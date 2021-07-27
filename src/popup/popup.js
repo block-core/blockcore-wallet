@@ -1,0 +1,1 @@
+console.log('Blockcore Extension starting...');
