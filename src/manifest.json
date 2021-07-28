@@ -13,8 +13,16 @@
     },
     "permissions": [
         "storage",
-        "scripting"
+        "scripting",
+        "activeTab",
+        "webNavigation"
     ],
+    "background": {
+        "scripts": [
+            "background.js",
+            "runtime.js"
+        ]
+    },
     "action": {
         "default_popup": "index.html",
         "default_icon": {
@@ -22,7 +30,7 @@
             "32": "/icons/blockcore-32x32.png",
             "48": "/icons/blockcore-48x48.png",
             "128": "/icons/blockcore-128x128.png"
-          }
+        }
     },
     "content_scripts": [
         {
