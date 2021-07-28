@@ -1,6 +1,5 @@
 import { Component, Inject, HostBinding } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import * as pbkdf2 from 'pbkdf2';
 import { CryptoService } from '../services/crypto.service';
 
 
