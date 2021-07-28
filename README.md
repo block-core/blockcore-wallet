@@ -17,6 +17,10 @@ To install the extension, follow the instructions here: [https://docs.microsoft.
 
 Choose the `dist` folder when picking folder for extension to load from.
 
+## Restrictions
+
+Currently the extension only activates when you're visiting the website [https://www.blockcore.net/](https://www.blockcore.net/).
+
 ## Manifest V2
 
 The Blockcore Extension is built using V2 of the manifest file format: [https://developer.chrome.com/docs/extensions/mv2/](https://developer.chrome.com/docs/extensions/mv2/)

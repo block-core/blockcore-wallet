@@ -1,0 +1,33 @@
+<div class="page">
+    <h1>Create Account (Wallet)</h1>
+
+    <mat-form-field appearance="outline" class="input-full-width">
+        <mat-label>Mnemonic</mat-label>
+        <input matInput [(ngModel)]="mnemonic" placeholder="Mnemonic">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="input-full-width">
+        <mat-label>Password</mat-label>
+        <input matInput [(ngModel)]="password" placeholder="Password">
+    </mat-form-field>
+
+    <button mat-flat-button color="primary" (click)="generate()">Generate</button>
+    &nbsp;&nbsp;
+    <button mat-flat-button color="primary" (click)="save()">Save</button>
+
+    <mat-form-field appearance="outline" class="input-full-width">
+        <mat-label>Encrypted Mnemonic</mat-label>
+        <input matInput [(ngModel)]="encrypted" placeholder="">
+    </mat-form-field>
+
+    <button mat-flat-button color="primary" (click)="unlock()">Unlock</button>
+
+    <mat-form-field appearance="outline" class="input-full-width">
+        <mat-label>Unlocked</mat-label>
+        <input matInput [(ngModel)]="unlocked" placeholder="Unlocked">
+    </mat-form-field>
+
+    <!-- <button mat-stroked-button (click)="clear()">Clear</button>
+<button mat-stroked-button color="warn" *ngIf="hasVaultSelected" (click)="remove(this.vault)">Remove</button> -->
+
+</div>
