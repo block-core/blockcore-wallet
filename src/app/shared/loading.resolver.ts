@@ -19,7 +19,6 @@ export class LoadingResolverService implements Resolve<any> {
             this.appState.load(() => {
                 resolve(null);
             });
-
         });
 
         return cb;

@@ -4,7 +4,6 @@
     "manifest_version": 2,
     "description": "Browser extension for Blockcore.",
     "author": "Blockcore",
-    "homepage_url": "https://www.blockcore.net/",
     "icons": {
         "16": "icons/blockcore-16x16.png",
         "32": "icons/blockcore-32x32.png",
@@ -14,7 +13,11 @@
     "permissions": [
         "storage",
         "activeTab",
-        "webNavigation"
+        "tabs",
+        "unlimitedStorage",
+        "webRequest",
+        "webNavigation",
+        "alarms"
     ],
     "background": {
         "scripts": [
@@ -22,7 +25,7 @@
             "runtime.js"
         ]
     },
-    "page_action": {
+    "browser_action": {
         "default_popup": "index.html"
     }
 }

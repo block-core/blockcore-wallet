@@ -30,9 +30,13 @@ export class ApplicationState {
     load(cb: any) {
         chrome.storage.local.get(['data'], (result) => {
 
-            if (result) {
+            if (result.data) {
                 this.persisted = result.data;
             }
+
+            // console.log('State loaded: ');
+            // console.log(JSON.stringify(this.persisted));
+            // console.log(JSON.stringify(result));
 
             this.initialized = true;
 

@@ -13,11 +13,34 @@ export class HomeComponent {
   password = '';
   unlocked = '';
   unlockPassword = '';
+  alarmName = 'refresh';
 
   constructor(
     public appState: ApplicationState,
     private crypto: CryptoService,
     private cd: ChangeDetectorRef) {
+
+    this.activateAlarm();
+
+  }
+
+  activateAlarm() {
+    chrome.alarms.getAll((alarms) => {
+      var hasAlarm = alarms.some((a) => {
+        return a.name == this.alarmName;
+      });
+
+      if (!hasAlarm) {
+        chrome.alarms.create('refresh', {
+          delayInMinutes: 0.1, periodInMinutes: 0.1
+        });
+
+        console.log('Created alarm.');
+      }
+      else {
+        console.log('Has alarm already!!');
+      }
+    })
   }
 
   generate() {
