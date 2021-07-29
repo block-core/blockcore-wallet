@@ -17,7 +17,8 @@
         "unlimitedStorage",
         "webRequest",
         "webNavigation",
-        "alarms"
+        "alarms",
+        "clipboardWrite"
     ],
     "background": {
         "scripts": [

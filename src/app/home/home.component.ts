@@ -2,6 +2,7 @@ import { Component, Inject, HostBinding, ChangeDetectorRef } from '@angular/core
 import { HttpClient } from '@angular/common/http';
 import { CryptoService } from '../services/crypto.service';
 import { ApplicationState } from '../services/application-state.service';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -18,7 +19,13 @@ export class HomeComponent {
   constructor(
     public appState: ApplicationState,
     private crypto: CryptoService,
+    private router: Router,
     private cd: ChangeDetectorRef) {
+
+      // If there are no accounts yet, we'll send users to account creation.
+    if (!this.appState.hasAccounts) {
+      this.router.navigateByUrl('/account');
+    }
 
     this.activateAlarm();
 

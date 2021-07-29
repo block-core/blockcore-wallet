@@ -11,8 +11,13 @@ export class ApplicationState {
     }
 
     persisted: any = {
-        'mnemonic': ''
+        'mnemonic': '',
+        accounts: []
     };
+
+    get hasAccounts(): boolean {
+        return this.persisted.accounts.length > 0;
+    }
 
     mnemonic: undefined | string;
 

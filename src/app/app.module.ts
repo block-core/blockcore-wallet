@@ -28,12 +28,14 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatChipsModule } from '@angular/material/chips';
 import { HomeComponent } from './home/home.component';
 import { AboutComponent } from './about/about.component';
+import { AccountComponent } from './account/account.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
-    AboutComponent
+    AboutComponent,
+    AccountComponent
   ],
   imports: [
     BrowserModule,
