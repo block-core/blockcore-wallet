@@ -8,9 +8,9 @@
         <p>A crypto wallet in your browser for coins, tokens, identities, NFTs and more.</p>
 
         <br>
-        <button mat-flat-button color="primary" (click)="create()">Create New Wallet</button>
+        <button class="wide-button" mat-flat-button color="primary" (click)="create()">Create New Wallet</button>
         <br>
-        <button mat-flat-button (click)="restore()">Use Existing Recovery Phrase</button>
+        <button class="wide-button" mat-flat-button (click)="restore()">Use Existing Recovery Phrase</button>
     </div>
 
     <div *ngIf="step == 1">
@@ -21,21 +21,27 @@
 
                     <h1>Secret Recovery Phrase</h1>
 
-                    <p>This is your private and secret sentence that is your account. You must store it safely, if you
+                    <p *ngIf="!recover">This is your private and secret sentence that is your account. You must store it
+                        safely, if you
                         loose it, you will loose all your assets. Nobody can recover it for you.</p>
 
-                    <mat-card class="recovery-phrase" [class.mat-elevation-z8]="true">{{mnemonic}}</mat-card>
+                    <p *ngIf="recover">Restore your existing wallet with your 12 or 24-word secret recovery phrase.</p>
 
-                    <!-- <button mat-stroked-button (click)="generate()">Click to generate</button> -->
+                    <mat-card *ngIf="!recover" class="recovery-phrase" [class.mat-elevation-z8]="true">{{mnemonic}}
+                        <button class="copy-button" mat-icon-button (click)="copy()">
+                            <mat-icon>content_copy</mat-icon>
+                        </button>
+                    </mat-card>
 
-                    <!-- <ng-template matStepLabel>Secret</ng-template> -->
-                    <!-- <mat-form-field appearance="fill">
-                        <mat-label>Name</mat-label>
-                        <input matInput placeholder="Last name, First name" formControlName="firstCtrl" required>
-                    </mat-form-field> -->
+                    <mat-form-field *ngIf="recover" class="input-full-width" appearance="outline">
+                        <mat-label>Recovery Phrase</mat-label>
+                        <textarea matInput [ngModel]="mnemonic" formControlName="firstCtrl" required></textarea>
+                    </mat-form-field>
+
                     <div>
                         <br>
-                        <button mat-flat-button color="primary" matStepperNext>OK, I have saved it</button>
+                        <button *ngIf="!recover" class="wide-button" mat-flat-button color="primary" matStepperNext>OK, I have saved it</button>
+                        <button *ngIf="recover" class="wide-button" mat-flat-button color="primary" matStepperNext>Import recovery phrase</button>
                     </div>
                 </form>
             </mat-step>
@@ -48,27 +54,26 @@
 
                     <mat-form-field class="input-full-width" appearance="outline">
                         <mat-label>Password</mat-label>
-                        <input matInput formControlName="secondCtrl" placeholder="Password" required>
+                        <input matInput type="password" [ngModel]="password" formControlName="passwordCtrl" placeholder="Password" required>
                     </mat-form-field>
 
                     <mat-form-field class="input-full-width" appearance="outline">
                         <mat-label>Confirm Password</mat-label>
-                        <input matInput formControlName="secondCtrl" placeholder="Confirm Password" required>
+                        <input matInput type="password" [ngModel]="password2" formControlName="password2Ctrl" placeholder="Confirm Password" required>
                     </mat-form-field>
 
                     <div>
-                        <!-- <button mat-button mat-flat-button matStepperPrevious>Back</button> -->
-                        <button mat-button mat-flat-button color="primary" matStepperNext>Save</button>
+                        <button class="wide-button" (click)="save()" [disabled]="!passwordValidated" mat-button mat-flat-button color="primary"
+                            matStepperNext>Save</button>
                     </div>
                 </form>
             </mat-step>
             <mat-step [editable]="false">
-                <!-- <ng-template matStepLabel>Done</ng-template> -->
                 <h1>All done!</h1>
                 <p>You can now begin to manage your wallet.</p>
                 <div>
                     <br><br><br><br>
-                    <button mat-flat-button color="primary" routerLink="/">Finish</button>
+                    <button class="wide-button" mat-flat-button color="primary" routerLink="/">Finish</button>
                 </div>
             </mat-step>
         </mat-stepper>

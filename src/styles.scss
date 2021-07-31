@@ -12,7 +12,6 @@ body {
     font-family: Roboto, "Helvetica Neue", sans-serif;
     background-color: #212121;
     color: white;
-
 }
 
 header {
@@ -35,4 +34,17 @@ header {
 
 .centered {
     text-align: center;
+}
+
+textarea,
+input,
+button,
+select {
+    font-family: inherit;
+    font-size: inherit;
+}
+
+.wide-button {
+    width: 100%;
+    margin-bottom: 0.5em;
 }

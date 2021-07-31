@@ -1,7 +1,4 @@
-button {
-    width: 100%;
-    margin-bottom: 0.5em;
-}
+
 
 /* p {
     font-size: 1.2em;
@@ -27,8 +24,21 @@ h1 {
 .recovery-phrase {
     font-size: 1.2em;
     word-spacing: 0.4em;
+    padding: 1em;
 }
 
-input {
+/* input {
     width: 100%;
+} */
+
+textarea {
+    font-size: 1.2em;
+    word-spacing: 0.4em;
+    height: 100px;
+}
+
+.copy-button {
+    position: absolute;
+    right: 0px;
+    bottom: 0px;
 }

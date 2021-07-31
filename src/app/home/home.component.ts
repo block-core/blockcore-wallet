@@ -15,6 +15,7 @@ export class HomeComponent {
   unlocked = '';
   unlockPassword = '';
   alarmName = 'refresh';
+  wallet: any;
 
   constructor(
     public appState: ApplicationState,
@@ -70,11 +71,11 @@ export class HomeComponent {
     this.unlocked = await this.crypto.decryptData(this.appState.persisted.mnemonic, this.unlockPassword) || "Unlock failed!";
   }
 
-  async save() {
-    // Set the mnemonic.
-    this.appState.persisted.mnemonic = await this.crypto.encryptData(this.mnemonic, this.password) || "Encrypting failed!";
+  // async save() {
+  //   // Set the mnemonic.
+  //   this.appState.persisted.mnemonic = await this.crypto.encryptData(this.mnemonic, this.password) || "Encrypting failed!";
 
-    // Persist the state.
-    this.appState.save(null);
-  }
+  //   // Persist the state.
+  //   this.appState.save(null);
+  // }
 }

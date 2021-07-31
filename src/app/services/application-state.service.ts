@@ -12,7 +12,9 @@ export class ApplicationState {
 
     persisted: any = {
         'mnemonic': '',
-        accounts: []
+        accounts: [
+            
+        ]
     };
 
     get hasAccounts(): boolean {

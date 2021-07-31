@@ -4,4 +4,50 @@
   <div class="header-text">Blockcore Extension</div>
 </header> -->
 
-<router-outlet></router-outlet>
+
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav #drawer class="sidenav print-hidden" fixedInViewport [attr.role]="'navigation'" [mode]="'over'">
+
+    <mat-toolbar class="logo-icon">
+      <img src="icons/blockcore-light-128x128.png">
+      <div>Blockcore</div>
+    </mat-toolbar>
+
+    <mat-menu #accounts="matMenu">
+      <button mat-menu-item>John</button>
+      <button mat-menu-item>John Doe</button>
+    </mat-menu>
+
+    <mat-nav-list class="menu-options">
+      <a mat-list-item [routerLink]="['/dashboard']" routerLinkActive="active-link">
+        <mat-icon mat-list-icon>dashboard</mat-icon>
+        <div mat-line>Dashboard</div>
+      </a>
+
+      <a mat-list-item [routerLink]="['/vaults']" routerLinkActive="active-link">
+        <mat-icon mat-list-icon matBadge="2" matBadgeColor="primary">device_hub</mat-icon>
+        <div mat-line>Vaults</div>
+      </a>
+      
+      <mat-divider></mat-divider>
+
+      <a mat-list-item [routerLink]="['/setup']" routerLinkActive="active-link">
+        <mat-icon mat-list-icon>perm_identity</mat-icon>
+        <div mat-line>Identity</div>
+      </a>
+
+    </mat-nav-list>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <mat-toolbar class="print-hidden">
+      <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()" >
+        <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+      </button>
+      <span></span>
+
+      <span class="example-spacer">Unlock wallet</span>
+
+    </mat-toolbar>
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
+</mat-sidenav-container>
