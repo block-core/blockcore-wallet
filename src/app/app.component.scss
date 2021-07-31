@@ -5,20 +5,41 @@
 .example-spacer {
     flex: 1 1 auto;
     margin-left: 0.8em;
- }
+}
 
- 
 .logo-icon {
     justify-content: center;
     cursor: pointer;
- }
- 
- .logo-icon img {
+}
+
+.logo-icon img {
     height: 60%;
- }
- 
- .logo-icon div {
+}
+
+.logo-icon div {
     font-size: 0.8em;
     margin-left: 0.8em;
- }
- 
+}
+
+.menu-mode-backdrop {
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(2px);
+}
+
+@keyframes animatedBlur {
+    from {
+        backdrop-filter: blur(6px);
+    }
+    to {
+        backdrop-filter: blur(0px);
+    }
+}
+
+@keyframes animatedBackground {
+    from {
+        transform: scale(1.2);
+    }
+    to {
+        transform: scale(1);
+    }
+}

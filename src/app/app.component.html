@@ -13,12 +13,35 @@
       <div>Blockcore</div>
     </mat-toolbar>
 
-    <mat-menu #accounts="matMenu">
+    <!-- <mat-menu #animals="matMenu" hasBackdrop="true" backdropClass="menu-mode-backdrop" overlapTrigger="false">
+      <button mat-menu-item>Connect to new...</button>
+      <button mat-menu-item [matMenuTriggerFor]="servers">Vaults</button>
+    </mat-menu> -->
+
+    <!-- <mat-menu #accounts="matMenu">
       <button mat-menu-item>John</button>
       <button mat-menu-item>John Doe</button>
+    </mat-menu> -->
+
+    <mat-menu #accounts="matMenu" hasBackdrop="true" backdropClass="menu-mode-backdrop" overlapTrigger="false">
+      <button mat-menu-item>Wallet 1</button>
+      <button mat-menu-item>Wallet 2</button>
     </mat-menu>
 
     <mat-nav-list class="menu-options">
+
+      <mat-form-field appearance="fill">
+        <mat-label>Choose Wallet</mat-label>
+        <mat-select [(value)]="wallet">
+          <mat-option *ngFor="let wallet of appState.persisted.accounts" [value]="wallet">{{wallet.name}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-list-item [matMenuTriggerFor]="accounts">
+        <mat-icon mat-list-icon>dashboard</mat-icon>
+        <div mat-line>Accounts:</div>
+      </mat-list-item>
+
       <a mat-list-item [routerLink]="['/dashboard']" routerLinkActive="active-link">
         <mat-icon mat-list-icon>dashboard</mat-icon>
         <div mat-line>Dashboard</div>
@@ -28,7 +51,7 @@
         <mat-icon mat-list-icon matBadge="2" matBadgeColor="primary">device_hub</mat-icon>
         <div mat-line>Vaults</div>
       </a>
-      
+
       <mat-divider></mat-divider>
 
       <a mat-list-item [routerLink]="['/setup']" routerLinkActive="active-link">
@@ -36,12 +59,27 @@
         <div mat-line>Identity</div>
       </a>
 
+      <a mat-list-item [routerLink]="['/vaults']" routerLinkActive="active-link">
+        <mat-icon mat-list-icon matBadge="2" matBadgeColor="primary">restart_alt</mat-icon>
+        <div mat-line>Remove Account</div>
+      </a>
+
+      <a mat-list-item [routerLink]="['/vaults']" routerLinkActive="active-link">
+        <mat-icon mat-list-icon matBadge="2" matBadgeColor="primary">delete</mat-icon>
+        <div mat-line>Remove Account</div>
+      </a>
+
+      <a mat-list-item [routerLink]="['/vaults']" routerLinkActive="active-link">
+        <mat-icon mat-list-icon matBadge="2" matBadgeColor="primary">delete</mat-icon>
+        <div mat-line>Remove Account 2</div>
+      </a>
+
     </mat-nav-list>
   </mat-sidenav>
   <mat-sidenav-content>
     <mat-toolbar class="print-hidden">
-      <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()" >
-        <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+      <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()">
+        <mat-icon>menu</mat-icon>
       </button>
       <span></span>
 
