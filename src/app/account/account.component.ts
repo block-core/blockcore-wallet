@@ -27,7 +27,9 @@ export class AccountComponent implements OnInit {
         public appState: ApplicationState,
         private crypto: CryptoService,
         private cd: ChangeDetectorRef
-    ) { }
+    ) {
+        this.appState.title = 'Create new wallet';
+    }
 
     ngOnInit() {
         this.firstFormGroup = this._formBuilder.group({
@@ -108,7 +110,7 @@ export class AccountComponent implements OnInit {
     }
 
     async save() {
-        const recoveryPhrase = await this.crypto.encryptData(this.mnemonic, this.password);
+        let recoveryPhrase = await this.crypto.encryptData(this.mnemonic, this.password);
 
         if (!recoveryPhrase) {
             console.error('Fatal error, unable to encrypt recovery phrase!');
@@ -116,13 +118,16 @@ export class AccountComponent implements OnInit {
         }
         else {
             this.appState.persisted.accounts.push({
-                name: 'Wallet 1',
+                name: 'Wallet ' + (this.appState.persisted.accounts.length + 1),
                 chains: ['identity', 'city'],
                 mnemonic: recoveryPhrase
             });
 
+            // Make the newly created wallet the selected one.
+            this.appState.persisted.activeAccountIndex = this.appState.persisted.accounts.length - 1;
+
             // Persist the state.
-            this.appState.save(null);
+            await this.appState.save();
         }
     }
 }

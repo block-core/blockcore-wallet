@@ -7,7 +7,8 @@ import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
-  templateUrl: './home.component.html'
+  templateUrl: './home.component.html',
+  styleUrls: ['./home.component.css']
 })
 export class HomeComponent {
   mnemonic = '';
@@ -16,6 +17,7 @@ export class HomeComponent {
   unlockPassword = '';
   alarmName = 'refresh';
   wallet: any;
+  error = '';
 
   constructor(
     public appState: ApplicationState,
@@ -23,13 +25,14 @@ export class HomeComponent {
     private router: Router,
     private cd: ChangeDetectorRef) {
 
-      // If there are no accounts yet, we'll send users to account creation.
-    if (!this.appState.hasAccounts) {
-      this.router.navigateByUrl('/account');
-    }
+    this.appState.title = 'Unlock wallet';
 
     this.activateAlarm();
 
+  }
+
+  removeError(): void {
+    this.error = '';
   }
 
   activateAlarm() {
@@ -55,27 +58,24 @@ export class HomeComponent {
     this.mnemonic = this.crypto.generateMnemonic();
   }
 
-  remove() {
+  async remove() {
     this.appState.persisted.mnemonic = '';
     this.mnemonic = '';
     this.password = '';
     this.unlocked = '';
     this.unlockPassword = '';
 
-    this.appState.save(() => {
-      this.cd.detectChanges();
-    });
+    await this.appState.save();
   }
 
   async unlock() {
-    this.unlocked = await this.crypto.decryptData(this.appState.persisted.mnemonic, this.unlockPassword) || "Unlock failed!";
+    var unlockedMnemonic = await this.crypto.decryptData(this.appState.activeAccount.mnemonic, this.unlockPassword);
+
+    if (unlockedMnemonic) {
+      this.appState.unlocked = true;
+      this.router.navigateByUrl('/wallet');
+    } else {
+      this.error = 'Invalid password';
+    }
   }
-
-  // async save() {
-  //   // Set the mnemonic.
-  //   this.appState.persisted.mnemonic = await this.crypto.encryptData(this.mnemonic, this.password) || "Encrypting failed!";
-
-  //   // Persist the state.
-  //   this.appState.save(null);
-  // }
 }

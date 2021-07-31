@@ -1,27 +1,14 @@
-<!-- 
-<header>
-  <img class="header-logo" src="/icons/blockcore-light-128x128.png">
-  <div class="header-text">Blockcore Extension</div>
-</header> -->
+<div *ngIf="appState.loading">
+  <router-outlet></router-outlet>
+</div>
 
-
-<mat-sidenav-container class="sidenav-container">
+<mat-sidenav-container class="sidenav-container" *ngIf="!appState.loading">
   <mat-sidenav #drawer class="sidenav print-hidden" fixedInViewport [attr.role]="'navigation'" [mode]="'over'">
 
     <mat-toolbar class="logo-icon">
       <img src="icons/blockcore-light-128x128.png">
       <div>Blockcore</div>
     </mat-toolbar>
-
-    <!-- <mat-menu #animals="matMenu" hasBackdrop="true" backdropClass="menu-mode-backdrop" overlapTrigger="false">
-      <button mat-menu-item>Connect to new...</button>
-      <button mat-menu-item [matMenuTriggerFor]="servers">Vaults</button>
-    </mat-menu> -->
-
-    <!-- <mat-menu #accounts="matMenu">
-      <button mat-menu-item>John</button>
-      <button mat-menu-item>John Doe</button>
-    </mat-menu> -->
 
     <mat-menu #accounts="matMenu" hasBackdrop="true" backdropClass="menu-mode-backdrop" overlapTrigger="false">
       <button mat-menu-item>Wallet 1</button>
@@ -30,60 +17,40 @@
 
     <mat-nav-list class="menu-options">
 
-      <mat-form-field appearance="fill">
+      <mat-form-field appearance="fill" *ngIf="appState.hasAccounts">
         <mat-label>Choose Wallet</mat-label>
-        <mat-select [(value)]="wallet">
-          <mat-option *ngFor="let wallet of appState.persisted.accounts" [value]="wallet">{{wallet.name}}</mat-option>
+        <mat-select (selectionChange)="onAccountChanged($event)" [(value)]="appState.persisted.activeAccountIndex">
+          <mat-option [value]="-1">Create new wallet</mat-option>
+          <mat-option *ngFor="let wallet of appState.persisted.accounts; let i = index" [value]="i">{{wallet.name}}
+          </mat-option>
         </mat-select>
       </mat-form-field>
 
-      <mat-list-item [matMenuTriggerFor]="accounts">
-        <mat-icon mat-list-icon>dashboard</mat-icon>
-        <div mat-line>Accounts:</div>
-      </mat-list-item>
-
-      <a mat-list-item [routerLink]="['/dashboard']" routerLinkActive="active-link">
-        <mat-icon mat-list-icon>dashboard</mat-icon>
-        <div mat-line>Dashboard</div>
-      </a>
-
-      <a mat-list-item [routerLink]="['/vaults']" routerLinkActive="active-link">
-        <mat-icon mat-list-icon matBadge="2" matBadgeColor="primary">device_hub</mat-icon>
-        <div mat-line>Vaults</div>
+      <a mat-list-item *ngIf="appState.activeAccount && appState.unlocked" (click)="lock()"
+        routerLinkActive="active-link">
+        <mat-icon mat-list-icon>lock</mat-icon>
+        <div mat-line>Lock Wallet</div>
       </a>
 
       <mat-divider></mat-divider>
 
-      <a mat-list-item [routerLink]="['/setup']" routerLinkActive="active-link">
-        <mat-icon mat-list-icon>perm_identity</mat-icon>
-        <div mat-line>Identity</div>
-      </a>
-
-      <a mat-list-item [routerLink]="['/vaults']" routerLinkActive="active-link">
-        <mat-icon mat-list-icon matBadge="2" matBadgeColor="primary">restart_alt</mat-icon>
+      <a mat-list-item *ngIf="appState.activeAccount" [routerLink]="['/remove']" (click)="drawer.toggle()"
+        routerLinkActive="active-link">
+        <mat-icon mat-list-icon>delete</mat-icon>
         <div mat-line>Remove Account</div>
-      </a>
-
-      <a mat-list-item [routerLink]="['/vaults']" routerLinkActive="active-link">
-        <mat-icon mat-list-icon matBadge="2" matBadgeColor="primary">delete</mat-icon>
-        <div mat-line>Remove Account</div>
-      </a>
-
-      <a mat-list-item [routerLink]="['/vaults']" routerLinkActive="active-link">
-        <mat-icon mat-list-icon matBadge="2" matBadgeColor="primary">delete</mat-icon>
-        <div mat-line>Remove Account 2</div>
       </a>
 
     </mat-nav-list>
   </mat-sidenav>
   <mat-sidenav-content>
     <mat-toolbar class="print-hidden">
-      <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()">
+      <button type="button" *ngIf="appState.hasAccounts" aria-label="Toggle sidenav" mat-icon-button
+        (click)="drawer.toggle()">
         <mat-icon>menu</mat-icon>
       </button>
       <span></span>
 
-      <span class="example-spacer">Unlock wallet</span>
+      <span class="example-spacer">{{appState.title}}</span>
 
     </mat-toolbar>
     <router-outlet></router-outlet>

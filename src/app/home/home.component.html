@@ -4,49 +4,23 @@
 
     <h1>Blockcore</h1>
 
-    <!-- <p>A crypto wallet in your browser for coins, tokens, identities, NFTs and more.</p> -->
-
-    <!-- <mat-form-field appearance="fill">
-        <mat-label>Choose Wallet</mat-label>
-        <mat-select [(value)]="wallet">
-            <mat-option *ngFor="let wallet of appState.persisted.accounts" [value]="wallet">{{wallet.name}}</mat-option>
-        </mat-select>
-    </mat-form-field>&nbsp;&nbsp;&nbsp;<button mat-flat-button color="primary" (click)="generate()">Add new
-        wallet</button> -->
-
     <h2>Enter your password to unlock</h2>
 
     <mat-form-field appearance="outline" class="input-full-width">
         <mat-label>Password</mat-label>
-        <input matInput [(ngModel)]="unlockPassword" placeholder="Password">
+        <input matInput type="password" [(ngModel)]="unlockPassword" placeholder="Password">
     </mat-form-field>
+
+    <div class="error-list">
+        <mat-chip-list *ngIf="error">
+
+            <mat-chip *ngIf="error" color="warn" selected (removed)="removeError()">{{error}}
+                <mat-icon matChipRemove>cancel</mat-icon>
+            </mat-chip>
+        </mat-chip-list>
+    </div>
 
     <button class="wide-button" mat-flat-button color="primary" (click)="unlock()">Unlock</button>
 
     <br><br>
-    <!-- 
-        <mat-form-field appearance="outline" class="input-full-width">
-            <mat-label>Unlocked</mat-label>
-            <input matInput [(ngModel)]="unlocked" placeholder="Unlocked">
-        </mat-form-field> -->
-
-    <!-- <button mat-flat-button color="primary" (click)="remove()">Remove Account</button> -->
-
-    <!-- <h1>Create Account (Wallet)</h1>
-
-        <mat-form-field appearance="outline" class="input-full-width">
-            <mat-label>Mnemonic</mat-label>
-            <input matInput [(ngModel)]="mnemonic" placeholder="Mnemonic">
-        </mat-form-field>
-
-        <button mat-flat-button color="primary" (click)="generate()">Generate</button>
-
-        <br><br>
-
-        <mat-form-field appearance="outline" class="input-full-width">
-            <mat-label>Password</mat-label>
-            <input matInput [(ngModel)]="password" placeholder="Password">
-        </mat-form-field> -->
-
-    <!-- <button mat-flat-button color="primary" (click)="save()">Save</button> -->
 </div>

@@ -2,12 +2,7 @@
 
 import { Injectable } from '@angular/core';
 import * as bip39 from 'bip39';
-
-const buff_to_base64 = (buff: any) => btoa(String.fromCharCode.apply(null, buff));
-const base64_to_buf = (b64: any) => Uint8Array.from(atob(b64), (c) => {
-    const arg: undefined | number | any = null;
-    return c.charCodeAt(arg);
-});
+import { Base64 } from 'js-base64';
 
 const enc = new TextEncoder();
 const dec = new TextDecoder();
@@ -67,8 +62,8 @@ export class CryptoService {
             buff.set(salt, 0);
             buff.set(iv, salt.byteLength);
             buff.set(encryptedContentArr, salt.byteLength + iv.byteLength);
-            const base64Buff = buff_to_base64(buff);
-            return base64Buff;
+
+            return Base64.fromUint8Array(buff);
         } catch (e) {
             console.error(e);
             return "";
@@ -77,11 +72,12 @@ export class CryptoService {
 
     async decryptData(encryptedData: string, password: string) {
         try {
-            const encryptedDataBuff = base64_to_buf(encryptedData);
+            const encryptedDataBuff = Base64.toUint8Array(encryptedData);
+
             const salt = encryptedDataBuff.slice(0, 16);
             const iv = encryptedDataBuff.slice(16, 16 + 12);
             const data = encryptedDataBuff.slice(16 + 12);
-            const passwordKey = await this.getPasswordKey(password);
+            const passwordKey = await this.getPasswordKey(password.toString());
             const aesKey = await this.deriveKey(passwordKey, salt, ["decrypt"]);
             const decryptedContent = await window.crypto.subtle.decrypt(
                 {

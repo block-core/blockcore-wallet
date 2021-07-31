@@ -8,9 +8,9 @@
         <p>A crypto wallet in your browser for coins, tokens, identities, NFTs and more.</p>
 
         <br>
-        <button class="wide-button" mat-flat-button color="primary" (click)="create()">Create New Wallet</button>
+        <button class="signup-button" mat-flat-button color="primary" (click)="create()">Create New Wallet</button>
         <br>
-        <button class="wide-button" mat-flat-button (click)="restore()">Use Existing Recovery Phrase</button>
+        <button class="signup-button" mat-flat-button (click)="restore()">Use Existing Recovery Phrase</button>
     </div>
 
     <div *ngIf="step == 1">
@@ -40,8 +40,8 @@
 
                     <div>
                         <br>
-                        <button *ngIf="!recover" class="wide-button" mat-flat-button color="primary" matStepperNext>OK, I have saved it</button>
-                        <button *ngIf="recover" class="wide-button" mat-flat-button color="primary" matStepperNext>Import recovery phrase</button>
+                        <button *ngIf="!recover" class="signup-button" mat-flat-button color="primary" matStepperNext>OK, I have saved it</button>
+                        <button *ngIf="recover" class="signup-button" mat-flat-button color="primary" matStepperNext>Import recovery phrase</button>
                     </div>
                 </form>
             </mat-step>
@@ -54,16 +54,16 @@
 
                     <mat-form-field class="input-full-width" appearance="outline">
                         <mat-label>Password</mat-label>
-                        <input matInput type="password" [ngModel]="password" formControlName="passwordCtrl" placeholder="Password" required>
+                        <input matInput type="password" [(ngModel)]="password" formControlName="passwordCtrl" placeholder="Password" required>
                     </mat-form-field>
 
                     <mat-form-field class="input-full-width" appearance="outline">
                         <mat-label>Confirm Password</mat-label>
-                        <input matInput type="password" [ngModel]="password2" formControlName="password2Ctrl" placeholder="Confirm Password" required>
+                        <input matInput type="password" [(ngModel)]="password2" formControlName="password2Ctrl" placeholder="Confirm Password" required>
                     </mat-form-field>
 
                     <div>
-                        <button class="wide-button" (click)="save()" [disabled]="!passwordValidated" mat-button mat-flat-button color="primary"
+                        <button class="signup-button" (click)="save()" [disabled]="!passwordValidated" mat-button mat-flat-button color="primary"
                             matStepperNext>Save</button>
                     </div>
                 </form>
@@ -73,7 +73,7 @@
                 <p>You can now begin to manage your wallet.</p>
                 <div>
                     <br><br><br><br>
-                    <button class="wide-button" mat-flat-button color="primary" routerLink="/">Finish</button>
+                    <button class="signup-button" mat-flat-button color="primary" routerLink="/">Finish</button>
                 </div>
             </mat-step>
         </mat-stepper>

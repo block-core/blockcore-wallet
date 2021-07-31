@@ -29,13 +29,19 @@ import { MatChipsModule } from '@angular/material/chips';
 import { HomeComponent } from './home/home.component';
 import { AboutComponent } from './about/about.component';
 import { AccountComponent } from './account/account.component';
+import { LoadingComponent } from './loading/loading.component';
+import { AccountRemoveComponent } from './account/remove/remove.component';
+import { WalletComponent } from './wallet/wallet.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
     AboutComponent,
-    AccountComponent
+    AccountComponent,
+    AccountRemoveComponent,
+    LoadingComponent,
+    WalletComponent,
   ],
   imports: [
     BrowserModule,
