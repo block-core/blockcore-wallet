@@ -10,7 +10,7 @@
         <br>
         <button class="signup-button" mat-flat-button color="primary" (click)="create()">Create New Wallet</button>
         <br>
-        <button class="signup-button" mat-flat-button (click)="restore()">Use Existing Recovery Phrase</button>
+        <button class="signup-button" mat-flat-button (click)="restore()">Use Existing Secret Recovery Phrase</button>
     </div>
 
     <div *ngIf="step == 1">
@@ -34,14 +34,14 @@
                     </mat-card>
 
                     <mat-form-field *ngIf="recover" class="input-full-width" appearance="outline">
-                        <mat-label>Recovery Phrase</mat-label>
+                        <mat-label>Secret Recovery Phrase</mat-label>
                         <textarea matInput [ngModel]="mnemonic" formControlName="firstCtrl" required></textarea>
                     </mat-form-field>
 
                     <div>
                         <br>
                         <button *ngIf="!recover" class="signup-button" mat-flat-button color="primary" matStepperNext>OK, I have saved it</button>
-                        <button *ngIf="recover" class="signup-button" mat-flat-button color="primary" matStepperNext>Import recovery phrase</button>
+                        <button *ngIf="recover" class="signup-button" mat-flat-button color="primary" matStepperNext>Import secret recovery phrase</button>
                     </div>
                 </form>
             </mat-step>

@@ -24,8 +24,10 @@ export class AccountRemoveComponent {
       const index: any = params.get('index');
       console.log('Account Index:', Number(index));
 
+      const accountCount = this.appState.activeWallet?.accounts?.length;
+
       // Check if the index is available before allowing to change.
-      if (index != -1 && index < this.appState.activeWallet.accounts.length) {
+      if (index != -1 && accountCount != null && index < accountCount) {
         this.appState.persisted.activeAccountIndex = Number(index);
       }
       else {
@@ -37,7 +39,7 @@ export class AccountRemoveComponent {
 
   async wipe() {
     // Remove the active account from the array.
-    this.appState.activeWallet.accounts.splice(this.appState.persisted.activeAccountIndex, 1);
+    this.appState.activeWallet?.accounts.splice(this.appState.persisted.activeAccountIndex, 1);
 
     if (this.appState.hasAccounts) {
       this.appState.persisted.activeAccountIndex = 0;

@@ -11,6 +11,7 @@ import { ApplicationState } from './services/application-state.service';
 export class AppComponent implements OnInit {
   title = 'blockcore-extension';
   wallet: any;
+  
 
   @ViewChild('drawer') drawer!: MatSidenav;
   @ViewChild('draweraccount') draweraccount!: MatSidenav;

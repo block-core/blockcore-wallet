@@ -11,7 +11,7 @@ import { ApplicationState } from 'src/app/services/application-state.service';
 })
 export class AccountEditComponent {
 
-  accountName!: string;
+  accountName: string | undefined;
 
   constructor(
     private router: Router,
@@ -28,7 +28,7 @@ export class AccountEditComponent {
       console.log('Account Index:', Number(index));
 
       this.appState.persisted.activeAccountIndex = Number(index);
-      this.accountName = this.appState.activeAccount.name;
+      this.accountName = this.appState.activeAccount?.name;
 
       // const id: any = params.get('address');
       // console.log('Address:', id);
@@ -40,14 +40,14 @@ export class AccountEditComponent {
 
       // await this.updateTransactions('/api/query/address/' + id + '/transactions?limit=' + this.limit);
     });
-
-
   }
 
   async save() {
-    this.appState.activeAccount.name = this.accountName;
-    await this.appState.save();
-    // this.router.navigateByUrl('/home');
+    if (this.appState.activeAccount) {
+      this.appState.activeAccount.name = this.accountName;
+      await this.appState.save();
+    }
+
     this.location.back();
   }
 

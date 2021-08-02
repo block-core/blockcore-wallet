@@ -26,7 +26,7 @@
         </mat-select>
       </mat-form-field>
 
-      <a mat-list-item *ngIf="appState.activeWallet && appState.unlocked" [routerLink]="['/wallet/edit']"
+      <a mat-list-item *ngIf="appState.activeWallet && appState.unlocked" [routerLink]="['/wallet', 'edit']"
         (click)="drawer.toggle()" routerLinkActive="active-link">
         <mat-icon mat-list-icon>edit</mat-icon>
         <div mat-line>Edit Wallet</div>
@@ -37,10 +37,31 @@
         <div mat-line>Lock Wallet</div>
       </mat-list-item>
 
-      <a mat-list-item *ngIf="appState.activeWallet" [routerLink]="['/wallet/remove']" (click)="drawer.toggle()"
+      <a mat-list-item *ngIf="appState.activeWallet" [routerLink]="['/wallet', 'remove']" (click)="drawer.toggle()"
         routerLinkActive="active-link">
         <mat-icon mat-list-icon>delete</mat-icon>
         <div mat-line>Remove Wallet</div>
+      </a>
+
+      <mat-divider></mat-divider>
+
+      <br>
+<!-- 
+      <mat-form-field appearance="fill">
+        <mat-label>Auto-Lock Timer</mat-label>
+        <mat-select [(value)]="autoTimeout">
+          <mat-option [value]="0">Zero</mat-option>
+          <mat-option [value]="5">5 minutes</mat-option>
+          <mat-option [value]="10">10 minutes</mat-option>
+          <mat-option [value]="15">15 minutes</mat-option>
+          <mat-option [value]="30">30 minutes</mat-option>
+          <mat-option [value]="60">60 minutes</mat-option>
+        </mat-select>
+      </mat-form-field> -->
+
+      <a mat-list-item  [routerLink]="['/settings']" (click)="drawer.toggle()" routerLinkActive="active-link">
+        <mat-icon mat-list-icon>settings</mat-icon>
+        <div mat-line>Settings</div>
       </a>
 
     </mat-nav-list>
@@ -59,7 +80,10 @@
 
       <div class="detail-box">
         <mat-icon mat-list-icon>account_circle</mat-icon>
-        <div class="detail-network">{{appState.activeAccount.network}}</div>
+        <div class="detail-network">
+          {{appState.activeAccount.network}}<br>
+          {{appState.activeAccount.derivationPath}}
+        </div>
       </div>
 
       <button mat-button [routerLink]="['account', 'edit', appState.persisted.activeAccountIndex]" (click)="draweraccount.toggle()">Edit account</button>
@@ -121,7 +145,7 @@
 
       <a mat-list-item *ngIf="appState.activeWallet && appState.unlocked" [routerLink]="['/account/create']"
         (click)="draweraccount.toggle()" routerLinkActive="active-link">
-        <mat-icon mat-list-icon>add</mat-icon>
+        <mat-icon mat-list-icon>add_circle_outline</mat-icon>
         <div mat-line>Add Account</div>
       </a>
 

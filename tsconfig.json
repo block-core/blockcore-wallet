@@ -18,6 +18,7 @@
     "module": "es2020",
     "lib": [
       "es2018",
+      "ESNext.String",
       "dom"
     ]
   },

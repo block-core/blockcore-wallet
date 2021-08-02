@@ -20,6 +20,7 @@
         "build": {
           "builder": "@angular-builders/custom-webpack:browser",
           "options": {
+            "aot": true,
             "outputPath": "dist/blockcore-extension",
             "index": "src/index.html",
             "main": "src/main.ts",

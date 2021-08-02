@@ -37,6 +37,7 @@ import { WalletRemoveComponent } from './wallet/remove/remove.component';
 import { WalletEditComponent } from './wallet/edit/edit.component';
 import { AccountCreateComponent } from './account/create/create.component';
 import { AccountComponent } from './account/account.component';
+import { SettingsComponent } from './settings/settings.component';
 
 @NgModule({
   declarations: [
@@ -52,6 +53,7 @@ import { AccountComponent } from './account/account.component';
     WalletCreateComponent,
     WalletEditComponent,
     WalletRemoveComponent,
+    SettingsComponent
   ],
   imports: [
     BrowserModule,

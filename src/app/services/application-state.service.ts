@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { EventEmitter, Injectable } from '@angular/core';
+import { Persisted, Wallet } from '../interfaces';
 
 @Injectable({
     providedIn: 'root'
@@ -10,11 +11,9 @@ export class ApplicationState {
     constructor() {
     }
 
-    persisted: any = {
-        'mnemonic': '',
-        wallets: [
-
-        ],
+    persisted: Persisted = {
+        autoTimeout: 5,
+        wallets: [],
         activeWalletIndex: 0,
         activeAccountIndex: 0
     };
@@ -27,7 +26,7 @@ export class ApplicationState {
         if (this.persisted.activeWalletIndex > -1) {
             return this.persisted.wallets[this.persisted.activeWalletIndex];
         } else {
-            return null;
+            return undefined;
         }
     }
 

@@ -6,6 +6,11 @@
   </mat-form-field>
 
   <br>
+  Purpose: {{appState.activeAccount?.purpose}}<br>
+  Network: {{appState.activeAccount?.network}}<br>
+  Index: {{appState.activeAccount?.index}}<br>
+
+  <br>
   <button class="signup-button" mat-flat-button color="primary" (click)="save()">Save</button>
   <br>
   <button class="signup-button" mat-flat-button (click)="cancel()">Cancel</button>

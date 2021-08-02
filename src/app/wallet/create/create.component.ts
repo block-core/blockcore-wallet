@@ -113,29 +113,20 @@ export class WalletCreateComponent implements OnInit {
         let recoveryPhrase = await this.crypto.encryptData(this.mnemonic, this.password);
 
         if (!recoveryPhrase) {
-            console.error('Fatal error, unable to encrypt recovery phrase!');
-            alert('Fatal error, unable to encrypt recovery phrase!');
+            console.error('Fatal error, unable to encrypt secret recovery phrase!');
+            alert('Fatal error, unable to encrypt secret recovery phrase!');
         }
         else {
             this.appState.persisted.wallets.push({
                 name: 'Wallet ' + (this.appState.persisted.wallets.length + 1),
-                chains: ['identity', 'city'],
                 mnemonic: recoveryPhrase,
                 accounts: [
                     {
                         index: 0,
-                        name: 'SondreB',
-                        network: 'profile'
-                    },
-                    {
-                        index: 0,
-                        name: 'Account 0',
-                        network: 'city'
-                    },
-                    {
-                        index: 0,
-                        name: 'Account 0',
-                        network: 'bitcoin'
+                        name: 'Identity',
+                        network: 616,
+                        purpose: 302,
+                        derivationPath: `302'/616'`
                     }
                 ]
             });

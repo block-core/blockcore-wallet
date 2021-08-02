@@ -1,0 +1,24 @@
+<div class="page">
+
+  <mat-form-field class="input-full-width" appearance="outline">
+    <mat-label>Auto-Lock Timer (minutes)</mat-label>
+    <input matInput [(ngModel)]="appState.persisted.autoTimeout" required>
+    <mat-hint>Set the idle time in minutes before the wallet become locked.</mat-hint>
+  </mat-form-field>
+
+  <!-- <mat-form-field appearance="fill">
+  <mat-label>Auto-Lock Timer</mat-label>
+  <mat-select [(value)]="appState.persisted.autoTimeout">
+    <mat-option [value]="0">Zero</mat-option>
+    <mat-option [value]="5">5 minutes</mat-option>
+    <mat-option [value]="10">10 minutes</mat-option>
+    <mat-option [value]="15">15 minutes</mat-option>
+    <mat-option [value]="30">30 minutes</mat-option>
+    <mat-option [value]="60">60 minutes</mat-option>
+  </mat-select>
+</mat-form-field> -->
+
+  <br><br>
+
+  <button class="signup-button" mat-flat-button color="primary" (click)="save()">Save</button>
+</div>

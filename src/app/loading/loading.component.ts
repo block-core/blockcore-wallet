@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { ApplicationState } from '../services/application-state.service';
 import { CryptoService } from '../services/crypto.service';
 import { Router } from '@angular/router';
+import { Persisted } from '../interfaces';
 
 @Component({
   selector: 'app-loading',
@@ -22,7 +23,7 @@ export class LoadingComponent implements OnInit {
     var state = await this.appState.load();
 
     if (state) {
-      this.appState.persisted = state;
+      this.appState.persisted = state as Persisted;
     }
 
     this.appState.loading = false;

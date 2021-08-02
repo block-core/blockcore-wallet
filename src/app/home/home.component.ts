@@ -59,7 +59,6 @@ export class HomeComponent {
   }
 
   async remove() {
-    this.appState.persisted.mnemonic = '';
     this.mnemonic = '';
     this.password = '';
     this.unlocked = '';
@@ -69,7 +68,11 @@ export class HomeComponent {
   }
 
   async unlock() {
-    var unlockedMnemonic = await this.crypto.decryptData(this.appState.activeWallet.mnemonic, this.unlockPassword);
+    let unlockedMnemonic = null;
+
+    if (this.appState.activeWallet) {
+      unlockedMnemonic = await this.crypto.decryptData(this.appState.activeWallet?.mnemonic, this.unlockPassword);
+    }
 
     if (unlockedMnemonic) {
       this.appState.unlocked = true;

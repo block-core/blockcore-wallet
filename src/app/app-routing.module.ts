@@ -11,6 +11,7 @@ import { AccountEditComponent } from './account/edit/edit.component';
 import { AccountCreateComponent } from './account/create/create.component';
 import { AccountRemoveComponent } from './account/remove/remove.component';
 import { AccountComponent } from './account/account.component';
+import { SettingsComponent } from './settings/settings.component';
 
 const routes: Routes = [
   {
@@ -24,6 +25,9 @@ const routes: Routes = [
   },
   {
     path: 'about', component: AboutComponent
+  },
+  {
+    path: 'settings', component: SettingsComponent
   },
   {
     path: 'account/view/:index', component: AccountComponent

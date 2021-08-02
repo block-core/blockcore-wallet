@@ -3,6 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ApplicationState } from '../../services/application-state.service';
 import { CryptoService } from '../../services/crypto.service';
+import { Account } from 'src/app/interfaces';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-account-create',
@@ -18,7 +20,11 @@ export class AccountCreateComponent implements OnInit {
     mnemonicInputDisabled = true;
     password = '';
     password2 = '';
-    network = 'identity';
+    network = "302'/616'";
+    indexes: number[] = [];
+    index: number = 0;
+    derivationPath!: string;
+    name = 'New account';
 
     get passwordValidated(): boolean {
         return this.password === this.password2 && this.secondFormGroup.valid;
@@ -27,9 +33,14 @@ export class AccountCreateComponent implements OnInit {
     constructor(private _formBuilder: FormBuilder,
         public appState: ApplicationState,
         private crypto: CryptoService,
+        private router: Router,
         private cd: ChangeDetectorRef
     ) {
         this.appState.title = 'Create new account';
+
+        for (let i = 0; i < 100; i++) {
+            this.indexes.push(i);
+        }
     }
 
     ngOnInit() {
@@ -41,6 +52,8 @@ export class AccountCreateComponent implements OnInit {
             passwordCtrl: ['', Validators.required],
             password2Ctrl: ['', Validators.required]
         });
+
+        this.derivationPath = this.getDerivationPath();
     }
 
     generate() {
@@ -91,78 +104,88 @@ export class AccountCreateComponent implements OnInit {
         document.body.removeChild(textArea);
     }
 
-    async onAccountChanged(event: any) {
-        const walletIndex = event.value;
-    
-        console.log(JSON.stringify(this.appState.persisted));
-    
-        // this.drawer.close();
-    
-        // if (walletIndex === -1) {
-        //   this.router.navigateByUrl('/wallet/create');
-        // } else {
-        //   console.log('walletIndex:', walletIndex);
-    
-        //   this.appState.persisted.activeWalletIndex = walletIndex;
-        //   await this.appState.save();
-    
-        //   console.log(this.appState.persisted.activeWalletIndex);
-    
-        //   // Make sure we route to home to unlock the newly selected wallet.
-        //   this.router.navigateByUrl('/home');
-        // }
-      }
+    getDerivationPath() {
+        return `m/${this.network}/${this.index}'`;
+    }
+
+    async onNetworkChanged(event: any) {
+        // this.network = event.value;
+        this.derivationPath = this.getDerivationPath();
+    }
+
+    async onAccountIndexChanged(event: any) {
+        // this.index = event.value;
+        this.derivationPath = this.getDerivationPath();
+    }
 
     create() {
-        this.step = 1;
-        this.recover = false;
-        this.generate();
+        debugger;
+        const splittedPath = this.derivationPath.split('/');
+        const splittedPathReplaced = this.derivationPath.replaceAll(`'`, ``).split('/');
 
-        this.firstFormGroup = this._formBuilder.group({
-            // firstCtrl: ['', Validators.required]
-        });
-    }
+        const parsedPurpose = Number(splittedPathReplaced[1]);
+        const parsedNetwork = Number(splittedPathReplaced[2]);
+        const parsedIndex = Number(splittedPathReplaced[3]);
 
-    restore() {
-        this.step = 1;
-        this.recover = true;
+        // TODO: Get the account index from the derivation path if user customizes it.
+        const account: Account = {
+            name: this.name,
+            index: parsedIndex,
+            network: parsedNetwork,
+            purpose: parsedPurpose,
+            derivationPath: this.derivationPath
+        };
 
-        this.firstFormGroup = this._formBuilder.group({
-            firstCtrl: ['', Validators.required]
-        });
-    }
-
-    async save() {
-        let recoveryPhrase = await this.crypto.encryptData(this.mnemonic, this.password);
-
-        if (!recoveryPhrase) {
-            console.error('Fatal error, unable to encrypt recovery phrase!');
-            alert('Fatal error, unable to encrypt recovery phrase!');
+        if (this.appState.activeWallet) {
+            this.appState.activeWallet.accounts.push(account);
+            this.router.navigateByUrl('/account/view/' + (this.appState.activeWallet.accounts.length - 1));
         }
-        else {
-            this.appState.persisted.wallets.push({
-                name: 'Wallet ' + (this.appState.persisted.wallets.length + 1),
-                chains: ['identity', 'city'],
-                mnemonic: recoveryPhrase,
-                accounts: [
-                    {
-                        index: 0,
-                        name: 'SondreB',
-                        network: 'profile'
-                    },
-                    {
-                        index: 0,
-                        name: 'Account 0',
-                        network: 'city'
-                    }
-                ]
-            });
 
-            // Make the newly created wallet the selected one.
-            this.appState.persisted.activeWalletIndex = this.appState.persisted.wallets.length - 1;
+        // this.step = 1;
+        // this.recover = false;
+        // this.generate();
 
-            // Persist the state.
-            await this.appState.save();
-        }
+        // this.firstFormGroup = this._formBuilder.group({
+        //     // firstCtrl: ['', Validators.required]
+        // });
     }
+
+    // restore() {
+    //     this.step = 1;
+    //     this.recover = true;
+
+    //     this.firstFormGroup = this._formBuilder.group({
+    //         firstCtrl: ['', Validators.required]
+    //     });
+    // }
+
+    // async save() {
+    //     let recoveryPhrase = await this.crypto.encryptData(this.mnemonic, this.password);
+
+    //     if (!recoveryPhrase) {
+    //         console.error('Fatal error, unable to encrypt recovery phrase!');
+    //         alert('Fatal error, unable to encrypt recovery phrase!');
+    //     }
+    //     else {
+    //         this.appState.persisted.wallets.push({
+    //             name: 'Wallet ' + (this.appState.persisted.wallets.length + 1),
+    //             // chains: ['identity', 'city'],
+    //             mnemonic: recoveryPhrase,
+    //             accounts: [
+    //                 {
+    //                     index: 0,
+    //                     name: 'Identity',
+    //                     network: 'profile',
+    //                     derivationPath: `302'/616'`
+    //                 }
+    //             ]
+    //         });
+
+    //         // Make the newly created wallet the selected one.
+    //         this.appState.persisted.activeWalletIndex = this.appState.persisted.wallets.length - 1;
+
+    //         // Persist the state.
+    //         await this.appState.save();
+    //     }
+    // }
 }

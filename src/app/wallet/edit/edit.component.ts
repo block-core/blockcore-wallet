@@ -11,7 +11,7 @@ import { ApplicationState } from 'src/app/services/application-state.service';
 })
 export class WalletEditComponent {
 
-  walletName!: string;
+  walletName: string | undefined;
 
   constructor(
     private router: Router,
@@ -20,12 +20,15 @@ export class WalletEditComponent {
   ) {
     this.appState.title = 'Edit Wallet'
 
-    this.walletName = this.appState.activeWallet.name;
+    this.walletName = this.appState.activeWallet?.name;
   }
 
   async save() {
-    this.appState.activeWallet.name = this.walletName;
-    await this.appState.save();
+    if (this.appState.activeWallet) {
+      this.appState.activeWallet.name = this.walletName;
+      await this.appState.save();
+    }
+
     // this.router.navigateByUrl('/home');
     this.location.back();
   }
