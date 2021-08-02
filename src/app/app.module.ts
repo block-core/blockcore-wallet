@@ -32,6 +32,7 @@ import { AccountComponent } from './account/account.component';
 import { LoadingComponent } from './loading/loading.component';
 import { AccountRemoveComponent } from './account/remove/remove.component';
 import { WalletComponent } from './wallet/wallet.component';
+import { AccountEditComponent } from './account/edit/edit.component';
 
 @NgModule({
   declarations: [
@@ -40,6 +41,7 @@ import { WalletComponent } from './wallet/wallet.component';
     AboutComponent,
     AccountComponent,
     AccountRemoveComponent,
+    AccountEditComponent,
     LoadingComponent,
     WalletComponent,
   ],

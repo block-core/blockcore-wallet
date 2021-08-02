@@ -1,0 +1,13 @@
+<div class="page centered">
+
+  <mat-form-field class="input-full-width" appearance="outline">
+    <mat-label>Wallet name</mat-label>
+    <input matInput [(ngModel)]="walletName" required>
+  </mat-form-field>
+
+  <br>
+  <button class="signup-button" mat-flat-button color="primary" (click)="save()">Save</button>
+  <br>
+  <button class="signup-button" mat-flat-button (click)="cancel()">Cancel</button>
+  
+</div>

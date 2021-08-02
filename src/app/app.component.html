@@ -26,6 +26,11 @@
         </mat-select>
       </mat-form-field>
 
+      <a mat-list-item *ngIf="appState.activeAccount && appState.unlocked"  [routerLink]="['/wallet/edit']" (click)="drawer.toggle()" routerLinkActive="active-link">
+        <mat-icon mat-list-icon>edit</mat-icon>
+        <div mat-line>Edit Wallet</div>
+      </a>
+
       <a mat-list-item *ngIf="appState.activeAccount && appState.unlocked" (click)="lock()"
         routerLinkActive="active-link">
         <mat-icon mat-list-icon>lock</mat-icon>
@@ -34,7 +39,7 @@
 
       <mat-divider></mat-divider>
 
-      <a mat-list-item *ngIf="appState.activeAccount" [routerLink]="['/remove']" (click)="drawer.toggle()"
+      <a mat-list-item *ngIf="appState.activeAccount" [routerLink]="['/wallet/remove']" (click)="drawer.toggle()"
         routerLinkActive="active-link">
         <mat-icon mat-list-icon>delete</mat-icon>
         <div mat-line>Remove Account</div>
