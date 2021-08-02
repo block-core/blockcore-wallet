@@ -12,22 +12,53 @@ export class ApplicationState {
 
     persisted: any = {
         'mnemonic': '',
-        accounts: [
+        wallets: [
 
         ],
+        activeWalletIndex: 0,
         activeAccountIndex: 0
     };
 
-    get hasAccounts(): boolean {
-        return this.persisted.accounts.length > 0;
+    get hasWallets(): boolean {
+        return this.persisted.wallets?.length > 0;
     }
 
-    get activeAccount() {
-        if (this.persisted.activeAccountIndex > -1) {
-            return this.persisted.accounts[this.persisted.activeAccountIndex];
+    get activeWallet() {
+        if (this.persisted.activeWalletIndex > -1) {
+            return this.persisted.wallets[this.persisted.activeWalletIndex];
         } else {
             return null;
         }
+    }
+
+    get hasAccounts(): boolean {
+        if (!this.activeWallet) {
+            return false;
+        }
+
+        return this.activeWallet.accounts?.length > 0;
+    }
+
+    get activeAccount() {
+        if (!this.activeWallet) {
+            return null;
+        }
+
+        if (!this.activeWallet.accounts) {
+            return null;
+        }
+
+        // If the index is -1, force it to pick first account.
+        if (this.persisted.activeAccountIndex == null || this.persisted.activeAccountIndex == -1) {
+            this.persisted.activeAccountIndex = 0;
+        }
+
+        // If the active index is higher than available accounts, reset to zero.
+        if (this.persisted.activeAccountIndex >= this.activeWallet.accounts.length) {
+            this.persisted.activeAccountIndex = 0;
+        }
+
+        return this.activeWallet.accounts[this.persisted.activeAccountIndex];
     }
 
     title!: string;
@@ -37,6 +68,20 @@ export class ApplicationState {
     loading = true;
 
     unlocked = false;
+
+    // changeAccount(index: number) {
+    //     if (index < 0) {
+    //         this.persisted.activeAccountIndex = -1;
+    //     }
+    //     // Check if the index is available before allowing to change.
+    //     if (index != -1 && index < this.appState.activeWallet.accounts.length) {
+    //         this.appState.persisted.activeAccountIndex = index;
+    //     }
+    //     else {
+    //         console.log('Attempting to show account that does not exists.');
+    //         this.router.navigateByUrl('/account');
+    //     }
+    // }
 
     async save(): Promise<void> {
 
@@ -71,7 +116,14 @@ export class ApplicationState {
                 if (chrome.runtime.lastError) {
                     return reject(chrome.runtime.lastError);
                 }
-                // Pass the data retrieved from storage down the promise chain.
+
+                // resolve(null);
+
+                // if (items.data.wallets?.length > 0) {
+                //     items.data.wallets[0].accounts = [];
+                // }
+
+                // // Pass the data retrieved from storage down the promise chain.
                 resolve(items.data);
             });
         });

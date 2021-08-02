@@ -13,6 +13,7 @@ export class AppComponent implements OnInit {
   wallet: any;
 
   @ViewChild('drawer') drawer!: MatSidenav;
+  @ViewChild('draweraccount') draweraccount!: MatSidenav;
 
   constructor(public appState: ApplicationState,
     private router: Router) {
@@ -38,14 +39,14 @@ export class AppComponent implements OnInit {
     this.drawer.close();
 
     if (walletIndex === -1) {
-      this.router.navigateByUrl('/account');
+      this.router.navigateByUrl('/wallet/create');
     } else {
       console.log('walletIndex:', walletIndex);
 
-      this.appState.persisted.activeAccountIndex = walletIndex;
+      this.appState.persisted.activeWalletIndex = walletIndex;
       await this.appState.save();
 
-      console.log(this.appState.persisted.activeAccountIndex);
+      console.log(this.appState.persisted.activeWalletIndex);
 
       // Make sure we route to home to unlock the newly selected wallet.
       this.router.navigateByUrl('/home');

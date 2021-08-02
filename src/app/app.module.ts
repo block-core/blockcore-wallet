@@ -28,11 +28,15 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatChipsModule } from '@angular/material/chips';
 import { HomeComponent } from './home/home.component';
 import { AboutComponent } from './about/about.component';
-import { AccountComponent } from './account/account.component';
 import { LoadingComponent } from './loading/loading.component';
 import { AccountRemoveComponent } from './account/remove/remove.component';
-import { WalletComponent } from './wallet/wallet.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
 import { AccountEditComponent } from './account/edit/edit.component';
+import { WalletCreateComponent } from './wallet/create/create.component';
+import { WalletRemoveComponent } from './wallet/remove/remove.component';
+import { WalletEditComponent } from './wallet/edit/edit.component';
+import { AccountCreateComponent } from './account/create/create.component';
+import { AccountComponent } from './account/account.component';
 
 @NgModule({
   declarations: [
@@ -40,10 +44,14 @@ import { AccountEditComponent } from './account/edit/edit.component';
     HomeComponent,
     AboutComponent,
     AccountComponent,
-    AccountRemoveComponent,
+    AccountCreateComponent,
     AccountEditComponent,
+    AccountRemoveComponent,
     LoadingComponent,
-    WalletComponent,
+    DashboardComponent,
+    WalletCreateComponent,
+    WalletEditComponent,
+    WalletRemoveComponent,
   ],
   imports: [
     BrowserModule,

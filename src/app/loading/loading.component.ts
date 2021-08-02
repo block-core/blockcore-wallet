@@ -28,16 +28,16 @@ export class LoadingComponent implements OnInit {
     this.appState.loading = false;
 
     // Select the previous selected account.
-    // if (this.appState.hasAccounts) {
-    //   this.appState.activeAccount = this.appState.persisted.accounts[0];
+    // if (this.appState.hasWallets) {
+    //   this.appState.activeWallet = this.appState.persisted.wallets[0];
     // }
 
     console.log(JSON.stringify(this.appState));
 
     console.log('redirect...');
 
-    if (!this.appState.hasAccounts) {
-      this.router.navigateByUrl('/account');
+    if (!this.appState.hasWallets) {
+      this.router.navigateByUrl('/wallet/create');
     }
     else {
       this.router.navigateByUrl('/home');

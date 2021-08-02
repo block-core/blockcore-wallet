@@ -1,6 +1,6 @@
 import { Component, Inject, HostBinding } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common'
 import { ApplicationState } from 'src/app/services/application-state.service';
 
@@ -13,13 +13,31 @@ export class AccountRemoveComponent {
   constructor(
     private router: Router,
     private location: Location,
-    public appState: ApplicationState
-  ) { }
+    public appState: ApplicationState,
+    private activatedRoute: ActivatedRoute,
+  ) {
+    this.appState.title = 'Remove Account';
+
+    this.activatedRoute.paramMap.subscribe(async params => {
+
+      console.log('PARAMS:', params);
+      const index: any = params.get('index');
+      console.log('Account Index:', Number(index));
+
+      // Check if the index is available before allowing to change.
+      if (index != -1 && index < this.appState.activeWallet.accounts.length) {
+        this.appState.persisted.activeAccountIndex = Number(index);
+      }
+      else {
+        console.log('Attempting to show account that does not exists.');
+        this.router.navigateByUrl('/account');
+      }
+    });
+  }
 
   async wipe() {
-    debugger;
     // Remove the active account from the array.
-    this.appState.persisted.accounts.splice(this.appState.persisted.activeAccountIndex, 1);
+    this.appState.activeWallet.accounts.splice(this.appState.persisted.activeAccountIndex, 1);
 
     if (this.appState.hasAccounts) {
       this.appState.persisted.activeAccountIndex = 0;
@@ -30,9 +48,9 @@ export class AccountRemoveComponent {
     await this.appState.save();
 
     if (this.appState.hasAccounts) {
-      this.router.navigateByUrl('/home');
+      this.router.navigateByUrl('/account/view/' + this.appState.persisted.activeAccountIndex);
     } else {
-      this.router.navigateByUrl('/account');
+      this.router.navigateByUrl('/account/create');
     }
 
   }

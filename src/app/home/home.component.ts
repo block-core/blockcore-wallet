@@ -69,11 +69,16 @@ export class HomeComponent {
   }
 
   async unlock() {
-    var unlockedMnemonic = await this.crypto.decryptData(this.appState.activeAccount.mnemonic, this.unlockPassword);
+    var unlockedMnemonic = await this.crypto.decryptData(this.appState.activeWallet.mnemonic, this.unlockPassword);
 
     if (unlockedMnemonic) {
       this.appState.unlocked = true;
-      this.router.navigateByUrl('/wallet');
+
+      if (this.appState.persisted.activeAccountIndex == null) {
+        this.appState.persisted.activeAccountIndex = 0;
+      }
+
+      this.router.navigateByUrl('/account/view/' + this.appState.persisted.activeAccountIndex);
     } else {
       this.error = 'Invalid password';
     }

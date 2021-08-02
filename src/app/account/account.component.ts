@@ -1,133 +1,43 @@
-import { Component, Inject, HostBinding, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, Inject, HostBinding, ChangeDetectorRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ApplicationState } from '../services/application-state.service';
 import { CryptoService } from '../services/crypto.service';
+import { ApplicationState } from '../services/application-state.service';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
-    selector: 'app-account',
-    templateUrl: './account.component.html',
-    styleUrls: ['./account.component.css']
+  selector: 'app-account',
+  templateUrl: './account.component.html'
 })
-export class AccountComponent implements OnInit {
-    mnemonic = '';
-    firstFormGroup!: FormGroup;
-    secondFormGroup!: FormGroup;
-    step = 0;
-    recover = false;
-    mnemonicInputDisabled = true;
-    password = '';
-    password2 = '';
+export class AccountComponent {
+  mnemonic = '';
+  password = '';
+  unlocked = '';
+  unlockPassword = '';
+  alarmName = 'refresh';
+  wallet: any;
+  account!: any;
 
-    get passwordValidated(): boolean {
-        return this.password === this.password2 && this.secondFormGroup.valid;
-    }
+  constructor(
+    public appState: ApplicationState,
+    private crypto: CryptoService,
+    private router: Router,
+    private activatedRoute: ActivatedRoute,
+    private cd: ChangeDetectorRef) {
 
-    constructor(private _formBuilder: FormBuilder,
-        public appState: ApplicationState,
-        private crypto: CryptoService,
-        private cd: ChangeDetectorRef
-    ) {
-        this.appState.title = 'Create new wallet';
-    }
+    this.appState.title = 'Account: ';
 
-    ngOnInit() {
-        this.firstFormGroup = this._formBuilder.group({
-            // firstCtrl: ['', Validators.required]
-        });
+    this.activatedRoute.paramMap.subscribe(async params => {
 
-        this.secondFormGroup = this._formBuilder.group({
-            passwordCtrl: ['', Validators.required],
-            password2Ctrl: ['', Validators.required]
-        });
-    }
+      console.log('PARAMS:', params);
+      const index: any = params.get('index');
+      console.log('Account Index:', Number(index));
 
-    generate() {
-        this.mnemonic = this.crypto.generateMnemonic();
-    }
+      this.appState.persisted.activeAccountIndex = Number(index);
 
-    copy() {
-        var textArea = document.createElement("textarea") as any;
+      // Persist when changing accounts.
+      this.appState.save();
 
-        // Place in the top-left corner of screen regardless of scroll position.
-        textArea.style.position = 'fixed';
-        textArea.style.top = 0;
-        textArea.style.left = 0;
-
-        // Ensure it has a small width and height. Setting to 1px / 1em
-        // doesn't work as this gives a negative w/h on some browsers.
-        textArea.style.width = '2em';
-        textArea.style.height = '2em';
-
-        // We don't need padding, reducing the size if it does flash render.
-        textArea.style.padding = 0;
-
-        // Clean up any borders.
-        textArea.style.border = 'none';
-        textArea.style.outline = 'none';
-        textArea.style.boxShadow = 'none';
-
-        // Avoid flash of the white box if rendered for any reason.
-        textArea.style.background = 'transparent';
-
-        textArea.value = this.mnemonic;
-
-        console.log(`${this.mnemonic}`);
-        console.log(`${textArea.value}`);
-
-        document.body.appendChild(textArea);
-        textArea.focus();
-        textArea.select();
-
-        try {
-            var successful = document.execCommand('copy');
-            var msg = successful ? 'successful' : 'unsuccessful';
-            console.log('Copying text command was ' + msg);
-        } catch (err) {
-            console.log('Oops, unable to copy');
-        }
-
-        document.body.removeChild(textArea);
-    }
-
-    create() {
-        this.step = 1;
-        this.recover = false;
-        this.generate();
-
-        this.firstFormGroup = this._formBuilder.group({
-            // firstCtrl: ['', Validators.required]
-        });
-    }
-
-    restore() {
-        this.step = 1;
-        this.recover = true;
-
-        this.firstFormGroup = this._formBuilder.group({
-            firstCtrl: ['', Validators.required]
-        });
-    }
-
-    async save() {
-        let recoveryPhrase = await this.crypto.encryptData(this.mnemonic, this.password);
-
-        if (!recoveryPhrase) {
-            console.error('Fatal error, unable to encrypt recovery phrase!');
-            alert('Fatal error, unable to encrypt recovery phrase!');
-        }
-        else {
-            this.appState.persisted.accounts.push({
-                name: 'Wallet ' + (this.appState.persisted.accounts.length + 1),
-                chains: ['identity', 'city'],
-                mnemonic: recoveryPhrase
-            });
-
-            // Make the newly created wallet the selected one.
-            this.appState.persisted.activeAccountIndex = this.appState.persisted.accounts.length - 1;
-
-            // Persist the state.
-            await this.appState.save();
-        }
-    }
+      this.appState.title = 'Account: ' + this.appState.activeAccount.name;
+    });
+  }
 }

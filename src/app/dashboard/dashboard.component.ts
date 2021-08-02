@@ -5,10 +5,10 @@ import { ApplicationState } from '../services/application-state.service';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-wallet',
-  templateUrl: './wallet.component.html'
+  selector: 'app-dashboard',
+  templateUrl: './dashboard.component.html'
 })
-export class WalletComponent {
+export class DashboardComponent {
   mnemonic = '';
   password = '';
   unlocked = '';
