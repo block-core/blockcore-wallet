@@ -106,11 +106,11 @@ export class ApplicationState {
 
     }
 
-    async load() {
+    async load() : Promise<{ data: any, action: string }> {
         // Immediately return a promise and start asynchronous work
         return new Promise((resolve, reject) => {
             // Asynchronously fetch all data from storage.sync.
-            chrome.storage.local.get(['data'], (items) => {
+            chrome.storage.local.get(['data', 'action'], (items: any) => {
                 // Pass any observed errors down the promise chain.
                 if (chrome.runtime.lastError) {
                     return reject(chrome.runtime.lastError);
@@ -123,7 +123,7 @@ export class ApplicationState {
                 // }
 
                 // // Pass the data retrieved from storage down the promise chain.
-                resolve(items.data);
+                resolve(items);
             });
         });
 

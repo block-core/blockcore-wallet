@@ -31,7 +31,9 @@
               "src/favicon.ico",
               "src/assets",
               "src/icons",
-              "src/manifest.json"
+              "src/manifest.json",
+              "src/provider.js",
+              "src/content.js"
             ],
             "styles": [
               "./node_modules/@angular/material/prebuilt-themes/pink-bluegrey.css",

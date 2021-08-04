@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Blockcore Provider - Sample Web Page</title>
+    <base href="/">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- <link rel="icon" type="image/x-icon" href="favicon.ico"> -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script src="blockcore-loader.js"></script>
+</head>
+
+<body>
+
+    <h1>Blockcore Provider - Sample Web Page</h1>
+
+    <button id="blockcore-extension-button" purpose="login">Click to sign with Blockcore</button>
+
+    <!-- <button id="blockcore-extension-button" purpose="signing">Sign with Blockcore</button> -->
+
+    <!-- <button onclick="connect();">Click to sign</button> with Blockcore Extension. -->
+
+    <script>
+        function connect() {
+            console.log('Attempting to connect with Blockcore Extension...');
+
+            // console.log(window.blockcore2);
+
+            if (!window.blockcore) {
+                alert('The Blockcore Provider has not loaded.');
+            } else {
+                var provider = window.blockcore;
+
+                window.blockcore.open();
+
+                // Subscribe to accounts change
+                provider.on("accountsChanged", (accounts) => {
+                    console.log(accounts);
+                });
+
+                // Subscribe to chainId change
+                provider.on("networkChanged", (chainId) => {
+                    console.log(chainId);
+                });
+
+                // Subscribe to session disconnection
+                provider.on("disconnect", (code, reason) => {
+                    console.log(code, reason);
+                });
+
+                // Open the UI:
+                // provider.open();
+
+                // console.log(provider);
+                // const accounts = provider.getAccounts();
+            }
+        }
+    </script>
+
+</body>
+
+</html>

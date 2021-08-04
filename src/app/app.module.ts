@@ -38,6 +38,7 @@ import { WalletEditComponent } from './wallet/edit/edit.component';
 import { AccountCreateComponent } from './account/create/create.component';
 import { AccountComponent } from './account/account.component';
 import { SettingsComponent } from './settings/settings.component';
+import { ActionSignComponent } from './action/sign/sign.component';
 
 @NgModule({
   declarations: [
@@ -53,7 +54,8 @@ import { SettingsComponent } from './settings/settings.component';
     WalletCreateComponent,
     WalletEditComponent,
     WalletRemoveComponent,
-    SettingsComponent
+    SettingsComponent,
+    ActionSignComponent
   ],
   imports: [
     BrowserModule,

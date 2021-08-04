@@ -1,4 +1,5 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
+import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
 import { Router } from '@angular/router';
 import { ApplicationState } from './services/application-state.service';
@@ -11,17 +12,31 @@ import { ApplicationState } from './services/application-state.service';
 export class AppComponent implements OnInit {
   title = 'blockcore-extension';
   wallet: any;
-  
-
   @ViewChild('drawer') drawer!: MatSidenav;
   @ViewChild('draweraccount') draweraccount!: MatSidenav;
 
   constructor(public appState: ApplicationState,
-    private router: Router) {
+    private router: Router,
+    @Inject(DOCUMENT) private document: Document) {
 
   }
 
   ngOnInit(): void {
+
+    // console.log(chrome.extension.getViews({ type: "tab" }));
+
+    const isInPopup = function () {
+      return (typeof chrome != undefined && chrome.extension) ?
+        chrome.extension.getViews({ type: "popup" }).length > 0 : null;
+    }
+
+    if (!isInPopup()) {
+      // When the extension is rendered in full screen, we'll add an extra class to body.
+      this.document.body.classList.add('full-mode');
+
+    } else {
+      //If you are already in the tab, do something else 
+    }
 
   }
 

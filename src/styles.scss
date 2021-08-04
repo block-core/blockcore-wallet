@@ -6,13 +6,21 @@ body {
 }
 
 body {
-    width: 400px; /* This is the width of the extension window */
-    height: 540px;
     margin: 0;
     font-size: 16px;
     font-family: Roboto, "Helvetica Neue", sans-serif;
     background-color: #212121;
     color: white;
+}
+
+.popup-mode {
+    width: 400px;
+    height: 540px;
+}
+
+.full-mode {
+    width: 100% !important;
+    height: 100% !important;
 }
 
 header {
@@ -27,6 +35,9 @@ header {
 
 .page {
     padding: 2em;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .input-full-width {
@@ -52,16 +63,16 @@ select {
 ::-webkit-scrollbar {
     width: 12px;
     height: 12px;
-  }
-  
-  ::-webkit-scrollbar-track {
+}
+
+::-webkit-scrollbar-track {
     background: rgba(0, 0, 0, 0.2);
-  }
-  
-  ::-webkit-scrollbar-thumb {
+}
+
+::-webkit-scrollbar-thumb {
     background: rgba(0, 0, 0, 0.35);
-  }
-  
-  ::-webkit-scrollbar-thumb:hover {
+}
+
+::-webkit-scrollbar-thumb:hover {
     background: rgba(0, 0, 0, 0.15);
-  }
+}

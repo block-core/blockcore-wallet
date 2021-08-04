@@ -12,6 +12,7 @@ import { AccountCreateComponent } from './account/create/create.component';
 import { AccountRemoveComponent } from './account/remove/remove.component';
 import { AccountComponent } from './account/account.component';
 import { SettingsComponent } from './settings/settings.component';
+import { ActionSignComponent } from './action/sign/sign.component';
 
 const routes: Routes = [
   {
@@ -52,6 +53,9 @@ const routes: Routes = [
   },
   {
     path: 'wallet/remove', component: WalletRemoveComponent
+  },
+  {
+    path: 'action/sign', component: ActionSignComponent
   }
 ];
 

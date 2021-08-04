@@ -1,9 +1,9 @@
 {
-    "name": "Blockcore Extension",
+    "name": "Blockcore",
     "version": "0.0.0.1",
     "manifest_version": 2,
     "description": "Browser extension for Blockcore.",
-    "author": "Blockcore",
+    "author": "https://www.blockcore.net",
     "icons": {
         "16": "icons/blockcore-16x16.png",
         "32": "icons/blockcore-32x32.png",
@@ -11,22 +11,48 @@
         "128": "icons/blockcore-128x128.png"
     },
     "permissions": [
-        "storage",
         "activeTab",
         "tabs",
+        "storage",
         "unlimitedStorage",
         "webRequest",
         "webNavigation",
         "alarms",
-        "clipboardWrite"
+        "clipboardWrite",
+        "notifications"
     ],
     "background": {
         "scripts": [
             "background.js",
             "runtime.js"
-        ]
+        ],
+        "persistent": true
     },
     "browser_action": {
-        "default_popup": "index.html"
-    }
+        "default_popup": "index.html",
+        "default_title": "Blockcore"
+    },
+    "content_scripts": [
+        {
+            "all_frames": true,
+            "js": [
+                "content.js"
+            ],
+            "matches": [
+                "file://*/*",
+                "http://*/*",
+                "https://*/*"
+            ],
+            "run_at": "document_start"
+        }
+    ],
+    "externally_connectable": {
+        "matches": [
+            "https://www.blockcore.net/*",
+            "http://localhost/*"
+        ]
+    },
+    "web_accessible_resources": [
+        "provider.js"
+    ]
 }

@@ -7,7 +7,8 @@ import { Persisted } from '../interfaces';
 
 @Component({
   selector: 'app-loading',
-  templateUrl: './loading.component.html'
+  templateUrl: './loading.component.html',
+  styleUrls: ['./loading.component.css']
 })
 export class LoadingComponent implements OnInit {
   constructor(
@@ -22,26 +23,34 @@ export class LoadingComponent implements OnInit {
     // Perform the initial load of the application state.
     var state = await this.appState.load();
 
-    if (state) {
-      this.appState.persisted = state as Persisted;
+    if (state.data) {
+      this.appState.persisted = state.data as Persisted;
     }
 
-    this.appState.loading = false;
+    // TODO: Remove this fake loader when closer to production.
+    setTimeout(() => {
 
-    // Select the previous selected account.
-    // if (this.appState.hasWallets) {
-    //   this.appState.activeWallet = this.appState.persisted.wallets[0];
-    // }
+      this.appState.loading = false;
+      console.log(JSON.stringify(this.appState));
+      console.log('redirect...');
 
-    console.log(JSON.stringify(this.appState));
+      if (state.action) {
+        console.log('ACTION WAS TRIGGERED!');
+        this.router.navigateByUrl('/action/sign');
+      }
+      else {
+        // Select the previous selected account.
+        // if (this.appState.hasWallets) {
+        //   this.appState.activeWallet = this.appState.persisted.wallets[0];
+        // }
+        if (!this.appState.hasWallets) {
+          this.router.navigateByUrl('/wallet/create');
+        }
+        else {
+          this.router.navigateByUrl('/home');
+        }
+      }
 
-    console.log('redirect...');
-
-    if (!this.appState.hasWallets) {
-      this.router.navigateByUrl('/wallet/create');
-    }
-    else {
-      this.router.navigateByUrl('/home');
-    }
+    }, 1000);
   }
 }

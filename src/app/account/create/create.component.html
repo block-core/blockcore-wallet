@@ -13,6 +13,8 @@
         </mat-select>
     </mat-form-field>
 
+    <br>
+
     <mat-form-field appearance="fill" *ngIf="appState.hasWallets">
         <mat-label>Account Index</mat-label>
         <mat-select (selectionChange)="onAccountIndexChanged($event)" [(value)]="index">
@@ -20,10 +22,14 @@
         </mat-select>
     </mat-form-field>
 
+    <br>
+
     <mat-form-field class="input-full-width" appearance="outline">
         <mat-label>Account Derivation Path</mat-label>
         <input matInput [(ngModel)]="derivationPath" required>
     </mat-form-field>
+
+    <br>
 
     <mat-form-field class="input-full-width" appearance="outline">
         <mat-label>Name</mat-label>
