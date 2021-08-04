@@ -8,7 +8,7 @@
 
     <mat-form-field appearance="outline" class="input-full-width">
         <mat-label>Password</mat-label>
-        <input matInput type="password" [(ngModel)]="unlockPassword" placeholder="Password">
+        <input matInput type="password" [(ngModel)]="unlockPassword" placeholder="Password" (keydown.enter)="unlock()">
     </mat-form-field>
 
     <div class="error-list">
