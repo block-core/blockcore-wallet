@@ -17,6 +17,7 @@ export class LoadingComponent implements OnInit {
     private router: Router,
     private cd: ChangeDetectorRef
   ) {
+    this.appState.title = 'Loading...';
   }
 
   async ngOnInit() {
@@ -29,13 +30,9 @@ export class LoadingComponent implements OnInit {
 
     // TODO: Remove this fake loader when closer to production.
     setTimeout(() => {
-
       this.appState.loading = false;
-      console.log(JSON.stringify(this.appState));
-      console.log('redirect...');
 
       if (state.action) {
-        console.log('ACTION WAS TRIGGERED!');
         this.router.navigateByUrl('/action/sign');
       }
       else {
@@ -51,6 +48,6 @@ export class LoadingComponent implements OnInit {
         }
       }
 
-    }, 1000);
+    }, 500);
   }
 }

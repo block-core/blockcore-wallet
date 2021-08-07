@@ -21,6 +21,16 @@
         "clipboardWrite",
         "notifications"
     ],
+    "commands": {
+        "_execute_browser_action": {
+            "suggested_key": {
+                "windows": "Alt+Shift+X",
+                "mac": "Alt+Shift+X",
+                "chromeos": "Alt+Shift+X",
+                "linux": "Alt+Shift+X"
+            }
+        }
+    },
     "background": {
         "scripts": [
             "background.js",

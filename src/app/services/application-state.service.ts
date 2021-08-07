@@ -1,14 +1,16 @@
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
-import { EventEmitter, Injectable } from '@angular/core';
+import { EventEmitter, Injectable, NgZone } from '@angular/core';
 import { Persisted, Wallet } from '../interfaces';
+import { MINUTE } from '../shared/constants';
+import { Router } from '@angular/router';
 
 @Injectable({
     providedIn: 'root'
 })
 export class ApplicationState {
 
-    constructor() {
+    constructor(private router: Router, private ngZone: NgZone) {
     }
 
     persisted: Persisted = {
@@ -68,6 +70,14 @@ export class ApplicationState {
 
     unlocked = false;
 
+    unlockedMnemonic!: string;
+
+    timer: any;
+
+    password!: string | null;
+
+    port!: chrome.runtime.Port | null;
+
     // changeAccount(index: number) {
     //     if (index < 0) {
     //         this.persisted.activeAccountIndex = -1;
@@ -82,6 +92,41 @@ export class ApplicationState {
     //     }
     // }
 
+    active() {
+        console.log('active:');
+        this.resetTimer();
+    }
+
+    onInactiveTimeout() {
+        console.log('onInactiveTimeout:');
+        this.unlockedMnemonic = '';
+        this.unlocked = false;
+
+        console.log('redirect to root:');
+        // Redirect to root and log user out of their wallet.
+        this.router.navigateByUrl('/');
+    }
+
+    resetTimer() {
+        console.log('resetTimer:', this.persisted.autoTimeout * MINUTE);
+        if (this.timer) {
+            clearTimeout(this.timer);
+        }
+
+        // We will only set timer if the wallet is actually unlocked.
+        if (this.unlocked) {
+            console.log('Setting timer to automatically unlock.');
+            this.timer = setTimeout(
+                () => this.ngZone.run(() => {
+                    this.onInactiveTimeout()
+                }),
+                this.persisted.autoTimeout * MINUTE
+            );
+        } else {
+            console.log('Timer not set since wallet is not unlocked.');
+        }
+    }
+
     async save(): Promise<void> {
 
         // Immediately return a promise and start asynchronous work
@@ -95,6 +140,9 @@ export class ApplicationState {
 
                 console.log('SAVED!');
 
+                // Update the timer, the timeout might have changed.
+                this.resetTimer();
+
                 // Pass any observed errors down the promise chain.
                 if (chrome.runtime.lastError) {
                     return reject(chrome.runtime.lastError);
@@ -106,7 +154,7 @@ export class ApplicationState {
 
     }
 
-    async load() : Promise<{ data: any, action: string }> {
+    async load(): Promise<{ data: any, action: string }> {
         // Immediately return a promise and start asynchronous work
         return new Promise((resolve, reject) => {
             // Asynchronously fetch all data from storage.sync.

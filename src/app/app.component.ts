@@ -1,7 +1,7 @@
 import { DOCUMENT } from '@angular/common';
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
-import { Router } from '@angular/router';
+import { NavigationEnd, Router } from '@angular/router';
 import { ApplicationState } from './services/application-state.service';
 
 @Component({
@@ -19,6 +19,11 @@ export class AppComponent implements OnInit {
     private router: Router,
     @Inject(DOCUMENT) private document: Document) {
 
+    router.events.subscribe((val) => {
+      if (val instanceof NavigationEnd) {
+        this.appState.active();
+      }
+    });
   }
 
   ngOnInit(): void {
@@ -38,19 +43,47 @@ export class AppComponent implements OnInit {
       //If you are already in the tab, do something else 
     }
 
+    this.appState.port = chrome.runtime.connect({ name: 'app-state' });
+
+    this.appState.port.onMessage.addListener(message => {
+      console.log('onMessage:', message);
+      console.log(window.location.origin);
+      // window.postMessage(message, window.location.origin);
+
+      debugger;
+
+      if (message.method == 'unlocked') {
+        console.log('UNLOCKED! YEEE!', message);
+      } else if (message.method == 'getlock') {
+        this.appState.password = message.data;
+      }
+
+    });
+
+    this.appState.port.onDisconnect.addListener(d => {
+      this.appState.port = null;
+    });
+
+    // this.appState.port.postMessage({ question: 'Why is it?' });
+    // this.appState.port.postMessage({ method: 'unlocked' });
+    this.appState.port.postMessage({ method: 'getlock' });
+
+    // window.postMessage('Hello World!!!', window.location.origin);
   }
 
   lock() {
     // TODO: We also must remove the master key at this time, but we currently don't keep master key in-memory.
     this.appState.unlocked = false;
+
+    this.appState.port?.postMessage({ method: 'lock' });
+    this.appState.password = null;
+
     this.drawer.close();
     this.router.navigateByUrl('/home');
   }
 
   async onAccountChanged(event: any) {
     const walletIndex = event.value;
-
-    console.log(JSON.stringify(this.appState.persisted));
 
     this.drawer.close();
 

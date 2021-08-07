@@ -1,4 +1,4 @@
-import { Component, Inject, HostBinding, ChangeDetectorRef } from '@angular/core';
+import { Component, Inject, HostBinding, ChangeDetectorRef, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { CryptoService } from '../services/crypto.service';
 import { ApplicationState } from '../services/application-state.service';
@@ -10,7 +10,7 @@ import { Router } from '@angular/router';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
-export class HomeComponent {
+export class HomeComponent implements OnInit {
   mnemonic = '';
   password = '';
   unlocked = '';
@@ -81,9 +81,21 @@ export class HomeComponent {
         this.appState.persisted.activeAccountIndex = 0;
       }
 
+      // Keep the unlocked mnemonic in-memory until auto-lock timer removes it.
+      this.appState.unlockedMnemonic = unlockedMnemonic;
+
+      this.appState.port?.postMessage({ method: 'unlock', data: this.unlockPassword });
+
       this.router.navigateByUrl('/account/view/' + this.appState.persisted.activeAccountIndex);
     } else {
       this.error = 'Invalid password';
+    }
+  }
+
+  ngOnInit(): void {
+    if (this.appState.password) {
+      this.unlockPassword = this.appState.password;
+      this.unlock();
     }
   }
 }
