@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { Location } from '@angular/common'
 import { UIState } from 'src/app/services/ui-state.service';
 import { CommunicationService } from 'src/app/services/communication.service';
+import { OrchestratorService } from 'src/app/services/orchestrator.service';
 
 @Component({
   selector: 'app-wallet-edit',
@@ -18,6 +19,7 @@ export class WalletEditComponent {
     private router: Router,
     private location: Location,
     private communication: CommunicationService,
+    private manager: OrchestratorService,
     public uiState: UIState
   ) {
     this.uiState.title = 'Edit Wallet'
@@ -25,7 +27,11 @@ export class WalletEditComponent {
   }
 
   async save() {
-    this.communication.send('wallet-rename', this.walletName);
+    if (!this.uiState.activeWallet || !this.walletName) {
+      return;
+    }
+
+    this.manager.setWalletName(this.uiState.activeWallet?.id, this.walletName);
 
     // if (this.uiState.activeWallet) {
     //   this.uiState.activeWallet.name = this.walletName;

@@ -94,6 +94,10 @@ export class OrchestratorService {
         this.communication.send('set-account-name', { id, index, name });
     }
 
+    setWalletName(id: string, name: string) {
+        this.communication.send('set-wallet-name', { id, name });
+    }
+
     unlock(id: string, password: string) {
         this.communication.send('wallet-unlock', { id, password });
     }

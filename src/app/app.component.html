@@ -21,14 +21,14 @@
         <mat-label>Choose Wallet</mat-label>
         <mat-select (selectionChange)="onAccountChanged($event)" [(value)]="uiState.persisted.activeWalletId">
           <mat-option [value]="''">Create new wallet</mat-option>
-          <mat-option *ngFor="let wallet of uiState.persisted.wallets.values();" [value]="wallet.id">{{wallet.name}}
+          <mat-option *ngFor="let wallet of uiState.persisted.wallets;" [value]="wallet.id">{{wallet.name}}
           </mat-option>
         </mat-select>
       </mat-form-field>
 
       <a mat-list-item *ngIf="uiState.activeWallet && !uiState.activeWalletUnlocked" [routerLink]="['/home']"
       (click)="drawer.toggle()" routerLinkActive="active-link">
-      <mat-icon mat-list-icon>lock</mat-icon>
+      <mat-icon mat-list-icon>lock_open</mat-icon>
       <div mat-line>Unlock Wallet</div>
     </a>
 
