@@ -1,8 +1,10 @@
-import { Component, Inject, HostBinding, ChangeDetectorRef, OnInit } from '@angular/core';
+import { Component, Inject, HostBinding, ChangeDetectorRef, OnInit, OnDestroy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { CryptoService } from '../services/crypto.service';
-import { ApplicationState } from '../services/application-state.service';
+import { UIState } from '../services/ui-state.service';
 import { Router } from '@angular/router';
+import { OrchestratorService } from '../services/orchestrator.service';
+import { CommunicationService } from '../services/communication.service';
 
 
 @Component({
@@ -10,7 +12,7 @@ import { Router } from '@angular/router';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
   mnemonic = '';
   password = '';
   unlocked = '';
@@ -18,17 +20,27 @@ export class HomeComponent implements OnInit {
   alarmName = 'refresh';
   wallet: any;
   error = '';
+  sub: any;
 
   constructor(
-    public appState: ApplicationState,
+    public uiState: UIState,
     private crypto: CryptoService,
     private router: Router,
+    private communication: CommunicationService,
+    private manager: OrchestratorService,
     private cd: ChangeDetectorRef) {
 
-    this.appState.title = 'Unlock wallet';
-
+    this.uiState.title = 'Unlock wallet';
     this.activateAlarm();
 
+    // When on home page and when unlocked, open account.
+    this.sub = this.communication.listen('wallet-unlocked', () => {
+      this.router.navigateByUrl('/account/view/' + this.uiState.activeWallet?.activeAccountIndex);
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.communication.unlisten(this.sub);
   }
 
   removeError(): void {
@@ -64,38 +76,42 @@ export class HomeComponent implements OnInit {
     this.unlocked = '';
     this.unlockPassword = '';
 
-    await this.appState.save();
+    // await this.uiState.save();
   }
 
   async unlock() {
-    let unlockedMnemonic = null;
-
-    if (this.appState.activeWallet) {
-      unlockedMnemonic = await this.crypto.decryptData(this.appState.activeWallet?.mnemonic, this.unlockPassword);
+    if (this.uiState.activeWallet) {
+      this.manager.unlock(this.uiState.activeWallet.id, this.unlockPassword);
     }
 
-    if (unlockedMnemonic) {
-      this.appState.unlocked = true;
+    // let unlockedMnemonic = null;
 
-      if (this.appState.persisted.activeAccountIndex == null) {
-        this.appState.persisted.activeAccountIndex = 0;
-      }
+    // if (this.uiState.activeWallet) {
+    //   unlockedMnemonic = await this.crypto.decryptData(this.uiState.activeWallet?.mnemonic, this.unlockPassword);
+    // }
 
-      // Keep the unlocked mnemonic in-memory until auto-lock timer removes it.
-      this.appState.unlockedMnemonic = unlockedMnemonic;
+    // if (unlockedMnemonic) {
+    //   this.uiState.unlocked = true;
 
-      this.appState.port?.postMessage({ method: 'unlock', data: this.unlockPassword });
+    //   if (this.uiState.persisted.activeAccountIndex == null) {
+    //     this.uiState.persisted.activeAccountIndex = 0;
+    //   }
 
-      this.router.navigateByUrl('/account/view/' + this.appState.persisted.activeAccountIndex);
-    } else {
-      this.error = 'Invalid password';
-    }
+    //   // Keep the unlocked mnemonic in-memory until auto-lock timer removes it.
+    //   this.uiState.unlockedMnemonic = unlockedMnemonic;
+
+    //   this.uiState.port?.postMessage({ method: 'unlock', data: this.unlockPassword });
+
+    //   this.router.navigateByUrl('/account/view/' + this.uiState.persisted.activeAccountIndex);
+    // } else {
+    //   this.error = 'Invalid password';
+    // }
   }
 
   ngOnInit(): void {
-    if (this.appState.password) {
-      this.unlockPassword = this.appState.password;
-      this.unlock();
-    }
+    // if (this.uiState.password) {
+    //   this.unlockPassword = this.uiState.password;
+    //   this.unlock();
+    // }
   }
 }

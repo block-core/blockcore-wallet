@@ -2,7 +2,8 @@ import { Component, Inject, HostBinding } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common'
-import { ApplicationState } from 'src/app/services/application-state.service';
+import { UIState } from 'src/app/services/ui-state.service';
+import { CommunicationService } from 'src/app/services/communication.service';
 
 @Component({
   selector: 'app-wallet-remove',
@@ -13,25 +14,28 @@ export class WalletRemoveComponent {
   constructor(
     private router: Router,
     private location: Location,
-    public appState: ApplicationState
+    private communication: CommunicationService,
+    public uiState: UIState
   ) {
+    this.uiState.title = 'Delete Wallet';
 
-    this.appState.title = 'Delete Wallet';
   }
 
   async wipe() {
     // Remove the active wallet from the array.
-    this.appState.persisted.wallets.splice(this.appState.persisted.activeWalletIndex, 1);
+    this.communication.send('wallet-remove', { id: this.uiState.persisted.activeWalletId });
 
-    if (this.appState.hasWallets) {
-      this.appState.persisted.activeWalletIndex = 0;
-    } else {
-      this.appState.persisted.activeWalletIndex = -1;
-    }
+    // this.uiState.persisted.wallets.splice(this.uiState.persisted.activeWalletIndex, 1);
 
-    await this.appState.save();
+    // if (this.uiState.hasWallets) {
+    //   this.uiState.persisted.activeWalletIndex = 0;
+    // } else {
+    //   this.uiState.persisted.activeWalletIndex = -1;
+    // }
 
-    if (this.appState.hasWallets) {
+    // await this.uiState.save();
+
+    if (this.uiState.hasWallets) {
       this.router.navigateByUrl('/home');
     } else {
       this.router.navigateByUrl('/wallet/create');

@@ -1,8 +1,8 @@
-<div *ngIf="appState.loading">
+<div *ngIf="uiState.loading">
   <router-outlet></router-outlet>
 </div>
 
-<mat-sidenav-container class="sidenav-container" *ngIf="!appState.loading">
+<mat-sidenav-container class="sidenav-container" *ngIf="!uiState.loading">
   <mat-sidenav #drawer class="sidenav print-hidden" fixedInViewport [attr.role]="'navigation'" [mode]="'over'">
 
     <mat-toolbar class="logo-icon">
@@ -17,27 +17,33 @@
 
     <mat-nav-list class="menu-options">
 
-      <mat-form-field appearance="fill" *ngIf="appState.hasWallets">
+      <mat-form-field appearance="fill" *ngIf="uiState.hasWallets">
         <mat-label>Choose Wallet</mat-label>
-        <mat-select (selectionChange)="onAccountChanged($event)" [(value)]="appState.persisted.activeWalletIndex">
-          <mat-option [value]="-1">Create new wallet</mat-option>
-          <mat-option *ngFor="let wallet of appState.persisted.wallets; let i = index" [value]="i">{{wallet.name}}
+        <mat-select (selectionChange)="onAccountChanged($event)" [(value)]="uiState.persisted.activeWalletId">
+          <mat-option [value]="''">Create new wallet</mat-option>
+          <mat-option *ngFor="let wallet of uiState.persisted.wallets.values();" [value]="wallet.id">{{wallet.name}}
           </mat-option>
         </mat-select>
       </mat-form-field>
 
-      <a mat-list-item *ngIf="appState.activeWallet && appState.unlocked" [routerLink]="['/wallet', 'edit']"
+      <a mat-list-item *ngIf="uiState.activeWallet && !uiState.activeWalletUnlocked" [routerLink]="['/home']"
+      (click)="drawer.toggle()" routerLinkActive="active-link">
+      <mat-icon mat-list-icon>lock</mat-icon>
+      <div mat-line>Unlock Wallet</div>
+    </a>
+
+      <a mat-list-item *ngIf="uiState.activeWallet && uiState.activeWalletUnlocked" [routerLink]="['/wallet', 'edit']"
         (click)="drawer.toggle()" routerLinkActive="active-link">
         <mat-icon mat-list-icon>edit</mat-icon>
         <div mat-line>Edit Wallet</div>
       </a>
 
-      <mat-list-item *ngIf="appState.activeWallet && appState.unlocked" (click)="lock()" routerLinkActive="active-link">
+      <mat-list-item *ngIf="uiState.activeWallet && uiState.activeWalletUnlocked" (click)="lock()" routerLinkActive="active-link">
         <mat-icon mat-list-icon>lock</mat-icon>
         <div mat-line>Lock Wallet</div>
       </mat-list-item>
 
-      <a mat-list-item *ngIf="appState.activeWallet" [routerLink]="['/wallet', 'remove']" (click)="drawer.toggle()"
+      <a mat-list-item *ngIf="uiState.activeWallet" [routerLink]="['/wallet', 'remove']" (click)="drawer.toggle()"
         routerLinkActive="active-link">
         <mat-icon mat-list-icon>delete</mat-icon>
         <div mat-line>Remove Wallet</div>
@@ -75,18 +81,18 @@
       <div>Blockcore</div>
     </mat-toolbar> -->
 
-    <div class="account-details" *ngIf="appState.activeAccount">
-      <h2>{{appState.activeAccount.name}}</h2>
+    <div class="account-details" *ngIf="uiState.activeAccount">
+      <h2>{{uiState.activeAccount.name}}</h2>
 
       <div class="detail-box">
         <mat-icon mat-list-icon>account_circle</mat-icon>
         <div class="detail-network">
-          {{appState.activeAccount.network}}<br>
-          {{appState.activeAccount.derivationPath}}
+          {{uiState.activeAccount.network}}<br>
+          {{uiState.activeAccount.derivationPath}}
         </div>
       </div>
 
-      <button mat-button [routerLink]="['account', 'edit', appState.persisted.activeAccountIndex]" (click)="draweraccount.toggle()">Edit account</button>
+      <button mat-button [routerLink]="['account', 'edit', uiState.activeWallet?.activeAccountIndex]" (click)="draweraccount.toggle()">Edit account</button>
 
     </div>
 
@@ -97,7 +103,7 @@
       <button mat-menu-item>Wallet 2</button>
     </mat-menu>
 
-    <mat-nav-list class="menu-options" *ngIf="appState.activeWallet && appState.unlocked">
+    <mat-nav-list class="menu-options" *ngIf="uiState.activeWallet && uiState.activeWalletUnlocked">
 
       <!-- <mat-form-field appearance="fill" *ngIf="appState.hasWallets">
         <mat-label>Choose Wallet</mat-label>
@@ -108,7 +114,7 @@
         </mat-select>
       </mat-form-field> -->
 
-      <a mat-list-item *ngFor="let account of appState.activeWallet.accounts; let i = index" [routerLink]="['account', 'view', i]" (click)="draweraccount.toggle()" routerLinkActive="active-link">
+      <a mat-list-item *ngFor="let account of uiState.activeWallet.accounts; let i = index" [routerLink]="['account', 'view', i]" (click)="draweraccount.toggle()" routerLinkActive="active-link">
         <mat-icon mat-list-icon>account_circle</mat-icon>
         <div mat-line>{{account.name}}</div>
         <div mat-line>{{account.network}}</div>
@@ -143,7 +149,7 @@
         </mat-select>
       </mat-form-field> -->
 
-      <a mat-list-item *ngIf="appState.activeWallet && appState.unlocked" [routerLink]="['/account/create']"
+      <a mat-list-item *ngIf="uiState.activeWallet && uiState.unlocked" [routerLink]="['/account/create']"
         (click)="draweraccount.toggle()" routerLinkActive="active-link">
         <mat-icon mat-list-icon>add_circle_outline</mat-icon>
         <div mat-line>Add Account</div>
@@ -153,15 +159,15 @@
   </mat-sidenav>
   <mat-sidenav-content>
     <mat-toolbar class="print-hidden">
-      <button type="button" *ngIf="appState.hasWallets" aria-label="Toggle sidenav" mat-icon-button
+      <button type="button" *ngIf="uiState.hasWallets" aria-label="Toggle sidenav" mat-icon-button
         (click)="drawer.toggle()">
         <mat-icon>menu</mat-icon>
       </button>
       <span></span>
 
-      <span class="example-spacer">{{appState.title}}</span>
+      <span class="example-spacer">{{uiState.title}}</span>
 
-      <button *ngIf="appState.unlocked" mat-icon-button (click)="draweraccount.toggle()">
+      <button *ngIf="uiState.activeWalletUnlocked" mat-icon-button (click)="draweraccount.toggle()">
         <mat-icon>account_circle</mat-icon>
       </button>
 

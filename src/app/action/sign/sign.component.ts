@@ -1,7 +1,7 @@
 import { Component, Inject, HostBinding, ChangeDetectorRef, ApplicationRef, NgZone } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { CryptoService } from '../../services/crypto.service';
-import { ApplicationState } from '../../services/application-state.service';
+import { UIState } from '../../services/ui-state.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -18,14 +18,14 @@ export class ActionSignComponent {
     wallet: any;
 
     constructor(
-        public appState: ApplicationState,
+        public uiState: UIState,
         private crypto: CryptoService,
         private router: Router,
         private app: ApplicationRef,
         private ngZone: NgZone,
         private cd: ChangeDetectorRef) {
 
-        this.appState.title = 'Action: Signing';
+        this.uiState.title = 'Action: Signing';
 
         // this.ngZone.run(() => this.router.navigate(["login"])).then();
 
@@ -36,8 +36,8 @@ export class ActionSignComponent {
         chrome.storage.local.set({ action: null }, () => {
             // this.app.tick();
             this.ngZone.run(() => {
-                this.appState.title = '';
-                this.appState.loading = true;
+                this.uiState.title = '';
+                this.uiState.loading = true;
                 this.router.navigateByUrl('/');
             });
         });

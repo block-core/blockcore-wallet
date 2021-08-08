@@ -2,7 +2,8 @@ import { Component, Inject, HostBinding } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common'
-import { ApplicationState } from 'src/app/services/application-state.service';
+import { UIState } from 'src/app/services/ui-state.service';
+import { OrchestratorService } from 'src/app/services/orchestrator.service';
 
 @Component({
   selector: 'app-remove',
@@ -13,10 +14,11 @@ export class AccountRemoveComponent {
   constructor(
     private router: Router,
     private location: Location,
-    public appState: ApplicationState,
+    private manager: OrchestratorService,
+    public uiState: UIState,
     private activatedRoute: ActivatedRoute,
   ) {
-    this.appState.title = 'Remove Account';
+    this.uiState.title = 'Remove Account';
 
     this.activatedRoute.paramMap.subscribe(async params => {
 
@@ -24,37 +26,33 @@ export class AccountRemoveComponent {
       const index: any = params.get('index');
       console.log('Account Index:', Number(index));
 
-      const accountCount = this.appState.activeWallet?.accounts?.length;
+      const accountCount = this.uiState.activeWallet?.accounts?.length;
 
-      // Check if the index is available before allowing to change.
-      if (index != -1 && accountCount != null && index < accountCount) {
-        this.appState.persisted.activeAccountIndex = Number(index);
+      if (this.uiState.activeWallet) {
+        // Check if the index is available before allowing to change.
+        if (index != -1 && accountCount != null && index < accountCount) {
+          this.uiState.activeWallet.activeAccountIndex = Number(index);
+        }
+        else {
+          console.log('Attempting to show account that does not exists.');
+          this.router.navigateByUrl('/account');
+        }
       }
       else {
-        console.log('Attempting to show account that does not exists.');
-        this.router.navigateByUrl('/account');
+        console.log('Attempting to show account when no wallet is selected.');
+        this.router.navigateByUrl('/');
       }
     });
   }
 
   async wipe() {
-    // Remove the active account from the array.
-    this.appState.activeWallet?.accounts.splice(this.appState.persisted.activeAccountIndex, 1);
-
-    if (this.appState.hasAccounts) {
-      this.appState.persisted.activeAccountIndex = 0;
-    } else {
-      this.appState.persisted.activeAccountIndex = -1;
+    if (!this.uiState.activeWallet) {
+      return;
     }
 
-    await this.appState.save();
+    var activeWallet = this.uiState.activeWallet;
 
-    if (this.appState.hasAccounts) {
-      this.router.navigateByUrl('/account/view/' + this.appState.persisted.activeAccountIndex);
-    } else {
-      this.router.navigateByUrl('/account/create');
-    }
-
+    this.manager.removeAccount(activeWallet.id, activeWallet.activeAccountIndex);
   }
 
   cancel() {

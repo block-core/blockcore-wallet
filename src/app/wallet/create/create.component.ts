@@ -1,8 +1,11 @@
 import { Component, Inject, HostBinding, OnInit, ChangeDetectorRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ApplicationState } from '../../services/application-state.service';
+import { UIState } from '../../services/ui-state.service';
 import { CryptoService } from '../../services/crypto.service';
+import { CommunicationService } from 'src/app/services/communication.service';
+import { Wallet } from 'src/app/interfaces';
+const { v4: uuidv4 } = require('uuid');
 
 @Component({
     selector: 'app-wallet-create',
@@ -24,11 +27,12 @@ export class WalletCreateComponent implements OnInit {
     }
 
     constructor(private _formBuilder: FormBuilder,
-        public appState: ApplicationState,
+        public uiState: UIState,
         private crypto: CryptoService,
+        private communication: CommunicationService,
         private cd: ChangeDetectorRef
     ) {
-        this.appState.title = 'Create new wallet';
+        this.uiState.title = 'Create new wallet';
     }
 
     ngOnInit() {
@@ -111,15 +115,18 @@ export class WalletCreateComponent implements OnInit {
 
     async save() {
         let recoveryPhrase = await this.crypto.encryptData(this.mnemonic, this.password);
+        const id = uuidv4();
 
         if (!recoveryPhrase) {
             console.error('Fatal error, unable to encrypt secret recovery phrase!');
             alert('Fatal error, unable to encrypt secret recovery phrase!');
         }
         else {
-            this.appState.persisted.wallets.push({
-                name: 'Wallet ' + (this.appState.persisted.wallets.length + 1),
+            var wallet : Wallet = {
+                id: id,
+                name: 'Wallet ' + (this.uiState.persisted.wallets.length + 1),
                 mnemonic: recoveryPhrase,
+                activeAccountIndex: 0,
                 accounts: [
                     {
                         index: 0,
@@ -129,13 +136,31 @@ export class WalletCreateComponent implements OnInit {
                         derivationPath: `302'/616'`
                     }
                 ]
-            });
+            };
+
+            this.communication.send('wallet-create', wallet);
 
             // Make the newly created wallet the selected one.
-            this.appState.persisted.activeWalletIndex = this.appState.persisted.wallets.length - 1;
+            // this.uiState.persisted.activeWalletId = id;
+
+            // this.communication.send('set-active-wallet-index', walletIndex);
+
+            // this.appState.persisted.wallets.push({
+            //     name: 'Wallet ' + (this.appState.persisted.wallets.length + 1),
+            //     mnemonic: recoveryPhrase,
+            //     accounts: [
+            //         {
+            //             index: 0,
+            //             name: 'Identity',
+            //             network: 616,
+            //             purpose: 302,
+            //             derivationPath: `302'/616'`
+            //         }
+            //     ]
+            // });
 
             // Persist the state.
-            await this.appState.save();
+            // await this.appState.save();
         }
     }
 }

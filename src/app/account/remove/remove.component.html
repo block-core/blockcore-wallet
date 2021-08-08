@@ -1,11 +1,11 @@
-<div class="page centered" *ngIf="appState.activeAccount">
+<div class="page centered" *ngIf="uiState.activeAccount">
 
   <mat-icon class="large-icon">delete</mat-icon>
   <br>
   <h1>Remove account from wallet</h1>
 
   <p>
-    This will remove the "{{appState.activeAccount.name}}" account from your "{{appState.activeWallet?.name}}" wallet.
+    This will remove the "{{uiState.activeAccount.name}}" account from your "{{uiState.activeWallet?.name}}" wallet.
     All local changes that has not been persisted to cloud storage or blockchain, will be lost.
   </p>
 

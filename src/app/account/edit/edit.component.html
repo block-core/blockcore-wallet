@@ -6,9 +6,9 @@
   </mat-form-field>
 
   <br>
-  Purpose: {{appState.activeAccount?.purpose}}<br>
-  Network: {{appState.activeAccount?.network}}<br>
-  Index: {{appState.activeAccount?.index}}<br>
+  Purpose: {{uiState.activeAccount?.purpose}}<br>
+  Network: {{uiState.activeAccount?.network}}<br>
+  Index: {{uiState.activeAccount?.index}}<br>
 
   <br>
   <button class="signup-button" mat-flat-button color="primary" (click)="save()">Save</button>
@@ -16,6 +16,6 @@
   <button class="signup-button" mat-flat-button (click)="cancel()">Cancel</button>
   <br>
   <br>
-  <button class="signup-button" mat-flat-button color="warn" [routerLink]="['/account', 'remove', appState.persisted.activeAccountIndex]">Remove</button>
+  <button class="signup-button" mat-flat-button color="warn" [routerLink]="['/account', 'remove', uiState.activeWallet?.activeAccountIndex]">Remove</button>
 
 </div>

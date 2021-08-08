@@ -1,6 +1,6 @@
 <div class="page centered">
 
-    <mat-form-field appearance="fill" *ngIf="appState.hasWallets">
+    <mat-form-field appearance="fill" *ngIf="uiState.hasWallets">
         <mat-label>Network</mat-label>
         <mat-select (selectionChange)="onNetworkChanged($event)" [(value)]="network">
             <mat-option value="302'/616'">Identity (302'/616')</mat-option>
@@ -15,7 +15,7 @@
 
     <br>
 
-    <mat-form-field appearance="fill" *ngIf="appState.hasWallets">
+    <mat-form-field appearance="fill" *ngIf="uiState.hasWallets">
         <mat-label>Account Index</mat-label>
         <mat-select (selectionChange)="onAccountIndexChanged($event)" [(value)]="index">
             <mat-option *ngFor="let accountindex of indexes;" [value]="accountindex">{{accountindex}}</mat-option>

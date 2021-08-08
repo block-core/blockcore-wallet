@@ -1,20 +1,25 @@
 import { Component, Inject, HostBinding } from '@angular/core';
-import { ApplicationState } from '../services/application-state.service';
+import { UIState } from '../services/ui-state.service';
 import { Location } from '@angular/common'
+import { OrchestratorService } from '../services/orchestrator.service';
 
 @Component({
   selector: 'app-settings',
   templateUrl: './settings.component.html'
 })
 export class SettingsComponent {
-  constructor(public appState: ApplicationState, private location: Location) {
+  autoTimeout!: number;
 
-    this.appState.title = 'Settings';
+  constructor(
+    public uiState: UIState,
+    private manager: OrchestratorService,
+    private location: Location) {
+    this.autoTimeout = this.uiState.persisted.autoTimeout;
+    this.uiState.title = 'Settings';
   }
 
   async save() {
-    await this.appState.save();
-
+    this.manager.setLockTimer(this.autoTimeout);
     this.location.back();
   }
 }

@@ -2,7 +2,8 @@ import { Component, Inject, HostBinding } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common'
-import { ApplicationState } from 'src/app/services/application-state.service';
+import { UIState } from 'src/app/services/ui-state.service';
+import { OrchestratorService } from 'src/app/services/orchestrator.service';
 
 @Component({
   selector: 'app-edit',
@@ -16,10 +17,11 @@ export class AccountEditComponent {
   constructor(
     private router: Router,
     private location: Location,
-    public appState: ApplicationState,
+    public uiState: UIState,
+    private manager: OrchestratorService,
     private activatedRoute: ActivatedRoute,
   ) {
-    this.appState.title = 'Edit Account'
+    this.uiState.title = 'Edit Account'
 
     this.activatedRoute.paramMap.subscribe(async params => {
 
@@ -27,8 +29,14 @@ export class AccountEditComponent {
       const index: any = params.get('index');
       console.log('Account Index:', Number(index));
 
-      this.appState.persisted.activeAccountIndex = Number(index);
-      this.accountName = this.appState.activeAccount?.name;
+      if (!this.uiState.activeWallet) {
+        return;
+      }
+
+      this.manager.setActiveAccountId(this.uiState.activeWallet.id, index);
+
+      // this.uiState.persisted.activeAccountIndex = Number(index);
+      // this.accountName = this.uiState.activeAccount?.name;
 
       // const id: any = params.get('address');
       // console.log('Address:', id);
@@ -43,9 +51,14 @@ export class AccountEditComponent {
   }
 
   async save() {
-    if (this.appState.activeAccount) {
-      this.appState.activeAccount.name = this.accountName;
-      await this.appState.save();
+    if (!this.uiState.activeWallet) {
+      this.location.back();
+      return;
+    }
+
+    // We won't allow empty names for accounts.
+    if (this.accountName) {
+      this.manager.setAccountName(this.uiState.activeWallet.id, this.uiState.activeWallet.activeAccountIndex, this.accountName);
     }
 
     this.location.back();

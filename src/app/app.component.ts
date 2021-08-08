@@ -2,7 +2,9 @@ import { DOCUMENT } from '@angular/common';
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
 import { NavigationEnd, Router } from '@angular/router';
-import { ApplicationState } from './services/application-state.service';
+import { UIState } from './services/ui-state.service';
+import { CommunicationService } from './services/communication.service';
+import { OrchestratorService } from './services/orchestrator.service';
 
 @Component({
   selector: 'app-root',
@@ -15,18 +17,50 @@ export class AppComponent implements OnInit {
   @ViewChild('drawer') drawer!: MatSidenav;
   @ViewChild('draweraccount') draweraccount!: MatSidenav;
 
-  constructor(public appState: ApplicationState,
+  constructor(public uiState: UIState,
     private router: Router,
+    private communication: CommunicationService,
+    private manager: OrchestratorService,
     @Inject(DOCUMENT) private document: Document) {
 
     router.events.subscribe((val) => {
       if (val instanceof NavigationEnd) {
-        this.appState.active();
+        this.uiState.active();
       }
     });
+
+    // Make sure we initialize the orchestrator early and hook up event handlers.
+    manager.initialize();
   }
 
   ngOnInit(): void {
+    // var sub1 = this.communication.listen('lock', () => {
+    //   console.log('LOCK!');
+    // });
+
+    // var sub2 = this.communication.listen('lock2', () => {
+    //   console.log('LOCK222!');
+    // });
+
+    // var sub3 = this.communication.listen('lock', () => {
+    //   console.log('LOCK!');
+    // });
+
+    // // this.communication.unlisten(sub1);
+    // // this.communication.unlisten(sub2);
+
+    // var sub4 = this.communication.listen('lock', () => {
+    //   console.log('LOCK!');
+    // });
+
+    // var sub5 = this.communication.listen('lock2', () => {
+    //   console.log('LOCK2222!');
+    // });
+
+    // this.communication.unlisten(sub5);
+
+    // this.communication.trigger('lock', { data: true });
+    // this.communication.trigger('lock2', { data: true });
 
     // console.log(chrome.extension.getViews({ type: "tab" }));
 
@@ -43,59 +77,66 @@ export class AppComponent implements OnInit {
       //If you are already in the tab, do something else 
     }
 
-    this.appState.port = chrome.runtime.connect({ name: 'app-state' });
+    // this.appState.port = chrome.runtime.connect({ name: 'extension-channel' });
 
-    this.appState.port.onMessage.addListener(message => {
-      console.log('onMessage:', message);
-      console.log(window.location.origin);
-      // window.postMessage(message, window.location.origin);
+    // this.appState.port.onMessage.addListener(message => {
+    //   console.log('onMessage:', message);
+    //   console.log(window.location.origin);
+    //   // window.postMessage(message, window.location.origin);
 
-      debugger;
+    //   debugger;
 
-      if (message.method == 'unlocked') {
-        console.log('UNLOCKED! YEEE!', message);
-      } else if (message.method == 'getlock') {
-        this.appState.password = message.data;
-      }
+    //   if (message.method == 'unlocked') {
+    //     console.log('UNLOCKED! YEEE!', message);
+    //   } else if (message.method == 'getlock') {
+    //     this.appState.password = message.data;
+    //   }
 
-    });
+    // });
 
-    this.appState.port.onDisconnect.addListener(d => {
-      this.appState.port = null;
-    });
+    // this.appState.port.onDisconnect.addListener(d => {
+    //   this.appState.port = null;
+    // });
 
-    // this.appState.port.postMessage({ question: 'Why is it?' });
-    // this.appState.port.postMessage({ method: 'unlocked' });
-    this.appState.port.postMessage({ method: 'getlock' });
+    // // this.appState.port.postMessage({ question: 'Why is it?' });
+    // // this.appState.port.postMessage({ method: 'unlocked' });
+    // this.appState.port.postMessage({ method: 'getlock' });
 
     // window.postMessage('Hello World!!!', window.location.origin);
   }
 
   lock() {
     // TODO: We also must remove the master key at this time, but we currently don't keep master key in-memory.
-    this.appState.unlocked = false;
+    // this.uiState.unlocked = false;
 
-    this.appState.port?.postMessage({ method: 'lock' });
-    this.appState.password = null;
+    if (!this.uiState.activeWallet) {
+      return;
+    }
+
+    this.manager.lock(this.uiState.activeWallet.id);
+
+    //this.uiState.port?.postMessage({ method: 'lock' });
+    // this.uiState.password = null;
 
     this.drawer.close();
-    this.router.navigateByUrl('/home');
+
+    // this.router.navigateByUrl('/home');
   }
 
   async onAccountChanged(event: any) {
-    const walletIndex = event.value;
+    const walletId = event.value;
 
     this.drawer.close();
 
-    if (walletIndex === -1) {
+    if (!walletId) {
       this.router.navigateByUrl('/wallet/create');
     } else {
-      console.log('walletIndex:', walletIndex);
+      console.log('walletId:', walletId);
 
-      this.appState.persisted.activeWalletIndex = walletIndex;
-      await this.appState.save();
+      this.communication.send('set-active-wallet-id', { id: walletId });
 
-      console.log(this.appState.persisted.activeWalletIndex);
+      this.uiState.persisted.activeWalletId = walletId;
+      //await this.uiState.save();
 
       // Make sure we route to home to unlock the newly selected wallet.
       this.router.navigateByUrl('/home');

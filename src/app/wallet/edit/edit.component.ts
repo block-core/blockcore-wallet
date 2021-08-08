@@ -2,7 +2,8 @@ import { Component, Inject, HostBinding } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common'
-import { ApplicationState } from 'src/app/services/application-state.service';
+import { UIState } from 'src/app/services/ui-state.service';
+import { CommunicationService } from 'src/app/services/communication.service';
 
 @Component({
   selector: 'app-wallet-edit',
@@ -16,18 +17,20 @@ export class WalletEditComponent {
   constructor(
     private router: Router,
     private location: Location,
-    public appState: ApplicationState
+    private communication: CommunicationService,
+    public uiState: UIState
   ) {
-    this.appState.title = 'Edit Wallet'
-
-    this.walletName = this.appState.activeWallet?.name;
+    this.uiState.title = 'Edit Wallet'
+    this.walletName = this.uiState.activeWallet?.name;
   }
 
   async save() {
-    if (this.appState.activeWallet) {
-      this.appState.activeWallet.name = this.walletName;
-      await this.appState.save();
-    }
+    this.communication.send('wallet-rename', this.walletName);
+
+    // if (this.uiState.activeWallet) {
+    //   this.uiState.activeWallet.name = this.walletName;
+    //   await this.uiState.save();
+    // }
 
     // this.router.navigateByUrl('/home');
     this.location.back();

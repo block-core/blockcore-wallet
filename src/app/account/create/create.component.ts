@@ -1,7 +1,7 @@
 import { Component, Inject, HostBinding, OnInit, ChangeDetectorRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ApplicationState } from '../../services/application-state.service';
+import { UIState } from '../../services/ui-state.service';
 import { CryptoService } from '../../services/crypto.service';
 import { Account } from 'src/app/interfaces';
 import { Router } from '@angular/router';
@@ -31,12 +31,12 @@ export class AccountCreateComponent implements OnInit {
     }
 
     constructor(private _formBuilder: FormBuilder,
-        public appState: ApplicationState,
+        public uiState: UIState,
         private crypto: CryptoService,
         private router: Router,
         private cd: ChangeDetectorRef
     ) {
-        this.appState.title = 'Create new account';
+        this.uiState.title = 'Create new account';
 
         for (let i = 0; i < 100; i++) {
             this.indexes.push(i);
@@ -119,7 +119,6 @@ export class AccountCreateComponent implements OnInit {
     }
 
     create() {
-        debugger;
         const splittedPath = this.derivationPath.split('/');
         const splittedPathReplaced = this.derivationPath.replaceAll(`'`, ``).split('/');
 
@@ -136,9 +135,9 @@ export class AccountCreateComponent implements OnInit {
             derivationPath: this.derivationPath
         };
 
-        if (this.appState.activeWallet) {
-            this.appState.activeWallet.accounts.push(account);
-            this.router.navigateByUrl('/account/view/' + (this.appState.activeWallet.accounts.length - 1));
+        if (this.uiState.activeWallet) {
+            this.uiState.activeWallet.accounts.push(account);
+            this.router.navigateByUrl('/account/view/' + (this.uiState.activeWallet.accounts.length - 1));
         }
 
         // this.step = 1;

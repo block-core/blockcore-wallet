@@ -28,18 +28,28 @@ interface Account {
 }
 
 interface Wallet {
+    id: string;
     name: string | undefined;
     // network: string;
     accounts: Account[];
     mnemonic: string;
+    activeAccountIndex: number;
 }
 
-interface Persisted
-{
-    wallets: Wallet[],
-    activeWalletIndex: number;
-    activeAccountIndex: number,
+interface Persisted {
+    // wallets: Map<string, Wallet>
+    wallets: Wallet[]
+    activeWalletId: string | undefined | null
     autoTimeout: number
+    // wallets: Wallet[],
+    // activeWalletIndex: number;
+    // activeAccountIndex: number
+}
+
+interface State {
+    action: string
+    persisted: Persisted
+    unlocked: string[]
 }
 
 export {
@@ -49,5 +59,6 @@ export {
     IStructures,
     Account,
     Wallet,
-    Persisted
+    Persisted,
+    State
 }

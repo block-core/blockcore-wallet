@@ -1,7 +1,7 @@
 import { Component, Inject, HostBinding, ChangeDetectorRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { CryptoService } from '../services/crypto.service';
-import { ApplicationState } from '../services/application-state.service';
+import { UIState } from '../services/ui-state.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -17,11 +17,11 @@ export class DashboardComponent {
   wallet: any;
 
   constructor(
-    public appState: ApplicationState,
+    public uiState: UIState,
     private crypto: CryptoService,
     private router: Router,
     private cd: ChangeDetectorRef) {
 
-    this.appState.title = 'Your Wallet';
+    this.uiState.title = 'Your Wallet';
   }
 }

@@ -19,6 +19,7 @@
     "lib": [
       "es2018",
       "ESNext.String",
+      "es2015.iterable",
       "dom"
     ]
   },
