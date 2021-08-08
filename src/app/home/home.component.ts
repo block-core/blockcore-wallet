@@ -43,6 +43,20 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.communication.unlisten(this.sub);
   }
 
+  ngOnInit(): void {
+    // if (this.uiState.password) {
+    //   this.unlockPassword = this.uiState.password;
+    //   this.unlock();
+    // }
+
+    // Verify if the wallet is already unlocked.
+    if (this.uiState.activeWallet) {
+      if (this.uiState.unlocked.findIndex(id => id == this.uiState.activeWallet?.id) > -1) {
+        this.router.navigateByUrl('/account/view/' + this.uiState.activeWallet?.activeAccountIndex);
+      }
+    }
+  }
+
   removeError(): void {
     this.error = '';
   }
@@ -70,14 +84,14 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.mnemonic = this.crypto.generateMnemonic();
   }
 
-  async remove() {
-    this.mnemonic = '';
-    this.password = '';
-    this.unlocked = '';
-    this.unlockPassword = '';
+  // async remove() {
+  //   this.mnemonic = '';
+  //   this.password = '';
+  //   this.unlocked = '';
+  //   this.unlockPassword = '';
 
-    // await this.uiState.save();
-  }
+  //   // await this.uiState.save();
+  // }
 
   async unlock() {
     if (this.uiState.activeWallet) {
@@ -105,13 +119,6 @@ export class HomeComponent implements OnInit, OnDestroy {
     //   this.router.navigateByUrl('/account/view/' + this.uiState.persisted.activeAccountIndex);
     // } else {
     //   this.error = 'Invalid password';
-    // }
-  }
-
-  ngOnInit(): void {
-    // if (this.uiState.password) {
-    //   this.unlockPassword = this.uiState.password;
-    //   this.unlock();
     // }
   }
 }

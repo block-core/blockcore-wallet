@@ -133,13 +133,23 @@ export class AppComponent implements OnInit {
     } else {
       console.log('walletId:', walletId);
 
-      this.communication.send('set-active-wallet-id', { id: walletId });
+      console.log('onAccountChanged:');
+      console.log(this.uiState.persisted.activeWalletId);
+      console.log(walletId);
 
-      this.uiState.persisted.activeWalletId = walletId;
+      this.manager.setActiveWalletId(walletId);
+
+      // this.uiState.persisted.activeWalletId = walletId;
       //await this.uiState.save();
 
-      // Make sure we route to home to unlock the newly selected wallet.
-      this.router.navigateByUrl('/home');
+      if (this.uiState.unlocked.findIndex(id => id == walletId) > -1) {
+        this.router.navigateByUrl('/account/view/' + this.uiState.activeWallet?.activeAccountIndex);
+      }
+      else {
+        // Make sure we route to home to unlock the newly selected wallet.
+        this.router.navigateByUrl('/home');
+      }
+
     }
   }
 }
