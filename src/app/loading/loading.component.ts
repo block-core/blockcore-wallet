@@ -30,7 +30,11 @@ export class LoadingComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     console.log('LOADING ON DESTROY!');
-    this.communication.unlisten(this.sub);
+
+    if (this.sub) {
+      this.communication.unlisten(this.sub);
+    }
+
     // this.communication.unlisten(this.sub2);
   }
 
@@ -114,12 +118,12 @@ export class LoadingComponent implements OnInit, OnDestroy {
 
       // The primary listeners should be triggered first, so uiState should have been set by now.
 
-      // Actions will override any other UI.
-      if (this.uiState.action) {
+
+      // Actions will override any other UI, but only if wallet is unlocked.
+      if (this.uiState.action && this.uiState.activeWallet && this.uiState.unlocked.indexOf(this.uiState.activeWallet.id) > -1) {
         // TODO: Add support for more actions.
         this.router.navigateByUrl('/action/sign');
       } else {
-
         if (!this.uiState.hasWallets) {
           this.router.navigateByUrl('/wallet/create');
         } else {

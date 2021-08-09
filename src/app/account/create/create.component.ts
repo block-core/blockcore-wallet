@@ -7,6 +7,7 @@ import { Account } from 'src/app/interfaces';
 import { Router } from '@angular/router';
 import { OrchestratorService } from 'src/app/services/orchestrator.service';
 import { CommunicationService } from 'src/app/services/communication.service';
+import { IconService } from 'src/app/services/icon.service';
 
 @Component({
     selector: 'app-account-create',
@@ -28,6 +29,7 @@ export class AccountCreateComponent implements OnInit, OnDestroy {
     derivationPath!: string;
     name = 'New account';
     sub: any;
+    icon: string | undefined;
 
     get passwordValidated(): boolean {
         return this.password === this.password2 && this.secondFormGroup.valid;
@@ -37,11 +39,13 @@ export class AccountCreateComponent implements OnInit, OnDestroy {
         public uiState: UIState,
         private crypto: CryptoService,
         private router: Router,
+        public icons: IconService,
         private communication: CommunicationService,
         private manager: OrchestratorService,
         private cd: ChangeDetectorRef
     ) {
         this.uiState.title = 'Create new account';
+        this.icon = icons.default;
 
         for (let i = 0; i < 100; i++) {
             this.indexes.push(i);
@@ -66,7 +70,7 @@ export class AccountCreateComponent implements OnInit, OnDestroy {
             }
         });
     }
-    
+
     ngOnDestroy(): void {
         this.communication.unlisten(this.sub);
     }
@@ -120,7 +124,7 @@ export class AccountCreateComponent implements OnInit, OnDestroy {
     }
 
     getDerivationPath() {
-        return `m/${this.network}/${this.index}'`;
+        return `m/${this.network.toString()}/${this.index.toString()}'`;
     }
 
     async onNetworkChanged(event: any) {
@@ -148,12 +152,11 @@ export class AccountCreateComponent implements OnInit, OnDestroy {
             index: parsedIndex,
             network: parsedNetwork,
             purpose: parsedPurpose,
-            derivationPath: this.derivationPath
+            derivationPath: this.derivationPath,
+            icon: this.icon
         };
 
         this.manager.createAccount(account);
-
-
 
         // this.step = 1;
         // this.recover = false;

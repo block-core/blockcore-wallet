@@ -19,7 +19,7 @@
 
       <mat-form-field appearance="fill" *ngIf="uiState.hasWallets">
         <mat-label>Choose Wallet</mat-label>
-        <mat-select (selectionChange)="onAccountChanged($event)" [(value)]="uiState.persisted.activeWalletId">
+        <mat-select (selectionChange)="onWalletChanged($event)" [(value)]="uiState.persisted.activeWalletId">
           <mat-option [value]="''">Create new wallet</mat-option>
           <mat-option *ngFor="let wallet of uiState.persisted.wallets;" [value]="wallet.id">{{wallet.name}}
           </mat-option>
@@ -86,7 +86,7 @@
       <h2>{{uiState.activeAccount.name}}</h2>
 
       <div class="detail-box">
-        <mat-icon mat-list-icon>account_circle</mat-icon>
+        <mat-icon mat-list-icon class="account-icon">{{uiState.activeAccount.icon}}</mat-icon>
         <div class="detail-network">
           {{uiState.activeAccount.network}}<br>
           {{uiState.activeAccount.derivationPath}}
@@ -116,10 +116,9 @@
         </mat-select>
       </mat-form-field> -->
 
-      <a mat-list-item *ngFor="let account of uiState.activeWallet.accounts; let i = index"
-        [routerLink]="['account', 'view', i]" (click)="draweraccount.toggle()" routerLinkActive="active-link">
-        <mat-icon mat-list-icon>account_circle</mat-icon>
-        <div mat-line>{{account.name}} ({{i}})</div>
+      <a mat-list-item *ngFor="let account of uiState.activeWallet.accounts; let i = index" (click)="onAccountChanged(i)" routerLinkActive="active-link">
+        <mat-icon mat-list-icon>{{account.icon}}</mat-icon>
+        <div mat-line>{{account.name}}</div>
         <div mat-line>{{account.network}}</div>
       </a>
 
@@ -171,7 +170,7 @@
       <span class="example-spacer">{{uiState.title}}</span>
 
       <button *ngIf="uiState.activeWalletUnlocked" mat-icon-button (click)="draweraccount.toggle()">
-        <mat-icon>account_circle</mat-icon>
+        <mat-icon>{{uiState.activeAccount?.icon}}</mat-icon>
       </button>
 
     </mat-toolbar>

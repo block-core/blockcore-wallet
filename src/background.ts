@@ -166,7 +166,7 @@ chrome.runtime.onSuspend.addListener(function () {
 //   });
 // });
 
-chrome.runtime.onMessage.addListener(function (request, sender: any, sendResponse) {
+chrome.runtime.onMessage.addListener(async (request: any, sender: any, sendResponse: any) => {
 
   console.log('onMessage (BACKGROUND): ' + JSON.stringify(request));
 
@@ -185,10 +185,22 @@ chrome.runtime.onMessage.addListener(function (request, sender: any, sendRespons
     //   }
     // );
 
+    await orchestrator.setAction('sign');
+
+    // TODO: Figure out how to find the top-right of the browser window that activates the popup. https://github.com/block-core/blockcore-extension/issues/10
+    var leftPosition = 0;
+    var topPosition = 0;
+
+    window.open("index.html", "blockcore_popup", "left=" + leftPosition + ",top=" + topPosition + ",width=440,height=590,status=no,scrollbars=no,resizable=no");
+
+    // orchestrator.setAction('sign').then(() => {
+    //   window.open("index.html", "blockcore_popup", "width=440,height=590,status=no,scrollbars=no,resizable=no");
+    // });
+
     // Set the action in storage and open popup.
-    chrome.storage.local.set({ action: 'sign' }, () => {
-      window.open("index.html", "blockcore_popup", "width=440,height=590,status=no,scrollbars=no,resizable=no");
-    });
+    // chrome.storage.local.set({ action: 'sign' }, () => {
+
+    // });
 
   }
 

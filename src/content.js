@@ -30,9 +30,14 @@ window.addEventListener("load", function () {
     loginButton.getAttribute('')
 
     loginButton.onclick = () => {
-      console.log('LOGIN!!!!!!!! Sending message from content to background!');
-      chrome.runtime.sendMessage({ action: "sign" }, function (response) {
-        // console.log(response.farewell);
+      console.log('LOGIN! Sending message from content to background!');
+      chrome.runtime.sendMessage({
+        action: "sign", document: {
+          "id": "123",
+          "identity": "I am who I am."
+        }
+      }, function (response) {
+        console.log(response);
       });
     };
   }

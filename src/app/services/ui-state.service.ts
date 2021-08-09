@@ -1,11 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { EventEmitter, Injectable, NgZone } from '@angular/core';
-import { Persisted, Wallet } from '../interfaces';
+import { Account, Persisted, Wallet } from '../interfaces';
 import { MINUTE } from '../shared/constants';
 import { Router } from '@angular/router';
 import { CommunicationService } from './communication.service';
 import { BehaviorSubject, ReplaySubject, Subject } from 'rxjs';
+import { Observable } from "rxjs";
 
 @Injectable({
     providedIn: 'root'
@@ -28,6 +29,13 @@ export class UIState {
         return this.persisted.wallets.length > 0;
     }
 
+    // activeWallet$: Subject<Wallet | undefined> = new ReplaySubject();
+    activeWalletSubject: BehaviorSubject<Wallet | undefined> = new BehaviorSubject<Wallet | undefined>(undefined);
+
+    public get activeWallet$() : Observable<Wallet | undefined> {
+        return this.activeWalletSubject.asObservable();
+    }
+
     get activeWallet() {
         if (this.persisted.activeWalletId) {
             return this.persisted.wallets.find(w => w.id == this.persisted.activeWalletId);
@@ -44,15 +52,21 @@ export class UIState {
         return this.activeWallet.accounts?.length > 0;
     }
 
+    activeAccountSubject: BehaviorSubject<Account | undefined> = new BehaviorSubject<Account | undefined>(undefined);
+
+    public get activeAccount$() : Observable<Account | undefined> {
+        return this.activeAccountSubject.asObservable();
+    }
+
     get activeAccount() {
         if (!this.activeWallet) {
-            return null;
+            return undefined;
         }
 
         const activeWallet = this.activeWallet;
 
         if (!activeWallet.accounts) {
-            return null;
+            return undefined;
         }
 
         if (activeWallet.activeAccountIndex == null || activeWallet.activeAccountIndex == -1) {

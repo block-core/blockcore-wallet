@@ -44,7 +44,11 @@ export class OrchestratorService {
             this.uiState.initialized = true;
             this.uiState.action = state.action;
             this.uiState.persisted = state.persisted;
+            
             this.uiState.persisted$.next(this.uiState.persisted);
+            this.uiState.activeWalletSubject.next(this.uiState.activeWallet);
+            this.uiState.activeAccountSubject.next(this.uiState.activeAccount);
+
             this.uiState.unlocked = state.unlocked;
         });
 
@@ -52,6 +56,13 @@ export class OrchestratorService {
         this.communication.listen('action', (action: string) => {
             console.log('action', action);
             this.uiState.action = action;
+        });
+
+        // When action has been reset, ensure that UI instances redirect to root.
+        this.communication.listen('action-changed', (action: string) => {
+            if (!action) {
+                this.router.navigateByUrl('/');
+            }
         });
 
         // When a wallet is removed, we must update UI.
@@ -108,9 +119,17 @@ export class OrchestratorService {
         this.communication.send('set-lock-timer', { minutes });
     }
 
-    setAccountName(id: string, index: number, name: string) {
-        this.communication.send('set-account-name', { id, index, name });
+    updateAccount(id: string, index: number, fields: { name: string, icon?: string }) {
+        this.communication.send('account-update', { id, index, fields });
     }
+
+    // setAccountName(id: string, index: number, name: string) {
+    //     this.communication.send('set-account-name', { id, index, name });
+    // }
+
+    // setAccountIcon(id: string, index: number, icon: string) {
+    //     this.communication.send('set-account-icon', { id, index, icon });
+    // }
 
     setWalletName(id: string, name: string) {
         this.communication.send('set-wallet-name', { id, name });
@@ -126,6 +145,10 @@ export class OrchestratorService {
 
     lock(id: string) {
         this.communication.send('wallet-lock', { id });
+    }
+
+    setAction(action: string) {
+        this.communication.send('set-action', { action });
     }
 
     createAccount(account: Account) {

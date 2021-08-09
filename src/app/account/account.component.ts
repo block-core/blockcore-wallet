@@ -1,15 +1,16 @@
-import { Component, Inject, HostBinding, ChangeDetectorRef } from '@angular/core';
+import { Component, Inject, HostBinding, ChangeDetectorRef, OnInit, OnDestroy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { CryptoService } from '../services/crypto.service';
 import { UIState } from '../services/ui-state.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { OrchestratorService } from '../services/orchestrator.service';
+import { CommunicationService } from '../services/communication.service';
 
 @Component({
   selector: 'app-account',
   templateUrl: './account.component.html'
 })
-export class AccountComponent {
+export class AccountComponent implements OnInit, OnDestroy {
   mnemonic = '';
   password = '';
   unlocked = '';
@@ -17,12 +18,15 @@ export class AccountComponent {
   alarmName = 'refresh';
   wallet: any;
   account!: any;
+  sub: any;
+  previousIndex!: number;
 
   constructor(
     public uiState: UIState,
     private crypto: CryptoService,
     private router: Router,
     private manager: OrchestratorService,
+    private communication: CommunicationService,
     private activatedRoute: ActivatedRoute,
     private cd: ChangeDetectorRef) {
 
@@ -51,6 +55,23 @@ export class AccountComponent {
       // Persist when changing accounts.
       // this.uiState.save();
 
+      this.previousIndex = index;
+
+    });
+  }
+
+  ngOnDestroy(): void {
+    if (this.sub) {
+      this.communication.unlisten(this.sub);
+    }
+  }
+
+  ngOnInit(): void {
+    this.sub = this.communication.listen('active-account-changed', (data: any) => {
+      // If we are currently viewing an account and the user changes, we'll refresh this view.
+      if (this.previousIndex != data.index) {
+        this.router.navigate(['account', 'view', data.index]);
+      }
     });
   }
 }

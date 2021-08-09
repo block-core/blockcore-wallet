@@ -122,7 +122,7 @@ export class WalletCreateComponent implements OnInit {
             alert('Fatal error, unable to encrypt secret recovery phrase!');
         }
         else {
-            var wallet : Wallet = {
+            var wallet: Wallet = {
                 id: id,
                 name: 'Wallet ' + (this.uiState.persisted.wallets.length + 1),
                 mnemonic: recoveryPhrase,
@@ -133,7 +133,8 @@ export class WalletCreateComponent implements OnInit {
                         name: 'Identity',
                         network: 616,
                         purpose: 302,
-                        derivationPath: `302'/616'`
+                        derivationPath: `302'/616'/0'`,
+                        icon: 'account_circle'
                     }
                 ]
             };

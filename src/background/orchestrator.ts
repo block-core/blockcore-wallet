@@ -80,6 +80,22 @@ export class OrchestratorBackgroundService {
         this.communication.sendToAll('state', initialState);
     };
 
+    async setAction(action: string) {
+        this.state.action = action;
+
+        if (typeof action !== 'string') {
+            console.error('Only objects that are string are allowed as actions.');
+            return;
+        }
+
+        await this.state.saveAction();
+
+        this.refreshState();
+
+        // Raise this after state has been updated, so orchestrator in UI can redirect correctly.
+        this.communication.sendToAll('action-changed', this.state.action);
+    }
+
     private eventHandlers() {
         // "state" is the first request from the UI.
         this.communication.listen('state', async (port: any, data: any) => {
@@ -115,6 +131,10 @@ export class OrchestratorBackgroundService {
             this.active();
         });
 
+        this.communication.listen('set-action', async (port: any, data: { action: string }) => {
+            this.setAction('');
+        });
+
         this.communication.listen('set-active-wallet-id', async (port: any, data: any) => {
             this.state.persisted.activeWalletId = data.id;
             await this.state.save();
@@ -127,7 +147,7 @@ export class OrchestratorBackgroundService {
             this.refreshState();
         });
 
-        this.communication.listen('set-account-name', async (port: any, data: { id: string, index: number, name: string }) => {
+        this.communication.listen('account-update', async (port: any, data: { id: string, index: number, fields: { name: string, icon: string } }) => {
             const wallet = this.state.persisted.wallets.find(w => w.id == data.id);
 
             if (!wallet) {
@@ -135,13 +155,30 @@ export class OrchestratorBackgroundService {
             }
 
             const account = wallet.accounts[data.index];
-            account.name = data.name;
+            account.name = data.fields.name;
+            account.icon = data.fields.icon;
 
             await this.state.save();
             this.refreshState();
 
-            this.communication.send(port, 'account-name-set');
+            this.communication.send(port, 'account-updated');
         });
+
+        // this.communication.listen('set-account-icon', async (port: any, data: { id: string, index: number, icon: string }) => {
+        //     const wallet = this.state.persisted.wallets.find(w => w.id == data.id);
+
+        //     if (!wallet) {
+        //         return;
+        //     }
+
+        //     const account = wallet.accounts[data.index];
+        //     account.icon = data.icon;
+
+        //     await this.state.save();
+        //     this.refreshState();
+
+        //     this.communication.send(port, 'account-icon-set');
+        // });
 
         this.communication.listen('set-wallet-name', async (port: any, data: { id: string, name: string }) => {
             const wallet = this.state.persisted.wallets.find(w => w.id == data.id);
@@ -278,17 +315,17 @@ export class OrchestratorBackgroundService {
 
         this.communication.listen('set-active-account', async (port: any, data: { index: number }) => {
             if (!this.state.activeWallet) {
+                console.log('No active wallet on set-active-account.');
                 return;
             }
 
-            // Add the new account.
             this.state.activeWallet.activeAccountIndex = data.index;
 
             await this.state.save();
 
             this.refreshState();
 
-            this.communication.sendToAll('active-account-changed');
+            this.communication.sendToAll('active-account-changed', { index: data.index });
         });
 
         this.communication.listen('wallet-create', async (port: any, data: Wallet) => {

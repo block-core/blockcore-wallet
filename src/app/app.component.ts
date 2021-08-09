@@ -1,5 +1,5 @@
 import { DOCUMENT } from '@angular/common';
-import { Component, Inject, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
 import { NavigationEnd, Router } from '@angular/router';
 import { UIState } from './services/ui-state.service';
@@ -21,6 +21,7 @@ export class AppComponent implements OnInit {
     private router: Router,
     private communication: CommunicationService,
     private manager: OrchestratorService,
+    private cd: ChangeDetectorRef,
     @Inject(DOCUMENT) private document: Document) {
 
     router.events.subscribe((val) => {
@@ -123,7 +124,15 @@ export class AppComponent implements OnInit {
     // this.router.navigateByUrl('/home');
   }
 
-  async onAccountChanged(event: any) {
+  onAccountChanged(index: number) {
+    this.draweraccount.toggle();
+
+    this.manager.setActiveAccountId(Number(index));
+
+    this.cd.detectChanges();
+  }
+
+  async onWalletChanged(event: any) {
     const walletId = event.value;
 
     this.drawer.close();

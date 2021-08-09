@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { CryptoService } from '../../services/crypto.service';
 import { UIState } from '../../services/ui-state.service';
 import { Router } from '@angular/router';
+import { OrchestratorService } from 'src/app/services/orchestrator.service';
 
 @Component({
     selector: 'app-sign',
@@ -23,6 +24,7 @@ export class ActionSignComponent {
         private router: Router,
         private app: ApplicationRef,
         private ngZone: NgZone,
+        private manager: OrchestratorService,
         private cd: ChangeDetectorRef) {
 
         this.uiState.title = 'Action: Signing';
@@ -32,14 +34,19 @@ export class ActionSignComponent {
     }
 
     exit() {
+        this.manager.setAction('');
+
+
+        
+
         // Set the action in storage and close the action
-        chrome.storage.local.set({ action: null }, () => {
-            // this.app.tick();
-            this.ngZone.run(() => {
-                this.uiState.title = '';
-                this.uiState.loading = true;
-                this.router.navigateByUrl('/');
-            });
-        });
+        // chrome.storage.local.set({ action: null }, () => {
+        //     // this.app.tick();
+        //     this.ngZone.run(() => {
+        //         this.uiState.title = '';
+        //         this.uiState.loading = true;
+        //         this.router.navigateByUrl('/');
+        //     });
+        // });
     }
 }

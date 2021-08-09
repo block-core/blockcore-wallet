@@ -122,5 +122,17 @@ export class AppState {
         });
     }
 
+    async saveAction(): Promise<void> {
+        return new Promise((resolve, reject) => {
+            chrome.storage.local.set({ 'action': this.action }, () => {
+                console.log('SAVED ACTION!');
 
+                if (chrome.runtime.lastError) {
+                    return reject(chrome.runtime.lastError);
+                }
+
+                resolve();
+            });
+        });
+    }
 }

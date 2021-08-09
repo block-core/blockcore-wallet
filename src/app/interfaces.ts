@@ -25,6 +25,7 @@ interface Account {
     index: number;
     purpose: number;
     derivationPath: string;
+    icon?: string;
 }
 
 interface Wallet {
