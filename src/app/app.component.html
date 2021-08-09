@@ -27,10 +27,10 @@
       </mat-form-field>
 
       <a mat-list-item *ngIf="uiState.activeWallet && !uiState.activeWalletUnlocked" [routerLink]="['/home']"
-      (click)="drawer.toggle()" routerLinkActive="active-link">
-      <mat-icon mat-list-icon>lock_open</mat-icon>
-      <div mat-line>Unlock Wallet</div>
-    </a>
+        (click)="drawer.toggle()" routerLinkActive="active-link">
+        <mat-icon mat-list-icon>lock_open</mat-icon>
+        <div mat-line>Unlock Wallet</div>
+      </a>
 
       <a mat-list-item *ngIf="uiState.activeWallet && uiState.activeWalletUnlocked" [routerLink]="['/wallet', 'edit']"
         (click)="drawer.toggle()" routerLinkActive="active-link">
@@ -38,7 +38,8 @@
         <div mat-line>Edit Wallet</div>
       </a>
 
-      <mat-list-item *ngIf="uiState.activeWallet && uiState.activeWalletUnlocked" (click)="lock()" routerLinkActive="active-link">
+      <mat-list-item *ngIf="uiState.activeWallet && uiState.activeWalletUnlocked" (click)="lock()"
+        routerLinkActive="active-link">
         <mat-icon mat-list-icon>lock</mat-icon>
         <div mat-line>Lock Wallet</div>
       </mat-list-item>
@@ -52,7 +53,7 @@
       <mat-divider></mat-divider>
 
       <br>
-<!-- 
+      <!-- 
       <mat-form-field appearance="fill">
         <mat-label>Auto-Lock Timer</mat-label>
         <mat-select [(value)]="autoTimeout">
@@ -65,7 +66,7 @@
         </mat-select>
       </mat-form-field> -->
 
-      <a mat-list-item  [routerLink]="['/settings']" (click)="drawer.toggle()" routerLinkActive="active-link">
+      <a mat-list-item [routerLink]="['/settings']" (click)="drawer.toggle()" routerLinkActive="active-link">
         <mat-icon mat-list-icon>settings</mat-icon>
         <div mat-line>Settings</div>
       </a>
@@ -92,7 +93,8 @@
         </div>
       </div>
 
-      <button mat-button [routerLink]="['account', 'edit', uiState.activeWallet?.activeAccountIndex]" (click)="draweraccount.toggle()">Edit account</button>
+      <button mat-button [routerLink]="['account', 'edit', uiState.activeWallet?.activeAccountIndex]"
+        (click)="draweraccount.toggle()">Edit account</button>
 
     </div>
 
@@ -114,9 +116,10 @@
         </mat-select>
       </mat-form-field> -->
 
-      <a mat-list-item *ngFor="let account of uiState.activeWallet.accounts; let i = index" [routerLink]="['account', 'view', i]" (click)="draweraccount.toggle()" routerLinkActive="active-link">
+      <a mat-list-item *ngFor="let account of uiState.activeWallet.accounts; let i = index"
+        [routerLink]="['account', 'view', i]" (click)="draweraccount.toggle()" routerLinkActive="active-link">
         <mat-icon mat-list-icon>account_circle</mat-icon>
-        <div mat-line>{{account.name}}</div>
+        <div mat-line>{{account.name}} ({{i}})</div>
         <div mat-line>{{account.network}}</div>
       </a>
 

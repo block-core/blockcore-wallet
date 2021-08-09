@@ -1,4 +1,4 @@
-import { State, Wallet } from 'src/app/interfaces';
+import { Account, State, Wallet } from 'src/app/interfaces';
 import { MINUTE } from 'src/app/shared/constants';
 import { AppState } from './application-state';
 import { CommunicationBackgroundService } from './communication';
@@ -139,6 +139,8 @@ export class OrchestratorBackgroundService {
 
             await this.state.save();
             this.refreshState();
+
+            this.communication.send(port, 'account-name-set');
         });
 
         this.communication.listen('set-wallet-name', async (port: any, data: { id: string, name: string }) => {
@@ -174,6 +176,22 @@ export class OrchestratorBackgroundService {
 
             // Raise this after state has been updated, so orchestrator in UI can redirect correctly.
             this.communication.sendToAll('account-removed', data);
+        });
+
+        this.communication.listen('wallet-remove', async (port: any, data: { id: string, index: number }) => {
+            const walletIndex = this.state.persisted.wallets.findIndex(w => w.id == data.id);
+
+            // Remove the wallet.
+            this.state.persisted.wallets.splice(walletIndex, 1);
+
+            // Remove the password for this wallet, if it was unlocked.
+            this.state.passwords.delete(data.id);
+
+            await this.state.save();
+            this.refreshState();
+
+            // Raise this after state has been updated, so orchestrator in UI can redirect correctly.
+            this.communication.sendToAll('wallet-removed', data);
         });
 
         this.communication.listen('wallet-lock', async (port: any, data: { id: string }) => {
@@ -239,6 +257,38 @@ export class OrchestratorBackgroundService {
                 this.communication.send(port, 'error', { exception: null, message: 'Invalid password' });
                 // this.error = 'Invalid password';
             }
+        });
+
+        this.communication.listen('account-create', async (port: any, data: Account) => {
+            if (!this.state.activeWallet) {
+                return;
+            }
+
+            // Add the new account.
+            this.state.activeWallet.accounts.push(data);
+
+            this.state.activeWallet.activeAccountIndex = (this.state.activeWallet.accounts.length - 1);
+
+            await this.state.save();
+
+            this.refreshState();
+
+            this.communication.sendToAll('account-created');
+        });
+
+        this.communication.listen('set-active-account', async (port: any, data: { index: number }) => {
+            if (!this.state.activeWallet) {
+                return;
+            }
+
+            // Add the new account.
+            this.state.activeWallet.activeAccountIndex = data.index;
+
+            await this.state.save();
+
+            this.refreshState();
+
+            this.communication.sendToAll('active-account-changed');
         });
 
         this.communication.listen('wallet-create', async (port: any, data: Wallet) => {

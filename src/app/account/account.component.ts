@@ -33,23 +33,24 @@ export class AccountComponent {
     }
 
     this.activatedRoute.paramMap.subscribe(async params => {
-
       console.log('PARAMS:', params);
       const index: any = params.get('index');
       // console.log('Account Index:', Number(index));
+
+      console.log('Index to view:', index);
 
       if (!this.uiState.activeWallet) {
         return;
       }
 
-      this.manager.setActiveAccountId(this.uiState.activeWallet.id, index);
+      this.manager.setActiveAccountId(index);
+      this.uiState.title = 'Account: ' + this.uiState.activeAccount?.name;
 
       // this.uiState.persisted.activeAccountIndex = Number(index);
 
       // Persist when changing accounts.
       // this.uiState.save();
 
-      // this.uiState.title = 'Account: ' + this.uiState.activeAccount?.name;
     });
   }
 }

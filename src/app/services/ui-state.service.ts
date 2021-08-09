@@ -22,7 +22,7 @@ export class UIState {
 
     persisted!: Persisted;
 
-    activeWalletIndex: number = 0;
+    // activeWalletIndex: number = 0;
 
     get hasWallets(): boolean {
         return this.persisted.wallets.length > 0;

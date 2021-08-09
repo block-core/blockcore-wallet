@@ -1,17 +1,19 @@
-import { Component, Inject, HostBinding, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, Inject, HostBinding, OnInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UIState } from '../../services/ui-state.service';
 import { CryptoService } from '../../services/crypto.service';
 import { Account } from 'src/app/interfaces';
 import { Router } from '@angular/router';
+import { OrchestratorService } from 'src/app/services/orchestrator.service';
+import { CommunicationService } from 'src/app/services/communication.service';
 
 @Component({
     selector: 'app-account-create',
     templateUrl: './create.component.html',
     styleUrls: ['../account.component.css']
 })
-export class AccountCreateComponent implements OnInit {
+export class AccountCreateComponent implements OnInit, OnDestroy {
     mnemonic = '';
     firstFormGroup!: FormGroup;
     secondFormGroup!: FormGroup;
@@ -25,6 +27,7 @@ export class AccountCreateComponent implements OnInit {
     index: number = 0;
     derivationPath!: string;
     name = 'New account';
+    sub: any;
 
     get passwordValidated(): boolean {
         return this.password === this.password2 && this.secondFormGroup.valid;
@@ -34,6 +37,8 @@ export class AccountCreateComponent implements OnInit {
         public uiState: UIState,
         private crypto: CryptoService,
         private router: Router,
+        private communication: CommunicationService,
+        private manager: OrchestratorService,
         private cd: ChangeDetectorRef
     ) {
         this.uiState.title = 'Create new account';
@@ -54,6 +59,16 @@ export class AccountCreateComponent implements OnInit {
         });
 
         this.derivationPath = this.getDerivationPath();
+
+        this.sub = this.communication.listen('account-created', () => {
+            if (this.uiState.activeWallet) {
+                this.router.navigateByUrl('/account/view/' + (this.uiState.activeWallet.accounts.length - 1));
+            }
+        });
+    }
+    
+    ngOnDestroy(): void {
+        this.communication.unlisten(this.sub);
     }
 
     generate() {
@@ -119,6 +134,7 @@ export class AccountCreateComponent implements OnInit {
     }
 
     create() {
+        debugger;
         const splittedPath = this.derivationPath.split('/');
         const splittedPathReplaced = this.derivationPath.replaceAll(`'`, ``).split('/');
 
@@ -135,10 +151,9 @@ export class AccountCreateComponent implements OnInit {
             derivationPath: this.derivationPath
         };
 
-        if (this.uiState.activeWallet) {
-            this.uiState.activeWallet.accounts.push(account);
-            this.router.navigateByUrl('/account/view/' + (this.uiState.activeWallet.accounts.length - 1));
-        }
+        this.manager.createAccount(account);
+
+
 
         // this.step = 1;
         // this.recover = false;

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { UIState } from './ui-state.service';
 import { CommunicationService } from './communication.service';
-import { State } from '../interfaces';
+import { Account, State } from '../interfaces';
 import {
     MatSnackBar,
     MatSnackBarHorizontalPosition,
@@ -56,6 +56,19 @@ export class OrchestratorService {
 
         // When a wallet is removed, we must update UI.
         this.communication.listen('wallet-removed', (value: any) => {
+            // We'll always redirect to root when a wallet is removed.
+            this.router.navigateByUrl('/');
+
+            // this.uiState.persisted.wallets.splice(this.uiState.persisted.activeWalletIndex, 1);
+
+            // if (this.uiState.hasWallets) {
+            //   this.uiState.persisted.activeWalletIndex = 0;
+            // } else {
+            //   this.uiState.persisted.activeWalletIndex = -1;
+            // }
+
+            // await this.uiState.save();
+
 
         });
 
@@ -82,8 +95,13 @@ export class OrchestratorService {
         this.communication.send('set-active-wallet-id', { id });
     }
 
-    setActiveAccountId(id: string, index: number) {
-        this.communication.send('set-active-account', { id, index });
+    setActiveAccountId(index: number) {
+        // Update local state as well.
+        if (this.uiState.activeWallet) {
+            this.uiState.activeWallet.activeAccountIndex = index;
+        }
+
+        this.communication.send('set-active-account', { index });
     }
 
     setLockTimer(minutes: number) {
@@ -108,5 +126,9 @@ export class OrchestratorService {
 
     lock(id: string) {
         this.communication.send('wallet-lock', { id });
+    }
+
+    createAccount(account: Account) {
+        this.communication.send('account-create', account);
     }
 }
