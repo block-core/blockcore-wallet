@@ -47,8 +47,15 @@ interface Persisted {
     // activeAccountIndex: number
 }
 
+interface Action
+{
+    action?: string;
+    document?: string;
+    tabId?: string;
+}
+
 interface State {
-    action: string
+    action?: Action
     persisted: Persisted
     unlocked: string[]
 }
@@ -61,5 +68,6 @@ export {
     Account,
     Wallet,
     Persisted,
-    State
+    State,
+    Action
 }

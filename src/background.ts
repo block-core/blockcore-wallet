@@ -33,7 +33,10 @@ const loadState = async () => {
   state.initialized = true;
 
   state.ui = ui ?? {};
-  state.action = action;
+
+  if (action) {
+    state.action = action;
+  }
 
   // communication.sendToAll('ui-state', state.ui);
 
@@ -185,7 +188,10 @@ chrome.runtime.onMessage.addListener(async (request: any, sender: any, sendRespo
     //   }
     // );
 
-    await orchestrator.setAction('sign');
+    debugger;
+    console.log(sender);
+
+    await orchestrator.setAction({ action: 'sign', document: request.document, tabId: sender.tab.id });
 
     // TODO: Figure out how to find the top-right of the browser window that activates the popup. https://github.com/block-core/blockcore-extension/issues/10
     var leftPosition = 0;

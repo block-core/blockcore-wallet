@@ -1,8 +1,20 @@
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-  console.log('onMessage (CONTENT): ' + JSON.stringify(request));
-  sendResponse({ fromcontent: "This message is from content.js" });
-});
+  if (!sender.tab) {
+    console.log('Message from extension:');
 
+    var output = this.document.getElementById('blockcore-extension-output');
+
+    if (output) {
+      output.innerText = request.content;
+    }
+  }
+  else {
+    console.log('Message from content script:' + sender.tab.url);
+  }
+
+  console.log('onMessage (CONTENT): ' + JSON.stringify(request));
+  // sendResponse({ fromcontent: "This message is from content.js" });
+});
 
 console.log('THIS IS THE EXTENSION CONTENT SCRIPT222!!!');
 
@@ -10,6 +22,16 @@ console.log('THIS IS THE EXTENSION CONTENT SCRIPT222!!!');
 //   console.log('onStartup:content');
 //   // chrome.storage.local.set({ has_been_notified: false });
 // });
+
+// chrome.runtime.onMessage.addListener(
+//   function(request, sender, sendResponse) {
+//     console.log(sender.tab ?
+//                 "from a content script:" + sender.tab.url :
+//                 "from the extension");
+//     if (request.greeting === "hello")
+//       sendResponse({farewell: "goodbye"});
+//   }
+// );
 
 window.addEventListener("load", function () {
   // alert("Ready state changed");
@@ -26,16 +48,17 @@ window.addEventListener("load", function () {
 
   var loginButton = this.document.getElementById('blockcore-extension-button');
 
+  var input = this.document.getElementById('blockcore-extension-input');
+
   if (loginButton) {
     loginButton.getAttribute('')
 
     loginButton.onclick = () => {
       console.log('LOGIN! Sending message from content to background!');
+      console.log(input.value);
+
       chrome.runtime.sendMessage({
-        action: "sign", document: {
-          "id": "123",
-          "identity": "I am who I am."
-        }
+        action: "sign", document: JSON.stringify(input.value)
       }, function (response) {
         console.log(response);
       });

@@ -11,13 +11,32 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <script src="blockcore-loader.js"></script>
+    <style>
+        #blockcore-extension-input {
+            width: 400px;
+            height: 200px;
+        }
+
+        #blockcore-extension-output {
+            border: 1px solid gray;
+            padding: 3em;
+            margin: 1em;
+        }
+    </style>
 </head>
 
 <body>
 
     <h1>Blockcore Provider - Sample Web Page</h1>
 
+    <textarea id="blockcore-extension-input">{
+        "id": "123",
+        "identity": "I am who I am."
+}</textarea>
+    <br>
     <button id="blockcore-extension-button" purpose="login">Click to sign with Blockcore</button>
+    <br>
+    <div id="blockcore-extension-output"></div>
 
     <!-- <button id="blockcore-extension-button" purpose="signing">Sign with Blockcore</button> -->
 

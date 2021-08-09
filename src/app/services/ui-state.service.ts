@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { EventEmitter, Injectable, NgZone } from '@angular/core';
-import { Account, Persisted, Wallet } from '../interfaces';
+import { Account, Action, Persisted, Wallet } from '../interfaces';
 import { MINUTE } from '../shared/constants';
 import { Router } from '@angular/router';
 import { CommunicationService } from './communication.service';
@@ -80,7 +80,7 @@ export class UIState {
         return this.activeWallet.accounts[activeWallet.activeAccountIndex];
     }
 
-    action!: string;
+    action?: Action;
 
     title!: string;
 

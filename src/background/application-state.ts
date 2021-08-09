@@ -1,4 +1,4 @@
-import { Persisted, Wallet } from "src/app/interfaces";
+import { Action, Persisted, Wallet } from "src/app/interfaces";
 import { MINUTE } from "src/app/shared/constants";
 
 export class AppState {
@@ -24,7 +24,7 @@ export class AppState {
         return Array.from(this.passwords.keys());
     };
 
-    action!: string;
+    action!: Action;
 
     get hasWallets(): boolean {
         return this.persisted.wallets.length > 0;
@@ -97,7 +97,7 @@ export class AppState {
         });
     }
 
-    async load(): Promise<{ data: Persisted, ui: any, action: string }> {
+    async load(): Promise<{ data: Persisted, ui: any, action: Action }> {
         // Immediately return a promise and start asynchronous work
         return new Promise((resolve, reject) => {
             // Asynchronously fetch all data from storage.sync.

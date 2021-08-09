@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { UIState } from './ui-state.service';
 import { CommunicationService } from './communication.service';
-import { Account, State } from '../interfaces';
+import { Account, Action, State } from '../interfaces';
 import {
     MatSnackBar,
     MatSnackBarHorizontalPosition,
@@ -44,7 +44,7 @@ export class OrchestratorService {
             this.uiState.initialized = true;
             this.uiState.action = state.action;
             this.uiState.persisted = state.persisted;
-            
+
             this.uiState.persisted$.next(this.uiState.persisted);
             this.uiState.activeWalletSubject.next(this.uiState.activeWallet);
             this.uiState.activeAccountSubject.next(this.uiState.activeAccount);
@@ -53,14 +53,14 @@ export class OrchestratorService {
         });
 
         // When an action is triggered from the content script / background.
-        this.communication.listen('action', (action: string) => {
+        this.communication.listen('action', (action: Action) => {
             console.log('action', action);
             this.uiState.action = action;
         });
 
         // When action has been reset, ensure that UI instances redirect to root.
-        this.communication.listen('action-changed', (action: string) => {
-            if (!action) {
+        this.communication.listen('action-changed', (action: Action) => {
+            if (!action.action) {
                 this.router.navigateByUrl('/');
             }
         });
@@ -147,11 +147,19 @@ export class OrchestratorService {
         this.communication.send('wallet-lock', { id });
     }
 
-    setAction(action: string) {
-        this.communication.send('set-action', { action });
+    setAction(action: Action) {
+        this.communication.send('set-action', action);
+    }
+
+    clearAction() {
+        this.communication.send('set-action', { action: '' });
     }
 
     createAccount(account: Account) {
         this.communication.send('account-create', account);
+    }
+
+    sign(content?: string, tabId?: string) {
+        this.communication.send('sign-content', { content, tabId });
     }
 }

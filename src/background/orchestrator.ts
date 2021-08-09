@@ -1,4 +1,4 @@
-import { Account, State, Wallet } from 'src/app/interfaces';
+import { Account, State, Wallet, Action } from 'src/app/interfaces';
 import { MINUTE } from 'src/app/shared/constants';
 import { AppState } from './application-state';
 import { CommunicationBackgroundService } from './communication';
@@ -80,13 +80,18 @@ export class OrchestratorBackgroundService {
         this.communication.sendToAll('state', initialState);
     };
 
-    async setAction(action: string) {
-        this.state.action = action;
-
-        if (typeof action !== 'string') {
+    async setAction(data: Action) {
+        if (typeof data.action !== 'string') {
             console.error('Only objects that are string are allowed as actions.');
             return;
         }
+
+        if (data.document != null && typeof data.document !== 'string') {
+            console.error('Only objects that are string are allowed as actions.');
+            return;
+        }
+
+        this.state.action = data;
 
         await this.state.saveAction();
 
@@ -131,8 +136,34 @@ export class OrchestratorBackgroundService {
             this.active();
         });
 
-        this.communication.listen('set-action', async (port: any, data: { action: string }) => {
-            this.setAction('');
+        this.communication.listen('set-action', async (port: any, data: Action) => {
+            this.setAction(data);
+        });
+
+        this.communication.listen('sign-content', async (port: any, data: { content: string, tabId: string }) => {
+            chrome.tabs.sendMessage(Number(data.tabId), { content: data.content }, function (response) {
+                console.log('Signed document sent to web page!');
+            });
+
+            // chrome.tabs.query({
+            //     // active: true,
+            //     // lastFocusedWindow: true
+            // }, (tabs) => {
+            //     debugger;
+            //     var tab = tabs[0];
+            //     // Provide the tab URL with the state query, because wallets and accounts is connected to domains.
+            //     // this.communication.send('state', { url: tab?.url });
+            //     chrome.tabs.sendMessage(Number(tab.id), { content: data.content }, function (response) {
+            //         console.log('Signed document sent to web page!');
+            //     });
+            // });
+
+            // chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+            //     chrome.tabs.sendMessage(tabs[0].id, { greeting: "hello" }, function (response) {
+            //         console.log(response.farewell);
+            //     });
+            // });
+
         });
 
         this.communication.listen('set-active-wallet-id', async (port: any, data: any) => {

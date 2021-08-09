@@ -11,12 +11,7 @@ import { OrchestratorService } from 'src/app/services/orchestrator.service';
     styleUrls: ['./sign.component.css']
 })
 export class ActionSignComponent {
-    mnemonic = '';
-    password = '';
-    unlocked = '';
-    unlockPassword = '';
-    alarmName = 'refresh';
-    wallet: any;
+    content?: string;
 
     constructor(
         public uiState: UIState,
@@ -26,27 +21,17 @@ export class ActionSignComponent {
         private ngZone: NgZone,
         private manager: OrchestratorService,
         private cd: ChangeDetectorRef) {
-
         this.uiState.title = 'Action: Signing';
 
-        // this.ngZone.run(() => this.router.navigate(["login"])).then();
+        this.content = this.uiState.action?.document;
+    }
 
+    sign() {
+        this.manager.sign(this.content, this.uiState.action?.tabId);
+        window.close();
     }
 
     exit() {
-        this.manager.setAction('');
-
-
-        
-
-        // Set the action in storage and close the action
-        // chrome.storage.local.set({ action: null }, () => {
-        //     // this.app.tick();
-        //     this.ngZone.run(() => {
-        //         this.uiState.title = '';
-        //         this.uiState.loading = true;
-        //         this.router.navigateByUrl('/');
-        //     });
-        // });
+        this.manager.clearAction();
     }
 }
