@@ -40,6 +40,7 @@ import { AccountComponent } from './account/account.component';
 import { SettingsComponent } from './settings/settings.component';
 import { ActionSignComponent } from './action/sign/sign.component';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { NetworkPipe } from './shared/network.pipe';
 
 @NgModule({
   declarations: [
@@ -56,7 +57,8 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     WalletEditComponent,
     WalletRemoveComponent,
     SettingsComponent,
-    ActionSignComponent
+    ActionSignComponent,
+    NetworkPipe
   ],
   imports: [
     BrowserModule,
@@ -88,6 +90,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     MatChipsModule,
     MatSnackBarModule
   ],
+  exports: [NetworkPipe],
   providers: [],
   bootstrap: [AppComponent]
 })
