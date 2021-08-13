@@ -46,23 +46,33 @@ window.addEventListener("load", function () {
 
   // console.log(window.blockcore2);
 
-  var loginButton = this.document.getElementById('blockcore-extension-button');
+  var buttons = document.getElementsByClassName('blockcore-extension-button'); // .getElementById('blockcore-extension-button');
+  var input = document.getElementById('blockcore-extension-input');
 
-  var input = this.document.getElementById('blockcore-extension-input');
+  console.log(buttons);
 
-  if (loginButton) {
-    loginButton.getAttribute('')
+  if (buttons) {
 
-    loginButton.onclick = () => {
-      console.log('LOGIN! Sending message from content to background!');
-      console.log(input.value);
+    Array.from(buttons).forEach((button) => {
+      let purpose = button.getAttribute('purpose');
 
-      chrome.runtime.sendMessage({
-        action: "sign", document: JSON.stringify(input.value)
-      }, function (response) {
-        console.log(response);
-      });
-    };
+      button.onclick = () => {
+        console.log('LOGIN! Sending message from content to background!');
+        console.log(input.value);
+
+        chrome.runtime.sendMessage({
+          action: purpose, document: JSON.stringify(input.value)
+        }, function (response) {
+          console.log(response);
+        });
+      };
+    });
+
+    // Array.forEach()
+    // var testDivs = Array.prototype.filter.call(buttons, function (button) {
+    // });
+    // buttons.forEach(button => {
+    // });
   }
 
   // var path = document.createElement('button');

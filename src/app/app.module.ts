@@ -41,6 +41,8 @@ import { SettingsComponent } from './settings/settings.component';
 import { ActionSignComponent } from './action/sign/sign.component';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { NetworkPipe } from './shared/network.pipe';
+import { ActionIdentityComponent } from './action/identity/identity.component';
+import { ActionLoginComponent } from './action/login/login.component';
 
 @NgModule({
   declarations: [
@@ -58,7 +60,9 @@ import { NetworkPipe } from './shared/network.pipe';
     WalletRemoveComponent,
     SettingsComponent,
     ActionSignComponent,
-    NetworkPipe
+    NetworkPipe,
+    ActionIdentityComponent,
+    ActionLoginComponent
   ],
   imports: [
     BrowserModule,

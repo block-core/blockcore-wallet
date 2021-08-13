@@ -1,12 +1,37 @@
 /* Source based on example by Brady Joslin - https://github.com/bradyjoslin */
 import * as bip39 from 'bip39';
 import { Base64 } from 'js-base64';
+import { payments } from 'bitcoinjs-lib';
+import { BlockcoreIdentity, Identity, BlockcoreIdentityTools } from '@blockcore/identity';
+import * as bs58 from 'bs58';
+import { keyUtils, Secp256k1KeyPair } from '@transmute/did-key-secp256k1';
 
 const enc = new TextEncoder();
 const dec = new TextDecoder();
 
+// TODO: Refactor the node/account management to a seperate type, e.g. "AccountManager" or something. Added here to finish faster.
+
 export class CryptoUtility {
     constructor() {
+    }
+
+    getProfileNetwork() {
+        var tools = new BlockcoreIdentityTools();
+        return tools.getProfileNetwork();
+    }
+
+    getAddress(node: any) {
+        const { address } = payments.p2pkh({
+            pubkey: node.publicKey,
+            network: this.getProfileNetwork(),
+        });
+
+        return address;
+    }
+
+    getIdentity(keyPair: Secp256k1KeyPair) {
+        var identity = new BlockcoreIdentity(keyPair.toKeyPair(false));
+        return identity;
     }
 
     generateMnemonic() {
@@ -63,6 +88,14 @@ export class CryptoUtility {
             console.error(e);
             return "";
         }
+    }
+
+    async getKeyPairFromNode(node: any) {
+        const tools = new BlockcoreIdentityTools();
+
+        let keyPair = await tools.keyPairFrom({ publicKeyBase58: bs58.encode(node.publicKey), privateKeyHex: node.privateKey.toString('hex') });
+
+        return keyPair;
     }
 
     async decryptData(encryptedData: string, password: string) {

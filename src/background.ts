@@ -176,7 +176,7 @@ chrome.runtime.onMessage.addListener(async (request: any, sender: any, sendRespo
   if (request.action == 'state') {
 
   }
-  else if (request.action == 'sign') {
+  else if (request.action == 'sign' || request.action == 'login' || request.action == 'identity') {
 
     // chrome.storage.local.get(
     //   { action: null }, // Providing a default if storage is empty
@@ -191,7 +191,7 @@ chrome.runtime.onMessage.addListener(async (request: any, sender: any, sendRespo
     debugger;
     console.log(sender);
 
-    await orchestrator.setAction({ action: 'sign', document: request.document, tabId: sender.tab.id });
+    await orchestrator.setAction({ action: request.action, document: request.document, tabId: sender.tab.id });
 
     // TODO: Figure out how to find the top-right of the browser window that activates the popup. https://github.com/block-core/blockcore-extension/issues/10
     var leftPosition = 0;

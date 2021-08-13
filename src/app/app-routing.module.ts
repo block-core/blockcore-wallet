@@ -13,6 +13,8 @@ import { AccountRemoveComponent } from './account/remove/remove.component';
 import { AccountComponent } from './account/account.component';
 import { SettingsComponent } from './settings/settings.component';
 import { ActionSignComponent } from './action/sign/sign.component';
+import { ActionIdentityComponent } from './action/identity/identity.component';
+import { ActionLoginComponent } from './action/login/login.component';
 
 const routes: Routes = [
   {
@@ -56,6 +58,12 @@ const routes: Routes = [
   },
   {
     path: 'action/sign', component: ActionSignComponent
+  },
+  {
+    path: 'action/identity', component: ActionIdentityComponent
+  },
+  {
+    path: 'action/login', component: ActionLoginComponent
   }
 ];
 

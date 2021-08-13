@@ -36,7 +36,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     // When on home page and when unlocked, open account.
     this.sub = this.communication.listen('wallet-unlocked', () => {
       if (this.uiState.action?.action) {
-        this.router.navigateByUrl('/action/sign');
+        this.router.navigate(['action', this.uiState.action.action]);
       } else {
         this.router.navigateByUrl('/account/view/' + this.uiState.activeWallet?.activeAccountIndex);
       }

@@ -122,7 +122,7 @@ export class LoadingComponent implements OnInit, OnDestroy {
       // Actions will override any other UI, but only if wallet is unlocked.
       if (this.uiState.action?.action && this.uiState.activeWallet && this.uiState.unlocked.indexOf(this.uiState.activeWallet.id) > -1) {
         // TODO: Add support for more actions.
-        this.router.navigateByUrl('/action/sign');
+        this.router.navigate(['action', this.uiState.action?.action]);
       } else {
         if (!this.uiState.hasWallets) {
           this.router.navigateByUrl('/wallet/create');

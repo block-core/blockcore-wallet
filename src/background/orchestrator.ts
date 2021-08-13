@@ -3,6 +3,8 @@ import { MINUTE } from 'src/app/shared/constants';
 import { AppState } from './application-state';
 import { CommunicationBackgroundService } from './communication';
 import { CryptoUtility } from './crypto-utility';
+import * as bip39 from 'bip39';
+import * as bip32 from 'bip32';
 
 export class OrchestratorBackgroundService {
     private communication!: CommunicationBackgroundService;
@@ -141,7 +143,56 @@ export class OrchestratorBackgroundService {
         });
 
         this.communication.listen('sign-content', async (port: any, data: { content: string, tabId: string }) => {
-            chrome.tabs.sendMessage(Number(data.tabId), { content: data.content }, function (response) {
+            var account = this.state.activeAccount;
+            var wallet = this.state.activeWallet;
+
+            if (!wallet || !account) {
+                chrome.tabs.sendMessage(Number(data.tabId), { content: 'No wallet/account active.' });
+                return;
+            }
+
+            // TODO: MUST VERIFY THAT ACCOUNT RESTORE AND NODES IS ALL CORRECT BELOW.
+            var masterSeed = await bip39.mnemonicToSeed(wallet.mnemonic, '');
+            const masterNode = bip32.fromSeed(masterSeed, this.crypto.getProfileNetwork());
+
+            // Get the hardened purpose and account node.
+            const accountNode = masterNode.derivePath(account.derivationPath); // m/302'/616'
+
+            const address0 = this.crypto.getAddress(accountNode);
+            var keyPair = await this.crypto.getKeyPairFromNode(accountNode);
+
+            // Get the identity corresponding with the key pair, does not contain the private key any longer.
+            var identity = this.crypto.getIdentity(keyPair);
+
+            let document = identity.document();
+
+            // Create an issuer from the identity, this is used to issue VCs.
+            const issuer = identity.issuer({ privateKey: keyPair.privateKeyBuffer?.toString('hex') });
+
+            // TODO: The URL should be provided by website triggering DID Document signing.
+            let configuration = await identity.configuration('https://localhost', issuer);
+            let configurationJson = JSON.stringify(configuration);
+
+            const setupPayload = {
+                "@context": "https://schemas.blockcore.net/.well-known/vault-configuration/v1",
+                "id": identity.id,
+                "url": "http://localhost:3001",
+                "name": 'Server Name',
+                "enabled": true,
+                "self": true,
+                "ws": "ws://localhost:9090",
+                "linked_dids": configuration.linked_dids,
+                "didDocument": document,
+                "vaultConfiguration": {
+                }
+            };
+
+            let setupDocument = setupPayload;
+            let setupDocumentJson = JSON.stringify(setupDocument);
+
+            // this.appState.identity = identity;
+
+            chrome.tabs.sendMessage(Number(data.tabId), { content: setupDocumentJson }, function (response) {
                 console.log('Signed document sent to web page!');
             });
 
