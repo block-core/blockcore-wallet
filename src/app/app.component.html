@@ -32,6 +32,12 @@
         <div mat-line>Unlock Wallet</div>
       </a>
 
+      <a mat-list-item *ngIf="uiState.activeWallet && uiState.activeWalletUnlocked" [routerLink]="['/dashboard']"
+        (click)="drawer.toggle()" routerLinkActive="active-link">
+        <mat-icon mat-list-icon>account_balance_wallet</mat-icon>
+        <div mat-line>View Wallet</div>
+      </a>
+
       <a mat-list-item *ngIf="uiState.activeWallet && uiState.activeWalletUnlocked" [routerLink]="['/wallet', 'edit']"
         (click)="drawer.toggle()" routerLinkActive="active-link">
         <mat-icon mat-list-icon>edit</mat-icon>
@@ -88,7 +94,7 @@
       <div class="detail-box">
         <mat-icon mat-list-icon class="account-icon">{{uiState.activeAccount.icon}}</mat-icon>
         <div class="detail-network">
-          {{uiState.activeAccount.network}}<br>
+          {{uiState.activeAccount.network | network}}<br>
           {{uiState.activeAccount.derivationPath}}
         </div>
       </div>
@@ -116,10 +122,11 @@
         </mat-select>
       </mat-form-field> -->
 
-      <a mat-list-item *ngFor="let account of uiState.activeWallet.accounts; let i = index" (click)="onAccountChanged(i)" routerLinkActive="active-link">
+      <a mat-list-item *ngFor="let account of uiState.activeWallet.accounts; let i = index"
+        (click)="onAccountChanged(i)" routerLinkActive="active-link">
         <mat-icon mat-list-icon>{{account.icon}}</mat-icon>
         <div mat-line>{{account.name}}</div>
-        <div mat-line>{{account.network}}</div>
+        <div mat-line>{{account.network | network}}</div>
       </a>
 
       <!-- <a mat-list-item *ngIf="appState.activeWallet && appState.unlocked" [routerLink]="['/wallet/edit']"
@@ -166,6 +173,10 @@
         <mat-icon>menu</mat-icon>
       </button>
       <span></span>
+
+      <button *ngIf="uiState.showBackButton" mat-icon-button (click)="goBack()">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
 
       <span class="example-spacer">{{uiState.title}}</span>
 

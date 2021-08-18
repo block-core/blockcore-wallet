@@ -38,7 +38,8 @@ export class HomeComponent implements OnInit, OnDestroy {
       if (this.uiState.action?.action) {
         this.router.navigate(['action', this.uiState.action.action]);
       } else {
-        this.router.navigateByUrl('/account/view/' + this.uiState.activeWallet?.activeAccountIndex);
+        this.router.navigateByUrl('/dashboard');
+        // this.router.navigateByUrl('/account/view/' + this.uiState.activeWallet?.activeAccountIndex);
       }
     });
   }
@@ -56,7 +57,8 @@ export class HomeComponent implements OnInit, OnDestroy {
     // Verify if the wallet is already unlocked.
     if (this.uiState.activeWallet) {
       if (this.uiState.unlocked.findIndex(id => id == this.uiState.activeWallet?.id) > -1) {
-        this.router.navigateByUrl('/account/view/' + this.uiState.activeWallet?.activeAccountIndex);
+        this.router.navigateByUrl('/dashboard');
+        // this.router.navigateByUrl('/account/view/' + this.uiState.activeWallet?.activeAccountIndex);
       }
     }
   }

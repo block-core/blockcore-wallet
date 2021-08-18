@@ -1,6 +1,39 @@
-<div class="page centered">
+<div class="page2">
+    <mat-nav-list *ngIf="uiState.activeWallet && uiState.activeWalletUnlocked">
+        <div mat-subheader>Accounts</div>
 
-    <div>241.244300 BTC</div>
+        <a mat-list-item *ngFor="let account of uiState.activeWallet.accounts; let i = index"
+            routerLinkActive="active-link" [routerLink]="['/', 'account', 'view', i]">
+            <mat-icon mat-list-icon>{{account.icon}}</mat-icon>
+            <div mat-line>{{account.name}}</div>
+            <div mat-line>{{account.network | network}}</div>
+        </a>
 
-    <br><br>
+        <mat-divider></mat-divider>
+        <div mat-subheader>Activity</div>
+
+        <mat-list-item *ngIf="history.length == 0">No activity yet</mat-list-item>
+
+        <a mat-list-item *ngFor="let item of history" routerLinkActive="active-link">
+            <mat-icon mat-list-icon>note</mat-icon>
+            <div mat-line>{{item.name}}</div>
+            <div mat-line> {{item.updated | date}} </div>
+        </a>
+
+        <mat-divider></mat-divider>
+        <div mat-subheader>Actions</div>
+
+        <a mat-list-item *ngIf="uiState.activeWallet && uiState.unlocked" [routerLink]="['/account/create']"
+            routerLinkActive="active-link">
+            <mat-icon mat-list-icon>add_circle_outline</mat-icon>
+            <div mat-line>Add Account</div>
+        </a>
+
+        <a mat-list-item *ngIf="uiState.activeWallet && uiState.unlocked" [routerLink]="['/wallet/create']"
+            routerLinkActive="active-link">
+            <mat-icon mat-list-icon>account_balance_wallet</mat-icon>
+            <div mat-line>Add Wallet</div>
+        </a>
+
+    </mat-nav-list>
 </div>

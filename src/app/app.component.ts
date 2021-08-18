@@ -5,6 +5,7 @@ import { NavigationEnd, Router } from '@angular/router';
 import { UIState } from './services/ui-state.service';
 import { CommunicationService } from './services/communication.service';
 import { OrchestratorService } from './services/orchestrator.service';
+import { Location } from '@angular/common'
 
 @Component({
   selector: 'app-root',
@@ -21,17 +22,25 @@ export class AppComponent implements OnInit {
     private router: Router,
     private communication: CommunicationService,
     private manager: OrchestratorService,
+    private location: Location,
     private cd: ChangeDetectorRef,
     @Inject(DOCUMENT) private document: Document) {
 
     router.events.subscribe((val) => {
       if (val instanceof NavigationEnd) {
+        // this.uiState.showBackButton = false;
+        // this.uiState.title = '';
         this.uiState.active();
       }
     });
 
     // Make sure we initialize the orchestrator early and hook up event handlers.
     manager.initialize();
+  }
+
+  goBack() {
+    this.router.navigateByUrl('/dashboard');
+    // this.location.back();
   }
 
   ngOnInit(): void {
@@ -152,7 +161,8 @@ export class AppComponent implements OnInit {
       //await this.uiState.save();
 
       if (this.uiState.unlocked.findIndex(id => id == walletId) > -1) {
-        this.router.navigateByUrl('/account/view/' + this.uiState.activeWallet?.activeAccountIndex);
+        this.router.navigateByUrl('/dashboard');
+        //this.router.navigateByUrl('/account/view/' + this.uiState.activeWallet?.activeAccountIndex);
       }
       else {
         // Make sure we route to home to unlock the newly selected wallet.

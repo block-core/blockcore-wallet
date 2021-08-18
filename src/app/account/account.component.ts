@@ -31,6 +31,7 @@ export class AccountComponent implements OnInit, OnDestroy {
     private cd: ChangeDetectorRef) {
 
     this.uiState.title = 'Account: ';
+    this.uiState.showBackButton = true;
 
     if (!this.uiState.hasAccounts) {
       this.router.navigateByUrl('/account/create');
@@ -68,6 +69,7 @@ export class AccountComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.sub = this.communication.listen('active-account-changed', (data: any) => {
+      console.log('active-account-changed!!!!');
       // If we are currently viewing an account and the user changes, we'll refresh this view.
       if (this.previousIndex != data.index) {
         this.router.navigate(['account', 'view', data.index]);

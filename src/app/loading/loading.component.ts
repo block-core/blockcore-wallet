@@ -130,7 +130,8 @@ export class LoadingComponent implements OnInit, OnDestroy {
           // If the active wallet is unlocked, we'll redirect accordingly.
           if (this.uiState.activeWallet && this.uiState.unlocked.indexOf(this.uiState.activeWallet.id) > -1) {
             console.log('LOADING REDIRECT TO ACCOUNT');
-            this.router.navigateByUrl('/account/view/' + this.uiState.activeWallet.activeAccountIndex);
+            this.router.navigateByUrl('/dashboard');
+            //this.router.navigateByUrl('/account/view/' + this.uiState.activeWallet.activeAccountIndex);
           } else {
             console.log('LOADING REDIRECT TO HOME');
             this.router.navigateByUrl('/home');

@@ -16,6 +16,7 @@ export class AccountEditComponent implements OnInit, OnDestroy {
 
   accountName: string | undefined;
   sub: any;
+  sub2: any;
   icon: string | undefined;
 
   constructor(
@@ -30,15 +31,24 @@ export class AccountEditComponent implements OnInit, OnDestroy {
     this.uiState.title = 'Edit Account'
 
     this.activatedRoute.paramMap.subscribe(async params => {
+      console.log('ROUTE CHANGE 1');
       const index: any = params.get('index');
 
       if (!this.uiState.activeWallet) {
+        console.log('ROUTE CHANGE 3');
         return;
       }
 
       this.manager.setActiveAccountId(index);
       this.accountName = this.uiState.activeAccount?.name;
       this.icon = this.uiState.activeAccount?.icon;
+      console.log('ROUTE CHANGE 2');
+    });
+
+    this.sub2 = this.uiState.activeAccount$.subscribe(() => {
+      this.accountName = this.uiState.activeAccount?.name;
+      this.icon = this.uiState.activeAccount?.icon;
+      console.log('ROUTE CHANGE 2');
     });
   }
 
@@ -55,7 +65,13 @@ export class AccountEditComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.communication.unlisten(this.sub);
+    if (this.sub) {
+      this.communication.unlisten(this.sub);
+    }
+
+    if (this.sub2) {
+      this.sub2.unsubscribe();
+    }
   }
 
   async save() {

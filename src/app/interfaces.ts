@@ -30,7 +30,7 @@ interface Account {
 
 interface Wallet {
     id: string;
-    name: string | undefined;
+    name: string;
     // network: string;
     accounts: Account[];
     mnemonic: string;

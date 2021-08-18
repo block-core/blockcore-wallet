@@ -95,7 +95,8 @@ export class OrchestratorService {
         // When a wallet is removed, we must update UI.
         this.communication.listen('account-removed', (value: any) => {
             if (this.uiState.hasAccounts) {
-                this.router.navigateByUrl('/account/view/' + this.uiState.activeWallet?.activeAccountIndex);
+                this.router.navigateByUrl('/dashboard');
+                // this.router.navigateByUrl('/account/view/' + this.uiState.activeWallet?.activeAccountIndex);
             } else {
                 this.router.navigateByUrl('/account/create');
             }

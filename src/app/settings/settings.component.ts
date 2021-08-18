@@ -16,6 +16,7 @@ export class SettingsComponent {
     private location: Location) {
     this.autoTimeout = this.uiState.persisted.autoTimeout;
     this.uiState.title = 'Settings';
+    this.uiState.showBackButton = true;
   }
 
   async save() {

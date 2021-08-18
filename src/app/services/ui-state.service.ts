@@ -23,6 +23,8 @@ export class UIState {
 
     persisted!: Persisted;
 
+    showBackButton = false;
+
     // activeWalletIndex: number = 0;
 
     get hasWallets(): boolean {
