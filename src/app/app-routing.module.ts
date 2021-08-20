@@ -15,6 +15,7 @@ import { SettingsComponent } from './settings/settings.component';
 import { ActionSignComponent } from './action/sign/sign.component';
 import { ActionIdentityComponent } from './action/identity/identity.component';
 import { ActionLoginComponent } from './action/login/login.component';
+import { AccountIdentityComponent } from './account/view/identity/identity.component';
 
 const routes: Routes = [
   {
@@ -34,6 +35,9 @@ const routes: Routes = [
   },
   {
     path: 'account/view/:index', component: AccountComponent
+  },
+  {
+    path: 'account/view/identity/:index', component: AccountIdentityComponent
   },
   {
     path: 'account/create', component: AccountCreateComponent

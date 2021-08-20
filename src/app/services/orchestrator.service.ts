@@ -44,6 +44,7 @@ export class OrchestratorService {
             this.uiState.initialized = true;
             this.uiState.action = state.action;
             this.uiState.persisted = state.persisted;
+            this.uiState.store = state.store;
 
             this.uiState.persisted$.next(this.uiState.persisted);
             this.uiState.activeWalletSubject.next(this.uiState.activeWallet);

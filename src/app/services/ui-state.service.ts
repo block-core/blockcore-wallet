@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { EventEmitter, Injectable, NgZone } from '@angular/core';
-import { Account, Action, Persisted, Wallet } from '../interfaces';
+import { Account, Action, Persisted, Store, Wallet } from '../interfaces';
 import { MINUTE } from '../shared/constants';
 import { Router } from '@angular/router';
 import { CommunicationService } from './communication.service';
@@ -22,6 +22,8 @@ export class UIState {
     persisted$: Subject<Persisted> = new ReplaySubject();
 
     persisted!: Persisted;
+
+    store!: Store;
 
     showBackButton = false;
 

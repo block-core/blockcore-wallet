@@ -41,8 +41,10 @@ import { SettingsComponent } from './settings/settings.component';
 import { ActionSignComponent } from './action/sign/sign.component';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { NetworkPipe } from './shared/network.pipe';
+import { TruncatePipe } from './shared/truncate.pipe';
 import { ActionIdentityComponent } from './action/identity/identity.component';
 import { ActionLoginComponent } from './action/login/login.component';
+import { AccountIdentityComponent } from './account/view/identity/identity.component';
 
 @NgModule({
   declarations: [
@@ -61,8 +63,10 @@ import { ActionLoginComponent } from './action/login/login.component';
     SettingsComponent,
     ActionSignComponent,
     NetworkPipe,
+    TruncatePipe,
     ActionIdentityComponent,
-    ActionLoginComponent
+    ActionLoginComponent,
+    AccountIdentityComponent
   ],
   imports: [
     BrowserModule,
@@ -94,7 +98,7 @@ import { ActionLoginComponent } from './action/login/login.component';
     MatChipsModule,
     MatSnackBarModule
   ],
-  exports: [NetworkPipe],
+  exports: [NetworkPipe, TruncatePipe],
   providers: [],
   bootstrap: [AppComponent]
 })

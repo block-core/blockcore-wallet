@@ -1,10 +1,11 @@
-import { Account, State, Wallet, Action } from 'src/app/interfaces';
-import { MINUTE } from 'src/app/shared/constants';
+import { Account, State, Wallet, Action, DIDPayload } from 'src/app/interfaces';
+import { MINUTE, NETWORK_IDENTITY } from 'src/app/shared/constants';
 import { AppState } from './application-state';
 import { CommunicationBackgroundService } from './communication';
 import { CryptoUtility } from './crypto-utility';
 import * as bip39 from 'bip39';
 import * as bip32 from 'bip32';
+import { decodeJWT, verifyJWT } from 'did-jwt';
 
 export class OrchestratorBackgroundService {
     private communication!: CommunicationBackgroundService;
@@ -68,6 +69,60 @@ export class OrchestratorBackgroundService {
         }
     }
 
+    async createIdentityDocument() {
+        var account = this.state.activeAccount;
+        var wallet = this.state.activeWallet;
+
+        if (!account || !wallet) {
+            return;
+        }
+
+        // TODO: MUST VERIFY THAT ACCOUNT RESTORE AND NODES IS ALL CORRECT BELOW.
+        var masterSeed = await bip39.mnemonicToSeed(wallet.mnemonic, '');
+        const masterNode = bip32.fromSeed(masterSeed, this.crypto.getProfileNetwork());
+
+        // Get the hardened purpose and account node.
+        const accountNode = masterNode.derivePath(account.derivationPath); // m/302'/616'
+
+        const address0 = this.crypto.getAddress(accountNode);
+        var keyPair = await this.crypto.getKeyPairFromNode(accountNode);
+
+        // Get the identity corresponding with the key pair, does not contain the private key any longer.
+        var identity = this.crypto.getIdentity(keyPair);
+
+        // let document = identity.document(({ service: services });
+        let document = identity.document();
+
+        // Create an issuer from the identity, this is used to issue VCs.
+        const issuer = identity.issuer({ privateKey: keyPair.privateKeyBuffer?.toString('hex') });
+
+        // TODO: The URL should be provided by website triggering DID Document signing.
+        // let configuration = await identity.configuration('https://localhost', issuer);
+        // let configurationJson = JSON.stringify(configuration);
+
+        // const signedJwt = await identity.signJwt({ payload: payload, privateKeyJwk: keyPairWebKey.privateKeyJwk });
+        // console.log('SIGNED PAYLOAD:');
+        // console.log(signedJwt);
+
+        const jws = await identity.jws({
+            payload: document,
+            privateKey: keyPair.privateKeyBuffer?.toString('hex')
+        });
+
+        const jwt = await identity.jwt({
+            payload: document,
+            privateKey: keyPair.privateKeyBuffer?.toString('hex')
+        });
+
+        var decodedDidDocument = decodeJWT(jws) as unknown as DIDPayload;
+        var decodedDidDocument2 = decodeJWT(jwt);
+
+        this.state.store.identities.push({ id: identity.id, didPayload: decodedDidDocument, didDocument: decodedDidDocument.payload });
+
+        account.identifier = identity.id;
+        account.name = identity.id;
+    }
+
     refreshState() {
         // Whenever we refresh the state, we'll also reset the timer. State changes should occur based on user-interaction.
         this.active();
@@ -75,7 +130,8 @@ export class OrchestratorBackgroundService {
         const initialState: State = {
             action: this.state.action,
             persisted: this.state.persisted,
-            unlocked: this.state.unlocked
+            unlocked: this.state.unlocked,
+            store: this.state.store
         }
 
         // Send new state to UI instances.
@@ -120,7 +176,8 @@ export class OrchestratorBackgroundService {
             const initialState: State = {
                 action: this.state.action,
                 persisted: this.state.persisted,
-                unlocked: this.state.unlocked
+                unlocked: this.state.unlocked,
+                store: this.state.store
             };
 
             this.communication.send(port, 'state', initialState);
@@ -388,11 +445,26 @@ export class OrchestratorBackgroundService {
 
             this.state.activeWallet.activeAccountIndex = (this.state.activeWallet.accounts.length - 1);
 
+            if (this.state.activeAccount?.network === NETWORK_IDENTITY) {
+                // Generate DID Document for the identity and persist it.
+                this.createIdentityDocument();
+
+                // TODO: Perform blockchain / vault data query and recovery.
+                // If there are transactions, DID Documents, NFTs or anythign else, we should launch the
+                // query probe here.
+
+                await this.state.saveStore(this.state.store);
+            }
+
             await this.state.save();
 
             this.refreshState();
 
             this.communication.sendToAll('account-created');
+
+            this.communication.sendToAll('identity-created');
+
+
         });
 
         this.communication.listen('set-active-account', async (port: any, data: { index: number }) => {
@@ -419,6 +491,12 @@ export class OrchestratorBackgroundService {
             // Change the active wallet to the new one.
             this.state.persisted.activeWalletId = data.id;
 
+            if (this.state.activeAccount?.network === NETWORK_IDENTITY) {
+                // Generate DID Document for the identity and persist it.
+                this.createIdentityDocument();
+                await this.state.saveStore(this.state.store);
+            }
+
             // Persist the state.
             await this.state.save();
 
@@ -426,6 +504,14 @@ export class OrchestratorBackgroundService {
 
             // Make sure we inform all instances when a wallet is deleted.
             this.communication.sendToAll('wallet-created');
+
+            // this.communication.sendToAll('account-created');
+
+            this.communication.sendToAll('identity-created');
+
+            // TODO: Perform blockchain / vault data query and recovery.
+            // If there are transactions, DID Documents, NFTs or anythign else, we should launch the
+            // query probe here.
         });
 
         this.communication.listen('wallet-delete', async (port: any, data: any) => {

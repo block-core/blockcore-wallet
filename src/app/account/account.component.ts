@@ -5,10 +5,12 @@ import { UIState } from '../services/ui-state.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { OrchestratorService } from '../services/orchestrator.service';
 import { CommunicationService } from '../services/communication.service';
+import { NETWORK_IDENTITY } from '../shared/constants';
 
 @Component({
   selector: 'app-account',
-  templateUrl: './account.component.html'
+  templateUrl: './account.component.html',
+  styleUrls: ['./account.component.css']
 })
 export class AccountComponent implements OnInit, OnDestroy {
   mnemonic = '';
@@ -18,7 +20,7 @@ export class AccountComponent implements OnInit, OnDestroy {
   alarmName = 'refresh';
   wallet: any;
   account!: any;
-  sub: any;
+  // sub: any;
   previousIndex!: number;
 
   constructor(
@@ -51,29 +53,31 @@ export class AccountComponent implements OnInit, OnDestroy {
       this.manager.setActiveAccountId(index);
       this.uiState.title = 'Account: ' + this.uiState.activeAccount?.name;
 
-      // this.uiState.persisted.activeAccountIndex = Number(index);
-
-      // Persist when changing accounts.
-      // this.uiState.save();
-
       this.previousIndex = index;
 
+      if (this.uiState.activeAccount?.network == NETWORK_IDENTITY) {
+        this.router.navigate(['account', 'view', 'identity', index]);
+      }
+
+      // this.uiState.persisted.activeAccountIndex = Number(index);
+      // Persist when changing accounts.
+      // this.uiState.save();
     });
   }
 
   ngOnDestroy(): void {
-    if (this.sub) {
-      this.communication.unlisten(this.sub);
-    }
+    // if (this.sub) {
+    //   this.communication.unlisten(this.sub);
+    // }
   }
 
   ngOnInit(): void {
-    this.sub = this.communication.listen('active-account-changed', (data: any) => {
-      console.log('active-account-changed!!!!');
-      // If we are currently viewing an account and the user changes, we'll refresh this view.
-      if (this.previousIndex != data.index) {
-        this.router.navigate(['account', 'view', data.index]);
-      }
-    });
+    // this.sub = this.communication.listen('active-account-changed', (data: any) => {
+    //   // If we are currently viewing an account and the user changes, we'll refresh this view.
+    //   if (this.previousIndex != data.index) {
+    //     console.log('active-account-changed!!!! DIFFERENT, WILL NAVIGATE!');
+    //     this.router.navigate(['account', 'view', data.index]);
+    //   }
+    // });
   }
 }

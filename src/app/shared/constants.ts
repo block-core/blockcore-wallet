@@ -3,3 +3,7 @@ export const SECOND = MILLISECOND * 1000;
 export const MINUTE = SECOND * 60;
 export const HOUR = MINUTE * 60;
 export const DAY = HOUR * 24;
+
+export const NETWORK_IDENTITY = 616;
+export const NETWORK_CITY = 1926;
+export const NETWORK_BTC = 0;

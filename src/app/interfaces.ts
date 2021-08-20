@@ -1,3 +1,5 @@
+import { DIDDocument, DIDDocumentMetadata } from "did-resolver";
+
 // interfaces.ts
 interface IWords {
     [key: string]: string;
@@ -26,6 +28,7 @@ interface Account {
     purpose: number;
     derivationPath: string;
     icon?: string;
+    identifier?: string;
 }
 
 interface Wallet {
@@ -47,8 +50,7 @@ interface Persisted {
     // activeAccountIndex: number
 }
 
-interface Action
-{
+interface Action {
     action?: string;
     document?: string;
     tabId?: string;
@@ -57,7 +59,51 @@ interface Action
 interface State {
     action?: Action
     persisted: Persisted
+    store: Store
     unlocked: string[]
+}
+
+interface Store {
+    identities: Identity[] // Contains the users own identities and queries/cached identities.
+    cache: {
+        identities: Identity[]
+    }
+}
+
+interface Identity {
+    id: string,
+    didDocument?: DIDDocument;
+    didResolution?: any | DIDResolutionResult;
+    didPayload?: DIDPayload;
+}
+
+interface DIDPayload {
+    /** Base64 encoded and signed JWS of the DID Document. */
+    data: string;
+
+    /** Decoded JWS header. */
+    header: {
+        alg: string;
+        issuer: string;
+    }
+
+    payload: DIDDocument;
+
+    /** The isolated signature from the JWS. */
+    signature: string
+}
+
+interface DIDDocumentMetadataEx extends DIDDocumentMetadata {
+    header: any,
+    signature: string,
+    data: string,
+    sequence: number // This is important to have latest of or updates to DID Documents will fail, ordered sequence is required.
+}
+
+interface DIDResolutionResult {
+    didDocument: any | DIDDocument;
+    didDocumentMetadata: DIDDocumentMetadataEx;
+    didResolutionMetadata: any;
 }
 
 export {
@@ -69,5 +115,9 @@ export {
     Wallet,
     Persisted,
     State,
-    Action
+    Action,
+    Store,
+    Identity,
+    DIDResolutionResult,
+    DIDPayload
 }

@@ -1,4 +1,4 @@
-import { Action, Persisted, Wallet } from "src/app/interfaces";
+import { Action, Persisted, Wallet, Store } from "src/app/interfaces";
 import { MINUTE } from "src/app/shared/constants";
 
 export class AppState {
@@ -7,6 +7,13 @@ export class AppState {
         autoTimeout: 10,
         wallets: [],
         activeWalletId: null
+    };
+
+    store: Store = {
+        identities: [],
+        cache: {
+            identities: []
+        }
     };
 
     ui: any;
@@ -97,11 +104,17 @@ export class AppState {
         });
     }
 
-    async load(): Promise<{ data: Persisted, ui: any, action: Action }> {
+    async load(): Promise<{ data: Persisted, ui: any, action: Action, store: Store }> {
         // Immediately return a promise and start asynchronous work
         return new Promise((resolve, reject) => {
             // Asynchronously fetch all data from storage.sync.
-            chrome.storage.local.get(['data', 'ui', 'action'], (items: any) => {
+
+            // data = AppState.
+            // ui = Some UI state.
+            // action = Action triggered by web apps.
+            // store = local copy of blockchain and other cloud data.
+
+            chrome.storage.local.get(['data', 'ui', 'action', 'store'], (items: any) => {
                 // Pass any observed errors down the promise chain.
                 if (chrome.runtime.lastError) {
                     return reject(chrome.runtime.lastError);
@@ -131,6 +144,33 @@ export class AppState {
                     return reject(chrome.runtime.lastError);
                 }
 
+                resolve();
+            });
+        });
+    }
+
+    async saveStore(store: Store): Promise<void> {
+        // Immediately return a promise and start asynchronous work
+        return new Promise((resolve, reject) => {
+            // Asynchronously fetch all data from storage.sync.
+            console.log('SAVING STORE:');
+            console.log(JSON.stringify(store));
+
+            // this.persisted.wallets = Object.fromEntries(this.persisted.wallets);
+
+            chrome.storage.local.set({ 'store': store }, () => {
+                console.log('SAVED STORE!');
+
+                // Update the timer, the timeout might have changed.
+                // TODO: Figure out if we need this, cause other actions will reset the timer anyway.
+                // this.resetTimer();
+                // this.active
+
+                // Pass any observed errors down the promise chain.
+                if (chrome.runtime.lastError) {
+                    return reject(chrome.runtime.lastError);
+                }
+                // Pass the data retrieved from storage down the promise chain.
                 resolve();
             });
         });

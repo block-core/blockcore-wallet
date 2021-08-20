@@ -23,11 +23,17 @@ const loadState = async () => {
   // chrome.storage.local.set({ 'data': null }, () => {
   // });
 
-  let { data, ui, action } = await state.load();
+  let { data, ui, action, store } = await state.load();
+
+  console.log('STORE', store);
 
   // Only set if data is available, will use default if not.
   if (data) {
     state.persisted = data;
+  }
+
+  if (store) {
+    state.store = store;
   }
 
   state.initialized = true;
@@ -188,7 +194,6 @@ chrome.runtime.onMessage.addListener(async (request: any, sender: any, sendRespo
     //   }
     // );
 
-    debugger;
     console.log(sender);
 
     await orchestrator.setAction({ action: request.action, document: request.document, tabId: sender.tab.id });

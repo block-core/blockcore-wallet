@@ -70,3 +70,8 @@
     margin-bottom: 0.5em;
 }
 
+.name-field {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

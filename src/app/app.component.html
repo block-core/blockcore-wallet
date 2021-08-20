@@ -89,7 +89,7 @@
     </mat-toolbar> -->
 
     <div class="account-details" *ngIf="uiState.activeAccount">
-      <h2>{{uiState.activeAccount.name}}</h2>
+      <h2 class="name-field">{{uiState.activeAccount.name  | truncate}}</h2>
 
       <div class="detail-box">
         <mat-icon mat-list-icon class="account-icon">{{uiState.activeAccount.icon}}</mat-icon>
@@ -125,7 +125,7 @@
       <a mat-list-item *ngFor="let account of uiState.activeWallet.accounts; let i = index"
         (click)="onAccountChanged(i)" routerLinkActive="active-link">
         <mat-icon mat-list-icon>{{account.icon}}</mat-icon>
-        <div mat-line>{{account.name}}</div>
+        <div mat-line class="name-field">{{account.name | truncate}}</div>
         <div mat-line>{{account.network | network}}</div>
       </a>
 
@@ -178,7 +178,7 @@
         <mat-icon>arrow_back</mat-icon>
       </button>
 
-      <span class="example-spacer">{{uiState.title}}</span>
+      <span class="example-spacer">{{uiState.title | truncate}}</span>
 
       <button *ngIf="uiState.activeWalletUnlocked" mat-icon-button (click)="draweraccount.toggle()">
         <mat-icon>{{uiState.activeAccount?.icon}}</mat-icon>
