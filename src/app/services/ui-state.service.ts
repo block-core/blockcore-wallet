@@ -160,6 +160,18 @@ export class UIState {
         // }
     }
 
+    async wipe(): Promise<void> {
+        return new Promise((resolve, reject) => {
+            chrome.storage.local.clear(() => {
+                debugger;
+                if (chrome.runtime.lastError) {
+                    return reject(chrome.runtime.lastError);
+                }
+                resolve();
+            });
+        });
+    }
+
     // async save(): Promise<void> {
 
     //     // Immediately return a promise and start asynchronous work

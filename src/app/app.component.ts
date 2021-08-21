@@ -38,6 +38,10 @@ export class AppComponent implements OnInit {
     manager.initialize();
   }
 
+  async wipe() {
+    this.uiState.wipe();
+  }
+
   goBack() {
     this.router.navigateByUrl('/dashboard');
     // this.location.back();

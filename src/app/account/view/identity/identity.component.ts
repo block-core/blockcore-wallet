@@ -5,6 +5,7 @@ import { UIState } from '../../../services/ui-state.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { OrchestratorService } from '../../../services/orchestrator.service';
 import { CommunicationService } from '../../../services/communication.service';
+import { Identity } from 'src/app/interfaces';
 
 @Component({
   selector: 'app-account-identity',
@@ -21,7 +22,8 @@ export class AccountIdentityComponent implements OnInit, OnDestroy {
   account!: any;
   sub: any;
   previousIndex!: number;
-  identity: any;
+  identity: Identity | undefined;
+  encryptedDataVaultUrl = '';
 
   constructor(
     public uiState: UIState,
@@ -40,7 +42,6 @@ export class AccountIdentityComponent implements OnInit, OnDestroy {
     }
 
     this.activatedRoute.paramMap.subscribe(async params => {
-      debugger;
       // If we are currently viewing an account and the user changes, we'll refresh this view.
       // if (this.previousIndex != data.index) {
       //   this.router.navigate(['account', 'view', data.index]);
@@ -69,6 +70,11 @@ export class AccountIdentityComponent implements OnInit, OnDestroy {
       var did = this.uiState.activeAccount?.identifier;
       this.identity = this.uiState.store.identities.find(i => i.id == did);
 
+      let service = this.identity?.services.find(s => s.type == 'EncryptedDataVault');
+
+      if (service) {
+        this.encryptedDataVaultUrl = service.serviceEndpoint;
+      }
     });
   }
 
@@ -78,9 +84,45 @@ export class AccountIdentityComponent implements OnInit, OnDestroy {
     }
   }
 
+  save() {
+    if (!this.identity) {
+      return;
+    }
+
+    if (this.encryptedDataVaultUrl && this.encryptedDataVaultUrl.length > 0) {
+      var edv = {
+        id: this.identity.id + '#edv',
+        type: 'EncryptedDataVault',
+        serviceEndpoint: this.encryptedDataVaultUrl
+      };
+
+      // Attempt to find existing EncryptedDataVault service. We do not want to replace any third party
+      // services the user might have added to their DID Document through other means.
+      if (this.identity.services.length > 0) {
+        var existingIndex = this.identity.services.findIndex(s => s.type == 'EncryptedDataVault');
+
+        if (existingIndex > -1) {
+          // Replace existing.
+          this.identity.services[existingIndex] = edv;
+        } else {
+          this.identity.services.push(edv);
+        }
+      }
+      else {
+        this.identity.services = [edv];
+      }
+
+      console.log(this.identity);
+      this.manager.updateIdentity(this.identity);
+    }
+  }
+
+  publish() {
+
+  }
+
   ngOnInit(): void {
     this.sub = this.communication.listen('active-account-changed', (data: any) => {
-      debugger;
       // If we are currently viewing an account and the user changes, we'll refresh this view.
       // if (this.previousIndex != data.index) {
       //   this.router.navigate(['account', 'view', data.index]);
@@ -108,6 +150,12 @@ export class AccountIdentityComponent implements OnInit, OnDestroy {
 
       var did = this.uiState.activeAccount?.identifier;
       this.identity = this.uiState.store.identities.find(i => i.id == did);
+
+      let service = this.identity?.services.find(s => s.type == 'EncryptedDataVault');
+
+      if (service) {
+        this.encryptedDataVaultUrl = service.serviceEndpoint;
+      }
 
     });
   }

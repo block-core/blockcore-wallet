@@ -2,8 +2,16 @@
 
   <mat-form-field class="input-full-width" appearance="outline">
     <mat-label>Auto-Lock Timer (minutes)</mat-label>
-    <input matInput [(ngModel)]="autoTimeout" required>
+    <input matInput [(ngModel)]="settings.autoTimeout" required>
     <mat-hint>Set the idle time in minutes before the wallet become locked.</mat-hint>
+  </mat-form-field>
+
+  <br><br>
+
+  <mat-form-field class="input-full-width" appearance="outline">
+    <mat-label>Data Vault</mat-label>
+    <input matInput [(ngModel)]="settings.dataVault">
+    <mat-hint>Only change this if you want to connect your identities to an third party Blockcore Vault instance.</mat-hint>
   </mat-form-field>
 
   <!-- <mat-form-field appearance="fill">

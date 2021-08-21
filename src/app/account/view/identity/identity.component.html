@@ -2,17 +2,30 @@
 
     <h4>{{identity.id}}</h4>
 
-    <!-- <p>
-        Your identity is primarily a list of public keys that you make public available for others to connect with you
-        in a secure manner.</p>
-    <p>You can use your identity to login to web apps, to chat with others, to sign contracts and documents, to
-        establish digital agreements and a lot more.</p> -->
     <p class="icon-indicator" *ngIf="!identity.published">
         <mat-icon class="icon-warn">done</mat-icon> This identity is currently NOT public
     </p>
     <p class="icon-indicator" *ngIf="identity.published">
         <mat-icon class="icon-success">done</mat-icon> This identity is currently public
     </p>
+
+    <mat-form-field class="input-full-width" appearance="outline">
+        <mat-label>Encrypted Data Vault URL</mat-label>
+        <input matInput [(ngModel)]="encryptedDataVaultUrl">
+        <mat-hint>Set a custom EDV URL if you self-host your own instance of Blockcore Vault.</mat-hint>
+    </mat-form-field>
+
+    <br><br>
+    <p>
+        <button class="signup-button" mat-flat-button color="primary" (click)="save()">Save (locally)</button>
+        <button class="signup-button" mat-flat-button color="warn" (click)="publish()">Publish</button>
+    </p>
+    <!-- <p>
+        Your identity is primarily a list of public keys that you make public available for others to connect with you
+        in a secure manner.</p>
+    <p>You can use your identity to login to web apps, to chat with others, to sign contracts and documents, to
+        establish digital agreements and a lot more.</p> -->
+
 
     <h3>DID Document:</h3>
     <textarea class="diddocument">{{identity.didDocument | json}}</textarea>

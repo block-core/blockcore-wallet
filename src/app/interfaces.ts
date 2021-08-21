@@ -1,4 +1,4 @@
-import { DIDDocument, DIDDocumentMetadata } from "did-resolver";
+import { DIDDocument, DIDDocumentMetadata, ServiceEndpoint } from "did-resolver";
 
 // interfaces.ts
 interface IWords {
@@ -44,10 +44,16 @@ interface Persisted {
     // wallets: Map<string, Wallet>
     wallets: Wallet[]
     activeWalletId: string | undefined | null
-    autoTimeout: number
+    // autoTimeout: number
+    settings: Settings
     // wallets: Wallet[],
     // activeWalletIndex: number;
     // activeAccountIndex: number
+}
+
+interface Settings {
+    dataVault: string;
+    autoTimeout: number;
 }
 
 interface Action {
@@ -72,6 +78,8 @@ interface Store {
 
 interface Identity {
     id: string,
+    published: boolean;
+    services: ServiceEndpoint[];
     didDocument?: DIDDocument;
     didResolution?: any | DIDResolutionResult;
     didPayload?: DIDPayload;
@@ -119,5 +127,6 @@ export {
     Store,
     Identity,
     DIDResolutionResult,
-    DIDPayload
+    DIDPayload,
+    Settings
 }

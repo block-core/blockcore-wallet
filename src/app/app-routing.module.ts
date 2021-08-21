@@ -16,6 +16,7 @@ import { ActionSignComponent } from './action/sign/sign.component';
 import { ActionIdentityComponent } from './action/identity/identity.component';
 import { ActionLoginComponent } from './action/login/login.component';
 import { AccountIdentityComponent } from './account/view/identity/identity.component';
+import { WipeComponent } from './wipe/wipe.component';
 
 const routes: Routes = [
   {
@@ -29,6 +30,9 @@ const routes: Routes = [
   },
   {
     path: 'about', component: AboutComponent
+  },
+  {
+    path: 'wipe', component: WipeComponent
   },
   {
     path: 'settings', component: SettingsComponent

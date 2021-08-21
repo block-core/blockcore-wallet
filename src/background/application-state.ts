@@ -1,10 +1,13 @@
-import { Action, Persisted, Wallet, Store } from "src/app/interfaces";
-import { MINUTE } from "src/app/shared/constants";
+import { Action, Persisted, Wallet, Store, Settings } from "src/app/interfaces";
+import { AUTO_TIMEOUT, MINUTE, VAULT_URL } from "src/app/shared/constants";
 
 export class AppState {
 
     persisted: Persisted = {
-        autoTimeout: 10,
+        settings: {
+            autoTimeout: AUTO_TIMEOUT,
+            dataVault: VAULT_URL
+        },
         wallets: [],
         activeWalletId: null
     };

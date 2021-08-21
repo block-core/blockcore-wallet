@@ -1,0 +1,15 @@
+<div class="page centered">
+    <mat-icon class="large-icon">delete</mat-icon>
+    <br>
+    <h1>Wipe all data and cache</h1>
+
+    <p>
+        This will remove all data, state and cache from the extension.
+        All local changes that has not been persisted to cloud storage or blockchain, will be lost.
+    </p>
+
+    <br>
+    <button class="signup-button" mat-flat-button (click)="cancel()">Cancel</button>
+    <br>
+    <button class="signup-button" mat-flat-button color="primary" (click)="wipe()">Yes, wipe data</button>
+</div>

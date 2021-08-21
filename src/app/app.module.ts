@@ -45,6 +45,7 @@ import { TruncatePipe } from './shared/truncate.pipe';
 import { ActionIdentityComponent } from './action/identity/identity.component';
 import { ActionLoginComponent } from './action/login/login.component';
 import { AccountIdentityComponent } from './account/view/identity/identity.component';
+import { WipeComponent } from './wipe/wipe.component';
 
 @NgModule({
   declarations: [
@@ -66,7 +67,8 @@ import { AccountIdentityComponent } from './account/view/identity/identity.compo
     TruncatePipe,
     ActionIdentityComponent,
     ActionLoginComponent,
-    AccountIdentityComponent
+    AccountIdentityComponent,
+    WipeComponent
   ],
   imports: [
     BrowserModule,

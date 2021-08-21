@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { UIState } from './ui-state.service';
 import { CommunicationService } from './communication.service';
-import { Account, Action, State } from '../interfaces';
+import { Account, Action, Identity, Settings, State } from '../interfaces';
 import {
     MatSnackBar,
     MatSnackBarHorizontalPosition,
@@ -117,9 +117,17 @@ export class OrchestratorService {
         this.communication.send('set-active-account', { index });
     }
 
-    setLockTimer(minutes: number) {
-        this.communication.send('set-lock-timer', { minutes });
+    setSettings(settings: Settings) {
+        this.communication.send('set-settings', settings);
     }
+
+    updateIdentity(identity: Identity) {
+        this.communication.send('update-identity', identity);
+    }
+
+    // setLockTimer(minutes: number) {
+    //     this.communication.send('set-lock-timer', { minutes });
+    // }
 
     updateAccount(id: string, index: number, fields: { name: string, icon?: string }) {
         this.communication.send('account-update', { id, index, fields });
