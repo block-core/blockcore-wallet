@@ -122,7 +122,7 @@ export class OrchestratorService {
     }
 
     updateIdentity(identity: Identity) {
-        this.communication.send('update-identity', identity);
+        this.communication.send('identity-update', identity);
     }
 
     // setLockTimer(minutes: number) {

@@ -21,6 +21,7 @@ export class AccountIdentityComponent implements OnInit, OnDestroy {
   wallet: any;
   account!: any;
   sub: any;
+  sub2: any;
   previousIndex!: number;
   identity: Identity | undefined;
   encryptedDataVaultUrl = '';
@@ -82,6 +83,10 @@ export class AccountIdentityComponent implements OnInit, OnDestroy {
     if (this.sub) {
       this.communication.unlisten(this.sub);
     }
+
+    if (this.sub2) {
+      this.communication.unlisten(this.sub2);
+    }
   }
 
   save() {
@@ -103,7 +108,10 @@ export class AccountIdentityComponent implements OnInit, OnDestroy {
 
         if (existingIndex > -1) {
           // Replace existing.
-          this.identity.services[existingIndex] = edv;
+          this.identity.services.splice(existingIndex, 1);
+          this.identity.services.push(edv);
+          // this.identity.services[existingIndex] = edv;
+
         } else {
           this.identity.services.push(edv);
         }
@@ -122,6 +130,10 @@ export class AccountIdentityComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.sub2 = this.communication.listen('identity-updated', () => {
+      this.identity = this.uiState.store.identities.find(i => i.id == this.identity?.id);
+    });
+
     this.sub = this.communication.listen('active-account-changed', (data: any) => {
       // If we are currently viewing an account and the user changes, we'll refresh this view.
       // if (this.previousIndex != data.index) {

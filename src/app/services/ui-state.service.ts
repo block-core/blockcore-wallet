@@ -163,7 +163,6 @@ export class UIState {
     async wipe(): Promise<void> {
         return new Promise((resolve, reject) => {
             chrome.storage.local.clear(() => {
-                debugger;
                 if (chrome.runtime.lastError) {
                     return reject(chrome.runtime.lastError);
                 }

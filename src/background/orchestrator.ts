@@ -131,9 +131,8 @@ export class OrchestratorBackgroundService {
     }
 
     async updateIdentityDocument(data: Identity) {
-
         // First get the signing key for this identity.
-        var account = this.state.activeWallet?.accounts.find(a => a.identifier == identity.id);
+        var account = this.state.activeWallet?.accounts.find(a => a.identifier == data.id);
 
         if (!account) {
             throw Error('Did not find account to update identity document on.');
@@ -191,16 +190,25 @@ export class OrchestratorBackgroundService {
         var decodedDidDocument = decodeJWT(jws) as unknown as DIDPayload;
         var decodedDidDocument2 = decodeJWT(jwt);
 
-        var updatedIdentity = { id: identity.id, published: false, services: [], didPayload: decodedDidDocument, didDocument: decodedDidDocument.payload };
+        var updatedIdentity = data;
+        updatedIdentity.didPayload = decodedDidDocument;
+        updatedIdentity.didDocument = decodedDidDocument.payload;
+
+        // var updatedIdentity = { id: data.id, published: data.published, services: data.services, didPayload: decodedDidDocument, didDocument: decodedDidDocument.payload };
 
         var existingIndex = this.state.store.identities.findIndex(i => i.id == data.id);
 
         if (existingIndex > -1) {
-            this.state.store.identities[existingIndex] = updatedIdentity
+            this.state.store.identities.splice(existingIndex, 1);
+            this.state.store.identities.push(updatedIdentity);
+            // this.state.store.identities[existingIndex] = updatedIdentity
         } else {
             // This shouldn't happen on updates...
             this.state.store.identities.push(updatedIdentity);
         }
+
+        console.log('CHECK THIS:');
+        console.log(JSON.stringify(this.state.store.identities));
 
         // account.identifier = identity.id;
         // account.name = identity.id;
@@ -555,9 +563,16 @@ export class OrchestratorBackgroundService {
         });
 
         this.communication.listen('identity-update', async (port: any, data: Identity) => {
-            this.updateIdentityDocument(data);
+
+            console.log('CHECK THIS 0:');
+            console.log(JSON.stringify(data));
+
+            await this.updateIdentityDocument(data);
 
             await this.state.saveStore(this.state.store);
+
+            console.log('CHECK THIS 2:');
+            console.log(JSON.stringify(this.state.store.identities));
 
             await this.state.save();
 
