@@ -20,6 +20,11 @@
         <button class="signup-button" mat-flat-button color="primary" (click)="save()">Save (locally)</button>
         <button class="signup-button" mat-flat-button color="warn" (click)="publish()">Publish</button>
     </p>
+    <br><br>
+    <p>
+        <button class="signup-button" mat-stroked-button (click)="copyDIDDocument()">Copy DID Document</button>
+        <button class="signup-button" mat-stroked-button (click)="copyVaultConfiguration()">Copy Blockcore Vault setup configuration</button>
+    </p>
     <!-- <p>
         Your identity is primarily a list of public keys that you make public available for others to connect with you
         in a secure manner.</p>

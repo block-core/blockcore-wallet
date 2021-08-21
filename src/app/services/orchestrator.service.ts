@@ -117,6 +117,10 @@ export class OrchestratorService {
         this.communication.send('set-active-account', { index });
     }
 
+    generateVaultConfiguration(domain: string) {
+        this.communication.send('get-vault-configuration', { domain });
+    }
+
     setSettings(settings: Settings) {
         this.communication.send('set-settings', settings);
     }

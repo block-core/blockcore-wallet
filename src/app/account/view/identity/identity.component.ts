@@ -6,6 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { OrchestratorService } from '../../../services/orchestrator.service';
 import { CommunicationService } from '../../../services/communication.service';
 import { Identity } from 'src/app/interfaces';
+import { copyToClipboard } from 'src/app/shared/utilities';
 
 @Component({
   selector: 'app-account-identity',
@@ -22,6 +23,7 @@ export class AccountIdentityComponent implements OnInit, OnDestroy {
   account!: any;
   sub: any;
   sub2: any;
+  sub3: any;
   previousIndex!: number;
   identity: Identity | undefined;
   encryptedDataVaultUrl = '';
@@ -87,6 +89,10 @@ export class AccountIdentityComponent implements OnInit, OnDestroy {
     if (this.sub2) {
       this.communication.unlisten(this.sub2);
     }
+
+    if (this.sub3) {
+      this.communication.unlisten(this.sub3);
+    }
   }
 
   save() {
@@ -129,7 +135,23 @@ export class AccountIdentityComponent implements OnInit, OnDestroy {
 
   }
 
+  copyDIDDocument() {
+    copyToClipboard(JSON.stringify(this.identity?.didDocument));
+  }
+
+  copyVaultConfiguration() {
+    var domain = this.encryptedDataVaultUrl;
+    this.manager.generateVaultConfiguration(domain);
+  }
+
   ngOnInit(): void {
+    this.sub3 = this.communication.listen('vault-configuration', (data: any) => {
+      console.log('VAULT CONFIGURATION:');
+      console.log(data);
+
+      copyToClipboard(JSON.stringify(data));
+    });
+
     this.sub2 = this.communication.listen('identity-updated', () => {
       this.identity = this.uiState.store.identities.find(i => i.id == this.identity?.id);
     });
