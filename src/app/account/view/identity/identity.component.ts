@@ -146,10 +146,12 @@ export class AccountIdentityComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.sub3 = this.communication.listen('vault-configuration', (data: any) => {
-      console.log('VAULT CONFIGURATION:');
-      console.log(data);
+      const vaultConfiguration = {
+        didConfiguration: data,
+        didDocument: this.identity?.didDocument
+      };
 
-      copyToClipboard(JSON.stringify(data));
+      copyToClipboard(JSON.stringify(vaultConfiguration));
     });
 
     this.sub2 = this.communication.listen('identity-updated', () => {
