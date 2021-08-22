@@ -160,11 +160,30 @@ export class OrchestratorBackgroundService {
 
         let document = null;
 
+        debugger;
+
         if (services) {
             document = identity.document({ service: services });
         } else {
             document = identity.document();
         }
+
+        // var tmp = JSON.parse(JSON.stringify(document));
+
+        // document.id = '';
+        // //document.id2 = '';
+        // document.verificationMethod = '';
+        // document.controller = '';
+        // document.authentication = '';
+        // document.assertionMethod = '';
+
+        // Make sure the properties are in right order to rule out bug with Mongoose.
+        // document.id = tmp.id;
+        //document.id2 = tmp.id;
+        // document.verificationMethod = tmp.verificationMethod;
+        // document.controller = tmp.controller;
+        // document.authentication = tmp.authentication;
+        // document.assertionMethod = tmp.assertionMethod;
 
         // Create an issuer from the identity, this is used to issue VCs.
         const issuer = identity.issuer({ privateKey: keyPair.privateKeyBuffer?.toString('hex') });
@@ -225,6 +244,8 @@ export class OrchestratorBackgroundService {
         var identity = this.crypto.getIdentity(keyPair);
 
         let document = null;
+
+        debugger;
 
         if (data.services) {
             document = identity.document({ service: data.services });
@@ -377,6 +398,8 @@ export class OrchestratorBackgroundService {
 
             // Get the identity corresponding with the key pair, does not contain the private key any longer.
             var identity = this.crypto.getIdentity(keyPair);
+
+            debugger;
 
             let document = identity.document();
 
@@ -623,6 +646,9 @@ export class OrchestratorBackgroundService {
                 // query probe here.
 
                 await this.state.saveStore(this.state.store);
+            } else {
+                console.error('THIS SHOULD NOT HAPPEN!!');
+                debugger;
             }
 
             await this.state.save();
@@ -674,6 +700,7 @@ export class OrchestratorBackgroundService {
         });
 
         this.communication.listen('identity-publish', async (port: any, data: Identity) => {
+            debugger;
             await this.sync.saveIdentity(data);
 
             // await this.updateIdentityDocument(data);
@@ -688,7 +715,7 @@ export class OrchestratorBackgroundService {
 
             this.refreshState();
 
-            this.communication.sendToAll('identity-published');
+            this.communication.sendToAll('identity-published', data);
         });
 
         this.communication.listen('set-active-account', async (port: any, data: { index: number }) => {

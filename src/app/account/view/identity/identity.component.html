@@ -20,6 +20,11 @@
         <button class="signup-button" mat-flat-button color="primary" (click)="save()">Save (locally)</button>
         <button class="signup-button" mat-flat-button color="warn" (click)="publish()">Publish</button>
     </p>
+
+    <p *ngIf="identity.published">
+        <a [href]="identityUrl" target="_blank">View identity on server</a>
+    </p>
+
     <br><br>
     <p>
         <button class="signup-button" mat-stroked-button (click)="copyDIDDocument()">Copy DID Document</button>
@@ -31,12 +36,7 @@
     <p>You can use your identity to login to web apps, to chat with others, to sign contracts and documents, to
         establish digital agreements and a lot more.</p> -->
 
-
-    <h3>DID Document:</h3>
-    <textarea class="diddocument">{{identity.didDocument | json}}</textarea>
+    <!-- <h3>DID Document:</h3>
+    <textarea class="diddocument">{{identity.didDocument | json}}</textarea> -->
 
 </div>
-
-<!-- <div class="page centered" *ngIf="!uiState.activeAccount">
-    <h3>No active account selected.</h3>
-</div> -->

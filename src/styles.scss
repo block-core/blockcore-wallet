@@ -13,6 +13,14 @@ body {
     color: white;
 }
 
+a {
+    color: white;
+}
+
+a:hover {
+    text-decoration: none;
+}
+
 .popup-mode {
     width: 400px;
     height: 540px;

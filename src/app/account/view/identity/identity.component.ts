@@ -7,6 +7,7 @@ import { OrchestratorService } from '../../../services/orchestrator.service';
 import { CommunicationService } from '../../../services/communication.service';
 import { Identity } from 'src/app/interfaces';
 import { copyToClipboard } from 'src/app/shared/utilities';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-account-identity',
@@ -29,8 +30,17 @@ export class AccountIdentityComponent implements OnInit, OnDestroy {
   identity: Identity | undefined;
   encryptedDataVaultUrl = '';
 
+  get identityUrl(): string {
+    if (!this.identity?.published) {
+      return '';
+    }
+
+    return this.uiState.persisted.settings.dataVault + '/identity/' + this.identity.id;
+  }
+
   constructor(
     public uiState: UIState,
+    private snackBar: MatSnackBar,
     private crypto: CryptoService,
     private router: Router,
     private manager: OrchestratorService,
@@ -137,6 +147,7 @@ export class AccountIdentityComponent implements OnInit, OnDestroy {
   }
 
   publish() {
+    debugger;
     if (this.identity) {
       this.manager.publishIdentity(this.identity);
     }
@@ -152,8 +163,15 @@ export class AccountIdentityComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.sub4 = this.communication.listen('identity-published', (data: any) => {
-      console.log('IDENTITY HAS BEEN PUBLISHED!!!');
+    this.sub4 = this.communication.listen('identity-published', (data: Identity) => {
+
+      this.identity = data;
+
+      this.snackBar.open('Your identity has been published', 'Hide', {
+        duration: 8000,
+        horizontalPosition: 'center',
+        verticalPosition: 'bottom',
+      });
     });
 
     this.sub3 = this.communication.listen('vault-configuration', (data: any) => {
