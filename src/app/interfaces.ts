@@ -1,4 +1,4 @@
-import { DIDDocument, DIDDocumentMetadata, ServiceEndpoint } from "did-resolver";
+import { DIDDocument, DIDDocumentMetadata, DIDResolutionMetadata, ServiceEndpoint } from "did-resolver";
 
 // interfaces.ts
 interface IWords {
@@ -81,7 +81,7 @@ interface Identity {
     published: boolean;
     services: ServiceEndpoint[];
     didDocument?: DIDDocument;
-    didResolution?: any | DIDResolutionResult;
+    didResolution?: DIDResolutionResult;
     didPayload?: DIDPayload;
 }
 
@@ -101,7 +101,7 @@ interface DIDPayload {
     signature: string
 }
 
-interface DIDDocumentMetadataEx extends DIDDocumentMetadata {
+interface DIDResolutionMetadataEx extends DIDResolutionMetadata {
     header: any,
     signature: string,
     data: string,
@@ -110,8 +110,8 @@ interface DIDDocumentMetadataEx extends DIDDocumentMetadata {
 
 interface DIDResolutionResult {
     didDocument: any | DIDDocument;
-    didDocumentMetadata: DIDDocumentMetadataEx;
-    didResolutionMetadata: any;
+    didDocumentMetadata: DIDDocumentMetadata;
+    didResolutionMetadata: DIDResolutionMetadataEx;
 }
 
 export {

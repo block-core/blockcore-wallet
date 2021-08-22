@@ -8,17 +8,20 @@ import * as bip32 from 'bip32';
 import { decodeJWT, verifyJWT } from 'did-jwt';
 import { settings } from 'cluster';
 import { ServiceEndpoint } from 'did-resolver';
+import { DataSyncService } from './data-sync';
 
 export class OrchestratorBackgroundService {
     private communication!: CommunicationBackgroundService;
     private state!: AppState;
     private crypto!: CryptoUtility;
+    private sync!: DataSyncService;
     timer: any;
 
-    configure(communication: CommunicationBackgroundService, state: AppState, crypto: CryptoUtility) {
+    configure(communication: CommunicationBackgroundService, state: AppState, crypto: CryptoUtility, sync: DataSyncService) {
         this.communication = communication;
         this.state = state;
         this.crypto = crypto;
+        this.sync = sync;
         this.eventHandlers();
         this.timeoutHandler();
     }
@@ -668,6 +671,24 @@ export class OrchestratorBackgroundService {
 
 
             // }
+        });
+
+        this.communication.listen('identity-publish', async (port: any, data: Identity) => {
+            await this.sync.saveIdentity(data);
+
+            // await this.updateIdentityDocument(data);
+
+            // Perhaps set this when successful callback from Vault?
+            data.published = true;
+
+            var existingIndex = this.state.store.identities.findIndex(i => i.id == data.id);
+            this.state.store.identities[existingIndex] = data;
+
+            await this.state.saveStore(this.state.store);
+
+            this.refreshState();
+
+            this.communication.sendToAll('identity-published');
         });
 
         this.communication.listen('set-active-account', async (port: any, data: { index: number }) => {

@@ -129,6 +129,10 @@ export class OrchestratorService {
         this.communication.send('identity-update', identity);
     }
 
+    publishIdentity(identity: Identity) {
+        this.communication.send('identity-publish', identity);
+    }
+
     // setLockTimer(minutes: number) {
     //     this.communication.send('set-lock-timer', { minutes });
     // }

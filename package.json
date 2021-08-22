@@ -22,6 +22,7 @@
     "@angular/platform-browser-dynamic": "~12.1.0-",
     "@angular/router": "~12.1.0-",
     "@blockcore/identity": "0.0.1",
+    "axios": "^0.21.1",
     "bip39": "^3.0.4",
     "bitcoinjs-lib": "^5.2.0",
     "bs58": "^4.0.1",

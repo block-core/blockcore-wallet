@@ -24,6 +24,7 @@ export class AccountIdentityComponent implements OnInit, OnDestroy {
   sub: any;
   sub2: any;
   sub3: any;
+  sub4: any;
   previousIndex!: number;
   identity: Identity | undefined;
   encryptedDataVaultUrl = '';
@@ -93,6 +94,10 @@ export class AccountIdentityComponent implements OnInit, OnDestroy {
     if (this.sub3) {
       this.communication.unlisten(this.sub3);
     }
+
+    if (this.sub4) {
+      this.communication.unlisten(this.sub4);
+    }
   }
 
   save() {
@@ -132,7 +137,9 @@ export class AccountIdentityComponent implements OnInit, OnDestroy {
   }
 
   publish() {
-
+    if (this.identity) {
+      this.manager.publishIdentity(this.identity);
+    }
   }
 
   copyDIDDocument() {
@@ -145,6 +152,10 @@ export class AccountIdentityComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.sub4 = this.communication.listen('identity-published', (data: any) => {
+      console.log('IDENTITY HAS BEEN PUBLISHED!!!');
+    });
+
     this.sub3 = this.communication.listen('vault-configuration', (data: any) => {
       const vaultConfiguration = {
         didConfiguration: data,

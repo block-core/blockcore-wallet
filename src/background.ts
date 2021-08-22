@@ -5,17 +5,20 @@ import { CommunicationBackgroundService } from './background/communication';
 import { CryptoUtility } from './background/crypto-utility';
 import { Persisted, State, Wallet } from './app/interfaces';
 import { OrchestratorBackgroundService } from './background/orchestrator';
+import { DataSyncService } from './background/data-sync';
 
 const utility = new CryptoUtility();
 const state = new AppState();
 const communication = new CommunicationBackgroundService();
 const orchestrator = new OrchestratorBackgroundService();
+const sync = new DataSyncService();
 
 const initialize = async () => {
   await loadState();
 
   // Hook up the background orchestrator:
-  orchestrator.configure(communication, state, utility);
+  sync.configure(communication, state, utility);
+  orchestrator.configure(communication, state, utility, sync);
 };
 
 const loadState = async () => {
