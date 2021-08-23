@@ -209,7 +209,7 @@ export class OrchestratorBackgroundService {
         var decodedDidDocument = decodeJWT(jws) as unknown as DIDPayload;
         var decodedDidDocument2 = decodeJWT(jwt);
 
-        this.state.store.identities.push({ id: identity.id, published: false, services: [], didPayload: decodedDidDocument, didDocument: decodedDidDocument.payload });
+        this.state.store.identities.push({ id: identity.id, published: false, sequence: -1, services: [], didPayload: decodedDidDocument, didDocument: decodedDidDocument.payload });
 
         account.identifier = identity.id;
         account.name = identity.id;
@@ -676,7 +676,7 @@ export class OrchestratorBackgroundService {
 
             this.refreshState();
 
-            this.communication.sendToAll('identity-updated');
+            this.communication.sendToAll('identity-updated', data);
 
             // if (!this.state.activeWallet) {
             //     return;
@@ -716,6 +716,11 @@ export class OrchestratorBackgroundService {
             this.refreshState();
 
             this.communication.sendToAll('identity-published', data);
+
+
+            // Begin verification
+
+
         });
 
         this.communication.listen('set-active-account', async (port: any, data: { index: number }) => {

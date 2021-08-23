@@ -79,6 +79,7 @@ interface Store {
 interface Identity {
     id: string,
     published: boolean;
+    sequence: number;
     services: ServiceEndpoint[];
     didDocument?: DIDDocument;
     didResolution?: DIDResolutionResult;

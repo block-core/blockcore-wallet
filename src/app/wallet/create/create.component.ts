@@ -14,7 +14,8 @@ const { v4: uuidv4 } = require('uuid');
     styleUrls: ['../wallet.component.css']
 })
 export class WalletCreateComponent implements OnInit {
-    mnemonic = '';
+    // TODO: Remove this hardcoded recovery phrase before release, used to easily restore test-wallet.
+    mnemonic = 'cash way jazz spare mesh develop split art cat link kind flame';
     firstFormGroup!: FormGroup;
     secondFormGroup!: FormGroup;
     step = 0;

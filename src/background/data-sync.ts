@@ -54,16 +54,24 @@ export class DataSyncService {
 
         var operationPayload;
 
+        debugger;
+
         // If there are no did resolution available for this identity, it means 
         // it has never been published.
-        if (!data.didResolution) {
-
+        if (data.sequence == null || data.sequence === -1) {
+            data.sequence = 0;
             var operationPayloadCreate = await identity.generateOperation('identity', 'create', 0, jws);
             operationPayload = await this.signDocument(identity, keyPair, operationPayloadCreate);
-
         } else {
-            var sequence = (data.didResolution.didResolutionMetadata.sequence + 1);
-            var operationPayloadCreate = await identity.generateOperation('identity', 'replace', sequence, jws);
+            // var sequence = (data.didResolution.didResolutionMetadata.sequence + 1);
+
+            // TODO: We're going to need a fairly advanced retry-logic where we ensure that sequence
+            // is correct. We can't simply keep increasing the sequence here, if the post fails against 
+            // the vault, then we must keep the previous action and send that in a queue first.
+
+            // TODO: Refactor this to make a queue of requests to be synced externally to vaults.
+            data.sequence = (data.sequence + 1);
+            var operationPayloadCreate = await identity.generateOperation('identity', 'replace', data.sequence, jws);
             operationPayload = await this.signDocument(identity, keyPair, operationPayloadCreate);
         }
 
@@ -79,6 +87,7 @@ export class DataSyncService {
             console.log(content);
         } catch (error) {
             console.error(error);
+            throw error;
         }
 
         // const rawResponse = await fetch(operationUrl, {
