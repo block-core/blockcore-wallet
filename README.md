@@ -26,10 +26,6 @@ To install the extension, follow the instructions here: https://docs.microsoft.c
 
 Choose the `blockcore-extension\dist\blockcore-extension` folder when picking folder for extension to load from.
 
-## Restrictions
-
-Currently the extension only activates when you're visiting the website https://www.blockcore.net/.
-
 ## Manifest V2
 
 The Blockcore Extension is built using V2 of the manifest file format: https://developer.chrome.com/docs/extensions/mv2/
