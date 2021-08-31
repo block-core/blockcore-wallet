@@ -1,6 +1,6 @@
 import type { Configuration } from 'webpack';
 const ExtensionReloader = require('webpack-ext-reloader');
-const config = require('./custom-webpack.config');
+const config = require('./webpack.config');
 
 module.exports = {
   ...config,

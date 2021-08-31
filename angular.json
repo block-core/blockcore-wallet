@@ -41,7 +41,7 @@
             ],
             "scripts": [],
             "customWebpackConfig": {
-              "path": "./custom-webpack.config.ts"
+              "path": "./webpack.config.ts"
             }
           },
           "configurations": {
@@ -74,7 +74,7 @@
               "sourceMap": true,
               "namedChunks": true,
               "customWebpackConfig": {
-                "path": "./custom-webpack-dev.config.ts"
+                "path": "./webpack-dev.config.ts"
               }
             }
           },

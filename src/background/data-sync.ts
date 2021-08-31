@@ -35,7 +35,6 @@ export class DataSyncService {
 
     /** Will attempt to create or update an identity. */
     async saveIdentity(data: Identity) {
-        debugger;
         // TODO: Further improve the logic of the identity saving.
 
         // If we have invalid sequence number for the update operation, we'll
@@ -53,8 +52,6 @@ export class DataSyncService {
         var identity = await this.getIdentity(keyPair);
 
         var operationPayload;
-
-        debugger;
 
         // If there are no did resolution available for this identity, it means 
         // it has never been published.

@@ -160,8 +160,6 @@ export class OrchestratorBackgroundService {
 
         let document = null;
 
-        debugger;
-
         if (services) {
             document = identity.document({ service: services });
         } else {
@@ -244,8 +242,6 @@ export class OrchestratorBackgroundService {
         var identity = this.crypto.getIdentity(keyPair);
 
         let document = null;
-
-        debugger;
 
         if (data.services) {
             document = identity.document({ service: data.services });
@@ -398,8 +394,6 @@ export class OrchestratorBackgroundService {
 
             // Get the identity corresponding with the key pair, does not contain the private key any longer.
             var identity = this.crypto.getIdentity(keyPair);
-
-            debugger;
 
             let document = identity.document();
 
@@ -700,7 +694,6 @@ export class OrchestratorBackgroundService {
         });
 
         this.communication.listen('identity-publish', async (port: any, data: Identity) => {
-            debugger;
             await this.sync.saveIdentity(data);
 
             // await this.updateIdentityDocument(data);

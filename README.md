@@ -2,12 +2,14 @@
 
 Basic shell for our future web browser extension for digital signing, web site login and more.
 
+The Blockcore Extension does basic wallet management, account management, identity management and signing.
+
+![](/doc/blockcore-extension-walkthrough.gif)
 
 ## Development Requirements
 
 - Node.js 14.x: https://nodejs.org/en/
 - Angular CLI: `npm install -g @angular/cli`
-
 
 ## Run with Hot-Reload
 

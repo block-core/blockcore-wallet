@@ -115,12 +115,17 @@ export class AccountIdentityComponent implements OnInit, OnDestroy {
       return;
     }
 
+    var edv = null;
+
     if (this.encryptedDataVaultUrl && this.encryptedDataVaultUrl.length > 0) {
-      var edv = {
+      edv = {
         id: this.identity.id + '#edv',
         type: 'EncryptedDataVault',
         serviceEndpoint: this.encryptedDataVaultUrl
       };
+    }
+
+    if (this.encryptedDataVaultUrl && this.encryptedDataVaultUrl.length > 0) {
 
       // Attempt to find existing EncryptedDataVault service. We do not want to replace any third party
       // services the user might have added to their DID Document through other means.
@@ -128,26 +133,37 @@ export class AccountIdentityComponent implements OnInit, OnDestroy {
         var existingIndex = this.identity.services.findIndex(s => s.type == 'EncryptedDataVault');
 
         if (existingIndex > -1) {
-          // Replace existing.
-          this.identity.services.splice(existingIndex, 1);
-          this.identity.services.push(edv);
-          // this.identity.services[existingIndex] = edv;
 
+          if (edv) {
+            // Replace existing.
+            this.identity.services.splice(existingIndex, 1);
+            this.identity.services.push(edv);
+            // this.identity.services[existingIndex] = edv;
+          } else {
+            // Remove it if the user has emptied the input field.
+            this.identity.services.splice(existingIndex, 1);
+          }
         } else {
-          this.identity.services.push(edv);
+          if (edv) {
+            this.identity.services.push(edv);
+          }
         }
       }
       else {
-        this.identity.services = [edv];
+        if (edv) {
+          this.identity.services = [edv];
+        }
       }
-
-      console.log(this.identity);
-      this.manager.updateIdentity(this.identity);
+    } else {
+      // If there is no URL, we'll reset the services list.
+      this.identity.services = [];
     }
+
+    console.log(this.identity);
+    this.manager.updateIdentity(this.identity);
   }
 
   publish() {
-    debugger;
     if (this.identity) {
       this.manager.publishIdentity(this.identity);
     }
