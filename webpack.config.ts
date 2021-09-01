@@ -3,12 +3,12 @@ import type { Configuration } from 'webpack';
 const webpack = require('webpack');
 
 module.exports = {
-  plugins: [
-    new webpack.ProvidePlugin({
-      Buffer: ['buffer', 'Buffer'],
-      process: 'process/browser'
-    })
-  ],
+  // plugins: [
+  //   new webpack.ProvidePlugin({
+  //     Buffer: ['buffer', 'Buffer'],
+  //     process: 'process/browser'
+  //   })
+  // ],
   resolve: {
     fallback: {
       "fs": false,
