@@ -10,11 +10,16 @@
     </p>
 
     <mat-form-field class="input-full-width" appearance="outline">
-        <mat-label>Encrypted Data Vault URL</mat-label>
+        <mat-label>Verifiable Data Registry URL</mat-label>
         <input matInput [(ngModel)]="verifiableDataRegistryUrl">
         <mat-hint>Set a custom VDR URL if you self-host your own instance of Blockcore Vault.</mat-hint>
     </mat-form-field>
 
+    <br><br>
+    IMPORTANT NOTE ON PRIVACY
+    <br>
+    The DID Document should never contain personal identifiable information. Never put your e-mail address or
+    name of any kind into the URL above.
     <br><br>
     <p>
         <button class="signup-button" mat-flat-button color="primary" (click)="save()">Save (locally)</button>
@@ -28,7 +33,8 @@
     <br><br>
     <p>
         <button class="signup-button" mat-stroked-button (click)="copyDIDDocument()">Copy DID Document</button>
-        <button class="signup-button" mat-stroked-button (click)="copyVaultConfiguration()">Copy Blockcore Vault setup configuration</button>
+        <button class="signup-button" mat-stroked-button (click)="copyVaultConfiguration()">Copy Blockcore Vault setup
+            configuration</button>
     </p>
     <!-- <p>
         Your identity is primarily a list of public keys that you make public available for others to connect with you
