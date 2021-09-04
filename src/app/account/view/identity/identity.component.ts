@@ -28,7 +28,7 @@ export class AccountIdentityComponent implements OnInit, OnDestroy {
   sub4: any;
   previousIndex!: number;
   identity: Identity | undefined;
-  encryptedDataVaultUrl = '';
+  verifiableDataRegistryUrl = '';
 
   get identityUrl(): string {
     if (!this.identity?.published) {
@@ -84,10 +84,10 @@ export class AccountIdentityComponent implements OnInit, OnDestroy {
       var did = this.uiState.activeAccount?.identifier;
       this.identity = this.uiState.store.identities.find(i => i.id == did);
 
-      let service = this.identity?.services.find(s => s.type == 'EncryptedDataVault');
+      let service = this.identity?.services.find(s => s.type == 'VerifiableDataRegistry');
 
       if (service) {
-        this.encryptedDataVaultUrl = service.serviceEndpoint;
+        this.verifiableDataRegistryUrl = service.serviceEndpoint;
       }
     });
   }
@@ -115,43 +115,43 @@ export class AccountIdentityComponent implements OnInit, OnDestroy {
       return;
     }
 
-    var edv = null;
+    var vdr = null;
 
-    if (this.encryptedDataVaultUrl && this.encryptedDataVaultUrl.length > 0) {
-      edv = {
-        id: this.identity.id + '#edv',
-        type: 'EncryptedDataVault',
-        serviceEndpoint: this.encryptedDataVaultUrl
+    if (this.verifiableDataRegistryUrl && this.verifiableDataRegistryUrl.length > 0) {
+      vdr = {
+        id: this.identity.id + '#vdr',
+        type: 'VerifiableDataRegistry',
+        serviceEndpoint: this.verifiableDataRegistryUrl
       };
     }
 
-    if (this.encryptedDataVaultUrl && this.encryptedDataVaultUrl.length > 0) {
+    if (this.verifiableDataRegistryUrl && this.verifiableDataRegistryUrl.length > 0) {
 
-      // Attempt to find existing EncryptedDataVault service. We do not want to replace any third party
+      // Attempt to find existing VerifiableDataRegistry service. We do not want to replace any third party
       // services the user might have added to their DID Document through other means.
       if (this.identity.services.length > 0) {
-        var existingIndex = this.identity.services.findIndex(s => s.type == 'EncryptedDataVault');
+        var existingIndex = this.identity.services.findIndex(s => s.type == 'VerifiableDataRegistry');
 
         if (existingIndex > -1) {
 
-          if (edv) {
+          if (vdr) {
             // Replace existing.
             this.identity.services.splice(existingIndex, 1);
-            this.identity.services.push(edv);
-            // this.identity.services[existingIndex] = edv;
+            this.identity.services.push(vdr);
+            // this.identity.services[existingIndex] = vdr;
           } else {
             // Remove it if the user has emptied the input field.
             this.identity.services.splice(existingIndex, 1);
           }
         } else {
-          if (edv) {
-            this.identity.services.push(edv);
+          if (vdr) {
+            this.identity.services.push(vdr);
           }
         }
       }
       else {
-        if (edv) {
-          this.identity.services = [edv];
+        if (vdr) {
+          this.identity.services = [vdr];
         }
       }
     } else {
@@ -174,7 +174,7 @@ export class AccountIdentityComponent implements OnInit, OnDestroy {
   }
 
   copyVaultConfiguration() {
-    var domain = this.encryptedDataVaultUrl;
+    var domain = this.verifiableDataRegistryUrl;
     this.manager.generateVaultConfiguration(domain);
   }
 
@@ -232,10 +232,10 @@ export class AccountIdentityComponent implements OnInit, OnDestroy {
       var did = this.uiState.activeAccount?.identifier;
       this.identity = this.uiState.store.identities.find(i => i.id == did);
 
-      let service = this.identity?.services.find(s => s.type == 'EncryptedDataVault');
+      let service = this.identity?.services.find(s => s.type == 'VerifiableDataRegistry');
 
       if (service) {
-        this.encryptedDataVaultUrl = service.serviceEndpoint;
+        this.verifiableDataRegistryUrl = service.serviceEndpoint;
       }
 
     });
