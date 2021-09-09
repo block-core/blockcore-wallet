@@ -1,10 +1,14 @@
 # Web Browser Extension for Blockcore
 
-Basic shell for our future web browser extension for digital signing, web site login and more.
+Basic shell for our web browser extension for digital signing, web site login and more.
 
 The Blockcore Extension does basic wallet management, account management, identity management and signing.
 
 ![](/doc/blockcore-extension-walkthrough.gif)
+
+## Supported Browsers
+
+The extension works on Chrome and Edge browsers. Future FireFox support might be added later.
 
 ## Development Requirements
 
