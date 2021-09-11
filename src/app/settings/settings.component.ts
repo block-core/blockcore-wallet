@@ -12,7 +12,7 @@ import { OverlayContainer } from '@angular/cdk/overlay';
 export class SettingsComponent {
   settings: Settings;
   theme: string = 'dark';
-  themeColor: 'primary' | 'accent' | 'warn' = 'primary';
+  themeColor: 'primary' | 'accent' | 'warn' = 'accent';
   isDark = false;
 
   constructor(
