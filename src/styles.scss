@@ -1,3 +1,21 @@
+@import "~@angular/material/theming";
+
+@include mat-core();
+
+@import "./theme.scss";
+@import "./custom-component-themes.scss";
+
+@include angular-material-theme($theming-material-components-theme);
+@include custom-components-theme($theming-material-components-theme);
+
+.dark-theme {
+    @include angular-material-color($dark-theme);
+    @include custom-components-theme($dark-theme);
+}
+
+// Override typography for all Angular Material, including mat-base-typography and all components.
+@include angular-material-typography($typography);
+
 /* You can add global styles to this file, and also import other style files */
 
 html,

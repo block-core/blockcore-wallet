@@ -11,8 +11,30 @@
   <mat-form-field class="input-full-width" appearance="outline">
     <mat-label>Data Vault</mat-label>
     <input matInput [(ngModel)]="settings.dataVault">
-    <mat-hint>Only change this if you want to connect your identities to an third party Blockcore Vault instance.</mat-hint>
+    <mat-hint>Only change this if you want to connect your identities to an third party Blockcore Vault instance.
+    </mat-hint>
   </mat-form-field>
+
+  <br><br>
+
+  <mat-form-field class="input-full-width" appearance="outline">
+    <mat-label>Choose your mode</mat-label>
+    <mat-select (selectionChange)="onThemeChanged($event)" [(value)]="settings.theme">
+      <mat-option [value]="'dark'">Dark</mat-option>
+      <mat-option [value]="'light'">Light</mat-option>
+    </mat-select>
+    <mat-hint>You must save the settings for mode and accent color to be persisted.
+    </mat-hint>
+  </mat-form-field>
+
+  <!-- <mat-form-field appearance="fill">
+    <mat-label>Choose accent color</mat-label>
+    <mat-select (selectionChange)="onAccentChanged($event)" [(value)]="settings.themeColor">
+      <mat-option [value]="'primary'">Accent #1</mat-option>
+      <mat-option [value]="'warn'">Accent #2</mat-option>
+      <mat-option [value]="'accent'">Accent #3</mat-option>
+    </mat-select>
+  </mat-form-field> -->
 
   <!-- <mat-form-field appearance="fill">
   <mat-label>Auto-Lock Timer</mat-label>

@@ -1,5 +1,5 @@
 import { DOCUMENT } from '@angular/common';
-import { ChangeDetectorRef, Component, Inject, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
 import { NavigationEnd, Router } from '@angular/router';
 import { UIState } from './services/ui-state.service';
@@ -20,6 +20,7 @@ export class AppComponent implements OnInit {
 
   constructor(public uiState: UIState,
     private router: Router,
+    private renderer: Renderer2,
     private communication: CommunicationService,
     private manager: OrchestratorService,
     private location: Location,
@@ -32,6 +33,22 @@ export class AppComponent implements OnInit {
         // this.uiState.title = '';
         this.uiState.active();
       }
+    });
+
+    this.uiState.persisted$.subscribe(() => {
+      if (this.uiState.persisted?.settings.theme === 'light') {
+        this.renderer.removeClass(document.body, 'dark-theme');
+      } else {
+        this.renderer.addClass(document.body, 'dark-theme');
+      }
+
+      // if (this.uiState.persisted?.settings.theme === 'light') {
+      //   this.renderer.setAttribute(document.body, 'color', 'warn');
+      // } else {
+      //   this.renderer.addClass(document.body, 'dark-theme');
+      // }
+
+
     });
 
     // Make sure we initialize the orchestrator early and hook up event handlers.
@@ -48,6 +65,7 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
     // var sub1 = this.communication.listen('lock', () => {
     //   console.log('LOCK!');
     // });

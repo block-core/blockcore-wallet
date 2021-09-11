@@ -1,0 +1,49 @@
+@import url("https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;500&display=swap");
+
+// primary, accent and warn palettes
+
+$theming-material-components-primary: mat-palette($mat-indigo);
+$theming-material-components-accent: mat-palette($mat-pink, A200, A100, A400);
+$theming-material-components-warn: mat-palette($mat-red);
+
+// Create the theme object (a Sass map containing all of the palettes).
+$theming-material-components-theme: mat-light-theme(
+    $theming-material-components-primary,
+    $theming-material-components-accent,
+    $theming-material-components-warn
+);
+
+// Define  a custom typography config
+$heading-font-family: "'Work Sans', sans-serif";
+
+$typography: mat-typography-config(
+    $display-4: mat-typography-level(112px, $font-family: $heading-font-family),
+    $display-3: mat-typography-level(56px, $font-family: $heading-font-family),
+    $display-2: mat-typography-level(45px, $font-family: $heading-font-family),
+    $display-1: mat-typography-level(34px, $font-family: $heading-font-family),
+    $headline: mat-typography-level(24px, $font-family: $heading-font-family),
+    $title: mat-typography-level(20px, $font-family: $heading-font-family),
+);
+
+// Define an alternate dark theme.
+$dark-primary: mat-palette($mat-blue-grey);
+$dark-accent: mat-palette($mat-amber, A200, A100, A400);
+$dark-warn: mat-palette($mat-deep-orange);
+$dark-theme: mat-dark-theme(
+    (
+        color: (
+            primary: $dark-primary,
+            accent: $dark-accent,
+            warn: $dark-warn,
+        ),
+    )
+);
+
+// Theme for notifications / snackbar
+// $notifications-theme: (
+//   default: #fff,
+//   info: mat-color(mat-palette($mat-blue), 400),
+//   success: mat-color(mat-palette($mat-green), 400),
+//   warning: mat-color(mat-palette($mat-yellow), 400),
+//   error: mat-color(mat-palette($mat-red), 400),
+// );

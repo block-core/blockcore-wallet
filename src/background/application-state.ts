@@ -6,7 +6,9 @@ export class AppState {
     persisted: Persisted = {
         settings: {
             autoTimeout: AUTO_TIMEOUT,
-            dataVault: VAULT_URL
+            dataVault: VAULT_URL,
+            theme: 'dark',
+            themeColor: 'primary'
         },
         wallets: [],
         activeWalletId: null

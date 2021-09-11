@@ -54,6 +54,8 @@ interface Persisted {
 interface Settings {
     dataVault: string;
     autoTimeout: number;
+    theme: string;
+    themeColor: string;
 }
 
 interface Action {

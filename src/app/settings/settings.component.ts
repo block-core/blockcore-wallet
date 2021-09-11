@@ -1,8 +1,9 @@
-import { Component, Inject, HostBinding } from '@angular/core';
+import { Component, Renderer2 } from '@angular/core';
 import { UIState } from '../services/ui-state.service';
 import { Location } from '@angular/common'
 import { OrchestratorService } from '../services/orchestrator.service';
 import { Settings } from '../interfaces';
+import { OverlayContainer } from '@angular/cdk/overlay';
 
 @Component({
   selector: 'app-settings',
@@ -10,8 +11,12 @@ import { Settings } from '../interfaces';
 })
 export class SettingsComponent {
   settings: Settings;
+  theme: string = 'dark';
+  themeColor: 'primary' | 'accent' | 'warn' = 'primary';
+  isDark = false;
 
   constructor(
+    private renderer: Renderer2,
     public uiState: UIState,
     private manager: OrchestratorService,
     private location: Location) {
@@ -26,5 +31,17 @@ export class SettingsComponent {
     // this.manager.setLockTimer(this.autoTimeout);
     this.manager.setSettings(this.settings);
     this.location.back();
+  }
+
+  onThemeChanged(event: any) {
+    if (this.settings.theme === 'light') {
+      this.renderer.removeClass(document.body, 'dark-theme');
+    } else {
+      this.renderer.addClass(document.body, 'dark-theme');
+    }
+  }
+
+  onAccentChanged(event: any) {
+    console.log(this.settings);
   }
 }
