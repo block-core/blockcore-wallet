@@ -633,16 +633,13 @@ export class OrchestratorBackgroundService {
 
             if (this.state.activeAccount?.network === NETWORK_IDENTITY) {
                 // Generate DID Document for the identity and persist it.
-                this.createIdentityDocument();
+                await this.createIdentityDocument();
 
                 // TODO: Perform blockchain / vault data query and recovery.
                 // If there are transactions, DID Documents, NFTs or anythign else, we should launch the
                 // query probe here.
 
                 await this.state.saveStore(this.state.store);
-            } else {
-                console.error('THIS SHOULD NOT HAPPEN!!');
-                debugger;
             }
 
             await this.state.save();

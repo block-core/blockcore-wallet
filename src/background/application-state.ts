@@ -165,6 +165,7 @@ export class AppState {
 
             chrome.storage.local.set({ 'store': store }, () => {
                 console.log('SAVED STORE!');
+                console.log(JSON.stringify(store));
 
                 // Update the timer, the timeout might have changed.
                 // TODO: Figure out if we need this, cause other actions will reset the timer anyway.

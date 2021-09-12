@@ -232,10 +232,16 @@ export class AccountIdentityComponent implements OnInit, OnDestroy {
       var did = this.uiState.activeAccount?.identifier;
       this.identity = this.uiState.store.identities.find(i => i.id == did);
 
+      // if (this.identity) {
+      //   this.identity = { id }
+      // }
+
       let service = this.identity?.services.find(s => s.type == 'VerifiableDataRegistry');
 
       if (service) {
         this.verifiableDataRegistryUrl = service.serviceEndpoint;
+      } else {
+        this.verifiableDataRegistryUrl = '';
       }
 
     });
