@@ -1,8 +1,8 @@
-# Web Browser Extension for Blockcore
+# CoinVault by Blockcore
 
-Basic shell for our web browser extension for digital signing, web site login and more.
+###  Web Browser Extension for crypto wallet in your browser for coins, tokens, identities, NFTs and more.
 
-The Blockcore Extension does basic wallet management, account management, identity management and signing.
+The Blockcore Extension does wallet management, account management, identity management and signing.
 
 ![](/doc/blockcore-extension-walkthrough.gif)
 
@@ -32,6 +32,6 @@ Choose the `blockcore-extension\dist\blockcore-extension` folder when picking fo
 
 ## Manifest V2
 
-The Blockcore Extension is built using V2 of the manifest file format: https://developer.chrome.com/docs/extensions/mv2/
+The extension is built using V2 of the manifest file format: https://developer.chrome.com/docs/extensions/mv2/
 
 We should migrate to V3 when possible: https://developer.chrome.com/docs/extensions/mv3/manifest/
