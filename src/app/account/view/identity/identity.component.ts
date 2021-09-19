@@ -29,6 +29,11 @@ export class AccountIdentityComponent implements OnInit, OnDestroy {
   previousIndex!: number;
   identity: Identity | undefined;
   verifiableDataRegistryUrl = '';
+  profile = {
+    name: '',
+    email: '',
+    website: ''
+  };
 
   get identityUrl(): string {
     if (!this.identity?.published) {
@@ -171,6 +176,10 @@ export class AccountIdentityComponent implements OnInit, OnDestroy {
 
   copyDIDDocument() {
     copyToClipboard(JSON.stringify(this.identity?.didDocument));
+  }
+
+  copyProfileDocument() {
+    copyToClipboard(JSON.stringify('Not implemented yet.'));
   }
 
   copyVaultConfiguration() {

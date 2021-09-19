@@ -139,7 +139,7 @@ export class WalletCreateComponent implements OnInit {
                         name: 'Identity',
                         network: 616,
                         purpose: 302,
-                        derivationPath: `302'/616'/0'`,
+                        derivationPath: `m/302'/616'/0'`,
                         icon: 'account_circle'
                     }
                 ]

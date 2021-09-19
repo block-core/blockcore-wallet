@@ -2,6 +2,37 @@
   <router-outlet></router-outlet>
 </div>
 
+<!-- <mat-toolbar color="primary" class="app-header">
+  <button mat-icon-button>
+    <mat-icon>menu</mat-icon>
+  </button>
+  <span>Config</span>
+  <span class="spacer"></span>
+  <button mat-icon-button>
+    <mat-icon>account_circle</mat-icon>
+  </button>
+  <span>Admin</span>
+</mat-toolbar> -->
+
+<mat-toolbar class="app-header" *ngIf="!uiState.loading">
+  <button type="button" *ngIf="uiState.hasWallets" aria-label="Toggle sidenav" mat-icon-button
+    (click)="drawer.toggle()">
+    <mat-icon>menu</mat-icon>
+  </button>
+  <span></span>
+
+  <button *ngIf="uiState.showBackButton" mat-icon-button (click)="goBack()">
+    <mat-icon>arrow_back</mat-icon>
+  </button>
+
+  <span class="example-spacer">{{uiState.title | truncate}}</span>
+
+  <button *ngIf="uiState.activeWalletUnlocked" mat-icon-button (click)="draweraccount.toggle()">
+    <mat-icon>{{uiState.activeAccount?.icon}}</mat-icon>
+  </button>
+
+</mat-toolbar>
+
 <mat-sidenav-container class="sidenav-container" *ngIf="!uiState.loading">
   <mat-sidenav #drawer class="sidenav print-hidden" fixedInViewport [attr.role]="'navigation'" [mode]="'over'">
 
@@ -166,25 +197,12 @@
 
     </mat-nav-list>
   </mat-sidenav>
-  <mat-sidenav-content>
-    <mat-toolbar class="print-hidden">
-      <button type="button" *ngIf="uiState.hasWallets" aria-label="Toggle sidenav" mat-icon-button
-        (click)="drawer.toggle()">
-        <mat-icon>menu</mat-icon>
-      </button>
-      <span></span>
 
-      <button *ngIf="uiState.showBackButton" mat-icon-button (click)="goBack()">
-        <mat-icon>arrow_back</mat-icon>
-      </button>
+  <!-- <mat-sidenav-content>
+    Don't use this, see reason: https://newbedev.com/angular-material-sidenav-cdkscrollable
+  -->
 
-      <span class="example-spacer">{{uiState.title | truncate}}</span>
-
-      <button *ngIf="uiState.activeWalletUnlocked" mat-icon-button (click)="draweraccount.toggle()">
-        <mat-icon>{{uiState.activeAccount?.icon}}</mat-icon>
-      </button>
-
-    </mat-toolbar>
+  <div>
     <router-outlet></router-outlet>
-  </mat-sidenav-content>
+  </div>
 </mat-sidenav-container>

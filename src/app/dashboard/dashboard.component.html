@@ -1,39 +1,112 @@
-<div class="page2">
-    <mat-nav-list *ngIf="uiState.activeWallet && uiState.activeWalletUnlocked">
-        <div mat-subheader>Accounts</div>
+<div class="page2" *ngIf="uiState.activeWallet && uiState.activeWalletUnlocked">
 
-        <a mat-list-item *ngFor="let account of uiState.activeWallet.accounts; let i = index"
-            routerLinkActive="active-link" [routerLink]="['/', 'account', 'view', i]">
-            <mat-icon mat-list-icon>{{account.icon}}</mat-icon>
-            <div mat-line>{{account.name}}</div>
-            <div mat-line>{{account.network | network}}</div>
-        </a>
+    <mat-tab-group class="tabs" mat-stretch-tabs *ngIf="uiState.activeWallet && uiState.activeWalletUnlocked">
+        <mat-tab>
+            <ng-template mat-tab-label>
+                <mat-icon class="example-tab-icon">manage_accounts</mat-icon>&nbsp;
+                <span>Accounts</span>
+            </ng-template>
 
-        <mat-divider></mat-divider>
-        <div mat-subheader>Activity</div>
+            <mat-nav-list>
+                <div mat-subheader>Accounts</div>
 
-        <mat-list-item *ngIf="history.length == 0">No activity yet</mat-list-item>
+                <a mat-list-item *ngFor="let account of uiState.activeWallet.accounts; let i = index"
+                    routerLinkActive="active-link" [routerLink]="['/', 'account', 'view', i]">
+                    <mat-icon mat-list-icon>{{account.icon}}</mat-icon>
+                    <div mat-line>{{account.name}}</div>
+                    <div mat-line>{{account.network | network}}</div>
+                </a>
 
-        <a mat-list-item *ngFor="let item of history" routerLinkActive="active-link">
-            <mat-icon mat-list-icon>note</mat-icon>
-            <div mat-line>{{item.name}}</div>
-            <div mat-line> {{item.updated | date}} </div>
-        </a>
+                <mat-divider></mat-divider>
+                <div mat-subheader>Activity</div>
 
-        <mat-divider></mat-divider>
-        <div mat-subheader>Actions</div>
+                <mat-list-item *ngIf="history.length == 0">No activity yet</mat-list-item>
 
-        <a mat-list-item *ngIf="uiState.activeWallet && uiState.unlocked" [routerLink]="['/account/create']"
-            routerLinkActive="active-link">
-            <mat-icon mat-list-icon>add_circle_outline</mat-icon>
-            <div mat-line>Add Account</div>
-        </a>
+                <a mat-list-item *ngFor="let item of history" routerLinkActive="active-link">
+                    <mat-icon mat-list-icon>note</mat-icon>
+                    <div mat-line>{{item.name}}</div>
+                    <div mat-line> {{item.updated | date}} </div>
+                </a>
 
-        <a mat-list-item *ngIf="uiState.activeWallet && uiState.unlocked" [routerLink]="['/wallet/create']"
-            routerLinkActive="active-link">
-            <mat-icon mat-list-icon>account_balance_wallet</mat-icon>
-            <div mat-line>Add Wallet</div>
-        </a>
+                <mat-divider></mat-divider>
+                <div mat-subheader>Actions</div>
 
-    </mat-nav-list>
+                <a mat-list-item *ngIf="uiState.activeWallet && uiState.unlocked" [routerLink]="['/account/create']"
+                    routerLinkActive="active-link">
+                    <mat-icon mat-list-icon>add_circle_outline</mat-icon>
+                    <div mat-line>Add Account</div>
+                </a>
+
+                <a mat-list-item *ngIf="uiState.activeWallet && uiState.unlocked" [routerLink]="['/wallet/create']"
+                    routerLinkActive="active-link">
+                    <mat-icon mat-list-icon>account_balance_wallet</mat-icon>
+                    <div mat-line>Add Wallet</div>
+                </a>
+
+            </mat-nav-list>
+
+        </mat-tab>
+
+        <mat-tab>
+            <ng-template mat-tab-label>
+                <mat-icon class="example-tab-icon">folder_shared</mat-icon>
+                &nbsp;
+                <span>Vaults</span>
+            </ng-template>
+
+            <mat-nav-list>
+
+                <div mat-subheader>Vaults</div>
+
+                <mat-list-item>
+                    <mat-icon mat-list-icon>folder_shared</mat-icon>
+                    <div mat-line>bf83b2d9-cd9e-48f6-a6cc-bcd9c9b48050</div>
+                    <div mat-line class="dimmed">Public</div>
+                </mat-list-item>
+
+                <mat-list-item>
+                    <mat-icon mat-list-icon>folder_shared</mat-icon>
+                    <div mat-line>af83b2d9-cd9e-48f6-a6cc-bcd9c9b48050</div>
+                    <div mat-line class="dimmed">Encrypted</div>
+                </mat-list-item>
+                <mat-list-item>
+                    <mat-icon mat-list-icon>folder_shared</mat-icon>
+                    <div mat-line>cf83b2d9-cd9e-48f6-a6cc-bcd9c9b48050</div>
+                    <div mat-line class="dimmed">Shared</div>
+                </mat-list-item>
+
+                <mat-divider></mat-divider>
+                <div mat-subheader>Activity</div>
+
+                <mat-list-item *ngIf="history.length == 0">No activity yet</mat-list-item>
+
+                <a mat-list-item *ngFor="let item of history" routerLinkActive="active-link">
+                    <mat-icon mat-list-icon>note</mat-icon>
+                    <div mat-line>{{item.name}}</div>
+                    <div mat-line> {{item.updated | date}} </div>
+                </a>
+
+                <mat-divider></mat-divider>
+                <div mat-subheader>Actions</div>
+
+                <a mat-list-item *ngIf="uiState.activeWallet && uiState.unlocked" [routerLink]="['/account/create']"
+                    routerLinkActive="active-link">
+                    <mat-icon mat-list-icon>add_circle_outline</mat-icon>
+                    <div mat-line>Add Vault</div>
+                </a>
+
+            </mat-nav-list>
+
+        </mat-tab>
+
+        <mat-tab>
+            <ng-template mat-tab-label>
+                <mat-icon class="example-tab-icon">mail</mat-icon>
+                &nbsp;
+                <span matBadge="2" matBadgeOverlap="false">Inbox</span>
+            </ng-template>
+
+        </mat-tab>
+
+    </mat-tab-group>
 </div>

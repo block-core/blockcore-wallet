@@ -31,6 +31,39 @@ body {
     color: white;
 }
 
+body,
+html {
+    padding: 0;
+    margin: 0;
+}
+
+// mat-sidenav {
+//     width: 200px;
+//     box-shadow: 3px 0 6px rgba(0, 0, 0, 0.24);
+// }
+
+// mat-sidenav-container,
+// mat-sidenav,
+// mat-sidenav-content {
+//     height: 100%;
+//     width: 100%;
+// }
+
+.content {
+    margin: 16px 0;
+    padding: 0 16px;
+}
+
+// html,
+// body,
+// material-app,
+// mat-sidenav-container {
+//     height: 100%;
+//     width: 100%;
+//     margin: 0;
+//     overflow: hidden;
+// }
+
 a {
     color: white;
 }
@@ -103,9 +136,6 @@ select {
     background: rgba(0, 0, 0, 0.15);
 }
 
-.icon-indicator {
-}
-
 .icon-warn {
     color: orange;
 }
@@ -120,3 +150,28 @@ select {
     padding-bottom: 2em;
     // margin-bottom: 3em;
 }
+
+// .stretched-tabs {
+//     max-width: 800px;
+//     width: 100%;
+// }
+
+.tabs {
+    height: 100%;
+}
+
+// ::ng-deep .mat-tab-header-pagination {
+//     display: none !important;
+// }
+
+// ::ng-deep .mat-tab-header {
+//     overflow-x: scroll !important;
+// }
+
+// ::ng-deep .mat-tab-label-container {
+//     overflow: visible !important;
+// }
+
+// ::ng-deep .mat-tab-header::-webkit-scrollbar {
+//     display: none;
+// }

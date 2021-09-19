@@ -1,48 +1,258 @@
-<div class="page centered" *ngIf="uiState.activeAccount && identity">
+<mat-tab-group mat-stretch-tabs *ngIf="uiState.activeAccount && identity">
+    <mat-tab>
+        <ng-template mat-tab-label>
+            <mat-icon class="example-tab-icon">person</mat-icon>
+        </ng-template>
 
-    <h4>{{identity.id}}</h4>
+        <div class="page">
+            <h2>Identity:</h2>
+            <h4>{{identity.id}}</h4>
 
-    <p class="icon-indicator" *ngIf="!identity.published">
-        <mat-icon class="icon-warn">done</mat-icon> This identity is currently NOT public
-    </p>
-    <p class="icon-indicator" *ngIf="identity.published">
-        <mat-icon class="icon-success">done</mat-icon> This identity is currently public
-    </p>
+            <p class="icon-indicator" *ngIf="!identity.published">
+                <mat-icon class="icon-warn">done</mat-icon> This identity is currently NOT public
+            </p>
+            <p class="icon-indicator" *ngIf="identity.published">
+                <mat-icon class="icon-success">done</mat-icon> This identity is currently public
+            </p>
 
-    <mat-form-field class="input-full-width" appearance="outline">
-        <mat-label>Verifiable Data Registry URL</mat-label>
-        <input matInput [(ngModel)]="verifiableDataRegistryUrl">
-        <mat-hint>Set a custom VDR URL if you self-host your own instance of Blockcore Vault.</mat-hint>
-    </mat-form-field>
+            <mat-form-field class="input-full-width" appearance="outline">
+                <mat-label>Verifiable Data Registry URL</mat-label>
+                <input matInput [(ngModel)]="verifiableDataRegistryUrl">
+                <mat-hint>Set a custom VDR URL if you self-host your own instance of Blockcore Vault.</mat-hint>
+            </mat-form-field>
 
-    <br><br>
-    IMPORTANT NOTE ON PRIVACY
-    <br>
-    The DID Document should never contain personal identifiable information. Never put your e-mail address or
-    name of any kind into the URL above.
-    <br><br>
-    <p>
-        <button class="signup-button" mat-flat-button color="primary" (click)="save()">Save (locally)</button>
-        <button class="signup-button" mat-flat-button color="warn" (click)="publish()">Publish</button>
-    </p>
+            <br><br>
+            IMPORTANT NOTE ON PRIVACY
+            <br>
+            The DID Document should never contain personal identifiable information. Never put your e-mail address or
+            name of any kind into the URL above.
+            <br><br>
+            <p>
+                <button class="signup-button" mat-flat-button color="primary" (click)="save()">Save (locally)</button>
+                <button class="signup-button" mat-flat-button color="warn" (click)="publish()">Publish</button>
+            </p>
 
-    <p *ngIf="identity.published">
-        <a [href]="identityUrl" target="_blank">View identity on server</a>
-    </p>
+            <p *ngIf="identity.published">
+                <a [href]="identityUrl" target="_blank">View identity on server</a>
+            </p>
 
-    <br><br>
-    <p>
-        <button class="signup-button" mat-stroked-button (click)="copyDIDDocument()">Copy DID Document</button>
-        <button class="signup-button" mat-stroked-button (click)="copyVaultConfiguration()">Copy Blockcore Vault setup
-            configuration</button>
-    </p>
-    <!-- <p>
-        Your identity is primarily a list of public keys that you make public available for others to connect with you
-        in a secure manner.</p>
-    <p>You can use your identity to login to web apps, to chat with others, to sign contracts and documents, to
-        establish digital agreements and a lot more.</p> -->
+            <br><br>
+            <p>
+                <button class="signup-button" mat-stroked-button (click)="copyDIDDocument()">Copy DID Document</button>
+                <button class="signup-button" mat-stroked-button (click)="copyVaultConfiguration()">Copy Blockcore Vault
+                    setup
+                    configuration</button>
+            </p>
+            <!-- <p>
+                Your identity is primarily a list of public keys that you make public available for others to connect with you
+                in a secure manner.</p>
+            <p>You can use your identity to login to web apps, to chat with others, to sign contracts and documents, to
+                establish digital agreements and a lot more.</p> -->
 
-    <!-- <h3>DID Document:</h3>
-    <textarea class="diddocument">{{identity.didDocument | json}}</textarea> -->
+            <!-- <h3>DID Document:</h3>
+            <textarea class="diddocument">{{identity.didDocument | json}}</textarea> -->
+        </div>
+    </mat-tab>
 
-</div>
+    <mat-tab>
+        <ng-template mat-tab-label>
+            <mat-icon class="example-tab-icon">contact_mail</mat-icon>
+        </ng-template>
+
+        <div class="page">
+            <h2>Profile:</h2>
+            <!-- <h4>{{identity.id}}</h4> -->
+
+            <p class="icon-indicator" *ngIf="!identity.published">
+                <mat-icon class="icon-warn">done</mat-icon> This profile is currently NOT public
+            </p>
+            <p class="icon-indicator" *ngIf="identity.published">
+                <mat-icon class="icon-success">done</mat-icon> This profile is currently public
+            </p>
+
+            <mat-form-field class="input-full-width" appearance="outline">
+                <mat-label>Name</mat-label>
+                <input matInput [(ngModel)]="profile.name">
+                <mat-hint>The name you want to be identified with.</mat-hint>
+            </mat-form-field>
+
+            <mat-form-field class="input-full-width" appearance="outline">
+                <mat-label>E-mail</mat-label>
+                <input matInput [(ngModel)]="profile.email">
+                <mat-hint>The e-mail to contact the identity.</mat-hint>
+            </mat-form-field>
+
+            <mat-form-field class="input-full-width" appearance="outline">
+                <mat-label>Website</mat-label>
+                <input matInput [(ngModel)]="profile.website">
+                <mat-hint>Website that is connected to the identity.</mat-hint>
+            </mat-form-field>
+
+            <br><br>
+            IMPORTANT NOTE ON PRIVACY
+            <br>
+            <p>
+                The profile is an signed document that third parties can use to verify belongs to your identity. You
+                must
+                give consideration to what data you put into your profile and with whom you share it.
+            </p>
+            <p>If you publish your profile to an Blockcore Vault, the profile will be public available.</p>
+            <p>To increase your privacy, only perform manual copy and sharing of your profile to friends and
+                connections.</p>
+
+
+            <br><br>
+            <p>
+                <button class="signup-button" mat-flat-button color="primary" (click)="save()">Save (locally)</button>
+                <button class="signup-button" mat-flat-button color="warn" (click)="publish()">Publish</button>
+            </p>
+
+            <p *ngIf="identity.published">
+                <a [href]="identityUrl" target="_blank">View identity on server</a>
+            </p>
+
+            <br><br>
+            <p>
+                <button class="signup-button" mat-stroked-button (click)="copyProfileDocument()">Copy profile
+                    Document</button>
+            </p>
+            <!-- <p>
+                Your identity is primarily a list of public keys that you make public available for others to connect with you
+                in a secure manner.</p>
+            <p>You can use your identity to login to web apps, to chat with others, to sign contracts and documents, to
+                establish digital agreements and a lot more.</p> -->
+
+            <!-- <h3>DID Document:</h3>
+            <textarea class="diddocument">{{identity.didDocument | json}}</textarea> -->
+        </div>
+    </mat-tab>
+
+    <mat-tab>
+        <ng-template mat-tab-label>
+            <mat-icon class="example-tab-icon">folder_shared</mat-icon>
+        </ng-template>
+
+        <div class="page">
+            <h2>Vaults:</h2>
+        </div>
+        <mat-list>
+            <mat-list-item>
+                <mat-icon mat-list-icon>folder_shared</mat-icon>
+                <div mat-line>bf83b2d9-cd9e-48f6-a6cc-bcd9c9b48050</div>
+                <div mat-line class="dimmed">Public</div>
+
+                <p><button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+                        <mat-icon>more_vert</mat-icon>
+                    </button>
+                    <mat-menu #menu="matMenu">
+                        <button mat-menu-item>
+                            <mat-icon>delete</mat-icon>
+                            <span>Remove hub</span>
+                        </button>
+                    </mat-menu>
+                </p>
+
+            </mat-list-item>
+            <mat-list-item>
+                <mat-icon mat-list-icon>folder_shared</mat-icon>
+                <div mat-line>af83b2d9-cd9e-48f6-a6cc-bcd9c9b48050</div>
+                <div mat-line class="dimmed">Encrypted</div>
+
+                <p><button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+                        <mat-icon>more_vert</mat-icon>
+                    </button>
+                    <mat-menu #menu="matMenu">
+                        <button mat-menu-item>
+                            <mat-icon>delete</mat-icon>
+                            <span>Remove hub</span>
+                        </button>
+                    </mat-menu>
+                </p>
+
+            </mat-list-item>
+            <mat-list-item>
+                <mat-icon mat-list-icon>folder_shared</mat-icon>
+                <div mat-line>cf83b2d9-cd9e-48f6-a6cc-bcd9c9b48050</div>
+                <div mat-line class="dimmed">Shared</div>
+
+                <p><button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+                        <mat-icon>more_vert</mat-icon>
+                    </button>
+                    <mat-menu #menu="matMenu">
+                        <button mat-menu-item>
+                            <mat-icon>delete</mat-icon>
+                            <span>Remove hub</span>
+                        </button>
+                    </mat-menu>
+                </p>
+
+            </mat-list-item>
+        </mat-list>
+
+
+    </mat-tab>
+
+    <mat-tab>
+        <ng-template mat-tab-label>
+            <mat-icon class="example-tab-icon" matBadge="2" matBadgeOverlap="false">mail</mat-icon>
+        </ng-template>
+
+        <div class="page">
+
+            <h2>Inbox:</h2>
+            <br>
+
+            <!-- <div class="requests-container">
+
+                <mat-card class="request-card">
+                    <mat-card-header>
+                        <div mat-card-avatar class="request-header-image"></div>
+                        <mat-card-title>Haxxors Paradise</mat-card-title>
+                        <mat-card-subtitle>id:PsPsadkjfdsT13Aab</mat-card-subtitle>
+                    </mat-card-header>
+                    <img mat-card-image src="https://material.angular.io/assets/img/examples/shiba2.jpg"
+                        alt="Photo of a Shiba Inu">
+                    <mat-card-content>
+                        <p>IP address: 10.0.0.3</p>
+                        <p>Sent: 2020-05-26 12:00</p>
+                        <p>
+                            Message:<br>
+                            I want to be your friend! PLZ!!!!
+                        </p>
+                    </mat-card-content>
+                    <mat-card-actions>
+                        <button mat-flat-button color="primary">Accept</button>&nbsp;
+                        <button mat-flat-button color="accent">Reject</button>&nbsp;
+                        <button mat-stroked-button>Block</button>
+                    </mat-card-actions>
+                </mat-card>
+
+
+                <mat-card class="request-card">
+                    <mat-card-header>
+                        <div mat-card-avatar class="request-header-image"></div>
+                        <mat-card-title>Shiba Inu</mat-card-title>
+                        <mat-card-subtitle>id:PasdfdsT123311b</mat-card-subtitle>
+                    </mat-card-header>
+                    <mat-card-content>
+                        <p>IP address: 10.0.0.4</p>
+                        <p>Sent: 2020-05-26 12:00</p>
+                        <p>
+                            Message:<br>
+                            Add me if you want, or don't. See if I care. I'm just a dog.
+                        </p>
+                    </mat-card-content>
+                    <mat-card-actions>
+                        <button mat-flat-button color="primary">Accept</button>&nbsp;
+                        <button mat-flat-button color="accent">Reject</button>&nbsp;
+                        <button mat-stroked-button>Block</button>
+                    </mat-card-actions>
+                </mat-card>
+
+
+            </div> -->
+
+        </div>
+
+    </mat-tab>
+</mat-tab-group>
