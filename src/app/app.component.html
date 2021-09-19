@@ -120,6 +120,11 @@
     </mat-toolbar> -->
 
     <div class="account-details" *ngIf="uiState.activeAccount">
+
+      <button class="close-sidenav-icon" mat-icon-button (click)="draweraccount.toggle()">
+        <mat-icon>close</mat-icon>
+      </button>
+
       <h2 class="name-field">{{uiState.activeAccount.name  | truncate}}</h2>
 
       <div class="detail-box">
