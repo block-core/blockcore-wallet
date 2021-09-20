@@ -27,6 +27,15 @@ export class UIState {
 
     showBackButton = false;
 
+    // getAllAccounts() {
+    //     return this.flatDeep(this.activeWallet?.accounts);
+    // }
+
+    // flatDeep(arr, d = 1) {
+    //     return d > 0 ? arr.reduce((acc, val) => acc.concat(Array.isArray(val) ? flatDeep(val, d - 1) : val), [])
+    //         : arr.slice();
+    // };
+
     // activeWalletIndex: number = 0;
 
     get hasWallets(): boolean {
@@ -36,7 +45,7 @@ export class UIState {
     // activeWallet$: Subject<Wallet | undefined> = new ReplaySubject();
     activeWalletSubject: BehaviorSubject<Wallet | undefined> = new BehaviorSubject<Wallet | undefined>(undefined);
 
-    public get activeWallet$() : Observable<Wallet | undefined> {
+    public get activeWallet$(): Observable<Wallet | undefined> {
         return this.activeWalletSubject.asObservable();
     }
 
@@ -58,7 +67,7 @@ export class UIState {
 
     activeAccountSubject: BehaviorSubject<Account | undefined> = new BehaviorSubject<Account | undefined>(undefined);
 
-    public get activeAccount$() : Observable<Account | undefined> {
+    public get activeAccount$(): Observable<Account | undefined> {
         return this.activeAccountSubject.asObservable();
     }
 

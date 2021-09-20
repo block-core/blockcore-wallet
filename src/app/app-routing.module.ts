@@ -17,6 +17,11 @@ import { ActionIdentityComponent } from './action/identity/identity.component';
 import { ActionLoginComponent } from './action/login/login.component';
 import { AccountIdentityComponent } from './account/view/identity/identity.component';
 import { WipeComponent } from './wipe/wipe.component';
+import { VaultComponent } from './vault/vault.component';
+import { VaultIdentityComponent } from './vault/view/identity/identity.component';
+import { VaultCreateComponent } from './vault/create/create.component';
+import { VaultEditComponent } from './vault/edit/edit.component';
+import { VaultRemoveComponent } from './vault/remove/remove.component';
 
 const routes: Routes = [
   {
@@ -51,6 +56,21 @@ const routes: Routes = [
   },
   {
     path: 'account/remove/:index', component: AccountRemoveComponent
+  },
+  {
+    path: 'vault/view/:index', component: VaultComponent
+  },
+  {
+    path: 'vault/view/identity/:index', component: VaultIdentityComponent
+  },
+  {
+    path: 'vault/create', component: VaultCreateComponent
+  },
+  {
+    path: 'vault/edit/:index', component: VaultEditComponent
+  },
+  {
+    path: 'vault/remove/:index', component: VaultRemoveComponent
   },
   {
     path: 'dashboard', component: DashboardComponent

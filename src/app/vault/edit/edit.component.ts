@@ -8,11 +8,11 @@ import { CommunicationService } from 'src/app/services/communication.service';
 import { IconService } from 'src/app/services/icon.service';
 
 @Component({
-  selector: 'app-account-edit',
+  selector: 'app-vault-edit',
   templateUrl: './edit.component.html',
-  styleUrls: ['../account.component.css']
+  styleUrls: ['../vault.component.css']
 })
-export class AccountEditComponent implements OnInit, OnDestroy {
+export class VaultEditComponent implements OnInit, OnDestroy {
 
   accountName: string | undefined;
   sub: any;

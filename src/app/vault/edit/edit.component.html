@@ -1,0 +1,34 @@
+<div class="page centered">
+
+  <mat-form-field class="input-full-width" appearance="outline">
+    <mat-label>Account name</mat-label>
+    <input matInput [(ngModel)]="accountName" required>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" *ngIf="uiState.activeAccount">
+    <mat-label>Icon</mat-label>
+    <mat-select [(value)]="icon">
+      <mat-option *ngFor="let icon of icons.icons" [value]="icon">
+        <mat-icon>{{icon}}</mat-icon>
+      </mat-option>
+      <mat-select-trigger>
+        <mat-icon>{{icon}}</mat-icon>
+      </mat-select-trigger>
+    </mat-select>
+  </mat-form-field>
+
+  <br>
+  Purpose: {{uiState.activeAccount?.purpose}}<br>
+  Network: {{uiState.activeAccount?.network}}<br>
+  Index: {{uiState.activeAccount?.index}}<br>
+
+  <br>
+  <button class="signup-button" mat-flat-button color="primary" (click)="save()">Save</button>
+  <br>
+  <button class="signup-button" mat-flat-button (click)="cancel()">Cancel</button>
+  <br>
+  <br>
+  <button class="signup-button" mat-flat-button color="warn"
+    [routerLink]="['/account', 'remove', uiState.activeWallet?.activeAccountIndex]">Remove</button>
+
+</div>

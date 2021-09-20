@@ -1,0 +1,49 @@
+h1 {
+    font-size: 2em;
+}
+
+.logo {
+    height: 96px;
+    margin-bottom: 1em;
+}
+
+.mat-stepper-horizontal {
+    margin-top: 8px;
+}
+
+.mat-form-field {
+    margin-top: 16px;
+}
+
+.recovery-phrase {
+    font-size: 1.2em;
+    word-spacing: 0.4em;
+    padding: 1em;
+}
+
+textarea {
+    font-size: 1.2em;
+    word-spacing: 0.4em;
+    height: 100px;
+}
+
+.copy-button {
+    position: absolute;
+    right: 0px;
+    bottom: 0px;
+}
+
+.signup-button {
+    width: 100%;
+    margin-bottom: 0.5em;
+}
+
+.large-icon {
+    font-size: 4em;
+    margin-left: -0.5em;
+}
+
+.diddocument {
+    width: 100%;
+    min-height: 520px;
+}

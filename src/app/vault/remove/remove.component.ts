@@ -6,11 +6,11 @@ import { UIState } from 'src/app/services/ui-state.service';
 import { OrchestratorService } from 'src/app/services/orchestrator.service';
 
 @Component({
-  selector: 'app-account-remove',
+  selector: 'app-vault-remove',
   templateUrl: './remove.component.html',
-  styleUrls: ['../account.component.css']
+  styleUrls: ['../vault.component.css']
 })
-export class AccountRemoveComponent {
+export class VaultRemoveComponent {
   constructor(
     private router: Router,
     private location: Location,

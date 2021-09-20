@@ -1,0 +1,10 @@
+<div class="page centered" *ngIf="uiState.activeAccount">
+
+    <div>0.0 {{uiState.activeAccount.network | network}}</div>
+
+    <br><br>
+</div>
+
+<div class="page centered" *ngIf="!uiState.activeAccount">
+    <h3>No active account selected.</h3>
+</div>
