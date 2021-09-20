@@ -1,12 +1,11 @@
-<div class="page2" *ngIf="uiState.activeWallet && uiState.activeWalletUnlocked">
+<mat-tab-group class="tabs" mat-stretch-tabs *ngIf="uiState.activeWallet && uiState.activeWalletUnlocked">
+    <mat-tab>
+        <ng-template mat-tab-label>
+            <mat-icon class="example-tab-icon">manage_accounts</mat-icon>&nbsp;
+            <span>Accounts</span>
+        </ng-template>
 
-    <mat-tab-group class="tabs" mat-stretch-tabs *ngIf="uiState.activeWallet && uiState.activeWalletUnlocked">
-        <mat-tab>
-            <ng-template mat-tab-label>
-                <mat-icon class="example-tab-icon">manage_accounts</mat-icon>&nbsp;
-                <span>Accounts</span>
-            </ng-template>
-
+        <div>
             <mat-nav-list>
                 <div mat-subheader>Accounts</div>
 
@@ -44,16 +43,18 @@
                 </a>
 
             </mat-nav-list>
+        </div>
 
-        </mat-tab>
+    </mat-tab>
 
-        <mat-tab>
-            <ng-template mat-tab-label>
-                <mat-icon class="example-tab-icon">folder_shared</mat-icon>
-                &nbsp;
-                <span>Vaults</span>
-            </ng-template>
+    <mat-tab>
+        <ng-template mat-tab-label>
+            <mat-icon class="example-tab-icon">folder_shared</mat-icon>
+            &nbsp;
+            <span>Vaults</span>
+        </ng-template>
 
+        <div>
             <mat-nav-list>
 
                 <div mat-subheader>Vaults</div>
@@ -96,17 +97,17 @@
                 </a>
 
             </mat-nav-list>
+        </div>
 
-        </mat-tab>
+    </mat-tab>
 
-        <mat-tab>
-            <ng-template mat-tab-label>
-                <mat-icon class="example-tab-icon">mail</mat-icon>
-                &nbsp;
-                <span matBadge="2" matBadgeOverlap="false">Inbox</span>
-            </ng-template>
+    <mat-tab>
+        <ng-template mat-tab-label>
+            <mat-icon class="example-tab-icon">mail</mat-icon>
+            &nbsp;
+            <span matBadge="2" matBadgeOverlap="false">Inbox</span>
+        </ng-template>
 
-        </mat-tab>
+    </mat-tab>
 
-    </mat-tab-group>
-</div>
+</mat-tab-group>

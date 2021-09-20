@@ -125,7 +125,7 @@
         <mat-icon>close</mat-icon>
       </button>
 
-      <h2 class="name-field">{{uiState.activeAccount.name  | truncate}}</h2>
+      <h2 class="name-field">{{uiState.activeAccount.name | truncate}}</h2>
 
       <div class="detail-box">
         <mat-icon mat-list-icon class="account-icon">{{uiState.activeAccount.icon}}</mat-icon>
@@ -207,7 +207,9 @@
     Don't use this, see reason: https://newbedev.com/angular-material-sidenav-cdkscrollable
   -->
 
-  <div>
+  <!-- <div> -->
+  <mat-sidenav-content>
     <router-outlet></router-outlet>
-  </div>
+  </mat-sidenav-content>
+  <!-- </div> -->
 </mat-sidenav-container>
