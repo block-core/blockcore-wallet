@@ -39,6 +39,10 @@ body {
     overflow: overlay !important;
 }
 
+.mat-sidenav-content {
+    overflow: overlay !important;
+}
+
 mat-tab-group {
     height: 100%;
 }
@@ -49,9 +53,9 @@ mat-tab-group {
     overflow: hidden !important;
 }
 
-.mat-drawer-content {
-    overflow: hidden !important;
-}
+// .mat-drawer-content {
+//     overflow: hidden !important;
+// }
 
 app-root {
     height: 100%;

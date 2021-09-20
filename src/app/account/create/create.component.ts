@@ -50,6 +50,8 @@ export class AccountCreateComponent implements OnInit, OnDestroy {
         for (let i = 0; i < 100; i++) {
             this.indexes.push(i);
         }
+
+        this.uiState.showBackButton = true;
     }
 
     ngOnInit() {
