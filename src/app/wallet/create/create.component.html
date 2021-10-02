@@ -36,7 +36,7 @@
 
                     <mat-form-field *ngIf="recover" class="input-full-width" appearance="outline">
                         <mat-label>Secret Recovery Phrase</mat-label>
-                        <textarea matInput [ngModel]="mnemonic" formControlName="firstCtrl" required></textarea>
+                        <textarea matInput [(ngModel)]="mnemonic" formControlName="firstCtrl" required></textarea>
                     </mat-form-field>
 
                     <div>

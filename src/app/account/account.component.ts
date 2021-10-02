@@ -20,8 +20,10 @@ export class AccountComponent implements OnInit, OnDestroy {
   alarmName = 'refresh';
   wallet: any;
   account!: any;
+  address!: string;
   // sub: any;
   previousIndex!: number;
+  sub: any;
 
   constructor(
     public uiState: UIState,
@@ -35,9 +37,15 @@ export class AccountComponent implements OnInit, OnDestroy {
     this.uiState.title = 'Account: ';
     this.uiState.showBackButton = true;
 
+    // Whenever the account changes, re-generate the address.
+    this.uiState.activeAccount$.subscribe(() => {
+      this.generateAddress();
+    });
+
     if (!this.uiState.hasAccounts) {
       this.router.navigateByUrl('/account/create');
     }
+
 
     this.activatedRoute.paramMap.subscribe(async params => {
       console.log('PARAMS:', params);
@@ -59,6 +67,8 @@ export class AccountComponent implements OnInit, OnDestroy {
         this.router.navigate(['account', 'view', 'identity', index]);
       }
 
+      // this.generateAddress();
+
       // this.uiState.persisted.activeAccountIndex = Number(index);
       // Persist when changing accounts.
       // this.uiState.save();
@@ -66,12 +76,30 @@ export class AccountComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    // if (this.sub) {
-    //   this.communication.unlisten(this.sub);
-    // }
+    if (this.sub) {
+      this.communication.unlisten(this.sub);
+    }
+  }
+
+  generateAddress() {
+    console.log('GENERATE address!!!!');
+    console.log(this.uiState.activeAccount);
+
+    this.communication.send('address-generate', { index: 0 });
+
+
+
   }
 
   ngOnInit(): void {
+    
+    this.sub = this.communication.listen('address-generated', (data: { address: string }) => {
+      console.log('ADDRESS GENERATED!!');
+      this.address = data.address;
+    });
+
+    // this.generateAddress();
+
     // this.sub = this.communication.listen('active-account-changed', (data: any) => {
     //   // If we are currently viewing an account and the user changes, we'll refresh this view.
     //   if (this.previousIndex != data.index) {

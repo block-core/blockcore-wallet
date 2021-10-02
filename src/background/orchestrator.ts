@@ -82,8 +82,17 @@ export class OrchestratorBackgroundService {
             return;
         }
 
+        let password = this.state.passwords.get(wallet.id);
+
+        if (!password) {
+            throw Error('missing password');
+        }
+
+        let unlockedMnemonic = null;
+        unlockedMnemonic = await this.crypto.decryptData(wallet.mnemonic, password);
+
         // TODO: MUST VERIFY THAT ACCOUNT RESTORE AND NODES IS ALL CORRECT BELOW.
-        var masterSeed = await bip39.mnemonicToSeed(wallet.mnemonic, '');
+        var masterSeed = await bip39.mnemonicToSeed(unlockedMnemonic, '');
         const masterNode = bip32.fromSeed(masterSeed, this.crypto.getProfileNetwork());
 
         // Get the hardened purpose and account node.
@@ -145,8 +154,17 @@ export class OrchestratorBackgroundService {
             return;
         }
 
+        let password = this.state.passwords.get(wallet.id);
+
+        if (!password) {
+            throw Error('missing password');
+        }
+
+        let unlockedMnemonic = null;
+        unlockedMnemonic = await this.crypto.decryptData(wallet.mnemonic, password);
+
         // TODO: MUST VERIFY THAT ACCOUNT RESTORE AND NODES IS ALL CORRECT BELOW.
-        var masterSeed = await bip39.mnemonicToSeed(wallet.mnemonic, '');
+        var masterSeed = await bip39.mnemonicToSeed(unlockedMnemonic, '');
         const masterNode = bip32.fromSeed(masterSeed, this.crypto.getProfileNetwork());
 
         // Get the hardened purpose and account node.
@@ -228,8 +246,17 @@ export class OrchestratorBackgroundService {
             return;
         }
 
+        let password = this.state.passwords.get(wallet.id);
+
+        if (!password) {
+            throw Error('missing password');
+        }
+
+        let unlockedMnemonic = null;
+        unlockedMnemonic = await this.crypto.decryptData(wallet.mnemonic, password);
+
         // TODO: MUST VERIFY THAT ACCOUNT RESTORE AND NODES IS ALL CORRECT BELOW.
-        var masterSeed = await bip39.mnemonicToSeed(wallet.mnemonic, '');
+        var masterSeed = await bip39.mnemonicToSeed(unlockedMnemonic, '');
         const masterNode = bip32.fromSeed(masterSeed, this.crypto.getProfileNetwork());
 
         // Get the hardened purpose and account node.
@@ -382,8 +409,17 @@ export class OrchestratorBackgroundService {
                 return;
             }
 
+            let password = this.state.passwords.get(wallet.id);
+
+            if (!password) {
+                throw Error('missing password');
+            }
+    
+            let unlockedMnemonic = null;
+            unlockedMnemonic = await this.crypto.decryptData(wallet.mnemonic, password);
+
             // TODO: MUST VERIFY THAT ACCOUNT RESTORE AND NODES IS ALL CORRECT BELOW.
-            var masterSeed = await bip39.mnemonicToSeed(wallet.mnemonic, '');
+            var masterSeed = await bip39.mnemonicToSeed(unlockedMnemonic, '');
             const masterNode = bip32.fromSeed(masterSeed, this.crypto.getProfileNetwork());
 
             // Get the hardened purpose and account node.
@@ -619,6 +655,96 @@ export class OrchestratorBackgroundService {
                 this.communication.send(port, 'error', { exception: null, message: 'Invalid password' });
                 // this.error = 'Invalid password';
             }
+        });
+
+        this.communication.listen('address-generate', async (port: any, data: { index: number }) => {
+            if (!this.state.activeWallet) {
+                return;
+            }
+
+            var account = this.state.activeAccount;
+            var wallet = this.state.activeWallet;
+
+            if (!account || !wallet) {
+                return;
+            }
+
+            let password = this.state.passwords.get(this.state.activeWallet.id);
+
+            if (!password) {
+                return;
+            }
+
+            let unlockedMnemonic = null;
+            unlockedMnemonic = await this.crypto.decryptData(wallet.mnemonic, password);
+
+            let network: any;
+
+            console.log(account);
+            console.log(account.network);
+
+            if (account.network === 105105) {
+                network = {
+                    messagePrefix: '\x18Bitcoin Signed Message:\n',
+                    bech32: 'strax',
+                    bip32: {
+                        public: 0x0488b21e,
+                        private: 0x0488ade4,
+                    },
+                    pubKeyHash: 75,
+                    scriptHash: 140,
+                    wif: 0x08
+                }
+            }
+            else if (account.network === 1926) {
+                network = {
+                    messagePrefix: '\x18CityCoin Signed Message:\n', // TODO: City Chain should migrate to use same prefix as Bitcoin.
+                    bech32: 'strax',
+                    bip32: {
+                        public: 0x0488b21e,
+                        private: 0x0488ade4,
+                    },
+                    pubKeyHash: 0x1c,
+                    scriptHash: 0x58,
+                    wif: 0x08
+                }
+            } else {
+                network = {
+                    messagePrefix: '\x18Bitcoin Signed Message:\n',
+                    bech32: 'id',
+                    bip32: {
+                        public: 0x0488b21e,
+                        private: 0x0488ade4,
+                    },
+                    pubKeyHash: 55,
+                    scriptHash: 117,
+                    wif: 0x08
+                }
+            }
+
+            // TODO: Obviously we should not repeat this process from recovery phrase, but this should 
+            // be applied during wallet unlock and state of the node should be kept in-memory. This is just
+            // done like this for quick prototyping.
+            var masterSeed = await bip39.mnemonicToSeed(unlockedMnemonic, '');
+            const masterNode = bip32.fromSeed(masterSeed, network);
+
+            // Get the hardened purpose and account node.
+            const accountNode = masterNode.derivePath(account.derivationPath); // m/44'/105105'/0'
+            
+            // console.log(wallet.mnemonic);
+            // console.log(unlockedMnemonic);
+            // console.log(accountNode.neutered().toBase58());
+
+            // const addressNode = masterNode.deriveHardened(data.index);
+            const addressNodeReceive = accountNode.derive(0);
+            const addressNodeReceiveIndex0 = addressNodeReceive.derive(0);
+            const addressNodeChange = accountNode.derive(1);
+            const addressNodeChangeIndex0 = addressNodeChange.derive(0);
+
+            const address0 = this.crypto.getAddressByNetworkp2pkh(addressNodeReceiveIndex0, network);
+
+            this.communication.send(port, 'address-generated', { address: address0 })
+
         });
 
         this.communication.listen('account-create', async (port: any, data: Account) => {

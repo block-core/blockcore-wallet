@@ -3,6 +3,12 @@
     <div>0.0 {{uiState.activeAccount.network | network}}</div>
 
     <br><br>
+
+    First address (for verification):<br>
+    <div *ngIf="address">
+        {{address}}
+    </div>
+
 </div>
 
 <div class="page centered" *ngIf="!uiState.activeAccount">

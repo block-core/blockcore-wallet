@@ -109,8 +109,17 @@ export class DataSyncService {
             throw Error('No active wallet/account.');
         }
 
+        let password = this.state.passwords.get(wallet.id);
+
+        if (!password) {
+            throw Error('missing password');
+        }
+
+        let unlockedMnemonic = null;
+        unlockedMnemonic = await this.crypto.decryptData(wallet.mnemonic, password);
+
         // TODO: MUST VERIFY THAT ACCOUNT RESTORE AND NODES IS ALL CORRECT BELOW.
-        var masterSeed = await bip39.mnemonicToSeed(wallet.mnemonic, '');
+        var masterSeed = await bip39.mnemonicToSeed(unlockedMnemonic, '');
         const masterNode = bip32.fromSeed(masterSeed, this.crypto.getProfileNetwork());
 
         // Get the hardened purpose and account node.

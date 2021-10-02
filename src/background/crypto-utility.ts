@@ -29,6 +29,33 @@ export class CryptoUtility {
         return address;
     }
 
+    getAddressByNetworkp2wsh(node: any, network: any) {
+        const { address } = payments.p2wsh({
+            pubkey: node.publicKey,
+            network: network,
+        });
+
+        return address;
+    }
+
+    getAddressByNetworkp2pkh(node: any, network: any) {
+        const { address } = payments.p2pkh({
+            pubkey: node.publicKey,
+            network: network,
+        });
+
+        return address;
+    }
+
+    getAddressByNetworkp2wpkh(node: any, network: any) {
+        const { address } = payments.p2wpkh({
+            pubkey: node.publicKey,
+            network: network,
+        });
+
+        return address;
+    }
+
     getIdentity(keyPair: Secp256k1KeyPair) {
         var identity = new BlockcoreIdentity(keyPair.toKeyPair(false));
         return identity;
