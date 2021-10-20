@@ -1,4 +1,4 @@
-import { Account, State, Wallet, Action, DIDPayload, Settings, Identity } from 'src/app/interfaces';
+import { Account, State, Wallet, Action, DIDPayload, Settings, Identity, Vault } from 'src/app/interfaces';
 import { MINUTE, NETWORK_IDENTITY } from 'src/app/shared/constants';
 import { AppState } from './application-state';
 import { CommunicationBackgroundService } from './communication';
@@ -837,6 +837,26 @@ export class OrchestratorBackgroundService {
             // Begin verification
 
 
+        });
+
+        this.communication.listen('vault-publish', async (port: any, data: Vault) => {
+            await this.sync.saveVault(data);
+
+            // await this.updateIdentityDocument(data);
+
+            // Perhaps set this when successful callback from Vault?
+            data.published = true;
+
+            // var existingIndex = this.state.store.identities.findIndex(i => i.id == data.id);
+            // this.state.store.identities[existingIndex] = data;
+
+            // await this.state.saveStore(this.state.store);
+
+            // this.refreshState();
+
+            this.communication.sendToAll('vault-published', data);
+
+            // Begin verification
         });
 
         this.communication.listen('set-active-account', async (port: any, data: { index: number }) => {

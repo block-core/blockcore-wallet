@@ -88,6 +88,33 @@ interface Identity {
     didPayload?: DIDPayload;
 }
 
+interface Vault {
+    id: string,
+    label?: string;
+    published?: boolean;
+    icon?: string;
+    controller?: string;
+    invoker?: string;
+    delegator?: string;
+    sequence?: number;
+    jws?: string;
+}
+
+/** EncryptedDocument from the Confidential Storage specification. */
+interface VaultEntryEncrypted
+{
+    id: string;
+    sequence: number;
+    jwe: any;
+}
+
+/** StructuredDocument from the Confidential Storage specification. */
+interface VaultEntry {
+    id: string;
+    meta: { created: Date };
+    content: any;
+}
+
 interface DIDPayload {
     /** Base64 encoded and signed JWS of the DID Document. */
     data: string;
@@ -131,5 +158,6 @@ export {
     Identity,
     DIDResolutionResult,
     DIDPayload,
-    Settings
+    Settings,
+    Vault
 }

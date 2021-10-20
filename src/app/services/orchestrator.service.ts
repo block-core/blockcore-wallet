@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { UIState } from './ui-state.service';
 import { CommunicationService } from './communication.service';
-import { Account, Action, Identity, Settings, State } from '../interfaces';
+import { Account, Action, Identity, Settings, State, Vault } from '../interfaces';
 import {
     MatSnackBar,
     MatSnackBarHorizontalPosition,
@@ -175,6 +175,10 @@ export class OrchestratorService {
 
     createAccount(account: Account) {
         this.communication.send('account-create', account);
+    }
+
+    createVault(data: Vault) {
+        this.communication.send('vault-publish', data);
     }
 
     sign(content?: string, tabId?: string) {

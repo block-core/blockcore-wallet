@@ -1,4 +1,4 @@
-import { Account, State, Wallet, Action, DIDPayload, Settings, Identity } from 'src/app/interfaces';
+import { Account, State, Wallet, Action, DIDPayload, Settings, Identity, Vault } from 'src/app/interfaces';
 import { MINUTE, NETWORK_IDENTITY } from 'src/app/shared/constants';
 import { AppState } from './application-state';
 import { CommunicationBackgroundService } from './communication';
@@ -32,6 +32,80 @@ export class DataSyncService {
         this.state = state;
         this.crypto = crypto;
     }
+
+    /** Will attempt to create or update an vault. */
+    async saveVault(data: Vault) {
+        // TODO: Further improve the logic of the identity saving.
+
+        // If we have invalid sequence number for the update operation, we'll
+        // not be able to update. So the question is if we should simply get 
+        // latest DID Document, update the sequence and replace without informing
+        // the user, or should we give user option to resolve conflict so they 
+        // don't potentially overwrite previous information?
+        // Initial version will simply attempt to create or update once.
+
+        // Get the signed JWS payload, we must combine the fields so we include the signature:
+        // var jws = data.didPayload?.data + '.' + data.didPayload?.signature;
+
+        debugger;
+
+        // var jws = data.jws;
+        var jws = data;
+
+        var keyPair = await this.getIdentityKeyPair();
+
+        var identity = await this.getIdentity(keyPair);
+
+        var operationPayload;
+
+        // If there are no did resolution available for this identity, it means 
+        // it has never been published.
+        if (data.sequence == null || data.sequence === -1) {
+            data.sequence = 0;
+            var operationPayloadCreate = await identity.generateOperation('vault', 'create', 0, jws);
+            operationPayload = await this.signDocument(identity, keyPair, operationPayloadCreate);
+        } else {
+            // var sequence = (data.didResolution.didResolutionMetadata.sequence + 1);
+
+            // TODO: We're going to need a fairly advanced retry-logic where we ensure that sequence
+            // is correct. We can't simply keep increasing the sequence here, if the post fails against 
+            // the vault, then we must keep the previous action and send that in a queue first.
+
+            // TODO: Refactor this to make a queue of requests to be synced externally to vaults.
+            data.sequence = (data.sequence + 1);
+            var operationPayloadCreate = await identity.generateOperation('vault', 'replace', data.sequence, jws);
+            operationPayload = await this.signDocument(identity, keyPair, operationPayloadCreate);
+        }
+
+        const operationUrl = this.state.persisted.settings.dataVault + '/operation';
+
+        const operationJson = {
+            "jwt": operationPayload
+        }
+
+        try {
+            var content = await axios.post(operationUrl, operationJson);
+            console.log('RESULT FROM OPERATION POST:');
+            console.log(content);
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
+
+        // const rawResponse = await fetch(operationUrl, {
+        //     method: 'POST',
+        //     headers: {
+        //         'Accept': 'application/json',
+        //         'Content-Type': 'application/json'
+        //     },
+        //     body: JSON.stringify(operationJson)
+        // });
+
+        // const content = await rawResponse.json();
+        // console.log('RESULT FROM OPERATION POST:');
+        // console.log(content);
+    }
+
 
     /** Will attempt to create or update an identity. */
     async saveIdentity(data: Identity) {

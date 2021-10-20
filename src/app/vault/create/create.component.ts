@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UIState } from '../../services/ui-state.service';
 import { CryptoService } from '../../services/crypto.service';
-import { Account } from 'src/app/interfaces';
+import { Account, Vault } from 'src/app/interfaces';
 import { Router } from '@angular/router';
 import { OrchestratorService } from 'src/app/services/orchestrator.service';
 import { CommunicationService } from 'src/app/services/communication.service';
@@ -32,13 +32,13 @@ export class VaultCreateComponent implements OnInit, OnDestroy {
     icon: string | undefined;
     selectedAccountIndex!: number;
 
-    vault = {
+    vault: Vault = {
         id: '',
         controller: '',
-        sequence: 0,
+        sequence: -1,
         invoker: '',
         delegator: ''
-      }
+    }
 
     get passwordValidated(): boolean {
         return this.password === this.password2 && this.secondFormGroup.valid;
@@ -91,11 +91,17 @@ export class VaultCreateComponent implements OnInit, OnDestroy {
         console.log(event.value);
         console.log('selectedAccountIndex:' + this.selectedAccountIndex);
 
+        this.vault.controller = this.uiState.activeWallet?.accounts[this.selectedAccountIndex].identifier;
+
         this.generate();
     }
 
     async generate() {
-        const text = `${this.selectedAccountIndex}#${this.selectedAccountIndex}`;
+        // TODO: We must get the derived public key from the key at the seleted index. Currently we'll just put the
+        // index, but this must be changed to public key or anyone can generate vault names that belong to the identifier.
+        const getPublicKeyForIdentityIndex = this.index;
+
+        const text = `${this.vault.controller}#${getPublicKeyForIdentityIndex}`;
         const digestHex = await this.digestMessage(text);
         console.log(digestHex);
         this.vault.id = digestHex;
@@ -165,27 +171,31 @@ export class VaultCreateComponent implements OnInit, OnDestroy {
     async onAccountIndexChanged(event: any) {
         // this.index = event.value;
         this.derivationPath = this.getDerivationPath();
+
+        this.generate();
     }
 
     create() {
-        const splittedPath = this.derivationPath.split('/');
-        const splittedPathReplaced = this.derivationPath.replaceAll(`'`, ``).split('/');
+        this.manager.createVault(this.vault);
 
-        const parsedPurpose = Number(splittedPathReplaced[1]);
-        const parsedNetwork = Number(splittedPathReplaced[2]);
-        const parsedIndex = Number(splittedPathReplaced[3]);
+        // const splittedPath = this.derivationPath.split('/');
+        // const splittedPathReplaced = this.derivationPath.replaceAll(`'`, ``).split('/');
 
-        // TODO: Get the account index from the derivation path if user customizes it.
-        const account: Account = {
-            name: this.name,
-            index: parsedIndex,
-            network: parsedNetwork,
-            purpose: parsedPurpose,
-            derivationPath: this.derivationPath,
-            icon: this.icon
-        };
+        // const parsedPurpose = Number(splittedPathReplaced[1]);
+        // const parsedNetwork = Number(splittedPathReplaced[2]);
+        // const parsedIndex = Number(splittedPathReplaced[3]);
 
-        this.manager.createAccount(account);
+        // // TODO: Get the account index from the derivation path if user customizes it.
+        // const account: Account = {
+        //     name: this.name,
+        //     index: parsedIndex,
+        //     network: parsedNetwork,
+        //     purpose: parsedPurpose,
+        //     derivationPath: this.derivationPath,
+        //     icon: this.icon
+        // };
+
+        // this.manager.createAccount(account);
 
         // this.step = 1;
         // this.recover = false;

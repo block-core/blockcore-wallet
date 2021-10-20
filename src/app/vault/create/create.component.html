@@ -4,14 +4,7 @@
         Create a container for data that can be synced between servers
     </mat-card-subtitle>
     <br> -->
-
     
-    <mat-form-field class="input-full-width" appearance="outline">
-        <mat-label>Name</mat-label>
-        <input matInput [(ngModel)]="name" required>
-    </mat-form-field>
-    
-
     <mat-form-field appearance="outline" class="input-full-width">
         <mat-label>Choose controller</mat-label>
         <mat-select (selectionChange)="onWalletChanged($event)" [(value)]="selectedAccountIndex">
@@ -32,8 +25,13 @@
         <input matInput [(ngModel)]="vault.id" disabled="true" placeholder="Generated from DID and sequence">
     </mat-form-field>
 
+    <mat-form-field class="input-full-width" appearance="outline">
+        <mat-label>Label (local only)</mat-label>
+        <input matInput [(ngModel)]="name" required>
+    </mat-form-field>
+
     <mat-form-field appearance="outline" class="input-full-width">
-        <mat-label>Icon</mat-label>
+        <mat-label>Icon (local only)</mat-label>
         <mat-select [(value)]="icon">
             <mat-option *ngFor="let icon of icons.icons" [value]="icon">
                 <mat-icon>{{icon}}</mat-icon>
