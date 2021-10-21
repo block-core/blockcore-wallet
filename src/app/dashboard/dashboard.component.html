@@ -47,7 +47,7 @@
 
     </mat-tab>
 
-    <mat-tab>
+    <mat-tab *ngIf="feature.enabled('vault')">
         <ng-template mat-tab-label>
             <mat-icon class="example-tab-icon">folder_shared</mat-icon>
             &nbsp;
@@ -101,7 +101,7 @@
 
     </mat-tab>
 
-    <mat-tab>
+    <mat-tab *ngIf="feature.enabled('inbox')">
         <ng-template mat-tab-label>
             <mat-icon class="example-tab-icon">mail</mat-icon>
             &nbsp;

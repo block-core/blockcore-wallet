@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { CryptoService } from '../services/crypto.service';
 import { UIState } from '../services/ui-state.service';
 import { Router } from '@angular/router';
+import { FeatureService } from '../services/features.service';
 
 export interface Section {
   name: string;
@@ -24,6 +25,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   history: Section[] = [];
 
   constructor(
+    public feature: FeatureService,
     public uiState: UIState,
     private crypto: CryptoService,
     private router: Router,

@@ -6,6 +6,7 @@ import { CryptoService } from '../../services/crypto.service';
 import { CommunicationService } from 'src/app/services/communication.service';
 import { Wallet } from 'src/app/interfaces';
 import { copyToClipboard } from 'src/app/shared/utilities';
+import { FeatureService } from 'src/app/services/features.service';
 const { v4: uuidv4 } = require('uuid');
 
 @Component({
@@ -29,6 +30,7 @@ export class WalletCreateComponent implements OnInit {
     }
 
     constructor(private _formBuilder: FormBuilder,
+        public feature: FeatureService,
         public uiState: UIState,
         private crypto: CryptoService,
         private communication: CommunicationService,
