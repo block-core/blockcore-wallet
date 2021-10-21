@@ -58,11 +58,13 @@
                 }
               ],
               "assets": [
-                "src/favicon.ico",
-                "src/assets",
-                "src/icons",
                 "src/provider.js",
                 "src/content.js",
+                {
+                  "input": "src/assets/blockcore/",
+                  "output": "/assets",
+                  "glob": "*"
+                },
                 {
                   "input": "src/manifest/blockcore/",
                   "output": "/",
@@ -79,11 +81,13 @@
             },
             "development": {
               "assets": [
-                "src/favicon.ico",
-                "src/assets",
-                "src/icons/blockcore",
                 "src/provider.js",
                 "src/content.js",
+                {
+                  "input": "src/assets/blockcore/",
+                  "output": "/assets",
+                  "glob": "*"
+                },
                 {
                   "input": "src/manifest/blockcore/",
                   "output": "/",
@@ -129,11 +133,13 @@
                 }
               ],
               "assets": [
-                "src/favicon.ico",
-                "src/assets",
-                "src/icons/coinvault",
                 "src/provider.js",
                 "src/content.js",
+                {
+                  "input": "src/assets/coinvault/",
+                  "output": "/assets",
+                  "glob": "*"
+                },
                 {
                   "input": "src/manifest/coinvault/",
                   "output": "/",
@@ -165,11 +171,13 @@
                 }
               ],
               "assets": [
-                "src/favicon.ico",
-                "src/assets",
-                "src/icons/smartcityplatform",
                 "src/provider.js",
                 "src/content.js",
+                {
+                  "input": "src/assets/smartcityplatform/",
+                  "output": "/assets",
+                  "glob": "*"
+                },
                 {
                   "input": "src/manifest/smartcityplatform/",
                   "output": "/",

@@ -23,6 +23,8 @@ export class UIState {
 
     persisted!: Persisted;
 
+    manifest!: chrome.runtime.Manifest;
+
     store!: Store;
 
     showBackButton = false;

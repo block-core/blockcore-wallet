@@ -25,12 +25,10 @@ export class LoadingComponent implements OnInit, OnDestroy {
     private cd: ChangeDetectorRef
   ) {
     this.uiState.title = 'Loading...';
-    console.log('LOADING COMPONENT CONSTRUCTOR');
+    this.uiState.manifest = chrome.runtime.getManifest();
   }
 
   ngOnDestroy(): void {
-    console.log('LOADING ON DESTROY!');
-
     if (this.sub) {
       this.communication.unlisten(this.sub);
     }

@@ -2,13 +2,13 @@
     "name": "Smart City Platform",
     "version": "0.0.1",
     "manifest_version": 2,
-    "description": "Browser extension for Smart City Platform.",
-    "author": "https://www.city-chain.org",
+    "description": "Manage your citizenship, identity, properties, social network and more.",
+    "author": "City Chain Foundation",
     "icons": {
-        "16": "icons/smartcityplatform/icon-16x16.png",
-        "32": "icons/smartcityplatform/icon-32x32.png",
-        "48": "icons/smartcityplatform/icon-48x48.png",
-        "128": "icons/smartcityplatform/icon-128x128.png"
+        "16": "assets/icon-16x16.png",
+        "32": "assets/icon-32x32.png",
+        "48": "assets/icon-48x48.png",
+        "128": "assets/icon-128x128.png"
     },
     "permissions": [
         "activeTab",
