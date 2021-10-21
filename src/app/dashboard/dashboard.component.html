@@ -101,13 +101,20 @@
 
     </mat-tab>
 
+    <mat-tab *ngIf="feature.enabled('collectible')">
+        <ng-template mat-tab-label>
+            <mat-icon class="example-tab-icon">category</mat-icon>
+            &nbsp;
+            <span>Collectibles</span>
+        </ng-template>
+    </mat-tab>
+
     <mat-tab *ngIf="feature.enabled('inbox')">
         <ng-template mat-tab-label>
             <mat-icon class="example-tab-icon">mail</mat-icon>
             &nbsp;
             <span matBadge="2" matBadgeOverlap="false">Inbox</span>
         </ng-template>
-
     </mat-tab>
 
 </mat-tab-group>

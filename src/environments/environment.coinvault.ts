@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  features: ['wallet', 'identity']
+  features: ['wallet', 'identity', 'collectible']
 };
