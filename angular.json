@@ -115,7 +115,10 @@
                 "src/icons/coinvault",
                 "src/provider.js",
                 "src/content.js",
-                "src/manifest.json"
+                {
+                  "input": "src/manifest/coinvault/manifest.json",
+                  "output": "src/manifest.json"
+                }
               ],
               "outputHashing": "none"
             },
@@ -139,7 +142,10 @@
                 "src/icons/smartcityplatform",
                 "src/provider.js",
                 "src/content.js",
-                "src/manifest.json"
+                {
+                  "input": "src/manifest/smartcityplatform/manifest.json",
+                  "output": "src/manifest.json"
+                }
               ],
               "fileReplacements": [
                 {
