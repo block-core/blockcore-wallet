@@ -3,10 +3,13 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "npm run watch",
+    "start": "ng build --watch --configuration=development",
+    "coinvault": "ng build --watch --configuration=coinvault",
+    "smartcityplatform": "ng build --watch --configuration=smartcityplatform",
+    "all": "ng build --configuration=production && ng build --configuration=coinvault && ng build --configuration=smartcityplatform",
     "serve": "ng serve",
     "build": "ng build",
-    "watch": "ng build --watch --configuration development",
+    "watch": "ng build --watch",
     "test": "ng test"
   },
   "private": true,

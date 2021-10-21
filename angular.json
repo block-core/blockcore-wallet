@@ -27,14 +27,7 @@
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
-            "assets": [
-              "src/favicon.ico",
-              "src/assets",
-              "src/icons",
-              "src/manifest.json",
-              "src/provider.js",
-              "src/content.js"
-            ],
+
             "styles": [
               "src/styles.scss"
             ],
@@ -57,6 +50,14 @@
                   "maximumError": "4kb"
                 }
               ],
+              "assets": [
+                "src/favicon.ico",
+                "src/assets",
+                "src/icons",
+                "src/provider.js",
+                "src/content.js",
+                "src/manifest.json"
+              ],
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
@@ -66,6 +67,14 @@
               "outputHashing": "none"
             },
             "development": {
+              "assets": [
+                "src/favicon.ico",
+                "src/assets",
+                "src/icons/blockcore",
+                "src/provider.js",
+                "src/content.js",
+                "src/manifest.json"
+              ],
               "buildOptimizer": false,
               "optimization": false,
               "vendorChunk": true,
@@ -75,6 +84,74 @@
               "customWebpackConfig": {
                 "path": "./webpack-dev.config.ts"
               }
+            },
+            "coinvault": {
+              "outputPath": "dist/coinvault-extension",
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "3mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "2kb",
+                  "maximumError": "4kb"
+                }
+              ],
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.prod.ts"
+                },
+                {
+                  "replace": "src/manifest.json",
+                  "with": "src/manifest/coinvault/manifest.json"
+                }
+              ],
+              "assets": [
+                "src/favicon.ico",
+                "src/assets",
+                "src/icons/coinvault",
+                "src/provider.js",
+                "src/content.js",
+                "src/manifest.json"
+              ],
+              "outputHashing": "none"
+            },
+            "smartcityplatform": {
+              "outputPath": "dist/smartcityplatform-extension",
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "3mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "2kb",
+                  "maximumError": "4kb"
+                }
+              ],
+              "assets": [
+                "src/favicon.ico",
+                "src/assets",
+                "src/icons/smartcityplatform",
+                "src/provider.js",
+                "src/content.js",
+                "src/manifest.json"
+              ],
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.prod.ts"
+                },
+                {
+                  "replace": "src/manifest.json",
+                  "with": "src/manifest/smartcityplatform/manifest.json"
+                }
+              ],
+              "outputHashing": "none"
             }
           },
           "defaultConfiguration": "production"
@@ -90,6 +167,12 @@
             },
             "development": {
               "browserTarget": "blockcore-extension:build:development"
+            },
+            "coinvault": {
+              "browserTarget": "blockcore-extension:build:coinvault"
+            },
+            "smartcityplatform": {
+              "browserTarget": "blockcore-extension:build:smartcityplatform"
             }
           },
           "defaultConfiguration": "development"
