@@ -27,7 +27,6 @@
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
-
             "styles": [
               "src/styles.scss"
             ],
@@ -38,6 +37,14 @@
           },
           "configurations": {
             "production": {
+              "optimization": {
+                "scripts": true,
+                "styles": {
+                  "minify": true,
+                  "inlineCritical": false
+                },
+                "fonts": true
+                },
               "budgets": [
                 {
                   "type": "initial",
@@ -95,6 +102,14 @@
             },
             "coinvault": {
               "outputPath": "dist/coinvault-extension",
+              "optimization": {
+                "scripts": true,
+                "styles": {
+                  "minify": true,
+                  "inlineCritical": false
+                },
+                "fonts": true
+                },
               "budgets": [
                 {
                   "type": "initial",
@@ -129,6 +144,14 @@
             },
             "smartcityplatform": {
               "outputPath": "dist/smartcityplatform-extension",
+              "optimization": {
+                "scripts": true,
+                "styles": {
+                  "minify": true,
+                  "inlineCritical": false
+                },
+                "fonts": true
+                },
               "budgets": [
                 {
                   "type": "initial",
