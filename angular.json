@@ -56,7 +56,11 @@
                 "src/icons",
                 "src/provider.js",
                 "src/content.js",
-                "src/manifest.json"
+                {
+                  "input": "src/manifest/blockcore/",
+                  "output": "/",
+                  "glob": "manifest.json"
+                }
               ],
               "fileReplacements": [
                 {
@@ -73,7 +77,11 @@
                 "src/icons/blockcore",
                 "src/provider.js",
                 "src/content.js",
-                "src/manifest.json"
+                {
+                  "input": "src/manifest/blockcore/",
+                  "output": "/",
+                  "glob": "manifest.json"
+                }
               ],
               "buildOptimizer": false,
               "optimization": false,
@@ -103,10 +111,6 @@
                 {
                   "replace": "src/environments/environment.ts",
                   "with": "src/environments/environment.prod.ts"
-                },
-                {
-                  "replace": "src/manifest.json",
-                  "with": "src/manifest/coinvault/manifest.json"
                 }
               ],
               "assets": [
@@ -116,8 +120,9 @@
                 "src/provider.js",
                 "src/content.js",
                 {
-                  "input": "src/manifest/coinvault/manifest.json",
-                  "output": "src/manifest.json"
+                  "input": "src/manifest/coinvault/",
+                  "output": "/",
+                  "glob": "manifest.json"
                 }
               ],
               "outputHashing": "none"
@@ -143,18 +148,15 @@
                 "src/provider.js",
                 "src/content.js",
                 {
-                  "input": "src/manifest/smartcityplatform/manifest.json",
-                  "output": "src/manifest.json"
+                  "input": "src/manifest/smartcityplatform/",
+                  "output": "/",
+                  "glob": "manifest.json"
                 }
               ],
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
                   "with": "src/environments/environment.prod.ts"
-                },
-                {
-                  "replace": "src/manifest.json",
-                  "with": "src/manifest/smartcityplatform/manifest.json"
                 }
               ],
               "outputHashing": "none"
