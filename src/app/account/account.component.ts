@@ -25,6 +25,20 @@ export class AccountComponent implements OnInit, OnDestroy {
   previousIndex!: number;
   sub: any;
 
+  activities = [{
+    icon: 'history',
+    amount: 50,
+    title: 'Received 50 STRAX',
+    status: 'Confirming...',
+    timestamp: new Date()
+  },{
+    icon: 'done',
+    amount: 10,
+    title: 'Sent 10 STRAX to XNfU57hAwQ1uWYRHjusas8MFCUQetuuX6o',
+    status: 'Success',
+    timestamp: new Date()
+  }]
+
   constructor(
     public uiState: UIState,
     private crypto: CryptoService,
@@ -34,7 +48,7 @@ export class AccountComponent implements OnInit, OnDestroy {
     private activatedRoute: ActivatedRoute,
     private cd: ChangeDetectorRef) {
 
-    this.uiState.title = 'Account: ';
+    this.uiState.title = 'Account...';
     this.uiState.showBackButton = true;
 
     // Whenever the account changes, re-generate the address.
@@ -59,7 +73,7 @@ export class AccountComponent implements OnInit, OnDestroy {
       }
 
       this.manager.setActiveAccountId(index);
-      this.uiState.title = 'Account: ' + this.uiState.activeAccount?.name;
+      this.uiState.title = this.uiState.activeAccount?.name || '';
 
       this.previousIndex = index;
 

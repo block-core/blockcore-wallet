@@ -51,6 +51,7 @@ import { VaultIdentityComponent } from './vault/view/identity/identity.component
 import { VaultCreateComponent } from './vault/create/create.component';
 import { VaultEditComponent } from './vault/edit/edit.component';
 import { VaultRemoveComponent } from './vault/remove/remove.component';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 @NgModule({
   declarations: [
@@ -108,7 +109,8 @@ import { VaultRemoveComponent } from './vault/remove/remove.component';
     MatStepperModule,
     MatProgressSpinnerModule,
     MatChipsModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatProgressBarModule
   ],
   exports: [NetworkPipe, TruncatePipe],
   providers: [],

@@ -1,44 +1,67 @@
 h1 {
-    font-size: 2em;
+  font-size: 2em;
 }
 
 .logo {
-    height: 96px;
-    margin-bottom: 1em;
+  height: 96px;
+  margin-bottom: 1em;
 }
 
 .mat-stepper-horizontal {
-    margin-top: 8px;
+  margin-top: 8px;
 }
 
 .mat-form-field {
-    margin-top: 16px;
+  margin-top: 16px;
 }
 
 .recovery-phrase {
-    font-size: 1.2em;
-    word-spacing: 0.4em;
-    padding: 1em;
+  font-size: 1.2em;
+  word-spacing: 0.4em;
+  padding: 1em;
 }
 
 textarea {
-    font-size: 1.2em;
-    word-spacing: 0.4em;
-    height: 100px;
+  font-size: 1.2em;
+  word-spacing: 0.4em;
+  height: 100px;
 }
 
 .copy-button {
-    position: absolute;
-    right: 0px;
-    bottom: 0px;
+  position: absolute;
+  right: 0px;
+  bottom: 0px;
 }
 
 .signup-button {
-    width: 100%;
-    margin-bottom: 0.5em;
+  width: 100%;
+  margin-bottom: 0.5em;
 }
 
 .large-icon {
-    font-size: 4em;
-    margin-left: -0.5em;
+  font-size: 4em;
+  margin-left: -0.5em;
+}
+
+.half-width {
+  padding: 0.3em 0.1em;
+}
+
+.full-action-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  text-align: center;
+}
+
+.full-action-buttons > button {
+  /* width: 50%;
+  height: 100px; */
+  flex-grow: 2;
+}
+
+/* Overrides one of the built in styles to make both buttons align with the separator. */
+.mat-card-actions
+{
+    margin-left: 0 !important;
+    margin-bottom: 0 !important;
 }

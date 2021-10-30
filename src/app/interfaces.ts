@@ -29,6 +29,7 @@ interface Account {
     derivationPath: string;
     icon?: string;
     identifier?: string;
+    balance?: number;
 }
 
 interface Wallet {
