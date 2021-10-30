@@ -24,6 +24,7 @@ export class AccountComponent implements OnInit, OnDestroy {
   // sub: any;
   previousIndex!: number;
   sub: any;
+  loading = true;
 
   activities = [{
     icon: 'history',
@@ -50,6 +51,10 @@ export class AccountComponent implements OnInit, OnDestroy {
 
     this.uiState.title = 'Account...';
     this.uiState.showBackButton = true;
+
+    setTimeout(() => {
+      this.loading = false;
+    }, 1500);
 
     // Whenever the account changes, re-generate the address.
     this.uiState.activeAccount$.subscribe(() => {
