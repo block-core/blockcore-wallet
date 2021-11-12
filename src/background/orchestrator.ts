@@ -730,7 +730,10 @@ export class OrchestratorBackgroundService {
 
             // Get the hardened purpose and account node.
             const accountNode = masterNode.derivePath(account.derivationPath); // m/44'/105105'/0'
-            
+
+            // TODO: use this in the account manager.
+            const xpub = accountNode.neutered().toBase58();
+
             // console.log(wallet.mnemonic);
             // console.log(unlockedMnemonic);
             // console.log(accountNode.neutered().toBase58());

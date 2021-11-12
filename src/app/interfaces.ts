@@ -1,3 +1,4 @@
+import { address } from "bitcoinjs-lib";
 import { DIDDocument, DIDDocumentMetadata, DIDResolutionMetadata, ServiceEndpoint } from "did-resolver";
 
 // interfaces.ts
@@ -145,6 +146,11 @@ interface DIDResolutionResult {
     didResolutionMetadata: DIDResolutionMetadataEx;
 }
 
+
+interface AccountAddress {
+    address: string;
+}
+
 export {
     // not exporting IWords | INumbers
     IBooleans,
@@ -160,5 +166,6 @@ export {
     DIDResolutionResult,
     DIDPayload,
     Settings,
-    Vault
+    Vault,
+    AccountAddress
 }
