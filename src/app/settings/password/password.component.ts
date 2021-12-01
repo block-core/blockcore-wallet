@@ -26,7 +26,7 @@ export class PasswordComponent implements OnDestroy {
     }
 
     save() {
-
+        alert('Not implemented yet.');
     }
 
     cancel() {
