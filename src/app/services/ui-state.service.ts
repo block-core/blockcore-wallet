@@ -29,6 +29,8 @@ export class UIState {
 
     showBackButton = false;
 
+    goBackHome = true;
+
     // getAllAccounts() {
     //     return this.flatDeep(this.activeWallet?.accounts);
     // }

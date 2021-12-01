@@ -60,8 +60,11 @@ export class AppComponent implements OnInit {
   }
 
   goBack() {
-    this.router.navigateByUrl('/dashboard');
-    // this.location.back();
+    if (this.uiState.goBackHome) {
+      this.router.navigateByUrl('/dashboard');
+    } else {
+      this.location.back();
+    }
   }
 
   ngOnInit(): void {

@@ -52,6 +52,10 @@ import { VaultCreateComponent } from './vault/create/create.component';
 import { VaultEditComponent } from './vault/edit/edit.component';
 import { VaultRemoveComponent } from './vault/remove/remove.component';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { PrivacyComponent } from './settings/privacy/privacy.component';
+import { LicensesComponent } from './settings/licenses/licenses.component';
+import { ChangesComponent } from './settings/changes/changes.component';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -79,11 +83,15 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
     VaultIdentityComponent,
     VaultCreateComponent,
     VaultEditComponent,
-    VaultRemoveComponent
+    VaultRemoveComponent,
+    PrivacyComponent,
+    LicensesComponent,
+    ChangesComponent
   ],
   imports: [
     BrowserModule,
     FormsModule,
+    HttpClientModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     ReactiveFormsModule,

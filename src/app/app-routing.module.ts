@@ -22,6 +22,9 @@ import { VaultIdentityComponent } from './vault/view/identity/identity.component
 import { VaultCreateComponent } from './vault/create/create.component';
 import { VaultEditComponent } from './vault/edit/edit.component';
 import { VaultRemoveComponent } from './vault/remove/remove.component';
+import { PrivacyComponent } from './settings/privacy/privacy.component';
+import { LicensesComponent } from './settings/licenses/licenses.component';
+import { ChangesComponent } from './settings/changes/changes.component';
 
 const routes: Routes = [
   {
@@ -41,6 +44,15 @@ const routes: Routes = [
   },
   {
     path: 'settings', component: SettingsComponent
+  },
+  {
+    path: 'settings/privacy', component: PrivacyComponent
+  },
+  {
+    path: 'settings/licenses', component: LicensesComponent
+  },
+  {
+    path: 'settings/changes', component: ChangesComponent
   },
   {
     path: 'account/view/:index', component: AccountComponent
