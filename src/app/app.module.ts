@@ -57,6 +57,7 @@ import { LicensesComponent } from './settings/licenses/licenses.component';
 import { ChangesComponent } from './settings/changes/changes.component';
 import { HttpClientModule } from '@angular/common/http';
 import { PasswordComponent } from './settings/password/password.component';
+import { RecoveryComponent } from './settings/recovery/recovery.component';
 
 @NgModule({
   declarations: [
@@ -65,6 +66,7 @@ import { PasswordComponent } from './settings/password/password.component';
     AboutComponent,
     PasswordComponent,
     AccountComponent,
+    RecoveryComponent,
     AccountCreateComponent,
     AccountEditComponent,
     AccountRemoveComponent,

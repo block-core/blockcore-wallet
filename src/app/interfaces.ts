@@ -58,6 +58,7 @@ interface Settings {
     autoTimeout: number;
     theme: string;
     themeColor: string;
+    language: string;
 }
 
 interface Action {

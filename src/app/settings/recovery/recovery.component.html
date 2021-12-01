@@ -1,0 +1,21 @@
+<div class="page centered">
+    <!-- <h1 class="mat-h1" *ngIf="appState.handset">{{appState.appTitle$ | async}}</h1> -->
+
+    <mat-icon class="large-icon">warning</mat-icon>
+    <br>
+
+    <h3>
+        Do NOT share you secret phrase with anyone!
+    </h3>
+
+    <p>If someone has your secret recovery phrase, they have full control over your wallet.</p>
+
+    <mat-form-field appearance="outline" class="input-full-width">
+        <mat-label>Verify password</mat-label>
+        <input matInput type="password" [(ngModel)]="password">
+    </mat-form-field>
+
+    <button class="signup-button" mat-flat-button (click)="cancel()">Cancel</button>
+    <button class="signup-button" mat-flat-button color="primary" (click)="show()">Show</button>
+
+</div>

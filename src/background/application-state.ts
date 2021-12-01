@@ -8,7 +8,8 @@ export class AppState {
             autoTimeout: AUTO_TIMEOUT,
             dataVault: VAULT_URL,
             theme: 'dark',
-            themeColor: 'primary'
+            themeColor: 'primary',
+            language: 'en'
         },
         wallets: [],
         activeWalletId: null

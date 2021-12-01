@@ -41,6 +41,14 @@ export class SettingsComponent {
     }
   }
 
+  onLanguageChanged(event: any) {
+    // if (this.settings.theme === 'light') {
+    //   this.renderer.removeClass(document.body, 'dark-theme');
+    // } else {
+    //   this.renderer.addClass(document.body, 'dark-theme');
+    // }
+  }
+
   onAccentChanged(event: any) {
     console.log(this.settings);
   }

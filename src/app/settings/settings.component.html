@@ -27,6 +27,18 @@
     </mat-hint>
   </mat-form-field>
 
+  <br><br>
+
+  <mat-form-field class="input-full-width" appearance="outline">
+    <mat-label>Display Language</mat-label>
+    <mat-select (selectionChange)="onLanguageChanged($event)" [(value)]="settings.language">
+      <mat-option [value]="'en'">English</mat-option>
+      <mat-option [value]="'no'">Norwegian</mat-option>
+    </mat-select>
+    <mat-hint>Change the display language for the extension.
+    </mat-hint>
+  </mat-form-field>
+
   <!-- <mat-form-field appearance="fill">
     <mat-label>Choose accent color</mat-label>
     <mat-select (selectionChange)="onAccentChanged($event)" [(value)]="settings.themeColor">
@@ -59,10 +71,10 @@
   <mat-nav-list>
     <div mat-subheader>Other Actions</div>
 
-    <a mat-list-item routerLinkActive="active-link" [routerLink]="['language']">
+    <!-- <a mat-list-item routerLinkActive="active-link" [routerLink]="['language']">
       <mat-icon mat-list-icon>language</mat-icon>
       <div mat-line>Language</div>
-    </a>
+    </a> -->
 
     <a mat-list-item routerLinkActive="active-link" [routerLink]="['trusted']">
       <mat-icon mat-list-icon>public</mat-icon>
