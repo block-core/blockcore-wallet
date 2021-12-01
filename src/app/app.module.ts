@@ -56,12 +56,14 @@ import { PrivacyComponent } from './settings/privacy/privacy.component';
 import { LicensesComponent } from './settings/licenses/licenses.component';
 import { ChangesComponent } from './settings/changes/changes.component';
 import { HttpClientModule } from '@angular/common/http';
+import { PasswordComponent } from './settings/password/password.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
     AboutComponent,
+    PasswordComponent,
     AccountComponent,
     AccountCreateComponent,
     AccountEditComponent,

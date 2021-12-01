@@ -25,6 +25,7 @@ import { VaultRemoveComponent } from './vault/remove/remove.component';
 import { PrivacyComponent } from './settings/privacy/privacy.component';
 import { LicensesComponent } from './settings/licenses/licenses.component';
 import { ChangesComponent } from './settings/changes/changes.component';
+import { PasswordComponent } from './settings/password/password.component';
 
 const routes: Routes = [
   {
@@ -53,6 +54,9 @@ const routes: Routes = [
   },
   {
     path: 'settings/changes', component: ChangesComponent
+  },
+  {
+    path: 'settings/password', component: PasswordComponent
   },
   {
     path: 'account/view/:index', component: AccountComponent
