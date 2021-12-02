@@ -71,22 +71,19 @@
   <mat-nav-list>
     <div mat-subheader>Other Actions</div>
 
-    <!-- <a mat-list-item routerLinkActive="active-link" [routerLink]="['language']">
-      <mat-icon mat-list-icon>language</mat-icon>
-      <div mat-line>Language</div>
-    </a> -->
-
-    <a mat-list-item routerLinkActive="active-link" [routerLink]="['trusted']">
+    <!-- TODO: Add this feature before showing in the UI. -->
+    <!-- <a mat-list-item routerLinkActive="active-link" [routerLink]="['trusted']">
       <mat-icon mat-list-icon>public</mat-icon>
       <div mat-line>Trusted Web Sites</div>
-    </a>
+    </a> -->
 
     <a mat-list-item routerLinkActive="active-link" [routerLink]="['password']">
       <mat-icon mat-list-icon>password</mat-icon>
       <div mat-line>Change Password</div>
     </a>
 
-    <a mat-list-item routerLinkActive="active-link" [routerLink]="['export-public-key']">
+    <!-- TODO: Perhaps these should be on account level and not wallet level? Consider adding based upon user feedback. -->
+    <!-- <a mat-list-item routerLinkActive="active-link" [routerLink]="['export-public-key']">
       <mat-icon mat-list-icon>key</mat-icon>
       <div mat-line>Export Extended Public Key</div>
     </a>
@@ -94,7 +91,7 @@
     <a mat-list-item routerLinkActive="active-link" [routerLink]="['export-private-key']">
       <mat-icon mat-list-icon>key</mat-icon>
       <div mat-line>Export Private Key</div>
-    </a>
+    </a> -->
 
     <a mat-list-item [routerLink]="['export-recovery-phrase']">
       <mat-icon mat-list-icon>key</mat-icon>
