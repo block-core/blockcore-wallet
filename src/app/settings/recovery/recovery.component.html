@@ -10,12 +10,21 @@
 
     <p>If someone has your secret recovery phrase, they have full control over your wallet.</p>
 
-    <mat-form-field appearance="outline" class="input-full-width">
+    <mat-form-field appearance="outline" class="input-full-width" *ngIf="!mnemonic">
         <mat-label>Verify password</mat-label>
         <input matInput type="password" [(ngModel)]="password">
     </mat-form-field>
 
-    <button class="signup-button" mat-flat-button (click)="cancel()">Cancel</button>
-    <button class="signup-button" mat-flat-button color="primary" (click)="show()">Show</button>
+    <mat-card *ngIf="mnemonic" class="recovery-phrase" [class.mat-elevation-z8]="true">{{mnemonic}}
+        <button class="copy-button" mat-icon-button (click)="copy()">
+            <mat-icon>content_copy</mat-icon>
+        </button>
+    </mat-card>
+
+    <br>
+
+    <button class="signup-button" *ngIf="mnemonic" mat-flat-button color="primary" (click)="cancel()">Close</button>
+    <button class="signup-button" *ngIf="!mnemonic" mat-flat-button (click)="cancel()">Cancel</button>
+    <button class="signup-button" *ngIf="!mnemonic" mat-flat-button color="primary" (click)="show()">Show</button>
 
 </div>

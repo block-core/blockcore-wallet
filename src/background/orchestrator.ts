@@ -657,6 +657,26 @@ export class OrchestratorBackgroundService {
             }
         });
 
+        
+        this.communication.listen('wallet-export-recovery-phrase', async (port: any, data: { id: string, password: string }) => {
+            var wallet = this.state.persisted.wallets.find(w => w.id == data.id);
+
+            if (!wallet) {
+                return;
+            }
+
+            let unlockedMnemonic = null;
+            unlockedMnemonic = await this.crypto.decryptData(wallet.mnemonic, data.password);
+
+            if (unlockedMnemonic) {
+                // Make sure we inform all instances when a wallet is unlocked.
+                this.communication.sendToAll('wallet-exported-recovery-phrase', unlockedMnemonic);
+
+            } else {
+                this.communication.send(port, 'error', { exception: null, message: 'Invalid password' });
+            }
+        });
+
         this.communication.listen('address-generate', async (port: any, data: { index: number }) => {
             if (!this.state.activeWallet) {
                 return;

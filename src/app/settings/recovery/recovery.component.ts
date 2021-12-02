@@ -1,6 +1,8 @@
 import { Location } from '@angular/common';
 import { Component, HostBinding, OnDestroy, ViewEncapsulation } from '@angular/core';
+import { CommunicationService } from 'src/app/services/communication.service';
 import { UIState } from 'src/app/services/ui-state.service';
+import { copyToClipboard } from 'src/app/shared/utilities';
 
 @Component({
     selector: 'app-recovery',
@@ -13,21 +15,43 @@ export class RecoveryComponent implements OnDestroy {
 
     password?: string;
 
-    constructor(public uiState: UIState, public location: Location) {
+    sub: any;
+
+    mnemonic: string = '';
+
+    constructor(
+        public uiState: UIState,
+        public location: Location,
+        private communication: CommunicationService) {
         this.uiState.title = 'Recovery Phrase';
         this.uiState.showBackButton = true;
         this.uiState.goBackHome = false;
+
+        this.sub = this.communication.listen('wallet-exported-recovery-phrase', (mnemonic: string) => {
+            debugger;
+            console.log('Received:', mnemonic);
+            this.mnemonic = mnemonic;
+        });
     }
 
     ngOnDestroy() {
+        this.mnemonic = '';
 
+        if (this.sub) {
+            this.communication.unlisten(this.sub);
+        }
     }
 
     show() {
-        alert('Not implemented yet.');
+        this.communication.send('wallet-export-recovery-phrase', { id: this.uiState.activeWallet?.id, password: this.password});
     }
 
     cancel() {
+        this.mnemonic = '';
         this.location.back();
+    }
+
+    copy() {
+        copyToClipboard(this.mnemonic);
     }
 }
