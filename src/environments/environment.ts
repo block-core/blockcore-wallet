@@ -4,7 +4,12 @@
 
 export const environment = {
   production: false,
-  features: ['wallet', 'identity', 'collectible', 'vault']
+  version: "0.0.2",
+  features: ['wallet', 'identity', 'collectible', 'vault'],
+  releaseUrl: 'https://github.com/block-core/blockcore-extension/releases',
+  sourceUrl: 'https://github.com/block-core/blockcore-extension',
+  instanceName: '',
+  instanceUrl: ''
 };
 
 /*

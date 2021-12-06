@@ -4,6 +4,7 @@ import { Location } from '@angular/common'
 import { OrchestratorService } from '../services/orchestrator.service';
 import { Settings } from '../interfaces';
 import { OverlayContainer } from '@angular/cdk/overlay';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-settings',
@@ -14,12 +15,15 @@ export class SettingsComponent {
   theme: string = 'dark';
   themeColor: 'primary' | 'accent' | 'warn' = 'accent';
   isDark = false;
+  env: any;
 
   constructor(
     private renderer: Renderer2,
     public uiState: UIState,
     private manager: OrchestratorService,
     private location: Location) {
+
+    this.env = environment;
 
     // Clone the settings on load:
     this.settings = JSON.parse(JSON.stringify(this.uiState.persisted.settings));
