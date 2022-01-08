@@ -39,6 +39,9 @@
     <button class="blockcore-extension-button" purpose="identity">Click to give identity with Blockcore</button>
 
     <br>
+    <button id="connectButton">Login me in!</button>
+
+    <br>
     <div id="blockcore-extension-output"></div>
 
     <!-- <button id="blockcore-extension-button" purpose="signing">Sign with Blockcore</button> -->
@@ -80,6 +83,20 @@
                 // const accounts = provider.getAccounts();
             }
         }
+    </script>
+
+
+    <script>
+        function connect() {
+            console.log('Hello world!');
+            console.log(window.blockcore);
+        }
+
+        (function () {
+            // Examples of wiring up click handler:
+            // document.getElementById("connectButton").onclick = connect;
+            document.getElementById("connectButton").addEventListener("click", connect);
+        })();
     </script>
 
 </body>

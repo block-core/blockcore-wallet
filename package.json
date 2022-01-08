@@ -10,7 +10,8 @@
     "serve": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch",
-    "test": "ng test"
+    "test": "ng test",
+    "test:web": "cd test/web && http-server"
   },
   "private": true,
   "dependencies": {
