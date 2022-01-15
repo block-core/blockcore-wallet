@@ -27,6 +27,7 @@ import { LicensesComponent } from './settings/licenses/licenses.component';
 import { ChangesComponent } from './settings/changes/changes.component';
 import { PasswordComponent } from './settings/password/password.component';
 import { RecoveryComponent } from './settings/recovery/recovery.component';
+import { NostrIdentityComponent } from './account/view/nostr/identity.component';
 
 const routes: Routes = [
   {
@@ -67,6 +68,9 @@ const routes: Routes = [
   },
   {
     path: 'account/view/identity/:index', component: AccountIdentityComponent
+  },
+  {
+    path: 'account/view/nostr/:index', component: NostrIdentityComponent
   },
   {
     path: 'account/create', component: AccountCreateComponent

@@ -4,6 +4,7 @@ export const environment = {
   features: ['wallet', 'identity', 'vault', 'inbox'],
   releaseUrl: 'https://github.com/CityChainFoundation/smart-city-platform/releases',
   sourceUrl: 'https://github.com/CityChainFoundation/smart-city-platform',
+  instance: 'smartcityplatform',
   instanceName: 'City Chain',
   instanceUrl: 'https://www.city-chain.org/'
 };

@@ -9,6 +9,7 @@ export class NetworkPipe implements PipeTransform {
         "0": "BTC",
         "1926": "CITY",
         "105105": "STRAX",
+        "401": "CRS",
         "616": "IDENTITY"
     };
 

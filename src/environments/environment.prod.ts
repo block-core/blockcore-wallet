@@ -4,6 +4,7 @@ export const environment = {
   features: ['wallet', 'identity', 'collectible', 'vault'],
   releaseUrl: 'https://github.com/block-core/blockcore-extension/releases',
   sourceUrl: 'https://github.com/block-core/blockcore-extension',
-  instanceName: '',
-  instanceUrl: ''
+  instance: 'blockcore',
+  instanceName: 'Blockcore',
+  instanceUrl: 'https://blockcore.net/'
 };

@@ -58,6 +58,7 @@ import { ChangesComponent } from './settings/changes/changes.component';
 import { HttpClientModule } from '@angular/common/http';
 import { PasswordComponent } from './settings/password/password.component';
 import { RecoveryComponent } from './settings/recovery/recovery.component';
+import { NostrIdentityComponent } from './account/view/nostr/identity.component';
 
 @NgModule({
   declarations: [
@@ -90,7 +91,8 @@ import { RecoveryComponent } from './settings/recovery/recovery.component';
     VaultRemoveComponent,
     PrivacyComponent,
     LicensesComponent,
-    ChangesComponent
+    ChangesComponent,
+    NostrIdentityComponent
   ],
   imports: [
     BrowserModule,

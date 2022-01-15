@@ -47,6 +47,15 @@ export class CryptoUtility {
         return address;
     }
 
+    getAddressByNetworkp2pkhFromBuffer(publicKey: Buffer, network: any) {
+        const { address } = payments.p2pkh({
+            pubkey: publicKey,
+            network: network,
+        });
+
+        return address;
+    }
+
     getAddressByNetworkp2wpkh(node: any, network: any) {
         const { address } = payments.p2wpkh({
             pubkey: node.publicKey,

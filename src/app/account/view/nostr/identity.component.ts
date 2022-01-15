@@ -8,13 +8,14 @@ import { CommunicationService } from '../../../services/communication.service';
 import { Identity } from 'src/app/interfaces';
 import { copyToClipboard } from 'src/app/shared/utilities';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { HDKey } from 'micro-bip32';
 
 @Component({
-  selector: 'app-account-identity',
+  selector: 'app-nostr-identity',
   templateUrl: './identity.component.html',
   styleUrls: ['./identity.component.css']
 })
-export class AccountIdentityComponent implements OnInit, OnDestroy {
+export class NostrIdentityComponent implements OnInit, OnDestroy {
   mnemonic = '';
   password = '';
   unlocked = '';
@@ -26,6 +27,7 @@ export class AccountIdentityComponent implements OnInit, OnDestroy {
   sub2: any;
   sub3: any;
   sub4: any;
+  sub5: any;
   previousIndex!: number;
   identity: Identity | undefined;
   verifiableDataRegistryUrl = '';
@@ -53,7 +55,7 @@ export class AccountIdentityComponent implements OnInit, OnDestroy {
     private activatedRoute: ActivatedRoute,
     private cd: ChangeDetectorRef) {
 
-    this.uiState.title = 'Account: ';
+    this.uiState.title = '';
     this.uiState.showBackButton = true;
 
     if (!this.uiState.hasAccounts) {
@@ -78,7 +80,12 @@ export class AccountIdentityComponent implements OnInit, OnDestroy {
       // }
 
       // this.manager.setActiveAccountId(index);
-      this.uiState.title = 'Account: ' + this.uiState.activeAccount?.name;
+      this.uiState.title = '' + this.uiState.activeAccount?.name;
+
+      // let root = HDKey.fromMasterSeed(Buffer.from(seed, 'hex'))
+      // return Buffer.from(root.derive(`m/44'/1237'/0'/0/0`).privateKey).toString('hex');
+
+      this.communication.send('nostr-generate', { index: 0 });
 
       // this.uiState.persisted.activeAccountIndex = Number(index);
 
@@ -113,6 +120,10 @@ export class AccountIdentityComponent implements OnInit, OnDestroy {
 
     if (this.sub4) {
       this.communication.unlisten(this.sub4);
+    }
+
+    if (this.sub5) {
+      this.communication.unlisten(this.sub5);
     }
   }
 
@@ -189,6 +200,13 @@ export class AccountIdentityComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+
+    this.sub5 = this.communication.listen('nostr-generated', async (data: any) => {
+      console.log('ADDRESS GENERATED!!');
+      console.log(data);
+      this.identity = data;
+    });
+
     this.sub4 = this.communication.listen('identity-published', (data: Identity) => {
 
       this.identity = data;
@@ -232,7 +250,7 @@ export class AccountIdentityComponent implements OnInit, OnDestroy {
       }
 
       // this.manager.setActiveAccountId(index);
-      this.uiState.title = 'Account: ' + this.uiState.activeAccount?.name;
+      this.uiState.title = '' + this.uiState.activeAccount?.name;
 
       // this.uiState.persisted.activeAccountIndex = Number(index);
 

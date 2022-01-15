@@ -7,6 +7,7 @@ import { CommunicationService } from 'src/app/services/communication.service';
 import { Wallet } from 'src/app/interfaces';
 import { copyToClipboard } from 'src/app/shared/utilities';
 import { FeatureService } from 'src/app/services/features.service';
+import { environment, Environments } from '../../../environments/environment';
 const { v4: uuidv4 } = require('uuid');
 
 @Component({
@@ -129,21 +130,68 @@ export class WalletCreateComponent implements OnInit {
             alert('Fatal error, unable to encrypt secret recovery phrase!');
         }
         else {
-            var wallet: Wallet = {
-                id: id,
-                name: 'Wallet ' + (this.uiState.persisted.wallets.length + 1),
-                mnemonic: recoveryPhrase,
-                activeAccountIndex: 0,
-                accounts: [
-                    {
+            let accounts: any[] = [];
+
+            switch (environment.instance) {
+                case Environments.Blockcore:
+                    accounts = [{
+                        index: 0,
+                        name: 'Stratis',
+                        network: 105105,
+                        purpose: 44,
+                        derivationPath: `m/44'/105105'/0'`,
+                        icon: 'paid'
+                    },{
+                        index: 0,
+                        name: 'Cirrus',
+                        network: 401,
+                        purpose: 44,
+                        derivationPath: `m/44'/401'/0'`,
+                        icon: 'paid'
+                    },{
                         index: 0,
                         name: 'Identity',
                         network: 616,
                         purpose: 302,
                         derivationPath: `m/302'/616'/0'`,
                         icon: 'account_circle'
-                    }
-                ]
+                    }];
+                    break;
+                case Environments.CoinVault:
+                    accounts = [{
+                        index: 0,
+                        name: 'Stratis',
+                        network: 105105,
+                        purpose: 44,
+                        derivationPath: `m/44'/105105'/0'`,
+                        icon: 'account_circle'
+                    },{
+                        index: 0,
+                        name: 'Cirrus',
+                        network: 401,
+                        purpose: 44,
+                        derivationPath: `m/44'/401'/0'`,
+                        icon: 'account_circle'
+                    }];
+                    break;
+                case Environments.SmartCityPlatform:
+                    accounts = [{
+                        index: 0,
+                        name: 'Identity',
+                        network: 616,
+                        purpose: 302,
+                        derivationPath: `m/302'/616'/0'`,
+                        icon: 'account_circle'
+                    }];
+                    break;
+            }
+
+            var wallet: Wallet = {
+                id: id,
+                name: 'Wallet ' + (this.uiState.persisted.wallets.length + 1),
+                mnemonic: recoveryPhrase,
+                activeAccountIndex: 0,
+                accounts: accounts
             };
 
             this.communication.send('wallet-create', wallet);

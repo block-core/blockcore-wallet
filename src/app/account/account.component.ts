@@ -5,7 +5,10 @@ import { UIState } from '../services/ui-state.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { OrchestratorService } from '../services/orchestrator.service';
 import { CommunicationService } from '../services/communication.service';
-import { NETWORK_IDENTITY } from '../shared/constants';
+import { NETWORK_IDENTITY, NETWORK_NOSTR } from '../shared/constants';
+import { concat, Observable, concatMap } from 'rxjs';
+import { request } from 'http';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-account',
@@ -32,7 +35,7 @@ export class AccountComponent implements OnInit, OnDestroy {
     title: 'Received 50 STRAX',
     status: 'Confirming...',
     timestamp: new Date()
-  },{
+  }, {
     icon: 'done',
     amount: 10,
     title: 'Sent 10 STRAX to XNfU57hAwQ1uWYRHjusas8MFCUQetuuX6o',
@@ -41,12 +44,14 @@ export class AccountComponent implements OnInit, OnDestroy {
   }]
 
   constructor(
+    private http: HttpClient,
     public uiState: UIState,
     private crypto: CryptoService,
     private router: Router,
     private manager: OrchestratorService,
     private communication: CommunicationService,
     private activatedRoute: ActivatedRoute,
+    private snackBar: MatSnackBar,
     private cd: ChangeDetectorRef) {
 
     this.uiState.title = 'Account...';
@@ -67,6 +72,7 @@ export class AccountComponent implements OnInit, OnDestroy {
 
 
     this.activatedRoute.paramMap.subscribe(async params => {
+      debugger;
       console.log('PARAMS:', params);
       const index: any = params.get('index');
       // console.log('Account Index:', Number(index));
@@ -84,6 +90,8 @@ export class AccountComponent implements OnInit, OnDestroy {
 
       if (this.uiState.activeAccount?.network == NETWORK_IDENTITY) {
         this.router.navigate(['account', 'view', 'identity', index]);
+      } else if (this.uiState.activeAccount?.network == NETWORK_NOSTR) {
+        this.router.navigate(['account', 'view', 'nostr', index]);
       }
 
       // this.generateAddress();
@@ -105,16 +113,78 @@ export class AccountComponent implements OnInit, OnDestroy {
     console.log(this.uiState.activeAccount);
 
     this.communication.send('address-generate', { index: 0 });
-
-
-
   }
 
-  ngOnInit(): void {
-    
-    this.sub = this.communication.listen('address-generated', (data: { address: string }) => {
+  async ngOnInit() {
+    this.sub = this.communication.listen('address-generated', async (data: { address: string, receive: any[], change: any[] }) => {
       console.log('ADDRESS GENERATED!!');
       this.address = data.address;
+
+      console.log('Full address list:');
+      console.log(data);
+
+      // Perform a map operation on all receive addresses to extend the array with result from indexer results.
+      data.receive.map(item => {
+        this.http.get(`http://localhost:9910/api/query/address/${item.address}`).subscribe(result => {
+          console.log(result);
+          item.json = 'hello';
+        }, error => {
+          console.log('oops', error);
+
+          if (error.error?.title) {
+            this.snackBar.open('Error: ' + error.error.title, 'Hide', {
+              duration: 8000,
+              horizontalPosition: 'center',
+              verticalPosition: 'bottom',
+            });
+          } else {
+            this.snackBar.open('Error: ' + error.message, 'Hide', {
+              duration: 8000,
+              horizontalPosition: 'center',
+              verticalPosition: 'bottom',
+            });
+          }
+
+        });
+      });
+
+      console.log(data);
+
+      const requests = <any>[];
+      let requests$: Observable<any[]>;
+
+      //   this.http.get('https://jsonplaceholder.typicode.com/posts/1')
+      // .pipe(mergeMap((res: any)=> this.httpClient
+      //     .get('https://jsonplaceholder.typicode.com/users/'+res.userId)))
+      // .subscribe((authorDetails: any)=>{
+      //     console.log(authorDetails)
+      // })
+
+      for (let i = 0; i < data.receive.length; i++) {
+
+        let receiveAddress = data.receive[i].address;
+        let changeAddress = data.change[i].address;
+
+        // requests$ = requests$.concatMap(this.http.get(`http://localhost:9910/api/query/address/${receiveAddress}`), this.http.get(`http://localhost:9910/api/query/address/${changeAddress}`));
+
+        // var result1 = await this.http.get(`http://localhost:9910/api/query/address/${receiveAddress}`);
+        // var result2 = await this.http.get(`http://localhost:9910/api/query/address/${changeAddress}`);
+
+        // console.log(result1);
+        // console.log(result2);
+
+        // http://localhost:9910/api/query/address/XFQBN8hbkQ3uF7R1jCqpMajCfiYj91YMyF
+      }
+
+      // console.log(requests$);
+
+      // requests$.subscribe((data: any) => {
+      //   console.log(data);
+      // });
+
+      // Perform all the http requests that has been added to requests queue:
+      // Promise.all(requests);
+
     });
 
     // this.generateAddress();
