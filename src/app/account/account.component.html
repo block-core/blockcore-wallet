@@ -24,15 +24,15 @@
         <a mat-list-item *ngFor="let activity of activities" routerLinkActive="active-link" [routerLink]="['/', 'account', 'view']">
             <mat-icon mat-list-icon>{{activity.icon}}</mat-icon>
             <div mat-line>{{activity.title}}</div>
-            <div mat-line> {{activity.timestamp | date}} </div>
+            <div mat-line> {{activity.address}} </div>
         </a>
 
     </mat-nav-list>
 
-    First address (for verification):<br>
+    <!-- First address (for verification):<br>
     <div *ngIf="address">
         {{address}}
-    </div>
+    </div> -->
 
 </div>
 

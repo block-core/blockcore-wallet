@@ -29,19 +29,7 @@ export class AccountComponent implements OnInit, OnDestroy {
   sub: any;
   loading = true;
 
-  activities = [{
-    icon: 'history',
-    amount: 50,
-    title: 'Received 50 STRAX',
-    status: 'Confirming...',
-    timestamp: new Date()
-  }, {
-    icon: 'done',
-    amount: 10,
-    title: 'Sent 10 STRAX to XNfU57hAwQ1uWYRHjusas8MFCUQetuuX6o',
-    status: 'Success',
-    timestamp: new Date()
-  }]
+  activities: any[] = [];
 
   constructor(
     private http: HttpClient,
@@ -123,12 +111,41 @@ export class AccountComponent implements OnInit, OnDestroy {
       console.log('Full address list:');
       console.log(data);
 
+      this.activities = [];
+
       // Perform a map operation on all receive addresses to extend the array with result from indexer results.
-      data.receive.map(item => {
-        this.http.get(`http://localhost:9910/api/query/address/${item.address}`).subscribe(result => {
-          console.log(result);
-          item.json = 'hello';
-        }, error => {
+      data.receive.map(async item => {
+
+        try {
+          let result: any = await this.http.get(`http://localhost:9910/api/query/address/${item.address}`).toPromise();
+
+          item.icon = 'history';
+          item.title = 'Received: ' + result.totalReceived + ' to ' + result.address;
+
+          let activity = {
+            ...item,
+            ...result
+          };
+
+          this.activities.push(activity);
+          console.log('activity:', activity);
+
+          // this.activities = [{
+          //   icon: 'history',
+          //   amount: 50,
+          //   title: 'Received 50 STRAX',
+          //   status: 'Confirming...',
+          //   timestamp: new Date()
+          // }, {
+          //   icon: 'done',
+          //   amount: 10,
+          //   title: 'Sent 10 STRAX to XNfU57hAwQ1uWYRHjusas8MFCUQetuuX6o',
+          //   status: 'Success',
+          //   timestamp: new Date()
+          // }]
+
+        }
+        catch (error: any) {
           console.log('oops', error);
 
           if (error.error?.title) {
@@ -144,11 +161,13 @@ export class AccountComponent implements OnInit, OnDestroy {
               verticalPosition: 'bottom',
             });
           }
+        }
 
-        });
+        // let result = await this.http.get(`http://localhost:9910/api/query/address/${item.address}`).subscribe(result => {
+        // }, error => {
+
+        // });
       });
-
-      console.log(data);
 
       const requests = <any>[];
       let requests$: Observable<any[]>;
@@ -160,21 +179,8 @@ export class AccountComponent implements OnInit, OnDestroy {
       //     console.log(authorDetails)
       // })
 
-      for (let i = 0; i < data.receive.length; i++) {
 
-        let receiveAddress = data.receive[i].address;
-        let changeAddress = data.change[i].address;
 
-        // requests$ = requests$.concatMap(this.http.get(`http://localhost:9910/api/query/address/${receiveAddress}`), this.http.get(`http://localhost:9910/api/query/address/${changeAddress}`));
-
-        // var result1 = await this.http.get(`http://localhost:9910/api/query/address/${receiveAddress}`);
-        // var result2 = await this.http.get(`http://localhost:9910/api/query/address/${changeAddress}`);
-
-        // console.log(result1);
-        // console.log(result2);
-
-        // http://localhost:9910/api/query/address/XFQBN8hbkQ3uF7R1jCqpMajCfiYj91YMyF
-      }
 
       // console.log(requests$);
 
