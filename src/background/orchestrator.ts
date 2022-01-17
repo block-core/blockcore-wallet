@@ -526,16 +526,17 @@ export class OrchestratorBackgroundService {
             if (recoveryPhrase) {
                 // Make sure we inform all instances when a wallet is unlocked.
                 this.manager.communication.sendToAll('wallet-exported-recovery-phrase', recoveryPhrase);
-
             } else {
                 this.manager.communication.send(port, 'error', { exception: null, message: 'Invalid password' });
             }
         });
 
         this.manager.communication.listen('address-generate', async (port: any, data: { index: number }) => {
-            if (!this.state.activeWallet) {
+            if (!this.manager.walletManager.activeWallet) {
                 return;
             }
+
+            const address = this.manager.walletManager.getReceiveAddress(this.manager.walletManager.activeAccount);
 
             var account = this.state.activeAccount;
             var wallet = this.state.activeWallet;

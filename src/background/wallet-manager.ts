@@ -1,4 +1,4 @@
-import { Settings } from "../app/interfaces";
+import { Account, Settings } from "../app/interfaces";
 import { MINUTE } from "../app/shared/constants";
 import { AppManager } from "./application-manager";
 
@@ -198,5 +198,36 @@ export class WalletManager {
         await this.manager.state.save();
 
         this.manager.broadcastState();
+    }
+
+    getAddress(account: Account, index: BigInt) {
+
+        // Get the network for this account. Maybe this operation should be done once upon initialize? Consider refactoring.
+        const network = this.manager.getNetwork(account.network, account.purpose);
+
+        
+
+        this.manager.state.networks.
+
+        this.manager.crypto.getAddress()
+
+        bip32.fromBase58(xpub).derive(0).derive(1).publicKey;
+
+        account.xpub.
+
+    }
+
+    getReceiveAddress(account: Account) {
+        // Get the last index without know transactions:
+        let address = account.state.addresses[account.state.addresses.length - 1];
+
+        if (address.totalReceivedCount > 0n) {
+            // Generate a new address.
+
+
+
+        }
+
+        return address.address;
     }
 }

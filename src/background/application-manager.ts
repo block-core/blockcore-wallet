@@ -1,3 +1,4 @@
+import { networkInterfaces } from "os";
 import { Action, Settings, State } from "../app/interfaces";
 import { environment } from "../environments/environment";
 import { AppState } from "./application-state";
@@ -32,6 +33,18 @@ export class AppManager {
         this.state.networks = networkLoader.getNetworks(environment.networks);
 
         // return [this.state, utility, communication, orchestrator, sync];
+    }
+
+    /** Get the network definition based upon the id, e.g. BTC, STRAX, CRS, CITY. */
+    getNetworkById(id: string) {
+        const network = this.state.networks.find(w => w.id == id);
+        return network;
+    }
+
+    /** Get the network definition based upon the id, e.g. BTC, STRAX, CRS, CITY. The purpose defaults to 44. */
+    getNetwork(id: number, purpose: number = 44) {
+        const network = this.state.networks.find(w => w.network == id && w.purpose == purpose);
+        return network;
     }
 
     initialize = async () => {
@@ -115,8 +128,7 @@ export class AppManager {
         this.communication.sendToAll('action-changed', this.state.action);
     }
 
-    async setSettings(data: Settings)
-    {
+    async setSettings(data: Settings) {
         this.state.persisted.settings = data;
         await this.state.save();
         this.broadcastState();
