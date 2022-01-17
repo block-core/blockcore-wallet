@@ -48,6 +48,9 @@ interface AccountState {
 }
 
 interface Address {
+    index: number;
+    change: boolean;
+
     address: string;
     balance: BigInt;
     totalReceived: BigInt;
@@ -222,17 +225,18 @@ interface DIDResolutionResult {
     didResolutionMetadata: DIDResolutionMetadataEx;
 }
 
-
-interface AccountAddress {
-    address: string;
-}
-
 export {
     // not exporting IWords | INumbers
     IBooleans,
     IValues,
     IStructures,
     Account,
+    AccountState,
+    Address,
+    Transaction,
+    TransactionInfo,
+    TransactionInput,
+    TransactionOutput,
     Wallet,
     Persisted,
     State,
@@ -243,5 +247,4 @@ export {
     DIDPayload,
     Settings,
     Vault,
-    AccountAddress
 }

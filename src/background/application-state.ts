@@ -113,6 +113,7 @@ export class AppState {
         });
     }
 
+    /** Loads all the persisted state into the extension. This might become bloated on large wallets. */
     async load(): Promise<{ data: Persisted, ui: any, action: Action, store: Store }> {
         // Immediately return a promise and start asynchronous work
         return new Promise((resolve, reject) => {
