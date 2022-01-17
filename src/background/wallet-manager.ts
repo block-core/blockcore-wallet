@@ -1,3 +1,5 @@
+import { HDKey } from "micro-bip32";
+import { generateMnemonic, mnemonicToSeedSync, validateMnemonic } from 'micro-bip39';
 import { Account, Settings } from "../app/interfaces";
 import { MINUTE } from "../app/shared/constants";
 import { AppManager } from "./application-manager";
@@ -18,6 +20,9 @@ export class WalletManager {
     }
 
     lockWallets() {
+        this.walletSecrets.clear();
+
+        // TODO: REMOVE WHEN READY!
         this.manager.state.passwords.clear();
 
         // Do we need to save the state and refresh? VERIFY!
@@ -28,7 +33,11 @@ export class WalletManager {
     }
 
     lockWallet(id: string) {
+        this.walletSecrets.delete(id);
+
+        // TODO: REMOVE WHEN READY!
         this.manager.state.passwords.delete(id);
+
         this.manager.broadcastState();
     }
 
@@ -45,6 +54,14 @@ export class WalletManager {
         return unlockedMnemonic;
     }
 
+    /** Contains the password and seed (unlocked) of wallets. This object should never be persisted and only exists in memory. */
+    walletSecrets = new Map<string, { password: string, seed: Uint8Array }>();
+
+    /** Returns list of wallet IDs that is currently unlocked. */
+    get unlocked(): string[] {
+        return Array.from(this.walletSecrets.keys());
+    };
+
     async unlockWallet(id: string, password: string) {
         var wallet = this.manager.walletManager.getWallet(id);
 
@@ -58,40 +75,16 @@ export class WalletManager {
         if (unlockedMnemonic) {
             this.manager.state.persisted.activeWalletId = wallet.id;
 
+            // From the secret receovery phrase, the master seed is derived.
+            // Learn more about the HD keys: https://raw.githubusercontent.com/bitcoin/bips/master/bip-0032/derivation.png
+            const masterSeed = mnemonicToSeedSync(unlockedMnemonic);
+
             // Add this wallet to list of unlocked.
+            this.walletSecrets.set(id, { password, seed: masterSeed });
+
+            // TODO: REMOVE!
             this.manager.state.passwords.set(id, password);
-
-            // if (wallet.accounts.length > 0 && wallet.activeAccountIndex == null) {
-            //     wallet.activeAccountIndex = 0;
-            // }
-
-            // if (this.state.persisted.activeAccountIndex
-
-            // this.uiState.unlocked = true;
-
-            // if (this.uiState.persisted.activeAccountIndex == null) {
-            //     this.uiState.persisted.activeAccountIndex = 0;
-            // }
-
-            // // Keep the unlocked mnemonic in-memory until auto-lock timer removes it.
-            // this.uiState.unlockedMnemonic = unlockedMnemonic;
-
-            // this.uiState.port?.postMessage({ method: 'unlock', data: this.unlockPassword });
-
-            // this.router.navigateByUrl('/account/view/' + this.uiState.persisted.activeAccountIndex);
-
-            // Add the new wallet.
-            // this.state.persisted.wallets.set(data.id, data);
-
-            // Change the active wallet to the new one.
-            // this.state.persisted.activeWalletId = data.id;
-
-            // TODO: VERIFY IF WE SHOULD SAVE STATE WHEN UNLOCKING?
-            // Persist the state.
-            //await this.manager.state.save();
-
-            // this.refreshState();
-
+            
             // Make sure we inform all instances when a wallet is unlocked.
             return true;
 
@@ -200,22 +193,55 @@ export class WalletManager {
         this.manager.broadcastState();
     }
 
-    getAddress(account: Account, index: BigInt) {
+    async addAccount(account: Account) {
+        // First derive the xpub and store that on the account.
+        const secret = this.walletSecrets.get(this.activeWallet.id);
 
-        // Get the network for this account. Maybe this operation should be done once upon initialize? Consider refactoring.
-        const network = this.manager.getNetwork(account.network, account.purpose);
+        const network = this.manager.getNetwork(account.network);
 
-        
+        const masterNode = HDKey.fromMasterSeed(Buffer.from(secret.seed), network.bip32);
 
-        this.manager.state.networks.
+        const accountNode = masterNode.derive(`m/${account.purpose}'/${account.network}'/${account.index}'`);
 
-        this.manager.crypto.getAddress()
+        account.xpub = accountNode.publicExtendedKey;
 
-        bip32.fromBase58(xpub).derive(0).derive(1).publicKey;
+        // Add account to the wallet and persist.
+        this.activeWallet.accounts.push(account);
 
-        account.xpub.
+        // Update the active account index to new account.
+        this.activeWallet.activeAccountIndex = (this.activeWallet.accounts.length - 1);
 
+        // const address = this.crypto.getAddressByNetworkp2pkh(identifierKeyPair, network);
+        // const address2 = this.crypto.getAddressByNetworkp2pkhFromBuffer(Buffer.from(Array.from(identifierKeyPair2.publicKey!)), network);
+
+        // const idArray = secp256k1.schnorr.getPublicKey(identifierKeyPair.privateKey!.toString('hex'));
+        // const id = Buffer.from(idArray).toString('hex');
+
+        // // Uncaught (in promise) TypeError: The first argument must be one of type string, Buffer, ArrayBuffer, Array, or Array-like Object. Received type object
+        // const id2Array = secp256k1.schnorr.getPublicKey(Buffer.from(identifierKeyPair2.privateKey!).toString('hex'));
+        // const id2 = Buffer.from(id2Array).toString('hex');
+
+        // const id3hex = Buffer.from(identifierKeyPair3.privateKey!).toString('hex');
+        // const id3Array = secp256k1.schnorr.getPublicKey(id3hex);
+        // const id3 = Buffer.from(id3Array).toString('hex');
+
+        await this.manager.state.save();
     }
+
+    // TODO: FIX VERY SOON!
+    // getAddress(account: Account, index: BigInt) {
+
+    //     // Get the network for this account. Maybe this operation should be done once upon initialize? Consider refactoring.
+    //     const network = this.manager.getNetwork(account.network, account.purpose);
+
+    //     this.manager.state.networks.
+
+    //     this.manager.crypto.getAddress()
+
+    //     bip32.fromBase58(xpub).derive(0).derive(1).publicKey;
+
+    //     account.xpub.
+    // }
 
     getReceiveAddress(account: Account) {
         // Get the last index without know transactions:
@@ -223,8 +249,6 @@ export class WalletManager {
 
         if (address.totalReceivedCount > 0n) {
             // Generate a new address.
-
-
 
         }
 

@@ -37,7 +37,9 @@ interface Account {
      */
     purposeAddress: number;
 
+    /** TODO: Remove this or change into an get-only method. It should only be used in UI, and not persisted. */
     derivationPath: string;
+
     icon?: string;
     identifier?: string;
 
