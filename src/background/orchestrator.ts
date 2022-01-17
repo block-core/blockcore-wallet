@@ -19,6 +19,7 @@ import {
 
 import { getPublicKey } from 'nostr-tools';
 
+/** Service that handles orchestration between background and frontend. Maps messages between managers and actions initiated in the UI. */
 export class OrchestratorBackgroundService {
     private communication!: CommunicationBackgroundService;
     private state!: AppState;

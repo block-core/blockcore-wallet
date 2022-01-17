@@ -1,9 +1,9 @@
-import { Account, AccountAddress, Wallet } from "../app/interfaces";
+import { Account, Wallet } from "../app/interfaces";
 import * as bip32 from 'bip32';
 
 /** Manager that keeps state and operations for a single account. This object does not keep the password, which must be supplied for signing operations. */
 export class AccountManager {
-    addresses: AccountAddress[] = [];
+    // addresses: AccountAddress[] = [];
     private lastUsedIndex: number = 0;
 
     constructor(account: Account) {

@@ -1,5 +1,6 @@
 const { v4: uuidv4 } = require('uuid');
 
+/** Service that handles channels between background and frontend, with subscriptions. */
 export class CommunicationBackgroundService {
     private port!: chrome.runtime.Port | null;
     // consumers: { [name: string]: any } = {};

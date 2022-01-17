@@ -9,7 +9,7 @@ import { DataSyncService } from './background/data-sync';
 import { AppManager } from './background/application-manager';
 
 const manager = new AppManager();
-let [state, utility, communication, orchestrator, sync] = manager.initialize();
+let [state, utility, communication, orchestrator, sync] = manager.configure();
 
 //const utility = new CryptoUtility();
 //const state = new AppState();
@@ -25,7 +25,7 @@ const initialize = async () => {
   debugger;
 
   // VERIFY:
-  return manager.loadState();
+  return manager.initialize();
 
   console.log('initialize is done in the background...');
   // VERIFY:

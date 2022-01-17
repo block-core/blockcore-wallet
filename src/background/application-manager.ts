@@ -5,6 +5,7 @@ import { CryptoUtility } from "./crypto-utility";
 import { DataSyncService } from "./data-sync";
 import { NetworkLoader } from "./network-loader";
 import { OrchestratorBackgroundService } from "./orchestrator";
+import { WalletManager } from "./wallet-manager";
 
 /** Main logic that is responsible for orchestration of the background service. */
 export class AppManager {
@@ -13,9 +14,10 @@ export class AppManager {
     }
 
     private state!: AppState;
+    walletManager!: WalletManager;
 
     /** Initializes the app, loads the AppState and other operations. */
-    initialize(): [AppState, CryptoUtility, CommunicationBackgroundService, OrchestratorBackgroundService, DataSyncService] {
+    configure(): [AppState, CryptoUtility, CommunicationBackgroundService, OrchestratorBackgroundService, DataSyncService] {
         debugger;
         const networkLoader = new NetworkLoader();
         const utility = new CryptoUtility();
@@ -32,6 +34,20 @@ export class AppManager {
 
         return [this.state, utility, communication, orchestrator, sync];
     }
+
+    initialize = async () => {
+        debugger;
+        // CLEAR DATA FOR DEBUG PURPOSES:
+        // chrome.storage.local.set({ 'data': null }, () => {
+        // });
+
+        // First load the existing state.
+        await this.loadState();
+
+        // Create the wallet manager, which act as root container for all the wallets and accounts.
+        this.walletManager = new WalletManager(this.state.persisted.wallets);
+        
+    };
 
     loadState = async () => {
         debugger;
