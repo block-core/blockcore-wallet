@@ -22,12 +22,21 @@ interface IStructures {
     [key: string]: INumbers | IBooleans | IValues;
 }
 
-/** The user account, most of this data should be considered immutable. The index, etc. should never change after creation. See "AccountState" to get balance, transaction history, addresses and more. */
+/** The user account, most of this data should be considered immutable. The index, etc. should never change after creation. See "AccountState" to get balance, 
+ * transaction history, addresses and more. */
 interface Account {
     name: string | undefined;
     network: number;
     index: number;
+
+    /** This is the actual purpose that should be used to derive keys */
     purpose: number;
+
+    /** This is the purpose of address types, which can be used to override the default (44, 49, 84). 
+     * Some Blockcore chains have used same derivatoin path for different address formats, and this property allows overriding the default.
+     */
+    purposeAddress: number;
+
     derivationPath: string;
     icon?: string;
     identifier?: string;
