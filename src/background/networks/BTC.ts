@@ -6,6 +6,14 @@ export class BTC44 implements Network {
     network: number = 0;
     purpose: number = 44;
     derivationPath: string = `m/44'/0'/0'`;
+    messagePrefix = '\x18Bitcoin Signed Message:\n';
+    bip32 = {
+        public: 0x0488b21e,
+        private: 0x0488ade4,
+    };
+    pubKeyHash = 0;
+    scriptHash = 5;
+    wif = 0x08;
 }
 
 export class BTC49 implements Network {
@@ -14,6 +22,14 @@ export class BTC49 implements Network {
     network: number = 0;
     purpose: number = 49;
     derivationPath: string = `m/49'/0'/0'`;
+    messagePrefix = '\x18Bitcoin Signed Message:\n';
+    bip32 = {
+        public: 0x0488b21e,
+        private: 0x0488ade4,
+    };
+    pubKeyHash = 0;
+    scriptHash = 5;
+    wif = 0x08;
 }
 
 export class BTC84 implements Network {
@@ -22,4 +38,12 @@ export class BTC84 implements Network {
     network: number = 0;
     purpose: number = 84;
     derivationPath: string = `m/84'/0'/0'`;
+    messagePrefix = '\x18Bitcoin Signed Message:\n';
+    bip32 = {
+        public: 0x0488b21e,
+        private: 0x0488ade4,
+    };
+    pubKeyHash = 0;
+    scriptHash = 5;
+    wif = 0x08;
 }

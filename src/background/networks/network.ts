@@ -15,6 +15,18 @@ export interface Network {
     /** The default derivation path displayed and editable when creating a new account. */
     derivationPath: string;
 
+    messagePrefix: string;
+
+    bech32?: string;
+
+    bip32: { public: number; private: number };
+
+    pubKeyHash: number;
+
+    scriptHash: number;
+
+    wif: number
+
     /** A logo that can be displayed in UI for the specific network. */
     // logo: ''; 
 }

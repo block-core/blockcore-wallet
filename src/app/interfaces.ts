@@ -31,6 +31,9 @@ interface Account {
     icon?: string;
     identifier?: string;
     balance?: number;
+
+    /** Extended Public Key for this account. */
+    xpub?: string;
 }
 
 interface Wallet {

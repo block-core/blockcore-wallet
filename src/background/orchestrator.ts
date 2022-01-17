@@ -975,6 +975,165 @@ export class OrchestratorBackgroundService {
 
             this.state.activeWallet.activeAccountIndex = (this.state.activeWallet.accounts.length - 1);
 
+            // When account is made, we'll retrieve the extended public key and store that to be persisted.
+            // With the xpub we can generate all addresses for the account without being able to know the private keys.
+            debugger;
+            if (!this.state.activeWallet) {
+                return;
+            }
+
+            var account = this.state.activeAccount;
+            var wallet = this.state.activeWallet;
+
+            if (!account || !wallet) {
+                return;
+            }
+
+            let password = this.state.passwords.get(this.state.activeWallet.id);
+
+            if (!password) {
+                return;
+            }
+
+            let unlockedMnemonic = null;
+            unlockedMnemonic = await this.crypto.decryptData(wallet.mnemonic, password);
+
+            let network: any;
+
+            console.log(account);
+            console.log(account.network);
+
+            if (account.network === 105105) {
+                network = {
+                    messagePrefix: '\x18Bitcoin Signed Message:\n',
+                    bech32: 'strax',
+                    bip32: {
+                        public: 0x0488b21e,
+                        private: 0x0488ade4,
+                    },
+                    pubKeyHash: 75,
+                    scriptHash: 140,
+                    wif: 0x08
+                }
+            }
+            else if (account.network === 1926) {
+                network = {
+                    messagePrefix: '\x18CityCoin Signed Message:\n', // TODO: City Chain should migrate to use same prefix as Bitcoin.
+                    bech32: 'strax',
+                    bip32: {
+                        public: 0x0488b21e,
+                        private: 0x0488ade4,
+                    },
+                    pubKeyHash: 0x1c,
+                    scriptHash: 0x58,
+                    wif: 0x08
+                }
+            } else {
+                network = {
+                    messagePrefix: '\x18Bitcoin Signed Message:\n',
+                    bech32: 'id',
+                    bip32: {
+                        public: 0x0488b21e,
+                        private: 0x0488ade4,
+                    },
+                    pubKeyHash: 55,
+                    scriptHash: 117,
+                    wif: 0x08
+                }
+            }
+
+            debugger;
+
+            // TODO: Obviously we should not repeat this process from recovery phrase, but this should 
+            // be applied during wallet unlock and state of the node should be kept in-memory. This is just
+            // done like this for quick prototyping.
+            var masterSeed = await bip39.mnemonicToSeed(unlockedMnemonic, '');
+
+            const seed = seedFromWords(unlockedMnemonic);
+            const priv = privateKeyFromSeed(seed);
+            const pub = getPublicKey(priv);
+            const pubHex = Buffer.from(pub).toString('hex');
+
+            // Nostr uses Bitcoin network definition, no need to supply Network ("Version" for micro-bip32).
+            const masterNode = bip32.fromSeed(masterSeed);
+            const root = HDKey.fromMasterSeed(Buffer.from(masterSeed));
+
+            if (!account.derivationPath) {
+                account.derivationPath = `m/44'/1237'/0'`;
+            }
+
+            // let root = HDKey.fromMasterSeed(Buffer.from(seed, 'hex'))
+            // return Buffer.from(root.derive(`m/44'/1237'/0'/0/0`).privateKey).toString(
+            //   'hex'
+            // )
+
+            // Get the hardened purpose and account node.
+            const accountNode = masterNode.derivePath(account.derivationPath); // IDENTITY: m/302'/616'
+            const accountNode2 = root.derive(account.derivationPath);
+            const accountNode3 = root.derive(`m/44'/1237'/0'/0/0`);
+
+            // Persist the xpub:
+            data.xpub = accountNode2.publicExtendedKey;
+
+            const identifierKeyPair = accountNode.derive(0).derive(0);
+            const identifierKeyPair2 = accountNode2.deriveChild(0).deriveChild(0);
+            const identifierKeyPair3 = accountNode3;
+
+            const address = this.crypto.getAddressByNetworkp2pkh(identifierKeyPair, network);
+            const address2 = this.crypto.getAddressByNetworkp2pkhFromBuffer(Buffer.from(Array.from(identifierKeyPair2.publicKey!)), network);
+
+            const idArray = secp256k1.schnorr.getPublicKey(identifierKeyPair.privateKey!.toString('hex'));
+            const id = Buffer.from(idArray).toString('hex');
+
+            // Uncaught (in promise) TypeError: The first argument must be one of type string, Buffer, ArrayBuffer, Array, or Array-like Object. Received type object
+            const id2Array = secp256k1.schnorr.getPublicKey(Buffer.from(identifierKeyPair2.privateKey!).toString('hex'));
+            const id2 = Buffer.from(id2Array).toString('hex');
+
+            const id3hex = Buffer.from(identifierKeyPair3.privateKey!).toString('hex');
+            const id3Array = secp256k1.schnorr.getPublicKey(id3hex);
+            const id3 = Buffer.from(id3Array).toString('hex');
+
+            if (address != address2) {
+                throw Error('oh fuck');
+            }
+
+            if (id != id2) {
+                throw Error('oh fuck');
+            }
+
+            // var keyPair = await this.crypto.getKeyPairFromNode(accountNode);
+            // var keyPair2 = await this.crypto.getKeyPairFromNode(accountNode);
+
+            // // TODO: use this in the account manager.
+            // const xpub = accountNode.neutered().toBase58();
+
+            // // console.log(wallet.mnemonic);
+            // // console.log(unlockedMnemonic);
+            // // console.log(accountNode.neutered().toBase58());
+
+            // // const addressNode = masterNode.deriveHardened(data.index);
+            // const addressNodeReceive = accountNode.derive(0);
+            // const addressNodeReceiveIndex0 = addressNodeReceive.derive(0);
+            // const addressNodeChange = accountNode.derive(1);
+            // const addressNodeChangeIndex0 = addressNodeChange.derive(0);
+
+            // const address0 = this.crypto.getAddressByNetworkp2pkh(addressNodeReceiveIndex0, network);
+
+            // const receiveAddress = [];
+            // const changeAddress = [];
+
+            // // TODO: This is just a basic prototype to return many receive and change address to the UI:
+            // for (let i = 0; i < 2; i++) {
+
+            //     const addressNodeReceive = accountNode.derive(0);
+            //     const addressNodeReceiveIndex = addressNodeReceive.derive(i);
+            //     const addressNodeChange = accountNode.derive(1);
+            //     const addressNodeChangeIndex = addressNodeChange.derive(i);
+
+            //     receiveAddress.push({ change: false, index: i, address: this.crypto.getAddressByNetworkp2pkh(addressNodeReceiveIndex, network) });
+            //     changeAddress.push({ change: true, index: i, address: this.crypto.getAddressByNetworkp2pkh(addressNodeChangeIndex, network) });
+            // }
+
             if (this.state.activeAccount?.network === NETWORK_IDENTITY) {
                 // Generate DID Document for the identity and persist it.
                 await this.createIdentityDocument();
