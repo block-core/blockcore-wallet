@@ -1,5 +1,5 @@
-import { Account, State, Wallet, Action, DIDPayload, Settings, Identity, Vault } from 'src/app/interfaces';
-import { MINUTE, NETWORK_IDENTITY } from 'src/app/shared/constants';
+import { Account, State, Wallet, Action, DIDPayload, Settings, Identity, Vault } from '../app/interfaces';
+import { MINUTE, NETWORK_IDENTITY } from '../app/shared/constants';
 import { AppState } from './application-state';
 import { CommunicationBackgroundService } from './communication';
 import { CryptoUtility } from './crypto-utility';
@@ -11,27 +11,14 @@ import { ServiceEndpoint } from 'did-resolver';
 import { DataSyncService } from './data-sync';
 import { HDKey } from 'micro-bip32';
 import * as secp256k1 from '@noble/secp256k1';
-import {
-    seedFromWords,
-    generateSeedWords,
-    privateKeyFromSeed
-} from 'nostr-tools/nip06';
-
+import { seedFromWords, generateSeedWords, privateKeyFromSeed } from 'nostr-tools/nip06';
 import { getPublicKey } from 'nostr-tools';
+import { AppManager } from './application-manager';
 
 /** Service that handles orchestration between background and frontend. Maps messages between managers and actions initiated in the UI. */
 export class OrchestratorBackgroundService {
-    private communication!: CommunicationBackgroundService;
-    private state!: AppState;
-    private crypto!: CryptoUtility;
-    private sync!: DataSyncService;
-    timer: any;
-
-    configure(communication: CommunicationBackgroundService, state: AppState, crypto: CryptoUtility, sync: DataSyncService) {
-        this.communication = communication;
-        this.state = state;
-        this.crypto = crypto;
-        this.sync = sync;
+    constructor(
+        private manager: AppManager) {
         this.eventHandlers();
         this.timeoutHandler();
     }
@@ -41,341 +28,278 @@ export class OrchestratorBackgroundService {
     }
 
     active() {
-        console.log('active:');
-        this.resetTimer();
+        this.manager.walletManager.resetTimer();
     }
 
-    async onInactiveTimeout() {
-        console.log('onInactiveTimeout:');
+    // REFACTORY IDENTITY LATER!
 
-        this.state.passwords.clear();
+    // async createVaultConfigurationDocument(domain: string) {
+    //     var account = this.manager.walletManager.activeAccount;
+    //     var wallet = this.manager.walletManager.activeWallet;
 
-        await this.state.save();
-        this.refreshState();
+    //     if (!account || !wallet) {
+    //         return;
+    //     }
 
-        this.communication.sendToAll('wallet-locked');
+    //     let password = this.state.passwords.get(wallet.id);
 
-        //this.unlocked = false;
-        // console.log('redirect to root:');
-        // Redirect to root and log user out of their wallet.
-        // this.router.navigateByUrl('/');
-    }
+    //     if (!password) {
+    //         throw Error('missing password');
+    //     }
 
-    resetTimer() {
-        console.log('resetTimer:', this.state.persisted.settings.autoTimeout * MINUTE);
+    //     let unlockedMnemonic = null;
+    //     unlockedMnemonic = await this.crypto.decryptData(wallet.mnemonic, password);
 
-        if (this.timer) {
-            clearTimeout(this.timer);
-        }
+    //     // TODO: MUST VERIFY THAT ACCOUNT RESTORE AND NODES IS ALL CORRECT BELOW.
+    //     var masterSeed = await bip39.mnemonicToSeed(unlockedMnemonic, '');
+    //     const masterNode = bip32.fromSeed(masterSeed, this.crypto.getProfileNetwork());
 
-        // We will only set timer if the wallet is actually unlocked.
-        if (this.state.passwords.size > 0) {
-            console.log('Setting timer to automatically unlock.');
-            this.timer = setTimeout(
-                // () => this.ngZone.run(() => {
-                () => {
-                    this.onInactiveTimeout();
-                },
-                // }),
-                this.state.persisted.settings.autoTimeout * MINUTE
-            );
-        } else {
-            console.log('Timer not set since wallet is not unlocked.');
-        }
-    }
+    //     // Get the hardened purpose and account node.
+    //     const accountNode = masterNode.derivePath(account.derivationPath); // m/302'/616'
 
-    async createVaultConfigurationDocument(domain: string) {
-        var account = this.state.activeAccount;
-        var wallet = this.state.activeWallet;
+    //     const address0 = this.crypto.getAddress(accountNode);
+    //     var keyPair = await this.crypto.getKeyPairFromNode(accountNode);
 
-        if (!account || !wallet) {
-            return;
-        }
+    //     // Get the identity corresponding with the key pair, does not contain the private key any longer.
+    //     var identity = this.crypto.getIdentity(keyPair);
 
-        let password = this.state.passwords.get(wallet.id);
+    //     let document = null;
 
-        if (!password) {
-            throw Error('missing password');
-        }
+    //     // if (services) {
+    //     //     document = identity.document({ service: services });
+    //     // } else {
+    //     //     document = identity.document();
+    //     // }
 
-        let unlockedMnemonic = null;
-        unlockedMnemonic = await this.crypto.decryptData(wallet.mnemonic, password);
+    //     // Create an issuer from the identity, this is used to issue VCs.
+    //     const issuer = identity.issuer({ privateKey: keyPair.privateKeyBuffer?.toString('hex') });
 
-        // TODO: MUST VERIFY THAT ACCOUNT RESTORE AND NODES IS ALL CORRECT BELOW.
-        var masterSeed = await bip39.mnemonicToSeed(unlockedMnemonic, '');
-        const masterNode = bip32.fromSeed(masterSeed, this.crypto.getProfileNetwork());
+    //     let configuration = await identity.configuration(domain, issuer);
 
-        // Get the hardened purpose and account node.
-        const accountNode = masterNode.derivePath(account.derivationPath); // m/302'/616'
+    //     return configuration;
 
-        const address0 = this.crypto.getAddress(accountNode);
-        var keyPair = await this.crypto.getKeyPairFromNode(accountNode);
+    //     // TODO: The URL should be provided by website triggering DID Document signing.
+    //     // let configuration = await identity.configuration('https://localhost', issuer);
+    //     // let configurationJson = JSON.stringify(configuration);
 
-        // Get the identity corresponding with the key pair, does not contain the private key any longer.
-        var identity = this.crypto.getIdentity(keyPair);
+    //     // const signedJwt = await identity.signJwt({ payload: payload, privateKeyJwk: keyPairWebKey.privateKeyJwk });
+    //     // console.log('SIGNED PAYLOAD:');
+    //     // console.log(signedJwt);
 
-        let document = null;
+    //     // const jws = await identity.jws({
+    //     //     payload: document,
+    //     //     privateKey: keyPair.privateKeyBuffer?.toString('hex')
+    //     // });
 
-        // if (services) {
-        //     document = identity.document({ service: services });
-        // } else {
-        //     document = identity.document();
-        // }
+    //     // const jwt = await identity.jwt({
+    //     //     payload: document,
+    //     //     privateKey: keyPair.privateKeyBuffer?.toString('hex')
+    //     // });
 
-        // Create an issuer from the identity, this is used to issue VCs.
-        const issuer = identity.issuer({ privateKey: keyPair.privateKeyBuffer?.toString('hex') });
+    //     // var decodedDidDocument = decodeJWT(jws) as unknown as DIDPayload;
+    //     // var decodedDidDocument2 = decodeJWT(jwt);
 
-        let configuration = await identity.configuration(domain, issuer);
+    //     // this.state.store.identities.push({ id: identity.id, published: false, services: [], didPayload: decodedDidDocument, didDocument: decodedDidDocument.payload });
 
-        return configuration;
+    //     // account.identifier = identity.id;
+    //     // account.name = identity.id;
+    // }
 
-        // TODO: The URL should be provided by website triggering DID Document signing.
-        // let configuration = await identity.configuration('https://localhost', issuer);
-        // let configurationJson = JSON.stringify(configuration);
+    // async createIdentityDocument(services?: ServiceEndpoint[]) {
+    //     var account = this.state.activeAccount;
+    //     var wallet = this.state.activeWallet;
 
-        // const signedJwt = await identity.signJwt({ payload: payload, privateKeyJwk: keyPairWebKey.privateKeyJwk });
-        // console.log('SIGNED PAYLOAD:');
-        // console.log(signedJwt);
+    //     if (!account || !wallet) {
+    //         return;
+    //     }
 
-        // const jws = await identity.jws({
-        //     payload: document,
-        //     privateKey: keyPair.privateKeyBuffer?.toString('hex')
-        // });
+    //     let password = this.state.passwords.get(wallet.id);
 
-        // const jwt = await identity.jwt({
-        //     payload: document,
-        //     privateKey: keyPair.privateKeyBuffer?.toString('hex')
-        // });
+    //     if (!password) {
+    //         throw Error('missing password');
+    //     }
 
-        // var decodedDidDocument = decodeJWT(jws) as unknown as DIDPayload;
-        // var decodedDidDocument2 = decodeJWT(jwt);
+    //     let unlockedMnemonic = null;
+    //     unlockedMnemonic = await this.crypto.decryptData(wallet.mnemonic, password);
 
-        // this.state.store.identities.push({ id: identity.id, published: false, services: [], didPayload: decodedDidDocument, didDocument: decodedDidDocument.payload });
+    //     // TODO: MUST VERIFY THAT ACCOUNT RESTORE AND NODES IS ALL CORRECT BELOW.
+    //     var masterSeed = await bip39.mnemonicToSeed(unlockedMnemonic, '');
+    //     const masterNode = bip32.fromSeed(masterSeed, this.crypto.getProfileNetwork());
 
-        // account.identifier = identity.id;
-        // account.name = identity.id;
-    }
+    //     // Get the hardened purpose and account node.
+    //     const accountNode = masterNode.derivePath(account.derivationPath); // m/302'/616'
 
-    async createIdentityDocument(services?: ServiceEndpoint[]) {
-        var account = this.state.activeAccount;
-        var wallet = this.state.activeWallet;
+    //     const address0 = this.crypto.getAddress(accountNode);
+    //     var keyPair = await this.crypto.getKeyPairFromNode(accountNode);
 
-        if (!account || !wallet) {
-            return;
-        }
+    //     // Get the identity corresponding with the key pair, does not contain the private key any longer.
+    //     var identity = this.crypto.getIdentity(keyPair);
 
-        let password = this.state.passwords.get(wallet.id);
+    //     let document = null;
 
-        if (!password) {
-            throw Error('missing password');
-        }
+    //     if (services) {
+    //         document = identity.document({ service: services });
+    //     } else {
+    //         document = identity.document();
+    //     }
 
-        let unlockedMnemonic = null;
-        unlockedMnemonic = await this.crypto.decryptData(wallet.mnemonic, password);
+    //     // var tmp = JSON.parse(JSON.stringify(document));
 
-        // TODO: MUST VERIFY THAT ACCOUNT RESTORE AND NODES IS ALL CORRECT BELOW.
-        var masterSeed = await bip39.mnemonicToSeed(unlockedMnemonic, '');
-        const masterNode = bip32.fromSeed(masterSeed, this.crypto.getProfileNetwork());
+    //     // document.id = '';
+    //     // //document.id2 = '';
+    //     // document.verificationMethod = '';
+    //     // document.controller = '';
+    //     // document.authentication = '';
+    //     // document.assertionMethod = '';
 
-        // Get the hardened purpose and account node.
-        const accountNode = masterNode.derivePath(account.derivationPath); // m/302'/616'
+    //     // Make sure the properties are in right order to rule out bug with Mongoose.
+    //     // document.id = tmp.id;
+    //     //document.id2 = tmp.id;
+    //     // document.verificationMethod = tmp.verificationMethod;
+    //     // document.controller = tmp.controller;
+    //     // document.authentication = tmp.authentication;
+    //     // document.assertionMethod = tmp.assertionMethod;
 
-        const address0 = this.crypto.getAddress(accountNode);
-        var keyPair = await this.crypto.getKeyPairFromNode(accountNode);
+    //     // Create an issuer from the identity, this is used to issue VCs.
+    //     const issuer = identity.issuer({ privateKey: keyPair.privateKeyBuffer?.toString('hex') });
 
-        // Get the identity corresponding with the key pair, does not contain the private key any longer.
-        var identity = this.crypto.getIdentity(keyPair);
+    //     // TODO: The URL should be provided by website triggering DID Document signing.
+    //     // let configuration = await identity.configuration('https://localhost', issuer);
+    //     // let configurationJson = JSON.stringify(configuration);
 
-        let document = null;
+    //     // const signedJwt = await identity.signJwt({ payload: payload, privateKeyJwk: keyPairWebKey.privateKeyJwk });
+    //     // console.log('SIGNED PAYLOAD:');
+    //     // console.log(signedJwt);
 
-        if (services) {
-            document = identity.document({ service: services });
-        } else {
-            document = identity.document();
-        }
+    //     const jws = await identity.jws({
+    //         payload: document,
+    //         privateKey: keyPair.privateKeyBuffer?.toString('hex')
+    //     });
 
-        // var tmp = JSON.parse(JSON.stringify(document));
+    //     const jwt = await identity.jwt({
+    //         payload: document,
+    //         privateKey: keyPair.privateKeyBuffer?.toString('hex')
+    //     });
 
-        // document.id = '';
-        // //document.id2 = '';
-        // document.verificationMethod = '';
-        // document.controller = '';
-        // document.authentication = '';
-        // document.assertionMethod = '';
+    //     var decodedDidDocument = decodeJWT(jws) as unknown as DIDPayload;
+    //     var decodedDidDocument2 = decodeJWT(jwt);
 
-        // Make sure the properties are in right order to rule out bug with Mongoose.
-        // document.id = tmp.id;
-        //document.id2 = tmp.id;
-        // document.verificationMethod = tmp.verificationMethod;
-        // document.controller = tmp.controller;
-        // document.authentication = tmp.authentication;
-        // document.assertionMethod = tmp.assertionMethod;
+    //     this.state.store.identities.push({ id: identity.id, published: false, sequence: -1, services: [], didPayload: decodedDidDocument, didDocument: decodedDidDocument.payload });
 
-        // Create an issuer from the identity, this is used to issue VCs.
-        const issuer = identity.issuer({ privateKey: keyPair.privateKeyBuffer?.toString('hex') });
+    //     account.identifier = identity.id;
+    //     account.name = identity.id;
+    // }
 
-        // TODO: The URL should be provided by website triggering DID Document signing.
-        // let configuration = await identity.configuration('https://localhost', issuer);
-        // let configurationJson = JSON.stringify(configuration);
+    // async updateIdentityDocument(data: Identity) {
+    //     // First get the signing key for this identity.
+    //     var account = this.state.activeWallet?.accounts.find(a => a.identifier == data.id);
 
-        // const signedJwt = await identity.signJwt({ payload: payload, privateKeyJwk: keyPairWebKey.privateKeyJwk });
-        // console.log('SIGNED PAYLOAD:');
-        // console.log(signedJwt);
+    //     if (!account) {
+    //         throw Error('Did not find account to update identity document on.');
+    //     }
 
-        const jws = await identity.jws({
-            payload: document,
-            privateKey: keyPair.privateKeyBuffer?.toString('hex')
-        });
+    //     // var account = this.state.activeAccount;
+    //     var wallet = this.state.activeWallet;
 
-        const jwt = await identity.jwt({
-            payload: document,
-            privateKey: keyPair.privateKeyBuffer?.toString('hex')
-        });
+    //     if (!account || !wallet) {
+    //         return;
+    //     }
 
-        var decodedDidDocument = decodeJWT(jws) as unknown as DIDPayload;
-        var decodedDidDocument2 = decodeJWT(jwt);
+    //     let password = this.state.passwords.get(wallet.id);
 
-        this.state.store.identities.push({ id: identity.id, published: false, sequence: -1, services: [], didPayload: decodedDidDocument, didDocument: decodedDidDocument.payload });
+    //     if (!password) {
+    //         throw Error('missing password');
+    //     }
 
-        account.identifier = identity.id;
-        account.name = identity.id;
-    }
+    //     let unlockedMnemonic = null;
+    //     unlockedMnemonic = await this.crypto.decryptData(wallet.mnemonic, password);
 
-    async updateIdentityDocument(data: Identity) {
-        // First get the signing key for this identity.
-        var account = this.state.activeWallet?.accounts.find(a => a.identifier == data.id);
+    //     // TODO: MUST VERIFY THAT ACCOUNT RESTORE AND NODES IS ALL CORRECT BELOW.
+    //     var masterSeed = await bip39.mnemonicToSeed(unlockedMnemonic, '');
+    //     const masterNode = bip32.fromSeed(masterSeed, this.crypto.getProfileNetwork());
 
-        if (!account) {
-            throw Error('Did not find account to update identity document on.');
-        }
+    //     // Get the hardened purpose and account node.
+    //     const accountNode = masterNode.derivePath(account.derivationPath); // m/302'/616'
 
-        // var account = this.state.activeAccount;
-        var wallet = this.state.activeWallet;
+    //     const address0 = this.crypto.getAddress(accountNode);
+    //     var keyPair = await this.crypto.getKeyPairFromNode(accountNode);
 
-        if (!account || !wallet) {
-            return;
-        }
+    //     // Get the identity corresponding with the key pair, does not contain the private key any longer.
+    //     var identity = this.crypto.getIdentity(keyPair);
 
-        let password = this.state.passwords.get(wallet.id);
+    //     let document = null;
 
-        if (!password) {
-            throw Error('missing password');
-        }
+    //     if (data.services) {
+    //         document = identity.document({ service: data.services });
+    //     } else {
+    //         document = identity.document();
+    //     }
 
-        let unlockedMnemonic = null;
-        unlockedMnemonic = await this.crypto.decryptData(wallet.mnemonic, password);
+    //     // Create an issuer from the identity, this is used to issue VCs.
+    //     const issuer = identity.issuer({ privateKey: keyPair.privateKeyBuffer?.toString('hex') });
 
-        // TODO: MUST VERIFY THAT ACCOUNT RESTORE AND NODES IS ALL CORRECT BELOW.
-        var masterSeed = await bip39.mnemonicToSeed(unlockedMnemonic, '');
-        const masterNode = bip32.fromSeed(masterSeed, this.crypto.getProfileNetwork());
+    //     // TODO: The URL should be provided by website triggering DID Document signing.
+    //     // let configuration = await identity.configuration('https://localhost', issuer);
+    //     // let configurationJson = JSON.stringify(configuration);
 
-        // Get the hardened purpose and account node.
-        const accountNode = masterNode.derivePath(account.derivationPath); // m/302'/616'
+    //     // const signedJwt = await identity.signJwt({ payload: payload, privateKeyJwk: keyPairWebKey.privateKeyJwk });
+    //     // console.log('SIGNED PAYLOAD:');
+    //     // console.log(signedJwt);
 
-        const address0 = this.crypto.getAddress(accountNode);
-        var keyPair = await this.crypto.getKeyPairFromNode(accountNode);
+    //     const jws = await identity.jws({
+    //         payload: document,
+    //         privateKey: keyPair.privateKeyBuffer?.toString('hex')
+    //     });
 
-        // Get the identity corresponding with the key pair, does not contain the private key any longer.
-        var identity = this.crypto.getIdentity(keyPair);
+    //     const jwt = await identity.jwt({
+    //         payload: document,
+    //         privateKey: keyPair.privateKeyBuffer?.toString('hex')
+    //     });
 
-        let document = null;
+    //     var decodedDidDocument = decodeJWT(jws) as unknown as DIDPayload;
+    //     var decodedDidDocument2 = decodeJWT(jwt);
 
-        if (data.services) {
-            document = identity.document({ service: data.services });
-        } else {
-            document = identity.document();
-        }
+    //     var updatedIdentity = data;
+    //     updatedIdentity.didPayload = decodedDidDocument;
+    //     updatedIdentity.didDocument = decodedDidDocument.payload;
 
-        // Create an issuer from the identity, this is used to issue VCs.
-        const issuer = identity.issuer({ privateKey: keyPair.privateKeyBuffer?.toString('hex') });
+    //     // var updatedIdentity = { id: data.id, published: data.published, services: data.services, didPayload: decodedDidDocument, didDocument: decodedDidDocument.payload };
 
-        // TODO: The URL should be provided by website triggering DID Document signing.
-        // let configuration = await identity.configuration('https://localhost', issuer);
-        // let configurationJson = JSON.stringify(configuration);
+    //     var existingIndex = this.state.store.identities.findIndex(i => i.id == data.id);
 
-        // const signedJwt = await identity.signJwt({ payload: payload, privateKeyJwk: keyPairWebKey.privateKeyJwk });
-        // console.log('SIGNED PAYLOAD:');
-        // console.log(signedJwt);
+    //     if (existingIndex > -1) {
+    //         this.state.store.identities.splice(existingIndex, 1);
+    //         this.state.store.identities.push(updatedIdentity);
+    //         // this.state.store.identities[existingIndex] = updatedIdentity
+    //     } else {
+    //         // This shouldn't happen on updates...
+    //         this.state.store.identities.push(updatedIdentity);
+    //     }
 
-        const jws = await identity.jws({
-            payload: document,
-            privateKey: keyPair.privateKeyBuffer?.toString('hex')
-        });
+    //     console.log('CHECK THIS:');
+    //     console.log(JSON.stringify(this.state.store.identities));
 
-        const jwt = await identity.jwt({
-            payload: document,
-            privateKey: keyPair.privateKeyBuffer?.toString('hex')
-        });
-
-        var decodedDidDocument = decodeJWT(jws) as unknown as DIDPayload;
-        var decodedDidDocument2 = decodeJWT(jwt);
-
-        var updatedIdentity = data;
-        updatedIdentity.didPayload = decodedDidDocument;
-        updatedIdentity.didDocument = decodedDidDocument.payload;
-
-        // var updatedIdentity = { id: data.id, published: data.published, services: data.services, didPayload: decodedDidDocument, didDocument: decodedDidDocument.payload };
-
-        var existingIndex = this.state.store.identities.findIndex(i => i.id == data.id);
-
-        if (existingIndex > -1) {
-            this.state.store.identities.splice(existingIndex, 1);
-            this.state.store.identities.push(updatedIdentity);
-            // this.state.store.identities[existingIndex] = updatedIdentity
-        } else {
-            // This shouldn't happen on updates...
-            this.state.store.identities.push(updatedIdentity);
-        }
-
-        console.log('CHECK THIS:');
-        console.log(JSON.stringify(this.state.store.identities));
-
-        // account.identifier = identity.id;
-        // account.name = identity.id;
-    }
+    //     // account.identifier = identity.id;
+    //     // account.name = identity.id;
+    // }
 
     refreshState() {
         // Whenever we refresh the state, we'll also reset the timer. State changes should occur based on user-interaction.
         this.active();
 
-        const initialState: State = {
-            action: this.state.action,
-            persisted: this.state.persisted,
-            unlocked: this.state.unlocked,
-            store: this.state.store
-        }
-
-        // Send new state to UI instances.
-        this.communication.sendToAll('state', initialState);
+        this.manager.broadcastState();
     };
 
     async setAction(data: Action) {
-        if (typeof data.action !== 'string') {
-            console.error('Only objects that are string are allowed as actions.');
-            return;
-        }
-
-        if (data.document != null && typeof data.document !== 'string') {
-            console.error('Only objects that are string are allowed as actions.');
-            return;
-        }
-
-        this.state.action = data;
-
-        await this.state.saveAction();
-
-        this.refreshState();
-
-        // Raise this after state has been updated, so orchestrator in UI can redirect correctly.
-        this.communication.sendToAll('action-changed', this.state.action);
+        this.manager.setAction(data);
     }
 
     private eventHandlers() {
         // "state" is the first request from the UI.
-        this.communication.listen('state', async (port: any, data: any) => {
+        this.manager.communication.listen('state', async (port: any, data: any) => {
             // If the local state has not yet initialized, we'll log error. This should normally not happen
             // and we have a race-condition that should be mitigated differently.
-            if (!this.state.initialized) {
+            if (!this.manager.state.initialized) {
                 console.error('State was requested before initialized. This is a race-condition that should not occurr.');
                 return;
             }
@@ -384,120 +308,103 @@ export class OrchestratorBackgroundService {
             const url = data.url;
             console.log('Getting last state for: ', url);
 
-            const initialState: State = {
-                action: this.state.action,
-                persisted: this.state.persisted,
-                unlocked: this.state.unlocked,
-                store: this.state.store
-            };
-
-            this.communication.send(port, 'state', initialState);
+            this.manager.broadcastState();
         });
 
-        // this.communication.listen('getlock', (port: any, data: any) => {
-        //     if (this.state.password) {
-        //         this.communication.send(port, 'getlock', true);
-        //     } else {
-        //         this.communication.send(port, 'getlock', false);
-        //     }
-        // });
-
-        this.communication.listen('timer-reset', (port: any, data: any) => {
+        this.manager.communication.listen('timer-reset', (port: any, data: any) => {
             this.active();
         });
 
-        this.communication.listen('set-action', async (port: any, data: Action) => {
+        this.manager.communication.listen('set-action', async (port: any, data: Action) => {
             this.setAction(data);
         });
 
-        this.communication.listen('sign-content', async (port: any, data: { content: string, tabId: string }) => {
-            var account = this.state.activeAccount;
-            var wallet = this.state.activeWallet;
+        this.manager.communication.listen('sign-content', async (port: any, data: { content: string, tabId: string }) => {
+            var account = this.manager.walletManager.activeAccount;
+            var wallet = this.manager.walletManager.activeWallet;
 
             if (!wallet || !account) {
                 chrome.tabs.sendMessage(Number(data.tabId), { content: 'No wallet/account active.' });
                 return;
             }
 
-            let password = this.state.passwords.get(wallet.id);
-
-            if (!password) {
-                throw Error('missing password');
+            if (!this.manager.walletManager.isActiveWalletUnlocked()) {
+                throw Error('Active wallet is not unlocked.');
             }
 
-            let unlockedMnemonic = null;
-            unlockedMnemonic = await this.crypto.decryptData(wallet.mnemonic, password);
+            // TODO: REFACTOR!
 
-            // TODO: MUST VERIFY THAT ACCOUNT RESTORE AND NODES IS ALL CORRECT BELOW.
-            var masterSeed = await bip39.mnemonicToSeed(unlockedMnemonic, '');
-            const masterNode = bip32.fromSeed(masterSeed, this.crypto.getProfileNetwork());
+            // let unlockedMnemonic = null;
+            // unlockedMnemonic = await this.manager.crypto.decryptData(wallet.mnemonic, password);
 
-            // Get the hardened purpose and account node.
-            const accountNode = masterNode.derivePath(account.derivationPath); // m/302'/616'
+            // // TODO: MUST VERIFY THAT ACCOUNT RESTORE AND NODES IS ALL CORRECT BELOW.
+            // var masterSeed = await bip39.mnemonicToSeed(unlockedMnemonic, '');
+            // const masterNode = bip32.fromSeed(masterSeed, this.crypto.getProfileNetwork());
 
-            const address0 = this.crypto.getAddress(accountNode);
-            var keyPair = await this.crypto.getKeyPairFromNode(accountNode);
+            // // Get the hardened purpose and account node.
+            // const accountNode = masterNode.derivePath(account.derivationPath); // m/302'/616'
 
-            // Get the identity corresponding with the key pair, does not contain the private key any longer.
-            var identity = this.crypto.getIdentity(keyPair);
+            // const address0 = this.crypto.getAddress(accountNode);
+            // var keyPair = await this.crypto.getKeyPairFromNode(accountNode);
 
-            let document = identity.document();
+            // // Get the identity corresponding with the key pair, does not contain the private key any longer.
+            // var identity = this.crypto.getIdentity(keyPair);
 
-            // Create an issuer from the identity, this is used to issue VCs.
-            const issuer = identity.issuer({ privateKey: keyPair.privateKeyBuffer?.toString('hex') });
+            // let document = identity.document();
 
-            // TODO: The URL should be provided by website triggering DID Document signing.
-            let configuration = await identity.configuration('https://localhost', issuer);
-            let configurationJson = JSON.stringify(configuration);
+            // // Create an issuer from the identity, this is used to issue VCs.
+            // const issuer = identity.issuer({ privateKey: keyPair.privateKeyBuffer?.toString('hex') });
 
-            const setupPayload = {
-                "@context": "https://schemas.blockcore.net/.well-known/vault-configuration/v1",
-                "id": identity.id,
-                "url": "http://localhost:3001",
-                "name": 'Server Name',
-                "enabled": true,
-                "self": true,
-                "ws": "ws://localhost:9090",
-                "linked_dids": configuration.linked_dids,
-                "didDocument": document,
-                "vaultConfiguration": {
-                }
-            };
+            // // TODO: The URL should be provided by website triggering DID Document signing.
+            // let configuration = await identity.configuration('https://localhost', issuer);
+            // let configurationJson = JSON.stringify(configuration);
 
-            let setupDocument = setupPayload;
-            let setupDocumentJson = JSON.stringify(setupDocument);
+            // const setupPayload = {
+            //     "@context": "https://schemas.blockcore.net/.well-known/vault-configuration/v1",
+            //     "id": identity.id,
+            //     "url": "http://localhost:3001",
+            //     "name": 'Server Name',
+            //     "enabled": true,
+            //     "self": true,
+            //     "ws": "ws://localhost:9090",
+            //     "linked_dids": configuration.linked_dids,
+            //     "didDocument": document,
+            //     "vaultConfiguration": {
+            //     }
+            // };
 
-            // this.appState.identity = identity;
+            // let setupDocument = setupPayload;
+            // let setupDocumentJson = JSON.stringify(setupDocument);
 
-            chrome.tabs.sendMessage(Number(data.tabId), { content: setupDocumentJson }, function (response) {
-                console.log('Signed document sent to web page!');
-            });
+            // // this.appState.identity = identity;
 
-            // chrome.tabs.query({
-            //     // active: true,
-            //     // lastFocusedWindow: true
-            // }, (tabs) => {
-            //     debugger;
-            //     var tab = tabs[0];
-            //     // Provide the tab URL with the state query, because wallets and accounts is connected to domains.
-            //     // this.communication.send('state', { url: tab?.url });
-            //     chrome.tabs.sendMessage(Number(tab.id), { content: data.content }, function (response) {
-            //         console.log('Signed document sent to web page!');
-            //     });
+            // chrome.tabs.sendMessage(Number(data.tabId), { content: setupDocumentJson }, function (response) {
+            //     console.log('Signed document sent to web page!');
             // });
 
-            // chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-            //     chrome.tabs.sendMessage(tabs[0].id, { greeting: "hello" }, function (response) {
-            //         console.log(response.farewell);
-            //     });
-            // });
+            // // chrome.tabs.query({
+            // //     // active: true,
+            // //     // lastFocusedWindow: true
+            // // }, (tabs) => {
+            // //     debugger;
+            // //     var tab = tabs[0];
+            // //     // Provide the tab URL with the state query, because wallets and accounts is connected to domains.
+            // //     // this.communication.send('state', { url: tab?.url });
+            // //     chrome.tabs.sendMessage(Number(tab.id), { content: data.content }, function (response) {
+            // //         console.log('Signed document sent to web page!');
+            // //     });
+            // // });
+
+            // // chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+            // //     chrome.tabs.sendMessage(tabs[0].id, { greeting: "hello" }, function (response) {
+            // //         console.log(response.farewell);
+            // //     });
+            // // });
 
         });
 
-        this.communication.listen('set-active-wallet-id', async (port: any, data: any) => {
-            this.state.persisted.activeWalletId = data.id;
-            await this.state.save();
-            this.refreshState();
+        this.manager.communication.listen('set-active-wallet-id', async (port: any, data: any) => {
+            await this.manager.walletManager.setActiveWallet(data.id);
         });
 
         // this.communication.listen('set-lock-timer', async (port: any, data: any) => {
@@ -506,20 +413,20 @@ export class OrchestratorBackgroundService {
         //     this.refreshState();
         // });
 
-        this.communication.listen('set-settings', async (port: any, data: Settings) => {
-            this.state.persisted.settings = data;
-            await this.state.save();
-            this.refreshState();
+        this.manager.communication.listen('set-settings', async (port: any, data: Settings) => {
+            await this.manager.setSettings(data);
         });
 
-        this.communication.listen('get-vault-configuration', async (port: any, data: { domain: string }) => {
-            // Generates the .well-known configuration for Blockcore Vault.
-            const vaultConfiguration = await this.createVaultConfigurationDocument(data.domain);
-            this.communication.send(port, 'vault-configuration', vaultConfiguration);
-        });
+        // TODO: REFACTOR!
+        // this.manager.communication.listen('get-vault-configuration', async (port: any, data: { domain: string }) => {
+        //     // Generates the .well-known configuration for Blockcore Vault.
+        //     const vaultConfiguration = await this.createVaultConfigurationDocument(data.domain);
+        //     this.manager.communication.send(port, 'vault-configuration', vaultConfiguration);
+        // });
 
-        this.communication.listen('account-update', async (port: any, data: { id: string, index: number, fields: { name: string, icon: string } }) => {
-            const wallet = this.state.persisted.wallets.find(w => w.id == data.id);
+
+        this.manager.communication.listen('account-update', async (port: any, data: { id: string, index: number, fields: { name: string, icon: string } }) => {
+            const wallet = this.manager.walletManager.getWallet(data.id);
 
             if (!wallet) {
                 return;
@@ -529,10 +436,11 @@ export class OrchestratorBackgroundService {
             account.name = data.fields.name;
             account.icon = data.fields.icon;
 
-            await this.state.save();
+            await this.manager.state.save();
             this.refreshState();
 
-            this.communication.send(port, 'account-updated');
+            // When this happens, the handlers will perform an routing change.
+            this.manager.communication.send(port, 'account-updated');
         });
 
         // this.communication.listen('set-account-icon', async (port: any, data: { id: string, index: number, icon: string }) => {
@@ -551,20 +459,22 @@ export class OrchestratorBackgroundService {
         //     this.communication.send(port, 'account-icon-set');
         // });
 
-        this.communication.listen('set-wallet-name', async (port: any, data: { id: string, name: string }) => {
-            const wallet = this.state.persisted.wallets.find(w => w.id == data.id);
+        this.manager.communication.listen('set-wallet-name', async (port: any, data: { id: string, name: string }) => {
+            const wallet = this.manager.walletManager.getWallet(data.id);
 
             if (!wallet) {
                 return;
             }
 
             wallet.name = data.name;
-            await this.state.save();
+
+            await this.manager.state.save();
+
             this.refreshState();
         });
 
-        this.communication.listen('account-remove', async (port: any, data: { id: string, index: number }) => {
-            const wallet = this.state.persisted.wallets.find(w => w.id == data.id);
+        this.manager.communication.listen('account-remove', async (port: any, data: { id: string, index: number }) => {
+            const wallet = this.manager.walletManager.getWallet(data.id);
 
             if (!wallet) {
                 return;
@@ -579,115 +489,50 @@ export class OrchestratorBackgroundService {
                 wallet.activeAccountIndex = -1;
             }
 
-            await this.state.save();
+            await this.manager.state.save();
             this.refreshState();
 
             // Raise this after state has been updated, so orchestrator in UI can redirect correctly.
-            this.communication.sendToAll('account-removed', data);
+            this.manager.communication.sendToAll('account-removed', data);
         });
 
-        this.communication.listen('wallet-remove', async (port: any, data: { id: string, index: number }) => {
-            const walletIndex = this.state.persisted.wallets.findIndex(w => w.id == data.id);
-
-            // Remove the wallet.
-            this.state.persisted.wallets.splice(walletIndex, 1);
-
-            // Remove the password for this wallet, if it was unlocked.
-            this.state.passwords.delete(data.id);
-
-            await this.state.save();
-            this.refreshState();
+        this.manager.communication.listen('wallet-remove', async (port: any, data: { id: string, index: number }) => {
+            await this.manager.walletManager.removeWallet(data.id);
 
             // Raise this after state has been updated, so orchestrator in UI can redirect correctly.
-            this.communication.sendToAll('wallet-removed', data);
+            this.manager.communication.sendToAll('wallet-removed', data);
         });
 
-        this.communication.listen('wallet-lock', async (port: any, data: { id: string }) => {
-
-            this.state.passwords.delete(data.id);
-
-            this.refreshState();
+        this.manager.communication.listen('wallet-lock', async (port: any, data: { id: string }) => {
+            this.manager.walletManager.lockWallet(data.id);
 
             // Make sure we inform all instances when a wallet is unlocked.
-            this.communication.sendToAll('wallet-locked');
+            this.manager.communication.sendToAll('wallet-locked');
         });
 
-        this.communication.listen('wallet-unlock', async (port: any, data: { id: string, password: string }) => {
-            var wallet = this.state.persisted.wallets.find(w => w.id == data.id);
+        this.manager.communication.listen('wallet-unlock', async (port: any, data: { id: string, password: string }) => {
+            const unlocked = await this.manager.walletManager.unlockWallet(data.id, data.password);
 
-            if (!wallet) {
-                return;
+            if (unlocked) {
+                this.manager.communication.sendToAll('wallet-unlocked');
+            } else {
+                this.manager.communication.send(port, 'error', { exception: null, message: 'Invalid password' });
             }
+        });
 
-            let unlockedMnemonic = null;
-            unlockedMnemonic = await this.crypto.decryptData(wallet.mnemonic, data.password);
+        this.manager.communication.listen('wallet-export-recovery-phrase', async (port: any, data: { id: string, password: string }) => {
+            var recoveryPhrase = this.manager.walletManager.revealSecretRecoveryPhrase(data.id, data.password);
 
-            if (unlockedMnemonic) {
-                this.state.persisted.activeWalletId = wallet.id;
-
-                // Add this wallet to list of unlocked.
-                this.state.passwords.set(data.id, data.password);
-
-                // if (wallet.accounts.length > 0 && wallet.activeAccountIndex == null) {
-                //     wallet.activeAccountIndex = 0;
-                // }
-
-                // if (this.state.persisted.activeAccountIndex
-
-                // this.uiState.unlocked = true;
-
-                // if (this.uiState.persisted.activeAccountIndex == null) {
-                //     this.uiState.persisted.activeAccountIndex = 0;
-                // }
-
-                // // Keep the unlocked mnemonic in-memory until auto-lock timer removes it.
-                // this.uiState.unlockedMnemonic = unlockedMnemonic;
-
-                // this.uiState.port?.postMessage({ method: 'unlock', data: this.unlockPassword });
-
-                // this.router.navigateByUrl('/account/view/' + this.uiState.persisted.activeAccountIndex);
-
-                // Add the new wallet.
-                // this.state.persisted.wallets.set(data.id, data);
-
-                // Change the active wallet to the new one.
-                // this.state.persisted.activeWalletId = data.id;
-
-                // Persist the state.
-                await this.state.save();
-
-                this.refreshState();
-
+            if (recoveryPhrase) {
                 // Make sure we inform all instances when a wallet is unlocked.
-                this.communication.sendToAll('wallet-unlocked');
+                this.manager.communication.sendToAll('wallet-exported-recovery-phrase', recoveryPhrase);
 
             } else {
-                this.communication.send(port, 'error', { exception: null, message: 'Invalid password' });
-                // this.error = 'Invalid password';
+                this.manager.communication.send(port, 'error', { exception: null, message: 'Invalid password' });
             }
         });
 
-
-        this.communication.listen('wallet-export-recovery-phrase', async (port: any, data: { id: string, password: string }) => {
-            var wallet = this.state.persisted.wallets.find(w => w.id == data.id);
-
-            if (!wallet) {
-                return;
-            }
-
-            let unlockedMnemonic = null;
-            unlockedMnemonic = await this.crypto.decryptData(wallet.mnemonic, data.password);
-
-            if (unlockedMnemonic) {
-                // Make sure we inform all instances when a wallet is unlocked.
-                this.communication.sendToAll('wallet-exported-recovery-phrase', unlockedMnemonic);
-
-            } else {
-                this.communication.send(port, 'error', { exception: null, message: 'Invalid password' });
-            }
-        });
-
-        this.communication.listen('address-generate', async (port: any, data: { index: number }) => {
+        this.manager.communication.listen('address-generate', async (port: any, data: { index: number }) => {
             if (!this.state.activeWallet) {
                 return;
             }

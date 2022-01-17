@@ -1,5 +1,5 @@
-import { Action, Persisted, Wallet, Store, Settings } from "src/app/interfaces";
-import { AUTO_TIMEOUT, MINUTE, VAULT_URL } from "src/app/shared/constants";
+import { Action, Persisted, Store, Settings, Wallet } from "../app/interfaces";
+import { AUTO_TIMEOUT, MINUTE, VAULT_URL } from "../app/shared/constants";
 import { Network } from "./networks";
 
 export class AppState {
@@ -14,7 +14,7 @@ export class AppState {
             themeColor: 'primary',
             language: 'en'
         },
-        wallets: [],
+        wallets: [] as Wallet[],
         activeWalletId: null
     };
 
@@ -42,49 +42,49 @@ export class AppState {
 
     action!: Action;
 
-    get hasWallets(): boolean {
-        return this.persisted.wallets.length > 0;
-    }
+    // get hasWallets(): boolean {
+    //     return this.persisted.wallets.length > 0;
+    // }
 
-    get activeWallet() {
-        if (this.persisted.activeWalletId) {
-            return this.persisted.wallets.find(w => w.id == this.persisted.activeWalletId);
-            // return this.persisted.wallets.get(this.persisted.activeWalletId);
-            // return this.persisted.wallets[this.persisted.activeWalletIndex];
-        } else {
-            return undefined;
-        }
-    }
+    // get activeWallet() {
+    //     if (this.persisted.activeWalletId) {
+    //         return this.persisted.wallets.find(w => w.id == this.persisted.activeWalletId);
+    //         // return this.persisted.wallets.get(this.persisted.activeWalletId);
+    //         // return this.persisted.wallets[this.persisted.activeWalletIndex];
+    //     } else {
+    //         return undefined;
+    //     }
+    // }
 
-    get hasAccounts(): boolean {
-        if (!this.activeWallet) {
-            return false;
-        }
+    // get hasAccounts(): boolean {
+    //     if (!this.activeWallet) {
+    //         return false;
+    //     }
 
-        return this.activeWallet.accounts?.length > 0;
-    }
+    //     return this.activeWallet.accounts?.length > 0;
+    // }
 
-    get activeAccount() {
-        if (!this.activeWallet) {
-            return null;
-        }
+    // get activeAccount() {
+    //     if (!this.activeWallet) {
+    //         return null;
+    //     }
 
-        const activeWallet = this.activeWallet;
+    //     const activeWallet = this.activeWallet;
 
-        if (!activeWallet.accounts) {
-            return null;
-        }
+    //     if (!activeWallet.accounts) {
+    //         return null;
+    //     }
 
-        if (activeWallet.activeAccountIndex == null || activeWallet.activeAccountIndex == -1) {
-            activeWallet.activeAccountIndex = 0;
-        }
-        // If the active index is higher than available accounts, reset to zero.
-        else if (activeWallet.activeAccountIndex >= activeWallet.accounts.length) {
-            activeWallet.activeAccountIndex = 0;
-        }
+    //     if (activeWallet.activeAccountIndex == null || activeWallet.activeAccountIndex == -1) {
+    //         activeWallet.activeAccountIndex = 0;
+    //     }
+    //     // If the active index is higher than available accounts, reset to zero.
+    //     else if (activeWallet.activeAccountIndex >= activeWallet.accounts.length) {
+    //         activeWallet.activeAccountIndex = 0;
+    //     }
 
-        return this.activeWallet.accounts[activeWallet.activeAccountIndex];
-    }
+    //     return this.activeWallet.accounts[activeWallet.activeAccountIndex];
+    // }
 
     async save(): Promise<void> {
         // Immediately return a promise and start asynchronous work

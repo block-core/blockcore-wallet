@@ -11,6 +11,7 @@ import { ServiceEndpoint } from 'did-resolver';
 import { keyUtils, Secp256k1KeyPair } from '@transmute/did-key-secp256k1';
 import { BlockcoreIdentity } from '@blockcore/identity';
 import { Issuer } from 'did-jwt-vc';
+import { AppManager } from './application-manager';
 const axios = require('axios');
 
 /** Responsible for syncing data between the extension and vault instances. */
@@ -24,13 +25,8 @@ export class DataSyncService {
     // refactored to perform similar logic. If the user edits an identity twice while being offline 
     // then we must be sure of syncing the first edit first in a queue when user come back online.
 
-    configure(
-        communication: CommunicationBackgroundService,
-        state: AppState,
-        crypto: CryptoUtility) {
-        this.communication = communication;
-        this.state = state;
-        this.crypto = crypto;
+    constructor(private manager: AppManager) {
+
     }
 
     /** Will attempt to create or update an vault. */

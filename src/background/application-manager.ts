@@ -1,3 +1,4 @@
+import { Action, Settings, State } from "../app/interfaces";
 import { environment } from "../environments/environment";
 import { AppState } from "./application-state";
 import { CommunicationBackgroundService } from "./communication";
@@ -9,30 +10,28 @@ import { WalletManager } from "./wallet-manager";
 
 /** Main logic that is responsible for orchestration of the background service. */
 export class AppManager {
-    constructor() {
-
-    }
-
-    private state!: AppState;
+    state!: AppState;
     walletManager!: WalletManager;
+    crypto!: CryptoUtility;
+    sync!: DataSyncService;
+    communication!: CommunicationBackgroundService;
+    private orchestrator!: OrchestratorBackgroundService;
 
     /** Initializes the app, loads the AppState and other operations. */
-    configure(): [AppState, CryptoUtility, CommunicationBackgroundService, OrchestratorBackgroundService, DataSyncService] {
+    // configure(): [AppState, CryptoUtility, CommunicationBackgroundService, OrchestratorBackgroundService, DataSyncService] {
+    configure() {
         debugger;
-        const networkLoader = new NetworkLoader();
-        const utility = new CryptoUtility();
-        this.state = new AppState();
-        const communication = new CommunicationBackgroundService();
-        const orchestrator = new OrchestratorBackgroundService();
-        const sync = new DataSyncService();
 
+        this.crypto = new CryptoUtility();
+        this.state = new AppState();
+        this.communication = new CommunicationBackgroundService();
+        this.sync = new DataSyncService(this);
+        this.orchestrator = new OrchestratorBackgroundService(this);
+
+        const networkLoader = new NetworkLoader();
         this.state.networks = networkLoader.getNetworks(environment.networks);
 
-        // Hook up dependencies, there are no IoC in our setup for background process:
-        sync.configure(communication, this.state, utility);
-        orchestrator.configure(communication, this.state, utility, sync);
-
-        return [this.state, utility, communication, orchestrator, sync];
+        // return [this.state, utility, communication, orchestrator, sync];
     }
 
     initialize = async () => {
@@ -45,8 +44,12 @@ export class AppManager {
         await this.loadState();
 
         // Create the wallet manager, which act as root container for all the wallets and accounts.
-        this.walletManager = new WalletManager(this.state.persisted.wallets);
-        
+        this.walletManager = new WalletManager(this);
+
+        this.walletManager.resetTimer();
+
+        // After initialize is finished, broadcast the state to the UI.
+        this.broadcastState();
     };
 
     loadState = async () => {
@@ -78,4 +81,44 @@ export class AppManager {
         console.log('Load State Completed!');
         console.log(this.state);
     };
+
+    broadcastState() {
+        const currentState: State = {
+            action: this.state.action,
+            persisted: this.state.persisted,
+            unlocked: this.state.unlocked,
+            store: this.state.store
+        }
+
+        // Send new state to UI instances.
+        this.communication.sendToAll('state', currentState);
+    }
+
+    async setAction(data: Action) {
+        if (typeof data.action !== 'string') {
+            console.error('Only objects that are string are allowed as actions.');
+            return;
+        }
+
+        if (data.document != null && typeof data.document !== 'string') {
+            console.error('Only objects that are string are allowed as actions.');
+            return;
+        }
+
+        this.state.action = data;
+
+        await this.state.saveAction();
+
+        this.broadcastState();
+
+        // Raise this after state has been updated, so orchestrator in UI can redirect correctly.
+        this.communication.sendToAll('action-changed', this.state.action);
+    }
+
+    async setSettings(data: Settings)
+    {
+        this.state.persisted.settings = data;
+        await this.state.save();
+        this.broadcastState();
+    }
 }
