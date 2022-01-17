@@ -6,7 +6,6 @@ export class BTC44 implements Network {
     network: number = 0;
     purpose: number = 44;
     derivationPath: string = `m/44'/0'/0'`;
-    logo: '';
 }
 
 export class BTC49 implements Network {
@@ -15,7 +14,6 @@ export class BTC49 implements Network {
     network: number = 0;
     purpose: number = 49;
     derivationPath: string = `m/49'/0'/0'`;
-    logo: '';
 }
 
 export class BTC84 implements Network {
@@ -24,5 +22,4 @@ export class BTC84 implements Network {
     network: number = 0;
     purpose: number = 84;
     derivationPath: string = `m/84'/0'/0'`;
-    logo: '';
 }

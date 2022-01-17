@@ -6,63 +6,71 @@ import { CryptoUtility } from './background/crypto-utility';
 import { Persisted, State, Wallet } from './app/interfaces';
 import { OrchestratorBackgroundService } from './background/orchestrator';
 import { DataSyncService } from './background/data-sync';
+import { AppManager } from './background/application-manager';
 
-const utility = new CryptoUtility();
-const state = new AppState();
-const communication = new CommunicationBackgroundService();
-const orchestrator = new OrchestratorBackgroundService();
-const sync = new DataSyncService();
+const manager = new AppManager();
+let [state, utility, communication, orchestrator, sync] = manager.initialize();
+
+//const utility = new CryptoUtility();
+//const state = new AppState();
+// const communication = new CommunicationBackgroundService();
+// const orchestrator = new OrchestratorBackgroundService();
+// const sync = new DataSyncService();
 
 const initialize = async () => {
-  await loadState();
-
-  // Hook up the background orchestrator:
-  sync.configure(communication, state, utility);
-  orchestrator.configure(communication, state, utility, sync);
-};
-
-const loadState = async () => {
   // CLEAR DATA FOR DEBUG PURPOSES:
   // chrome.storage.local.set({ 'data': null }, () => {
   // });
 
-  let { data, ui, action, store } = await state.load();
+  debugger;
 
-  console.log('STORE', store);
+  // VERIFY:
+  return manager.loadState();
 
-  // Only set if data is available, will use default if not.
-  if (data) {
-    state.persisted = data;
-  }
+  console.log('initialize is done in the background...');
+  // VERIFY:
+  //return await manager.loadState();
+  // VERIFY:
+  //await manager.loadState();
 
-  if (store) {
-    state.store = store;
-  }
+  //let { data, ui, action, store } = await manager.loadState();
 
-  state.initialized = true;
+  // console.log('STORE', store);
 
-  state.ui = ui ?? {};
+  // // Only set if data is available, will use default if not.
+  // if (data) {
+  //   state.persisted = data;
+  // }
 
-  if (action) {
-    state.action = action;
-  }
+  // if (store) {
+  //   state.store = store;
+  // }
 
-  // communication.sendToAll('ui-state', state.ui);
+  // state.initialized = true;
 
-  console.log('Load State Completed!');
-  console.log(state);
+  // state.ui = ui ?? {};
+
+  // if (action) {
+  //   state.action = action;
+  // }
+
+  // // communication.sendToAll('ui-state', state.ui);
+
+  // console.log('Load State Completed!');
+  // console.log(state);
 };
 
 // Run when the browser has been fully exited and opened again.
 chrome.runtime.onStartup.addListener(async () => {
+  debugger;
   console.log('onStartup');
   await initialize();
 
   console.log('Continue processing...');
 });
 
-
 chrome.runtime.onInstalled.addListener(async ({ reason }) => {
+  debugger;
   console.log('onInstalled');
   await initialize();
 
@@ -111,12 +119,7 @@ chrome.runtime.onInstalled.addListener(async ({ reason }) => {
 //   });
 
 //   port.onMessage.addListener(function (msg) {
-
-
-
 //     communication.process(msg);
-
-
 //     console.log('UI sent us: ', msg);
 
 //     if (msg.method === 'unlock') {
@@ -179,7 +182,6 @@ chrome.runtime.onSuspend.addListener(function () {
 // });
 
 chrome.runtime.onMessage.addListener(async (request: any, sender: any, sendResponse: any) => {
-
   console.log('onMessage (BACKGROUND): ' + JSON.stringify(request));
 
   if (request.action == 'state') {

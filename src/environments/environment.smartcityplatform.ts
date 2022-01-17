@@ -6,5 +6,6 @@ export const environment = {
   sourceUrl: 'https://github.com/CityChainFoundation/smart-city-platform',
   instance: 'smartcityplatform',
   instanceName: 'City Chain',
-  instanceUrl: 'https://www.city-chain.org/'
+  instanceUrl: 'https://www.city-chain.org/',
+  networks: ['CITY', 'IDENTITY', 'NOSTR']
 };

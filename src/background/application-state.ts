@@ -1,7 +1,10 @@
 import { Action, Persisted, Wallet, Store, Settings } from "src/app/interfaces";
 import { AUTO_TIMEOUT, MINUTE, VAULT_URL } from "src/app/shared/constants";
+import { Network } from "./networks";
 
 export class AppState {
+
+    networks: Network[] = [];
 
     persisted: Persisted = {
         settings: {

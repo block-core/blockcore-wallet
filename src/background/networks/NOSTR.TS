@@ -6,5 +6,4 @@ export class NOSTR implements Network {
     network: number = 1237;
     purpose: number = 44;
     derivationPath: string = `m/44'/1237'/0'`;
-    logo: '';
 }

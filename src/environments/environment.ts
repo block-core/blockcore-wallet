@@ -10,7 +10,8 @@ export const environment = {
   sourceUrl: 'https://github.com/block-core/blockcore-extension',
   instance: 'blockcore',
   instanceName: 'Blockcore',
-  instanceUrl: 'https://blockcore.net/'
+  instanceUrl: 'https://blockcore.net/',
+  networks: [] // Returns all
 };
 
 export enum Environments {

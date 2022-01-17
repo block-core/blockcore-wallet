@@ -6,5 +6,4 @@ export class IDENTITY implements Network {
     network: number = 616;
     purpose: number = 302;
     derivationPath: string = `m/302'/616'/0'`;
-    logo: '';
 }

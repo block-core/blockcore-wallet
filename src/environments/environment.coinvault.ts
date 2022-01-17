@@ -6,5 +6,6 @@ export const environment = {
   sourceUrl: 'https://github.com/CoinVault/coinvault-extension',
   instance: 'coinvault',
   instanceName: 'CoinVault',
-  instanceUrl: 'https://www.coinvault.io'
+  instanceUrl: 'https://www.coinvault.io',
+  networks: ['STRAX', 'CRS']
 };

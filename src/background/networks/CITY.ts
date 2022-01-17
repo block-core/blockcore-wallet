@@ -6,5 +6,4 @@ export class CITY implements Network {
     network: number = 1926;
     purpose: number = 44;
     derivationPath: string = `m/44'/1926'/0'`;
-    logo: '';
 }

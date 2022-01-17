@@ -6,5 +6,4 @@ export class STRAX implements Network {
     network: number = 105105;
     purpose: number = 44;
     derivationPath: string = `m/44'/105105'/0'`;
-    logo: '';
 }
