@@ -3,11 +3,11 @@ import { HttpClient } from '@angular/common/http';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UIState } from '../../services/ui-state.service';
 import { CryptoService } from '../../services/crypto.service';
-import { Account, Vault } from 'src/app/interfaces';
+import { Account, Vault } from '../../interfaces';
 import { Router } from '@angular/router';
-import { OrchestratorService } from 'src/app/services/orchestrator.service';
-import { CommunicationService } from 'src/app/services/communication.service';
-import { IconService } from 'src/app/services/icon.service';
+import { OrchestratorService } from '../../services/orchestrator.service';
+import { CommunicationService } from '../../services/communication.service';
+import { IconService } from '../../services/icon.service';
 
 @Component({
     selector: 'app-vault-create',

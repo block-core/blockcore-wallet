@@ -22,6 +22,7 @@ interface IStructures {
     [key: string]: INumbers | IBooleans | IValues;
 }
 
+/** The user account, most of this data should be considered immutable. The index, etc. should never change after creation. See "AccountState" to get balance, transaction history, addresses and more. */
 interface Account {
     name: string | undefined;
     network: number;
@@ -30,10 +31,82 @@ interface Account {
     derivationPath: string;
     icon?: string;
     identifier?: string;
-    balance?: number;
 
     /** Extended Public Key for this account. */
     xpub?: string;
+    state?: AccountState;
+}
+
+interface AccountState {
+    /** The latest known balance of this account */
+    balance: BigInt;
+
+    /** The time when this account data was updated */
+    retrieved: Date;
+
+    addresses: Address[];
+}
+
+interface Address {
+    address: string;
+    balance: BigInt;
+    totalReceived: BigInt;
+    totalStake: BigInt;
+    totalMine: BigInt;
+    totalSent: BigInt;
+    totalReceivedCount: BigInt;
+    totalSentCount: BigInt;
+    totalStakeCount: BigInt;
+    totalMineCount: BigInt;
+    pendingSent: BigInt;
+    pendingReceived: BigInt;
+
+    transactions: Transaction[];
+}
+
+interface Transaction {
+    entryType: ['send', 'receive'];
+    transactionHash: string;
+    value: BigInt;
+    blockIndex: BigInt;
+    confirmations: BigInt;
+    details: TransactionInfo;
+}
+
+interface TransactionInfo {
+    symbol: string;
+    blockHash: string;
+    blockIndex: BigInt;
+    timestamp: BigInt;
+    transactionId: string;
+    confirmations: BigInt;
+    isCoinbase: boolean;
+    isCoinstake: boolean;
+    lockTime: string;
+    rbf: boolean;
+    version: BigInt;
+    inputs: TransactionInput[];
+    outputs: TransactionOutput[];
+}
+
+interface TransactionInput {
+    inputIndex: BigInt;
+    inputAddress: string;
+    inputAmount: BigInt;
+    inputTransactionId: string;
+    scriptSig: string;
+    scriptSigAsm: string;
+    witScript: string;
+    sequenceLock: string;
+}
+
+interface TransactionOutput {
+    address: string;
+    balance: BigInt;
+    index: BigInt;
+    outputType: string;
+    scriptPubKeyAsm: string;
+    scriptPubKey: string;
 }
 
 interface Wallet {
@@ -107,8 +180,7 @@ interface Vault {
 }
 
 /** EncryptedDocument from the Confidential Storage specification. */
-interface VaultEntryEncrypted
-{
+interface VaultEntryEncrypted {
     id: string;
     sequence: number;
     jwe: any;
