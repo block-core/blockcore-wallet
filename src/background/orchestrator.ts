@@ -531,6 +531,7 @@ export class OrchestratorBackgroundService {
             }
         });
 
+        // TODO: Expand the address generation APIs to keep track of indexes for both change and non-change.
         this.manager.communication.listen('address-generate', async (port: any, data: { index: number }) => {
             if (!this.manager.walletManager.activeWallet) {
                 return;
@@ -651,168 +652,168 @@ export class OrchestratorBackgroundService {
             //     changeAddress.push({ change: true, index: i, address: this.crypto.getAddressByNetworkp2pkh(addressNodeChangeIndex, network) });
             // }
 
-            
+
 
         });
 
-        this.communication.listen('nostr-generate', async (port: any, data: { index: number }) => {
-            if (!this.state.activeWallet) {
-                return;
-            }
+        // TODO: REFACTOR THIS INTO THE NETWORK DEFINITION OR WALLET MANAGER.
+        // this.manager.communication.listen('nostr-generate', async (port: any, data: { index: number }) => {
+        //     if (!this.state.activeWallet) {
+        //         return;
+        //     }
 
-            var account = this.state.activeAccount;
-            var wallet = this.state.activeWallet;
+        //     var account = this.state.activeAccount;
+        //     var wallet = this.state.activeWallet;
 
-            if (!account || !wallet) {
-                return;
-            }
+        //     if (!account || !wallet) {
+        //         return;
+        //     }
 
-            let password = this.state.passwords.get(this.state.activeWallet.id);
+        //     let password = this.state.passwords.get(this.state.activeWallet.id);
 
-            if (!password) {
-                return;
-            }
+        //     if (!password) {
+        //         return;
+        //     }
 
-            let unlockedMnemonic = null;
-            unlockedMnemonic = await this.crypto.decryptData(wallet.mnemonic, password);
+        //     let unlockedMnemonic = null;
+        //     unlockedMnemonic = await this.crypto.decryptData(wallet.mnemonic, password);
 
-            let network: any;
+        //     let network: any;
 
-            console.log(account);
-            console.log(account.network);
+        //     console.log(account);
+        //     console.log(account.network);
 
-            if (account.network === 105105) {
-                network = {
-                    messagePrefix: '\x18Bitcoin Signed Message:\n',
-                    bech32: 'strax',
-                    bip32: {
-                        public: 0x0488b21e,
-                        private: 0x0488ade4,
-                    },
-                    pubKeyHash: 75,
-                    scriptHash: 140,
-                    wif: 0x08
-                }
-            }
-            else if (account.network === 1926) {
-                network = {
-                    messagePrefix: '\x18CityCoin Signed Message:\n', // TODO: City Chain should migrate to use same prefix as Bitcoin.
-                    bech32: 'strax',
-                    bip32: {
-                        public: 0x0488b21e,
-                        private: 0x0488ade4,
-                    },
-                    pubKeyHash: 0x1c,
-                    scriptHash: 0x58,
-                    wif: 0x08
-                }
-            } else {
-                network = {
-                    messagePrefix: '\x18Bitcoin Signed Message:\n',
-                    bech32: 'id',
-                    bip32: {
-                        public: 0x0488b21e,
-                        private: 0x0488ade4,
-                    },
-                    pubKeyHash: 55,
-                    scriptHash: 117,
-                    wif: 0x08
-                }
-            }
+        //     if (account.network === 105105) {
+        //         network = {
+        //             messagePrefix: '\x18Bitcoin Signed Message:\n',
+        //             bech32: 'strax',
+        //             bip32: {
+        //                 public: 0x0488b21e,
+        //                 private: 0x0488ade4,
+        //             },
+        //             pubKeyHash: 75,
+        //             scriptHash: 140,
+        //             wif: 0x08
+        //         }
+        //     }
+        //     else if (account.network === 1926) {
+        //         network = {
+        //             messagePrefix: '\x18CityCoin Signed Message:\n', // TODO: City Chain should migrate to use same prefix as Bitcoin.
+        //             bech32: 'strax',
+        //             bip32: {
+        //                 public: 0x0488b21e,
+        //                 private: 0x0488ade4,
+        //             },
+        //             pubKeyHash: 0x1c,
+        //             scriptHash: 0x58,
+        //             wif: 0x08
+        //         }
+        //     } else {
+        //         network = {
+        //             messagePrefix: '\x18Bitcoin Signed Message:\n',
+        //             bech32: 'id',
+        //             bip32: {
+        //                 public: 0x0488b21e,
+        //                 private: 0x0488ade4,
+        //             },
+        //             pubKeyHash: 55,
+        //             scriptHash: 117,
+        //             wif: 0x08
+        //         }
+        //     }
 
-            debugger;
+        //     debugger;
 
-            // TODO: Obviously we should not repeat this process from recovery phrase, but this should 
-            // be applied during wallet unlock and state of the node should be kept in-memory. This is just
-            // done like this for quick prototyping.
-            var masterSeed = await bip39.mnemonicToSeed(unlockedMnemonic, '');
+        //     // TODO: Obviously we should not repeat this process from recovery phrase, but this should 
+        //     // be applied during wallet unlock and state of the node should be kept in-memory. This is just
+        //     // done like this for quick prototyping.
+        //     var masterSeed = await bip39.mnemonicToSeed(unlockedMnemonic, '');
 
-            const seed = seedFromWords(unlockedMnemonic);
-            const priv = privateKeyFromSeed(seed);
-            const pub = getPublicKey(priv);
-            const pubHex = Buffer.from(pub).toString('hex');
+        //     const seed = seedFromWords(unlockedMnemonic);
+        //     const priv = privateKeyFromSeed(seed);
+        //     const pub = getPublicKey(priv);
+        //     const pubHex = Buffer.from(pub).toString('hex');
 
-            // Nostr uses Bitcoin network definition, no need to supply Network ("Version" for micro-bip32).
-            const masterNode = bip32.fromSeed(masterSeed);
-            const root = HDKey.fromMasterSeed(Buffer.from(masterSeed));
+        //     // Nostr uses Bitcoin network definition, no need to supply Network ("Version" for micro-bip32).
+        //     const masterNode = bip32.fromSeed(masterSeed);
+        //     const root = HDKey.fromMasterSeed(Buffer.from(masterSeed));
 
-            if (!account.derivationPath) {
-                account.derivationPath = `m/44'/1237'/0'`;
-            }
+        //     if (!account.derivationPath) {
+        //         account.derivationPath = `m/44'/1237'/0'`;
+        //     }
 
-            // let root = HDKey.fromMasterSeed(Buffer.from(seed, 'hex'))
-            // return Buffer.from(root.derive(`m/44'/1237'/0'/0/0`).privateKey).toString(
-            //   'hex'
-            // )
+        //     // let root = HDKey.fromMasterSeed(Buffer.from(seed, 'hex'))
+        //     // return Buffer.from(root.derive(`m/44'/1237'/0'/0/0`).privateKey).toString(
+        //     //   'hex'
+        //     // )
 
-            // Get the hardened purpose and account node.
-            const accountNode = masterNode.derivePath(account.derivationPath); // IDENTITY: m/302'/616'
-            const accountNode2 = root.derive(account.derivationPath);
-            const accountNode3 = root.derive(`m/44'/1237'/0'/0/0`);
+        //     // Get the hardened purpose and account node.
+        //     const accountNode = masterNode.derivePath(account.derivationPath); // IDENTITY: m/302'/616'
+        //     const accountNode2 = root.derive(account.derivationPath);
+        //     const accountNode3 = root.derive(`m/44'/1237'/0'/0/0`);
 
 
-            const identifierKeyPair = accountNode.derive(0).derive(0);
-            const identifierKeyPair2 = accountNode2.deriveChild(0).deriveChild(0);
-            const identifierKeyPair3 = accountNode3;
+        //     const identifierKeyPair = accountNode.derive(0).derive(0);
+        //     const identifierKeyPair2 = accountNode2.deriveChild(0).deriveChild(0);
+        //     const identifierKeyPair3 = accountNode3;
 
-            const address = this.crypto.getAddressByNetworkp2pkh(identifierKeyPair, network);
-            const address2 = this.crypto.getAddressByNetworkp2pkhFromBuffer(Buffer.from(Array.from(identifierKeyPair2.publicKey!)), network);
+        //     const address = this.crypto.getAddressByNetworkp2pkh(identifierKeyPair, network);
+        //     const address2 = this.crypto.getAddressByNetworkp2pkhFromBuffer(Buffer.from(Array.from(identifierKeyPair2.publicKey!)), network);
 
-            const idArray = secp256k1.schnorr.getPublicKey(identifierKeyPair.privateKey!.toString('hex'));
-            const id = Buffer.from(idArray).toString('hex');
+        //     const idArray = secp256k1.schnorr.getPublicKey(identifierKeyPair.privateKey!.toString('hex'));
+        //     const id = Buffer.from(idArray).toString('hex');
 
-            // Uncaught (in promise) TypeError: The first argument must be one of type string, Buffer, ArrayBuffer, Array, or Array-like Object. Received type object
-            const id2Array = secp256k1.schnorr.getPublicKey(Buffer.from(identifierKeyPair2.privateKey!).toString('hex'));
-            const id2 = Buffer.from(id2Array).toString('hex');
+        //     // Uncaught (in promise) TypeError: The first argument must be one of type string, Buffer, ArrayBuffer, Array, or Array-like Object. Received type object
+        //     const id2Array = secp256k1.schnorr.getPublicKey(Buffer.from(identifierKeyPair2.privateKey!).toString('hex'));
+        //     const id2 = Buffer.from(id2Array).toString('hex');
 
-            const id3hex = Buffer.from(identifierKeyPair3.privateKey!).toString('hex');
-            const id3Array = secp256k1.schnorr.getPublicKey(id3hex);
-            const id3 = Buffer.from(id3Array).toString('hex');
+        //     const id3hex = Buffer.from(identifierKeyPair3.privateKey!).toString('hex');
+        //     const id3Array = secp256k1.schnorr.getPublicKey(id3hex);
+        //     const id3 = Buffer.from(id3Array).toString('hex');
 
-            if (address != address2) {
-                throw Error('oh fuck');
-            }
+        //     if (address != address2) {
+        //         throw Error('oh fuck');
+        //     }
 
-            if (id != id2) {
-                throw Error('oh fuck');
-            }
+        //     if (id != id2) {
+        //         throw Error('oh fuck');
+        //     }
 
-            // var keyPair = await this.crypto.getKeyPairFromNode(accountNode);
-            // var keyPair2 = await this.crypto.getKeyPairFromNode(accountNode);
+        //     // var keyPair = await this.crypto.getKeyPairFromNode(accountNode);
+        //     // var keyPair2 = await this.crypto.getKeyPairFromNode(accountNode);
 
-            // // TODO: use this in the account manager.
-            // const xpub = accountNode.neutered().toBase58();
+        //     // // TODO: use this in the account manager.
+        //     // const xpub = accountNode.neutered().toBase58();
 
-            // // console.log(wallet.mnemonic);
-            // // console.log(unlockedMnemonic);
-            // // console.log(accountNode.neutered().toBase58());
+        //     // // console.log(wallet.mnemonic);
+        //     // // console.log(unlockedMnemonic);
+        //     // // console.log(accountNode.neutered().toBase58());
 
-            // // const addressNode = masterNode.deriveHardened(data.index);
-            // const addressNodeReceive = accountNode.derive(0);
-            // const addressNodeReceiveIndex0 = addressNodeReceive.derive(0);
-            // const addressNodeChange = accountNode.derive(1);
-            // const addressNodeChangeIndex0 = addressNodeChange.derive(0);
+        //     // // const addressNode = masterNode.deriveHardened(data.index);
+        //     // const addressNodeReceive = accountNode.derive(0);
+        //     // const addressNodeReceiveIndex0 = addressNodeReceive.derive(0);
+        //     // const addressNodeChange = accountNode.derive(1);
+        //     // const addressNodeChangeIndex0 = addressNodeChange.derive(0);
 
-            // const address0 = this.crypto.getAddressByNetworkp2pkh(addressNodeReceiveIndex0, network);
+        //     // const address0 = this.crypto.getAddressByNetworkp2pkh(addressNodeReceiveIndex0, network);
 
-            // const receiveAddress = [];
-            // const changeAddress = [];
+        //     // const receiveAddress = [];
+        //     // const changeAddress = [];
 
-            // // TODO: This is just a basic prototype to return many receive and change address to the UI:
-            // for (let i = 0; i < 2; i++) {
+        //     // // TODO: This is just a basic prototype to return many receive and change address to the UI:
+        //     // for (let i = 0; i < 2; i++) {
 
-            //     const addressNodeReceive = accountNode.derive(0);
-            //     const addressNodeReceiveIndex = addressNodeReceive.derive(i);
-            //     const addressNodeChange = accountNode.derive(1);
-            //     const addressNodeChangeIndex = addressNodeChange.derive(i);
+        //     //     const addressNodeReceive = accountNode.derive(0);
+        //     //     const addressNodeReceiveIndex = addressNodeReceive.derive(i);
+        //     //     const addressNodeChange = accountNode.derive(1);
+        //     //     const addressNodeChangeIndex = addressNodeChange.derive(i);
 
-            //     receiveAddress.push({ change: false, index: i, address: this.crypto.getAddressByNetworkp2pkh(addressNodeReceiveIndex, network) });
-            //     changeAddress.push({ change: true, index: i, address: this.crypto.getAddressByNetworkp2pkh(addressNodeChangeIndex, network) });
-            // }
+        //     //     receiveAddress.push({ change: false, index: i, address: this.crypto.getAddressByNetworkp2pkh(addressNodeReceiveIndex, network) });
+        //     //     changeAddress.push({ change: true, index: i, address: this.crypto.getAddressByNetworkp2pkh(addressNodeChangeIndex, network) });
+        //     // }
 
-            this.communication.send(port, 'nostr-generated', { id: id })
-
-        });
+        //     this.communication.send(port, 'nostr-generated', { id: id })
+        // });
 
         this.manager.communication.listen('account-create', async (port: any, data: Account) => {
             if (!this.manager.walletManager.activeWallet) {
@@ -829,159 +830,126 @@ export class OrchestratorBackgroundService {
             // this.manager.communication.sendToAll('identity-created');
         });
 
-        this.communication.listen('identity-update', async (port: any, data: Identity) => {
+        // TODO: REFACTOR IDENTITY IN THE FUTURE!
+        // this.manager.communication.listen('identity-update', async (port: any, data: Identity) => {
 
-            console.log('CHECK THIS 0:');
-            console.log(JSON.stringify(data));
+        //     console.log('CHECK THIS 0:');
+        //     console.log(JSON.stringify(data));
 
-            await this.updateIdentityDocument(data);
+        //     await this.updateIdentityDocument(data);
 
-            await this.state.saveStore(this.state.store);
+        //     await this.state.saveStore(this.state.store);
 
-            console.log('CHECK THIS 2:');
-            console.log(JSON.stringify(this.state.store.identities));
+        //     console.log('CHECK THIS 2:');
+        //     console.log(JSON.stringify(this.state.store.identities));
 
-            await this.state.save();
+        //     await this.state.save();
 
-            this.refreshState();
+        //     this.refreshState();
 
-            this.communication.sendToAll('identity-updated', data);
+        //     this.communication.sendToAll('identity-updated', data);
 
-            // if (!this.state.activeWallet) {
-            //     return;
-            // }
+        //     // if (!this.state.activeWallet) {
+        //     //     return;
+        //     // }
 
-            // // Add the new account.
-            // this.state.activeWallet.accounts.push(data);
+        //     // // Add the new account.
+        //     // this.state.activeWallet.accounts.push(data);
 
-            // this.state.activeWallet.activeAccountIndex = (this.state.activeWallet.accounts.length - 1);
+        //     // this.state.activeWallet.activeAccountIndex = (this.state.activeWallet.accounts.length - 1);
 
-            // if (this.state.activeAccount?.network === NETWORK_IDENTITY) {
-            //     // Generate DID Document for the identity and persist it.
-            //     this.createIdentityDocument();
+        //     // if (this.state.activeAccount?.network === NETWORK_IDENTITY) {
+        //     //     // Generate DID Document for the identity and persist it.
+        //     //     this.createIdentityDocument();
 
-            //     // TODO: Perform blockchain / vault data query and recovery.
-            //     // If there are transactions, DID Documents, NFTs or anythign else, we should launch the
-            //     // query probe here.
-
-
-            // }
-        });
-
-        this.communication.listen('identity-publish', async (port: any, data: Identity) => {
-            await this.sync.saveIdentity(data);
-
-            // await this.updateIdentityDocument(data);
-
-            // Perhaps set this when successful callback from Vault?
-            data.published = true;
-
-            var existingIndex = this.state.store.identities.findIndex(i => i.id == data.id);
-            this.state.store.identities[existingIndex] = data;
-
-            await this.state.saveStore(this.state.store);
-
-            this.refreshState();
-
-            this.communication.sendToAll('identity-published', data);
+        //     //     // TODO: Perform blockchain / vault data query and recovery.
+        //     //     // If there are transactions, DID Documents, NFTs or anythign else, we should launch the
+        //     //     // query probe here.
 
 
-            // Begin verification
+        //     // }
+        // });
+
+        // this.communication.listen('identity-publish', async (port: any, data: Identity) => {
+        //     await this.sync.saveIdentity(data);
+
+        //     // await this.updateIdentityDocument(data);
+
+        //     // Perhaps set this when successful callback from Vault?
+        //     data.published = true;
+
+        //     var existingIndex = this.state.store.identities.findIndex(i => i.id == data.id);
+        //     this.state.store.identities[existingIndex] = data;
+
+        //     await this.state.saveStore(this.state.store);
+
+        //     this.refreshState();
+
+        //     this.communication.sendToAll('identity-published', data);
 
 
-        });
+        //     // Begin verification
 
-        this.communication.listen('vault-publish', async (port: any, data: Vault) => {
-            await this.sync.saveVault(data);
 
-            // await this.updateIdentityDocument(data);
+        // });
 
-            // Perhaps set this when successful callback from Vault?
-            data.published = true;
+        // this.communication.listen('vault-publish', async (port: any, data: Vault) => {
+        //     await this.sync.saveVault(data);
 
-            // var existingIndex = this.state.store.identities.findIndex(i => i.id == data.id);
-            // this.state.store.identities[existingIndex] = data;
+        //     // await this.updateIdentityDocument(data);
 
-            // await this.state.saveStore(this.state.store);
+        //     // Perhaps set this when successful callback from Vault?
+        //     data.published = true;
 
-            // this.refreshState();
+        //     // var existingIndex = this.state.store.identities.findIndex(i => i.id == data.id);
+        //     // this.state.store.identities[existingIndex] = data;
 
-            this.communication.sendToAll('vault-published', data);
+        //     // await this.state.saveStore(this.state.store);
 
-            // Begin verification
-        });
+        //     // this.refreshState();
 
-        this.communication.listen('set-active-account', async (port: any, data: { index: number }) => {
-            if (!this.state.activeWallet) {
+        //     this.communication.sendToAll('vault-published', data);
+
+        //     // Begin verification
+        // });
+
+        this.manager.communication.listen('set-active-account', async (port: any, data: { index: number }) => {
+            if (!this.manager.walletManager.activeWallet) {
                 console.log('No active wallet on set-active-account.');
                 return;
             }
 
-            this.state.activeWallet.activeAccountIndex = data.index;
+            this.manager.walletManager.activeWallet.activeAccountIndex = data.index;
 
-            await this.state.save();
+            await this.manager.state.save();
 
             this.refreshState();
 
-            this.communication.sendToAll('active-account-changed', { index: data.index });
+            this.manager.communication.sendToAll('active-account-changed', { index: data.index });
         });
 
-        this.communication.listen('wallet-create', async (port: any, data: Wallet) => {
+        this.manager.communication.listen('wallet-create', async (port: any, data: Wallet) => {
             // Add the new wallet.
             // TODO: Do we first want to validate if the wallet is not already added with same ID?
             // If so... we must ensure that mnemonics are not different, or a call might wipe existing wallet.
-            this.state.persisted.wallets.push(data);
-
-            // Change the active wallet to the new one.
-            this.state.persisted.activeWalletId = data.id;
-
-            if (this.state.activeAccount?.network === NETWORK_IDENTITY) {
-                // Generate DID Document for the identity and persist it.
-                this.createIdentityDocument();
-                await this.state.saveStore(this.state.store);
-            }
-
-            // Persist the state.
-            await this.state.save();
+            this.manager.walletManager.addWallet(data);
 
             this.refreshState();
 
+            // TODO: REFACTOR IDENTITY CREATION IN THE FUTURE.
+            // if (this.state.activeAccount?.network === NETWORK_IDENTITY) {
+            //     // Generate DID Document for the identity and persist it.
+            //     this.createIdentityDocument();
+            //     await this.state.saveStore(this.state.store);
+            // }
+
             // Make sure we inform all instances when a wallet is deleted.
-            this.communication.sendToAll('wallet-created');
+            this.manager.communication.sendToAll('wallet-created');
 
             // this.communication.sendToAll('account-created');
 
-            this.communication.sendToAll('identity-created');
-
-            // TODO: Perform blockchain / vault data query and recovery.
-            // If there are transactions, DID Documents, NFTs or anythign else, we should launch the
-            // query probe here.
-        });
-
-        this.communication.listen('wallet-delete', async (port: any, data: any) => {
-            const walletId = data.id;
-
-            // Remove the wallet.
-            this.state.persisted.wallets.splice(this.state.persisted.wallets.findIndex(w => w.id == walletId), 1);
-
-            // Remove the password, if wallet was unlocked.
-            this.state.passwords.delete(walletId);
-
-            if (!this.state.hasWallets) {
-                this.state.persisted.activeWalletId = null;
-            } else {
-                // Select the first key as active wallet.
-                this.state.persisted.activeWalletId = this.state.persisted.wallets[0].id;
-                // const keys = Array.from(this.state.persisted.wallets.keys());
-                // this.state.persisted.activeWalletId = keys[0];
-            }
-
-            await this.state.save();
-
-            // Make sure we inform all instances when a wallet is deleted.
-            this.communication.sendToAll('wallet-deleted');
-
-            this.refreshState();
+            // TODO: REFATOR IN FUTURE.
+            //this.communication.sendToAll('identity-created');
         });
     }
 }

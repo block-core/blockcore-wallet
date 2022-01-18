@@ -1,6 +1,6 @@
 import { HDKey } from "micro-bip32";
 import { generateMnemonic, mnemonicToSeedSync, validateMnemonic } from 'micro-bip39';
-import { Account, Settings } from "../app/interfaces";
+import { Account, Settings, Wallet } from "../app/interfaces";
 import { MINUTE } from "../app/shared/constants";
 import { AppManager } from "./application-manager";
 
@@ -84,7 +84,7 @@ export class WalletManager {
 
             // TODO: REMOVE!
             this.manager.state.passwords.set(id, password);
-            
+
             // Make sure we inform all instances when a wallet is unlocked.
             return true;
 
@@ -209,7 +209,7 @@ export class WalletManager {
         this.activeWallet.accounts.push(account);
 
         // Update the active account index to new account.
-        this.activeWallet.activeAccountIndex = (this.activeWallet.accounts.length - 1);
+        this.activeWallet.activeAccountIndex = (this.activeWallet?.accounts.length - 1) ?? 0;
 
         // const address = this.crypto.getAddressByNetworkp2pkh(identifierKeyPair, network);
         // const address2 = this.crypto.getAddressByNetworkp2pkhFromBuffer(Buffer.from(Array.from(identifierKeyPair2.publicKey!)), network);
@@ -243,7 +243,7 @@ export class WalletManager {
     //     account.xpub.
     // }
 
-    getReceiveAddress(account: Account) {
+    getChangeAddress(account: Account) {
         // Get the last index without know transactions:
         let address = account.state.addresses[account.state.addresses.length - 1];
 
@@ -253,5 +253,69 @@ export class WalletManager {
         }
 
         return address.address;
+    }
+
+    getChangeAddressByIndex(account: Account, index: number) {
+        // Get the last index without know transactions:
+        let address = account.state.addresses[account.state.addresses.length - 1];
+
+        if (address.totalReceivedCount > 0n) {
+            // Generate a new address.
+
+        }
+
+        return address.address;
+    }
+
+    async getReceiveAddress(account: Account) {
+        const index = account.state.receive.length - 1;
+
+        // Get the last index without know transactions:
+        let address = account.state.receive[index];
+
+        if (address.totalReceivedCount > 0n) {
+            // Generate a new address.
+            const addressIndex = index + 1;
+
+            const accountNode = HDKey.fromExtendedKey(account.xpub, this.manager.getNetwork(account.network).bip32);
+            const addressNode = accountNode.deriveChild(0).deriveChild(addressIndex);
+
+            const network = this.manager.getNetwork(account.network, account.purpose);
+            const address = this.manager.crypto.getAddressByNetwork(Buffer.from(addressNode.publicKey), network, account.purposeAddress);
+
+            account.state.receive.push({
+                index: addressIndex,
+                address: address
+            });
+
+            await this.manager.state.save();
+        }
+
+        return address;
+    }
+
+    getReceiveAddressByIndex(account: Account, index: number) {
+        if (index > (account.state?.receive.length - 1)) {
+            throw Error('The index is higher than any known address. Use getReceiveAddress to get next address.');
+        }
+
+        // Get the last index without know transactions:
+        return account.state.receive[index];
+    }
+
+    addWallet(wallet: Wallet) {
+        this.manager.state.persisted.wallets.push(wallet);
+
+        // Change the active wallet to the new one.
+        this.manager.state.persisted.activeWalletId = wallet.id;
+
+        if (wallet.restored) {
+            // Schedule background processing of the default accounts against the blockchain APIs.
+            // This should only register a flag and return from this method to allow UI to continue processing.
+
+            // TODO: Perform blockchain / vault data query and recovery.
+            // If there are transactions, DID Documents, NFTs or anythign else, we should launch the
+            // query probe here.
+        }
     }
 }

@@ -55,12 +55,14 @@ interface AccountState {
     /** The time when this account data was updated */
     retrieved: Date;
 
-    addresses: Address[];
+    receive:  Address[];
+
+    change: Address[];
 }
 
 interface Address {
     index: number;
-    change: boolean;
+    // change: boolean;
 
     address: string;
     balance: BigInt;
@@ -124,6 +126,8 @@ interface TransactionOutput {
 }
 
 interface Wallet {
+    /** Indicates if this wallet was restored or created as new. If the wallet is restored, we will automatically scan the blockchains to data when new accounts are added. */
+    restored: boolean;
     id: string;
     name: string;
     // network: string;

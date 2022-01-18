@@ -1,7 +1,7 @@
 /* Source based on example by Brady Joslin - https://github.com/bradyjoslin */
 import * as bip39 from 'bip39';
 import { Base64 } from 'js-base64';
-import { payments } from 'bitcoinjs-lib';
+import { address, payments } from 'bitcoinjs-lib';
 import { BlockcoreIdentity, Identity, BlockcoreIdentityTools } from '@blockcore/identity';
 import * as bs58 from 'bs58';
 import { keyUtils, Secp256k1KeyPair } from '@transmute/did-key-secp256k1';
@@ -29,6 +29,35 @@ export class CryptoUtility {
         return address;
     }
 
+    getAddressByNetwork(publicKey: Buffer, network: any, addressPurpose: number) {
+        if (addressPurpose == 44) {
+            const { address } = payments.p2pkh({
+                pubkey: publicKey,
+                network: network,
+            });
+
+            return address;
+        } else if (addressPurpose == 49) {
+            throw Error(`The address purpose ${addressPurpose} is currently not supported.`);
+
+            // const { address } = payments.p2wsh({
+            //     pubkey: publicKey,
+            //     network: network,
+            // });
+    
+            // return address;
+        } else if (addressPurpose == 84) {
+            const { address } = payments.p2wpkh({
+                pubkey: publicKey,
+                network: network,
+            });
+
+            return address;
+        }
+
+        throw Error(`The address purpose ${addressPurpose} is currently not supported.`);
+    }
+
     getAddressByNetworkp2wsh(node: any, network: any) {
         const { address } = payments.p2wsh({
             pubkey: node.publicKey,
@@ -38,7 +67,7 @@ export class CryptoUtility {
         return address;
     }
 
-    getAddressByNetworkp2pkh(node: any, network: any) {
+    FgetAddressByNetworkp2pkh(node: any, network: any) {
         const { address } = payments.p2pkh({
             pubkey: node.publicKey,
             network: network,
