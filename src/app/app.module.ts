@@ -59,6 +59,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { PasswordComponent } from './settings/password/password.component';
 import { RecoveryComponent } from './settings/recovery/recovery.component';
 import { NostrIdentityComponent } from './account/view/nostr/identity.component';
+import { AccountReceiveComponent } from './account/receive/receive.component';
 
 @NgModule({
   declarations: [
@@ -92,7 +93,8 @@ import { NostrIdentityComponent } from './account/view/nostr/identity.component'
     PrivacyComponent,
     LicensesComponent,
     ChangesComponent,
-    NostrIdentityComponent
+    NostrIdentityComponent,
+    AccountReceiveComponent
   ],
   imports: [
     BrowserModule,
@@ -130,4 +132,6 @@ import { NostrIdentityComponent } from './account/view/nostr/identity.component'
   providers: [],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+
+}

@@ -10,7 +10,7 @@
         </mat-card-content> -->
         <mat-divider inset></mat-divider>
         <mat-card-actions class="full-action-buttons">
-            <button class="half-width" mat-raised-button color="primary">Receive</button>
+            <button class="half-width" mat-raised-button [routerLink]="['/', 'account', 'receive', uiState.activeAccount.index]" color="primary">Receive</button>
             <button class="half-width" mat-raised-button>Send</button>
         </mat-card-actions>
         <mat-card-footer>
