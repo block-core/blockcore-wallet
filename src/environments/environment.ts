@@ -11,7 +11,7 @@ export const environment = {
   instance: 'blockcore',
   instanceName: 'Blockcore',
   instanceUrl: 'https://blockcore.net/',
-  networks: [] // Returns all
+  networks: [''] // Returns all
 };
 
 export enum Environments {

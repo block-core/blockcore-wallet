@@ -16,7 +16,7 @@ export class AppManager {
     crypto!: CryptoUtility;
     sync!: DataSyncService;
     communication!: CommunicationBackgroundService;
-    private orchestrator!: OrchestratorBackgroundService;
+    orchestrator!: OrchestratorBackgroundService;
 
     /** Initializes the app, loads the AppState and other operations. */
     // configure(): [AppState, CryptoUtility, CommunicationBackgroundService, OrchestratorBackgroundService, DataSyncService] {
@@ -42,9 +42,8 @@ export class AppManager {
     }
 
     /** Get the network definition based upon the id, e.g. BTC, STRAX, CRS, CITY. The purpose defaults to 44. */
-    getNetwork(id: number, purpose: number = 44) {
-        const network = this.state.networks.find(w => w.network == id && w.purpose == purpose);
-        return network;
+    getNetwork(network: number, purpose: number = 44) {
+        return this.state.networks.find(w => w.network == network && w.purpose == purpose);
     }
 
     initialize = async () => {

@@ -65,19 +65,19 @@ interface Address {
     // change: boolean;
 
     address: string;
-    balance: BigInt;
-    totalReceived: BigInt;
-    totalStake: BigInt;
-    totalMine: BigInt;
-    totalSent: BigInt;
-    totalReceivedCount: BigInt;
-    totalSentCount: BigInt;
-    totalStakeCount: BigInt;
-    totalMineCount: BigInt;
-    pendingSent: BigInt;
-    pendingReceived: BigInt;
+    balance?: BigInt;
+    totalReceived?: BigInt;
+    totalStake?: BigInt;
+    totalMine?: BigInt;
+    totalSent?: BigInt;
+    totalReceivedCount?: BigInt;
+    totalSentCount?: BigInt;
+    totalStakeCount?: BigInt;
+    totalMineCount?: BigInt;
+    pendingSent?: BigInt;
+    pendingReceived?: BigInt;
 
-    transactions: Transaction[];
+    transactions?: Transaction[];
 }
 
 interface Transaction {

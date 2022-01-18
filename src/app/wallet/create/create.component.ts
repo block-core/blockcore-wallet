@@ -3,10 +3,10 @@ import { HttpClient } from '@angular/common/http';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UIState } from '../../services/ui-state.service';
 import { CryptoService } from '../../services/crypto.service';
-import { CommunicationService } from 'src/app/services/communication.service';
-import { Wallet } from 'src/app/interfaces';
-import { copyToClipboard } from 'src/app/shared/utilities';
-import { FeatureService } from 'src/app/services/features.service';
+import { CommunicationService } from '../../services/communication.service';
+import { Wallet } from '../../interfaces';
+import { copyToClipboard } from '../../shared/utilities';
+import { FeatureService } from '../../services/features.service';
 import { environment, Environments } from '../../../environments/environment';
 const { v4: uuidv4 } = require('uuid');
 
@@ -187,6 +187,7 @@ export class WalletCreateComponent implements OnInit {
             }
 
             var wallet: Wallet = {
+                restored: this.recover,
                 id: id,
                 name: 'Wallet ' + (this.uiState.persisted.wallets.length + 1),
                 mnemonic: recoveryPhrase,

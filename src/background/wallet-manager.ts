@@ -1,6 +1,6 @@
 import { HDKey } from "micro-bip32";
 import { generateMnemonic, mnemonicToSeedSync, validateMnemonic } from 'micro-bip39';
-import { Account, Settings, Wallet } from "../app/interfaces";
+import { Account, Address, Settings, Wallet } from "../app/interfaces";
 import { MINUTE } from "../app/shared/constants";
 import { AppManager } from "./application-manager";
 
@@ -43,12 +43,12 @@ export class WalletManager {
 
     async revealSecretRecoveryPhrase(id: string, password: string) {
         var wallet = this.manager.walletManager.getWallet(id);
+        let unlockedMnemonic = null;
 
         if (!wallet) {
-            return;
+            return unlockedMnemonic;
         }
 
-        let unlockedMnemonic = null;
         unlockedMnemonic = await this.manager.crypto.decryptData(wallet.mnemonic, password);
 
         return unlockedMnemonic;
@@ -64,12 +64,12 @@ export class WalletManager {
 
     async unlockWallet(id: string, password: string) {
         var wallet = this.manager.walletManager.getWallet(id);
+        let unlockedMnemonic = null;
 
         if (!wallet) {
-            return;
+            return unlockedMnemonic;
         }
-
-        let unlockedMnemonic = null;
+        
         unlockedMnemonic = await this.manager.crypto.decryptData(wallet.mnemonic, password);
 
         if (unlockedMnemonic) {
@@ -243,47 +243,54 @@ export class WalletManager {
     //     account.xpub.
     // }
 
-    getChangeAddress(account: Account) {
-        // Get the last index without know transactions:
-        let address = account.state.addresses[account.state.addresses.length - 1];
+    // getChangeAddress(account: Account) {
+    //     // Get the last index without know transactions:
+    //     let address = account.state.addresses[account.state.addresses.length - 1];
 
-        if (address.totalReceivedCount > 0n) {
-            // Generate a new address.
+    //     if (address.totalReceivedCount > 0n) {
+    //         // Generate a new address.
 
-        }
+    //     }
 
-        return address.address;
-    }
+    //     return address.address;
+    // }
 
-    getChangeAddressByIndex(account: Account, index: number) {
-        // Get the last index without know transactions:
-        let address = account.state.addresses[account.state.addresses.length - 1];
+    // getChangeAddressByIndex(account: Account, index: number) {
+    //     // Get the last index without know transactions:
+    //     let address = account.state.addresses[account.state.addresses.length - 1];
 
-        if (address.totalReceivedCount > 0n) {
-            // Generate a new address.
+    //     if (address.totalReceivedCount > 0n) {
+    //         // Generate a new address.
 
-        }
+    //     }
 
-        return address.address;
+    //     return address.address;
+    // }
+
+    async getChangeAddress(account: Account) {
+        return this.getAddress(account, 1, account.state.change);
     }
 
     async getReceiveAddress(account: Account) {
-        const index = account.state.receive.length - 1;
+        return this.getAddress(account, 0, account.state.receive);
+    }
+
+    async getAddress(account: Account, type: number, addresses: Address[]) {
+        const index = addresses.length - 1;
 
         // Get the last index without know transactions:
-        let address = account.state.receive[index];
+        let address = addresses[index];
 
         if (address.totalReceivedCount > 0n) {
             // Generate a new address.
             const addressIndex = index + 1;
 
-            const accountNode = HDKey.fromExtendedKey(account.xpub, this.manager.getNetwork(account.network).bip32);
-            const addressNode = accountNode.deriveChild(0).deriveChild(addressIndex);
-
             const network = this.manager.getNetwork(account.network, account.purpose);
+            const accountNode = HDKey.fromExtendedKey(account.xpub, network.bip32);
+            const addressNode = accountNode.deriveChild(type).deriveChild(addressIndex);
             const address = this.manager.crypto.getAddressByNetwork(Buffer.from(addressNode.publicKey), network, account.purposeAddress);
 
-            account.state.receive.push({
+            addresses.push({
                 index: addressIndex,
                 address: address
             });
@@ -296,11 +303,20 @@ export class WalletManager {
 
     getReceiveAddressByIndex(account: Account, index: number) {
         if (index > (account.state?.receive.length - 1)) {
-            throw Error('The index is higher than any known address. Use getReceiveAddress to get next address.');
+            throw Error('The index is higher than any known address. Use getReceiveAddress to get next receive address.');
         }
 
         // Get the last index without know transactions:
         return account.state.receive[index];
+    }
+
+    getChangeAddressByIndex(account: Account, index: number) {
+        if (index > (account.state?.change.length - 1)) {
+            throw Error('The index is higher than any known address. Use getChangeAddress to get next change address.');
+        }
+
+        // Get the last index without know transactions:
+        return account.state.change[index];
     }
 
     addWallet(wallet: Wallet) {

@@ -9,7 +9,7 @@ import { DataSyncService } from './background/data-sync';
 import { AppManager } from './background/application-manager';
 
 const manager = new AppManager();
-let [state, utility, communication, orchestrator, sync] = manager.configure();
+manager.configure();
 
 //const utility = new CryptoUtility();
 //const state = new AppState();
@@ -201,7 +201,7 @@ chrome.runtime.onMessage.addListener(async (request: any, sender: any, sendRespo
 
     console.log(sender);
 
-    await orchestrator.setAction({ action: request.action, document: request.document, tabId: sender.tab.id });
+    await manager.orchestrator.setAction({ action: request.action, document: request.document, tabId: sender.tab.id });
 
     // TODO: Figure out how to find the top-right of the browser window that activates the popup. https://github.com/block-core/blockcore-extension/issues/10
     var leftPosition = 0;
