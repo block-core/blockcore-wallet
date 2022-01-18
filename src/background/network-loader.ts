@@ -5,11 +5,16 @@ export class NetworkLoader {
     private networks: Network[] = [];
 
     constructor() {
-
+        this.createNetworks();
     }
 
     /** Returns a list of networks that correspond to the filter supplied. */
     getNetworks(filter: string[]) {
+        // When the filter is empty, we'll return the full list.
+        if (filter.length == 0) {
+            return this.networks;
+        }
+
         return this.networks.filter((network) => {
             return filter.includes(network.id);
         });

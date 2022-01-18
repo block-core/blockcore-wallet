@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UIState } from '../../services/ui-state.service';
 import { CryptoService } from '../../services/crypto.service';
 import { CommunicationService } from '../../services/communication.service';
-import { Wallet } from '../../interfaces';
+import { Account, Wallet } from '../../interfaces';
 import { copyToClipboard } from '../../shared/utilities';
 import { FeatureService } from '../../services/features.service';
 import { environment, Environments } from '../../../environments/environment';
@@ -130,7 +130,9 @@ export class WalletCreateComponent implements OnInit {
             alert('Fatal error, unable to encrypt secret recovery phrase!');
         }
         else {
-            let accounts: any[] = [];
+            let accounts: Account[] = [];
+
+            debugger;
 
             switch (environment.instance) {
                 case Environments.Blockcore:
@@ -139,22 +141,43 @@ export class WalletCreateComponent implements OnInit {
                         name: 'Stratis',
                         network: 105105,
                         purpose: 44,
+                        purposeAddress: 44,
                         derivationPath: `m/44'/105105'/0'`,
-                        icon: 'paid'
+                        icon: 'paid',
+                        state: {
+                            balance: 0,
+                            retrieved: null,
+                            receive: [],
+                            change: []
+                        },
                     },{
                         index: 0,
                         name: 'Cirrus',
                         network: 401,
                         purpose: 44,
+                        purposeAddress: 44,
                         derivationPath: `m/44'/401'/0'`,
-                        icon: 'paid'
+                        icon: 'paid',
+                        state: {
+                            balance: 0,
+                            retrieved: null,
+                            receive: [],
+                            change: []
+                        },
                     },{
                         index: 0,
                         name: 'Identity',
                         network: 616,
                         purpose: 302,
+                        purposeAddress: 302,
                         derivationPath: `m/302'/616'/0'`,
-                        icon: 'account_circle'
+                        icon: 'account_circle',
+                        state: {
+                            balance: 0,
+                            retrieved: null,
+                            receive: [],
+                            change: []
+                        },
                     }];
                     break;
                 case Environments.CoinVault:
@@ -163,15 +186,29 @@ export class WalletCreateComponent implements OnInit {
                         name: 'Stratis',
                         network: 105105,
                         purpose: 44,
+                        purposeAddress: 44,
                         derivationPath: `m/44'/105105'/0'`,
-                        icon: 'account_circle'
+                        icon: 'account_circle',
+                        state: {
+                            balance: 0,
+                            retrieved: null,
+                            receive: [],
+                            change: []
+                        },
                     },{
                         index: 0,
                         name: 'Cirrus',
                         network: 401,
                         purpose: 44,
+                        purposeAddress: 44,
                         derivationPath: `m/44'/401'/0'`,
-                        icon: 'account_circle'
+                        icon: 'account_circle',
+                        state: {
+                            balance: 0,
+                            retrieved: null,
+                            receive: [],
+                            change: []
+                        },
                     }];
                     break;
                 case Environments.SmartCityPlatform:
@@ -180,8 +217,15 @@ export class WalletCreateComponent implements OnInit {
                         name: 'Identity',
                         network: 616,
                         purpose: 302,
+                        purposeAddress: 302,
                         derivationPath: `m/302'/616'/0'`,
-                        icon: 'account_circle'
+                        icon: 'account_circle',
+                        state: {
+                            balance: 0,
+                            retrieved: null,
+                            receive: [],
+                            change: []
+                        },
                     }];
                     break;
             }
@@ -194,6 +238,8 @@ export class WalletCreateComponent implements OnInit {
                 activeAccountIndex: 0,
                 accounts: accounts
             };
+
+            debugger;
 
             this.communication.send('wallet-create', wallet);
 

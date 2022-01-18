@@ -69,7 +69,7 @@ export class WalletManager {
         if (!wallet) {
             return unlockedMnemonic;
         }
-        
+
         unlockedMnemonic = await this.manager.crypto.decryptData(wallet.mnemonic, password);
 
         if (unlockedMnemonic) {
@@ -276,12 +276,13 @@ export class WalletManager {
     }
 
     async getAddress(account: Account, type: number, addresses: Address[]) {
+        debugger;
         const index = addresses.length - 1;
 
         // Get the last index without know transactions:
         let address = addresses[index];
 
-        if (address.totalReceivedCount > 0n) {
+        if (address == null || address.totalReceivedCount > 0n) {
             // Generate a new address.
             const addressIndex = index + 1;
 

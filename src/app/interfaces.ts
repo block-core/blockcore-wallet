@@ -50,7 +50,7 @@ interface Account {
 
 interface AccountState {
     /** The latest known balance of this account */
-    balance: BigInt;
+    balance: number;
 
     /** The time when this account data was updated */
     retrieved: Date;

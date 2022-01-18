@@ -929,12 +929,17 @@ export class OrchestratorBackgroundService {
         });
 
         this.manager.communication.listen('wallet-create', async (port: any, data: Wallet) => {
+            debugger;
             // Add the new wallet.
             // TODO: Do we first want to validate if the wallet is not already added with same ID?
             // If so... we must ensure that mnemonics are not different, or a call might wipe existing wallet.
             this.manager.walletManager.addWallet(data);
 
             this.refreshState();
+            
+            // VERIFICATION HACK, NOT POSSIBLE YET DUE TO xpub NOT GENERATED ON UI:
+            // this.manager.walletManager.activeWallet.activeAccountIndex = 0;
+            // const address = await this.manager.walletManager.getReceiveAddress(this.manager.walletManager.activeAccount);
 
             // TODO: REFACTOR IDENTITY CREATION IN THE FUTURE.
             // if (this.state.activeAccount?.network === NETWORK_IDENTITY) {
