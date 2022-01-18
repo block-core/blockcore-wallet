@@ -325,6 +325,16 @@ export class WalletManager {
         // Update the active account index to new account.
         wallet.activeAccountIndex = (wallet.accounts.length - 1);
 
+        // After new account has been added and set as active, we'll generate some addresses:
+
+        debugger;
+
+        // Generate the first receive address.
+        await this.getReceiveAddress(account);
+
+        // Generate the first change address.
+        await this.getChangeAddress(account);
+
         // const address = this.crypto.getAddressByNetworkp2pkh(identifierKeyPair, network);
         // const address2 = this.crypto.getAddressByNetworkp2pkhFromBuffer(Buffer.from(Array.from(identifierKeyPair2.publicKey!)), network);
 

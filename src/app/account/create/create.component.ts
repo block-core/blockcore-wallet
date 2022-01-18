@@ -155,7 +155,13 @@ export class AccountCreateComponent implements OnInit, OnDestroy {
             purpose: parsedPurpose,
             purposeAddress: parsedPurpose, // Until we have UI for selecting override, simply replicate the purpose from input.
             derivationPath: this.derivationPath,
-            icon: this.icon
+            icon: this.icon,
+            state: {
+                balance: 0,
+                change: [],
+                receive: [],
+                retrieved: null
+            }
         };
 
         this.manager.createAccount(account);

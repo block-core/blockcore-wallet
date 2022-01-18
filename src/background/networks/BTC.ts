@@ -1,8 +1,10 @@
 import { Network } from './network';
 
 export class BTC44 implements Network {
-    id: string = 'BTC';
+    id: string = 'BTC44';
     name: string = 'Bitcoin (1addresses)';
+    symbol = 'BTC';
+    bech32 = 'bc';
     network: number = 0;
     purpose: number = 44;
     derivationPath: string = `m/44'/0'/0'`;
@@ -17,8 +19,10 @@ export class BTC44 implements Network {
 }
 
 export class BTC49 implements Network {
-    id: string = 'BTC';
+    id: string = 'BTC49';
     name: string = 'Bitcoin (3addresses)';
+    symbol = 'BTC';
+    bech32 = 'bc';
     network: number = 0;
     purpose: number = 49;
     derivationPath: string = `m/49'/0'/0'`;
@@ -33,8 +37,10 @@ export class BTC49 implements Network {
 }
 
 export class BTC84 implements Network {
-    id: string = 'BTC';
+    id: string = 'BTC84';
     name: string = 'Bitcoin (bc1addresses)';
+    symbol = 'BTC';
+    bech32 = 'bc';
     network: number = 0;
     purpose: number = 84;
     derivationPath: string = `m/84'/0'/0'`;

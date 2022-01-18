@@ -6,6 +6,9 @@ export interface Network {
     /** Human readable name that is used to show network name to users. */
     name: string;
 
+    /** The unique identifier might not always correspond to the symbol/ticker used, this will be used in the UI. */
+    symbol: string;
+
     /** SLIP44 registered network number. */
     network: number;
 
@@ -17,7 +20,7 @@ export interface Network {
 
     messagePrefix: string;
 
-    bech32?: string;
+    bech32: string;
 
     bip32: { public: number; private: number };
 
