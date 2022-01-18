@@ -131,6 +131,8 @@ interface Wallet {
     id: string;
     name: string;
     // network: string;
+
+    /** Accounts that belong to a wallet. Do not manipulate this list directly, but do all operations through the WalletManager. */
     accounts: Account[];
     mnemonic: string;
     activeAccountIndex: number;

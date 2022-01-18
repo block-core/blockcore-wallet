@@ -236,7 +236,8 @@ export class WalletCreateComponent implements OnInit {
                 name: 'Wallet ' + (this.uiState.persisted.wallets.length + 1),
                 mnemonic: recoveryPhrase,
                 activeAccountIndex: 0,
-                accounts: accounts
+                accounts: []
+                // accounts: accounts
             };
 
             debugger;

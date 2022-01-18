@@ -35,6 +35,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
     // When on home page and when unlocked, open account.
     this.sub = this.communication.listen('wallet-unlocked', () => {
+      debugger;
       if (this.uiState.action?.action) {
         this.router.navigate(['action', this.uiState.action.action]);
       } else {
@@ -53,6 +54,8 @@ export class HomeComponent implements OnInit, OnDestroy {
     //   this.unlockPassword = this.uiState.password;
     //   this.unlock();
     // }
+
+    debugger;
 
     // Verify if the wallet is already unlocked.
     if (this.uiState.activeWallet) {

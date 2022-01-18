@@ -100,7 +100,8 @@ export class AccountComponent implements OnInit, OnDestroy {
     console.log('GENERATE address!!!!');
     console.log(this.uiState.activeAccount);
 
-    this.communication.send('address-generate', { index: 0 });
+    debugger;
+    // this.communication.send('address-generate', { index: 0 });
   }
 
   async ngOnInit() {

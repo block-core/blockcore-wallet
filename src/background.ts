@@ -8,6 +8,9 @@ import { OrchestratorBackgroundService } from './background/orchestrator';
 import { DataSyncService } from './background/data-sync';
 import { AppManager } from './background/application-manager';
 
+
+
+
 const manager = new AppManager();
 manager.configure();
 

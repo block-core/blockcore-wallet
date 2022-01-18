@@ -2,6 +2,7 @@ import { HDKey } from "micro-bip32";
 import { generateMnemonic, mnemonicToSeedSync, validateMnemonic } from 'micro-bip39';
 import { Account, Address, Settings, Wallet } from "../app/interfaces";
 import { MINUTE } from "../app/shared/constants";
+import { environment, Environments } from "../environments/environment";
 import { AppManager } from "./application-manager";
 
 /** Manager that keeps state and operations for a single wallet. This object does not keep the password, which must be supplied for signing operations. */
@@ -13,6 +14,111 @@ export class WalletManager {
     constructor(private manager: AppManager) {
         // bip32.fromBase58(xpub).derive(0).derive(1).publicKey;
 
+    }
+
+    /** Used to display options on first wallet unlock. User can pick which of these default accounts they want to activate on their wallet. */
+    getDefaultAccounts(wallet: Wallet) {
+        let accounts: Account[] = [];
+
+        debugger;
+
+        switch (environment.instance) {
+            case Environments.Blockcore:
+                accounts = [{
+                    index: 0,
+                    name: 'Stratis',
+                    network: 105105,
+                    purpose: 44,
+                    purposeAddress: 44,
+                    derivationPath: `m/44'/105105'/0'`,
+                    icon: 'paid',
+                    state: {
+                        balance: 0,
+                        retrieved: null,
+                        receive: [],
+                        change: []
+                    },
+                }, {
+                    index: 0,
+                    name: 'Cirrus',
+                    network: 401,
+                    purpose: 44,
+                    purposeAddress: 44,
+                    derivationPath: `m/44'/401'/0'`,
+                    icon: 'paid',
+                    state: {
+                        balance: 0,
+                        retrieved: null,
+                        receive: [],
+                        change: []
+                    },
+                }, {
+                    index: 0,
+                    name: 'Identity',
+                    network: 616,
+                    purpose: 302,
+                    purposeAddress: 302,
+                    derivationPath: `m/302'/616'/0'`,
+                    icon: 'account_circle',
+                    state: {
+                        balance: 0,
+                        retrieved: null,
+                        receive: [],
+                        change: []
+                    },
+                }];
+                break;
+            case Environments.CoinVault:
+                accounts = [{
+                    index: 0,
+                    name: 'Stratis',
+                    network: 105105,
+                    purpose: 44,
+                    purposeAddress: 44,
+                    derivationPath: `m/44'/105105'/0'`,
+                    icon: 'account_circle',
+                    state: {
+                        balance: 0,
+                        retrieved: null,
+                        receive: [],
+                        change: []
+                    },
+                }, {
+                    index: 0,
+                    name: 'Cirrus',
+                    network: 401,
+                    purpose: 44,
+                    purposeAddress: 44,
+                    derivationPath: `m/44'/401'/0'`,
+                    icon: 'account_circle',
+                    state: {
+                        balance: 0,
+                        retrieved: null,
+                        receive: [],
+                        change: []
+                    },
+                }];
+                break;
+            case Environments.SmartCityPlatform:
+                accounts = [{
+                    index: 0,
+                    name: 'Identity',
+                    network: 616,
+                    purpose: 302,
+                    purposeAddress: 302,
+                    derivationPath: `m/302'/616'/0'`,
+                    icon: 'account_circle',
+                    state: {
+                        balance: 0,
+                        retrieved: null,
+                        receive: [],
+                        change: []
+                    },
+                }];
+                break;
+        }
+
+        return accounts;
     }
 
     getWallets() {
@@ -193,9 +299,15 @@ export class WalletManager {
         this.manager.broadcastState();
     }
 
-    async addAccount(account: Account) {
+    async addAccount(account: Account, wallet?: Wallet) {
+        if (!wallet) {
+            wallet = this.activeWallet;
+        }
+
+        debugger;
+
         // First derive the xpub and store that on the account.
-        const secret = this.walletSecrets.get(this.activeWallet.id);
+        const secret = this.walletSecrets.get(wallet.id);
 
         const network = this.manager.getNetwork(account.network);
 
@@ -203,13 +315,15 @@ export class WalletManager {
 
         const accountNode = masterNode.derive(`m/${account.purpose}'/${account.network}'/${account.index}'`);
 
+        debugger;
+
         account.xpub = accountNode.publicExtendedKey;
 
         // Add account to the wallet and persist.
-        this.activeWallet.accounts.push(account);
+        wallet.accounts.push(account);
 
         // Update the active account index to new account.
-        this.activeWallet.activeAccountIndex = (this.activeWallet?.accounts.length - 1) ?? 0;
+        wallet.activeAccountIndex = (wallet.accounts.length - 1);
 
         // const address = this.crypto.getAddressByNetworkp2pkh(identifierKeyPair, network);
         // const address2 = this.crypto.getAddressByNetworkp2pkhFromBuffer(Buffer.from(Array.from(identifierKeyPair2.publicKey!)), network);
@@ -320,7 +434,27 @@ export class WalletManager {
         return account.state.change[index];
     }
 
-    addWallet(wallet: Wallet) {
+    async addWallet(wallet: Wallet) {
+        debugger;
+
+        // let recoveryPhrase = await this.manager.crypto.decryptData(wallet.mnemonic, wallet.);
+
+        // // From the secret receovery phrase, the master seed is derived.
+        // // Learn more about the HD keys: https://raw.githubusercontent.com/bitcoin/bips/master/bip-0032/derivation.png
+        // const masterSeed = mnemonicToSeedSync(wallet.mnemonic);
+
+        // // Add this wallet to list of unlocked.
+        // this.walletSecrets.set(id, { password, seed: masterSeed });
+
+        // // TODO: REMOVE!
+        // this.manager.state.passwords.set(id, password);
+
+        // const defaultAccounts = this.manager.walletManager.getDefaultAccounts(wallet);
+
+        // for (const account of defaultAccounts) {
+        //     await this.manager.walletManager.addAccount(account, wallet);
+        // }
+
         this.manager.state.persisted.wallets.push(wallet);
 
         // Change the active wallet to the new one.

@@ -1,5 +1,5 @@
-import { Account, State, Wallet, Action, DIDPayload, Settings, Identity, Vault } from 'src/app/interfaces';
-import { MINUTE, NETWORK_IDENTITY } from 'src/app/shared/constants';
+import { Account, State, Wallet, Action, DIDPayload, Settings, Identity, Vault } from '../app/interfaces';
+import { MINUTE, NETWORK_IDENTITY } from '../app/shared/constants';
 import { AppState } from './application-state';
 import { CommunicationBackgroundService } from './communication';
 import { CryptoUtility } from './crypto-utility';
@@ -31,7 +31,7 @@ export class DataSyncService {
 
     // TODO: REFACTORY IDENTITY!!
 
-    
+
     // /** Will attempt to create or update an vault. */
     // async saveVault(data: Vault) {
     //     // TODO: Further improve the logic of the identity saving.

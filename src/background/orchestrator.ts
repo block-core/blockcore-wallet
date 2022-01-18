@@ -513,6 +513,8 @@ export class OrchestratorBackgroundService {
         this.manager.communication.listen('wallet-unlock', async (port: any, data: { id: string, password: string }) => {
             const unlocked = await this.manager.walletManager.unlockWallet(data.id, data.password);
 
+            debugger;
+
             if (unlocked) {
                 this.manager.communication.sendToAll('wallet-unlocked');
             } else {
@@ -533,6 +535,9 @@ export class OrchestratorBackgroundService {
 
         // TODO: Expand the address generation APIs to keep track of indexes for both change and non-change.
         this.manager.communication.listen('address-generate', async (port: any, data: { index: number }) => {
+
+            debugger;
+
             if (!this.manager.walletManager.activeWallet) {
                 return;
             }
