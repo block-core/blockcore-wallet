@@ -110,6 +110,8 @@ export class LoadingComponent implements OnInit, OnDestroy {
 
     this.sub = this.communication.listen('state', () => {
 
+      debugger;
+
       this.uiState.loading = false;
 
       console.log('SUBSCRIPTION IN LOADING!!!');
@@ -125,6 +127,9 @@ export class LoadingComponent implements OnInit, OnDestroy {
         if (!this.uiState.hasWallets) {
           this.router.navigateByUrl('/wallet/create');
         } else {
+
+          debugger;
+
           // If the active wallet is unlocked, we'll redirect accordingly.
           if (this.uiState.activeWallet && this.uiState.unlocked.indexOf(this.uiState.activeWallet.id) > -1) {
             console.log('LOADING REDIRECT TO ACCOUNT');

@@ -167,6 +167,7 @@ export class AppComponent implements OnInit {
   }
 
   async onWalletChanged(event: any) {
+    debugger;
     const walletId = event.value;
 
     this.drawer.close();

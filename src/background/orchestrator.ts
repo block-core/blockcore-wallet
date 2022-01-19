@@ -939,6 +939,8 @@ export class OrchestratorBackgroundService {
             // If so... we must ensure that mnemonics are not different, or a call might wipe existing wallet.
             await this.manager.walletManager.addWallet(data);
 
+            
+
             this.refreshState();
             
             // VERIFICATION HACK, NOT POSSIBLE YET DUE TO xpub NOT GENERATED ON UI:

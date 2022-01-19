@@ -128,9 +128,6 @@ export class WalletManager {
     lockWallets() {
         this.walletSecrets.clear();
 
-        // TODO: REMOVE WHEN READY!
-        this.manager.state.passwords.clear();
-
         // Do we need to save the state and refresh? VERIFY!
         // await this.state.save();
         // this.refreshState();
@@ -140,9 +137,6 @@ export class WalletManager {
 
     lockWallet(id: string) {
         this.walletSecrets.delete(id);
-
-        // TODO: REMOVE WHEN READY!
-        this.manager.state.passwords.delete(id);
 
         this.manager.broadcastState();
     }
@@ -188,9 +182,6 @@ export class WalletManager {
             // Add this wallet to list of unlocked.
             this.walletSecrets.set(id, { password, seed: masterSeed });
 
-            // TODO: REMOVE!
-            this.manager.state.passwords.set(id, password);
-
             // Make sure we inform all instances when a wallet is unlocked.
             return true;
 
@@ -207,7 +198,7 @@ export class WalletManager {
         }
 
         // We will only set timer if the wallet is actually unlocked.
-        if (this.manager.state.passwords.size > 0) {
+        if (this.walletSecrets.size > 0) {
             console.log('Setting timer to automatically unlock.');
             this.timer = setTimeout(
                 () => {
@@ -265,9 +256,9 @@ export class WalletManager {
     }
 
     isActiveWalletUnlocked(): boolean {
-        let password = this.manager.state.passwords.get(this.activeWallet.id);
+        let secret = this.walletSecrets.get(this.activeWallet.id);
 
-        if (password === null || password === undefined || password === '') {
+        if (secret === null || secret.password === null || secret.password === undefined || secret.password === '') {
             return false;
         } else {
             return true;
@@ -292,8 +283,8 @@ export class WalletManager {
         this.manager.state.persisted.wallets.splice(walletIndex, 1);
 
         // Remove the password for this wallet, if it was unlocked.
-        this.manager.state.passwords.delete(id);
-
+        this.manager.walletManager.walletSecrets.delete(id);
+        
         await this.manager.state.save();
 
         this.manager.broadcastState();
@@ -478,5 +469,8 @@ export class WalletManager {
             // If there are transactions, DID Documents, NFTs or anythign else, we should launch the
             // query probe here.
         }
+
+        // Persist the newly created wallet.
+        await this.manager.state.save();
     }
 }

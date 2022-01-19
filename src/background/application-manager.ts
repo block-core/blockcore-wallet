@@ -98,7 +98,7 @@ export class AppManager {
         const currentState: State = {
             action: this.state.action,
             persisted: this.state.persisted,
-            unlocked: this.state.unlocked,
+            unlocked: this.walletManager.unlocked,
             store: this.state.store
         }
 

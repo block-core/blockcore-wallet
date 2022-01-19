@@ -33,12 +33,12 @@ export class AppState {
 
     loading = true;
 
-    passwords = new Map<string, string>();
+    // passwords = new Map<string, string>();
 
-    /** Returns list of wallet IDs that is currently unlocked. */
-    get unlocked(): string[] {
-        return Array.from(this.passwords.keys());
-    };
+    // /** Returns list of wallet IDs that is currently unlocked. */
+    // get unlocked(): string[] {
+    //     return Array.from(this.passwords.keys());
+    // };
 
     action!: Action;
 

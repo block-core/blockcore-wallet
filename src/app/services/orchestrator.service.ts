@@ -40,6 +40,7 @@ export class OrchestratorService {
 
         // Whenever the state is updated, we'll update in the UI.
         this.communication.listen('state', (state: State) => {
+            debugger;
             console.log('state', state);
             this.uiState.initialized = true;
             this.uiState.action = state.action;
