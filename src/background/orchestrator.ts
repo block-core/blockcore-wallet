@@ -825,7 +825,7 @@ export class OrchestratorBackgroundService {
                 return;
             }
 
-            this.manager.walletManager.addAccount(data);
+            await this.manager.walletManager.addAccount(data);
 
             this.refreshState();
 
@@ -934,11 +934,10 @@ export class OrchestratorBackgroundService {
         });
 
         this.manager.communication.listen('wallet-create', async (port: any, data: Wallet) => {
-            debugger;
             // Add the new wallet.
             // TODO: Do we first want to validate if the wallet is not already added with same ID?
             // If so... we must ensure that mnemonics are not different, or a call might wipe existing wallet.
-            this.manager.walletManager.addWallet(data);
+            await this.manager.walletManager.addWallet(data);
 
             this.refreshState();
             
