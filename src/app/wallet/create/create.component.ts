@@ -1,13 +1,11 @@
-import { Component, Inject, HostBinding, OnInit, ChangeDetectorRef } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UIState } from '../../services/ui-state.service';
 import { CryptoService } from '../../services/crypto.service';
 import { CommunicationService } from '../../services/communication.service';
-import { Account, Wallet } from '../../interfaces';
+import { Wallet } from '../../interfaces';
 import { copyToClipboard } from '../../shared/utilities';
 import { FeatureService } from '../../services/features.service';
-import { environment, Environments } from '../../../environments/environment';
 const { v4: uuidv4 } = require('uuid');
 
 @Component({
@@ -58,50 +56,6 @@ export class WalletCreateComponent implements OnInit {
         copyToClipboard(this.mnemonic);
     }
 
-    // copy() {
-    //     var textArea = document.createElement("textarea") as any;
-
-    //     // Place in the top-left corner of screen regardless of scroll position.
-    //     textArea.style.position = 'fixed';
-    //     textArea.style.top = 0;
-    //     textArea.style.left = 0;
-
-    //     // Ensure it has a small width and height. Setting to 1px / 1em
-    //     // doesn't work as this gives a negative w/h on some browsers.
-    //     textArea.style.width = '2em';
-    //     textArea.style.height = '2em';
-
-    //     // We don't need padding, reducing the size if it does flash render.
-    //     textArea.style.padding = 0;
-
-    //     // Clean up any borders.
-    //     textArea.style.border = 'none';
-    //     textArea.style.outline = 'none';
-    //     textArea.style.boxShadow = 'none';
-
-    //     // Avoid flash of the white box if rendered for any reason.
-    //     textArea.style.background = 'transparent';
-
-    //     textArea.value = this.mnemonic;
-
-    //     console.log(`${this.mnemonic}`);
-    //     console.log(`${textArea.value}`);
-
-    //     document.body.appendChild(textArea);
-    //     textArea.focus();
-    //     textArea.select();
-
-    //     try {
-    //         var successful = document.execCommand('copy');
-    //         var msg = successful ? 'successful' : 'unsuccessful';
-    //         console.log('Copying text command was ' + msg);
-    //     } catch (err) {
-    //         console.log('Oops, unable to copy');
-    //     }
-
-    //     document.body.removeChild(textArea);
-    // }
-
     create() {
         this.step = 1;
         this.recover = false;
@@ -130,106 +84,6 @@ export class WalletCreateComponent implements OnInit {
             alert('Fatal error, unable to encrypt secret recovery phrase!');
         }
         else {
-            let accounts: Account[] = [];
-
-            debugger;
-
-            switch (environment.instance) {
-                case Environments.Blockcore:
-                    accounts = [{
-                        index: 0,
-                        name: 'Stratis',
-                        network: 105105,
-                        purpose: 44,
-                        purposeAddress: 44,
-                        derivationPath: `m/44'/105105'/0'`,
-                        icon: 'paid',
-                        state: {
-                            balance: 0,
-                            retrieved: null,
-                            receive: [],
-                            change: []
-                        },
-                    },{
-                        index: 0,
-                        name: 'Cirrus',
-                        network: 401,
-                        purpose: 44,
-                        purposeAddress: 44,
-                        derivationPath: `m/44'/401'/0'`,
-                        icon: 'paid',
-                        state: {
-                            balance: 0,
-                            retrieved: null,
-                            receive: [],
-                            change: []
-                        },
-                    },{
-                        index: 0,
-                        name: 'Identity',
-                        network: 616,
-                        purpose: 302,
-                        purposeAddress: 302,
-                        derivationPath: `m/302'/616'/0'`,
-                        icon: 'account_circle',
-                        state: {
-                            balance: 0,
-                            retrieved: null,
-                            receive: [],
-                            change: []
-                        },
-                    }];
-                    break;
-                case Environments.CoinVault:
-                    accounts = [{
-                        index: 0,
-                        name: 'Stratis',
-                        network: 105105,
-                        purpose: 44,
-                        purposeAddress: 44,
-                        derivationPath: `m/44'/105105'/0'`,
-                        icon: 'account_circle',
-                        state: {
-                            balance: 0,
-                            retrieved: null,
-                            receive: [],
-                            change: []
-                        },
-                    },{
-                        index: 0,
-                        name: 'Cirrus',
-                        network: 401,
-                        purpose: 44,
-                        purposeAddress: 44,
-                        derivationPath: `m/44'/401'/0'`,
-                        icon: 'account_circle',
-                        state: {
-                            balance: 0,
-                            retrieved: null,
-                            receive: [],
-                            change: []
-                        },
-                    }];
-                    break;
-                case Environments.SmartCityPlatform:
-                    accounts = [{
-                        index: 0,
-                        name: 'Identity',
-                        network: 616,
-                        purpose: 302,
-                        purposeAddress: 302,
-                        derivationPath: `m/302'/616'/0'`,
-                        icon: 'account_circle',
-                        state: {
-                            balance: 0,
-                            retrieved: null,
-                            receive: [],
-                            change: []
-                        },
-                    }];
-                    break;
-            }
-
             var wallet: Wallet = {
                 restored: this.recover,
                 id: id,
@@ -237,34 +91,9 @@ export class WalletCreateComponent implements OnInit {
                 mnemonic: recoveryPhrase,
                 activeAccountIndex: 0,
                 accounts: []
-                // accounts: accounts
             };
 
-            debugger;
-
             this.communication.send('wallet-create', wallet);
-
-            // Make the newly created wallet the selected one.
-            // this.uiState.persisted.activeWalletId = id;
-
-            // this.communication.send('set-active-wallet-index', walletIndex);
-
-            // this.appState.persisted.wallets.push({
-            //     name: 'Wallet ' + (this.appState.persisted.wallets.length + 1),
-            //     mnemonic: recoveryPhrase,
-            //     accounts: [
-            //         {
-            //             index: 0,
-            //             name: 'Identity',
-            //             network: 616,
-            //             purpose: 302,
-            //             derivationPath: `302'/616'`
-            //         }
-            //     ]
-            // });
-
-            // Persist the state.
-            // await this.appState.save();
         }
     }
 }
