@@ -1,11 +1,8 @@
-import { Component, Inject, HostBinding, ChangeDetectorRef, OnInit, OnDestroy } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { Component,  ChangeDetectorRef, OnInit, OnDestroy } from '@angular/core';
 import { UIState } from '../services/ui-state.service';
 import { CryptoService } from '../services/crypto.service';
 import { Router } from '@angular/router';
-import { State, Persisted } from '../interfaces';
 import { CommunicationService } from '../services/communication.service';
-import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-loading',
@@ -15,7 +12,6 @@ import { Subscription } from 'rxjs';
 export class LoadingComponent implements OnInit, OnDestroy {
   private sub: any;
   private sub2: any;
-  // private sub2!: Subscription;
 
   constructor(
     public uiState: UIState,
@@ -29,25 +25,10 @@ export class LoadingComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this.sub) {
-      this.communication.unlisten(this.sub);
-    }
-
-    // this.communication.unlisten(this.sub2);
+    // if (this.sub) {
+    //   this.communication.unlisten(this.sub);
+    // }
   }
-
-  // loadWallets() {
-  //   if (!this.uiState.hasWallets) {
-  //     this.router.navigateByUrl('/wallet/create');
-  //   } else {
-  //     // If the active wallet is unlocked, we'll redirect accordingly.
-  //     if (this.uiState.activeWallet && this.uiState.unlocked.indexOf(this.uiState.activeWallet.id) > -1) {
-  //       this.router.navigateByUrl('/account/view/' + this.uiState.persisted.activeWalletId);
-  //     } else {
-  //       this.router.navigateByUrl('/home');
-  //     }
-  //   }
-  // }
 
   async ngOnInit() {
 
@@ -61,14 +42,19 @@ export class LoadingComponent implements OnInit, OnDestroy {
     //   this.loadWallets();
     // });
 
+
+    // When the extension has been initialized, we'll send 'state' to background to get the current state. The UI will show loading
+    // indicator until 'state-changed' is triggered.
     chrome.tabs.query({
       active: true,
       lastFocusedWindow: true
     }, (tabs) => {
+      debugger;
       var tab = tabs[0];
       // Provide the tab URL with the state query, because wallets and accounts is connected to domains.
-      this.communication.send('state', { url: tab?.url });
+      this.communication.send('state-load', { url: tab?.url });
     });
+
 
     // Make sure we have initialized state at least once.
     // Should this be observable or something, so we can subscribe?
@@ -108,99 +94,49 @@ export class LoadingComponent implements OnInit, OnDestroy {
     // Load the application state, which is individual UI instance data.
     // var state = await this.uiState.load();
 
-    this.sub = this.communication.listen('state', () => {
-
+    this.uiState.activeWallet$.toPromise().then((data) => {
       debugger;
-
-      this.uiState.loading = false;
-
-      console.log('SUBSCRIPTION IN LOADING!!!');
-
-      // The primary listeners should be triggered first, so uiState should have been set by now.
-
-
-      // Actions will override any other UI, but only if wallet is unlocked.
-      if (this.uiState.action?.action && this.uiState.activeWallet && this.uiState.unlocked.indexOf(this.uiState.activeWallet.id) > -1) {
-        // TODO: Add support for more actions.
-        this.router.navigate(['action', this.uiState.action?.action]);
-      } else {
-        if (!this.uiState.hasWallets) {
-          this.router.navigateByUrl('/wallet/create');
-        } else {
-
-          debugger;
-
-          // If the active wallet is unlocked, we'll redirect accordingly.
-          if (this.uiState.activeWallet && this.uiState.unlocked.indexOf(this.uiState.activeWallet.id) > -1) {
-            console.log('LOADING REDIRECT TO ACCOUNT');
-            this.router.navigateByUrl('/dashboard');
-            //this.router.navigateByUrl('/account/view/' + this.uiState.activeWallet.activeAccountIndex);
-          } else {
-            console.log('LOADING REDIRECT TO HOME');
-            this.router.navigateByUrl('/home');
-          }
-        }
-
-        // Select the previous selected account.
-        //     // if (this.appState.hasWallets) {
-        //     //   this.appState.activeWallet = this.appState.persisted.wallets[0];
-        //     // }
-        //     if (!this.uiState.hasWallets) {
-        //       this.router.navigateByUrl('/wallet/create');
-        //     }
-        //     else {
-        //       this.router.navigateByUrl('/home');
-        //     }
-      }
-
-      // 
-
-      // if (this.uiState.action) {
-      //   this.router.navigateByUrl('/action/sign');
-      // }
-      // else {
-      //   // Select the previous selected account.
-      //   // if (this.appState.hasWallets) {
-      //   //   this.appState.activeWallet = this.appState.persisted.wallets[0];
-      //   // }
-      //   if (!this.uiState.hasWallets) {
-      //     this.router.navigateByUrl('/wallet/create');
-      //   }
-      //   else {
-      //     this.router.navigateByUrl('/home');
-      //   }
-      // }
+      console.log(data);
     });
 
-    console.log('LOADING SUBSCRIPTION:', this.sub);
+    this.uiState.activeAccount$.toPromise().then((data) => {
+      debugger;
+      console.log(data);
+    });
+    
 
-    // Perform the initial load of the application state.
-    // var state = await this.appState.load();
+    // // SHOULD WE LISTEN TO STATE-CHANGED, OR REALLY BE LOOKING AT THE WALLET AND ACCOUNT?!
+    // this.sub = this.communication.listen('state-changed', () => {
+    //   debugger;
 
-    // if (state.data) {
-    //   this.appState.persisted = state.data as Persisted;
-    // }
+    //   this.uiState.loading = false;
 
-    // // TODO: Remove this fake loader when closer to production.
-    // setTimeout(() => {
-    //   this.appState.loading = false;
+    //   console.log('SUBSCRIPTION IN LOADING!!!');
 
-    //   if (state.action) {
-    //     this.router.navigateByUrl('/action/sign');
-    //   }
-    //   else {
-    //     // Select the previous selected account.
-    //     // if (this.appState.hasWallets) {
-    //     //   this.appState.activeWallet = this.appState.persisted.wallets[0];
-    //     // }
-    //     if (!this.appState.hasWallets) {
+    //   // The primary listeners should be triggered first, so uiState should have been set by now.
+
+    //   // Actions will override any other UI, but only if wallet is unlocked.
+    //   if (this.uiState.action?.action && this.uiState.activeWallet && this.uiState.unlocked.indexOf(this.uiState.activeWallet.id) > -1) {
+    //     // TODO: Add support for more actions.
+    //     this.router.navigate(['action', this.uiState.action?.action]);
+    //   } else {
+    //     if (!this.uiState.hasWallets) {
     //       this.router.navigateByUrl('/wallet/create');
-    //     }
-    //     else {
-    //       this.router.navigateByUrl('/home');
+    //     } else {
+
+    //       debugger;
+
+    //       // If the active wallet is unlocked, we'll redirect accordingly.
+    //       if (this.uiState.activeWallet && this.uiState.unlocked.indexOf(this.uiState.activeWallet.id) > -1) {
+    //         console.log('LOADING REDIRECT TO ACCOUNT');
+    //         this.router.navigateByUrl('/dashboard');
+    //         //this.router.navigateByUrl('/account/view/' + this.uiState.activeWallet.activeAccountIndex);
+    //       } else {
+    //         console.log('LOADING REDIRECT TO HOME');
+    //         this.router.navigateByUrl('/home');
+    //       }
     //     }
     //   }
-
-    // }, 500);
+    // });
   }
 }

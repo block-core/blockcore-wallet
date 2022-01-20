@@ -35,3 +35,12 @@ Choose the `blockcore-extension\dist\blockcore-extension` folder when picking fo
 The extension is built using V2 of the manifest file format: https://developer.chrome.com/docs/extensions/mv2/
 
 We should migrate to V3 when possible: https://developer.chrome.com/docs/extensions/mv3/manifest/
+
+
+## Developer and Architect notes
+
+The background service is a long running background service that is "always" active.
+
+When the UI is triggered, it will send an event to the background with name 'state', which will return the current state 
+as an 'state-changed' event.
+

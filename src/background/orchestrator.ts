@@ -296,7 +296,8 @@ export class OrchestratorBackgroundService {
 
     private eventHandlers() {
         // "state" is the first request from the UI.
-        this.manager.communication.listen('state', async (port: any, data: any) => {
+        this.manager.communication.listen('state-load', async (port: any, data: any) => {
+            debugger;
             // If the local state has not yet initialized, we'll log error. This should normally not happen
             // and we have a race-condition that should be mitigated differently.
             if (!this.manager.state.initialized) {
@@ -308,7 +309,7 @@ export class OrchestratorBackgroundService {
             const url = data.url;
             console.log('Getting last state for: ', url);
 
-            this.manager.broadcastState();
+            this.manager.broadcastState(true);
         });
 
         this.manager.communication.listen('timer-reset', (port: any, data: any) => {
@@ -512,6 +513,10 @@ export class OrchestratorBackgroundService {
 
         this.manager.communication.listen('wallet-unlock', async (port: any, data: { id: string, password: string }) => {
             const unlocked = await this.manager.walletManager.unlockWallet(data.id, data.password);
+
+            // After the wallet has been unlocked, we must ensure that the UI state has latest information about 
+            // which wallets is unlocked.
+            this.manager.broadcastState();
 
             debugger;
 

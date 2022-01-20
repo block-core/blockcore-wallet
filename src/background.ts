@@ -188,7 +188,7 @@ chrome.runtime.onMessage.addListener(async (request: any, sender: any, sendRespo
   console.log('onMessage (BACKGROUND): ' + JSON.stringify(request));
 
   if (request.action == 'state') {
-
+    debugger;
   }
   else if (request.action == 'sign' || request.action == 'login' || request.action == 'identity') {
 

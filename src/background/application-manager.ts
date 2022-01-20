@@ -94,7 +94,7 @@ export class AppManager {
         console.log(this.state);
     };
 
-    broadcastState() {
+    broadcastState(initial: boolean = false) {
         const currentState: State = {
             action: this.state.action,
             persisted: this.state.persisted,
@@ -102,8 +102,12 @@ export class AppManager {
             store: this.state.store
         }
 
+        debugger;
+
+        const eventName = initial ? 'state-loaded' : 'state-changed';
+
         // Send new state to UI instances.
-        this.communication.sendToAll('state', currentState);
+        this.communication.sendToAll(eventName, currentState);
     }
 
     async setAction(data: Action) {

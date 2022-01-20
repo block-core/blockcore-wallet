@@ -20,6 +20,7 @@ export class OrchestratorService {
         private snackBar: MatSnackBar
     ) {
         console.log('OrchestratorService constructor.');
+        debugger;
         // this.eventHandlers();
     }
 
@@ -39,19 +40,82 @@ export class OrchestratorService {
         // });
 
         // Whenever the state is updated, we'll update in the UI.
-        this.communication.listen('state', (state: State) => {
+        this.communication.listen('state-loaded', (state: State) => {
+
+            // Loading has completed.
+            this.uiState.loading = false;
+
             debugger;
-            console.log('state', state);
+            console.log('EVENT: state-loaded', state);
             this.uiState.initialized = true;
             this.uiState.action = state.action;
             this.uiState.persisted = state.persisted;
             this.uiState.store = state.store;
+            this.uiState.unlocked = state.unlocked;
 
             this.uiState.persisted$.next(this.uiState.persisted);
             this.uiState.activeWalletSubject.next(this.uiState.activeWallet);
             this.uiState.activeAccountSubject.next(this.uiState.activeAccount);
 
+            // If an action has been triggered, we'll always show action until user closes the action.
+            if (this.uiState.action?.action && this.uiState.activeWallet && this.uiState.unlocked.indexOf(this.uiState.activeWallet.id) > -1) {
+                // TODO: Add support for more actions.
+                this.router.navigate(['action', this.uiState.action?.action]);
+            } else {
+                // If the state was changed and there is no wallets, send user to create wallet UI.
+                if (!this.uiState.hasWallets) {
+                    this.router.navigateByUrl('/wallet/create');
+                } else {
+                    // If the active wallet is unlocked, we'll redirect accordingly.
+                    if (this.uiState.activeWallet && this.uiState.unlocked.indexOf(this.uiState.activeWallet.id) > -1) {
+                        console.log('LOADING REDIRECT TO ACCOUNT');
+                        this.router.navigateByUrl('/dashboard');
+                        //this.router.navigateByUrl('/account/view/' + this.uiState.activeWallet.activeAccountIndex);
+                    } else {
+                        // When the initial state is loaded and user has not unlocked any wallets, we'll show the unlock screen on home.
+                        console.log('LOADING REDIRECT TO HOME');
+                        this.router.navigateByUrl('/home');
+                    }
+                }
+            }
+        });
+
+        // Whenever the state is updated, we'll update in the UI.
+        this.communication.listen('state-changed', (state: State) => {
+            debugger;
+            console.log('EVENT: state-changed', state);
+            this.uiState.initialized = true;
+            this.uiState.action = state.action;
+            this.uiState.persisted = state.persisted;
+            this.uiState.store = state.store;
             this.uiState.unlocked = state.unlocked;
+
+            this.uiState.persisted$.next(this.uiState.persisted);
+            this.uiState.activeWalletSubject.next(this.uiState.activeWallet);
+            this.uiState.activeAccountSubject.next(this.uiState.activeAccount);
+
+            // // If an action has been triggered, we'll always show action until user closes the action.
+            // if (this.uiState.action?.action && this.uiState.activeWallet && this.uiState.unlocked.indexOf(this.uiState.activeWallet.id) > -1) {
+            //     // TODO: Add support for more actions.
+            //     this.router.navigate(['action', this.uiState.action?.action]);
+            // } else {
+            //     // If the state was changed and there is no wallets, send user to create wallet UI.
+            //     if (!this.uiState.hasWallets) {
+            //         this.router.navigateByUrl('/wallet/create');
+            //     }
+
+            //     // else {
+            //     //     // If the active wallet is unlocked, we'll redirect accordingly.
+            //     //     if (this.uiState.activeWallet && this.uiState.unlocked.indexOf(this.uiState.activeWallet.id) > -1) {
+            //     //         console.log('LOADING REDIRECT TO ACCOUNT');
+            //     //         this.router.navigateByUrl('/dashboard');
+            //     //         //this.router.navigateByUrl('/account/view/' + this.uiState.activeWallet.activeAccountIndex);
+            //     //     } else {
+            //     //         console.log('LOADING REDIRECT TO HOME');
+            //     //         this.router.navigateByUrl('/home');
+            //     //     }
+            //     // }
+            // }
         });
 
         // When an action is triggered from the content script / background.

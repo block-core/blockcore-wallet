@@ -43,7 +43,7 @@ export class UIState {
     // activeWalletIndex: number = 0;
 
     get hasWallets(): boolean {
-        return this.persisted.wallets.length > 0;
+        return this.persisted?.wallets.length > 0;
     }
 
     // activeWallet$: Subject<Wallet | undefined> = new ReplaySubject();
