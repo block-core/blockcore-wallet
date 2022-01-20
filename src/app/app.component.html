@@ -28,7 +28,8 @@
   <span class="example-spacer">{{uiState.title | truncate}}</span>
 
   <button *ngIf="uiState.activeWalletUnlocked" mat-icon-button (click)="draweraccount.toggle()">
-    <mat-icon>{{uiState.activeAccount?.icon}}</mat-icon>
+    <mat-icon *ngIf="uiState.activeAccount">{{uiState.activeAccount?.icon}}</mat-icon>
+    <mat-icon *ngIf="!uiState.activeAccount">account_circle</mat-icon>
   </button>
 
 </mat-toolbar>

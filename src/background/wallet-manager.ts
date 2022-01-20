@@ -300,7 +300,7 @@ export class WalletManager {
         // First derive the xpub and store that on the account.
         const secret = this.walletSecrets.get(wallet.id);
 
-        const network = this.manager.getNetwork(account.network);
+        const network = this.manager.getNetwork(account.network, account.purpose);
 
         const masterNode = HDKey.fromMasterSeed(Buffer.from(secret.seed), network.bip32);
 

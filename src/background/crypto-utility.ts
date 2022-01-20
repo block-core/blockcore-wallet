@@ -53,6 +53,9 @@ export class CryptoUtility {
             });
 
             return address;
+        } else if (addressPurpose == 302) {
+            // TODO: Fix this to properly generate the DID:
+            return `did:is:${publicKey.toString('hex')}`;
         }
 
         throw Error(`The address purpose ${addressPurpose} is currently not supported.`);
