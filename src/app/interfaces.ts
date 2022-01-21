@@ -49,6 +49,9 @@ interface Account {
 
     /** The type of Account, used to show the account in different sections of the UI. Should be 'coin', 'token' or 'other'. */
     type: string;
+
+    /** Temporary property used for UI-selections. */
+    selected?: boolean;
 }
 
 interface AccountState {

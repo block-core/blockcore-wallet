@@ -825,11 +825,32 @@ export class OrchestratorBackgroundService {
         //     this.communication.send(port, 'nostr-generated', { id: id })
         // });
 
+        this.manager.communication.listen('accounts-create', async (port: any, data: Account[]) => {
+            if (!this.manager.walletManager.activeWallet) {
+                return;
+            }
+
+            for (const account of data) {
+                // Don't persist the selected value.
+                delete account.selected;
+                await this.manager.walletManager.addAccount(account);
+            }
+
+            this.refreshState();
+
+            this.manager.communication.sendToAll('account-created');
+
+            // TODO: REFACTOR WHEN TIME COMES!
+            // this.manager.communication.sendToAll('identity-created');
+        });
+
         this.manager.communication.listen('account-create', async (port: any, data: Account) => {
             if (!this.manager.walletManager.activeWallet) {
                 return;
             }
 
+            // Don't persist the selected value.
+            delete data.selected;
             await this.manager.walletManager.addAccount(data);
 
             this.refreshState();
@@ -944,10 +965,10 @@ export class OrchestratorBackgroundService {
             // If so... we must ensure that mnemonics are not different, or a call might wipe existing wallet.
             await this.manager.walletManager.addWallet(data);
 
-            
+
 
             this.refreshState();
-            
+
             // VERIFICATION HACK, NOT POSSIBLE YET DUE TO xpub NOT GENERATED ON UI:
             // this.manager.walletManager.activeWallet.activeAccountIndex = 0;
             // const address = await this.manager.walletManager.getReceiveAddress(this.manager.walletManager.activeAccount);

@@ -1,6 +1,9 @@
 import { Component, Inject, HostBinding, ChangeDetectorRef, OnInit, OnDestroy } from '@angular/core';
+import { Router } from '@angular/router';
 import { Account } from '../../interfaces';
+import { CommunicationService } from '../../services/communication.service';
 import { NetworksService } from '../../services/networks.service';
+import { OrchestratorService } from '../../services/orchestrator.service';
 import { UIState } from '../../services/ui-state.service';
 
 @Component({
@@ -12,10 +15,14 @@ export class AccountSelectComponent implements OnInit, OnDestroy {
 
     coins: Account[];
     other: Account[];
+    sub: any;
 
     constructor(
         private uiState: UIState,
-        private networkService: NetworksService
+        private networkService: NetworksService,
+        private orchestrator: OrchestratorService,
+        private communication: CommunicationService,
+        private router: Router
     ) {
         uiState.title = 'Select accounts';
         uiState.showBackButton = true;
@@ -27,9 +34,20 @@ export class AccountSelectComponent implements OnInit, OnDestroy {
 
         this.coins = accounts.filter(item => item.type === 'coin' || item.type === 'token');
         this.other = accounts.filter(item => item.type === 'other');
+
+        this.sub = this.communication.listen('account-created', () => {
+            this.router.navigateByUrl('/dashboard');
+        });
     }
 
     ngOnDestroy(): void {
+        this.communication.unlisten(this.sub);
+    }
 
+    create() {
+        const accounts = this.coins.filter(item => item.selected)
+        accounts.push(...this.other.filter(item => item.selected));
+
+        this.orchestrator.createAccounts(accounts);
     }
 }

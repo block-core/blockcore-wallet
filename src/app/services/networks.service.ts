@@ -40,6 +40,7 @@ export class NetworksService {
         switch (environment.instance) {
             case Environments.Blockcore:
                 accounts = [{
+                    selected: true,
                     index: 0,
                     name: 'Stratis',
                     type: 'coin',
@@ -119,6 +120,7 @@ export class NetworksService {
             case Environments.CoinVault:
                 accounts = [{
                     index: 0,
+                    selected: true,
                     name: 'Stratis',
                     type: 'coin',
                     network: 105105,
@@ -134,6 +136,7 @@ export class NetworksService {
                     },
                 }, {
                     index: 0,
+                    selected: true,
                     name: 'Cirrus',
                     type: 'coin',
                     network: 401,
@@ -152,6 +155,7 @@ export class NetworksService {
             case Environments.SmartCityPlatform:
                 accounts = [{
                     index: 0,
+                    selected: true,
                     name: 'City Coin',
                     type: 'coin',
                     network: 1926,
@@ -167,6 +171,7 @@ export class NetworksService {
                     },
                 }, {
                     index: 0,
+                    selected: true,
                     name: 'Identity',
                     type: 'other',
                     network: 616,

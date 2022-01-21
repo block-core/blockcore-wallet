@@ -248,6 +248,10 @@ export class OrchestratorService {
         this.communication.send('account-create', account);
     }
 
+    createAccounts(account: Account[]) {
+        this.communication.send('accounts-create', account);
+    }
+
     createVault(data: Vault) {
         this.communication.send('vault-publish', data);
     }
