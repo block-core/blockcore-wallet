@@ -71,19 +71,20 @@ export class IndexerService {
         if (empty) {
             // Queue up in one second
             setTimeout(() => {
-
+                this.queryIndexer();
             }, 1000);
         }
     }
 
     queryIndexer() {
         while (!this.q.isEmpty()) {
+            debugger;
             const item = this.q.dequeue();
 
             const account = item.account as Account;
             const wallet = item.wallet as Wallet;
             const network = this.manager.getNetwork(account.network, account.purpose);
-            const indexerUrl = this.manager.state.persisted.settings.indexer.replace('{id}', network.id);
+            const indexerUrl = this.manager.state.persisted.settings.indexer.replace('{id}', network.id.toLowerCase());
 
             console.log('Indexer URL:', indexerUrl);
 
@@ -155,6 +156,7 @@ export class IndexerService {
             // account.state.receive
 
         }
+
         // this.manager.communication.sendToAll('account-data-updated');
     }
 }

@@ -1,5 +1,6 @@
 import { networkInterfaces } from "os";
 import { Action, Settings, State } from "../app/interfaces";
+import { INDEXER_URL } from "../app/shared/constants";
 import { environment } from "../environments/environment";
 import { AppState } from "./application-state";
 import { CommunicationBackgroundService } from "./communication";
@@ -70,6 +71,12 @@ export class AppManager {
         let { data, ui, action, store } = await this.state.load();
 
         console.log('STORE', store);
+
+        // If the indexer is not set, force it to be the default.
+        // TODO: This can likely be removed after development, used to handle previously stored settings without the default server.
+        if (!data.settings.indexer) {
+            data.settings.indexer = INDEXER_URL;
+        }
 
         // Only set if data is available, will use default if not.
         if (data) {
