@@ -149,6 +149,7 @@ export class AccountCreateComponent implements OnInit, OnDestroy {
 
         // TODO: Get the account index from the derivation path if user customizes it.
         const account: Account = {
+            type: 'coin', // TODO: Change this depending on what user selects.
             name: this.name,
             index: parsedIndex,
             network: parsedNetwork,

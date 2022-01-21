@@ -60,6 +60,7 @@ import { PasswordComponent } from './settings/password/password.component';
 import { RecoveryComponent } from './settings/recovery/recovery.component';
 import { NostrIdentityComponent } from './account/view/nostr/identity.component';
 import { AccountReceiveComponent } from './account/receive/receive.component';
+import { AccountSelectComponent } from './account/select/select.component';
 
 @NgModule({
   declarations: [
@@ -94,7 +95,8 @@ import { AccountReceiveComponent } from './account/receive/receive.component';
     LicensesComponent,
     ChangesComponent,
     NostrIdentityComponent,
-    AccountReceiveComponent
+    AccountReceiveComponent,
+    AccountSelectComponent
   ],
   imports: [
     BrowserModule,

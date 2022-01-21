@@ -35,12 +35,19 @@ export class HomeComponent implements OnInit, OnDestroy {
 
     // When on home page and when unlocked, open account.
     this.sub = this.communication.listen('wallet-unlocked', () => {
-      debugger;
       if (this.uiState.action?.action) {
         this.router.navigate(['action', this.uiState.action.action]);
       } else {
-        this.router.navigateByUrl('/dashboard');
-        // this.router.navigateByUrl('/account/view/' + this.uiState.activeWallet?.activeAccountIndex);
+
+        debugger;
+
+        // If user has zero accounts, we'll show the account select screen that will auto-create accounts the user chooses.
+        if (this.uiState.hasAccounts) {
+          this.router.navigateByUrl('/dashboard');
+          //this.router.navigateByUrl('/account/view/' + this.uiState.activeWallet.activeAccountIndex);
+        } else {
+          this.router.navigateByUrl('/account/select');
+        }
       }
     });
   }

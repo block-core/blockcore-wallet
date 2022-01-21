@@ -1,0 +1,25 @@
+<div class="page centered">
+    <h1>Select accounts</h1>
+    <h3>Choose what accounts to add to your wallet</h3>
+
+    <mat-selection-list #shoes>
+        <div mat-subheader>Coins/Tokens</div>
+        <mat-list-option *ngFor="let account of coins">
+            <mat-icon mat-list-icon>{{account.icon}}</mat-icon>
+            <div mat-line>{{account.name}}</div>
+            <div mat-line> {{account.purpose}} / {{account.network}} </div>
+        </mat-list-option>
+        <mat-divider></mat-divider>
+        <div mat-subheader>Other</div>
+        <mat-list-option *ngFor="let account of other">
+            <mat-icon mat-list-icon>{{account.icon}}</mat-icon>
+            <div mat-line>{{account.name}}</div>
+            <div mat-line> {{account.purpose}} / {{account.network}} </div>
+        </mat-list-option>
+    </mat-selection-list>
+
+    <p>
+        Options selected: {{shoes.selectedOptions.selected.length}}
+    </p>
+
+</div>

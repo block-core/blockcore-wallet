@@ -46,6 +46,9 @@ interface Account {
     /** Extended Public Key for this account. */
     xpub?: string;
     state?: AccountState;
+
+    /** The type of Account, used to show the account in different sections of the UI. Should be 'coin', 'token' or 'other'. */
+    type: string;
 }
 
 interface AccountState {

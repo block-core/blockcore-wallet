@@ -29,6 +29,7 @@ import { PasswordComponent } from './settings/password/password.component';
 import { RecoveryComponent } from './settings/recovery/recovery.component';
 import { NostrIdentityComponent } from './account/view/nostr/identity.component';
 import { AccountReceiveComponent } from './account/receive/receive.component';
+import { AccountSelectComponent } from './account/select/select.component';
 
 const routes: Routes = [
   {
@@ -63,6 +64,9 @@ const routes: Routes = [
   },
   {
     path: 'settings/export-recovery-phrase', component: RecoveryComponent
+  },
+  {
+    path: 'account/select', component: AccountSelectComponent
   },
   {
     path: 'account/view/:index', component: AccountComponent

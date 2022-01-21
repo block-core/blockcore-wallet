@@ -68,9 +68,15 @@ export class OrchestratorService {
                 } else {
                     // If the active wallet is unlocked, we'll redirect accordingly.
                     if (this.uiState.activeWallet && this.uiState.unlocked.indexOf(this.uiState.activeWallet.id) > -1) {
-                        console.log('LOADING REDIRECT TO ACCOUNT');
-                        this.router.navigateByUrl('/dashboard');
-                        //this.router.navigateByUrl('/account/view/' + this.uiState.activeWallet.activeAccountIndex);
+
+                        // If user has zero accounts, we'll show the account select screen that will auto-create accounts the user chooses.
+                        if (this.uiState.hasAccounts) {
+                            this.router.navigateByUrl('/dashboard');
+                            //this.router.navigateByUrl('/account/view/' + this.uiState.activeWallet.activeAccountIndex);
+                        } else {
+                            this.router.navigateByUrl('/account/select');
+                        }
+
                     } else {
                         // When the initial state is loaded and user has not unlocked any wallets, we'll show the unlock screen on home.
                         console.log('LOADING REDIRECT TO HOME');
