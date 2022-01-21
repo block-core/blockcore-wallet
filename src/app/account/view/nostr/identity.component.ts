@@ -63,7 +63,6 @@ export class NostrIdentityComponent implements OnInit, OnDestroy {
     }
 
     this.activatedRoute.paramMap.subscribe(async params => {
-      debugger;
       // If we are currently viewing an account and the user changes, we'll refresh this view.
       // if (this.previousIndex != data.index) {
       //   this.router.navigate(['account', 'view', data.index]);
@@ -236,8 +235,6 @@ export class NostrIdentityComponent implements OnInit, OnDestroy {
       // if (this.previousIndex != data.index) {
       //   this.router.navigate(['account', 'view', data.index]);
       // }
-
-      debugger;
 
       // console.log('PARAMS:', params);
       // const index: any = params.get('index');

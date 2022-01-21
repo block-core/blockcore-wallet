@@ -38,9 +38,6 @@ export class HomeComponent implements OnInit, OnDestroy {
       if (this.uiState.action?.action) {
         this.router.navigate(['action', this.uiState.action.action]);
       } else {
-
-        debugger;
-
         // If user has zero accounts, we'll show the account select screen that will auto-create accounts the user chooses.
         if (this.uiState.hasAccounts) {
           this.router.navigateByUrl('/dashboard');
@@ -61,8 +58,6 @@ export class HomeComponent implements OnInit, OnDestroy {
     //   this.unlockPassword = this.uiState.password;
     //   this.unlock();
     // }
-
-    debugger;
 
     // Verify if the wallet is already unlocked.
     if (this.uiState.activeWallet) {

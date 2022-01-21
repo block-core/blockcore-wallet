@@ -25,12 +25,8 @@ const initialize = async () => {
   // chrome.storage.local.set({ 'data': null }, () => {
   // });
 
-  debugger;
-
-  // VERIFY:
   return manager.initialize();
 
-  console.log('initialize is done in the background...');
   // VERIFY:
   //return await manager.loadState();
   // VERIFY:

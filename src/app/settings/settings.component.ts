@@ -5,6 +5,7 @@ import { OrchestratorService } from '../services/orchestrator.service';
 import { Settings } from '../interfaces';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { environment } from '../../environments/environment';
+import { INDEXER_URL } from '../shared/constants';
 
 @Component({
   selector: 'app-settings',
@@ -24,6 +25,11 @@ export class SettingsComponent {
     private location: Location) {
 
     this.env = environment;
+
+    // Reset to default if missing.
+    if (!this.uiState.persisted.settings.indexer) {
+      this.uiState.persisted.settings.indexer = INDEXER_URL;
+    }
 
     // Clone the settings on load:
     this.settings = JSON.parse(JSON.stringify(this.uiState.persisted.settings));

@@ -192,8 +192,6 @@ export class WalletManager {
             wallet = this.activeWallet;
         }
 
-        debugger;
-
         // First derive the xpub and store that on the account.
         const secret = this.walletSecrets.get(wallet.id);
 
@@ -202,8 +200,6 @@ export class WalletManager {
         const masterNode = HDKey.fromMasterSeed(Buffer.from(secret.seed), network.bip32);
 
         const accountNode = masterNode.derive(`m/${account.purpose}'/${account.network}'/${account.index}'`);
-
-        debugger;
 
         account.xpub = accountNode.publicExtendedKey;
 
@@ -214,8 +210,6 @@ export class WalletManager {
         wallet.activeAccountIndex = (wallet.accounts.length - 1);
 
         // After new account has been added and set as active, we'll generate some addresses:
-
-        debugger;
 
         // Generate the first receive address.
         await this.getReceiveAddress(account);
@@ -238,6 +232,18 @@ export class WalletManager {
         // const id3 = Buffer.from(id3Array).toString('hex');
 
         await this.manager.state.save();
+
+        if (wallet.restored) {
+            // Schedule background processing of the account against the blockchain APIs.
+            // This should only register a flag and return from this method to allow UI to continue processing.
+
+            // TODO: Perform blockchain / vault data query and recovery.
+            // If there are transactions, DID Documents, NFTs or anythign else, we should launch the
+            // query probe here.
+            this.manager.indexer.process(account, wallet);
+        }
+
+
     }
 
     // TODO: FIX VERY SOON!
@@ -288,7 +294,6 @@ export class WalletManager {
     }
 
     async getAddress(account: Account, type: number, addresses: Address[]) {
-        debugger;
         const index = addresses.length - 1;
 
         // Get the last index without know transactions:
@@ -333,8 +338,6 @@ export class WalletManager {
     }
 
     async addWallet(wallet: Wallet) {
-        debugger;
-
         // let recoveryPhrase = await this.manager.crypto.decryptData(wallet.mnemonic, wallet.);
 
         // // From the secret receovery phrase, the master seed is derived.
@@ -357,15 +360,6 @@ export class WalletManager {
 
         // Change the active wallet to the new one.
         this.manager.state.persisted.activeWalletId = wallet.id;
-
-        if (wallet.restored) {
-            // Schedule background processing of the default accounts against the blockchain APIs.
-            // This should only register a flag and return from this method to allow UI to continue processing.
-
-            // TODO: Perform blockchain / vault data query and recovery.
-            // If there are transactions, DID Documents, NFTs or anythign else, we should launch the
-            // query probe here.
-        }
 
         // Persist the newly created wallet.
         await this.manager.state.save();

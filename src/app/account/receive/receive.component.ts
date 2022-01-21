@@ -52,14 +52,11 @@ export class AccountReceiveComponent implements OnInit, OnDestroy {
     }
 
     async ngOnInit() {
-
         // TODO: When can we start using .lastItem and similar functions on arrays?
         this.addressEntry = this.uiState.activeAccount.state.receive[this.uiState.activeAccount.state.receive.length - 1];
         this.address = this.addressEntry.address;
 
         try {
-            debugger;
-
             this.qrCode = await QRCode.toDataURL(this.address, {
                 errorCorrectionLevel: 'L',
                 margin: 2,

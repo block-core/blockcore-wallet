@@ -297,7 +297,6 @@ export class OrchestratorBackgroundService {
     private eventHandlers() {
         // "state" is the first request from the UI.
         this.manager.communication.listen('state-load', async (port: any, data: any) => {
-            debugger;
             // If the local state has not yet initialized, we'll log error. This should normally not happen
             // and we have a race-condition that should be mitigated differently.
             if (!this.manager.state.initialized) {
@@ -497,6 +496,11 @@ export class OrchestratorBackgroundService {
             this.manager.communication.sendToAll('account-removed', data);
         });
 
+        this.manager.communication.listen('account-scan', async (port: any, data: { account: Account, wallet: Wallet }) => {
+            console.log('Performing account scan', data);
+            this.manager.indexer.process(data.account, data.wallet);
+        });
+
         this.manager.communication.listen('wallet-remove', async (port: any, data: { id: string, index: number }) => {
             await this.manager.walletManager.removeWallet(data.id);
 
@@ -518,8 +522,6 @@ export class OrchestratorBackgroundService {
             // which wallets is unlocked.
             this.manager.broadcastState();
 
-            debugger;
-
             if (unlocked) {
                 this.manager.communication.sendToAll('wallet-unlocked');
             } else {
@@ -540,8 +542,6 @@ export class OrchestratorBackgroundService {
 
         // TODO: Expand the address generation APIs to keep track of indexes for both change and non-change.
         this.manager.communication.listen('address-generate', async (port: any, data: { index: number }) => {
-
-            debugger;
 
             if (!this.manager.walletManager.activeWallet) {
                 return;

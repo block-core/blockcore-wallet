@@ -156,6 +156,7 @@ interface Persisted {
 }
 
 interface Settings {
+    indexer: string;
     dataVault: string;
     autoTimeout: number;
     theme: string;

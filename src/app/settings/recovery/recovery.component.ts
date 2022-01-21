@@ -28,7 +28,6 @@ export class RecoveryComponent implements OnDestroy {
         this.uiState.goBackHome = false;
 
         this.sub = this.communication.listen('wallet-exported-recovery-phrase', (mnemonic: string) => {
-            debugger;
             console.log('Received:', mnemonic);
             this.mnemonic = mnemonic;
         });

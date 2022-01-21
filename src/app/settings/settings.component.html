@@ -9,11 +9,20 @@
   <br><br>
 
   <mat-form-field class="input-full-width" appearance="outline">
+    <mat-label>Indexer</mat-label>
+    <input matInput [(ngModel)]="settings.indexer">
+    <mat-hint>Only change this if you want to connect your own indexer or third party indexer.
+    </mat-hint>
+  </mat-form-field>
+
+  <!-- <br><br>
+
+  <mat-form-field class="input-full-width" appearance="outline">
     <mat-label>Data Vault</mat-label>
     <input matInput [(ngModel)]="settings.dataVault">
     <mat-hint>Only change this if you want to connect your identities to an third party Blockcore Vault instance.
     </mat-hint>
-  </mat-form-field>
+  </mat-form-field> -->
 
   <br><br>
 

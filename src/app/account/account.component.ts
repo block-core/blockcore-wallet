@@ -21,8 +21,8 @@ export class AccountComponent implements OnInit, OnDestroy {
   unlocked = '';
   unlockPassword = '';
   alarmName = 'refresh';
-  wallet: any;
-  account!: any;
+  // wallet: any;
+  // account!: any;
   address!: string;
   // sub: any;
   previousIndex!: number;
@@ -60,7 +60,6 @@ export class AccountComponent implements OnInit, OnDestroy {
 
 
     this.activatedRoute.paramMap.subscribe(async params => {
-      debugger;
       console.log('PARAMS:', params);
       const index: any = params.get('index');
       // console.log('Account Index:', Number(index));
@@ -100,8 +99,12 @@ export class AccountComponent implements OnInit, OnDestroy {
     console.log('GENERATE address!!!!');
     console.log(this.uiState.activeAccount);
 
-    debugger;
     // this.communication.send('address-generate', { index: 0 });
+  }
+
+  scan() {
+    debugger;
+    this.communication.send('account-scan', { account: this.uiState.activeAccount, wallet: this.uiState.activeWallet });
   }
 
   async ngOnInit() {

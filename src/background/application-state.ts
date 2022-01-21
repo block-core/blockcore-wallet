@@ -1,5 +1,5 @@
 import { Action, Persisted, Store, Settings, Wallet } from "../app/interfaces";
-import { AUTO_TIMEOUT, MINUTE, VAULT_URL } from "../app/shared/constants";
+import { AUTO_TIMEOUT, INDEXER_URL, MINUTE, VAULT_URL } from "../app/shared/constants";
 import { Network } from "./networks";
 
 export class AppState {
@@ -9,6 +9,7 @@ export class AppState {
     persisted: Persisted = {
         settings: {
             autoTimeout: AUTO_TIMEOUT,
+            indexer: INDEXER_URL,
             dataVault: VAULT_URL,
             theme: 'dark',
             themeColor: 'primary',

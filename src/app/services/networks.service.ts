@@ -35,8 +35,6 @@ export class NetworksService {
     getDefaultAccounts(wallet: Wallet) {
         let accounts: Account[] = [];
 
-        debugger;
-
         switch (environment.instance) {
             case Environments.Blockcore:
                 accounts = [{

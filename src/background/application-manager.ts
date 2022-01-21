@@ -5,6 +5,7 @@ import { AppState } from "./application-state";
 import { CommunicationBackgroundService } from "./communication";
 import { CryptoUtility } from "./crypto-utility";
 import { DataSyncService } from "./data-sync";
+import { IndexerService } from "./indexer";
 import { NetworkLoader } from "./network-loader";
 import { OrchestratorBackgroundService } from "./orchestrator";
 import { WalletManager } from "./wallet-manager";
@@ -17,22 +18,20 @@ export class AppManager {
     sync!: DataSyncService;
     communication!: CommunicationBackgroundService;
     orchestrator!: OrchestratorBackgroundService;
+    indexer!: IndexerService;
 
     /** Initializes the app, loads the AppState and other operations. */
     // configure(): [AppState, CryptoUtility, CommunicationBackgroundService, OrchestratorBackgroundService, DataSyncService] {
     configure() {
-        debugger;
-
         this.crypto = new CryptoUtility();
         this.state = new AppState();
         this.communication = new CommunicationBackgroundService();
         this.sync = new DataSyncService(this);
         this.orchestrator = new OrchestratorBackgroundService(this);
+        this.indexer = new IndexerService(this);
 
         const networkLoader = new NetworkLoader();
         this.state.networks = networkLoader.getNetworks(environment.networks);
-
-        // return [this.state, utility, communication, orchestrator, sync];
     }
 
     /** Get the network definition based upon the id, e.g. BTC, STRAX, CRS, CITY. */
@@ -41,13 +40,12 @@ export class AppManager {
         return network;
     }
 
-    /** Get the network definition based upon the id, e.g. BTC, STRAX, CRS, CITY. The purpose defaults to 44. */
+    /** Get the network definition based upon the network number and purpose. The purpose defaults to 44. */
     getNetwork(network: number, purpose: number = 44) {
         return this.state.networks.find(w => w.network == network && w.purpose == purpose);
     }
 
     initialize = async () => {
-        debugger;
         // CLEAR DATA FOR DEBUG PURPOSES:
         // chrome.storage.local.set({ 'data': null }, () => {
         // });
@@ -65,7 +63,6 @@ export class AppManager {
     };
 
     loadState = async () => {
-        debugger;
         // CLEAR DATA FOR DEBUG PURPOSES:
         // chrome.storage.local.set({ 'data': null }, () => {
         // });
@@ -101,8 +98,6 @@ export class AppManager {
             unlocked: this.walletManager.unlocked,
             store: this.state.store
         }
-
-        debugger;
 
         const eventName = initial ? 'state-loaded' : 'state-changed';
 

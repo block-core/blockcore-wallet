@@ -19,9 +19,7 @@ export class OrchestratorService {
         private router: Router,
         private snackBar: MatSnackBar
     ) {
-        console.log('OrchestratorService constructor.');
-        debugger;
-        // this.eventHandlers();
+
     }
 
     initialize() {
@@ -45,7 +43,6 @@ export class OrchestratorService {
             // Loading has completed.
             this.uiState.loading = false;
 
-            debugger;
             console.log('EVENT: state-loaded', state);
             this.uiState.initialized = true;
             this.uiState.action = state.action;
@@ -88,7 +85,6 @@ export class OrchestratorService {
 
         // Whenever the state is updated, we'll update in the UI.
         this.communication.listen('state-changed', (state: State) => {
-            debugger;
             console.log('EVENT: state-changed', state);
             this.uiState.initialized = true;
             this.uiState.action = state.action;

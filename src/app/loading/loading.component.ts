@@ -94,15 +94,15 @@ export class LoadingComponent implements OnInit, OnDestroy {
     // Load the application state, which is individual UI instance data.
     // var state = await this.uiState.load();
 
-    this.uiState.activeWallet$.toPromise().then((data) => {
-      debugger;
-      console.log(data);
-    });
+    // this.uiState.activeWallet$.toPromise().then((data) => {
+    //   debugger;
+    //   console.log(data);
+    // });
 
-    this.uiState.activeAccount$.toPromise().then((data) => {
-      debugger;
-      console.log(data);
-    });
+    // this.uiState.activeAccount$.toPromise().then((data) => {
+    //   debugger;
+    //   console.log(data);
+    // });
     
 
     // // SHOULD WE LISTEN TO STATE-CHANGED, OR REALLY BE LOOKING AT THE WALLET AND ACCOUNT?!

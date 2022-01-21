@@ -219,8 +219,6 @@ export class AccountIdentityComponent implements OnInit, OnDestroy {
       //   this.router.navigate(['account', 'view', data.index]);
       // }
 
-      debugger;
-
       // console.log('PARAMS:', params);
       // const index: any = params.get('index');
       const index = data.index;
