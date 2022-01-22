@@ -1,17 +1,6 @@
-import { Account, State, Wallet, Action, DIDPayload, Settings, Identity, Vault, Address } from '../app/interfaces';
-import { MINUTE, NETWORK_IDENTITY } from '../app/shared/constants';
-import { AppState } from './application-state';
-import { CommunicationBackgroundService } from './communication';
-import { CryptoUtility } from './crypto-utility';
-import * as bip39 from 'bip39';
-import * as bip32 from 'bip32';
-import { decodeJWT, verifyJWT } from 'did-jwt';
-import { settings } from 'cluster';
-import { ServiceEndpoint } from 'did-resolver';
-import { keyUtils, Secp256k1KeyPair } from '@transmute/did-key-secp256k1';
-import { BlockcoreIdentity } from '@blockcore/identity';
-import { Issuer } from 'did-jwt-vc';
+import { Account, Wallet } from '../app/interfaces';
 import { AppManager } from './application-manager';
+
 //const axios = require('axios');
 // In order to gain the TypeScript typings (for intellisense / autocomplete) while using CommonJS imports with require() use the following approach:
 const axios = require('axios').default;
@@ -49,13 +38,8 @@ class Queue {
     }
 }
 
-
 /** Service that handles queries against the blockchain indexer to retrieve data for accounts. Runs in the background. */
 export class IndexerService {
-    timer: any;
-    private communication!: CommunicationBackgroundService;
-    private state!: AppState;
-    private crypto!: CryptoUtility;
     private q = new Queue();
 
     constructor(private manager: AppManager) {
@@ -75,6 +59,10 @@ export class IndexerService {
                 await this.queryIndexer();
             }, 1000);
         }
+    }
+
+    hasWork() {
+        return !this.q.isEmpty();
     }
 
     async queryIndexer() {

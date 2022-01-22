@@ -1,6 +1,6 @@
 import { networkInterfaces } from "os";
 import { Action, Settings, State } from "../app/interfaces";
-import { INDEXER_URL } from "../app/shared/constants";
+import { INDEXER_URL, MINUTE } from "../app/shared/constants";
 import { environment } from "../environments/environment";
 import { AppState } from "./application-state";
 import { CommunicationBackgroundService } from "./communication";
@@ -61,7 +61,28 @@ export class AppManager {
 
         // After initialize is finished, broadcast the state to the UI.
         this.broadcastState();
+
+        this.scheduledIndexer();
+
     };
+
+    scheduledIndexer() {
+        setInterval(() => {
+            // We will only iterate all wallets and schedule indexing if the indexer is currently finished with all previous tasks.
+            if (!this.indexer.hasWork()) {
+                const wallets = this.walletManager.getWallets();
+
+                for (let i = 0; i < wallets.length; i++) {
+                    const wallet = wallets[i];
+
+                    for (let j = 0; j < wallet.accounts.length; j++) {
+                        const account = wallet.accounts[j];
+                        this.indexer.process(account, wallet, false);
+                    }
+                }
+            }
+        }, MINUTE);
+    }
 
     loadState = async () => {
         // CLEAR DATA FOR DEBUG PURPOSES:
