@@ -9,12 +9,12 @@ export class AmountPipe implements PipeTransform {
 
     }
 
-    transform(value: number): string {
+    transform(value: number | BigInt): string {
         if (this.uiState.persisted.settings.amountFormat == 'sat') {
             return value.toString();
         }
         else if (this.uiState.persisted.settings.amountFormat == 'bitcoin') {
-            return (value / 100000000).toFixed(8);
+            return (value as number / 100000000).toFixed(8);
         }
         else {
             const formatted = satcomma.fromSats(value, { validateBitcoinMaxSupply: false });

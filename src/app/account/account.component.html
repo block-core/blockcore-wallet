@@ -2,8 +2,8 @@
 
     <mat-card class="example-card">
         <!-- <mat-card-subtitle>{{uiState.activeAccount.name}}</mat-card-subtitle> -->
-        <mat-card-subtitle>$0</mat-card-subtitle>
-        <mat-card-title>{{uiState.activeAccount.state?.balance || 0}} {{uiState.activeAccount.network | network}}
+        <mat-card-subtitle>Balance</mat-card-subtitle>
+        <mat-card-title>{{uiState.activeAccount.state?.balance || 0 | amount}} {{uiState.activeAccount.network | network}}
         </mat-card-title>
         <!-- <mat-card-content>
             <p>$0</p>
@@ -35,7 +35,7 @@
         </a>
     </mat-nav-list>
 
-    {{this.uiState.activeAccount.state.receive | json}}
+    <!-- {{this.uiState.activeAccount.state.receive | json}} -->
 
     <!-- First address (for verification):<br>
     <div *ngIf="address">

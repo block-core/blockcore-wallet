@@ -61,6 +61,7 @@ import { RecoveryComponent } from './settings/recovery/recovery.component';
 import { NostrIdentityComponent } from './account/view/nostr/identity.component';
 import { AccountReceiveComponent } from './account/receive/receive.component';
 import { AccountSelectComponent } from './account/select/select.component';
+import { AmountPipe } from './shared/amount.pipe';
 
 @NgModule({
   declarations: [
@@ -96,7 +97,8 @@ import { AccountSelectComponent } from './account/select/select.component';
     ChangesComponent,
     NostrIdentityComponent,
     AccountReceiveComponent,
-    AccountSelectComponent
+    AccountSelectComponent,
+    AmountPipe
   ],
   imports: [
     BrowserModule,
