@@ -1,4 +1,4 @@
-import { Account, State, Wallet, Action, DIDPayload, Settings, Identity, Vault } from '../app/interfaces';
+import { Account, State, Wallet, Action, DIDPayload, Settings, Identity, Vault, Address } from '../app/interfaces';
 import { MINUTE, NETWORK_IDENTITY } from '../app/shared/constants';
 import { AppState } from './application-state';
 import { CommunicationBackgroundService } from './communication';
@@ -12,7 +12,9 @@ import { keyUtils, Secp256k1KeyPair } from '@transmute/did-key-secp256k1';
 import { BlockcoreIdentity } from '@blockcore/identity';
 import { Issuer } from 'did-jwt-vc';
 import { AppManager } from './application-manager';
-const axios = require('axios');
+//const axios = require('axios');
+// In order to gain the TypeScript typings (for intellisense / autocomplete) while using CommonJS imports with require() use the following approach:
+const axios = require('axios').default;
 
 class Queue {
     items: any[];
@@ -61,7 +63,6 @@ export class IndexerService {
     }
 
     process(account: Account, wallet: Wallet) {
-
         const empty = this.q.isEmpty();
 
         // Registers in queue processing of the account in specific wallet.
@@ -70,19 +71,25 @@ export class IndexerService {
         // If the queue is empty, we'll schedule processing with a timeout.
         if (empty) {
             // Queue up in one second
-            setTimeout(() => {
-                this.queryIndexer();
+            setTimeout(async () => {
+                await this.queryIndexer();
             }, 1000);
         }
     }
 
-    queryIndexer() {
+    async queryIndexer() {
+
+        let counter = 0;
+
         while (!this.q.isEmpty()) {
-            debugger;
             const item = this.q.dequeue();
 
+            debugger;
+
+            // These two entries has been sent from
             const account = item.account as Account;
             const wallet = item.wallet as Wallet;
+
             const network = this.manager.getNetwork(account.network, account.purpose);
             const indexerUrl = this.manager.state.persisted.settings.indexer.replace('{id}', network.id.toLowerCase());
 
@@ -92,71 +99,165 @@ export class IndexerService {
             for (let i = 0; i < account.state.receive.length; i++) {
                 let receiveAddress = account.state.receive[i];
 
-                // receiveAddress.address
+                // If we have already retrieved this, skip to next. We will only query again if
+                // there is an "force" parameter (to be added later).
+                if (!receiveAddress.retrieved) {
 
-                //              // Perform a map operation on all receive addresses to extend the array with result from indexer results.
-                //   data.receive.map(async item => {
+                    counter++;
 
-                //     try {
-                //       let result: any = await this.http.get(`http://localhost:9910/api/query/address/${item.address}`).toPromise();
+                    try {
+                        // We don't have Angular context available in the background, we we'll rely on axios to perform queries:
+                        const date = new Date().toISOString();
+                        const response = await axios.get(`${indexerUrl}/api/query/address/${receiveAddress.address}`);
+                        console.log(response);
+                        const data = response.data;
 
-                //       item.icon = 'history';
-                //       item.title = 'Received: ' + result.totalReceived + ' to ' + result.address;
+                        debugger;
 
-                //       let activity = {
-                //         ...item,
-                //         ...result
-                //       };
+                        // Just a minor verification in case the returned data is wrong or scrambled.
+                        if (receiveAddress.address == data.address) {
+                            var updatedReceiveAddress = { ...receiveAddress, ...data };
 
-                //       this.activities.push(activity);
-                //       console.log('activity:', activity);
+                            // Persist the date we got this data:
+                            updatedReceiveAddress.retrieved = date;
+                            console.log(updatedReceiveAddress);
 
-                //       // this.activities = [{
-                //       //   icon: 'history',
-                //       //   amount: 50,
-                //       //   title: 'Received 50 STRAX',
-                //       //   status: 'Confirming...',
-                //       //   timestamp: new Date()
-                //       // }, {
-                //       //   icon: 'done',
-                //       //   amount: 10,
-                //       //   title: 'Sent 10 STRAX to XNfU57hAwQ1uWYRHjusas8MFCUQetuuX6o',
-                //       //   status: 'Success',
-                //       //   timestamp: new Date()
-                //       // }]
+                            // Replace the received entry.
+                            account.state.receive[i] = updatedReceiveAddress;
+                        }
 
+                        // let result: any = await this.http.get(`http://localhost:9910/api/query/address/${item.address}`).toPromise();
+
+                        // item.icon = 'history';
+                        // item.title = 'Received: ' + result.totalReceived + ' to ' + result.address;
+
+                        // let activity = {
+                        //     ...item,
+                        //     ...result
+                        // };
+
+                        // this.activities.push(activity);
+                        // console.log('activity:', activity);
+
+                    } catch (error) {
+                        console.error(error);
+
+                        // TODO: Implement error handling in background and how to send it to UI.
+                        // We should probably have an error log in settings, so users can see background problems as well.
+                        this.manager.communication.sendToAll('error', error);
+
+                        // if (error.error?.title) {
+                        //     this.snackBar.open('Error: ' + error.error.title, 'Hide', {
+                        //         duration: 8000,
+                        //         horizontalPosition: 'center',
+                        //         verticalPosition: 'bottom',
+                        //     });
+                        // } else {
+                        //     this.snackBar.open('Error: ' + error.message, 'Hide', {
+                        //         duration: 8000,
+                        //         horizontalPosition: 'center',
+                        //         verticalPosition: 'bottom',
+                        //     });
+                        // }
+                    }
+                }
+
+                // For every 5 queried address, we will persist the state and update UI.
+                // TODO: Verify what this should be based upon user testing and verification of experience.
+                if (counter > 4) {
+                    account.state.balance = this.manager.walletManager.calculateBalance(account);
+                    await this.manager.state.save();
+                    this.manager.broadcastState();
+                    counter = 0;
+                }
+
+                // // Make a request for a user with a given ID
+                // axios.get('/user?ID=12345')
+                // .then(function (response) {
+                //     // handle success
+                //     console.log(response);
+                // })
+                // .catch(function (error) {
+                //     // handle error
+                //     console.log(error);
+                // })
+                // .then(function () {
+                //     // always executed
+                // });
+
+                // axios.get('/user', {
+                //     params: {
+                //         ID: 12345
                 //     }
+                // })
+                //     .then(function (response) {
+                //         console.log(response);
+                //     })
+                //     .catch(function (error) {
+                //         console.log(error);
+                //     })
+                //     .then(function () {
+                //         // always executed
+                //     });
+
+
+
+                // this.activities = [{
+                //   icon: 'history',
+                //   amount: 50,
+                //   title: 'Received 50 STRAX',
+                //   status: 'Confirming...',
+                //   timestamp: new Date()
+                // }, {
+                //   icon: 'done',
+                //   amount: 10,
+                //   title: 'Sent 10 STRAX to XNfU57hAwQ1uWYRHjusas8MFCUQetuuX6o',
+                //   status: 'Success',
+                //   timestamp: new Date()
+                // }]
+
+                // }
                 //     catch (error: any) {
-                //       console.log('oops', error);
+                //     console.log('oops', error);
 
-                //       if (error.error?.title) {
+                //     if (error.error?.title) {
                 //         this.snackBar.open('Error: ' + error.error.title, 'Hide', {
-                //           duration: 8000,
-                //           horizontalPosition: 'center',
-                //           verticalPosition: 'bottom',
+                //             duration: 8000,
+                //             horizontalPosition: 'center',
+                //             verticalPosition: 'bottom',
                 //         });
-                //       } else {
+                //     } else {
                 //         this.snackBar.open('Error: ' + error.message, 'Hide', {
-                //           duration: 8000,
-                //           horizontalPosition: 'center',
-                //           verticalPosition: 'bottom',
+                //             duration: 8000,
+                //             horizontalPosition: 'center',
+                //             verticalPosition: 'bottom',
                 //         });
-                //       }
                 //     }
 
-                //     // let result = await this.http.get(`http://localhost:9910/api/query/address/${item.address}`).subscribe(result => {
-                //     // }, error => {
+                debugger;
 
-                //     // });
-                //   });
+                // If we just processed the last entry, check if we should find more receive addresses.
+                if (i == account.state.receive.length - 1) {
+                    // Check if the last entry has been used.
+                    const lastReceiveAddress = account.state.receive[account.state.receive.length - 1];
 
+                    // If the last address has been used, generate a new one and query that and continue until all is found.
+                    if (this.manager.walletManager.hasBeenUsed(lastReceiveAddress)) {
+                        await this.manager.walletManager.getReceiveAddress(account);
+                        // Now the .receive array should have one more entry and the loop should continue.
+                    }
+                }
             }
 
-            // account.state.receive
-            // account.state.receive
+            // Finally set the date on the account itself.
+            account.state.retrieved = new Date().toISOString();
 
+            account.state.balance = this.manager.walletManager.calculateBalance(account);
+            // Save and broadcast for every full account query
+            await this.manager.state.save();
+            this.manager.broadcastState();
         }
 
-        // this.manager.communication.sendToAll('account-data-updated');
+        this.manager.communication.sendToAll('account-data-updated');
     }
 }

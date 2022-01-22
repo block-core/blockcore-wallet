@@ -45,6 +45,8 @@ export class AccountComponent implements OnInit, OnDestroy {
     this.uiState.title = 'Account...';
     this.uiState.showBackButton = true;
 
+    
+
     setTimeout(() => {
       this.loading = false;
     }, 1500);

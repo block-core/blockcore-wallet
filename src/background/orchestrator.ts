@@ -14,6 +14,7 @@ import * as secp256k1 from '@noble/secp256k1';
 import { seedFromWords, generateSeedWords, privateKeyFromSeed } from 'nostr-tools/nip06';
 import { getPublicKey } from 'nostr-tools';
 import { AppManager } from './application-manager';
+import { AccountReceiveComponent } from '../app/account/receive/receive.component';
 
 /** Service that handles orchestration between background and frontend. Maps messages between managers and actions initiated in the UI. */
 export class OrchestratorBackgroundService {
@@ -498,7 +499,14 @@ export class OrchestratorBackgroundService {
 
         this.manager.communication.listen('account-scan', async (port: any, data: { account: Account, wallet: Wallet }) => {
             console.log('Performing account scan', data);
-            this.manager.indexer.process(data.account, data.wallet);
+
+            // When data is sent from UI to background, it is serialized to JSON and the instance does not have a reference 
+            // to the original state. Therefore we'll get the correct objects based upon the IDs provided and send those 
+            // to the indexer.
+            const wallet = this.manager.walletManager.getWallet(data.wallet.id);
+            const account = wallet.accounts[data.account.index];
+
+            this.manager.indexer.process(account, wallet);
         });
 
         this.manager.communication.listen('wallet-remove', async (port: any, data: { id: string, index: number }) => {

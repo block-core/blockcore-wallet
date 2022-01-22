@@ -13,7 +13,8 @@ export class AppState {
             dataVault: VAULT_URL,
             theme: 'dark',
             themeColor: 'primary',
-            language: 'en'
+            language: 'en',
+            amountFormat: 'bitcoin'
         },
         wallets: [] as Wallet[],
         activeWalletId: null

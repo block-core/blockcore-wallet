@@ -56,10 +56,10 @@ interface Account {
 
 interface AccountState {
     /** The latest known balance of this account */
-    balance: number;
+    balance: number | BigInt;
 
     /** The time when this account data was updated */
-    retrieved: Date;
+    retrieved: string;
 
     receive:  Address[];
 
@@ -82,6 +82,8 @@ interface Address {
     totalMineCount?: BigInt;
     pendingSent?: BigInt;
     pendingReceived?: BigInt;
+
+    retrieved?: string;
 
     transactions?: Transaction[];
 }
@@ -162,6 +164,8 @@ interface Settings {
     theme: string;
     themeColor: string;
     language: string;
+    /** Allows users to change how the amounts are displayed. */
+    amountFormat: string;
 }
 
 interface Action {

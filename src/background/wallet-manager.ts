@@ -38,6 +38,11 @@ export class WalletManager {
         this.manager.broadcastState();
     }
 
+    calculateBalance(account: Account) {
+        let balance = account.state.receive.map(x => x.balance).reduce((x: any, y: any) => x + y);
+        return balance;
+    }
+
     async revealSecretRecoveryPhrase(id: string, password: string) {
         var wallet = this.manager.walletManager.getWallet(id);
         let unlockedMnemonic = null;
@@ -181,7 +186,7 @@ export class WalletManager {
 
         // Remove the password for this wallet, if it was unlocked.
         this.manager.walletManager.walletSecrets.delete(id);
-        
+
         await this.manager.state.save();
 
         this.manager.broadcastState();
@@ -293,13 +298,17 @@ export class WalletManager {
         return this.getAddress(account, 0, account.state.receive);
     }
 
+    hasBeenUsed(address: Address) {
+        return (address.totalReceivedCount > 0n || address.totalSent > 0n || address.totalStakeCount > 0n || address.totalMineCount > 0n);
+    }
+
     async getAddress(account: Account, type: number, addresses: Address[]) {
         const index = addresses.length - 1;
 
         // Get the last index without know transactions:
         let address = addresses[index];
 
-        if (address == null || address.totalReceivedCount > 0n) {
+        if (address == null || this.hasBeenUsed(address)) {
             // Generate a new address.
             const addressIndex = index + 1;
 

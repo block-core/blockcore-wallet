@@ -21,14 +21,21 @@
 
     <mat-nav-list>
         <div mat-subheader>Recent Activity</div>
-
         <a mat-list-item *ngFor="let activity of activities" routerLinkActive="active-link" [routerLink]="['/', 'account', 'view']">
             <mat-icon mat-list-icon>{{activity.icon}}</mat-icon>
             <div mat-line>{{activity.title}}</div>
             <div mat-line> {{activity.address}} </div>
         </a>
-
+        <mat-divider></mat-divider>
+        <div mat-subheader>Addresses</div>
+        <a mat-list-item *ngFor="let address of this.uiState.activeAccount.state.receive" routerLinkActive="active-link" [routerLink]="['/', 'account', 'address', address.index]">
+            <!-- <mat-icon mat-list-icon>{{activity.icon}}</mat-icon> -->
+            <div mat-line>{{address.address}} ({{address.balance}})</div>
+            <div mat-line> {{address.totalReceived}} / {{address.totalSent}} </div>
+        </a>
     </mat-nav-list>
+
+    {{this.uiState.activeAccount.state.receive | json}}
 
     <!-- First address (for verification):<br>
     <div *ngIf="address">
