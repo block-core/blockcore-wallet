@@ -27,7 +27,8 @@ export class AccountComponent implements OnInit, OnDestroy {
   // sub: any;
   previousIndex!: number;
   sub: any;
-  loading = true;
+  sub2: any;
+  loading = false;
 
   activities: any[] = [];
 
@@ -45,11 +46,9 @@ export class AccountComponent implements OnInit, OnDestroy {
     this.uiState.title = 'Account...';
     this.uiState.showBackButton = true;
 
-    
-
-    setTimeout(() => {
-      this.loading = false;
-    }, 1500);
+    // setTimeout(() => {
+    //   this.loading = false;
+    // }, 1500);
 
     // Whenever the account changes, re-generate the address.
     this.uiState.activeAccount$.subscribe(() => {
@@ -59,7 +58,6 @@ export class AccountComponent implements OnInit, OnDestroy {
     if (!this.uiState.hasAccounts) {
       this.router.navigateByUrl('/account/create');
     }
-
 
     this.activatedRoute.paramMap.subscribe(async params => {
       console.log('PARAMS:', params);
@@ -104,12 +102,18 @@ export class AccountComponent implements OnInit, OnDestroy {
     // this.communication.send('address-generate', { index: 0 });
   }
 
-  scan() {
-    debugger;
-    this.communication.send('account-scan', { account: this.uiState.activeAccount, wallet: this.uiState.activeWallet });
+  scan(force: boolean = false) {
+    this.loading = true;
+
+    this.communication.send('account-scan', { force: force, account: this.uiState.activeAccount, wallet: this.uiState.activeWallet });
   }
 
   async ngOnInit() {
+
+    this.sub2 = this.communication.listen('account-scanned', async (data: { accountId: string }) => {
+      this.loading = false;
+    });
+
     this.sub = this.communication.listen('address-generated', async (data: { address: string, receive: any[], change: any[] }) => {
       console.log('ADDRESS GENERATED!!');
       this.address = data.address;

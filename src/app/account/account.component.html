@@ -12,12 +12,15 @@
         <mat-card-actions class="full-action-buttons">
             <button class="half-width" mat-raised-button [routerLink]="['/', 'account', 'receive', uiState.activeAccount.index]" color="primary">Receive</button>
             <button class="half-width" mat-raised-button>Send</button>
-            <button class="half-width" mat-raised-button (click)="scan()">Scan</button>
         </mat-card-actions>
         <mat-card-footer>
             <mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
         </mat-card-footer>
     </mat-card>
+
+    <button class="half-width" mat-raised-button (click)="scan()">Scan</button>
+
+    <button class="half-width" mat-raised-button (click)="scan(true)">Force Scan</button>
 
     <mat-nav-list>
         <div mat-subheader>Recent Activity</div>

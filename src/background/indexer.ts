@@ -258,6 +258,6 @@ export class IndexerService {
             this.manager.broadcastState();
         }
 
-        this.manager.communication.sendToAll('account-data-updated');
+        this.manager.communication.sendToAll('account-scanned');
     }
 }
