@@ -245,10 +245,8 @@ export class WalletManager {
             // TODO: Perform blockchain / vault data query and recovery.
             // If there are transactions, DID Documents, NFTs or anythign else, we should launch the
             // query probe here.
-            this.manager.indexer.process(account, wallet);
+            this.manager.indexer.process(account, wallet, false);
         }
-
-
     }
 
     // TODO: FIX VERY SOON!

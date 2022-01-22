@@ -497,7 +497,7 @@ export class OrchestratorBackgroundService {
             this.manager.communication.sendToAll('account-removed', data);
         });
 
-        this.manager.communication.listen('account-scan', async (port: any, data: { account: Account, wallet: Wallet }) => {
+        this.manager.communication.listen('account-scan', async (port: any, data: { force: boolean, account: Account, wallet: Wallet }) => {
             console.log('Performing account scan', data);
 
             // When data is sent from UI to background, it is serialized to JSON and the instance does not have a reference 
@@ -506,7 +506,7 @@ export class OrchestratorBackgroundService {
             const wallet = this.manager.walletManager.getWallet(data.wallet.id);
             const account = wallet.accounts[data.account.index];
 
-            this.manager.indexer.process(account, wallet);
+            this.manager.indexer.process(account, wallet, data.force);
         });
 
         this.manager.communication.listen('wallet-remove', async (port: any, data: { id: string, index: number }) => {

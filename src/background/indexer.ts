@@ -62,11 +62,11 @@ export class IndexerService {
 
     }
 
-    process(account: Account, wallet: Wallet) {
+    process(account: Account, wallet: Wallet, force: boolean) {
         const empty = this.q.isEmpty();
 
         // Registers in queue processing of the account in specific wallet.
-        this.q.enqueue({ account, wallet });
+        this.q.enqueue({ account, wallet, force });
 
         // If the queue is empty, we'll schedule processing with a timeout.
         if (empty) {
@@ -101,7 +101,7 @@ export class IndexerService {
 
                 // If we have already retrieved this, skip to next. We will only query again if
                 // there is an "force" parameter (to be added later).
-                if (!receiveAddress.retrieved) {
+                if (item.force || !receiveAddress.retrieved) {
 
                     counter++;
 
