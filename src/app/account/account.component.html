@@ -31,11 +31,18 @@
             <div mat-line> {{activity.address}} </div>
         </a>
         <mat-divider></mat-divider>
-        <div mat-subheader>Addresses</div>
+        <div mat-subheader>Receive Addresses</div>
         <a mat-list-item *ngFor="let address of this.uiState.activeAccount.state.receive" routerLinkActive="active-link" [routerLink]="['/', 'account', 'address', address.index]">
             <!-- <mat-icon mat-list-icon>{{activity.icon}}</mat-icon> -->
-            <div mat-line>{{address.address}} ({{address.balance}})</div>
-            <div mat-line> {{address.totalReceived}} / {{address.totalSent}} </div>
+            <div mat-line>{{address.address}}</div>
+            <div mat-line>R:{{address.totalReceived | amount}} / S:{{address.totalSent | amount}} </div>
+        </a>
+        <mat-divider></mat-divider>
+        <div mat-subheader>Change Addresses</div>
+        <a mat-list-item *ngFor="let address of this.uiState.activeAccount.state.change" routerLinkActive="active-link" [routerLink]="['/', 'account', 'address', address.index]">
+            <!-- <mat-icon mat-list-icon>{{activity.icon}}</mat-icon> -->
+            <div mat-line>{{address.address}}</div>
+            <div mat-line>R:{{address.totalReceived | amount}} / S:{{address.totalSent | amount}} </div>
         </a>
     </mat-nav-list>
 
