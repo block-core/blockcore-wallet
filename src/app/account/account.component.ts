@@ -1,4 +1,4 @@
-import { Component, Inject, HostBinding, ChangeDetectorRef, OnInit, OnDestroy } from '@angular/core';
+import { Component, ChangeDetectorRef, OnInit, OnDestroy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { CryptoService } from '../services/crypto.service';
 import { UIState } from '../services/ui-state.service';
@@ -6,8 +6,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { OrchestratorService } from '../services/orchestrator.service';
 import { CommunicationService } from '../services/communication.service';
 import { NETWORK_IDENTITY, NETWORK_NOSTR } from '../shared/constants';
-import { concat, Observable, concatMap } from 'rxjs';
-import { request } from 'http';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { NetworksService } from '../services/networks.service';
 import { Transaction } from '../interfaces';
@@ -23,16 +21,14 @@ export class AccountComponent implements OnInit, OnDestroy {
   unlocked = '';
   unlockPassword = '';
   alarmName = 'refresh';
-  // wallet: any;
-  // account!: any;
   address!: string;
-  // sub: any;
   previousIndex!: number;
   sub: any;
   sub2: any;
   loading = false;
-
   activities: any[] = [];
+  public transactions: Transaction[];
+  public networkStatus: any;
 
   constructor(
     private http: HttpClient,
@@ -49,15 +45,6 @@ export class AccountComponent implements OnInit, OnDestroy {
     this.uiState.title = 'Account...';
     this.uiState.showBackButton = true;
 
-    // setTimeout(() => {
-    //   this.loading = false;
-    // }, 1500);
-
-    // Whenever the account changes, re-generate the address.
-    this.uiState.activeAccount$.subscribe(() => {
-      this.generateAddress();
-    });
-
     if (!this.uiState.hasAccounts) {
       this.router.navigateByUrl('/account/create');
     }
@@ -65,9 +52,6 @@ export class AccountComponent implements OnInit, OnDestroy {
     this.activatedRoute.paramMap.subscribe(async params => {
       console.log('PARAMS:', params);
       const index: any = params.get('index');
-      // console.log('Account Index:', Number(index));
-
-      console.log('Index to view:', index);
 
       if (!this.uiState.activeWallet) {
         return;
@@ -75,7 +59,6 @@ export class AccountComponent implements OnInit, OnDestroy {
 
       this.manager.setActiveAccountId(index);
       this.uiState.title = this.uiState.activeAccount?.name || '';
-
       this.previousIndex = index;
 
       if (this.uiState.activeAccount?.network == NETWORK_IDENTITY) {
@@ -83,12 +66,6 @@ export class AccountComponent implements OnInit, OnDestroy {
       } else if (this.uiState.activeAccount?.network == NETWORK_NOSTR) {
         this.router.navigate(['account', 'view', 'nostr', index]);
       }
-
-      // this.generateAddress();
-
-      // this.uiState.persisted.activeAccountIndex = Number(index);
-      // Persist when changing accounts.
-      // this.uiState.save();
     });
   }
 
@@ -98,20 +75,11 @@ export class AccountComponent implements OnInit, OnDestroy {
     }
   }
 
-  generateAddress() {
-    console.log('GENERATE address!!!!');
-    console.log(this.uiState.activeAccount);
-
-    // this.communication.send('address-generate', { index: 0 });
-  }
-
   scan(force: boolean = false) {
     this.loading = true;
 
     this.communication.send('account-scan', { force: force, account: this.uiState.activeAccount, wallet: this.uiState.activeWallet });
   }
-
-  public networkStatus: any;
 
   async toggleNetwork() {
     if (!this.networkStatus) {
@@ -143,10 +111,12 @@ export class AccountComponent implements OnInit, OnDestroy {
     }
   }
 
-  public transactions: Transaction[];
+  openExplorer(transaction: Transaction) {
+    const network = this.network.getNetwork(this.uiState.activeAccount.network, this.uiState.activeAccount.purpose);
+    chrome.tabs.create({ url: `https://explorer.blockcore.net/${network.id}/explorer/transaction/${transaction.transactionHash}`, active: false });
+  }
 
   async ngOnInit() {
-
     // Get a full list of transactions. We run filter at the end to remove empty entries.
     const transactions = this.uiState.activeAccount.state.receive.flatMap(item => item.transactions).filter((el) => el != null);
 
@@ -234,9 +204,6 @@ export class AccountComponent implements OnInit, OnDestroy {
     //   //     console.log(authorDetails)
     //   // })
 
-
-
-
     //   // console.log(requests$);
 
     //   // requests$.subscribe((data: any) => {
@@ -247,8 +214,6 @@ export class AccountComponent implements OnInit, OnDestroy {
     //   // Promise.all(requests);
 
     // });
-
-    // this.generateAddress();
 
     // this.sub = this.communication.listen('active-account-changed', (data: any) => {
     //   // If we are currently viewing an account and the user changes, we'll refresh this view.
