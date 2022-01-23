@@ -66,13 +66,10 @@ export class IndexerService {
     }
 
     async queryIndexer() {
-
         let counter = 0;
 
         while (!this.q.isEmpty()) {
             const item = this.q.dequeue();
-
-            debugger;
 
             // These two entries has been sent from
             const account = item.account as Account;
@@ -81,9 +78,7 @@ export class IndexerService {
             const network = this.manager.getNetwork(account.network, account.purpose);
             const indexerUrl = this.manager.state.persisted.settings.indexer.replace('{id}', network.id.toLowerCase());
 
-            console.log('Indexer URL:', indexerUrl);
-
-            // Loop through all receive indexes until no more data is found:
+            // Loop through all receive addresses until no more data is found:
             for (let i = 0; i < account.state.receive.length; i++) {
                 let receiveAddress = account.state.receive[i];
 
@@ -100,8 +95,6 @@ export class IndexerService {
                         console.log(response);
                         const data = response.data;
 
-                        debugger;
-
                         // Just a minor verification in case the returned data is wrong or scrambled.
                         if (receiveAddress.address == data.address) {
                             var updatedReceiveAddress = { ...receiveAddress, ...data };
@@ -113,20 +106,6 @@ export class IndexerService {
                             // Replace the received entry.
                             account.state.receive[i] = updatedReceiveAddress;
                         }
-
-                        // let result: any = await this.http.get(`http://localhost:9910/api/query/address/${item.address}`).toPromise();
-
-                        // item.icon = 'history';
-                        // item.title = 'Received: ' + result.totalReceived + ' to ' + result.address;
-
-                        // let activity = {
-                        //     ...item,
-                        //     ...result
-                        // };
-
-                        // this.activities.push(activity);
-                        // console.log('activity:', activity);
-
                     } catch (error) {
                         console.error(error);
 
@@ -159,71 +138,6 @@ export class IndexerService {
                     counter = 0;
                 }
 
-                // // Make a request for a user with a given ID
-                // axios.get('/user?ID=12345')
-                // .then(function (response) {
-                //     // handle success
-                //     console.log(response);
-                // })
-                // .catch(function (error) {
-                //     // handle error
-                //     console.log(error);
-                // })
-                // .then(function () {
-                //     // always executed
-                // });
-
-                // axios.get('/user', {
-                //     params: {
-                //         ID: 12345
-                //     }
-                // })
-                //     .then(function (response) {
-                //         console.log(response);
-                //     })
-                //     .catch(function (error) {
-                //         console.log(error);
-                //     })
-                //     .then(function () {
-                //         // always executed
-                //     });
-
-
-
-                // this.activities = [{
-                //   icon: 'history',
-                //   amount: 50,
-                //   title: 'Received 50 STRAX',
-                //   status: 'Confirming...',
-                //   timestamp: new Date()
-                // }, {
-                //   icon: 'done',
-                //   amount: 10,
-                //   title: 'Sent 10 STRAX to XNfU57hAwQ1uWYRHjusas8MFCUQetuuX6o',
-                //   status: 'Success',
-                //   timestamp: new Date()
-                // }]
-
-                // }
-                //     catch (error: any) {
-                //     console.log('oops', error);
-
-                //     if (error.error?.title) {
-                //         this.snackBar.open('Error: ' + error.error.title, 'Hide', {
-                //             duration: 8000,
-                //             horizontalPosition: 'center',
-                //             verticalPosition: 'bottom',
-                //         });
-                //     } else {
-                //         this.snackBar.open('Error: ' + error.message, 'Hide', {
-                //             duration: 8000,
-                //             horizontalPosition: 'center',
-                //             verticalPosition: 'bottom',
-                //         });
-                //     }
-
-                debugger;
-
                 // If we just processed the last entry, check if we should find more receive addresses.
                 if (i == account.state.receive.length - 1) {
                     // Check if the last entry has been used.
@@ -233,6 +147,79 @@ export class IndexerService {
                     if (this.manager.walletManager.hasBeenUsed(lastReceiveAddress)) {
                         await this.manager.walletManager.getReceiveAddress(account);
                         // Now the .receive array should have one more entry and the loop should continue.
+                    }
+                }
+            }
+
+            // Loop through all change addresses until no more data is found:
+            for (let i = 0; i < account.state.change.length; i++) {
+                let changeAddress = account.state.change[i];
+
+                // If we have already retrieved this, skip to next. We will only query again if
+                // there is an "force" parameter (to be added later).
+                if (item.force || !changeAddress.retrieved) {
+
+                    counter++;
+
+                    try {
+                        // We don't have Angular context available in the background, we we'll rely on axios to perform queries:
+                        const date = new Date().toISOString();
+                        const response = await axios.get(`${indexerUrl}/api/query/address/${changeAddress.address}`);
+                        console.log(response);
+                        const data = response.data;
+
+                        // Just a minor verification in case the returned data is wrong or scrambled.
+                        if (changeAddress.address == data.address) {
+                            var updatedChangeAddress = { ...changeAddress, ...data };
+
+                            // Persist the date we got this data:
+                            updatedChangeAddress.retrieved = date;
+                            console.log(updatedChangeAddress);
+
+                            // Replace the change entry.
+                            account.state.change[i] = updatedChangeAddress;
+                        }
+                    } catch (error) {
+                        console.error(error);
+
+                        // TODO: Implement error handling in background and how to send it to UI.
+                        // We should probably have an error log in settings, so users can see background problems as well.
+                        this.manager.communication.sendToAll('error', error);
+
+                        // if (error.error?.title) {
+                        //     this.snackBar.open('Error: ' + error.error.title, 'Hide', {
+                        //         duration: 8000,
+                        //         horizontalPosition: 'center',
+                        //         verticalPosition: 'bottom',
+                        //     });
+                        // } else {
+                        //     this.snackBar.open('Error: ' + error.message, 'Hide', {
+                        //         duration: 8000,
+                        //         horizontalPosition: 'center',
+                        //         verticalPosition: 'bottom',
+                        //     });
+                        // }
+                    }
+                }
+
+                // For every 5 queried address, we will persist the state and update UI.
+                // TODO: Verify what this should be based upon user testing and verification of experience.
+                if (counter > 4) {
+                    account.state.balance = this.manager.walletManager.calculateBalance(account);
+                    await this.manager.state.save();
+                    this.manager.broadcastState();
+                    counter = 0;
+                }
+
+                // If we just processed the last entry, check if we should find more change addresses.
+                if (i == account.state.change.length - 1) {
+                    // Check if the last entry has been used.
+                    const lastChangeAddress = account.state.change[account.state.change.length - 1];
+
+                    // If the last address has been used, generate a new one and query that and continue until all is found.
+                    if (this.manager.walletManager.hasBeenUsed(lastChangeAddress)) {
+                        await this.manager.walletManager.getChangeAddress(account);
+                        // Now the .change array should have one more entry and the loop should continue.
                     }
                 }
             }

@@ -39,8 +39,10 @@ export class WalletManager {
     }
 
     calculateBalance(account: Account) {
-        let balance = account.state.receive.map(x => x.balance).reduce((x: any, y: any) => x + y);
-        return balance;
+        let balanceReceive = account.state.receive.map(x => x.balance).reduce((x: any, y: any) => x + y);
+        let balanceChange = account.state.change.map(x => x.balance).reduce((x: any, y: any) => x + y);
+
+        return (<any>balanceReceive + <any>balanceChange);
     }
 
     async revealSecretRecoveryPhrase(id: string, password: string) {
