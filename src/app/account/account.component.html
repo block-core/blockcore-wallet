@@ -29,12 +29,20 @@
 
 
             <mat-nav-list>
-                <div mat-subheader>Recent Activity</div>
+                <!-- <div mat-subheader>Recent Activity</div>
                 <a mat-list-item *ngFor="let activity of activities" routerLinkActive="active-link"
                     [routerLink]="['/', 'account', 'view']">
                     <mat-icon mat-list-icon>{{activity.icon}}</mat-icon>
                     <div mat-line>{{activity.title}}</div>
                     <div mat-line> {{activity.address}} </div>
+                </a> -->
+                <div mat-subheader>Transactions</div>
+                <a mat-list-item *ngFor="let transaction of transactions" routerLinkActive="active-link"
+                    [routerLink]="['/', 'account', 'view']">
+                    <mat-icon mat-list-icon *ngIf="transaction.entryType == 'send'">send</mat-icon>
+                    <mat-icon mat-list-icon *ngIf="transaction.entryType == 'receive'">call_received</mat-icon>
+                    <div mat-line>{{transaction.value | amount}}</div>
+                    <div mat-line> {{transaction.confirmations}} confirmations</div>
                 </a>
             </mat-nav-list>
 

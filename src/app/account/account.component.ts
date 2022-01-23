@@ -10,6 +10,7 @@ import { concat, Observable, concatMap } from 'rxjs';
 import { request } from 'http';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { NetworksService } from '../services/networks.service';
+import { Transaction } from '../interfaces';
 
 @Component({
   selector: 'app-account',
@@ -142,7 +143,17 @@ export class AccountComponent implements OnInit, OnDestroy {
     }
   }
 
+  public transactions: Transaction[];
+
   async ngOnInit() {
+
+    // Get a full list of transactions. We run filter at the end to remove empty entries.
+    const transactions = this.uiState.activeAccount.state.receive.flatMap(item => item.transactions).filter((el) => el != null);
+
+    // Sort the transactions by blockIndex, having the highest number first.
+    const sortedTransactions = transactions.sort((a: any, b: any) => { if (a.blockIndex > b.blockIndex) return -1; return 0; });
+
+    this.transactions = sortedTransactions;
 
     this.sub2 = this.communication.listen('account-scanned', async (data: { accountId: string }) => {
       this.loading = false;

@@ -89,7 +89,7 @@ interface Address {
 }
 
 interface Transaction {
-    entryType: ['send', 'receive'];
+    entryType: string;
     transactionHash: string;
     value: BigInt;
     blockIndex: BigInt;

@@ -103,6 +103,15 @@ export class IndexerService {
                             updatedReceiveAddress.retrieved = date;
                             console.log(updatedReceiveAddress);
 
+                            // Check if the address has been used, then retrieve transaction history.
+                            if (this.manager.walletManager.hasBeenUsed(updatedReceiveAddress)) {
+                                // TODO: Add support for paging.
+                                const responseTransactions = await axios.get(`${indexerUrl}/api/query/address/${receiveAddress.address}/transactions?confirmations=0&offset=0&limit=20`);
+                                console.log(responseTransactions);
+                                const transactions = responseTransactions.data;
+                                updatedReceiveAddress.transactions = transactions;
+                            }
+
                             // Replace the received entry.
                             account.state.receive[i] = updatedReceiveAddress;
                         }
