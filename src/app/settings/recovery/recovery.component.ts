@@ -28,7 +28,6 @@ export class RecoveryComponent implements OnDestroy {
         this.uiState.goBackHome = false;
 
         this.sub = this.communication.listen('wallet-exported-recovery-phrase', (mnemonic: string) => {
-            console.log('Received:', mnemonic);
             this.mnemonic = mnemonic;
         });
     }
@@ -42,7 +41,7 @@ export class RecoveryComponent implements OnDestroy {
     }
 
     show() {
-        this.communication.send('wallet-export-recovery-phrase', { id: this.uiState.activeWallet?.id, password: this.password});
+        this.communication.send('wallet-export-recovery-phrase', { id: this.uiState.activeWallet?.id, password: this.password });
     }
 
     cancel() {

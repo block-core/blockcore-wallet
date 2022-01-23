@@ -538,7 +538,7 @@ export class OrchestratorBackgroundService {
         });
 
         this.manager.communication.listen('wallet-export-recovery-phrase', async (port: any, data: { id: string, password: string }) => {
-            var recoveryPhrase = this.manager.walletManager.revealSecretRecoveryPhrase(data.id, data.password);
+            var recoveryPhrase = await this.manager.walletManager.revealSecretRecoveryPhrase(data.id, data.password);
 
             if (recoveryPhrase) {
                 // Make sure we inform all instances when a wallet is unlocked.

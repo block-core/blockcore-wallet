@@ -53,7 +53,12 @@ export class WalletManager {
             return unlockedMnemonic;
         }
 
-        unlockedMnemonic = await this.manager.crypto.decryptData(wallet.mnemonic, password);
+        try {
+            unlockedMnemonic = await this.manager.crypto.decryptData(wallet.mnemonic, password);
+        }
+        catch (error) {
+            console.error(error);
+        }
 
         return unlockedMnemonic;
     }

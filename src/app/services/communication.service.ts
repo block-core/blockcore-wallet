@@ -45,7 +45,8 @@ export class CommunicationService {
 
         var consumer = this.consumers.get(method);
 
-        console.log('Forwarding data to consumers:', data);
+        // Enable this for debugging. If enabled, it will reveal in the log the secret recovery phrase when revealing it through settings.
+        // console.log('Forwarding data to consumers:', data);
 
         // Make sure we execute the listeners in Angular Zone.
         this.ngZone.run(() => {
