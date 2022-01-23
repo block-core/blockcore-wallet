@@ -3,14 +3,16 @@
     <mat-card class="example-card">
         <!-- <mat-card-subtitle>{{uiState.activeAccount.name}}</mat-card-subtitle> -->
         <mat-card-subtitle>Balance</mat-card-subtitle>
-        <mat-card-title>{{uiState.activeAccount.state?.balance || 0 | amount}} {{uiState.activeAccount.network | network}}
+        <mat-card-title>{{uiState.activeAccount.state?.balance || 0 | amount}} {{uiState.activeAccount.network |
+            network}}
         </mat-card-title>
         <!-- <mat-card-content>
             <p>$0</p>
         </mat-card-content> -->
         <mat-divider inset></mat-divider>
         <mat-card-actions class="full-action-buttons">
-            <button class="half-width" mat-raised-button [routerLink]="['/', 'account', 'receive', uiState.activeAccount.index]" color="primary">Receive</button>
+            <button class="half-width" mat-raised-button
+                [routerLink]="['/', 'account', 'receive', uiState.activeAccount.index]" color="primary">Receive</button>
             <button class="half-width" mat-raised-button>Send</button>
         </mat-card-actions>
         <mat-card-footer>
@@ -18,33 +20,91 @@
         </mat-card-footer>
     </mat-card>
 
-    <br>
-    <button mat-raised-button (click)="scan()">Scan</button>
-    &nbsp;
-    <button mat-raised-button (click)="scan(true)">Force Scan</button>
 
-    <mat-nav-list>
-        <div mat-subheader>Recent Activity</div>
-        <a mat-list-item *ngFor="let activity of activities" routerLinkActive="active-link" [routerLink]="['/', 'account', 'view']">
-            <mat-icon mat-list-icon>{{activity.icon}}</mat-icon>
-            <div mat-line>{{activity.title}}</div>
-            <div mat-line> {{activity.address}} </div>
-        </a>
-        <mat-divider></mat-divider>
-        <div mat-subheader>Receive Addresses</div>
-        <a mat-list-item *ngFor="let address of this.uiState.activeAccount.state.receive" routerLinkActive="active-link" [routerLink]="['/', 'account', 'address', address.index]">
-            <!-- <mat-icon mat-list-icon>{{activity.icon}}</mat-icon> -->
-            <div mat-line>{{address.address}}</div>
-            <div mat-line>R:{{address.totalReceived | amount}} / S:{{address.totalSent | amount}} </div>
-        </a>
-        <mat-divider></mat-divider>
-        <div mat-subheader>Change Addresses</div>
-        <a mat-list-item *ngFor="let address of this.uiState.activeAccount.state.change" routerLinkActive="active-link" [routerLink]="['/', 'account', 'address', address.index]">
-            <!-- <mat-icon mat-list-icon>{{activity.icon}}</mat-icon> -->
-            <div mat-line>{{address.address}}</div>
-            <div mat-line>R:{{address.totalReceived | amount}} / S:{{address.totalSent | amount}} </div>
-        </a>
-    </mat-nav-list>
+    <mat-tab-group class="account-tabs">
+        <mat-tab>
+            <ng-template mat-tab-label>
+                <mat-icon class="example-tab-icon">calendar_today</mat-icon>
+            </ng-template>
+
+
+            <mat-nav-list>
+                <div mat-subheader>Recent Activity</div>
+                <a mat-list-item *ngFor="let activity of activities" routerLinkActive="active-link"
+                    [routerLink]="['/', 'account', 'view']">
+                    <mat-icon mat-list-icon>{{activity.icon}}</mat-icon>
+                    <div mat-line>{{activity.title}}</div>
+                    <div mat-line> {{activity.address}} </div>
+                </a>
+            </mat-nav-list>
+
+
+        </mat-tab>
+
+        <mat-tab>
+            <ng-template mat-tab-label>
+                <mat-icon class="example-tab-icon">description</mat-icon>
+            </ng-template>
+
+            <mat-nav-list>
+                <div mat-subheader>Receive Addresses</div>
+                <a mat-list-item *ngFor="let address of this.uiState.activeAccount.state.receive"
+                    routerLinkActive="active-link" [routerLink]="['/', 'account', 'address', address.index]">
+                    <!-- <mat-icon mat-list-icon>{{activity.icon}}</mat-icon> -->
+                    <div mat-line>{{address.address}}</div>
+                    <div mat-line>R:{{address.totalReceived | amount}} / S:{{address.totalSent | amount}} </div>
+                </a>
+                <mat-divider></mat-divider>
+                <div mat-subheader>Change Addresses</div>
+                <a mat-list-item *ngFor="let address of this.uiState.activeAccount.state.change"
+                    routerLinkActive="active-link" [routerLink]="['/', 'account', 'address', address.index]">
+                    <!-- <mat-icon mat-list-icon>{{activity.icon}}</mat-icon> -->
+                    <div mat-line>{{address.address}}</div>
+                    <div mat-line>R:{{address.totalReceived | amount}} / S:{{address.totalSent | amount}} </div>
+                </a>
+            </mat-nav-list>
+
+        </mat-tab>
+
+        <mat-tab>
+            <ng-template mat-tab-label>
+                <mat-icon class="example-tab-icon">build_circle</mat-icon>
+            </ng-template>
+
+            <br>
+
+            <mat-nav-list>
+                <a mat-list-item (click)="scan()">
+                    <mat-icon mat-list-icon>search</mat-icon>
+                    <div mat-line>Scan</div>
+                </a>
+
+                <a mat-list-item (click)="scan(true)">
+                    <mat-icon mat-list-icon>find_replace</mat-icon>
+                    <div mat-line>Force Scan</div>
+                </a>
+
+                <a mat-list-item (click)="toggleNetwork()">
+                    <mat-icon mat-list-icon>public</mat-icon>
+                    <div mat-line>Network Status</div>
+                </a>
+
+
+            </mat-nav-list>
+
+            <mat-card *ngIf="networkStatus">
+                <mat-card-title>{{networkStatus.name}} ({{networkStatus.symbol}})</mat-card-title>
+                <mat-card-subtitle>{{networkStatus.configuration.name}}</mat-card-subtitle>
+                <mat-card-content>
+                    <p>Height: {{networkStatus.blockHeight}}</p>
+                    <p>Relay Fee: {{networkStatus.node.network.relayFee}}</p>
+                    <p>Memory pool: {{networkStatus.node.transactionsInPool}} transactions</p>
+                    <p>Connections (on the indexer): {{networkStatus.node.network.connections}}</p>
+                </mat-card-content>
+            </mat-card>
+
+        </mat-tab>
+    </mat-tab-group>
 
     <!-- {{this.uiState.activeAccount.state.receive | json}} -->
 

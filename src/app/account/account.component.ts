@@ -9,6 +9,7 @@ import { NETWORK_IDENTITY, NETWORK_NOSTR } from '../shared/constants';
 import { concat, Observable, concatMap } from 'rxjs';
 import { request } from 'http';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { NetworksService } from '../services/networks.service';
 
 @Component({
   selector: 'app-account',
@@ -37,6 +38,7 @@ export class AccountComponent implements OnInit, OnDestroy {
     public uiState: UIState,
     private crypto: CryptoService,
     private router: Router,
+    private network: NetworksService,
     private manager: OrchestratorService,
     private communication: CommunicationService,
     private activatedRoute: ActivatedRoute,
@@ -108,100 +110,132 @@ export class AccountComponent implements OnInit, OnDestroy {
     this.communication.send('account-scan', { force: force, account: this.uiState.activeAccount, wallet: this.uiState.activeWallet });
   }
 
+  public networkStatus: any;
+
+  async toggleNetwork() {
+    if (!this.networkStatus) {
+      try {
+        const network = this.network.getNetwork(this.uiState.activeAccount.network, this.uiState.activeAccount.purpose);
+        const indexerUrl = this.uiState.persisted.settings.indexer.replace('{id}', network.id.toLowerCase());
+        let result: any = await this.http.get(`${indexerUrl}/api/stats/info`).toPromise();
+        this.networkStatus = result;
+      }
+      catch (error: any) {
+        console.log('oops', error);
+
+        if (error.error?.title) {
+          this.snackBar.open('Error: ' + error.error.title, 'Hide', {
+            duration: 8000,
+            horizontalPosition: 'center',
+            verticalPosition: 'bottom',
+          });
+        } else {
+          this.snackBar.open('Error: ' + error.message, 'Hide', {
+            duration: 8000,
+            horizontalPosition: 'center',
+            verticalPosition: 'bottom',
+          });
+        }
+      }
+    } else {
+      this.networkStatus = null;
+    }
+  }
+
   async ngOnInit() {
 
     this.sub2 = this.communication.listen('account-scanned', async (data: { accountId: string }) => {
       this.loading = false;
     });
 
-    this.sub = this.communication.listen('address-generated', async (data: { address: string, receive: any[], change: any[] }) => {
-      console.log('ADDRESS GENERATED!!');
-      this.address = data.address;
+    // this.sub = this.communication.listen('address-generated', async (data: { address: string, receive: any[], change: any[] }) => {
+    //   console.log('ADDRESS GENERATED!!');
+    //   this.address = data.address;
 
-      console.log('Full address list:');
-      console.log(data);
+    //   console.log('Full address list:');
+    //   console.log(data);
 
-      this.activities = [];
+    //   this.activities = [];
 
-      // Perform a map operation on all receive addresses to extend the array with result from indexer results.
-      data.receive.map(async item => {
+    //   // Perform a map operation on all receive addresses to extend the array with result from indexer results.
+    //   data.receive.map(async item => {
 
-        try {
-          let result: any = await this.http.get(`http://localhost:9910/api/query/address/${item.address}`).toPromise();
+    //     try {
+    //       let result: any = await this.http.get(`http://localhost:9910/api/query/address/${item.address}`).toPromise();
 
-          item.icon = 'history';
-          item.title = 'Received: ' + result.totalReceived + ' to ' + result.address;
+    //       item.icon = 'history';
+    //       item.title = 'Received: ' + result.totalReceived + ' to ' + result.address;
 
-          let activity = {
-            ...item,
-            ...result
-          };
+    //       let activity = {
+    //         ...item,
+    //         ...result
+    //       };
 
-          this.activities.push(activity);
-          console.log('activity:', activity);
+    //       this.activities.push(activity);
+    //       console.log('activity:', activity);
 
-          // this.activities = [{
-          //   icon: 'history',
-          //   amount: 50,
-          //   title: 'Received 50 STRAX',
-          //   status: 'Confirming...',
-          //   timestamp: new Date()
-          // }, {
-          //   icon: 'done',
-          //   amount: 10,
-          //   title: 'Sent 10 STRAX to XNfU57hAwQ1uWYRHjusas8MFCUQetuuX6o',
-          //   status: 'Success',
-          //   timestamp: new Date()
-          // }]
+    //       // this.activities = [{
+    //       //   icon: 'history',
+    //       //   amount: 50,
+    //       //   title: 'Received 50 STRAX',
+    //       //   status: 'Confirming...',
+    //       //   timestamp: new Date()
+    //       // }, {
+    //       //   icon: 'done',
+    //       //   amount: 10,
+    //       //   title: 'Sent 10 STRAX to XNfU57hAwQ1uWYRHjusas8MFCUQetuuX6o',
+    //       //   status: 'Success',
+    //       //   timestamp: new Date()
+    //       // }]
 
-        }
-        catch (error: any) {
-          console.log('oops', error);
+    //     }
+    //     catch (error: any) {
+    //       console.log('oops', error);
 
-          if (error.error?.title) {
-            this.snackBar.open('Error: ' + error.error.title, 'Hide', {
-              duration: 8000,
-              horizontalPosition: 'center',
-              verticalPosition: 'bottom',
-            });
-          } else {
-            this.snackBar.open('Error: ' + error.message, 'Hide', {
-              duration: 8000,
-              horizontalPosition: 'center',
-              verticalPosition: 'bottom',
-            });
-          }
-        }
+    //       if (error.error?.title) {
+    //         this.snackBar.open('Error: ' + error.error.title, 'Hide', {
+    //           duration: 8000,
+    //           horizontalPosition: 'center',
+    //           verticalPosition: 'bottom',
+    //         });
+    //       } else {
+    //         this.snackBar.open('Error: ' + error.message, 'Hide', {
+    //           duration: 8000,
+    //           horizontalPosition: 'center',
+    //           verticalPosition: 'bottom',
+    //         });
+    //       }
+    //     }
 
-        // let result = await this.http.get(`http://localhost:9910/api/query/address/${item.address}`).subscribe(result => {
-        // }, error => {
+    //     // let result = await this.http.get(`http://localhost:9910/api/query/address/${item.address}`).subscribe(result => {
+    //     // }, error => {
 
-        // });
-      });
+    //     // });
+    //   });
 
-      const requests = <any>[];
-      let requests$: Observable<any[]>;
+    //   const requests = <any>[];
+    //   let requests$: Observable<any[]>;
 
-      //   this.http.get('https://jsonplaceholder.typicode.com/posts/1')
-      // .pipe(mergeMap((res: any)=> this.httpClient
-      //     .get('https://jsonplaceholder.typicode.com/users/'+res.userId)))
-      // .subscribe((authorDetails: any)=>{
-      //     console.log(authorDetails)
-      // })
-
-
+    //   //   this.http.get('https://jsonplaceholder.typicode.com/posts/1')
+    //   // .pipe(mergeMap((res: any)=> this.httpClient
+    //   //     .get('https://jsonplaceholder.typicode.com/users/'+res.userId)))
+    //   // .subscribe((authorDetails: any)=>{
+    //   //     console.log(authorDetails)
+    //   // })
 
 
-      // console.log(requests$);
 
-      // requests$.subscribe((data: any) => {
-      //   console.log(data);
-      // });
 
-      // Perform all the http requests that has been added to requests queue:
-      // Promise.all(requests);
+    //   // console.log(requests$);
 
-    });
+    //   // requests$.subscribe((data: any) => {
+    //   //   console.log(data);
+    //   // });
+
+    //   // Perform all the http requests that has been added to requests queue:
+    //   // Promise.all(requests);
+
+    // });
 
     // this.generateAddress();
 

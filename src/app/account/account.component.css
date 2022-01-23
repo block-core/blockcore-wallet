@@ -15,8 +15,6 @@ h1 {
   margin-top: 16px;
 }
 
-
-
 textarea {
   font-size: 1.2em;
   word-spacing: 0.4em;
@@ -46,8 +44,11 @@ textarea {
 }
 
 /* Overrides one of the built in styles to make both buttons align with the separator. */
-.mat-card-actions
-{
-    margin-left: 0 !important;
-    margin-bottom: 0 !important;
+.mat-card-actions {
+  margin-left: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+.account-tabs {
+  margin-top: 1em;
 }
