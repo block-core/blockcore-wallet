@@ -18,9 +18,14 @@
 
     <p class="wrap">Block hash: {{transaction.details.blockHash}}</p>
 
-    <p>Inputs: {{transaction.details.inputs.length}}</p>
+    <p>Inputs ({{transaction.details.inputs.length}}): {{transaction.details.inputsAmount | amount}}</p>
 
-    <p>Outputs: {{transaction.details.outputs.length}}</p>
+    <p>Outputs ({{transaction.details.outputs.length}}): {{transaction.details.outputsAmount | amount}}</p>
+
+    <p>Fees: {{transaction.details.fees | amount}}</p>
+
+    Data:<br>
+    <p class="wrap" *ngFor="let data of transaction.details.data;">{{data}}</p>
 
     <!-- <p class="mat-caption network-info">
         This address can only be used to receive {{network.symbol}} on the {{network.name}} network.

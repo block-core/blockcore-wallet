@@ -9,7 +9,7 @@ import { IconService } from '../../services/icon.service';
 import { copyToClipboard } from '../../shared/utilities';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import * as QRCode from 'qrcode';
-import { Address, Transaction } from '../../interfaces';
+import { Address, Transaction, TransactionView } from '../../interfaces';
 import { NetworksService } from '../../services/networks.service';
 import { Network } from '../../../background/networks';
 var QRCode2 = require('qrcode');
@@ -25,7 +25,7 @@ export class AccountTransactionComponent implements OnInit, OnDestroy {
     address: string;
     qrCode: string;
     network: Network;
-    public transaction: Transaction;
+    public transaction: TransactionView;
     txid: string;
 
     constructor(public uiState: UIState,
@@ -62,10 +62,25 @@ export class AccountTransactionComponent implements OnInit, OnDestroy {
             console.log('filteredChangeTransactions', filteredChangeTransactions);
 
             if (filteredReceiveTransactions.length == 1) {
-                this.transaction = filteredReceiveTransactions[0];
+                this.transaction = filteredReceiveTransactions[0] as TransactionView;
             } else if (filteredChangeTransactions.length == 1) {
-                this.transaction = filteredChangeTransactions[0];
+                this.transaction = filteredChangeTransactions[0] as TransactionView;
             }
+
+            // Calculate values on the transaction object.
+            this.transaction.details.inputsAmount = this.transaction.details.inputs.reduce((sum, item) => {
+                sum += item.inputAmount;
+                return sum;
+            }, 0);;
+
+            this.transaction.details.outputsAmount = this.transaction.details.outputs.reduce((sum, item) => {
+                sum += item.balance;
+                return sum;
+            }, 0);;
+
+            this.transaction.details.fees = this.transaction.details.inputsAmount - this.transaction.details.outputsAmount;
+
+            this.transaction.details.data = this.transaction.details.outputs.filter(i => i.outputType == 'TX_NULL_DATA').map(i => i.scriptPubKeyAsm);
 
             // this.manager.setActiveAccountId(index);
             // this.accountName = this.uiState.activeAccount?.name;

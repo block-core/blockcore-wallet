@@ -61,7 +61,7 @@ interface AccountState {
     /** The time when this account data was updated */
     retrieved: string;
 
-    receive:  Address[];
+    receive: Address[];
 
     change: Address[];
 }
@@ -97,6 +97,10 @@ interface Transaction {
     details: TransactionInfo;
 }
 
+interface TransactionView extends Transaction {
+    details: TransactionInfoView;
+}
+
 interface TransactionInfo {
     symbol: string;
     blockHash: string;
@@ -113,10 +117,19 @@ interface TransactionInfo {
     outputs: TransactionOutput[];
 }
 
+interface TransactionInfoView extends TransactionInfo {
+    inputsAmount: BigInt | number;
+    outputsAmount: BigInt | number;
+    fees: number;
+
+    /** OP_RETURN data available in the outputs */
+    data: string[];
+}
+
 interface TransactionInput {
     inputIndex: BigInt;
     inputAddress: string;
-    inputAmount: BigInt;
+    inputAmount: number;
     inputTransactionId: string;
     scriptSig: string;
     scriptSigAsm: string;
@@ -126,7 +139,7 @@ interface TransactionInput {
 
 interface TransactionOutput {
     address: string;
-    balance: BigInt;
+    balance: number;
     index: BigInt;
     outputType: string;
     scriptPubKeyAsm: string;
@@ -265,6 +278,8 @@ export {
     TransactionInfo,
     TransactionInput,
     TransactionOutput,
+    TransactionView,
+    TransactionInfoView,
     Wallet,
     Persisted,
     State,
