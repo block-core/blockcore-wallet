@@ -1,0 +1,28 @@
+<div class="page">
+    <h2>Transaction Details</h2>
+
+    <button class="half-width" mat-raised-button (click)="openExplorer(transaction.transactionHash)"
+        color="primary">Open in Block Explorer</button>
+
+    <br><br>
+
+    <p class="wrap">Transaction ID: {{transaction.transactionHash}}
+        <!-- <button class="copy-button" mat-icon-button (click)="copy()">
+        <mat-icon>content_copy</mat-icon>
+    </button> -->
+    </p>
+
+    <p>Confirmations: {{transaction.confirmations}}</p>
+
+    <p>Block Height: {{transaction.details.blockIndex}}</p>
+
+    <p class="wrap">Block hash: {{transaction.details.blockHash}}</p>
+
+    <p>Inputs: {{transaction.details.inputs.length}}</p>
+
+    <p>Outputs: {{transaction.details.outputs.length}}</p>
+
+    <!-- <p class="mat-caption network-info">
+        This address can only be used to receive {{network.symbol}} on the {{network.name}} network.
+    </p> -->
+</div>

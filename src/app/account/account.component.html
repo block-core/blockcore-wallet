@@ -36,8 +36,8 @@
                     <div mat-line>{{activity.title}}</div>
                     <div mat-line> {{activity.address}} </div>
                 </a> -->
-                <div mat-subheader>Transactions</div>
-                <a mat-list-item *ngFor="let transaction of transactions" (click)="openExplorer(transaction)">
+                <div mat-subheader>Transactions</div> 
+                <a mat-list-item *ngFor="let transaction of transactions"  [routerLink]="['/', 'account', 'transaction', transaction.transactionHash]">
                     <mat-icon class="positive-color" mat-list-icon *ngIf="transaction.entryType == 'receive'">add</mat-icon>
                     <mat-icon class="negative-color" mat-list-icon *ngIf="transaction.entryType == 'send'">remove</mat-icon>
                     <div mat-line>{{transaction.value | amount}}</div>

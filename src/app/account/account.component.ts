@@ -111,11 +111,6 @@ export class AccountComponent implements OnInit, OnDestroy {
     }
   }
 
-  openExplorer(transaction: Transaction) {
-    const network = this.network.getNetwork(this.uiState.activeAccount.network, this.uiState.activeAccount.purpose);
-    chrome.tabs.create({ url: `https://explorer.blockcore.net/${network.id}/explorer/transaction/${transaction.transactionHash}`, active: false });
-  }
-
   async ngOnInit() {
     // Get a full list of transactions. We run filter at the end to remove empty entries.
     const transactions = this.uiState.activeAccount.state.receive.flatMap(item => item.transactions).filter((el) => el != null);

@@ -30,6 +30,7 @@ import { RecoveryComponent } from './settings/recovery/recovery.component';
 import { NostrIdentityComponent } from './account/view/nostr/identity.component';
 import { AccountReceiveComponent } from './account/receive/receive.component';
 import { AccountSelectComponent } from './account/select/select.component';
+import { AccountTransactionComponent } from './account/transaction/transaction.component';
 
 const routes: Routes = [
   {
@@ -73,6 +74,9 @@ const routes: Routes = [
   },
   {
     path: 'account/receive/:index', component: AccountReceiveComponent
+  },
+  {
+    path: 'account/transaction/:txid', component: AccountTransactionComponent
   },
   {
     path: 'account/view/identity/:index', component: AccountIdentityComponent

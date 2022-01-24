@@ -1,0 +1,12 @@
+.wrap {
+  overflow-wrap: break-word;
+}
+
+.network-info {
+  margin-top: 2em;
+}
+
+.qr-code {
+    border-radius: 5px;
+    margin-bottom: 1em;
+}
