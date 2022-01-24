@@ -48,7 +48,6 @@ export class WalletManager {
         }
 
         for (let i = 0; i < inputs.length; i++) {
-            debugger;
             const input = inputs[i];
             tx.addInput(input.outpoint.transactionId, input.outpoint.outputIndex);
         }
@@ -76,8 +75,6 @@ export class WalletManager {
             // Get the index of the address, we need that to get the private key for signing.
             let signingAddress = this.activeAccount.state.receive.find(item => item.address == input.address);
 
-            debugger;
-
             let addressNode: HDKey;
 
             if (!signingAddress) {
@@ -92,8 +89,8 @@ export class WalletManager {
             }
 
             try {
-                const signer = Bitcoin.ECPair.fromPrivateKey(Buffer.from(addressNode.privateKey), { network: network });
-                tx.sign(i, signer);
+                const ecPair = Bitcoin.ECPair.fromPrivateKey(Buffer.from(addressNode.privateKey), { network: network });
+                tx.sign(i, ecPair);
             }
             catch (error) {
                 console.error(error);
