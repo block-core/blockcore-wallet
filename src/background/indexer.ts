@@ -1,4 +1,4 @@
-import { Account, Wallet } from '../app/interfaces';
+import { Account, Transaction, Wallet } from '../app/interfaces';
 import { AppManager } from './application-manager';
 
 //const axios = require('axios');
@@ -65,6 +65,18 @@ export class IndexerService {
         return !this.q.isEmpty();
     }
 
+    async updateWithTransactionInfo(transactions: Transaction[], indexerUrl: string) {
+        debugger;
+        for (let i = 0; i < transactions.length; i++) {
+            const transaction = transactions[i];
+
+            const responseTransaction = await axios.get(`${indexerUrl}/api/query/transaction/${transaction.transactionHash}`);
+            console.log(responseTransaction);
+
+            transaction.details = responseTransaction.data;
+        }
+    }
+
     async queryIndexer() {
         let counter = 0;
 
@@ -109,6 +121,10 @@ export class IndexerService {
                                 const responseTransactions = await axios.get(`${indexerUrl}/api/query/address/${receiveAddress.address}/transactions?confirmations=0&offset=0&limit=20`);
                                 console.log(responseTransactions);
                                 const transactions = responseTransactions.data;
+
+                                // Get all the transaction info for each of the transactions discovered on this address.
+                                await this.updateWithTransactionInfo(transactions, indexerUrl);
+
                                 updatedReceiveAddress.transactions = transactions;
                             }
 
