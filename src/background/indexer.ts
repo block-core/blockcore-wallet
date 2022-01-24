@@ -1,4 +1,4 @@
-import { Account, Transaction, Wallet } from '../app/interfaces';
+import { Account, Address, Transaction, UnspentTransactionOutput, Wallet } from '../app/interfaces';
 import { AppManager } from './application-manager';
 
 //const axios = require('axios');
@@ -66,13 +66,9 @@ export class IndexerService {
     }
 
     async updateWithTransactionInfo(transactions: Transaction[], indexerUrl: string) {
-        debugger;
         for (let i = 0; i < transactions.length; i++) {
             const transaction = transactions[i];
-
             const responseTransaction = await axios.get(`${indexerUrl}/api/query/transaction/${transaction.transactionHash}`);
-            console.log(responseTransaction);
-
             transaction.details = responseTransaction.data;
         }
     }
@@ -104,28 +100,34 @@ export class IndexerService {
                         // We don't have Angular context available in the background, we we'll rely on axios to perform queries:
                         const date = new Date().toISOString();
                         const response = await axios.get(`${indexerUrl}/api/query/address/${receiveAddress.address}`);
-                        console.log(response);
                         const data = response.data;
 
                         // Just a minor verification in case the returned data is wrong or scrambled.
                         if (receiveAddress.address == data.address) {
-                            var updatedReceiveAddress = { ...receiveAddress, ...data };
+                            var updatedReceiveAddress: Address = { ...receiveAddress, ...data };
 
                             // Persist the date we got this data:
                             updatedReceiveAddress.retrieved = date;
-                            console.log(updatedReceiveAddress);
 
                             // Check if the address has been used, then retrieve transaction history.
                             if (this.manager.walletManager.hasBeenUsed(updatedReceiveAddress)) {
                                 // TODO: Add support for paging.
+                                // TODO: Figure out if we will actually get the full transaction history and persist that to storage. We might simply only query this 
+                                // when the user want to look at transaction details. Instead we can rely on the unspent API, which give us much less data.
                                 const responseTransactions = await axios.get(`${indexerUrl}/api/query/address/${receiveAddress.address}/transactions?confirmations=0&offset=0&limit=20`);
-                                console.log(responseTransactions);
                                 const transactions = responseTransactions.data;
 
                                 // Get all the transaction info for each of the transactions discovered on this address.
                                 await this.updateWithTransactionInfo(transactions, indexerUrl);
-
                                 updatedReceiveAddress.transactions = transactions;
+
+                                debugger;
+
+                                // TODO: Add support for paging.
+                                // Get the unspent outputs. We need to figure out how we should refresh this, as this might change depending on many factors.
+                                const responseUnspentTransactions = await axios.get(`${indexerUrl}/api/query/address/${receiveAddress.address}/transactions/unspent?confirmations=0&offset=0&limit=20`);
+                                const unspentTransactions: UnspentTransactionOutput[] = responseUnspentTransactions.data;
+                                updatedReceiveAddress.unspent = unspentTransactions;
                             }
 
                             // Replace the received entry.
@@ -190,7 +192,6 @@ export class IndexerService {
                         // We don't have Angular context available in the background, we we'll rely on axios to perform queries:
                         const date = new Date().toISOString();
                         const response = await axios.get(`${indexerUrl}/api/query/address/${changeAddress.address}`);
-                        console.log(response);
                         const data = response.data;
 
                         // Just a minor verification in case the returned data is wrong or scrambled.
@@ -199,7 +200,27 @@ export class IndexerService {
 
                             // Persist the date we got this data:
                             updatedChangeAddress.retrieved = date;
-                            console.log(updatedChangeAddress);
+
+                            // Check if the address has been used, then retrieve transaction history.
+                            if (this.manager.walletManager.hasBeenUsed(updatedChangeAddress)) {
+                                // TODO: Add support for paging.
+                                // TODO: Figure out if we will actually get the full transaction history and persist that to storage. We might simply only query this 
+                                // when the user want to look at transaction details. Instead we can rely on the unspent API, which give us much less data.
+                                const responseTransactions = await axios.get(`${indexerUrl}/api/query/address/${changeAddress.address}/transactions?confirmations=0&offset=0&limit=20`);
+                                const transactions = responseTransactions.data;
+
+                                // Get all the transaction info for each of the transactions discovered on this address.
+                                await this.updateWithTransactionInfo(transactions, indexerUrl);
+                                updatedChangeAddress.transactions = transactions;
+
+                                debugger;
+
+                                // TODO: Add support for paging.
+                                // Get the unspent outputs. We need to figure out how we should refresh this, as this might change depending on many factors.
+                                const responseUnspentTransactions = await axios.get(`${indexerUrl}/api/query/address/${changeAddress.address}/transactions/unspent?confirmations=0&offset=0&limit=20`);
+                                const unspentTransactions: UnspentTransactionOutput[] = responseUnspentTransactions.data;
+                                updatedChangeAddress.unspent = unspentTransactions;
+                            }
 
                             // Replace the change entry.
                             account.state.change[i] = updatedChangeAddress;

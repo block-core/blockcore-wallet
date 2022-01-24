@@ -86,6 +86,20 @@ interface Address {
     retrieved?: string;
 
     transactions?: Transaction[];
+    unspent?: UnspentTransactionOutput[]
+}
+
+interface UnspentTransactionOutput {
+    outpoints: {
+        transactionId: string;
+        outputIndex: number;
+    }
+    address: string;
+    scriptHex: string;
+    value: BigInt | number;
+    blockIndex: BigInt | number;
+    coinBase: boolean;
+    coinStake: boolean;
 }
 
 interface Transaction {
@@ -280,6 +294,7 @@ export {
     TransactionOutput,
     TransactionView,
     TransactionInfoView,
+    UnspentTransactionOutput,
     Wallet,
     Persisted,
     State,

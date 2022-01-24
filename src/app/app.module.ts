@@ -63,6 +63,7 @@ import { AccountReceiveComponent } from './account/receive/receive.component';
 import { AccountSelectComponent } from './account/select/select.component';
 import { AmountPipe } from './shared/amount.pipe';
 import { AccountTransactionComponent } from './account/transaction/transaction.component';
+import { AccountSendComponent } from './account/send/send.component';
 
 @NgModule({
   declarations: [
@@ -100,7 +101,8 @@ import { AccountTransactionComponent } from './account/transaction/transaction.c
     AccountReceiveComponent,
     AccountSelectComponent,
     AmountPipe,
-    AccountTransactionComponent
+    AccountTransactionComponent,
+    AccountSendComponent
   ],
   imports: [
     BrowserModule,

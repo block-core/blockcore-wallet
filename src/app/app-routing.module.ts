@@ -31,6 +31,7 @@ import { NostrIdentityComponent } from './account/view/nostr/identity.component'
 import { AccountReceiveComponent } from './account/receive/receive.component';
 import { AccountSelectComponent } from './account/select/select.component';
 import { AccountTransactionComponent } from './account/transaction/transaction.component';
+import { AccountSendComponent } from './account/send/send.component';
 
 const routes: Routes = [
   {
@@ -71,6 +72,9 @@ const routes: Routes = [
   },
   {
     path: 'account/view/:index', component: AccountComponent
+  },
+  {
+    path: 'account/send/:index', component: AccountSendComponent
   },
   {
     path: 'account/receive/:index', component: AccountReceiveComponent
