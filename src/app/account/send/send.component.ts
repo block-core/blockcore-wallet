@@ -13,7 +13,6 @@ import { Address, UnspentTransactionOutput } from '../../interfaces';
 import { NetworksService } from '../../services/networks.service';
 import { Network } from '../../../background/networks';
 var QRCode2 = require('qrcode');
-import { TransactionBuilder } from 'bitcoinjs-lib';
 
 @Component({
     selector: 'app-account-send',
@@ -22,14 +21,19 @@ import { TransactionBuilder } from 'bitcoinjs-lib';
 })
 export class AccountSendComponent implements OnInit, OnDestroy {
     addressEntry: Address;
-    address: string;
+    address: string = '';
+    amount: string = '100000000'; // 1 coin
+    fee: string = '00100000'; // 0.001 coin
     qrCode: string;
     network: Network;
     unspent: UnspentTransactionOutput[];
+    sub: any;
+    transactionHex: string;
 
     constructor(public uiState: UIState,
         private renderer: Renderer2,
         private networks: NetworksService,
+        private communication: CommunicationService,
         private snackBar: MatSnackBar) {
         // this.uiState.title = 'Receive Address';
         this.uiState.goBackHome = false;
@@ -38,26 +42,30 @@ export class AccountSendComponent implements OnInit, OnDestroy {
         this.network = this.networks.getNetwork(account.network, account.purposeAddress);
     }
 
+    send() {
+        this.communication.send('account-send', { address: this.address, amount: this.amount, fee: this.fee });
+    }
+
     ngOnDestroy(): void {
-
+        if (this.sub) {
+            this.communication.unlisten(this.sub);
+        }
     }
 
-    copy() {
-        copyToClipboard(this.address);
+    // copy() {
+    //     copyToClipboard(this.address);
 
-        this.snackBar.open('Receive address copied to clipboard', 'Hide', {
-            duration: 1500,
-            horizontalPosition: 'center',
-            verticalPosition: 'bottom',
-        });
-    }
+    //     this.snackBar.open('Receive address copied to clipboard', 'Hide', {
+    //         duration: 1500,
+    //         horizontalPosition: 'center',
+    //         verticalPosition: 'bottom',
+    //     });
+    // }
 
     async ngOnInit() {
         // TODO: When can we start using .lastItem and similar functions on arrays?
-        this.addressEntry = this.uiState.activeAccount.state.receive[this.uiState.activeAccount.state.receive.length - 1];
-        this.address = this.addressEntry.address;
-
-        debugger;
+        // this.addressEntry = this.uiState.activeAccount.state.receive[this.uiState.activeAccount.state.receive.length - 1];
+        // this.address = this.addressEntry.address;
 
         const unspentReceive = this.uiState.activeAccount.state.receive.flatMap(i => i.unspent).filter(i => i !== undefined);
         const unspentChange = this.uiState.activeAccount.state.change.flatMap(i => i.unspent).filter(i => i !== undefined);
@@ -66,12 +74,10 @@ export class AccountSendComponent implements OnInit, OnDestroy {
 
         console.log(this.unspent);
 
-        // var tx = new TransactionBuilder(this.network);
-        // tx.addInput("0c105b8c127e7d0c1ae82b3c31546535608235d5428f5673106e40d0b19a7119", 2);
-        // tx.addOutput("12idKQBikRgRuZEbtxXQ4WFYB7Wa3hZzhT", 149000); // 1000 satoshis will be taken as fee.
-
-        // tx.sign(0, key);
-        // console.log(tx.build().toHex());
+        this.sub = this.communication.listen('account-sent', async (data: { transactionHex: string }) => {
+            debugger;
+            this.transactionHex = data.transactionHex;
+        });
 
         // try {
         //     this.qrCode = await QRCode.toDataURL(this.address, {

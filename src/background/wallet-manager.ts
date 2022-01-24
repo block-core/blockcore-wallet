@@ -1,9 +1,12 @@
 import { HDKey } from "micro-bip32";
 import { generateMnemonic, mnemonicToSeedSync, validateMnemonic } from 'micro-bip39';
-import { Account, Address, Settings, Wallet } from "../app/interfaces";
+import { Account, Address, Settings, Transaction, UnspentTransactionOutput, Wallet } from "../app/interfaces";
 import { MINUTE } from "../app/shared/constants";
 import { environment, Environments } from "../environments/environment";
 import { AppManager } from "./application-manager";
+import { TransactionBuilder } from 'bitcoinjs-lib';
+import * as Bitcoin from 'bitcoinjs-lib';
+// import { toSatoshi } from "./units";
 
 /** Manager that keeps state and operations for a single wallet. This object does not keep the password, which must be supplied for signing operations. */
 export class WalletManager {
@@ -16,7 +19,90 @@ export class WalletManager {
 
     }
 
+    async sendTransaction(address: string, amount: number, fee: number) {
+        // TODO: Verify the address for this network!! ... Help the user avoid sending transactions on very wrong addresses.
+        const account = this.activeAccount;
+        const network = this.manager.getNetwork(account.network, account.purpose);
 
+        // We currently only support BTC-compatible transactions such as STRAX. We do not support other Blockcore chains that are not PoS v4.
+        var tx = new TransactionBuilder(network); // Important to provide the network so addresses are constructed correctly.
+
+        const unspentReceive = account.state.receive.flatMap(i => i.unspent).filter(i => i !== undefined);
+        const unspentChange = account.state.change.flatMap(i => i.unspent).filter(i => i !== undefined);
+        const unspent = [...unspentReceive, ...unspentChange];
+
+        // Collect unspent until we have enough amount.
+        const requiredAmount = BigInt(amount) + BigInt(fee);
+        let aggregatedAmount: number = 0;
+        const inputs: UnspentTransactionOutput[] = [];
+
+        for (let i = 0; i < unspent.length; i++) {
+            const tx = unspent[i];
+            aggregatedAmount += <number>tx.value;
+
+            inputs.push(tx);
+
+            if (aggregatedAmount >= requiredAmount) {
+                break;
+            }
+        }
+
+        for (let i = 0; i < inputs.length; i++) {
+            debugger;
+            const input = inputs[i];
+            tx.addInput(input.outpoint.transactionId, input.outpoint.outputIndex);
+        }
+
+        // // Add the output the user requested.
+        tx.addOutput(address, amount);
+
+        const changeAddress = await this.getChangeAddress(account);
+
+        // Take the total sum of the aggregated inputs, remove the sendAmount and fee.
+        const changeAmount = aggregatedAmount - amount - fee;
+
+        // // Send the rest to change address.
+        tx.addOutput(changeAddress.address, changeAmount);
+
+        // Get the secret seed.
+        const secret = this.walletSecrets.get(this.activeWallet.id);
+
+        // Create the master node.
+        const masterNode = HDKey.fromMasterSeed(Buffer.from(secret.seed), network.bip32);
+
+        for (let i = 0; i < inputs.length; i++) {
+            const input = inputs[i];
+
+            // Get the index of the address, we need that to get the private key for signing.
+            let signingAddress = this.activeAccount.state.receive.find(item => item.address == input.address);
+
+            debugger;
+
+            let addressNode: HDKey;
+
+            if (!signingAddress) {
+                signingAddress = this.activeAccount.state.change.find(item => item.address == input.address);
+                addressNode = masterNode.derive(`m/${account.purpose}'/${account.network}'/${account.index}'/1/${signingAddress.index}`);
+            } else {
+                addressNode = masterNode.derive(`m/${account.purpose}'/${account.network}'/${account.index}'/0/${signingAddress.index}`);
+            }
+
+            if (!signingAddress) {
+                throw Error('Unable to find the signing address for the selected transaction input. Unable to continue.');
+            }
+
+            try {
+                const signer = Bitcoin.ECPair.fromPrivateKey(Buffer.from(addressNode.privateKey), { network: network });
+                tx.sign(i, signer);
+            }
+            catch (error) {
+                console.error(error);
+                throw Error('Unable to sign the transaction. Unable to continue.');
+            }
+        }
+
+        console.log(tx.build().toHex());
+    }
 
     getWallets() {
         return this.manager.state.persisted.wallets;

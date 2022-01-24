@@ -516,6 +516,12 @@ export class OrchestratorBackgroundService {
             this.manager.communication.sendToAll('wallet-removed', data);
         });
 
+        this.manager.communication.listen('account-send', async (port: any, data: { address: string, amount: string, fee: string }) => {
+            await this.manager.walletManager.sendTransaction(data.address, Number(data.amount), Number(data.fee));
+
+            this.manager.communication.sendToAll('account-sent');
+        });
+
         this.manager.communication.listen('wallet-lock', async (port: any, data: { id: string }) => {
             this.manager.walletManager.lockWallet(data.id);
 

@@ -90,7 +90,7 @@ interface Address {
 }
 
 interface UnspentTransactionOutput {
-    outpoints: {
+    outpoint: {
         transactionId: string;
         outputIndex: number;
     }
