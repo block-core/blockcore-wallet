@@ -100,7 +100,12 @@ export class WalletManager {
             }
         }
 
-        console.log(tx.build().toHex());
+        const transactionHex = tx.build().toHex();
+
+        console.log('transactionHex', transactionHex);
+
+        // this.manager.indexer.broadcastTransaction(transactionHex);
+
     }
 
     getWallets() {

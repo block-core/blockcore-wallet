@@ -73,6 +73,19 @@ export class IndexerService {
         }
     }
 
+    async broadcastTransaction(txhex: string) {
+        debugger;
+        // These two entries has been sent from
+        const account = this.manager.walletManager.activeAccount;
+
+        const network = this.manager.getNetwork(account.network, account.purpose);
+        const indexerUrl = this.manager.state.persisted.settings.indexer.replace('{id}', network.id.toLowerCase());
+
+        const date = new Date().toISOString();
+        const response = await axios.post(`${indexerUrl}/api/post/send`, txhex);
+        const data = response.data;
+    }
+
     async queryIndexer() {
         let counter = 0;
 
