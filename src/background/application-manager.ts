@@ -91,14 +91,6 @@ export class AppManager {
 
         let { data, ui, action, store } = await this.state.load();
 
-        console.log('STORE', store);
-
-        // If the indexer is not set, force it to be the default.
-        // TODO: This can likely be removed after development, used to handle previously stored settings without the default server.
-        if (!data.settings.indexer) {
-            data.settings.indexer = INDEXER_URL;
-        }
-
         // Only set if data is available, will use default if not.
         if (data) {
             this.state.persisted = data;
@@ -114,7 +106,7 @@ export class AppManager {
         if (action) {
             this.state.action = action;
         }
-
+        
         console.log('Load State Completed!');
         console.log(this.state);
     };

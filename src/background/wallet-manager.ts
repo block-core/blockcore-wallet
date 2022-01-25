@@ -84,6 +84,8 @@ export class WalletManager {
                 addressNode = masterNode.derive(`m/${account.purpose}'/${account.network}'/${account.index}'/0/${signingAddress.index}`);
             }
 
+            debugger;
+
             if (!signingAddress) {
                 throw Error('Unable to find the signing address for the selected transaction input. Unable to continue.');
             }
