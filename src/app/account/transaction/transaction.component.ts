@@ -41,9 +41,7 @@ export class AccountTransactionComponent implements OnInit, OnDestroy {
         this.network = this.networks.getNetwork(account.network, account.purposeAddress);
 
         this.activatedRoute.paramMap.subscribe(async params => {
-            console.log('ROUTE CHANGE 1');
             this.txid = params.get('txid');
-            console.log('txid', this.txid);
 
             // TODO: Move this logic to an service.
             const account = this.uiState.activeAccount;
@@ -59,9 +57,9 @@ export class AccountTransactionComponent implements OnInit, OnDestroy {
             console.log('filteredReceiveTransactions', filteredReceiveTransactions);
             console.log('filteredChangeTransactions', filteredChangeTransactions);
 
-            if (filteredReceiveTransactions.length == 1) {
+            if (filteredReceiveTransactions.length > 0) {
                 this.transaction = filteredReceiveTransactions[0] as TransactionView;
-            } else if (filteredChangeTransactions.length == 1) {
+            } else if (filteredChangeTransactions.length > 0) {
                 this.transaction = filteredChangeTransactions[0] as TransactionView;
             }
 

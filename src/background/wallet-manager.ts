@@ -1,20 +1,12 @@
 import { HDKey } from "micro-bip32";
-import { generateMnemonic, mnemonicToSeedSync, validateMnemonic } from 'micro-bip39';
-import { Account, Address, Settings, Transaction, UnspentTransactionOutput, Wallet } from "../app/interfaces";
+import { mnemonicToSeedSync } from 'micro-bip39';
+import { Account, Address, UnspentTransactionOutput, Wallet } from "../app/interfaces";
 import { MINUTE } from "../app/shared/constants";
-import { environment, Environments } from "../environments/environment";
 import { AppManager } from "./application-manager";
 import { Psbt } from '@blockcore/blockcore-js';
-
 import * as ecc from 'tiny-secp256k1';
-import * as Bitcoin from '@blockcore/blockcore-js';
-
 import ECPairFactory from 'ecpair';
-import BIP32Factory from 'bip32';
-// import { toSatoshi } from "./units";
 const ECPair = ECPairFactory(ecc);
-const rng = require('randombytes');
-const bip32 = BIP32Factory(ecc);
 
 /** Manager that keeps state and operations for a single wallet. This object does not keep the password, which must be supplied for signing operations. */
 export class WalletManager {
@@ -23,22 +15,17 @@ export class WalletManager {
     private timer: any;
 
     constructor(private manager: AppManager) {
-        // bip32.fromBase58(xpub).derive(0).derive(1).publicKey;
-
     }
-
-
 
     async sendTransaction(address: string, amount: number, fee: number) {
         // TODO: Verify the address for this network!! ... Help the user avoid sending transactions on very wrong addresses.
         const account = this.activeAccount;
         const network = this.manager.getNetwork(account.network, account.purpose);
 
+        // We currently only support BTC-compatible transactions such as STRAX. We do not support other Blockcore chains that are not PoS v4.
         const tx = new Psbt({ network: network });
         tx.setVersion(2); // These are defaults. This line is not needed.
         tx.setLocktime(0); // These are defaults. This line is not needed.
-        // We currently only support BTC-compatible transactions such as STRAX. We do not support other Blockcore chains that are not PoS v4.
-        //var tx = new TransactionBuilder(network); // Important to provide the network so addresses are constructed correctly.
 
         const unspentReceive = account.state.receive.flatMap(i => i.unspent).filter(i => i !== undefined);
         const unspentChange = account.state.change.flatMap(i => i.unspent).filter(i => i !== undefined);
@@ -118,12 +105,12 @@ export class WalletManager {
             }
         }
 
-        //const transactionHex = tx.build().toHex();
         const transactionHex = tx.finalizeAllInputs().extractTransaction().toHex();
-
         console.log('transactionHex', transactionHex);
+
         const transactionId = await this.manager.indexer.broadcastTransaction(transactionHex);
         console.log('transactionId', transactionId);
+
         return transactionId;
     }
 
