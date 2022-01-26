@@ -63,7 +63,6 @@ export class WalletManager {
         for (let i = 0; i < inputs.length; i++) {
             const input = inputs[i];
 
-            debugger;
             const hex = await this.manager.indexer.getTransactionHex(input.outpoint.transactionId);
 
             tx.addInput({
@@ -123,12 +122,9 @@ export class WalletManager {
         const transactionHex = tx.finalizeAllInputs().extractTransaction().toHex();
 
         console.log('transactionHex', transactionHex);
-
-        debugger;
-        return '';
-        // const transactionId = this.manager.indexer.broadcastTransaction(transactionHex);
-        //return transactionId;
-
+        const transactionId = await this.manager.indexer.broadcastTransaction(transactionHex);
+        console.log('transactionId', transactionId);
+        return transactionId;
     }
 
     getWallets() {
