@@ -4,9 +4,17 @@ import { Account, Address, Settings, Transaction, UnspentTransactionOutput, Wall
 import { MINUTE } from "../app/shared/constants";
 import { environment, Environments } from "../environments/environment";
 import { AppManager } from "./application-manager";
-import { TransactionBuilder } from 'bitcoinjs-lib';
-import * as Bitcoin from 'bitcoinjs-lib';
+import { Psbt } from '@blockcore/blockcore-js';
+
+import * as ecc from 'tiny-secp256k1';
+import * as Bitcoin from '@blockcore/blockcore-js';
+
+import ECPairFactory from 'ecpair';
+import BIP32Factory from 'bip32';
 // import { toSatoshi } from "./units";
+const ECPair = ECPairFactory(ecc);
+const rng = require('randombytes');
+const bip32 = BIP32Factory(ecc);
 
 /** Manager that keeps state and operations for a single wallet. This object does not keep the password, which must be supplied for signing operations. */
 export class WalletManager {
@@ -19,13 +27,18 @@ export class WalletManager {
 
     }
 
+
+
     async sendTransaction(address: string, amount: number, fee: number) {
         // TODO: Verify the address for this network!! ... Help the user avoid sending transactions on very wrong addresses.
         const account = this.activeAccount;
         const network = this.manager.getNetwork(account.network, account.purpose);
 
+        const tx = new Psbt({ network: network });
+        tx.setVersion(2); // These are defaults. This line is not needed.
+        tx.setLocktime(0); // These are defaults. This line is not needed.
         // We currently only support BTC-compatible transactions such as STRAX. We do not support other Blockcore chains that are not PoS v4.
-        var tx = new TransactionBuilder(network); // Important to provide the network so addresses are constructed correctly.
+        //var tx = new TransactionBuilder(network); // Important to provide the network so addresses are constructed correctly.
 
         const unspentReceive = account.state.receive.flatMap(i => i.unspent).filter(i => i !== undefined);
         const unspentChange = account.state.change.flatMap(i => i.unspent).filter(i => i !== undefined);
@@ -49,11 +62,19 @@ export class WalletManager {
 
         for (let i = 0; i < inputs.length; i++) {
             const input = inputs[i];
-            tx.addInput(input.outpoint.transactionId, input.outpoint.outputIndex);
+
+            debugger;
+            const hex = await this.manager.indexer.getTransactionHex(input.outpoint.transactionId);
+
+            tx.addInput({
+                hash: input.outpoint.transactionId,
+                index: input.outpoint.outputIndex,
+                nonWitnessUtxo: Buffer.from(hex, 'hex')
+            });
         }
 
         // // Add the output the user requested.
-        tx.addOutput(address, amount);
+        tx.addOutput({ address, value: amount });
 
         const changeAddress = await this.getChangeAddress(account);
 
@@ -61,7 +82,7 @@ export class WalletManager {
         const changeAmount = aggregatedAmount - amount - fee;
 
         // // Send the rest to change address.
-        tx.addOutput(changeAddress.address, changeAmount);
+        tx.addOutput({ address: changeAddress.address, value: changeAmount });
 
         // Get the secret seed.
         const secret = this.walletSecrets.get(this.activeWallet.id);
@@ -89,8 +110,8 @@ export class WalletManager {
             }
 
             try {
-                const ecPair = Bitcoin.ECPair.fromPrivateKey(Buffer.from(addressNode.privateKey), { network: network });
-                tx.sign(i, ecPair);
+                const ecPair = ECPair.fromPrivateKey(Buffer.from(addressNode.privateKey), { network: network });
+                tx.signInput(i, ecPair);
             }
             catch (error) {
                 console.error(error);
@@ -98,13 +119,15 @@ export class WalletManager {
             }
         }
 
-        const transactionHex = tx.build().toHex();
+        //const transactionHex = tx.build().toHex();
+        const transactionHex = tx.finalizeAllInputs().extractTransaction().toHex();
 
         console.log('transactionHex', transactionHex);
 
-        const transactionId = this.manager.indexer.broadcastTransaction(transactionHex);
-
-        return transactionId;
+        debugger;
+        return '';
+        // const transactionId = this.manager.indexer.broadcastTransaction(transactionHex);
+        //return transactionId;
 
     }
 

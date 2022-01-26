@@ -1,4 +1,3 @@
-import { address } from "bitcoinjs-lib";
 import { DIDDocument, DIDDocumentMetadata, DIDResolutionMetadata, ServiceEndpoint } from "did-resolver";
 
 // interfaces.ts
@@ -109,6 +108,7 @@ interface Transaction {
     blockIndex: BigInt;
     confirmations: BigInt;
     details: TransactionInfo;
+    hex: string;
 }
 
 interface TransactionView extends Transaction {

@@ -65,11 +65,23 @@ export class IndexerService {
         return !this.q.isEmpty();
     }
 
+    async getTransactionHex(txid: string) {
+        const account = this.manager.walletManager.activeAccount;
+        const network = this.manager.getNetwork(account.network, account.purpose);
+        const indexerUrl = this.manager.state.persisted.settings.indexer.replace('{id}', network.id.toLowerCase());
+
+        const responseTransactionHex = await axios.get(`${indexerUrl}/api/query/transaction/${txid}/hex`);
+        return responseTransactionHex.data;
+    }
+
     async updateWithTransactionInfo(transactions: Transaction[], indexerUrl: string) {
         for (let i = 0; i < transactions.length; i++) {
             const transaction = transactions[i];
             const responseTransaction = await axios.get(`${indexerUrl}/api/query/transaction/${transaction.transactionHash}`);
             transaction.details = responseTransaction.data;
+
+            const responseTransactionHex = await axios.get(`${indexerUrl}/api/query/transaction/${transaction.transactionHash}/hex`);
+            transaction.hex = responseTransactionHex.data;
         }
     }
 

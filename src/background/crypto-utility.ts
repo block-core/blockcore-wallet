@@ -1,7 +1,7 @@
 /* Source based on example by Brady Joslin - https://github.com/bradyjoslin */
 import * as bip39 from 'bip39';
 import { Base64 } from 'js-base64';
-import { address, payments } from 'bitcoinjs-lib';
+import { payments } from '@blockcore/blockcore-js';
 import { BlockcoreIdentity, Identity, BlockcoreIdentityTools } from '@blockcore/identity';
 import * as bs58 from 'bs58';
 import { keyUtils, Secp256k1KeyPair } from '@transmute/did-key-secp256k1';
