@@ -45,8 +45,6 @@ export class AccountTransactionComponent implements OnInit, OnDestroy {
             this.txid = params.get('txid');
             console.log('txid', this.txid);
 
-            debugger;
-
             // TODO: Move this logic to an service.
             const account = this.uiState.activeAccount;
 

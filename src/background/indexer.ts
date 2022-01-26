@@ -74,16 +74,21 @@ export class IndexerService {
     }
 
     async broadcastTransaction(txhex: string) {
-        debugger;
         // These two entries has been sent from
         const account = this.manager.walletManager.activeAccount;
-
         const network = this.manager.getNetwork(account.network, account.purpose);
         const indexerUrl = this.manager.state.persisted.settings.indexer.replace('{id}', network.id.toLowerCase());
 
-        const date = new Date().toISOString();
-        const response = await axios.post(`${indexerUrl}/api/post/send`, txhex);
+        const response = await axios.post(`${indexerUrl}/api/command/send`, txhex, {
+            headers: {
+                'Content-Type': 'application/json-patch+json',
+            }
+        });
         const data = response.data;
+
+        console.log('Should contain transaction ID if broadcast was OK:', data);
+
+        return data;
     }
 
     async queryIndexer() {
@@ -133,8 +138,6 @@ export class IndexerService {
                                 // Get all the transaction info for each of the transactions discovered on this address.
                                 await this.updateWithTransactionInfo(transactions, indexerUrl);
                                 updatedReceiveAddress.transactions = transactions;
-
-                                debugger;
 
                                 // TODO: Add support for paging.
                                 // Get the unspent outputs. We need to figure out how we should refresh this, as this might change depending on many factors.
@@ -225,8 +228,6 @@ export class IndexerService {
                                 // Get all the transaction info for each of the transactions discovered on this address.
                                 await this.updateWithTransactionInfo(transactions, indexerUrl);
                                 updatedChangeAddress.transactions = transactions;
-
-                                debugger;
 
                                 // TODO: Add support for paging.
                                 // Get the unspent outputs. We need to figure out how we should refresh this, as this might change depending on many factors.

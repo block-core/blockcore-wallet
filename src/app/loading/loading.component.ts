@@ -49,7 +49,7 @@ export class LoadingComponent implements OnInit, OnDestroy {
       active: true,
       lastFocusedWindow: true
     }, (tabs) => {
-      debugger;
+      // debugger;
       var tab = tabs[0];
       // Provide the tab URL with the state query, because wallets and accounts is connected to domains.
       this.communication.send('state-load', { url: tab?.url });
