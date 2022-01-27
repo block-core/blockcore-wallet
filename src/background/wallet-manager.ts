@@ -23,7 +23,7 @@ export class WalletManager {
         const network = this.manager.getNetwork(account.network, account.purpose);
 
         // We currently only support BTC-compatible transactions such as STRAX. We do not support other Blockcore chains that are not PoS v4.
-        const tx = new Psbt({ network: network, maximumFeeRate: 5000  });  // satoshi per byte, 5000 is default.
+        const tx = new Psbt({ network: network, maximumFeeRate: 5000 });  // satoshi per byte, 5000 is default.
         tx.setVersion(2); // These are defaults. This line is not needed.
         tx.setLocktime(0); // These are defaults. This line is not needed.
 
@@ -109,16 +109,13 @@ export class WalletManager {
         const transactionHex = finalTransaction.toHex();
         console.log('transactionHex', transactionHex);
 
-        return { transactionHex, fee: tx.getFee(), feeRate: tx.getFeeRate(), virtualSize: finalTransaction.virtualSize(), weight: finalTransaction.weight()  };
+        return { transactionHex, fee: tx.getFee(), feeRate: tx.getFeeRate(), virtualSize: finalTransaction.virtualSize(), weight: finalTransaction.weight() };
     }
 
     async sendTransaction(transactionHex: string): Promise<{ transactionId: string, transactionHex: string }> {
         console.log('transactionHex', transactionHex);
-
-        //const transactionId = await this.manager.indexer.broadcastTransaction(transactionHex);
-        const transactionId = '4c3e91a6a1f99da948723a3c5e313d0aabbea0cb2f19256bf688bd678ad86ffe';
+        const transactionId = await this.manager.indexer.broadcastTransaction(transactionHex);
         console.log('transactionId', transactionId);
-
         return { transactionId, transactionHex };
     }
 
