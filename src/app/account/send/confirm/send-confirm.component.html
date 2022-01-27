@@ -52,7 +52,7 @@
 </mat-form-field> -->
 <br>
 
-<button class="full-width" mat-raised-button routerLink="../sending" color="primary">Send</button>
+<button class="full-width" [disabled]="!transaction" mat-raised-button routerLink="../sending" color="primary">Send</button>
 
 <div *ngIf="transaction" class="wrap"><br>HEX: {{transaction.transactionHex}}</div>
 
