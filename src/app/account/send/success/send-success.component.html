@@ -1,13 +1,13 @@
 <h2>Payment sent</h2>
 
 <div class="centered-block">
-    <mat-icon  class="success-icon">done</mat-icon>
+    <mat-icon class="success-icon">done</mat-icon>
 </div>
 
-<div *ngIf="sendService.transactionHex">
-    Transaction was broadcasted:
-    <p>ID: {{sendService.transactionId}}</p>
-    <p>Hex: {{sendService.transactionHex}}</p>
+<div *ngIf="sendService.transactionHex" class="wrap">
+    <br><br>
+    ID:<br>
+    {{sendService.transactionId}}
 </div>
 
 <br><br>

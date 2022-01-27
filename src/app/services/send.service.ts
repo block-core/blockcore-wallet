@@ -24,6 +24,8 @@ export class SendService {
     fee: string;
     transactionHex: string;
     transactionId: string;
+    SATOSHI_FACTOR = SATOSHI_FACTOR;
+    routingIndex: number;
 
     get total() {
         return Number(this.amount) + Number(this.fee);
@@ -43,11 +45,11 @@ export class SendService {
         private router: Router,
         private snackBar: MatSnackBar
     ) {
-        this.communication.listen('transaction-sent', async (data: { transactionId: string, transactionHex: string }) => {
-            this.loading = false;
-            this.transactionId = data.transactionId;
-            this.transactionHex = data.transactionHex;
-        });
+        // this.communication.listen('transaction-sent', async (data: { transactionId: string, transactionHex: string }) => {
+        //     this.loading = false;
+        //     this.transactionId = data.transactionId;
+        //     this.transactionHex = data.transactionHex;
+        // });
     }
 
     send() {

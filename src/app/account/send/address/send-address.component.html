@@ -14,13 +14,13 @@
     <mat-form-field class="input-full-width" appearance="outline">
         <mat-label>Amount</mat-label>
         <input matInput formControlName="amountInput" [(ngModel)]="sendService.amount" required>
-        <mat-error *ngIf="form.controls['amountInput'].invalid">Amount is required.</mat-error>
+        <mat-error *ngIf="form.controls['amountInput'].invalid">Amount is required and must be correctly entered.</mat-error>
     </mat-form-field>
 
     <mat-form-field class="input-full-width" appearance="outline">
         <mat-label>Fee</mat-label>
         <input matInput formControlName="feeInput" [(ngModel)]="sendService.fee" required>
-        <mat-error *ngIf="form.controls['feeInput'].invalid">Fee is required.</mat-error>
+        <mat-error *ngIf="form.controls['feeInput'].invalid">Fee is required and must be correctly entered.</mat-error>
     </mat-form-field>
 
 </form>

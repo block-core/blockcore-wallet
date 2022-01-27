@@ -115,7 +115,8 @@ export class WalletManager {
     async sendTransaction(transactionHex: string): Promise<{ transactionId: string, transactionHex: string }> {
         console.log('transactionHex', transactionHex);
 
-        const transactionId = await this.manager.indexer.broadcastTransaction(transactionHex);
+        //const transactionId = await this.manager.indexer.broadcastTransaction(transactionHex);
+        const transactionId = '4c3e91a6a1f99da948723a3c5e313d0aabbea0cb2f19256bf688bd678ad86ffe';
         console.log('transactionId', transactionId);
 
         return { transactionId, transactionHex };

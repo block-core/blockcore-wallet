@@ -84,11 +84,11 @@ export class AccountSendComponent implements OnInit, OnDestroy {
 
         console.log(this.unspent);
 
-        this.sub = this.communication.listen('transaction-sent', async (data: { transactionId: string, transactionHex: string }) => {
-            this.loading = false;
-            debugger;
-            this.transactionHex = data.transactionHex;
-        });
+        // this.sub = this.communication.listen('transaction-sent', async (data: { transactionId: string, transactionHex: string }) => {
+        //     this.loading = false;
+        //     debugger;
+        //     this.transactionHex = data.transactionHex;
+        // });
 
         // try {
         //     this.qrCode = await QRCode.toDataURL(this.address, {

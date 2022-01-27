@@ -78,7 +78,7 @@ const routes: Routes = [
     path: 'account/view/:index', component: AccountComponent
   },
   {
-    path: 'account/send/:index', component: AccountSendComponent, children: [
+    path: 'account/send', component: AccountSendComponent, children: [
       { path: '', redirectTo: 'address', pathMatch: 'full' },
       {
         path: 'address',

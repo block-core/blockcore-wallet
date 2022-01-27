@@ -518,10 +518,7 @@ export class OrchestratorBackgroundService {
         });
 
         this.manager.communication.listen('transaction-send', async (port: any, data: { transactionHex: string }) => {
-
-            // const transactionHex = await this.manager.walletManager.createTransaction(data.address, Number(data.amount), Number(data.fee));
-            // const transactionDetails = await this.manager.walletManager.sendTransaction(transactionHex);
-            const transactionDetails = { transactionHex: '123', transactionId: 'xx123123' };
+            const transactionDetails = await this.manager.walletManager.sendTransaction(data.transactionHex);
             this.manager.communication.sendToAll('transaction-sent', transactionDetails);
         });
 

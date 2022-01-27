@@ -61,7 +61,6 @@ export class AccountIdentityComponent implements OnInit, OnDestroy {
     }
 
     this.activatedRoute.paramMap.subscribe(async params => {
-      debugger;
       // If we are currently viewing an account and the user changes, we'll refresh this view.
       // if (this.previousIndex != data.index) {
       //   this.router.navigate(['account', 'view', data.index]);
