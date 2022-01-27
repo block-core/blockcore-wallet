@@ -1,5 +1,7 @@
 <div class="page centered">
-    <h2>Send {{network.symbol}}</h2>
+    <!-- <h2>Send {{network.symbol}}</h2>
+
+    <mat-spinner class="loader"></mat-spinner>
 
     <mat-form-field class="input-full-width" appearance="outline">
         <mat-label>Address</mat-label>
@@ -16,23 +18,25 @@
         <input matInput [(ngModel)]="fee" required>
     </mat-form-field>
 
-    <button class="half-width" mat-raised-button (click)="send()" color="primary">Send</button>
+    <button class="half-width" mat-raised-button (click)="send()" color="primary">Send</button> -->
 
-    <div *ngIf="transactionHex">
-        Transaction was broadcasted:
-        <p>{{transactionHex}}</p>
-    </div>
+    <router-outlet></router-outlet>
+    <br>
 
-    <mat-nav-list>
+    <!-- <a [routerLink]="['address']">Address</a>
+    <a [routerLink]="['confirm']">Confirm</a>
+    <a [routerLink]="['success']">Success</a> -->
+
+    <!-- <mat-nav-list>
         <div mat-subheader>Unspent Transactions</div>
         <a mat-list-item *ngFor="let transaction of unspent">
             <div mat-line>{{transaction.scriptHex}}</div>
             <div mat-line>{{transaction.value | amount}}</div>
             <div mat-line>{{transaction.address}}</div>
         </a>
-    </mat-nav-list>
+    </mat-nav-list> -->
 
-    <p class="mat-caption network-info">
+    <!-- <p class="mat-caption network-info">
         This address can only be used to receive {{network.symbol}} on the {{network.name}} network.
-    </p>
+    </p> -->
 </div>

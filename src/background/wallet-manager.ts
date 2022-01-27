@@ -17,7 +17,7 @@ export class WalletManager {
     constructor(private manager: AppManager) {
     }
 
-    async sendTransaction(address: string, amount: number, fee: number) {
+    async sendTransaction(address: string, amount: number, fee: number): Promise<{ transactionId: string, transactionHex: string }> {
         // TODO: Verify the address for this network!! ... Help the user avoid sending transactions on very wrong addresses.
         const account = this.activeAccount;
         const network = this.manager.getNetwork(account.network, account.purpose);
@@ -111,7 +111,7 @@ export class WalletManager {
         const transactionId = await this.manager.indexer.broadcastTransaction(transactionHex);
         console.log('transactionId', transactionId);
 
-        return transactionId;
+        return { transactionId, transactionHex };
     }
 
     getWallets() {

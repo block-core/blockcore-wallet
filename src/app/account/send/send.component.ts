@@ -12,6 +12,7 @@ import * as QRCode from 'qrcode';
 import { Address, UnspentTransactionOutput } from '../../interfaces';
 import { NetworksService } from '../../services/networks.service';
 import { Network } from '../../../background/networks';
+import { SendService } from '../../services/send.service';
 var QRCode2 = require('qrcode');
 
 @Component({
@@ -29,8 +30,10 @@ export class AccountSendComponent implements OnInit, OnDestroy {
     unspent: UnspentTransactionOutput[];
     sub: any;
     transactionHex: string;
+    loading = false;
 
     constructor(public uiState: UIState,
+        public sendService: SendService,
         private renderer: Renderer2,
         private networks: NetworksService,
         private communication: CommunicationService,
@@ -38,11 +41,17 @@ export class AccountSendComponent implements OnInit, OnDestroy {
         // this.uiState.title = 'Receive Address';
         this.uiState.goBackHome = false;
 
+        this.sendService.reset();
+
         const account = this.uiState.activeAccount;
+        sendService.account = account;
+        sendService.network = this.networks.getNetwork(account.network, account.purposeAddress);
+
         this.network = this.networks.getNetwork(account.network, account.purposeAddress);
     }
 
     send() {
+        this.loading = true;
         this.communication.send('account-send', { address: this.address, amount: this.amount, fee: this.fee });
     }
 
@@ -74,7 +83,8 @@ export class AccountSendComponent implements OnInit, OnDestroy {
 
         console.log(this.unspent);
 
-        this.sub = this.communication.listen('account-sent', async (data: { transactionHex: string }) => {
+        this.sub = this.communication.listen('account-sent', async (data: { transactionId: string, transactionHex: string }) => {
+            this.loading = false;
             debugger;
             this.transactionHex = data.transactionHex;
         });

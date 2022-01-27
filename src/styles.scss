@@ -112,6 +112,20 @@ header {
     width: 100%;
 }
 
+.full-width {
+    width: 100% !important;
+}
+
+.loader-logo {
+    margin-top: 3em;
+}
+
+.loader {
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 3em;
+}
+
 .centered {
     text-align: center;
 }
@@ -178,6 +192,92 @@ select {
 .negative-color {
     color: #F44336;
 }
+
+
+
+
+
+
+.grid-label-value {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.25em 1.2em;
+  }
+  
+  .grid-label-value div {
+    display: contents;
+  }
+  
+  .grid-label-value div span:nth-child(1) {
+    color: var(--foreground-alternative);
+    text-align: right;
+  }
+  
+  .grid-label-value div span:nth-child(1)::after {
+    content: ":";
+  }
+  
+  .grid-label-value div span:nth-child(2) {
+    text-align: right;
+  }
+  
+  .grid-label-value ul {
+    margin: 0;
+  }
+  
+  
+  
+  .grid-label-value-label {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.25em 1.2em 1.2em;
+  }
+  
+  .grid-label-value-label div {
+    display: contents;
+  }
+  
+  .grid-label-value-label div span:nth-child(1) {
+    color: var(--foreground-alternative);
+    text-align: right;
+  }
+  
+  .grid-label-value-label div span:nth-child(1)::after {
+    content: ":";
+  }
+  
+  .grid-label-value-label div span:nth-child(2) {
+    text-align: right;
+  }
+  
+  
+  .grid-label-value-label div span:nth-child(3) {
+    text-align: left;
+    margin-left: 1em;
+  }
+  
+  
+  .grid-label-value-label ul {
+    margin: 0;
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 .sub-title {
     font-size: 0.9em;

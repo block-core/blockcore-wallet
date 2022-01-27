@@ -517,8 +517,9 @@ export class OrchestratorBackgroundService {
         });
 
         this.manager.communication.listen('account-send', async (port: any, data: { address: string, amount: string, fee: string }) => {
-            const txid = await this.manager.walletManager.sendTransaction(data.address, Number(data.amount), Number(data.fee));
-            this.manager.communication.sendToAll('account-sent', { txid: txid });
+            // const transactionDetails = await this.manager.walletManager.sendTransaction(data.address, Number(data.amount), Number(data.fee));
+            const transactionDetails = { transactionHex: '123', transactionId: 'xx123123' };
+            this.manager.communication.sendToAll('account-sent', transactionDetails);
         });
 
         this.manager.communication.listen('wallet-lock', async (port: any, data: { id: string }) => {

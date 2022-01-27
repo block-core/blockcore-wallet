@@ -1,0 +1,15 @@
+<h2>Payment sent</h2>
+
+<mat-icon class="success-icon">done</mat-icon>
+
+<div *ngIf="sendService.transactionHex">
+    Transaction was broadcasted:
+    <p>ID: {{sendService.transactionId}}</p>
+    <p>Hex: {{sendService.transactionHex}}</p>
+</div>
+
+<!-- <br>
+
+<button class="full-width" mat-raised-button routerLink="../success" color="primary">OK</button> -->
+
+<!-- <mat-spinner class="loader"></mat-spinner> -->

@@ -32,6 +32,10 @@ import { AccountReceiveComponent } from './account/receive/receive.component';
 import { AccountSelectComponent } from './account/select/select.component';
 import { AccountTransactionComponent } from './account/transaction/transaction.component';
 import { AccountSendComponent } from './account/send/send.component';
+import { AccountSendAddressComponent } from './account/send/address/send-address.component';
+import { AccountSendConfirmComponent } from './account/send/confirm/send-confirm.component';
+import { AccountSendSuccessComponent } from './account/send/success/send-success.component';
+import { AccountSendSendingComponent } from './account/send/sending/send-sending.component';
 
 const routes: Routes = [
   {
@@ -74,7 +78,25 @@ const routes: Routes = [
     path: 'account/view/:index', component: AccountComponent
   },
   {
-    path: 'account/send/:index', component: AccountSendComponent
+    path: 'account/send/:index', component: AccountSendComponent, children: [
+      { path: '', redirectTo: 'address', pathMatch: 'full' },
+      {
+        path: 'address',
+        component: AccountSendAddressComponent
+      },
+      {
+        path: 'confirm',
+        component: AccountSendConfirmComponent
+      },
+      {
+        path: 'sending',
+        component: AccountSendSendingComponent
+      },
+      {
+        path: 'success',
+        component: AccountSendSuccessComponent
+      }
+    ]
   },
   {
     path: 'account/receive/:index', component: AccountReceiveComponent

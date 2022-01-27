@@ -1,0 +1,49 @@
+<h2>Confirm Payment</h2>
+
+<div class="grid-label-value">
+    <div><span>Sending to</span><span>{{sendService.address}}</span></div>
+    <div><span>Sending from</span><span>{{sendService.account.name}}</span></div>
+    <div><span>Amount</span><span>{{sendService.amount}}</span></div>
+    <div><span>Fee</span><span>{{sendService.fee}}</span></div>
+    <div><span>Total</span><span>{{sendService.total}}</span></div>
+</div>
+
+<!-- <p>Sending to:</p>
+<mat-card class="address" [class.mat-elevation-z8]="true">{{sendService.address}}</mat-card>
+
+<br><br>
+<p>Sending from:</p>
+<mat-card class="address" [class.mat-elevation-z8]="true">{{sendService.account.name}}</mat-card>
+
+<br><br>
+<p>Amount:</p>
+<mat-card class="address" [class.mat-elevation-z8]="true">{{sendService.amount}}</mat-card>
+
+<br><br>
+<p>Fee:</p>
+<mat-card class="address" [class.mat-elevation-z8]="true">{{sendService.fee}}</mat-card>
+
+<br><br>
+<p>Total:</p>
+<mat-card class="address" [class.mat-elevation-z8]="true">{{sendService.total}}</mat-card> -->
+
+<!-- 
+
+<mat-form-field class="input-full-width" appearance="outline">
+    <mat-label>Address</mat-label>
+    <input matInput [(ngModel)]="sendService.address" required>
+</mat-form-field>
+
+<mat-form-field class="input-full-width" appearance="outline">
+    <mat-label>Amount</mat-label>
+    <input matInput [(ngModel)]="sendService.amount" required>
+</mat-form-field>
+
+<mat-form-field class="input-full-width" appearance="outline">
+    <mat-label>Fee</mat-label>
+    <input matInput [(ngModel)]="sendService.fee" required>
+</mat-form-field> -->
+<br>
+
+<button class="full-width" mat-raised-button routerLink="../sending" color="primary">Send</button>
+<!-- <button class="full-width" mat-raised-button (click)="sendService.send()" color="primary">Send</button> -->
