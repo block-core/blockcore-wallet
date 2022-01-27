@@ -3,3 +3,10 @@
   width: 64px;
   height: 64px;
 }
+
+.centered-block {
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 2em;
+  text-align: center;
+}

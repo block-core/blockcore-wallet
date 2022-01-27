@@ -1,18 +1,29 @@
 <h2>Send {{sendService.network.symbol}}</h2>
 
-<mat-form-field class="input-full-width" appearance="outline">
-    <mat-label>Address</mat-label>
-    <input matInput [(ngModel)]="sendService.address" required>
-</mat-form-field>
+<form [formGroup]="form">
 
-<mat-form-field class="input-full-width" appearance="outline">
-    <mat-label>Amount</mat-label>
-    <input matInput [(ngModel)]="sendService.amount" required>
-</mat-form-field>
+    <mat-form-field class="input-full-width" appearance="outline">
+        <mat-label>Address</mat-label>
+        <input matInput formControlName="addressInput" [(ngModel)]="sendService.address" required>
+        <!-- <mat-error
+            *ngIf="form.controls['addressInput'].hasError('required') && form.controls['addressInput'].dirty || form.controls['addressInput'].touched">
+            Address is required.</mat-error> -->
+        <mat-error *ngIf="form.controls['addressInput'].invalid">Address is required.</mat-error>
+    </mat-form-field>
 
-<mat-form-field class="input-full-width" appearance="outline">
-    <mat-label>Fee</mat-label>
-    <input matInput [(ngModel)]="sendService.fee" required>
-</mat-form-field>
+    <mat-form-field class="input-full-width" appearance="outline">
+        <mat-label>Amount</mat-label>
+        <input matInput formControlName="amountInput" [(ngModel)]="sendService.amount" required>
+        <mat-error *ngIf="form.controls['amountInput'].invalid">Amount is required.</mat-error>
+    </mat-form-field>
 
-<button class="full-width" mat-raised-button routerLink="../confirm" color="primary">Continue</button>
+    <mat-form-field class="input-full-width" appearance="outline">
+        <mat-label>Fee</mat-label>
+        <input matInput formControlName="feeInput" [(ngModel)]="sendService.fee" required>
+        <mat-error *ngIf="form.controls['feeInput'].invalid">Fee is required.</mat-error>
+    </mat-form-field>
+
+</form>
+
+<button class="full-width" [disabled]="!form.valid" mat-raised-button routerLink="../confirm"
+    color="primary">Continue</button>

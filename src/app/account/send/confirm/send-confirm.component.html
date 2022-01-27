@@ -1,11 +1,11 @@
 <h2>Confirm Payment</h2>
 
-<div class="grid-label-value">
-    <div><span>Sending to</span><span>{{sendService.address}}</span></div>
-    <div><span>Sending from</span><span>{{sendService.account.name}}</span></div>
+<div class="grid-row-label-value">
+    <div><span>To</span><span>{{sendService.address}}</span></div>
+    <div><span>From</span><span>{{sendService.account.name}}</span></div>
     <div><span>Amount</span><span>{{sendService.amount}}</span></div>
     <div><span>Fee</span><span>{{sendService.fee}}</span></div>
-    <div><span>Total</span><span>{{sendService.total}}</span></div>
+    <div><span>Total</span><span class="total">{{sendService.total}} {{sendService.network.symbol}}</span></div>
 </div>
 
 <!-- <p>Sending to:</p>

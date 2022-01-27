@@ -1,6 +1,8 @@
 <h2>Payment sent</h2>
 
-<mat-icon class="success-icon">done</mat-icon>
+<div class="centered-block">
+    <mat-icon  class="success-icon">done</mat-icon>
+</div>
 
 <div *ngIf="sendService.transactionHex">
     Transaction was broadcasted:
@@ -10,7 +12,7 @@
 
 <br><br>
 
-<button class="full-width" mat-raised-button routerLink="/" color="primary">OK</button>
+<button class="full-width" mat-raised-button routerLink="/dashboard" color="primary">OK</button>
 
 <!-- <br>
 
