@@ -30,7 +30,7 @@ export class AccountSendAddressComponent implements OnInit, OnDestroy {
         this.form = fb.group({
             addressInput: new FormControl('', [Validators.required, Validators.minLength(6)]),
             amountInput: new FormControl('', [Validators.required]),
-            feeInput: new FormControl('', [Validators.required])
+            feeInput: new FormControl('0.00010000', [Validators.required])
         });
 
         // this.parts = fb.group({

@@ -16,4 +16,5 @@ export class CRS implements Network {
     pubKeyHash = 28;
     scriptHash = 88;
     wif = 0x08; // TODO: Verify if this is still used for CRS.
+    feeRate = '0.00010000';
 }

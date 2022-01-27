@@ -3,8 +3,15 @@
 <div class="grid-row-label-value">
     <div><span>To</span><span>{{sendService.address}}</span></div>
     <div><span>From</span><span>{{sendService.account.name}}</span></div>
-    <div><span>Amount</span><span>{{sendService.amount}}</span></div>
-    <div><span>Fee</span><span>{{sendService.fee}}</span></div>
+    <div><span>Amount</span><span>{{sendService.amount}} {{sendService.network.symbol}}</span></div>
+    
+    <!-- <div><span>Fee</span><span>{{sendService.fee}} ({{sendService.feeAsSatoshi}}) {{sendService.network.symbol}}</span></div> -->
+    <div *ngIf="transaction"><span>Fee</span><span>{{transaction.fee / SATOSHI_FACTOR}} {{sendService.network.symbol}}</span></div>
+    <div *ngIf="transaction"><span>FeeRate</span><span>{{transaction.feeRate}} sat/byte</span></div>
+    
+    <!-- <div *ngIf="transaction"><span>virtualSize</span><span>{{transaction.virtualSize}}</span></div>
+    <div *ngIf="transaction"><span>weight</span><span>{{transaction.weight}}</span></div> -->
+
     <div><span>Total</span><span class="total">{{sendService.total}} {{sendService.network.symbol}}</span></div>
 </div>
 
@@ -46,4 +53,7 @@
 <br>
 
 <button class="full-width" mat-raised-button routerLink="../sending" color="primary">Send</button>
+
+<div *ngIf="transaction" class="wrap"><br>HEX: {{transaction.transactionHex}}</div>
+
 <!-- <button class="full-width" mat-raised-button (click)="sendService.send()" color="primary">Send</button> -->

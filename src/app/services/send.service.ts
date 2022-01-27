@@ -9,6 +9,7 @@ import {
     MatSnackBarVerticalPosition,
 } from '@angular/material/snack-bar';
 import { Network } from '../../background/networks';
+import { SATOSHI_FACTOR } from '../shared/constants';
 
 @Injectable({
     providedIn: 'root'
@@ -28,13 +29,21 @@ export class SendService {
         return Number(this.amount) + Number(this.fee);
     }
 
+    get amountAsSatoshi() {
+        return Number(this.amount) * SATOSHI_FACTOR;
+    }
+
+    get feeAsSatoshi() {
+        return Number(this.fee) * SATOSHI_FACTOR;
+    }
+
     constructor(
         private communication: CommunicationService,
         private uiState: UIState,
         private router: Router,
         private snackBar: MatSnackBar
     ) {
-        this.communication.listen('account-sent', async (data: { transactionId: string, transactionHex: string }) => {
+        this.communication.listen('transaction-sent', async (data: { transactionId: string, transactionHex: string }) => {
             this.loading = false;
             this.transactionId = data.transactionId;
             this.transactionHex = data.transactionHex;
@@ -47,13 +56,16 @@ export class SendService {
         this.router.navigate(['success']);
     }
 
+    resetFee() {
+        this.fee = this.network.feeRate;
+    }
+
     reset() {
         this.account = null;
         this.network = null;
         this.loading = false;
         this.address = '';
         this.amount = '';
-        this.fee = '';
         this.transactionHex = '';
         this.transactionId = '';
     }

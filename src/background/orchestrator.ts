@@ -15,6 +15,7 @@ import { seedFromWords, generateSeedWords, privateKeyFromSeed } from 'nostr-tool
 import { getPublicKey } from 'nostr-tools';
 import { AppManager } from './application-manager';
 import { AccountReceiveComponent } from '../app/account/receive/receive.component';
+import { Transaction } from '@blockcore/blockcore-js';
 
 /** Service that handles orchestration between background and frontend. Maps messages between managers and actions initiated in the UI. */
 export class OrchestratorBackgroundService {
@@ -516,10 +517,22 @@ export class OrchestratorBackgroundService {
             this.manager.communication.sendToAll('wallet-removed', data);
         });
 
-        this.manager.communication.listen('account-send', async (port: any, data: { address: string, amount: string, fee: string }) => {
-            // const transactionDetails = await this.manager.walletManager.sendTransaction(data.address, Number(data.amount), Number(data.fee));
+        this.manager.communication.listen('transaction-send', async (port: any, data: { transactionHex: string }) => {
+
+            // const transactionHex = await this.manager.walletManager.createTransaction(data.address, Number(data.amount), Number(data.fee));
+            // const transactionDetails = await this.manager.walletManager.sendTransaction(transactionHex);
             const transactionDetails = { transactionHex: '123', transactionId: 'xx123123' };
-            this.manager.communication.sendToAll('account-sent', transactionDetails);
+            this.manager.communication.sendToAll('transaction-sent', transactionDetails);
+        });
+
+        this.manager.communication.listen('transaction-create', async (port: any, data: { address: string, amount: string, fee: string }) => {
+            try {
+                const transactionDetails = await this.manager.walletManager.createTransaction(data.address, Number(data.amount), Number(data.fee));
+                console.log('transactionDetails', transactionDetails);
+                this.manager.communication.sendToAll('transaction-created', transactionDetails);
+            } catch (error) {
+                this.manager.communication.send(port, 'error', { exception: error, message: error.toString() });
+            }
         });
 
         this.manager.communication.listen('wallet-lock', async (port: any, data: { id: string }) => {

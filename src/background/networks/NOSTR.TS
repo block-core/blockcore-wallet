@@ -16,4 +16,5 @@ export class NOSTR implements Network {
     pubKeyHash = 0;
     scriptHash = 5;
     wif = 0x08;
+    feeRate = '0.00000000';
 }

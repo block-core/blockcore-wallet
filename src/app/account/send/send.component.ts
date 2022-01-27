@@ -23,8 +23,8 @@ var QRCode2 = require('qrcode');
 export class AccountSendComponent implements OnInit, OnDestroy {
     addressEntry: Address;
     address: string = '';
-    amount: string = '100000000'; // 1 coin
-    fee: string = '00100000'; // 0.001 coin
+    // amount: string = '100000000'; // 1 coin
+    // fee: string = '00100000'; // 0.001 coin
     qrCode: string;
     network: Network;
     unspent: UnspentTransactionOutput[];
@@ -41,19 +41,20 @@ export class AccountSendComponent implements OnInit, OnDestroy {
         // this.uiState.title = 'Receive Address';
         this.uiState.goBackHome = false;
 
-        this.sendService.reset();
+        sendService.reset();
 
         const account = this.uiState.activeAccount;
         sendService.account = account;
         sendService.network = this.networks.getNetwork(account.network, account.purposeAddress);
+        sendService.resetFee(); // Reset fee after we have network available.
 
         this.network = this.networks.getNetwork(account.network, account.purposeAddress);
     }
 
-    send() {
-        this.loading = true;
-        this.communication.send('account-send', { address: this.address, amount: this.amount, fee: this.fee });
-    }
+    // send() {
+    //     this.loading = true;
+    //     this.communication.send('transaction-send', { address: this.address, amount: this.amount, fee: this.fee });
+    // }
 
     ngOnDestroy(): void {
         if (this.sub) {
@@ -83,7 +84,7 @@ export class AccountSendComponent implements OnInit, OnDestroy {
 
         console.log(this.unspent);
 
-        this.sub = this.communication.listen('account-sent', async (data: { transactionId: string, transactionHex: string }) => {
+        this.sub = this.communication.listen('transaction-sent', async (data: { transactionId: string, transactionHex: string }) => {
             this.loading = false;
             debugger;
             this.transactionHex = data.transactionHex;

@@ -30,6 +30,8 @@ export interface Network {
 
     wif: number
 
+    feeRate: string;
+
     /** A logo that can be displayed in UI for the specific network. */
     // logo: ''; 
 }

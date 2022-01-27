@@ -17,13 +17,13 @@ export class WalletManager {
     constructor(private manager: AppManager) {
     }
 
-    async sendTransaction(address: string, amount: number, fee: number): Promise<{ transactionId: string, transactionHex: string }> {
+    async createTransaction(address: string, amount: number, fee: number): Promise<{ transactionHex: string, fee: number, feeRate: number, virtualSize: number, weight: number }> {
         // TODO: Verify the address for this network!! ... Help the user avoid sending transactions on very wrong addresses.
         const account = this.activeAccount;
         const network = this.manager.getNetwork(account.network, account.purpose);
 
         // We currently only support BTC-compatible transactions such as STRAX. We do not support other Blockcore chains that are not PoS v4.
-        const tx = new Psbt({ network: network });
+        const tx = new Psbt({ network: network, maximumFeeRate: 5000  });  // satoshi per byte, 5000 is default.
         tx.setVersion(2); // These are defaults. This line is not needed.
         tx.setLocktime(0); // These are defaults. This line is not needed.
 
@@ -105,7 +105,14 @@ export class WalletManager {
             }
         }
 
-        const transactionHex = tx.finalizeAllInputs().extractTransaction().toHex();
+        const finalTransaction = tx.finalizeAllInputs().extractTransaction();
+        const transactionHex = finalTransaction.toHex();
+        console.log('transactionHex', transactionHex);
+
+        return { transactionHex, fee: tx.getFee(), feeRate: tx.getFeeRate(), virtualSize: finalTransaction.virtualSize(), weight: finalTransaction.weight()  };
+    }
+
+    async sendTransaction(transactionHex: string): Promise<{ transactionId: string, transactionHex: string }> {
         console.log('transactionHex', transactionHex);
 
         const transactionId = await this.manager.indexer.broadcastTransaction(transactionHex);
