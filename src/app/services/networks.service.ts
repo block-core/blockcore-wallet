@@ -17,7 +17,7 @@ export class NetworksService {
     constructor() {
         const networkLoader = new NetworkLoader();
         this.networks = networkLoader.getNetworks(environment.networks);
-        this.networks = networkLoader.getAllNetworks();
+        this.allNetworks = networkLoader.getAllNetworks();
     }
 
     getDerivationPathForNetwork(network: Network) {
