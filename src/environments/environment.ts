@@ -15,11 +15,7 @@ export const environment = {
   networks: ['STRAX'] as string[] // Returns all
 };
 
-export enum Environments {
-  Blockcore = 'blockcore',
-  CoinVault = 'coinvault',
-  SmartCityPlatform = 'smartcityplatform'
-}
+
 
 /*
  * For easier debugging in development mode, you can import the following file

@@ -1,6 +1,6 @@
 {
   "name": "blockcore-extension",
-  "version": "0.0.0",
+  "version": "0.0.2",
   "scripts": {
     "ng": "ng",
     "start": "ng build --watch --configuration=development",
@@ -8,10 +8,11 @@
     "smartcityplatform": "ng build --watch --configuration=smartcityplatform",
     "all": "ng build --configuration=production && ng build --configuration=coinvault && ng build --configuration=smartcityplatform",
     "serve": "ng serve",
-    "build": "ng build",
+    "build": "ng build --configuration=production",
     "watch": "ng build --watch",
     "test": "ng test",
-    "test:web": "cd test/web && http-server"
+    "test:web": "cd test/web && http-server",
+    "version": "node -p \"require('./package.json').version\""
   },
   "private": true,
   "dependencies": {
