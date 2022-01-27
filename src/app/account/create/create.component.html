@@ -2,17 +2,13 @@
 
     <mat-form-field appearance="fill" *ngIf="uiState.hasWallets">
         <mat-label>Network</mat-label>
+
         <mat-select (selectionChange)="onNetworkChanged($event)" [(value)]="network">
-            <mat-option value="302'/616'">Identity (302'/616')</mat-option>
-            <mat-option value="44'/105105'">Stratis (STRAX) (44'/105105')</mat-option>
-            <mat-option value="44'/1926'">City Coin (44'/1926')</mat-option>
-            <mat-option value="44'/0'">Bitcoin (44', 1addresses)</mat-option>
-            <mat-option value="49'/0'">Bitcoin (49' 3addresses)</mat-option>
-            <mat-option value="84'/0'">Bitcoin (84' bc1addresses)</mat-option>
-            <mat-option value="44'/1237'">Nostr (44'/1237')</mat-option>
-            <!-- <mat-option *ngFor="let wallet of appState.persisted.wallets; let i = index" [value]="i">{{wallet.name}} -->
-            <!-- </mat-option> -->
+            <mat-option *ngFor="let net of this.networkService.networks;"
+                [value]="networkService.getDerivationPathForNetwork(net)">{{net.name}}
+            </mat-option>
         </mat-select>
+
     </mat-form-field>
 
     <br>
@@ -20,14 +16,14 @@
     <mat-form-field appearance="fill" *ngIf="uiState.activeAccount">
         <mat-label>Icon</mat-label>
         <mat-select [(value)]="icon">
-          <mat-option *ngFor="let icon of icons.icons" [value]="icon">
-            <mat-icon>{{icon}}</mat-icon>
-          </mat-option>
-          <mat-select-trigger>
-            <mat-icon>{{icon}}</mat-icon>
-          </mat-select-trigger>
+            <mat-option *ngFor="let icon of icons.icons" [value]="icon">
+                <mat-icon>{{icon}}</mat-icon>
+            </mat-option>
+            <mat-select-trigger>
+                <mat-icon>{{icon}}</mat-icon>
+            </mat-select-trigger>
         </mat-select>
-      </mat-form-field>
+    </mat-form-field>
 
     <br>
 

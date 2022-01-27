@@ -15,9 +15,6 @@ export interface Network {
     /** Purpose part of the derivation path. This is normally 44 for most use cases. */
     purpose: number;
 
-    /** The default derivation path displayed and editable when creating a new account. */
-    derivationPath: string;
-
     messagePrefix: string;
 
     bech32: string;

@@ -6,7 +6,6 @@ export class STRAX implements Network {
     symbol = 'STRAX';
     network: number = 105105;
     purpose: number = 44;
-    derivationPath: string = `m/44'/105105'/0'`;
     messagePrefix = '\x18Bitcoin Signed Message:\n';
     bech32 = 'strax';
     bip32 = {

@@ -6,7 +6,6 @@ export class IDENTITY implements Network {
     symbol = 'did:is';
     network: number = 616;
     purpose: number = 302;
-    derivationPath: string = `m/302'/616'/0'`;
     messagePrefix = '\x18Bitcoin Signed Message:\n';
     bech32 = 'id';
     bip32 = {

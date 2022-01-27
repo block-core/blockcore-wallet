@@ -3,7 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { CryptoService } from '../../services/crypto.service';
 import { UIState } from '../../services/ui-state.service';
 import { Router } from '@angular/router';
-import { OrchestratorService } from 'src/app/services/orchestrator.service';
+import { OrchestratorService } from '../../services/orchestrator.service';
+import { NetworksService } from '../../services/networks.service';
 
 @Component({
     selector: 'app-identity',
@@ -19,6 +20,7 @@ export class ActionIdentityComponent {
         private router: Router,
         private app: ApplicationRef,
         private ngZone: NgZone,
+        public networkService: NetworksService,
         private manager: OrchestratorService,
         private cd: ChangeDetectorRef) {
         this.uiState.title = 'Action: Identity';

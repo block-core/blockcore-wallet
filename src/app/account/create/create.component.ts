@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 import { OrchestratorService } from '../../services/orchestrator.service';
 import { CommunicationService } from '../../services/communication.service';
 import { IconService } from '../../services/icon.service';
+import { NetworksService } from '../../services/networks.service';
 
 @Component({
     selector: 'app-account-create',
@@ -23,7 +24,7 @@ export class AccountCreateComponent implements OnInit, OnDestroy {
     mnemonicInputDisabled = true;
     password = '';
     password2 = '';
-    network = "302'/616'";
+    network = '';
     indexes: number[] = [];
     index: number = 0;
     derivationPath!: string;
@@ -40,6 +41,7 @@ export class AccountCreateComponent implements OnInit, OnDestroy {
         private crypto: CryptoService,
         private router: Router,
         public icons: IconService,
+        public networkService: NetworksService,
         private communication: CommunicationService,
         private manager: OrchestratorService,
         private cd: ChangeDetectorRef
@@ -52,6 +54,9 @@ export class AccountCreateComponent implements OnInit, OnDestroy {
         }
 
         this.uiState.showBackButton = true;
+
+        // Default to the first available network.
+        this.network = this.networkService.getDerivationPathForNetwork(this.networkService.networks[0]);
     }
 
     ngOnInit() {
@@ -126,7 +131,7 @@ export class AccountCreateComponent implements OnInit, OnDestroy {
     }
 
     getDerivationPath() {
-        return `m/${this.network.toString()}/${this.index.toString()}'`;
+        return `${this.network.toString()}/${this.index.toString()}'`;
     }
 
     async onNetworkChanged(event: any) {
@@ -155,7 +160,6 @@ export class AccountCreateComponent implements OnInit, OnDestroy {
             network: parsedNetwork,
             purpose: parsedPurpose,
             purposeAddress: parsedPurpose, // Until we have UI for selecting override, simply replicate the purpose from input.
-            derivationPath: this.derivationPath,
             icon: this.icon,
             state: {
                 balance: 0,

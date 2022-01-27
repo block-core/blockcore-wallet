@@ -6,7 +6,6 @@ export class CRS implements Network {
     symbol = 'CRS';
     network: number = 401;
     purpose: number = 44;
-    derivationPath: string = `m/44'/401'/0'`;
     messagePrefix = '\x18Bitcoin Signed Message:\n';
     bech32 = 'tb';
     bip32 = {

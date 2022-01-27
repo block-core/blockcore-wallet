@@ -20,6 +20,14 @@ export class NetworksService {
         this.networks = networkLoader.getAllNetworks();
     }
 
+    getDerivationPathForNetwork(network: Network) {
+        return `m/${network.purpose}'/${network.network}'`;;
+    }
+
+    getDerivationPathForAccount(account: Account) {
+        return `m/${account.purpose}'/${account.network}'/${account.index}'`;;
+    }
+
     /** Get the network definition based upon the id, e.g. BTC, STRAX, CRS, CITY. */
     getNetworkById(id: string) {
         const network = this.networks.find(w => w.id == id);
@@ -45,7 +53,6 @@ export class NetworksService {
                     network: 105105,
                     purpose: 44,
                     purposeAddress: 44,
-                    derivationPath: `m/44'/105105'/0'`,
                     icon: 'paid',
                     state: {
                         balance: 0,
@@ -60,7 +67,6 @@ export class NetworksService {
                     network: 401,
                     purpose: 44,
                     purposeAddress: 44,
-                    derivationPath: `m/44'/401'/0'`,
                     icon: 'paid',
                     state: {
                         balance: 0,
@@ -75,7 +81,6 @@ export class NetworksService {
                     network: 1926,
                     purpose: 44,
                     purposeAddress: 44,
-                    derivationPath: `m/44'/1926'/0'`,
                     icon: 'paid',
                     state: {
                         balance: 0,
@@ -90,7 +95,6 @@ export class NetworksService {
                     network: 616,
                     purpose: 302,
                     purposeAddress: 302,
-                    derivationPath: `m/302'/616'/0'`,
                     icon: 'account_circle',
                     state: {
                         balance: 0,
@@ -105,7 +109,6 @@ export class NetworksService {
                     network: 1237,
                     purpose: 44,
                     purposeAddress: 44, // TODO: Nostr should have custom derived address, add this ability (schnorr signature)
-                    derivationPath: `m/44'/1237'/0'`,
                     icon: 'account_circle',
                     state: {
                         balance: 0,
@@ -124,7 +127,6 @@ export class NetworksService {
                     network: 105105,
                     purpose: 44,
                     purposeAddress: 44,
-                    derivationPath: `m/44'/105105'/0'`,
                     icon: 'account_circle',
                     state: {
                         balance: 0,
@@ -140,7 +142,6 @@ export class NetworksService {
                     network: 401,
                     purpose: 44,
                     purposeAddress: 44,
-                    derivationPath: `m/44'/401'/0'`,
                     icon: 'account_circle',
                     state: {
                         balance: 0,
@@ -159,7 +160,6 @@ export class NetworksService {
                     network: 1926,
                     purpose: 44,
                     purposeAddress: 44,
-                    derivationPath: `m/44'/1926'/0'`,
                     icon: 'paid',
                     state: {
                         balance: 0,
@@ -175,7 +175,6 @@ export class NetworksService {
                     network: 616,
                     purpose: 302,
                     purposeAddress: 302,
-                    derivationPath: `m/302'/616'/0'`,
                     icon: 'account_circle',
                     state: {
                         balance: 0,
@@ -190,7 +189,6 @@ export class NetworksService {
                     network: 1237,
                     purpose: 44,
                     purposeAddress: 44, // TODO: Nostr should have custom derived address, add this ability (schnorr signature)
-                    derivationPath: `m/44'/1237'/0'`,
                     icon: 'account_circle',
                     state: {
                         balance: 0,

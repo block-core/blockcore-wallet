@@ -132,7 +132,7 @@
         <mat-icon mat-list-icon class="account-icon">{{uiState.activeAccount.icon}}</mat-icon>
         <div class="detail-network">
           {{uiState.activeAccount.network | network}}<br>
-          {{uiState.activeAccount.derivationPath}}
+          {{networkService.getDerivationPathForAccount(uiState.activeAccount)}}
         </div>
       </div>
 

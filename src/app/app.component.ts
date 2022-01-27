@@ -6,6 +6,7 @@ import { UIState } from './services/ui-state.service';
 import { CommunicationService } from './services/communication.service';
 import { OrchestratorService } from './services/orchestrator.service';
 import { Location } from '@angular/common'
+import { NetworksService } from './services/networks.service';
 
 @Component({
   selector: 'app-root',
@@ -25,6 +26,7 @@ export class AppComponent implements OnInit {
     private manager: OrchestratorService,
     private location: Location,
     private cd: ChangeDetectorRef,
+    public networkService: NetworksService,
     @Inject(DOCUMENT) private document: Document) {
 
     router.events.subscribe((val) => {

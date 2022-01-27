@@ -4,6 +4,7 @@ import { CryptoService } from '../../services/crypto.service';
 import { UIState } from '../../services/ui-state.service';
 import { Router } from '@angular/router';
 import { OrchestratorService } from 'src/app/services/orchestrator.service';
+import { NetworksService } from '../../services/networks.service';
 
 @Component({
     selector: 'app-sign',
@@ -19,6 +20,7 @@ export class ActionSignComponent {
         private router: Router,
         private app: ApplicationRef,
         private ngZone: NgZone,
+        public networkService: NetworksService,
         private manager: OrchestratorService,
         private cd: ChangeDetectorRef) {
         this.uiState.title = 'Action: Signing';
