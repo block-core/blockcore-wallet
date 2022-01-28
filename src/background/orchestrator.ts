@@ -532,6 +532,29 @@ export class OrchestratorBackgroundService {
             }
         });
 
+        this.manager.communication.listen('wallet-password-change', async (port: any, data: { id: string, oldpassword: string, newpassword: string }) => {
+            try {
+                // First make sure that existing password is valid:
+                const validOldPassword = await this.manager.walletManager.unlockWallet(data.id, data.oldpassword);
+
+                if (!validOldPassword) {
+                    this.manager.communication.send(port, 'error', { message: 'The existing password is incorrect.' });
+                    return;
+                }
+
+                const walletWasChanged = await this.manager.walletManager.changeWalletPassword(data.id, data.oldpassword, data.newpassword);
+
+                if (walletWasChanged) {
+                    this.manager.communication.sendToAll('wallet-password-changed', null);
+                } else {
+                    this.manager.communication.send(port, 'error', { message: 'Unable to change password on wallet for unknown reason.' });
+                }
+
+            } catch (error) {
+                this.manager.communication.send(port, 'error', { exception: error, message: error.toString() });
+            }
+        });
+
         this.manager.communication.listen('wallet-lock', async (port: any, data: { id: string }) => {
             this.manager.walletManager.lockWallet(data.id);
 

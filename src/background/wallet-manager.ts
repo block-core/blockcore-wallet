@@ -200,6 +200,43 @@ export class WalletManager {
         }
     }
 
+    /** Cange the wallet password in one operation. */
+    async changeWalletPassword(id: string, oldpassword: string, newpassword: string) {
+        var wallet = this.manager.walletManager.getWallet(id);
+        let unlockedMnemonic = null;
+
+        if (!wallet) {
+            return unlockedMnemonic;
+        }
+
+        unlockedMnemonic = await this.manager.crypto.decryptData(wallet.mnemonic, oldpassword);
+
+        if (unlockedMnemonic) {
+
+            // Encrypt the recovery phrase with new password and persist.
+            let encryptedRecoveryPhrase = await this.manager.crypto.encryptData(unlockedMnemonic, newpassword);
+            wallet.mnemonic = encryptedRecoveryPhrase;
+
+            // Make sure we persist the newly encrypted recovery phrase.
+            await this.manager.state.save();
+
+            // Make sure we delete the existing wallet secret for this wallet.
+            this.walletSecrets.delete(id);
+
+            const masterSeed = mnemonicToSeedSync(unlockedMnemonic);
+
+            // Add this wallet to list of unlocked.
+            this.walletSecrets.set(id, { password: newpassword, seed: masterSeed });
+
+            this.manager.state.persisted.activeWalletId = wallet.id;
+
+            return true;
+
+        } else {
+            return false;
+        }
+    }
+
     resetTimer() {
         console.log('resetTimer:', this.manager.state.persisted.settings.autoTimeout * MINUTE);
 
