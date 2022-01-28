@@ -36,7 +36,7 @@ export class SendService {
         return BigInt(amountAsDecimal);
     }
 
-    get feeAsSatoshi() : BigInt | any {
+    get feeAsSatoshi() : BigInt {
         const feeAsDecimal = Number(this.fee) * SATOSHI_FACTOR;
         return BigInt(feeAsDecimal);
     }
@@ -55,8 +55,8 @@ export class SendService {
     }
 
     /** Used to specify maximum amount and fee will be subtracted from the supplied amount. */
-    setMax(amount: BigInt) {
-        const maxAmountWithoutFee = <any>amount - <any>this.feeAsSatoshi;
+    setMax(amount: BigInt | number) {
+        const maxAmountWithoutFee = Number(amount) - Number(this.feeAsSatoshi);
         this.amount = (maxAmountWithoutFee / SATOSHI_FACTOR).toPrecision(8);
     }
 
