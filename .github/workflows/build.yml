@@ -53,7 +53,7 @@ jobs:
 
       - name: Package
         run: |
-          zip -r ${{env.RELEASE_NAME}} dist/${{ env.PROJECT_NAME }}
+          zip -j -r ${{env.RELEASE_NAME}} dist/${{ env.PROJECT_NAME }}
 
       - uses: actions/upload-artifact@v1
         with:
