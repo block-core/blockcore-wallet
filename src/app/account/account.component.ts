@@ -29,6 +29,7 @@ export class AccountComponent implements OnInit, OnDestroy {
   activities: any[] = [];
   public transactions: Transaction[];
   public networkStatus: any;
+  private scanTimer : any;
 
   constructor(
     private http: HttpClient,
@@ -73,11 +74,12 @@ export class AccountComponent implements OnInit, OnDestroy {
     if (this.sub) {
       this.communication.unlisten(this.sub);
     }
+
+    clearInterval(this.scanTimer);
   }
 
   scan(force: boolean = false) {
     this.loading = true;
-
     this.communication.send('account-scan', { force: force, account: this.uiState.activeAccount, wallet: this.uiState.activeWallet });
   }
 
@@ -123,6 +125,10 @@ export class AccountComponent implements OnInit, OnDestroy {
     this.sub2 = this.communication.listen('account-scanned', async (data: { accountId: string }) => {
       this.loading = false;
     });
+
+    this.scanTimer = setInterval(() => {
+      this.scan();
+    }, 30000);
 
     // this.sub = this.communication.listen('address-generated', async (data: { address: string, receive: any[], change: any[] }) => {
     //   console.log('ADDRESS GENERATED!!');
