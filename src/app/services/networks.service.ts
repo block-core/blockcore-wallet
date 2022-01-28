@@ -62,6 +62,7 @@ export class NetworksService {
                         change: []
                     }
                 }, {
+                    selected: true,
                     index: 0,
                     name: 'Cirrus',
                     type: 'coin',

@@ -8,5 +8,5 @@ export const environment = {
   instance: 'blockcore',
   instanceName: 'Blockcore',
   instanceUrl: 'https://blockcore.net/',
-  networks: ['STRAX'] // Returns all
+  networks: ['STRAX', 'CRS'] // Returns all
 };

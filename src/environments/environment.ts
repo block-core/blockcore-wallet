@@ -12,10 +12,8 @@ export const environment = {
   instance: 'blockcore',
   instanceName: 'Blockcore',
   instanceUrl: 'https://blockcore.net/',
-  networks: ['STRAX'] as string[] // Returns all
+  networks: ['STRAX', 'CRS'] as string[] // Returns all
 };
-
-
 
 /*
  * For easier debugging in development mode, you can import the following file
