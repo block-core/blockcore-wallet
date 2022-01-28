@@ -1,4 +1,4 @@
-import { BTC44, BTC84, CITY, CRS, IDENTITY, Network, NOSTR, STRAX } from './networks';
+import { Network, BTC44, BTC84, CITY, CRS, IDENTITY, NOSTR, STRAX } from './networks';
 
 /** Holds a list of networks that is available. */
 export class NetworkLoader {
