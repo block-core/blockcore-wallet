@@ -1,6 +1,11 @@
-<div class="page" *ngIf="uiState.activeAccount">
+<div class="page" *ngIf="uiState.activeAccount && uiState.activeAccount.network == 401">
+    <div *ngIf="uiState.activeAccount.network == 401">
+        Cirrus is currently not supported. Check back later!
+    </div>
+</div>
 
-    <mat-card class="example-card">
+<div class="page" *ngIf="uiState.activeAccount && uiState.activeAccount.network != 401">
+    <mat-card>
         <!-- <mat-card-subtitle>{{uiState.activeAccount.name}}</mat-card-subtitle> -->
         <mat-card-subtitle>Balance</mat-card-subtitle>
         <mat-card-title>{{uiState.activeAccount.state?.balance || 0 | amount}} {{uiState.activeAccount.network |
@@ -13,14 +18,12 @@
         <mat-card-actions class="full-action-buttons">
             <button class="half-width" mat-raised-button
                 [routerLink]="['/', 'account', 'receive', uiState.activeAccount.index]" color="primary">Receive</button>
-            <button class="half-width" [routerLink]="['/', 'account', 'send']"
-                mat-raised-button>Send</button>
+            <button class="half-width" [routerLink]="['/', 'account', 'send']" mat-raised-button>Send</button>
         </mat-card-actions>
         <mat-card-footer>
             <mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
         </mat-card-footer>
     </mat-card>
-
 
     <mat-tab-group class="account-tabs">
         <mat-tab>
