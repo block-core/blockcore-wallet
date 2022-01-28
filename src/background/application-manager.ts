@@ -8,6 +8,7 @@ import { CryptoUtility } from "./crypto-utility";
 import { DataSyncService } from "./data-sync";
 import { IndexerService } from "./indexer";
 import { NetworkLoader } from "./network-loader";
+import { Network } from "./networks";
 import { OrchestratorBackgroundService } from "./orchestrator";
 import { WalletManager } from "./wallet-manager";
 
@@ -20,6 +21,7 @@ export class AppManager {
     communication!: CommunicationBackgroundService;
     orchestrator!: OrchestratorBackgroundService;
     indexer!: IndexerService;
+    allNetworks: Network[];
 
     /** Initializes the app, loads the AppState and other operations. */
     // configure(): [AppState, CryptoUtility, CommunicationBackgroundService, OrchestratorBackgroundService, DataSyncService] {
@@ -33,17 +35,21 @@ export class AppManager {
 
         const networkLoader = new NetworkLoader();
         this.state.networks = networkLoader.getNetworks(environment.networks);
+
+        // Keep a local state of all networks that exists. We'll use this to allow get operations
+        // that always work, even when a certain network is disabled in the UI.
+        this.allNetworks = networkLoader.getAllNetworks();
     }
 
     /** Get the network definition based upon the id, e.g. BTC, STRAX, CRS, CITY. */
     getNetworkById(id: string) {
-        const network = this.state.networks.find(w => w.id == id);
+        const network = this.allNetworks.find(w => w.id == id);
         return network;
     }
 
     /** Get the network definition based upon the network number and purpose. The purpose defaults to 44. */
     getNetwork(network: number, purpose: number = 44) {
-        return this.state.networks.find(w => w.network == network && w.purpose == purpose);
+        return this.allNetworks.find(w => w.network == network && w.purpose == purpose);
     }
 
     initialize = async () => {
