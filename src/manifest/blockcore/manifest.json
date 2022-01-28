@@ -1,6 +1,6 @@
 {
     "name": "Blockcore Extension",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "manifest_version": 2,
     "description": "Browser extension by Blockcore.",
     "author": "Blockcore",
