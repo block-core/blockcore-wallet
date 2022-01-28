@@ -127,8 +127,8 @@ header {
 }
 
 .wrap {
-    overflow-wrap: break-word;
-  }
+  overflow-wrap: break-word;
+}
 
 .centered {
   text-align: center;
@@ -325,4 +325,8 @@ select {
   font-size: 1.2em;
   word-spacing: 0.4em;
   padding: 1em;
+}
+
+.right {
+  float: right;
 }

@@ -1,0 +1,5 @@
+.available-balance {
+    float: right;
+    margin-top: 0.5em;
+    cursor: pointer;
+}

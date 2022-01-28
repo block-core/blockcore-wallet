@@ -1,10 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { SendService } from '../../../services/send.service';
+import { UIState } from '../../../services/ui-state.service';
 
 @Component({
     selector: 'app-account-send-address',
-    templateUrl: './send-address.component.html'
+    templateUrl: './send-address.component.html',
+    styleUrls: ['./send-address.component.css']
 })
 export class AccountSendAddressComponent implements OnInit, OnDestroy {
 
@@ -25,7 +27,10 @@ export class AccountSendAddressComponent implements OnInit, OnDestroy {
     // hideRequiredControl = new FormControl(false);
     // floatLabelControl = new FormControl('auto');
 
-    constructor(public sendService: SendService, private fb: FormBuilder) {
+    constructor(
+        public uiState: UIState,
+        public sendService: SendService,
+        private fb: FormBuilder) {
 
         this.form = fb.group({
             addressInput: new FormControl('', [Validators.required, Validators.minLength(6)]),
@@ -50,6 +55,10 @@ export class AccountSendAddressComponent implements OnInit, OnDestroy {
     }
 
     async ngOnInit() {
+    }
+
+    fillMax(amount: number | BigInt) {
+        this.sendService.setMax(amount);
     }
 
     getErrorMessage() {

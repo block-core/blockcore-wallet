@@ -52,6 +52,12 @@ export class SendService {
         // });
     }
 
+    /** Used to specify maximum amount and fee will be subtracted from the supplied amount. */
+    setMax(amount: number | BigInt) {
+        const maxAmountWithoutFee = <number>amount - this.feeAsSatoshi;
+        this.amount = (maxAmountWithoutFee / SATOSHI_FACTOR).toPrecision(8);
+    }
+
     send() {
         this.loading = true;
         // this.communication.send('account-send', { address: this.address, amount: this.amount, fee: this.fee });
