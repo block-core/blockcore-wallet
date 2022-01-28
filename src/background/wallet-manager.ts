@@ -59,16 +59,19 @@ export class WalletManager {
             });
         }
 
-        // // Add the output the user requested.
+        // Add the output the user requested.
         tx.addOutput({ address, value: amount });
-
-        const changeAddress = await this.getChangeAddress(account);
 
         // Take the total sum of the aggregated inputs, remove the sendAmount and fee.
         const changeAmount = aggregatedAmount - amount - fee;
 
-        // // Send the rest to change address.
-        tx.addOutput({ address: changeAddress.address, value: changeAmount });
+        // If there is any change amount left, make sure we send it to the user's change address.
+        if (changeAmount > 0) {
+            const changeAddress = await this.getChangeAddress(account);
+
+            // // Send the rest to change address.
+            tx.addOutput({ address: changeAddress.address, value: changeAmount });
+        }
 
         // Get the secret seed.
         const secret = this.walletSecrets.get(this.activeWallet.id);
