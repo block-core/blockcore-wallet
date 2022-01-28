@@ -24,19 +24,21 @@ export class SendService {
     fee: string;
     transactionHex: string;
     transactionId: string;
-    SATOSHI_FACTOR = SATOSHI_FACTOR;
+    SATOSHI_FACTOR: any = SATOSHI_FACTOR;
     routingIndex: number;
 
-    get total() {
-        return Number(this.amount) + Number(this.fee);
+    get total() : BigInt | any {
+        return this.amountAsSatoshi + this.feeAsSatoshi;
     }
 
-    get amountAsSatoshi() {
-        return Number(this.amount) * SATOSHI_FACTOR;
+    get amountAsSatoshi() : BigInt | any {
+        const amountAsDecimal = Number(this.amount) * SATOSHI_FACTOR;
+        return BigInt(amountAsDecimal);
     }
 
-    get feeAsSatoshi() {
-        return Number(this.fee) * SATOSHI_FACTOR;
+    get feeAsSatoshi() : BigInt | any {
+        const feeAsDecimal = Number(this.fee) * SATOSHI_FACTOR;
+        return BigInt(feeAsDecimal);
     }
 
     constructor(
@@ -53,8 +55,8 @@ export class SendService {
     }
 
     /** Used to specify maximum amount and fee will be subtracted from the supplied amount. */
-    setMax(amount: number | BigInt) {
-        const maxAmountWithoutFee = <number>amount - this.feeAsSatoshi;
+    setMax(amount: BigInt) {
+        const maxAmountWithoutFee = <any>amount - <any>this.feeAsSatoshi;
         this.amount = (maxAmountWithoutFee / SATOSHI_FACTOR).toPrecision(8);
     }
 

@@ -1,6 +1,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import * as satcomma from 'satcomma';
 import { UIState } from '../services/ui-state.service';
+import { SATOSHI_FACTOR } from './constants';
 
 @Pipe({ name: 'amount', pure: false })
 export class AmountPipe implements PipeTransform {
@@ -14,7 +15,11 @@ export class AmountPipe implements PipeTransform {
             return value.toString();
         }
         else if (this.uiState.persisted.settings.amountFormat == 'bitcoin') {
-            return (value as number / 100000000).toFixed(8);
+            if (typeof value === 'bigint') {
+                return (Number(value) / SATOSHI_FACTOR).toFixed(8);
+            } else {
+                return (value as number / SATOSHI_FACTOR).toFixed(8);
+            }
         }
         else {
             const formatted = satcomma.fromSats(value, { validateBitcoinMaxSupply: false });

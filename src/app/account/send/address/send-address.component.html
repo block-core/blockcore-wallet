@@ -1,4 +1,4 @@
-<div class="available-balance" matTooltip="Click to fill out maximum (minus fee)" (click)="fillMax(uiState.activeAccount.state?.balance || 0)">Available: {{uiState.activeAccount.state?.balance || 0 | amount}}</div>
+<div class="available-balance" matTooltip="Click to fill out maximum (minus fee)" (click)="fillMax(uiState.activeAccount.state?.balance)">Available: {{uiState.activeAccount.state?.balance || 0 | amount}}</div>
 <h2>Send {{sendService.network.symbol}}</h2>
 
 <form [formGroup]="form">
