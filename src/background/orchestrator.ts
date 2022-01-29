@@ -517,8 +517,16 @@ export class OrchestratorBackgroundService {
             this.manager.communication.sendToAll('wallet-removed', data);
         });
 
-        this.manager.communication.listen('transaction-send', async (port: any, data: { transactionHex: string }) => {
+        this.manager.communication.listen('transaction-send', async (port: any, data: { transactionHex: string, addresses: string[] }) => {
+            var account = this.manager.walletManager.activeAccount;
+
+            // Watch the address that belongs to the selected inputs used in the transaction.
+            for (let i = 0; i < data.addresses.length; i++) {
+                this.manager.indexer.watchAddress(data.addresses[i], account);
+            }
+
             const transactionDetails = await this.manager.walletManager.sendTransaction(data.transactionHex);
+
             this.manager.communication.sendToAll('transaction-sent', transactionDetails);
         });
 

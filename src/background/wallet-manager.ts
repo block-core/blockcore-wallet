@@ -17,14 +17,15 @@ export class WalletManager {
     constructor(private manager: AppManager) {
     }
 
-    async createTransaction(address: string, amount: number, fee: number): Promise<{ transactionHex: string, fee: number, feeRate: number, virtualSize: number, weight: number }> {
+    async createTransaction(address: string, amount: number, fee: number): Promise<{ addresses: string[], transactionHex: string, fee: number, feeRate: number, virtualSize: number, weight: number }> {
         // TODO: Verify the address for this network!! ... Help the user avoid sending transactions on very wrong addresses.
         const account = this.activeAccount;
         const network = this.manager.getNetwork(account.network, account.purpose);
+        const affectedAddresses = [];
 
         // We currently only support BTC-compatible transactions such as STRAX. We do not support other Blockcore chains that are not PoS v4.
         const tx = new Psbt({ network: network, maximumFeeRate: 5000 });  // satoshi per byte, 5000 is default.
-        tx.setVersion(2); // These are defaults. This line is not needed.
+        tx.setVersion(1); // Lock-time is not used so set to 1 (defaults to 2).
         tx.setLocktime(0); // These are defaults. This line is not needed.
 
         const unspentReceive = account.state.receive.flatMap(i => i.unspent).filter(i => i !== undefined);
@@ -49,8 +50,9 @@ export class WalletManager {
 
         for (let i = 0; i < inputs.length; i++) {
             const input = inputs[i];
-
             const hex = await this.manager.indexer.getTransactionHex(input.outpoint.transactionId);
+
+            affectedAddresses.push(input.address);
 
             tx.addInput({
                 hash: input.outpoint.transactionId,
@@ -112,7 +114,7 @@ export class WalletManager {
         const transactionHex = finalTransaction.toHex();
         console.log('transactionHex', transactionHex);
 
-        return { transactionHex, fee: tx.getFee(), feeRate: tx.getFeeRate(), virtualSize: finalTransaction.virtualSize(), weight: finalTransaction.weight() };
+        return { addresses: affectedAddresses, transactionHex, fee: tx.getFee(), feeRate: tx.getFeeRate(), virtualSize: finalTransaction.virtualSize(), weight: finalTransaction.weight() };
     }
 
     async sendTransaction(transactionHex: string): Promise<{ transactionId: string, transactionHex: string }> {

@@ -196,6 +196,7 @@ chrome.runtime.onMessage.addListener(async (request: any, sender: any, sendRespo
 //   console.log('onClicked!');
 //  });
 
+// TODO: We must have a system to delete alarms that has been registered, they don't disappear by simply not registering them.
 chrome.alarms.onAlarm.addListener(function (alarm) {
-  console.log("Got an alarm!", alarm);
+  // console.log("Got an alarm!", alarm);
 });

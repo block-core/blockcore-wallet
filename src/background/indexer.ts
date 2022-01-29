@@ -1,3 +1,4 @@
+import { address } from '@blockcore/blockcore-js';
 import { Account, Address, Transaction, UnspentTransactionOutput, Wallet } from '../app/interfaces';
 import { AppManager } from './application-manager';
 
@@ -41,9 +42,33 @@ class Queue {
 /** Service that handles queries against the blockchain indexer to retrieve data for accounts. Runs in the background. */
 export class IndexerService {
     private q = new Queue();
+    private a = new Map<string, { change: boolean, account: Account, addressEntry: Address, count: number }>();
 
     constructor(private manager: AppManager) {
+        // On interval loop through all watched addresses.
+        setInterval(async () => {
+            await this.watchIndexer();
+        }, 15000);
+    }
 
+    watchAddress(address: string, account: Account) {
+        // Check if the address is already watched.
+        const item = this.a.get(address);
+
+        if (item) {
+            return;
+        }
+
+        let addressEntry = account.state.receive.find(a => a.address == address)
+        let change = false;
+
+        if (!addressEntry) {
+            addressEntry = account.state.change.find(a => a.address == address);
+            change = true;
+        }
+
+        // Queue up a watcher that has the address, account it belongs to and balance at the time.
+        this.a.set(address, { change, account, addressEntry, count: 0 });
     }
 
     process(account: Account, wallet: Wallet, force: boolean) {
@@ -104,6 +129,9 @@ export class IndexerService {
     }
 
     async queryIndexer() {
+        console.log('queryIndexer executing.');
+
+        let changes = false;
         let counter = 0;
 
         while (!this.q.isEmpty()) {
@@ -160,6 +188,7 @@ export class IndexerService {
 
                             // Replace the received entry.
                             account.state.receive[i] = updatedReceiveAddress;
+                            changes = true;
                         }
                     } catch (error) {
                         console.error(error);
@@ -187,9 +216,12 @@ export class IndexerService {
                 // For every 5 queried address, we will persist the state and update UI.
                 // TODO: Verify what this should be based upon user testing and verification of experience.
                 if (counter > 4) {
-                    account.state.balance = this.manager.walletManager.calculateBalance(account);
-                    await this.manager.state.save();
-                    this.manager.broadcastState();
+                    if (changes) {
+                        account.state.balance = this.manager.walletManager.calculateBalance(account);
+                        await this.manager.state.save();
+                        this.manager.broadcastState();
+                    }
+
                     counter = 0;
                 }
 
@@ -201,6 +233,7 @@ export class IndexerService {
                     // If the last address has been used, generate a new one and query that and continue until all is found.
                     if (this.manager.walletManager.hasBeenUsed(lastReceiveAddress)) {
                         await this.manager.walletManager.getReceiveAddress(account);
+                        changes = true;
                         // Now the .receive array should have one more entry and the loop should continue.
                     }
                 }
@@ -250,6 +283,7 @@ export class IndexerService {
 
                             // Replace the change entry.
                             account.state.change[i] = updatedChangeAddress;
+                            changes = true;
                         }
                     } catch (error) {
                         console.error(error);
@@ -277,9 +311,13 @@ export class IndexerService {
                 // For every 5 queried address, we will persist the state and update UI.
                 // TODO: Verify what this should be based upon user testing and verification of experience.
                 if (counter > 4) {
-                    account.state.balance = this.manager.walletManager.calculateBalance(account);
-                    await this.manager.state.save();
-                    this.manager.broadcastState();
+
+                    if (changes) {
+                        account.state.balance = this.manager.walletManager.calculateBalance(account);
+                        await this.manager.state.save();
+                        this.manager.broadcastState();
+                    }
+
                     counter = 0;
                 }
 
@@ -292,19 +330,118 @@ export class IndexerService {
                     if (this.manager.walletManager.hasBeenUsed(lastChangeAddress)) {
                         await this.manager.walletManager.getChangeAddress(account);
                         // Now the .change array should have one more entry and the loop should continue.
+                        changes = true;
                     }
                 }
             }
 
-            // Finally set the date on the account itself.
-            account.state.retrieved = new Date().toISOString();
+            if (changes) {
+                console.log('THERE ARE CHANGES DURING A NORMAL SCAN!!');
+                // Finally set the date on the account itself.
+                account.state.retrieved = new Date().toISOString();
 
-            account.state.balance = this.manager.walletManager.calculateBalance(account);
-            // Save and broadcast for every full account query
-            await this.manager.state.save();
-            this.manager.broadcastState();
+                account.state.balance = this.manager.walletManager.calculateBalance(account);
+                // Save and broadcast for every full account query
+                await this.manager.state.save();
+                this.manager.broadcastState();
+            } else {
+                console.log('NO CHANGES DURING SCAN!');
+            }
+
         }
 
         this.manager.communication.sendToAll('account-scanned');
+    }
+
+    async updateAddressState(indexerUrl: string, addressEntry: Address, change: boolean, data: any, account: Account) {
+        const date = new Date().toISOString();
+
+        var updatedReceiveAddress: Address = { ...addressEntry, ...data };
+
+        // Persist the date we got this data:
+        updatedReceiveAddress.retrieved = date;
+
+        // TODO: Add support for paging.
+        // TODO: Figure out if we will actually get the full transaction history and persist that to storage. We might simply only query this 
+        // when the user want to look at transaction details. Instead we can rely on the unspent API, which give us much less data.
+        const responseTransactions = await axios.get(`${indexerUrl}/api/query/address/${addressEntry.address}/transactions?confirmations=0&offset=0&limit=20`);
+        const transactions = responseTransactions.data;
+
+        // Get all the transaction info for each of the transactions discovered on this address.
+        await this.updateWithTransactionInfo(transactions, indexerUrl);
+        updatedReceiveAddress.transactions = transactions;
+
+        // TODO: Add support for paging.
+        // Get the unspent outputs. We need to figure out how we should refresh this, as this might change depending on many factors.
+        const responseUnspentTransactions = await axios.get(`${indexerUrl}/api/query/address/${addressEntry.address}/transactions/unspent?confirmations=0&offset=0&limit=20`);
+        const unspentTransactions: UnspentTransactionOutput[] = responseUnspentTransactions.data;
+        updatedReceiveAddress.unspent = unspentTransactions;
+
+        // Replace the entry.
+        if (change) {
+            account.state.change[addressEntry.index] = updatedReceiveAddress;
+        }
+        else {
+            account.state.receive[addressEntry.index] = updatedReceiveAddress;
+        }
+
+        // Finally set the date on the account itself.
+        account.state.retrieved = new Date().toISOString();
+        account.state.balance = this.manager.walletManager.calculateBalance(account);
+
+        await this.manager.state.save();
+        this.manager.broadcastState();
+    }
+
+    async watchIndexer() {
+        console.log('watchIndexer executing.', this.a);
+
+        this.a.forEach(async (value, key) => {
+            const account = value.account;
+            const addressEntry = value.addressEntry;
+            const network = this.manager.getNetwork(account.network, account.purpose);
+            const indexerUrl = this.manager.state.persisted.settings.indexer.replace('{id}', network.id.toLowerCase());
+
+            try {
+                // We don't have Angular context available in the background, we we'll rely on axios to perform queries:
+                const date = new Date().toISOString();
+                const response = await axios.get(`${indexerUrl}/api/query/address/${addressEntry.address}`);
+                const data = response.data;
+
+                // If there is any difference in the balance, make sure we update!
+                if (addressEntry.balance != data.balance) {
+                    console.log('BALANCE IS DIFFERENT, UPDATE STATE!', addressEntry.balance, data.balance, data);
+                    debugger;
+                    await this.updateAddressState(indexerUrl, value.addressEntry, value.change, data, account);
+
+                    // Stop watching this address.
+                    this.a.delete(key);
+                } else if (data.pendingSent > 0 || data.pendingReceived > 0) {
+                    console.log('PENDING, UPDATE STATE!');
+                    // If there is any pending, we'll continue watching this address.
+                    await this.updateAddressState(indexerUrl, value.addressEntry, value.change, data, account);
+                    // Continue watching this address as long as there is pending, when pending becomes 0, the balance should hopefully
+                    // be updated and one final update will be performed before removing this watch entry.
+                } else {
+                    // If there are no difference in balance and no pending and we've queried already 10 times (10 * 10 seconds), we'll
+                    // stop watching this address.
+                    value.count = value.count + 1;
+
+                    console.log('CONTINUE WATCHING', value.count);
+
+                    if (value.count > 10) {
+                        // When finished, remove from the list.
+                        console.log('FINISHED WATCHING, REMOVING:', key);
+                        this.a.delete(key);
+                    }
+                }
+
+            } catch (error) {
+                console.error(error);
+                // TODO: Implement error handling in background and how to send it to UI.
+                // We should probably have an error log in settings, so users can see background problems as well.
+                this.manager.communication.sendToAll('error', error);
+            }
+        });
     }
 }

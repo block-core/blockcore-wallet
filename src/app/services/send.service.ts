@@ -27,16 +27,19 @@ export class SendService {
     SATOSHI_FACTOR: any = SATOSHI_FACTOR;
     routingIndex: number;
 
-    get total() : BigInt | any {
+    /** The affected addresses for the current transaction. */
+    addresses: string[];
+
+    get total(): BigInt | any {
         return this.amountAsSatoshi + this.feeAsSatoshi;
     }
 
-    get amountAsSatoshi() : BigInt | any {
+    get amountAsSatoshi(): BigInt | any {
         const amountAsDecimal = Number(this.amount) * SATOSHI_FACTOR;
         return BigInt(amountAsDecimal);
     }
 
-    get feeAsSatoshi() : BigInt {
+    get feeAsSatoshi(): BigInt {
         const feeAsDecimal = Number(this.fee) * SATOSHI_FACTOR;
         return BigInt(feeAsDecimal);
     }
@@ -78,5 +81,6 @@ export class SendService {
         this.amount = '';
         this.transactionHex = '';
         this.transactionId = '';
+        this.addresses = [];
     }
 }

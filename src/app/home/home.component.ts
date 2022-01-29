@@ -73,22 +73,23 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   activateAlarm() {
-    chrome.alarms.getAll((alarms) => {
-      var hasAlarm = alarms.some((a) => {
-        return a.name == this.alarmName;
-      });
+    // TODO: Alarm is not needed as long as we use Manifest v2.
+    // chrome.alarms.getAll((alarms) => {
+    //   var hasAlarm = alarms.some((a) => {
+    //     return a.name == this.alarmName;
+    //   });
 
-      if (!hasAlarm) {
-        chrome.alarms.create('refresh', {
-          delayInMinutes: 0.1, periodInMinutes: 0.1
-        });
+    //   if (!hasAlarm) {
+    //     chrome.alarms.create('refresh', {
+    //       delayInMinutes: 0.1, periodInMinutes: 0.1
+    //     });
 
-        console.log('Created alarm.');
-      }
-      else {
-        console.log('Has alarm already!!');
-      }
-    })
+    //     console.log('Created alarm.');
+    //   }
+    //   else {
+    //     console.log('Has alarm already!!');
+    //   }
+    // })
   }
 
   generate() {

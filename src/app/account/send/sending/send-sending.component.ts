@@ -38,6 +38,6 @@ export class AccountSendSendingComponent implements OnInit, OnDestroy {
             this.router.navigateByUrl('/account/send/success');
         });
 
-        this.communication.send('transaction-send', { transactionHex: this.sendService.transactionHex });
+        this.communication.send('transaction-send', { addresses: this.sendService.addresses, transactionHex: this.sendService.transactionHex });
     }
 }
