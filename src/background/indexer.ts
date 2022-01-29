@@ -348,6 +348,14 @@ export class IndexerService {
                 console.log('NO CHANGES DURING SCAN!');
             }
 
+            // Make sure we always watch the latest receive/change addresses.
+            // Register watcher for the last receive/change addresses.
+            const lastChange = account.state.change[account.state.change.length - 1];
+            const lastReceive = account.state.receive[account.state.receive.length - 1];
+
+            // Make the count "-1" which means we'll continue looking at these addresses forever.
+            this.a.set(lastChange.address, { change: true, account: account, addressEntry: lastChange, count: -1 });
+            this.a.set(lastReceive.address, { change: false, account: account, addressEntry: lastReceive, count: -1 });
         }
 
         this.manager.communication.sendToAll('account-scanned');
@@ -423,19 +431,23 @@ export class IndexerService {
                     // Continue watching this address as long as there is pending, when pending becomes 0, the balance should hopefully
                     // be updated and one final update will be performed before removing this watch entry.
                 } else {
-                    // If there are no difference in balance and no pending and we've queried already 10 times (10 * 10 seconds), we'll
-                    // stop watching this address.
-                    value.count = value.count + 1;
+                    // -1 means we will process forever until this address has been used and spent.
+                    if (value.count === -1) {
+                        console.log('LAST ADDRESS', value);
+                    } else {
+                        // If there are no difference in balance and no pending and we've queried already 10 times (10 * 10 seconds), we'll
+                        // stop watching this address.
+                        value.count = value.count + 1;
 
-                    console.log('CONTINUE WATCHING', value.count);
+                        console.log('CONTINUE WATCHING', value.count);
 
-                    if (value.count > 10) {
-                        // When finished, remove from the list.
-                        console.log('FINISHED WATCHING, REMOVING:', key);
-                        this.a.delete(key);
+                        if (value.count > 10) {
+                            // When finished, remove from the list.
+                            console.log('FINISHED WATCHING, REMOVING:', key);
+                            this.a.delete(key);
+                        }
                     }
                 }
-
             } catch (error) {
                 console.error(error);
                 // TODO: Implement error handling in background and how to send it to UI.

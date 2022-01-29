@@ -15,7 +15,6 @@ import { SATOSHI_FACTOR } from '../shared/constants';
     providedIn: 'root'
 })
 export class SendService {
-
     account: Account;
     network: Network;
     loading = false;
