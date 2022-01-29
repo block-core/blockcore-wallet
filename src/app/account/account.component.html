@@ -88,14 +88,10 @@
             <br>
 
             <mat-nav-list>
-                <a mat-list-item (click)="scan()">
-                    <mat-icon mat-list-icon>search</mat-icon>
-                    <div mat-line>Scan</div>
-                </a>
-
+ 
                 <a mat-list-item (click)="scan(true)">
-                    <mat-icon mat-list-icon>find_replace</mat-icon>
-                    <div mat-line>Force Scan</div>
+                    <mat-icon mat-list-icon>history</mat-icon>
+                    <div mat-line>Refresh History</div>
                 </a>
 
                 <a mat-list-item (click)="toggleNetwork()">
