@@ -26,12 +26,6 @@ jobs:
           node-version: 16
           registry-url: "https://registry.npmjs.org"
 
-      # Should we force a version or attempt to rely on pre-installed on build agent / production environment?
-      # - name: Setup Node.js (${{ matrix.node_version }})
-      #   uses: actions/setup-node@v1
-      #   with:
-      #     node-version: ${{ matrix.node_version }}
-
       - name: Variables
         run: |
           echo VERSION=$(npm run version --silent) >> $GITHUB_ENV
@@ -47,15 +41,7 @@ jobs:
       - name: Install and Build
         run: |
           npm ci
-          npm run build
-          npm run coinvault
-          npm run smartcityplatform
-      # - name: Display structure of downloaded files
-      #   run: ls -R
-
-      # - name: Run Tests
-      #   run: |
-      #     npm run test
+          npm run all
 
       - name: Package Blockcore
         run: |
@@ -75,22 +61,25 @@ jobs:
           zip -r ../../${{env.RELEASE_NAME_SMARTCITYPLATFORM}} "./"
           cd ../../
 
-      - uses: actions/upload-artifact@v1
+      - name: Upload Blockcore
+        uses: actions/upload-artifact@v1
         with:
           name: ${{env.BLOCKCORE}}-preview-${{env.VERSION}}
           path: "${{env.RELEASE_NAME_BLOCKCORE}}"
 
-      - uses: actions/upload-artifact@v1
+      - name: Upload CoinVault
+        uses: actions/upload-artifact@v1
         with:
           name: ${{env.COINVAULT}}-preview-${{env.VERSION}}
           path: "${{env.RELEASE_NAME_COINVAULT}}"
 
-      - uses: actions/upload-artifact@v1
+      - name: Upload SmartCityPlatform
+        uses: actions/upload-artifact@v1
         with:
           name: ${{env.SMARTCITYPLATFORM}}-preview-${{env.VERSION}}
           path: "${{env.RELEASE_NAME_SMARTCITYPLATFORM}}"
 
-      - name: Release
+      - name: Create/Update Draft Release
         uses: sondreb/action-release@main
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
