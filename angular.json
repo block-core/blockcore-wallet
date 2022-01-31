@@ -21,7 +21,7 @@
           "builder": "@angular-builders/custom-webpack:browser",
           "options": {
             "aot": true,
-            "outputPath": "dist/blockcore-extension",
+            "outputPath": "dist/blockcore",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -105,7 +105,7 @@
               }
             },
             "coinvault": {
-              "outputPath": "dist/coinvault-extension",
+              "outputPath": "dist/coinvault",
               "optimization": {
                 "scripts": true,
                 "styles": {
@@ -149,7 +149,7 @@
               "outputHashing": "none"
             },
             "smartcityplatform": {
-              "outputPath": "dist/smartcityplatform-extension",
+              "outputPath": "dist/smartcityplatform",
               "optimization": {
                 "scripts": true,
                 "styles": {

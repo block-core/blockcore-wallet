@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      BLOCKCORE: "blockcore-extension"
+      BLOCKCORE: "blockcore"
       COINVAULT: "coinvault"
       SMARTCITYPLATFORM: "smartcityplatform"
 
