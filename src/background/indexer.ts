@@ -90,8 +90,7 @@ export class IndexerService {
         return !this.q.isEmpty();
     }
 
-    async getTransactionHex(txid: string) {
-        const account = this.manager.walletManager.activeAccount;
+    async getTransactionHex(account: Account, txid: string) {
         const network = this.manager.getNetwork(account.network, account.purpose);
         const indexerUrl = this.manager.state.persisted.settings.indexer.replace('{id}', network.id.toLowerCase());
 
@@ -110,9 +109,8 @@ export class IndexerService {
         }
     }
 
-    async broadcastTransaction(txhex: string) {
+    async broadcastTransaction(account: Account, txhex: string) {
         // These two entries has been sent from
-        const account = this.manager.walletManager.activeAccount;
         const network = this.manager.getNetwork(account.network, account.purpose);
         const indexerUrl = this.manager.state.persisted.settings.indexer.replace('{id}', network.id.toLowerCase());
 

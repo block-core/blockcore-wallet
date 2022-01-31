@@ -10,8 +10,6 @@ const ECPair = ECPairFactory(ecc);
 
 /** Manager that keeps state and operations for a single wallet. This object does not keep the password, which must be supplied for signing operations. */
 export class WalletManager {
-    // addresses: AccountAddress[] = [];
-    private lastUsedIndex: number = 0;
     private timer: any;
 
     constructor(private manager: AppManager) {
@@ -49,7 +47,7 @@ export class WalletManager {
 
         for (let i = 0; i < inputs.length; i++) {
             const input = inputs[i];
-            const hex = await this.manager.indexer.getTransactionHex(input.outpoint.transactionId);
+            const hex = await this.manager.indexer.getTransactionHex(account, input.outpoint.transactionId);
 
             affectedAddresses.push(input.address);
 
@@ -75,7 +73,7 @@ export class WalletManager {
         }
 
         // Get the secret seed.
-        const secret = this.walletSecrets.get(this.activeWallet.id);
+        const secret = this.walletSecrets.get(wallet.id);
 
         // Create the master node.
         const masterNode = HDKey.fromMasterSeed(Buffer.from(secret.seed), network.bip32);
@@ -84,12 +82,12 @@ export class WalletManager {
             const input = inputs[i];
 
             // Get the index of the address, we need that to get the private key for signing.
-            let signingAddress = this.activeAccount.state.receive.find(item => item.address == input.address);
+            let signingAddress = account.state.receive.find(item => item.address == input.address);
 
             let addressNode: HDKey;
 
             if (!signingAddress) {
-                signingAddress = this.activeAccount.state.change.find(item => item.address == input.address);
+                signingAddress = account.state.change.find(item => item.address == input.address);
                 addressNode = masterNode.derive(`m/${account.purpose}'/${account.network}'/${account.index}'/1/${signingAddress.index}`);
             } else {
                 addressNode = masterNode.derive(`m/${account.purpose}'/${account.network}'/${account.index}'/0/${signingAddress.index}`);
@@ -116,9 +114,9 @@ export class WalletManager {
         return { addresses: affectedAddresses, transactionHex, fee: tx.getFee(), feeRate: tx.getFeeRate(), virtualSize: finalTransaction.virtualSize(), weight: finalTransaction.weight() };
     }
 
-    async sendTransaction(transactionHex: string): Promise<{ transactionId: string, transactionHex: string }> {
+    async sendTransaction(account: Account, transactionHex: string): Promise<{ transactionId: string, transactionHex: string }> {
         console.log('transactionHex', transactionHex);
-        const transactionId = await this.manager.indexer.broadcastTransaction(transactionHex);
+        const transactionId = await this.manager.indexer.broadcastTransaction(account, transactionHex);
         console.log('transactionId', transactionId);
         return { transactionId, transactionHex };
     }
@@ -276,35 +274,31 @@ export class WalletManager {
         }
     }
 
-    get hasAccounts(): boolean {
-        if (!this.activeWallet) {
-            return false;
-        }
-
-        return this.activeWallet.accounts?.length > 0;
+    hasAccounts(wallet: Wallet): boolean {
+        return wallet.accounts?.length > 0;
     }
 
-    get activeAccount() {
-        if (!this.activeWallet) {
-            return null;
-        }
+    // get activeAccount() {
+    //     if (!this.activeWallet) {
+    //         return null;
+    //     }
 
-        const activeWallet = this.activeWallet;
+    //     const activeWallet = this.activeWallet;
 
-        if (!activeWallet.accounts) {
-            return null;
-        }
+    //     if (!activeWallet.accounts) {
+    //         return null;
+    //     }
 
-        if (activeWallet.activeAccountIndex == null || activeWallet.activeAccountIndex == -1) {
-            activeWallet.activeAccountIndex = 0;
-        }
-        // If the active index is higher than available accounts, reset to zero.
-        else if (activeWallet.activeAccountIndex >= activeWallet.accounts.length) {
-            activeWallet.activeAccountIndex = 0;
-        }
+    //     if (activeWallet.activeAccountIndex == null || activeWallet.activeAccountIndex == -1) {
+    //         activeWallet.activeAccountIndex = 0;
+    //     }
+    //     // If the active index is higher than available accounts, reset to zero.
+    //     else if (activeWallet.activeAccountIndex >= activeWallet.accounts.length) {
+    //         activeWallet.activeAccountIndex = 0;
+    //     }
 
-        return this.activeWallet.accounts[activeWallet.activeAccountIndex];
-    }
+    //     return this.activeWallet.accounts[activeWallet.activeAccountIndex];
+    // }
 
     isActiveWalletUnlocked(): boolean {
         let secret = this.walletSecrets.get(this.activeWallet.id);
@@ -357,11 +351,7 @@ export class WalletManager {
         this.manager.broadcastState();
     }
 
-    async addAccount(account: Account, wallet?: Wallet) {
-        if (!wallet) {
-            wallet = this.activeWallet;
-        }
-
+    async addAccount(account: Account, wallet: Wallet) {
         // First derive the xpub and store that on the account.
         const secret = this.walletSecrets.get(wallet.id);
 
@@ -413,45 +403,6 @@ export class WalletManager {
             this.manager.indexer.process(account, wallet, false);
         }
     }
-
-    // TODO: FIX VERY SOON!
-    // getAddress(account: Account, index: BigInt) {
-
-    //     // Get the network for this account. Maybe this operation should be done once upon initialize? Consider refactoring.
-    //     const network = this.manager.getNetwork(account.network, account.purpose);
-
-    //     this.manager.state.networks.
-
-    //     this.manager.crypto.getAddress()
-
-    //     bip32.fromBase58(xpub).derive(0).derive(1).publicKey;
-
-    //     account.xpub.
-    // }
-
-    // getChangeAddress(account: Account) {
-    //     // Get the last index without know transactions:
-    //     let address = account.state.addresses[account.state.addresses.length - 1];
-
-    //     if (address.totalReceivedCount > 0n) {
-    //         // Generate a new address.
-
-    //     }
-
-    //     return address.address;
-    // }
-
-    // getChangeAddressByIndex(account: Account, index: number) {
-    //     // Get the last index without know transactions:
-    //     let address = account.state.addresses[account.state.addresses.length - 1];
-
-    //     if (address.totalReceivedCount > 0n) {
-    //         // Generate a new address.
-
-    //     }
-
-    //     return address.address;
-    // }
 
     async getChangeAddress(account: Account) {
         return this.getAddress(account, 1, account.state.change);

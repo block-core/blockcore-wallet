@@ -491,7 +491,7 @@ export class OrchestratorBackgroundService {
                 this.manager.indexer.watchAddress(data.addresses[i], account);
             }
 
-            const transactionDetails = await this.manager.walletManager.sendTransaction(data.transactionHex);
+            const transactionDetails = await this.manager.walletManager.sendTransaction(account, data.transactionHex);
 
             this.manager.communication.sendToAll('transaction-sent', transactionDetails);
         });
@@ -754,7 +754,7 @@ export class OrchestratorBackgroundService {
 
             // Don't persist the selected value.
             delete data.account.selected;
-            await this.manager.walletManager.addAccount(data.account);
+            await this.manager.walletManager.addAccount(data.account, wallet);
 
             this.refreshState();
 
