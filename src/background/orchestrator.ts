@@ -22,11 +22,6 @@ export class OrchestratorBackgroundService {
     constructor(
         private manager: AppManager) {
         this.eventHandlers();
-        this.timeoutHandler();
-    }
-
-    timeoutHandler() {
-
     }
 
     active() {
@@ -321,9 +316,9 @@ export class OrchestratorBackgroundService {
             this.setAction(data);
         });
 
-        this.manager.communication.listen('sign-content', async (port: any, data: { content: string, tabId: string }) => {
-            var account = this.manager.walletManager.activeAccount;
-            var wallet = this.manager.walletManager.activeWallet;
+        this.manager.communication.listen('sign-content', async (port: any, data: { content: string, tabId: string, walletId: string, accountId: string }) => {
+            const wallet = this.manager.walletManager.getWallet(data.walletId);
+            const account = this.manager.walletManager.getAccount(wallet, data.accountId);
 
             if (!wallet || !account) {
                 chrome.tabs.sendMessage(Number(data.tabId), { content: 'No wallet/account active.' });
@@ -409,12 +404,6 @@ export class OrchestratorBackgroundService {
             await this.manager.walletManager.setActiveWallet(data.id);
         });
 
-        // this.communication.listen('set-lock-timer', async (port: any, data: any) => {
-        //     this.state.persisted.autoTimeout = data.minutes;
-        //     await this.state.save();
-        //     this.refreshState();
-        // });
-
         this.manager.communication.listen('set-settings', async (port: any, data: Settings) => {
             await this.manager.setSettings(data);
         });
@@ -426,9 +415,8 @@ export class OrchestratorBackgroundService {
         //     this.manager.communication.send(port, 'vault-configuration', vaultConfiguration);
         // });
 
-
-        this.manager.communication.listen('account-update', async (port: any, data: { id: string, index: number, fields: { name: string, icon: string } }) => {
-            const wallet = this.manager.walletManager.getWallet(data.id);
+        this.manager.communication.listen('account-update', async (port: any, data: { walletId: string, index: number, fields: { name: string, icon: string } }) => {
+            const wallet = this.manager.walletManager.getWallet(data.walletId);
 
             if (!wallet) {
                 return;
@@ -445,24 +433,8 @@ export class OrchestratorBackgroundService {
             this.manager.communication.send(port, 'account-updated');
         });
 
-        // this.communication.listen('set-account-icon', async (port: any, data: { id: string, index: number, icon: string }) => {
-        //     const wallet = this.state.persisted.wallets.find(w => w.id == data.id);
-
-        //     if (!wallet) {
-        //         return;
-        //     }
-
-        //     const account = wallet.accounts[data.index];
-        //     account.icon = data.icon;
-
-        //     await this.state.save();
-        //     this.refreshState();
-
-        //     this.communication.send(port, 'account-icon-set');
-        // });
-
-        this.manager.communication.listen('set-wallet-name', async (port: any, data: { id: string, name: string }) => {
-            const wallet = this.manager.walletManager.getWallet(data.id);
+        this.manager.communication.listen('set-wallet-name', async (port: any, data: { walletId: string, name: string }) => {
+            const wallet = this.manager.walletManager.getWallet(data.walletId);
 
             if (!wallet) {
                 return;
@@ -475,8 +447,8 @@ export class OrchestratorBackgroundService {
             this.refreshState();
         });
 
-        this.manager.communication.listen('account-remove', async (port: any, data: { id: string, index: number }) => {
-            const wallet = this.manager.walletManager.getWallet(data.id);
+        this.manager.communication.listen('account-remove', async (port: any, data: { walletId: string, index: number }) => {
+            const wallet = this.manager.walletManager.getWallet(data.walletId);
 
             if (!wallet) {
                 return;
@@ -498,14 +470,11 @@ export class OrchestratorBackgroundService {
             this.manager.communication.sendToAll('account-removed', data);
         });
 
-        this.manager.communication.listen('account-scan', async (port: any, data: { force: boolean, account: Account, wallet: Wallet }) => {
-            console.log('Performing account scan', data);
+        this.manager.communication.listen('account-scan', async (port: any, data: { force: boolean, accountId: string, walletId: string }) => {
+            const wallet = this.manager.walletManager.getWallet(data.walletId);
+            const account = this.manager.walletManager.getAccount(wallet, data.accountId);
 
-            // When data is sent from UI to background, it is serialized to JSON and the instance does not have a reference 
-            // to the original state. Therefore we'll get the correct objects based upon the IDs provided and send those 
-            // to the indexer.
-            const wallet = this.manager.walletManager.getWallet(data.wallet.id);
-            const account = wallet.accounts[data.account.index];
+            console.log('Performing account scan', data);
 
             this.manager.indexer.process(account, wallet, data.force);
         });

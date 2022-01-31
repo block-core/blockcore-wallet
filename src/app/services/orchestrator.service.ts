@@ -200,32 +200,20 @@ export class OrchestratorService {
         this.communication.send('identity-publish', identity);
     }
 
-    // setLockTimer(minutes: number) {
-    //     this.communication.send('set-lock-timer', { minutes });
-    // }
-
-    updateAccount(id: string, index: number, fields: { name: string, icon?: string }) {
-        this.communication.send('account-update', { id, index, fields });
+    updateAccount(walletId: string, index: number, fields: { name: string, icon?: string }) {
+        this.communication.send('account-update', { walletId, index, fields });
     }
 
-    // setAccountName(id: string, index: number, name: string) {
-    //     this.communication.send('set-account-name', { id, index, name });
-    // }
-
-    // setAccountIcon(id: string, index: number, icon: string) {
-    //     this.communication.send('set-account-icon', { id, index, icon });
-    // }
-
-    setWalletName(id: string, name: string) {
-        this.communication.send('set-wallet-name', { id, name });
+    setWalletName(walletId: string, name: string) {
+        this.communication.send('set-wallet-name', { walletId, name });
     }
 
     unlock(id: string, password: string) {
         this.communication.send('wallet-unlock', { id, password });
     }
 
-    removeAccount(id: string, index: number) {
-        this.communication.send('account-remove', { id, index });
+    removeAccount(walletId: string, index: number) {
+        this.communication.send('account-remove', { walletId, index });
     }
 
     lock(id: string) {
@@ -253,6 +241,6 @@ export class OrchestratorService {
     }
 
     sign(content?: string, tabId?: string) {
-        this.communication.send('sign-content', { content, tabId });
+        this.communication.send('sign-content', { content, tabId, walletId: this.uiState.activeWallet.id, accountId: this.uiState.activeAccount.identifier });
     }
 }

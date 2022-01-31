@@ -323,6 +323,10 @@ export class WalletManager {
         this.manager.broadcastState();
     }
 
+    getAccount(wallet: Wallet, accountId: string) {
+        return wallet.accounts.find(a => a.identifier == accountId);
+    }
+
     getWallet(id: string) {
         const wallet = this.manager.state.persisted.wallets.find(w => w.id == id);
         return wallet;

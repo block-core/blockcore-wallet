@@ -80,7 +80,7 @@ export class AccountComponent implements OnInit, OnDestroy {
 
   scan(force: boolean = false) {
     this.loading = true;
-    this.communication.send('account-scan', { force: force, account: this.uiState.activeAccount, wallet: this.uiState.activeWallet });
+    this.communication.send('account-scan', { force: force, accountId: this.uiState.activeAccount.identifier, walletId: this.uiState.activeWallet.id });
   }
 
   async toggleNetwork() {
