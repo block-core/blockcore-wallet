@@ -23,7 +23,7 @@ export class WalletRemoveComponent {
 
   async wipe() {
     // Remove the active wallet from the array.
-    this.communication.send('wallet-remove', { id: this.uiState.persisted.activeWalletId });
+    this.communication.send('wallet-remove', { walletId: this.uiState.persisted.activeWalletId });
 
     // this.uiState.persisted.wallets.splice(this.uiState.persisted.activeWalletIndex, 1);
 

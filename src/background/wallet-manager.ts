@@ -17,9 +17,8 @@ export class WalletManager {
     constructor(private manager: AppManager) {
     }
 
-    async createTransaction(address: string, amount: number, fee: number): Promise<{ addresses: string[], transactionHex: string, fee: number, feeRate: number, virtualSize: number, weight: number }> {
+    async createTransaction(wallet: Wallet, account: Account, address: string, amount: number, fee: number): Promise<{ addresses: string[], transactionHex: string, fee: number, feeRate: number, virtualSize: number, weight: number }> {
         // TODO: Verify the address for this network!! ... Help the user avoid sending transactions on very wrong addresses.
-        const account = this.activeAccount;
         const network = this.manager.getNetwork(account.network, account.purpose);
         const affectedAddresses = [];
 
@@ -151,8 +150,8 @@ export class WalletManager {
         return (<any>balanceReceive + <any>balanceChange);
     }
 
-    async revealSecretRecoveryPhrase(id: string, password: string) {
-        var wallet = this.manager.walletManager.getWallet(id);
+    async revealSecretRecoveryPhrase(walletId: string, password: string) {
+        var wallet = this.manager.walletManager.getWallet(walletId);
         let unlockedMnemonic = null;
 
         if (!wallet) {
@@ -177,8 +176,8 @@ export class WalletManager {
         return Array.from(this.walletSecrets.keys());
     };
 
-    async unlockWallet(id: string, password: string) {
-        var wallet = this.manager.walletManager.getWallet(id);
+    async unlockWallet(walletId: string, password: string) {
+        var wallet = this.manager.walletManager.getWallet(walletId);
         let unlockedMnemonic = null;
 
         if (!wallet) {
@@ -195,7 +194,7 @@ export class WalletManager {
             const masterSeed = mnemonicToSeedSync(unlockedMnemonic);
 
             // Add this wallet to list of unlocked.
-            this.walletSecrets.set(id, { password, seed: masterSeed });
+            this.walletSecrets.set(walletId, { password, seed: masterSeed });
 
             // Make sure we inform all instances when a wallet is unlocked.
             return true;
@@ -206,8 +205,8 @@ export class WalletManager {
     }
 
     /** Cange the wallet password in one operation. */
-    async changeWalletPassword(id: string, oldpassword: string, newpassword: string) {
-        var wallet = this.manager.walletManager.getWallet(id);
+    async changeWalletPassword(walletId: string, oldpassword: string, newpassword: string) {
+        var wallet = this.manager.walletManager.getWallet(walletId);
         let unlockedMnemonic = null;
 
         if (!wallet) {
@@ -226,12 +225,12 @@ export class WalletManager {
             await this.manager.state.save();
 
             // Make sure we delete the existing wallet secret for this wallet.
-            this.walletSecrets.delete(id);
+            this.walletSecrets.delete(walletId);
 
             const masterSeed = mnemonicToSeedSync(unlockedMnemonic);
 
             // Add this wallet to list of unlocked.
-            this.walletSecrets.set(id, { password: newpassword, seed: masterSeed });
+            this.walletSecrets.set(walletId, { password: newpassword, seed: masterSeed });
 
             this.manager.state.persisted.activeWalletId = wallet.id;
 
@@ -318,9 +317,21 @@ export class WalletManager {
     }
 
     async setActiveWallet(id: string) {
-        this.manager.state.persisted.activeWalletId = id;
-        await this.manager.state.save();
-        this.manager.broadcastState();
+        if (this.manager.state.persisted.activeWalletId != id) {
+            this.manager.state.persisted.activeWalletId = id;
+            return true;
+        }
+
+        return false;
+    }
+
+    async setActiveAccount(index: number) {
+        if (this.activeWallet.activeAccountIndex != index) {
+            this.activeWallet.activeAccountIndex = index;
+            return true;
+        }
+
+        return false;
     }
 
     getAccount(wallet: Wallet, accountId: string) {
@@ -499,28 +510,7 @@ export class WalletManager {
     }
 
     async addWallet(wallet: Wallet) {
-        // let recoveryPhrase = await this.manager.crypto.decryptData(wallet.mnemonic, wallet.);
-
-        // // From the secret receovery phrase, the master seed is derived.
-        // // Learn more about the HD keys: https://raw.githubusercontent.com/bitcoin/bips/master/bip-0032/derivation.png
-        // const masterSeed = mnemonicToSeedSync(wallet.mnemonic);
-
-        // // Add this wallet to list of unlocked.
-        // this.walletSecrets.set(id, { password, seed: masterSeed });
-
-        // // TODO: REMOVE!
-        // this.manager.state.passwords.set(id, password);
-
-        // const defaultAccounts = this.manager.walletManager.getDefaultAccounts(wallet);
-
-        // for (const account of defaultAccounts) {
-        //     await this.manager.walletManager.addAccount(account, wallet);
-        // }
-
         this.manager.state.persisted.wallets.push(wallet);
-
-        // Change the active wallet to the new one.
-        this.manager.state.persisted.activeWalletId = wallet.id;
 
         // Persist the newly created wallet.
         await this.manager.state.save();

@@ -61,7 +61,7 @@ export class PasswordComponent implements OnDestroy {
             return;
         }
 
-        this.communication.send('wallet-password-change', { id: this.uiState.activeWallet?.id, oldpassword: this.existingPassword, newpassword: this.confirmedPassword });
+        this.communication.send('wallet-password-change', { walletId: this.uiState.activeWallet?.id, oldpassword: this.existingPassword, newpassword: this.confirmedPassword });
     }
 
     cancel() {

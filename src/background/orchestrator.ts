@@ -400,10 +400,6 @@ export class OrchestratorBackgroundService {
 
         });
 
-        this.manager.communication.listen('set-active-wallet-id', async (port: any, data: any) => {
-            await this.manager.walletManager.setActiveWallet(data.id);
-        });
-
         this.manager.communication.listen('set-settings', async (port: any, data: Settings) => {
             await this.manager.setSettings(data);
         });
@@ -479,15 +475,16 @@ export class OrchestratorBackgroundService {
             this.manager.indexer.process(account, wallet, data.force);
         });
 
-        this.manager.communication.listen('wallet-remove', async (port: any, data: { id: string, index: number }) => {
-            await this.manager.walletManager.removeWallet(data.id);
+        this.manager.communication.listen('wallet-remove', async (port: any, data: { walletId: string, index: number }) => {
+            await this.manager.walletManager.removeWallet(data.walletId);
 
             // Raise this after state has been updated, so orchestrator in UI can redirect correctly.
             this.manager.communication.sendToAll('wallet-removed', data);
         });
 
-        this.manager.communication.listen('transaction-send', async (port: any, data: { transactionHex: string, addresses: string[] }) => {
-            var account = this.manager.walletManager.activeAccount;
+        this.manager.communication.listen('transaction-send', async (port: any, data: { walletId: string, accountId: string, transactionHex: string, addresses: string[] }) => {
+            const wallet = this.manager.walletManager.getWallet(data.walletId);
+            const account = this.manager.walletManager.getAccount(wallet, data.accountId);
 
             // Watch the address that belongs to the selected inputs used in the transaction.
             for (let i = 0; i < data.addresses.length; i++) {
@@ -499,9 +496,12 @@ export class OrchestratorBackgroundService {
             this.manager.communication.sendToAll('transaction-sent', transactionDetails);
         });
 
-        this.manager.communication.listen('transaction-create', async (port: any, data: { address: string, amount: string, fee: string }) => {
+        this.manager.communication.listen('transaction-create', async (port: any, data: { walletId: string, accountId: string, address: string, amount: string, fee: string }) => {
+            const wallet = this.manager.walletManager.getWallet(data.walletId);
+            const account = this.manager.walletManager.getAccount(wallet, data.accountId);
+
             try {
-                const transactionDetails = await this.manager.walletManager.createTransaction(data.address, Number(data.amount), Number(data.fee));
+                const transactionDetails = await this.manager.walletManager.createTransaction(wallet, account, data.address, Number(data.amount), Number(data.fee));
                 console.log('transactionDetails', transactionDetails);
                 this.manager.communication.sendToAll('transaction-created', transactionDetails);
             } catch (error) {
@@ -509,17 +509,17 @@ export class OrchestratorBackgroundService {
             }
         });
 
-        this.manager.communication.listen('wallet-password-change', async (port: any, data: { id: string, oldpassword: string, newpassword: string }) => {
+        this.manager.communication.listen('wallet-password-change', async (port: any, data: { walletId: string, oldpassword: string, newpassword: string }) => {
             try {
                 // First make sure that existing password is valid:
-                const validOldPassword = await this.manager.walletManager.unlockWallet(data.id, data.oldpassword);
+                const validOldPassword = await this.manager.walletManager.unlockWallet(data.walletId, data.oldpassword);
 
                 if (!validOldPassword) {
                     this.manager.communication.send(port, 'error', { message: 'The existing password is incorrect.' });
                     return;
                 }
 
-                const walletWasChanged = await this.manager.walletManager.changeWalletPassword(data.id, data.oldpassword, data.newpassword);
+                const walletWasChanged = await this.manager.walletManager.changeWalletPassword(data.walletId, data.oldpassword, data.newpassword);
 
                 if (walletWasChanged) {
                     this.manager.communication.sendToAll('wallet-password-changed', null);
@@ -532,15 +532,15 @@ export class OrchestratorBackgroundService {
             }
         });
 
-        this.manager.communication.listen('wallet-lock', async (port: any, data: { id: string }) => {
-            this.manager.walletManager.lockWallet(data.id);
+        this.manager.communication.listen('wallet-lock', async (port: any, data: { walletId: string }) => {
+            this.manager.walletManager.lockWallet(data.walletId);
 
             // Make sure we inform all instances when a wallet is unlocked.
             this.manager.communication.sendToAll('wallet-locked');
         });
 
-        this.manager.communication.listen('wallet-unlock', async (port: any, data: { id: string, password: string }) => {
-            const unlocked = await this.manager.walletManager.unlockWallet(data.id, data.password);
+        this.manager.communication.listen('wallet-unlock', async (port: any, data: { walletId: string, password: string }) => {
+            const unlocked = await this.manager.walletManager.unlockWallet(data.walletId, data.password);
 
             // After the wallet has been unlocked, we must ensure that the UI state has latest information about 
             // which wallets is unlocked.
@@ -553,8 +553,8 @@ export class OrchestratorBackgroundService {
             }
         });
 
-        this.manager.communication.listen('wallet-export-recovery-phrase', async (port: any, data: { id: string, password: string }) => {
-            var recoveryPhrase = await this.manager.walletManager.revealSecretRecoveryPhrase(data.id, data.password);
+        this.manager.communication.listen('wallet-export-recovery-phrase', async (port: any, data: { walletId: string, password: string }) => {
+            var recoveryPhrase = await this.manager.walletManager.revealSecretRecoveryPhrase(data.walletId, data.password);
 
             if (recoveryPhrase) {
                 // Make sure we inform all instances when a wallet is unlocked.
@@ -565,129 +565,12 @@ export class OrchestratorBackgroundService {
         });
 
         // TODO: Expand the address generation APIs to keep track of indexes for both change and non-change.
-        this.manager.communication.listen('address-generate', async (port: any, data: { index: number }) => {
-
-            if (!this.manager.walletManager.activeWallet) {
-                return;
-            }
-
-            const address = this.manager.walletManager.getReceiveAddress(this.manager.walletManager.activeAccount);
+        this.manager.communication.listen('address-generate', async (port: any, data: { walletId: string, accountId: string, index: number }) => {
+            const wallet = this.manager.walletManager.getWallet(data.walletId);
+            const account = this.manager.walletManager.getAccount(wallet, data.accountId);
+            const address = this.manager.walletManager.getReceiveAddress(account);
 
             this.manager.communication.send(port, 'address-generated', { address: address })
-
-            // var account = this.state.activeAccount;
-            // var wallet = this.state.activeWallet;
-
-            // if (!account || !wallet) {
-            //     return;
-            // }
-
-            // let password = this.state.passwords.get(this.state.activeWallet.id);
-
-            // if (!password) {
-            //     return;
-            // }
-
-            // let unlockedMnemonic = null;
-            // unlockedMnemonic = await this.crypto.decryptData(wallet.mnemonic, password);
-
-            // let network: any;
-
-            // console.log(account);
-            // console.log(account.network);
-
-            // if (account.network === 105105) {
-            //     network = {
-            //         messagePrefix: '\x18Bitcoin Signed Message:\n',
-            //         bech32: 'strax',
-            //         bip32: {
-            //             public: 0x0488b21e,
-            //             private: 0x0488ade4,
-            //         },
-            //         pubKeyHash: 75,
-            //         scriptHash: 140,
-            //         wif: 0x08
-            //     }
-            // }
-            // else if (account.network === 1926) {
-            //     network = {
-            //         messagePrefix: '\x18CityCoin Signed Message:\n', // TODO: City Chain should migrate to use same prefix as Bitcoin.
-            //         bech32: 'strax',
-            //         bip32: {
-            //             public: 0x0488b21e,
-            //             private: 0x0488ade4,
-            //         },
-            //         pubKeyHash: 0x1c,
-            //         scriptHash: 0x58,
-            //         wif: 0x08
-            //     }
-            // } else if (account.network === 401) {
-            //     network = {
-            //         messagePrefix: '\x18Bitcoin Signed Message:\n',
-            //         bech32: 'tb',
-            //         bip32: {
-            //             public: 0x0488b21e,
-            //             private: 0x0488ade4,
-            //         },
-            //         pubKeyHash: 28,
-            //         scriptHash: 88,
-            //         wif: 0x08 // TODO: Verify if this is still used for CRS.
-            //     }
-            // } else {
-            //     network = {
-            //         messagePrefix: '\x18Bitcoin Signed Message:\n',
-            //         bech32: 'id',
-            //         bip32: {
-            //             public: 0x0488b21e,
-            //             private: 0x0488ade4,
-            //         },
-            //         pubKeyHash: 55,
-            //         scriptHash: 117,
-            //         wif: 0x08
-            //     }
-            // }
-
-            // // TODO: Obviously we should not repeat this process from recovery phrase, but this should 
-            // // be applied during wallet unlock and state of the node should be kept in-memory. This is just
-            // // done like this for quick prototyping.
-            // var masterSeed = await bip39.mnemonicToSeed(unlockedMnemonic, '');
-            // const masterNode = bip32.fromSeed(masterSeed, network);
-
-            // // Get the hardened purpose and account node.
-            // const accountNode = masterNode.derivePath(account.derivationPath); // m/44'/105105'/0'
-
-            // // TODO: use this in the account manager.
-            // const xpub = accountNode.neutered().toBase58();
-
-            // // console.log(wallet.mnemonic);
-            // // console.log(unlockedMnemonic);
-            // // console.log(accountNode.neutered().toBase58());
-
-            // // const addressNode = masterNode.deriveHardened(data.index);
-            // const addressNodeReceive = accountNode.derive(0);
-            // const addressNodeReceiveIndex0 = addressNodeReceive.derive(0);
-            // const addressNodeChange = accountNode.derive(1);
-            // const addressNodeChangeIndex0 = addressNodeChange.derive(0);
-
-            // const address0 = this.crypto.getAddressByNetworkp2pkh(addressNodeReceiveIndex0, network);
-
-            // const receiveAddress = [];
-            // const changeAddress = [];
-
-            // // TODO: This is just a basic prototype to return many receive and change address to the UI:
-            // for (let i = 0; i < 2; i++) {
-
-            //     const addressNodeReceive = accountNode.derive(0);
-            //     const addressNodeReceiveIndex = addressNodeReceive.derive(i);
-            //     const addressNodeChange = accountNode.derive(1);
-            //     const addressNodeChangeIndex = addressNodeChange.derive(i);
-
-            //     receiveAddress.push({ change: false, index: i, address: this.crypto.getAddressByNetworkp2pkh(addressNodeReceiveIndex, network) });
-            //     changeAddress.push({ change: true, index: i, address: this.crypto.getAddressByNetworkp2pkh(addressNodeChangeIndex, network) });
-            // }
-
-
-
         });
 
         // TODO: REFACTOR THIS INTO THE NETWORK DEFINITION OR WALLET MANAGER.
@@ -849,15 +732,13 @@ export class OrchestratorBackgroundService {
         //     this.communication.send(port, 'nostr-generated', { id: id })
         // });
 
-        this.manager.communication.listen('accounts-create', async (port: any, data: Account[]) => {
-            if (!this.manager.walletManager.activeWallet) {
-                return;
-            }
+        this.manager.communication.listen('accounts-create', async (port: any, data: { walletId: string, accounts: Account[] }) => {
+            const wallet = this.manager.walletManager.getWallet(data.walletId);
 
-            for (const account of data) {
+            for (const account of data.accounts) {
                 // Don't persist the selected value.
                 delete account.selected;
-                await this.manager.walletManager.addAccount(account);
+                await this.manager.walletManager.addAccount(account, wallet);
             }
 
             this.refreshState();
@@ -868,14 +749,12 @@ export class OrchestratorBackgroundService {
             // this.manager.communication.sendToAll('identity-created');
         });
 
-        this.manager.communication.listen('account-create', async (port: any, data: Account) => {
-            if (!this.manager.walletManager.activeWallet) {
-                return;
-            }
+        this.manager.communication.listen('account-create', async (port: any, data: { walletId: string, account: Account }) => {
+            const wallet = this.manager.walletManager.getWallet(data.walletId);
 
             // Don't persist the selected value.
-            delete data.selected;
-            await this.manager.walletManager.addAccount(data);
+            delete data.account.selected;
+            await this.manager.walletManager.addAccount(data.account);
 
             this.refreshState();
 
@@ -968,19 +847,32 @@ export class OrchestratorBackgroundService {
         //     // Begin verification
         // });
 
-        this.manager.communication.listen('set-active-account', async (port: any, data: { index: number }) => {
-            if (!this.manager.walletManager.activeWallet) {
-                console.log('No active wallet on set-active-account.');
-                return;
-            }
-
-            this.manager.walletManager.activeWallet.activeAccountIndex = data.index;
+        this.manager.communication.listen('set-active-wallet-id', async (port: any, data: any) => {
+            await this.manager.walletManager.setActiveWallet(data.id);
 
             await this.manager.state.save();
-
             this.refreshState();
+        });
 
-            this.manager.communication.sendToAll('active-account-changed', { index: data.index });
+        this.manager.communication.listen('set-active-account', async (port: any, data: { walletId: string, index: number }) => {
+            // Set the new active wallet, if different from before.
+            const changedWallet = await this.manager.walletManager.setActiveWallet(data.walletId);
+
+            // Set the new active account, if different from before.
+            const changedAccount = await this.manager.walletManager.setActiveAccount(data.index);
+
+            if (changedWallet || changedAccount) {
+                await this.manager.state.save();
+                this.refreshState();
+            }
+
+            if (changedWallet) {
+                this.manager.communication.sendToAll('active-wallet-changed', { walletId: data.walletId });
+            }
+
+            if (changedAccount) {
+                this.manager.communication.sendToAll('active-account-changed', { walletId: data.walletId, index: data.index });
+            }
         });
 
         this.manager.communication.listen('wallet-create', async (port: any, data: Wallet) => {
@@ -989,13 +881,11 @@ export class OrchestratorBackgroundService {
             // If so... we must ensure that mnemonics are not different, or a call might wipe existing wallet.
             await this.manager.walletManager.addWallet(data);
 
+            await this.manager.walletManager.setActiveWallet(data.id);
 
+            await this.manager.state.save();
 
             this.refreshState();
-
-            // VERIFICATION HACK, NOT POSSIBLE YET DUE TO xpub NOT GENERATED ON UI:
-            // this.manager.walletManager.activeWallet.activeAccountIndex = 0;
-            // const address = await this.manager.walletManager.getReceiveAddress(this.manager.walletManager.activeAccount);
 
             // TODO: REFACTOR IDENTITY CREATION IN THE FUTURE.
             // if (this.state.activeAccount?.network === NETWORK_IDENTITY) {
@@ -1006,8 +896,6 @@ export class OrchestratorBackgroundService {
 
             // Make sure we inform all instances when a wallet is deleted.
             this.manager.communication.sendToAll('wallet-created');
-
-            // this.communication.sendToAll('account-created');
 
             // TODO: REFATOR IN FUTURE.
             //this.communication.sendToAll('identity-created');

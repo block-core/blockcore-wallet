@@ -8,6 +8,7 @@ import {
     MatSnackBarHorizontalPosition,
     MatSnackBarVerticalPosition,
 } from '@angular/material/snack-bar';
+import { stringify } from 'querystring';
 
 @Injectable({
     providedIn: 'root'
@@ -181,7 +182,7 @@ export class OrchestratorService {
             this.uiState.activeWallet.activeAccountIndex = index;
         }
 
-        this.communication.send('set-active-account', { index });
+        this.communication.send('set-active-account', { walletId: this.uiState.activeWallet.id, index });
     }
 
     generateVaultConfiguration(domain: string) {
@@ -208,16 +209,16 @@ export class OrchestratorService {
         this.communication.send('set-wallet-name', { walletId, name });
     }
 
-    unlock(id: string, password: string) {
-        this.communication.send('wallet-unlock', { id, password });
+    unlock(walletId: string, password: string) {
+        this.communication.send('wallet-unlock', { walletId, password });
     }
 
     removeAccount(walletId: string, index: number) {
         this.communication.send('account-remove', { walletId, index });
     }
 
-    lock(id: string) {
-        this.communication.send('wallet-lock', { id });
+    lock(walletId: string) {
+        this.communication.send('wallet-lock', { walletId });
     }
 
     setAction(action: Action) {
@@ -228,12 +229,12 @@ export class OrchestratorService {
         this.communication.send('set-action', { action: '' });
     }
 
-    createAccount(account: Account) {
-        this.communication.send('account-create', account);
+    createAccount(walletId: string, account: Account) {
+        this.communication.send('account-create', { walletId, account });
     }
 
-    createAccounts(account: Account[]) {
-        this.communication.send('accounts-create', account);
+    createAccounts(walletId: string, accounts: Account[]) {
+        this.communication.send('accounts-create', { walletId, accounts });
     }
 
     createVault(data: Vault) {

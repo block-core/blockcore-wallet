@@ -169,7 +169,7 @@ export class AccountCreateComponent implements OnInit, OnDestroy {
             }
         };
 
-        this.manager.createAccount(account);
+        this.manager.createAccount(this.uiState.activeWallet.id, account);
 
         // this.step = 1;
         // this.recover = false;

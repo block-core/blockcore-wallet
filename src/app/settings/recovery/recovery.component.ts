@@ -41,7 +41,7 @@ export class RecoveryComponent implements OnDestroy {
     }
 
     show() {
-        this.communication.send('wallet-export-recovery-phrase', { id: this.uiState.activeWallet?.id, password: this.password });
+        this.communication.send('wallet-export-recovery-phrase', { walletId: this.uiState.activeWallet?.id, password: this.password });
     }
 
     cancel() {

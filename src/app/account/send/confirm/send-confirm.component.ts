@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommunicationService } from '../../../services/communication.service';
 import { SendService } from '../../../services/send.service';
+import { UIState } from '../../../services/ui-state.service';
 
 @Component({
     selector: 'app-account-send-confirm',
@@ -13,6 +14,7 @@ export class AccountSendConfirmComponent implements OnInit, OnDestroy {
 
     constructor(
         public sendService: SendService,
+        private uiState: UIState,
         private communication: CommunicationService) {
 
     }
@@ -30,6 +32,6 @@ export class AccountSendConfirmComponent implements OnInit, OnDestroy {
             this.sendService.addresses = data.addresses;
         });
 
-        this.communication.send('transaction-create', { address: this.sendService.address, amount: this.sendService.amountAsSatoshi, fee: this.sendService.feeAsSatoshi });
+        this.communication.send('transaction-create', { walletId: this.uiState.activeWallet.id, accountId: this.sendService.account.identifier, address: this.sendService.address, amount: this.sendService.amountAsSatoshi, fee: this.sendService.feeAsSatoshi });
     }
 }
