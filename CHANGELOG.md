@@ -1,3 +1,16 @@
+## <small>0.0.5 (2022-01-31)</small>
+
+* Enable all features for dev mode ([95d70ef](https://github.com/block-core/blockcore-extension/commit/95d70ef))
+* Fix a lint issue ([1dc12d7](https://github.com/block-core/blockcore-extension/commit/1dc12d7))
+* Fix type linting issue for production build ([27a48aa](https://github.com/block-core/blockcore-extension/commit/27a48aa))
+* Improve stateless orchestration ([8e51625](https://github.com/block-core/blockcore-extension/commit/8e51625)), closes [#50](https://github.com/block-core/blockcore-extension/issues/50)
+* Improve the stateless orchestration ([95d4e76](https://github.com/block-core/blockcore-extension/commit/95d4e76)), closes [#50](https://github.com/block-core/blockcore-extension/issues/50)
+* Increase wallet lock to 15 minutes ([293f6b7](https://github.com/block-core/blockcore-extension/commit/293f6b7))
+* Refactor orchestration to be stateless ([c85c359](https://github.com/block-core/blockcore-extension/commit/c85c359)), closes [#50](https://github.com/block-core/blockcore-extension/issues/50)
+* Update README and featureset for individual instances ([f62abb5](https://github.com/block-core/blockcore-extension/commit/f62abb5))
+
+
+
 ## <small>0.0.4 (2022-01-31)</small>
 
 * Add build of multiple instances ([f778df4](https://github.com/block-core/blockcore-extension/commit/f778df4))

@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
-  version: "0.0.5",
+  version: "0.0.6",
   features: ['wallet', 'identity', 'collectible', 'vault'],
   releaseUrl: 'https://github.com/block-core/blockcore-extension/releases',
   sourceUrl: 'https://github.com/block-core/blockcore-extension',
