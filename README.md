@@ -1,4 +1,4 @@
-# CoinVault by Blockcore
+# Blockcore Extension
 
 ###  Web Browser Extension for crypto wallet in your browser for coins, tokens, identities, NFTs and more.
 
@@ -6,11 +6,41 @@ The Blockcore Extension does wallet management, account management, identity man
 
 ![](/doc/blockcore-extension-walkthrough.gif)
 
+## Instances
+
+This extension is made available in multiple different instances that has different featuresets:
+
+### Blockcore
+
+- Chains: All Blockcore supported blockchains
+- All features currently under development
+- Download: ["blockcore-*.zip](https://github.com/block-core/blockcore-extension/releases)
+
+### CoinVault
+
+- Chains: Stratis and Cirrus.
+- Features: Wallet, NFT and more.
+- Download: ["coinvault-*.zip](https://github.com/block-core/blockcore-extension/releases)
+
+### Smart City Platform
+
+- Chains: City Chain
+- Features: Focused on decentralized citizenship
+- Download: ["smartcityplatform-*.zip](https://github.com/block-core/blockcore-extension/releases)
+
 ## Supported Browsers
 
 The extension works on Chrome and Edge browsers. Future FireFox support might be added later.
 
-## Development Requirements
+## WARNING AND RISK
+
+This software should be considered experimental, use at your own risk.
+
+All the standard practices for cryptocurrency wallets apply: Make sure you take backup of your secret recovery phrase. We are not responsible for any mistakes or problems with the software and services. You hold your own keys, we can never restore or help you if you loose your secret recovery phrase. You can still loose valuables even though you don't loose your recovery phrase, due to bugs and issues in the software provided. Use at your own risk.
+
+# Development
+
+## Requirements
 
 - Node.js 14.x: https://nodejs.org/en/
 - Angular CLI: `npm install -g @angular/cli`

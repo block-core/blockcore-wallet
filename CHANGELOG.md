@@ -1,3 +1,12 @@
+## <small>0.0.4 (2022-01-31)</small>
+
+* Add build of multiple instances ([f778df4](https://github.com/block-core/blockcore-extension/commit/f778df4))
+* Migrate away from "-extension" subfix ([d199b4d](https://github.com/block-core/blockcore-extension/commit/d199b4d))
+* Prepare for next release ([23da37c](https://github.com/block-core/blockcore-extension/commit/23da37c))
+* Simplify the build and update some labels for steps ([a0468c7](https://github.com/block-core/blockcore-extension/commit/a0468c7))
+
+
+
 ## <small>0.0.3 (2022-01-31)</small>
 
 * Add a notification that Cirrus is not yet supported ([a65f23c](https://github.com/block-core/blockcore-extension/commit/a65f23c))

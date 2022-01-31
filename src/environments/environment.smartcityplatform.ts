@@ -1,7 +1,7 @@
 export const environment = {
   production: true,
-  version: "0.0.4",
-  features: ['wallet', 'identity', 'vault', 'inbox'],
+  version: "0.0.5",
+  features: ['wallet', 'identity', 'collectible', 'vault', 'inbox'],
   releaseUrl: 'https://github.com/CityChainFoundation/smart-city-platform/releases',
   sourceUrl: 'https://github.com/CityChainFoundation/smart-city-platform',
   instance: 'smartcityplatform',

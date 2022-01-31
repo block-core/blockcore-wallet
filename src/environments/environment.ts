@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  version: "0.0.4",
+  version: "0.0.5",
   // features: ['wallet', 'identity', 'collectible', 'vault'],
   features: ['wallet'], // Preparing for alpha release, just hide features not ready for use.
   releaseUrl: 'https://github.com/block-core/blockcore-extension/releases',
@@ -12,7 +12,7 @@ export const environment = {
   instance: 'blockcore',
   instanceName: 'Blockcore',
   instanceUrl: 'https://blockcore.net/',
-  networks: ['STRAX', 'CRS'] as string[] // Returns all
+  networks: [] // Returns all
 };
 
 /*
