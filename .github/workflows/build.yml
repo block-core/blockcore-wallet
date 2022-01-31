@@ -13,7 +13,9 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      PROJECT_NAME: "blockcore-extension"
+      BLOCKCORE: "blockcore-extension"
+      COINVAULT: "coinvault"
+      SMARTCITYPLATFORM: "smartcityplatform"
 
     steps:
       - uses: actions/checkout@master
@@ -37,13 +39,17 @@ jobs:
 
       - name: Package Name
         run: |
-          echo RELEASE_NAME=${{ env.PROJECT_NAME }}-${{ env.VERSION }}.zip >> $GITHUB_ENV
+          echo RELEASE_NAME_BLOCKCORE=${{ env.BLOCKCORE }}-${{ env.VERSION }}.zip >> $GITHUB_ENV
+          echo RELEASE_NAME_COINVAULT=${{ env.COINVAULT }}-${{ env.VERSION }}.zip >> $GITHUB_ENV
+          echo RELEASE_NAME_SMARTCITYPLATFORM=${{ env.SMARTCITYPLATFORM }}-${{ env.VERSION }}.zip >> $GITHUB_ENV
         shell: bash
 
       - name: Install and Build
         run: |
           npm ci
           npm run build
+          npm run coinvault
+          npm run smartcityplatform
       # - name: Display structure of downloaded files
       #   run: ls -R
 
@@ -51,22 +57,44 @@ jobs:
       #   run: |
       #     npm run test
 
-      - name: Package
+      - name: Package Blockcore
         run: |
-          cd dist/${{ env.PROJECT_NAME }}
-          zip -r ../../${{env.RELEASE_NAME}} "./"
+          cd dist/${{ env.BLOCKCORE }}
+          zip -r ../../${{env.RELEASE_NAME_BLOCKCORE}} "./"
+          cd ../../
+
+      - name: Package CoinVault
+        run: |
+          cd dist/${{ env.COINVAULT }}
+          zip -r ../../${{env.RELEASE_NAME_COINVAULT}} "./"
+          cd ../../
+
+      - name: Package SmartCityPlatform
+        run: |
+          cd dist/${{ env.SMARTCITYPLATFORM }}
+          zip -r ../../${{env.RELEASE_NAME_SMARTCITYPLATFORM}} "./"
           cd ../../
 
       - uses: actions/upload-artifact@v1
         with:
-          name: ${{env.PROJECT_NAME}}-preview-${{env.VERSION}}
-          path: "${{env.RELEASE_NAME}}"
+          name: ${{env.BLOCKCORE}}-preview-${{env.VERSION}}
+          path: "${{env.RELEASE_NAME_BLOCKCORE}}"
+
+      - uses: actions/upload-artifact@v1
+        with:
+          name: ${{env.COINVAULT}}-preview-${{env.VERSION}}
+          path: "${{env.RELEASE_NAME_COINVAULT}}"
+
+      - uses: actions/upload-artifact@v1
+        with:
+          name: ${{env.SMARTCITYPLATFORM}}-preview-${{env.VERSION}}
+          path: "${{env.RELEASE_NAME_SMARTCITYPLATFORM}}"
 
       - name: Release
         uses: sondreb/action-release@main
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          files: "${{env.RELEASE_NAME}}"
+          files: "${{env.RELEASE_NAME_BLOCKCORE}};${{env.RELEASE_NAME_COINVAULT}};${{env.RELEASE_NAME_SMARTCITYPLATFORM}}"
           draft: true
           prerelease: false
           name: "Blockcore Extension (Release ${{env.VERSION}})"
