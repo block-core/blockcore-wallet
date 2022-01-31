@@ -7,6 +7,7 @@ import { CommunicationService } from './services/communication.service';
 import { OrchestratorService } from './services/orchestrator.service';
 import { Location } from '@angular/common'
 import { NetworksService } from './services/networks.service';
+import { environment } from '../environments/environment';
 
 @Component({
   selector: 'app-root',
@@ -28,6 +29,8 @@ export class AppComponent implements OnInit {
     private cd: ChangeDetectorRef,
     public networkService: NetworksService,
     @Inject(DOCUMENT) private document: Document) {
+
+    document.title = environment.instanceName;
 
     router.events.subscribe((val) => {
       if (val instanceof NavigationEnd) {

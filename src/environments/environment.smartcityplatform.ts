@@ -5,7 +5,7 @@ export const environment = {
   releaseUrl: 'https://github.com/CityChainFoundation/smart-city-platform/releases',
   sourceUrl: 'https://github.com/CityChainFoundation/smart-city-platform',
   instance: 'smartcityplatform',
-  instanceName: 'City Chain',
+  instanceName: 'Smart City Platform',
   instanceUrl: 'https://www.city-chain.org/',
   networks: ['CITY', 'IDENTITY', 'NOSTR']
 };
