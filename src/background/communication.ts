@@ -34,7 +34,11 @@ export class CommunicationBackgroundService {
 
             port.onMessage.addListener((message) => {
 
-                console.log('onMessage listener:', message);
+                if (!message.data?.hideFromLog) {
+                    console.log('onMessage listener:', message);
+                } else {
+                    console.log('onMessage listener (data hidden):', message.method);
+                }
 
                 if (!message.method) {
                     return;

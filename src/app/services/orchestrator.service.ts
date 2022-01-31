@@ -210,7 +210,7 @@ export class OrchestratorService {
     }
 
     unlock(walletId: string, password: string) {
-        this.communication.send('wallet-unlock', { walletId, password });
+        this.communication.send('wallet-unlock', { walletId, password, hideFromLog: true });
     }
 
     removeAccount(walletId: string, index: number) {

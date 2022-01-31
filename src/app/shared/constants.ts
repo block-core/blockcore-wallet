@@ -11,6 +11,6 @@ export const NETWORK_BTC = 0;
 
 export const VAULT_URL = 'https://vault.blockcore.net';
 export const INDEXER_URL = 'https://{id}.indexer.blockcore.net';
-export const AUTO_TIMEOUT = 10;
+export const AUTO_TIMEOUT = 15; // 15 minutes
 
 export const SATOSHI_FACTOR = 100000000;

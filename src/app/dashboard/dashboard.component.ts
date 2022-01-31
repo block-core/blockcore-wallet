@@ -42,9 +42,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     // TODO: activeWalletUnlocked IS FALSE ON FIRST UNLOCK!!!
-
     this.sub = this.uiState.activeWallet$.subscribe(() => {
-      debugger
       if (this.uiState.activeWallet) {
         this.uiState.title = this.uiState.activeWallet.name;
       }

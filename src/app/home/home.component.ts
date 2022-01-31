@@ -59,6 +59,9 @@ export class HomeComponent implements OnInit, OnDestroy {
     //   this.unlock();
     // }
 
+    // console.log('ngOnInit:Home', this.uiState.activeWallet);
+    // console.log('ngOnInit:unlocked', this.uiState.unlocked);
+
     // Verify if the wallet is already unlocked.
     if (this.uiState.activeWallet) {
       if (this.uiState.unlocked.findIndex(id => id == this.uiState.activeWallet?.id) > -1) {
