@@ -2,8 +2,10 @@
 
 * Add a notification that Cirrus is not yet supported ([a65f23c](https://github.com/block-core/blockcore-extension/commit/a65f23c))
 * Add change password feature ([c1aa2fe](https://github.com/block-core/blockcore-extension/commit/c1aa2fe)), closes [#25](https://github.com/block-core/blockcore-extension/issues/25)
+* Add changelog functionality ([cdc9803](https://github.com/block-core/blockcore-extension/commit/cdc9803))
 * Add Cirrus back as enabled network ([5658646](https://github.com/block-core/blockcore-extension/commit/5658646))
 * Add display of balance on send and support maximum send ([9df248c](https://github.com/block-core/blockcore-extension/commit/9df248c))
+* Add link to releases in the changes view ([9fe5a8d](https://github.com/block-core/blockcore-extension/commit/9fe5a8d))
 * Add listener for last addresses ([2191747](https://github.com/block-core/blockcore-extension/commit/2191747))
 * Add reference to another issue in the changes log ([f088608](https://github.com/block-core/blockcore-extension/commit/f088608))
 * Add watch on addresses when used in transactions ([c6c419d](https://github.com/block-core/blockcore-extension/commit/c6c419d))
