@@ -91,6 +91,11 @@ a:hover {
   height: 100% !important;
 }
 
+.full-mode .maximize {
+  display: none;
+  visibility: hidden;
+}
+
 header {
   display: flex;
   padding: 2em;

@@ -53,7 +53,6 @@ export class AppComponent implements OnInit {
       //   this.renderer.addClass(document.body, 'dark-theme');
       // }
 
-
     });
 
     // Make sure we initialize the orchestrator early and hook up event handlers.
@@ -62,6 +61,10 @@ export class AppComponent implements OnInit {
 
   async wipe() {
     this.uiState.wipe();
+  }
+
+  maximize() {
+    chrome.tabs.create({ active: true, selected: true, url: "index.html" });
   }
 
   goBack() {
@@ -73,36 +76,23 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // TODO: Find an alternative method to discover if app renders in tab or popup.
+    // The issue here is a race-condition, where he popup does not close fast enough 
+    // for this logic to run. So the length is larger then 0, when run too early.
+    setTimeout(() => {
+      const isInPopup = function () {
+        return (typeof chrome != undefined && chrome.extension) ?
+          chrome.extension.getViews({ type: "popup" }).length > 0 : null;
+      }
 
-    // var sub1 = this.communication.listen('lock', () => {
-    //   console.log('LOCK!');
-    // });
+      if (!isInPopup()) {
+        // When the extension is rendered in full screen, we'll add an extra class to body.
+        this.document.body.classList.add('full-mode');
+      } else {
+        //If you are already in the tab, do something else 
+      }
 
-    // var sub2 = this.communication.listen('lock2', () => {
-    //   console.log('LOCK222!');
-    // });
-
-    // var sub3 = this.communication.listen('lock', () => {
-    //   console.log('LOCK!');
-    // });
-
-    // // this.communication.unlisten(sub1);
-    // // this.communication.unlisten(sub2);
-
-    // var sub4 = this.communication.listen('lock', () => {
-    //   console.log('LOCK!');
-    // });
-
-    // var sub5 = this.communication.listen('lock2', () => {
-    //   console.log('LOCK2222!');
-    // });
-
-    // this.communication.unlisten(sub5);
-
-    // this.communication.trigger('lock', { data: true });
-    // this.communication.trigger('lock2', { data: true });
-
-    // console.log(chrome.extension.getViews({ type: "tab" }));
+    }, 500);
 
     const isInPopup = function () {
       return (typeof chrome != undefined && chrome.extension) ?
@@ -112,37 +102,9 @@ export class AppComponent implements OnInit {
     if (!isInPopup()) {
       // When the extension is rendered in full screen, we'll add an extra class to body.
       this.document.body.classList.add('full-mode');
-
     } else {
       //If you are already in the tab, do something else 
     }
-
-    // this.appState.port = chrome.runtime.connect({ name: 'extension-channel' });
-
-    // this.appState.port.onMessage.addListener(message => {
-    //   console.log('onMessage:', message);
-    //   console.log(window.location.origin);
-    //   // window.postMessage(message, window.location.origin);
-
-    //   debugger;
-
-    //   if (message.method == 'unlocked') {
-    //     console.log('UNLOCKED! YEEE!', message);
-    //   } else if (message.method == 'getlock') {
-    //     this.appState.password = message.data;
-    //   }
-
-    // });
-
-    // this.appState.port.onDisconnect.addListener(d => {
-    //   this.appState.port = null;
-    // });
-
-    // // this.appState.port.postMessage({ question: 'Why is it?' });
-    // // this.appState.port.postMessage({ method: 'unlocked' });
-    // this.appState.port.postMessage({ method: 'getlock' });
-
-    // window.postMessage('Hello World!!!', window.location.origin);
   }
 
   lock() {

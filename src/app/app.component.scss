@@ -1,80 +1,87 @@
 .header-logo {
-    height: 60px;
+  height: 60px;
 }
 
 .example-spacer {
-    flex: 1 1 auto;
-    margin-left: 0.4em;
+  flex: 1 1 auto;
+  margin-left: 0.4em;
 }
 
 .logo-icon {
-    justify-content: center;
-    cursor: pointer;
+  justify-content: center;
+  cursor: pointer;
 }
 
 .logo-icon img {
-    height: 60%;
+  height: 60%;
 }
 
 .logo-icon div {
-    font-size: 0.8em;
-    margin-left: 0.8em;
+  font-size: 0.8em;
+  margin-left: 0.8em;
 }
 
 .menu-mode-backdrop {
-    background-color: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(2px);
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(2px);
+}
+
+.maximize {
+  position: fixed;
+  bottom: 8px;
+  right: 10px;
+  z-index: 10000;
+  cursor: pointer;
 }
 
 @keyframes animatedBlur {
-    from {
-        backdrop-filter: blur(6px);
-    }
-    to {
-        backdrop-filter: blur(0px);
-    }
+  from {
+    backdrop-filter: blur(6px);
+  }
+  to {
+    backdrop-filter: blur(0px);
+  }
 }
 
 @keyframes animatedBackground {
-    from {
-        transform: scale(1.2);
-    }
-    to {
-        transform: scale(1);
-    }
+  from {
+    transform: scale(1.2);
+  }
+  to {
+    transform: scale(1);
+  }
 }
 
 .account-details {
-    padding: 1em;
+  padding: 1em;
 }
 
 .detail-box {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .account-icon {
-    font-size: 4em !important;
-    width: 64px;
-    height: 64px;
+  font-size: 4em !important;
+  width: 64px;
+  height: 64px;
 }
 
 .detail-network {
-    line-height: 1.8em;
-    margin-left: 0.5em;
-    margin-bottom: 0.5em;
+  line-height: 1.8em;
+  margin-left: 0.5em;
+  margin-bottom: 0.5em;
 }
 
 .name-field {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.close-sidenav-icon
-{
-    float: right;
-    margin-right: -0.5em;
-    margin-top: -0.5em;
+.close-sidenav-icon {
+  float: right;
+  margin-right: -0.5em;
+  margin-top: -0.5em;
 }
