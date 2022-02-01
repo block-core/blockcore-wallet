@@ -68,6 +68,8 @@ import { AccountSendAddressComponent } from './account/send/address/send-address
 import { AccountSendConfirmComponent } from './account/send/confirm/send-confirm.component';
 import { AccountSendSuccessComponent } from './account/send/success/send-success.component';
 import { AccountSendSendingComponent } from './account/send/sending/send-sending.component';
+import { LoggerModule, NgxLoggerLevel, TOKEN_LOGGER_WRITER_SERVICE } from "ngx-logger";
+import { LogWriterService } from './services/log-writer.service';
 
 @NgModule({
   declarations: [
@@ -116,6 +118,13 @@ import { AccountSendSendingComponent } from './account/send/sending/send-sending
     BrowserModule,
     FormsModule,
     HttpClientModule,
+    LoggerModule.forRoot(
+      { level: NgxLoggerLevel.DEBUG, enableSourceMaps: true, serverLogLevel: NgxLoggerLevel.OFF }, // Don't send logs anywhere!
+      {
+        writerProvider: {
+          provide: TOKEN_LOGGER_WRITER_SERVICE, useClass: LogWriterService
+        }
+      }),
     AppRoutingModule,
     BrowserAnimationsModule,
     ReactiveFormsModule,

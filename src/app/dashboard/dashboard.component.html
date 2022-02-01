@@ -44,10 +44,15 @@
                     <div mat-line>Add Wallet</div>
                 </a>
 
-                <!-- <a mat-list-item (click)="copyLogs()">
+                <a mat-list-item (click)="copyErrorLogs()">
+                    <mat-icon mat-list-icon>report_problem</mat-icon>
+                    <div mat-line>Copy Error Logs</div>
+                </a>
+
+                <a mat-list-item (click)="copyDebugLogs()">
                     <mat-icon mat-list-icon>bug_report</mat-icon>
                     <div mat-line>Copy Debug Logs</div>
-                </a> -->
+                </a>
 
             </mat-nav-list>
         </div>

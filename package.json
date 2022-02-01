@@ -42,6 +42,7 @@
     "ecpair": "^2.0.1",
     "js-base64": "3.7.2",
     "micro-bip32": "^0.1.0",
+    "ngx-logger": "5.0.7",
     "nostr-tools": "0.20.1",
     "qrcode": "^1.5.0",
     "rxjs": "7.5.2",
