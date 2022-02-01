@@ -1,6 +1,7 @@
 import { address } from '@blockcore/blockcore-js';
 import { Account, Address, Transaction, UnspentTransactionOutput, Wallet } from '../app/interfaces';
 import { AppManager } from './application-manager';
+import { NGXLogger } from "ngx-logger";
 
 //const axios = require('axios');
 // In order to gain the TypeScript typings (for intellisense / autocomplete) while using CommonJS imports with require() use the following approach:
@@ -10,7 +11,6 @@ class Queue {
     items: any[];
 
     constructor(...params: any[]) {
-        console.log(params);
         this.items = [...params];
     }
 
@@ -44,7 +44,9 @@ export class IndexerService {
     private q = new Queue();
     private a = new Map<string, { change: boolean, account: Account, addressEntry: Address, count: number }>();
 
-    constructor(private manager: AppManager) {
+    constructor(
+        private manager: AppManager,
+        private logger: NGXLogger) {
         // On interval loop through all watched addresses.
         setInterval(async () => {
             await this.watchIndexer();
@@ -121,13 +123,13 @@ export class IndexerService {
         });
         const data = response.data;
 
-        console.log('Should contain transaction ID if broadcast was OK:', data);
+        this.logger.debug('Should contain transaction ID if broadcast was OK:', data);
 
         return data;
     }
 
     async queryIndexer() {
-        console.log('queryIndexer executing.');
+        this.logger.debug('queryIndexer executing.');
 
         let changes = false;
         let counter = 0;
@@ -189,7 +191,7 @@ export class IndexerService {
                             changes = true;
                         }
                     } catch (error) {
-                        console.error(error);
+                        this.logger.error(error);
 
                         // TODO: Implement error handling in background and how to send it to UI.
                         // We should probably have an error log in settings, so users can see background problems as well.
@@ -284,7 +286,7 @@ export class IndexerService {
                             changes = true;
                         }
                     } catch (error) {
-                        console.error(error);
+                        this.logger.error(error);
 
                         // TODO: Implement error handling in background and how to send it to UI.
                         // We should probably have an error log in settings, so users can see background problems as well.
@@ -334,16 +336,15 @@ export class IndexerService {
             }
 
             if (changes) {
-                console.log('THERE ARE CHANGES DURING A NORMAL SCAN!!');
+                this.logger.info('There are updated data found during an normal account scan.');
                 // Finally set the date on the account itself.
                 account.state.retrieved = new Date().toISOString();
-
                 account.state.balance = this.manager.walletManager.calculateBalance(account);
                 // Save and broadcast for every full account query
                 await this.manager.state.save();
                 this.manager.broadcastState();
             } else {
-                console.log('NO CHANGES DURING SCAN!');
+                this.logger.debug('No changes during account scan.');
             }
 
             // Make sure we always watch the latest receive/change addresses.
@@ -400,7 +401,7 @@ export class IndexerService {
     }
 
     async watchIndexer() {
-        console.log('watchIndexer executing.', this.a);
+        this.logger.info('watchIndexer executing.', this.a);
 
         this.a.forEach(async (value, key) => {
             const account = value.account;
@@ -416,14 +417,15 @@ export class IndexerService {
 
                 // If there is any difference in the balance, make sure we update!
                 if (addressEntry.balance != data.balance) {
-                    console.log('BALANCE IS DIFFERENT, UPDATE STATE!', addressEntry.balance, data.balance, data);
+                    this.logger.info('BALANCE IS DIFFERENT, UPDATE STATE!', addressEntry.balance, data.balance, data);
                     debugger;
                     await this.updateAddressState(indexerUrl, value.addressEntry, value.change, data, account);
 
                     // Stop watching this address.
                     this.a.delete(key);
                 } else if (data.pendingSent > 0 || data.pendingReceived > 0) {
-                    console.log('PENDING, UPDATE STATE!');
+                    this.logger.info('PENDING, UPDATE STATE!');
+
                     // If there is any pending, we'll continue watching this address.
                     await this.updateAddressState(indexerUrl, value.addressEntry, value.change, data, account);
                     // Continue watching this address as long as there is pending, when pending becomes 0, the balance should hopefully
@@ -431,23 +433,23 @@ export class IndexerService {
                 } else {
                     // -1 means we will process forever until this address has been used and spent.
                     if (value.count === -1) {
-                        console.log('LAST ADDRESS', value);
+                        this.logger.debug('Will continue to process until change discovered: ', value);
                     } else {
                         // If there are no difference in balance and no pending and we've queried already 10 times (10 * 10 seconds), we'll
                         // stop watching this address.
                         value.count = value.count + 1;
 
-                        console.log('CONTINUE WATCHING', value.count);
+                        this.logger.debug('Will continue to process for a little longer: ', value.count);
 
                         if (value.count > 10) {
                             // When finished, remove from the list.
-                            console.log('FINISHED WATCHING, REMOVING:', key);
+                            this.logger.debug('Watching was finished, removing: ', key);
                             this.a.delete(key);
                         }
                     }
                 }
             } catch (error) {
-                console.error(error);
+                this.logger.error(error);
                 // TODO: Implement error handling in background and how to send it to UI.
                 // We should probably have an error log in settings, so users can see background problems as well.
                 this.manager.communication.sendToAll('error', error);
