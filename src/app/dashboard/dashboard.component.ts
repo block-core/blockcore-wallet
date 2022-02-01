@@ -54,4 +54,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
       this.sub.unsubscribe();
     }
   }
+
+  copyLogs() {
+
+  }
 }

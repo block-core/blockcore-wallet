@@ -26,13 +26,6 @@
   backdrop-filter: blur(2px);
 }
 
-.maximize {
-  position: fixed;
-  bottom: 8px;
-  right: 10px;
-  z-index: 10000;
-  cursor: pointer;
-}
 
 @keyframes animatedBlur {
   from {

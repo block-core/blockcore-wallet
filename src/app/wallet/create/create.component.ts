@@ -84,10 +84,13 @@ export class WalletCreateComponent implements OnInit {
             alert('Fatal error, unable to encrypt secret recovery phrase!');
         }
         else {
+            // Make the name 'Wallet' for first wallet, append count on other wallets.
+            let walletName = (this.uiState.persisted.wallets.length == 0) ? 'Wallet' : 'Wallet ' + (this.uiState.persisted.wallets.length + 1);
+
             var wallet: Wallet = {
                 restored: this.recover,
                 id: id,
-                name: 'Wallet ' + (this.uiState.persisted.wallets.length + 1),
+                name: walletName,
                 mnemonic: recoveryPhrase,
                 activeAccountIndex: 0,
                 accounts: []

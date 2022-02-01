@@ -12,7 +12,8 @@
                 <a mat-list-item *ngFor="let account of uiState.activeWallet.accounts; let i = index"
                     routerLinkActive="active-link" [routerLink]="['/', 'account', 'view', i]">
                     <mat-icon mat-list-icon>{{account.icon}}</mat-icon>
-                    <div mat-line>{{account.name}}<span class="account-balance">{{account.state.balance | amount}}</span></div>
+                    <div mat-line>{{account.name}}<span class="account-balance">{{account.state.balance |
+                            amount}}</span></div>
                     <div mat-line>{{account.network | network}}</div>
                 </a>
 
@@ -42,6 +43,11 @@
                     <mat-icon mat-list-icon>account_balance_wallet</mat-icon>
                     <div mat-line>Add Wallet</div>
                 </a>
+
+                <!-- <a mat-list-item (click)="copyLogs()">
+                    <mat-icon mat-list-icon>bug_report</mat-icon>
+                    <div mat-line>Copy Debug Logs</div>
+                </a> -->
 
             </mat-nav-list>
         </div>

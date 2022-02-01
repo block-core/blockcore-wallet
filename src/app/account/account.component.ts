@@ -29,7 +29,7 @@ export class AccountComponent implements OnInit, OnDestroy {
   activities: any[] = [];
   public transactions: Transaction[];
   public networkStatus: any;
-  private scanTimer : any;
+  private scanTimer: any;
 
   constructor(
     private http: HttpClient,

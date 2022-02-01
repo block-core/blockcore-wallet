@@ -1,4 +1,6 @@
-<div class="maximize" (click)="maximize()"><mat-icon matTooltipPosition="left" matTooltip="Open in new tab">south_east</mat-icon></div>
+<div class="maximize" (click)="maximize()">
+  <mat-icon matTooltipPosition="left" matTooltip="Expand the view">aspect_ratio</mat-icon>
+</div>
 
 <div *ngIf="uiState.loading">
   <router-outlet></router-outlet>
