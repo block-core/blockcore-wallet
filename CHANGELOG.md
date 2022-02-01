@@ -1,3 +1,17 @@
+## <small>0.0.6 (2022-02-01)</small>
+
+* Add a button to maximize wallet in a tab ([fa48f7a](https://github.com/block-core/blockcore-extension/commit/fa48f7a)), closes [#31](https://github.com/block-core/blockcore-extension/issues/31)
+* Add dedicated LoggerService and BackgroundLoggerService ([b9809fa](https://github.com/block-core/blockcore-extension/commit/b9809fa))
+* Add framework for logging ([e7509a3](https://github.com/block-core/blockcore-extension/commit/e7509a3))
+* Change the initial wallet name ([4011d45](https://github.com/block-core/blockcore-extension/commit/4011d45))
+* Improve handling of wallet selection after delete wallet ([cf69653](https://github.com/block-core/blockcore-extension/commit/cf69653)), closes [#48](https://github.com/block-core/blockcore-extension/issues/48)
+* Remove console logging from indexer ([35b36f8](https://github.com/block-core/blockcore-extension/commit/35b36f8))
+* Remove console logging from wallet manager ([d027133](https://github.com/block-core/blockcore-extension/commit/d027133))
+* Update changelog and version for next release ([dd6eaff](https://github.com/block-core/blockcore-extension/commit/dd6eaff))
+* Update the expander icon ([5a37df7](https://github.com/block-core/blockcore-extension/commit/5a37df7))
+
+
+
 ## <small>0.0.5 (2022-01-31)</small>
 
 * Enable all features for dev mode ([95d70ef](https://github.com/block-core/blockcore-extension/commit/95d70ef))
