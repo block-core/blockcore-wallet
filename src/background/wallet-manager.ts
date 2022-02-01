@@ -4,6 +4,7 @@ import { Account, Address, UnspentTransactionOutput, Wallet } from "../app/inter
 import { MINUTE } from "../app/shared/constants";
 import { AppManager } from "./application-manager";
 import { Psbt } from '@blockcore/blockcore-js';
+import { NGXLogger } from "ngx-logger";
 import * as ecc from 'tiny-secp256k1';
 import ECPairFactory from 'ecpair';
 const ECPair = ECPairFactory(ecc);
@@ -12,7 +13,9 @@ const ECPair = ECPairFactory(ecc);
 export class WalletManager {
     private timer: any;
 
-    constructor(private manager: AppManager) {
+    constructor(
+        private manager: AppManager,
+        private logger: NGXLogger) {
     }
 
     async createTransaction(wallet: Wallet, account: Account, address: string, amount: number, fee: number): Promise<{ addresses: string[], transactionHex: string, fee: number, feeRate: number, virtualSize: number, weight: number }> {
@@ -102,22 +105,23 @@ export class WalletManager {
                 tx.signInput(i, ecPair);
             }
             catch (error) {
-                console.error(error);
+                this.logger.error(error);
                 throw Error('Unable to sign the transaction. Unable to continue.');
             }
         }
 
         const finalTransaction = tx.finalizeAllInputs().extractTransaction();
         const transactionHex = finalTransaction.toHex();
-        console.log('transactionHex', transactionHex);
+
+        this.logger.debug('TransactionHex', transactionHex);
 
         return { addresses: affectedAddresses, transactionHex, fee: tx.getFee(), feeRate: tx.getFeeRate(), virtualSize: finalTransaction.virtualSize(), weight: finalTransaction.weight() };
     }
 
     async sendTransaction(account: Account, transactionHex: string): Promise<{ transactionId: string, transactionHex: string }> {
-        console.log('transactionHex', transactionHex);
+        this.logger.debug('TransactionHex', transactionHex);
         const transactionId = await this.manager.indexer.broadcastTransaction(account, transactionHex);
-        console.log('transactionId', transactionId);
+        this.logger.debug('TransactionId', transactionId);
         return { transactionId, transactionHex };
     }
 
@@ -160,7 +164,7 @@ export class WalletManager {
             unlockedMnemonic = await this.manager.crypto.decryptData(wallet.mnemonic, password);
         }
         catch (error) {
-            console.error(error);
+            this.logger.error(error);
         }
 
         return unlockedMnemonic;
@@ -240,7 +244,7 @@ export class WalletManager {
     }
 
     resetTimer() {
-        console.log('resetTimer:', this.manager.state.persisted.settings.autoTimeout * MINUTE);
+        this.logger.info('resetTimer:', this.manager.state.persisted.settings.autoTimeout * MINUTE);
 
         if (this.timer) {
             clearTimeout(this.timer);
@@ -248,7 +252,7 @@ export class WalletManager {
 
         // We will only set timer if the wallet is actually unlocked.
         if (this.walletSecrets.size > 0) {
-            console.log('Setting timer to automatically unlock.');
+            this.logger.info('Setting timer to automatically unlock.');
             this.timer = setTimeout(
                 () => {
                     this.lockWallets();
@@ -256,7 +260,7 @@ export class WalletManager {
                 this.manager.state.persisted.settings.autoTimeout * MINUTE
             );
         } else {
-            console.log('Timer not set since wallet is not unlocked.');
+            this.logger.info('Timer not set since wallet is not unlocked.');
         }
     }
 
