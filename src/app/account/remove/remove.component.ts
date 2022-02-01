@@ -2,8 +2,8 @@ import { Component, Inject, HostBinding } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common'
-import { UIState } from 'src/app/services/ui-state.service';
-import { OrchestratorService } from 'src/app/services/orchestrator.service';
+import { UIState } from '../../services/ui-state.service';
+import { OrchestratorService } from '../../services/orchestrator.service';
 
 @Component({
   selector: 'app-account-remove',

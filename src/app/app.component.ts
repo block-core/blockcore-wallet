@@ -144,16 +144,10 @@ export class AppComponent implements OnInit {
     if (!walletId) {
       this.router.navigateByUrl('/wallet/create');
     } else {
-      console.log('walletId:', walletId);
-
-      console.log('onAccountChanged:');
-      console.log(this.uiState.persisted.activeWalletId);
-      console.log(walletId);
-
       this.manager.setActiveWalletId(walletId);
 
-      // this.uiState.persisted.activeWalletId = walletId;
-      //await this.uiState.save();
+      // We also must update the local state immediately because we are not waiting for callback before redirect.
+      this.uiState.persisted.activeWalletId = walletId;
 
       if (this.uiState.unlocked.findIndex(id => id == walletId) > -1) {
         this.router.navigateByUrl('/dashboard');
