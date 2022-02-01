@@ -6,15 +6,15 @@
         <div mat-subheader>Coins/Tokens</div>
         <mat-list-option *ngFor="let account of coins" [(selected)]="account.selected">
             <mat-icon mat-list-icon>{{account.icon}}</mat-icon>
-            <div mat-line>{{account.name}}</div>
-            <div mat-line> {{account.purpose}} / {{account.network}} </div>
+            <div mat-line>{{account.name}} ({{account | network}})</div>
+            <!-- <div mat-line> {{account.symbol}} / {{account.network}} </div> -->
         </mat-list-option>
-        <mat-divider></mat-divider>
-        <div mat-subheader>Other</div>
+        <mat-divider *ngIf="other.length > 0"></mat-divider>
+        <div mat-subheader *ngIf="other.length > 0">Other</div>
         <mat-list-option *ngFor="let account of other" [(selected)]="account.selected">
             <mat-icon mat-list-icon>{{account.icon}}</mat-icon>
-            <div mat-line>{{account.name}}</div>
-            <div mat-line> {{account.purpose}} / {{account.network}} </div>
+            <div mat-line>{{account.name}} ({{account | network}})</div>
+            <!-- <div mat-line> {{account.purpose}} / {{account.network}} </div> -->
         </mat-list-option>
     </mat-selection-list>
 

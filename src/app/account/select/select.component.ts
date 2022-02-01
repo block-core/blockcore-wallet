@@ -41,7 +41,9 @@ export class AccountSelectComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        this.communication.unlisten(this.sub);
+        if (this.sub) {
+            this.communication.unlisten(this.sub);
+        }
     }
 
     create() {

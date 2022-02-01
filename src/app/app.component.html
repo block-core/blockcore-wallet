@@ -135,7 +135,7 @@
       <div class="detail-box">
         <mat-icon mat-list-icon class="account-icon">{{uiState.activeAccount.icon}}</mat-icon>
         <div class="detail-network">
-          {{uiState.activeAccount.network | network}}<br>
+          {{uiState.activeAccount | network}}<br>
           {{networkService.getDerivationPathForAccount(uiState.activeAccount)}}
         </div>
       </div>
@@ -167,7 +167,7 @@
         (click)="onAccountChanged(i)" routerLinkActive="active-link">
         <mat-icon mat-list-icon>{{account.icon}}</mat-icon>
         <div mat-line class="name-field">{{account.name | truncate}}</div>
-        <div mat-line>{{account.network | network}}</div>
+        <div mat-line>{{account | network}}</div>
       </a>
 
       <!-- <a mat-list-item *ngIf="appState.activeWallet && appState.unlocked" [routerLink]="['/wallet/edit']"

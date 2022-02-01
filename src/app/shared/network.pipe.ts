@@ -1,27 +1,20 @@
 import { Pipe, PipeTransform } from '@angular/core';
+import { NetworksService } from '../services/networks.service';
 
 @Pipe({
     name: 'network'
 })
 export class NetworkPipe implements PipeTransform {
+    constructor(private networkService: NetworksService) {
 
-    private units: any = {
-        "0": "BTC",
-        "1926": "CITY",
-        "105105": "STRAX",
-        "401": "CRS",
-        "616": "IDENTITY"
-    };
+    }
 
-    transform(value: number): any {
-        if (!value == null) {
+    transform(value: { network: number, purpose: number }): any {
+        if (!value == null || !value.network == null || !value.purpose == null) {
             return '?';
         }
 
-        if (isNaN(Number(value))) {
-            return '?';
-        }
-
-        return this.units[value];
+        const network = this.networkService.getNetwork(value.network, value.purpose);
+        return network.symbol;
     }
 }
