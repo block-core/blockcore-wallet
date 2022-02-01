@@ -7,6 +7,7 @@ import { CommunicationBackgroundService } from "./communication";
 import { CryptoUtility } from "./crypto-utility";
 import { DataSyncService } from "./data-sync";
 import { IndexerService } from "./indexer";
+import { BackgroundLoggerService } from "./logger";
 import { NetworkLoader } from "./network-loader";
 import { Network } from "./networks";
 import { OrchestratorBackgroundService } from "./orchestrator";
@@ -22,10 +23,12 @@ export class AppManager {
     orchestrator!: OrchestratorBackgroundService;
     indexer!: IndexerService;
     allNetworks: Network[];
+    logger: BackgroundLoggerService;
 
     /** Initializes the app, loads the AppState and other operations. */
     // configure(): [AppState, CryptoUtility, CommunicationBackgroundService, OrchestratorBackgroundService, DataSyncService] {
     configure() {
+        this.logger = new BackgroundLoggerService();
         this.crypto = new CryptoUtility();
         this.state = new AppState();
         this.communication = new CommunicationBackgroundService();
@@ -112,7 +115,7 @@ export class AppManager {
         if (action) {
             this.state.action = action;
         }
-        
+
         console.log('Load State Completed!');
         console.log(this.state);
     };

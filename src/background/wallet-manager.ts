@@ -1,10 +1,9 @@
 import { HDKey } from "micro-bip32";
 import { mnemonicToSeedSync } from 'micro-bip39';
-import { Account, Address, UnspentTransactionOutput, Wallet } from "../app/interfaces";
+import { Account, Address, Logger, UnspentTransactionOutput, Wallet } from "../app/interfaces";
 import { MINUTE } from "../app/shared/constants";
 import { AppManager } from "./application-manager";
 import { Psbt } from '@blockcore/blockcore-js';
-import { NGXLogger } from "ngx-logger";
 import * as ecc from 'tiny-secp256k1';
 import ECPairFactory from 'ecpair';
 const ECPair = ECPairFactory(ecc);
@@ -12,10 +11,11 @@ const ECPair = ECPairFactory(ecc);
 /** Manager that keeps state and operations for a single wallet. This object does not keep the password, which must be supplied for signing operations. */
 export class WalletManager {
     private timer: any;
+    private logger: Logger
 
     constructor(
-        private manager: AppManager,
-        private logger: NGXLogger) {
+        private manager: AppManager) {
+        this.logger = manager.logger;
     }
 
     async createTransaction(wallet: Wallet, account: Account, address: string, amount: number, fee: number): Promise<{ addresses: string[], transactionHex: string, fee: number, feeRate: number, virtualSize: number, weight: number }> {

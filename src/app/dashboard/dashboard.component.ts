@@ -4,8 +4,8 @@ import { CryptoService } from '../services/crypto.service';
 import { UIState } from '../services/ui-state.service';
 import { Router } from '@angular/router';
 import { FeatureService } from '../services/features.service';
-import { NGXLogger } from "ngx-logger";
 import { copyToClipboard } from '../shared/utilities';
+import { LoggerService } from '../services/logger.service';
 
 export interface Section {
   name: string;
@@ -32,7 +32,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     public uiState: UIState,
     private crypto: CryptoService,
     private router: Router,
-    private logger: NGXLogger,
+    private logger: LoggerService,
     private cd: ChangeDetectorRef) {
 
     this.uiState.showBackButton = false;

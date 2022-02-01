@@ -1,7 +1,6 @@
 import { address } from '@blockcore/blockcore-js';
-import { Account, Address, Transaction, UnspentTransactionOutput, Wallet } from '../app/interfaces';
+import { Account, Address, Logger, Transaction, UnspentTransactionOutput, Wallet } from '../app/interfaces';
 import { AppManager } from './application-manager';
-import { NGXLogger } from "ngx-logger";
 
 //const axios = require('axios');
 // In order to gain the TypeScript typings (for intellisense / autocomplete) while using CommonJS imports with require() use the following approach:
@@ -43,10 +42,12 @@ class Queue {
 export class IndexerService {
     private q = new Queue();
     private a = new Map<string, { change: boolean, account: Account, addressEntry: Address, count: number }>();
+    private logger: Logger;
 
     constructor(
         private manager: AppManager,
-        private logger: NGXLogger) {
+    ) {
+        this.logger = manager.logger;
         // On interval loop through all watched addresses.
         setInterval(async () => {
             await this.watchIndexer();
