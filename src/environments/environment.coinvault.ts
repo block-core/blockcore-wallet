@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
-  version: "0.0.7",
+  version: "0.0.8",
   features: ['wallet', 'collectible'],
   releaseUrl: 'https://github.com/CoinVault/coinvault-extension/releases',
   sourceUrl: 'https://github.com/CoinVault/coinvault-extension',
