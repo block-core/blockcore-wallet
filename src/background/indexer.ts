@@ -1,10 +1,12 @@
 import { address } from '@blockcore/blockcore-js';
 import { Account, Address, Logger, Transaction, UnspentTransactionOutput, Wallet } from '../app/interfaces';
 import { AppManager } from './application-manager';
+import axiosRetry from 'axios-retry';
 
 //const axios = require('axios');
 // In order to gain the TypeScript typings (for intellisense / autocomplete) while using CommonJS imports with require() use the following approach:
 const axios = require('axios').default;
+axiosRetry(axios, { retries: 3 });
 
 class Queue {
     items: any[];
