@@ -8,6 +8,7 @@ import { OrchestratorService } from './services/orchestrator.service';
 import { Location } from '@angular/common'
 import { NetworksService } from './services/networks.service';
 import { environment } from '../environments/environment';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-root',
@@ -23,12 +24,19 @@ export class AppComponent implements OnInit {
   constructor(public uiState: UIState,
     private router: Router,
     private renderer: Renderer2,
+    public translate: TranslateService,
     private communication: CommunicationService,
     private manager: OrchestratorService,
     private location: Location,
     private cd: ChangeDetectorRef,
     public networkService: NetworksService,
     @Inject(DOCUMENT) private document: Document) {
+
+    translate.addLangs(['en', 'no']);
+    translate.setDefaultLang('en');
+
+    const browserLang = translate.getBrowserLang();
+    translate.use(browserLang.match(/en|no/) ? browserLang : 'en');
 
     document.title = environment.instanceName;
 

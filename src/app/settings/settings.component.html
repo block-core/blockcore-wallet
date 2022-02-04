@@ -41,8 +41,8 @@
   <mat-form-field class="input-full-width" appearance="outline">
     <mat-label>Display Language</mat-label>
     <mat-select (selectionChange)="onLanguageChanged($event)" [(value)]="settings.language">
-      <mat-option [value]="'en'">English</mat-option>
-      <!-- <mat-option [value]="'no'">Norwegian</mat-option> -->
+      <mat-option *ngFor="let lang of translate.getLangs()" [value]="lang">
+        {{ lang | translate }}</mat-option>
     </mat-select>
     <mat-hint>Change the display language for the extension.
     </mat-hint>
@@ -84,7 +84,7 @@
 
   <br><br>
 
-  <button class="signup-button" mat-flat-button color="primary" (click)="save()">Save</button>
+  <button class="signup-button" mat-flat-button color="primary" (click)="save()">{{ 'SETTINGS.SAVE' | translate }}</button>
 
   <br><br>
   <mat-divider></mat-divider>

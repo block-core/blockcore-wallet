@@ -1,0 +1,11 @@
+{
+	"en": "English",
+	"no": "Norsk",
+	"APP": {
+		"ADD_ACCOUNT": "Add Account",
+		"SELECT": "Change language"
+	},
+	"SETTINGS": {
+		"SAVE": "Save"
+	}
+}

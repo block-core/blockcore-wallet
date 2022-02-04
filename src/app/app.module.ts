@@ -70,7 +70,14 @@ import { AccountSendSuccessComponent } from './account/send/success/send-success
 import { AccountSendSendingComponent } from './account/send/sending/send-sending.component';
 import { LoggerModule, NgxLoggerLevel, TOKEN_LOGGER_WRITER_SERVICE } from "ngx-logger";
 import { LogWriterService } from './services/log-writer.service';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { HttpClient } from '@angular/common/http';
+
+// required for AOT compilation
+export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
+  return new TranslateHttpLoader(http);
+}
 
 @NgModule({
   declarations: [
@@ -117,7 +124,15 @@ import { TranslateModule } from '@ngx-translate/core';
   ],
   imports: [
     BrowserModule,
-    TranslateModule.forRoot(),
+    // ngx-translate and the loader module
+    HttpClientModule,
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: HttpLoaderFactory,
+        deps: [HttpClient]
+      }
+    }),
     FormsModule,
     HttpClientModule,
     LoggerModule.forRoot(

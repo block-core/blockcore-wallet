@@ -6,6 +6,7 @@ import { Settings } from '../interfaces';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { environment } from '../../environments/environment';
 import { INDEXER_URL } from '../shared/constants';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-settings',
@@ -21,6 +22,7 @@ export class SettingsComponent {
   constructor(
     private renderer: Renderer2,
     public uiState: UIState,
+    public translate: TranslateService,
     private manager: OrchestratorService,
     private location: Location) {
 
@@ -52,6 +54,8 @@ export class SettingsComponent {
   }
 
   onLanguageChanged(event: any) {
+    this.translate.use(this.settings.language)
+
     // if (this.settings.theme === 'light') {
     //   this.renderer.removeClass(document.body, 'dark-theme');
     // } else {

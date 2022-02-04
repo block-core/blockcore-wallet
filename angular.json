@@ -44,7 +44,7 @@
                   "inlineCritical": false
                 },
                 "fonts": true
-                },
+              },
               "budgets": [
                 {
                   "type": "initial",
@@ -63,6 +63,11 @@
                 {
                   "input": "src/assets/blockcore/",
                   "output": "/assets",
+                  "glob": "*"
+                },
+                {
+                  "input": "src/assets/i18n/",
+                  "output": "/assets/i18n",
                   "glob": "*"
                 },
                 {
@@ -86,6 +91,11 @@
                 {
                   "input": "src/assets/blockcore/",
                   "output": "/assets",
+                  "glob": "*"
+                },
+                {
+                  "input": "src/assets/i18n/",
+                  "output": "/assets/i18n",
                   "glob": "*"
                 },
                 {
@@ -113,7 +123,7 @@
                   "inlineCritical": false
                 },
                 "fonts": true
-                },
+              },
               "budgets": [
                 {
                   "type": "initial",
@@ -141,6 +151,11 @@
                   "glob": "*"
                 },
                 {
+                  "input": "src/assets/i18n/",
+                  "output": "/assets/i18n",
+                  "glob": "*"
+                },
+                {
                   "input": "src/manifest/coinvault/",
                   "output": "/",
                   "glob": "manifest.json"
@@ -157,7 +172,7 @@
                   "inlineCritical": false
                 },
                 "fonts": true
-                },
+              },
               "budgets": [
                 {
                   "type": "initial",
@@ -176,6 +191,11 @@
                 {
                   "input": "src/assets/smartcityplatform/",
                   "output": "/assets",
+                  "glob": "*"
+                },
+                {
+                  "input": "src/assets/i18n/",
+                  "output": "/assets/i18n",
                   "glob": "*"
                 },
                 {
