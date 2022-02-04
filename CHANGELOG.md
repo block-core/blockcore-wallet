@@ -1,4 +1,11 @@
-## <small>0.0.7 (2022-02-02)</small>
+## <small>0.0.8 (2022-02-04)</small>
+
+* Add retry logic for indexer calls ([c36a9c6](https://github.com/block-core/blockcore-extension/commit/c36a9c6))
+* Fix a typo and upgrade version ([4935e8c](https://github.com/block-core/blockcore-extension/commit/4935e8c)), closes [#60](https://github.com/block-core/blockcore-extension/issues/60)
+
+
+
+## <small>0.0.7 (2022-02-01)</small>
 
 * Hide the extra languages in settings ([4d5d4f9](https://github.com/block-core/blockcore-extension/commit/4d5d4f9)), closes [#26](https://github.com/block-core/blockcore-extension/issues/26)
 * Update changelog and version ([a014206](https://github.com/block-core/blockcore-extension/commit/a014206))
