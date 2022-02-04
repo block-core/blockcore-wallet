@@ -70,6 +70,7 @@ import { AccountSendSuccessComponent } from './account/send/success/send-success
 import { AccountSendSendingComponent } from './account/send/sending/send-sending.component';
 import { LoggerModule, NgxLoggerLevel, TOKEN_LOGGER_WRITER_SERVICE } from "ngx-logger";
 import { LogWriterService } from './services/log-writer.service';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
   declarations: [
@@ -116,6 +117,7 @@ import { LogWriterService } from './services/log-writer.service';
   ],
   imports: [
     BrowserModule,
+    TranslateModule.forRoot(),
     FormsModule,
     HttpClientModule,
     LoggerModule.forRoot(

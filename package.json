@@ -13,7 +13,9 @@
     "test": "ng test",
     "test:web": "cd test/web && http-server",
     "version": "node -p \"require('./package.json').version\"",
-    "changelog": "conventional-changelog -i CHANGELOG.md -s -r 0 && git add CHANGELOG.md"
+    "changelog": "conventional-changelog -i CHANGELOG.md -s -r 0 && git add CHANGELOG.md",
+    "i18n:init": "ngx-translate-extract --input ./src --output ./src/assets/i18n/template.json --key-as-default-value --replace --format json",
+    "i18n:extract": "ngx-translate-extract --input ./src --output ./src/assets/i18n/{en,da,de,fi,nb,nl,sv}.json --clean --format json"
   },
   "private": true,
   "dependencies": {
@@ -29,6 +31,7 @@
     "@angular/router": "13.2.0",
     "@blockcore/blockcore-js": "^7.0.0",
     "@blockcore/identity": "0.0.1",
+    "@ngx-translate/core": "^14.0.0",
     "@noble/secp256k1": "1.5.2",
     "axios": "0.25.0",
     "axios-retry": "^3.2.4",
@@ -58,6 +61,7 @@
     "@angular-devkit/build-angular": "13.2.0",
     "@angular/cli": "13.2.0",
     "@angular/compiler-cli": "13.2.0",
+    "@biesbjerg/ngx-translate-extract": "^7.0.4",
     "@types/bs58": "^4.0.1",
     "@types/chrome": "0.0.154",
     "@types/jasmine": "3.8.2",
