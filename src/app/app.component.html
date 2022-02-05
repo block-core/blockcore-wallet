@@ -51,7 +51,7 @@
       <mat-form-field appearance="fill" *ngIf="uiState.hasWallets">
         <mat-label>{{ 'App.ChooseWallet' | translate }}</mat-label>
         <mat-select (selectionChange)="onWalletChanged($event)" [(value)]="uiState.persisted.activeWalletId">
-          <mat-option [value]="''">{{ 'APP.CREATE_NEW_WALLET' | translate }}</mat-option>
+          <mat-option [value]="''">{{ 'App.CreateNewWallet' | translate }}</mat-option>
           <mat-option *ngFor="let wallet of uiState.persisted.wallets;" [value]="wallet.id">{{wallet.name}}
           </mat-option>
         </mat-select>
