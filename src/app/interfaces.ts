@@ -182,6 +182,7 @@ interface Persisted {
 }
 
 interface Settings {
+    developer: boolean;
     indexer: string;
     dataVault: string;
     autoTimeout: number;

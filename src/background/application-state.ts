@@ -14,7 +14,8 @@ export class AppState {
             theme: 'dark',
             themeColor: 'primary',
             language: 'en',
-            amountFormat: 'bitcoin'
+            amountFormat: 'bitcoin',
+            developer: false
         },
         wallets: [] as Wallet[],
         activeWalletId: null

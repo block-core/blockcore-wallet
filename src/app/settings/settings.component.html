@@ -84,7 +84,20 @@
 
   <br><br>
 
-  <button class="signup-button" mat-flat-button color="primary" (click)="save()">{{ 'Settings.Save' | translate }}</button>
+  <mat-form-field class="input-full-width" appearance="outline">
+    <mat-label>Developer mode</mat-label>
+    <mat-select [(value)]="settings.developer">
+      <mat-option [value]="false">Off</mat-option>
+      <mat-option [value]="true">On</mat-option>
+    </mat-select>
+    <mat-hint>Enable to view additional debug views.
+    </mat-hint>
+  </mat-form-field>
+
+  <br><br>
+
+  <button class="signup-button" mat-flat-button color="primary" (click)="save()">{{ 'Settings.Save' | translate
+    }}</button>
 
   <br><br>
   <mat-divider></mat-divider>
