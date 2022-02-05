@@ -42,13 +42,28 @@
                 <div mat-subheader>Transactions</div>
                 <a mat-list-item *ngFor="let transaction of transactions"
                     [routerLink]="['/', 'account', 'transaction', transaction.transactionHash]">
-                    <mat-icon class="positive-color" mat-list-icon *ngIf="transaction.entryType == 'receive'">add
+                    <!-- <mat-icon class="positive-color" mat-list-icon *ngIf="transaction.entryType == 'receive'">add
                     </mat-icon>
                     <mat-icon class="negative-color" mat-list-icon *ngIf="transaction.entryType == 'send'">remove
-                    </mat-icon>
-                    <div mat-line>
-                        {{calculateAmount(transaction) | amount}}
-                        <span *ngIf="uiState.persisted.settings.developer"><br>Transacted total: {{transaction.value | amount}}</span>
+                    </mat-icon> -->
+
+                    <div mat-line *ngIf="!transaction.description">
+
+                        <!-- <mat-icon class="positive-color" *ngIf="transaction.entryType == 'receive'">add
+                        </mat-icon>
+                        <mat-icon class="negative-color" *ngIf="transaction.entryType == 'send'">remove
+                        </mat-icon> -->
+
+                        <span class="positive-color" *ngIf="transaction.entryType == 'receive'">+{{transaction.calculatedValue | amount}}</span>
+                        <span class="negative-color" *ngIf="transaction.entryType == 'send'">-{{transaction.calculatedValue | amount}}</span>
+                        
+                        <!-- <span *ngIf="uiState.persisted.settings.developer"><br>Transacted total: {{transaction.value |
+                            amount}}</span> -->
+                    </div>
+                    <div mat-line class="positive-color" *ngIf="transaction.description">
+                        {{transaction.description}}
+                    </div>
+                    <div mat-line class="address" [innerHTML]="transaction.calculatedAddress">
                     </div>
                     <!-- <div mat-line> {{transaction.confirmations}} confirmations</div> -->
                 </a>

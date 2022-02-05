@@ -128,6 +128,12 @@ interface TransactionInfo {
     outputs: TransactionOutput[];
 }
 
+interface TransactionHistory extends Transaction {
+    calculatedValue: number;
+    description: string;
+    calculatedAddress: string;
+}
+
 interface TransactionInfoView extends TransactionInfo {
     inputsAmount: BigInt | number;
     outputsAmount: BigInt | number;
@@ -314,4 +320,5 @@ export {
     Settings,
     Vault,
     Logger,
+    TransactionHistory
 }
