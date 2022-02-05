@@ -1,3 +1,18 @@
+## <small>0.0.9 (2022-02-05)</small>
+
+* Add developer mode in settings ([cde814d](https://github.com/block-core/blockcore-extension/commit/cde814d))
+* Add French language file to prepare for translation ([086114c](https://github.com/block-core/blockcore-extension/commit/086114c))
+* Add support for i18n (internationalization) ([87725a3](https://github.com/block-core/blockcore-extension/commit/87725a3))
+* Add translation module and translation extractor ([d42b493](https://github.com/block-core/blockcore-extension/commit/d42b493))
+* Change the syntax for translation keys ([f625b3f](https://github.com/block-core/blockcore-extension/commit/f625b3f))
+* Fix CreateNewWallet translation ([685da73](https://github.com/block-core/blockcore-extension/commit/685da73))
+* Fixes the transaction history and displays correctly ([cfcb940](https://github.com/block-core/blockcore-extension/commit/cfcb940))
+* Improved the transaction history with consolidation that works better ([b7884a7](https://github.com/block-core/blockcore-extension/commit/b7884a7))
+* Revert "Update build pipeline to run in parallel" ([49617ef](https://github.com/block-core/blockcore-extension/commit/49617ef))
+* Update changelog ([2877dac](https://github.com/block-core/blockcore-extension/commit/2877dac))
+
+
+
 ## <small>0.0.8 (2022-02-04)</small>
 
 * Add retry logic for indexer calls ([c36a9c6](https://github.com/block-core/blockcore-extension/commit/c36a9c6))
