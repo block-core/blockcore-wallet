@@ -31,7 +31,6 @@
                 <mat-icon class="example-tab-icon">calendar_today</mat-icon>
             </ng-template>
 
-
             <mat-nav-list>
                 <!-- <div mat-subheader>Recent Activity</div>
                 <a mat-list-item *ngFor="let activity of activities" routerLinkActive="active-link"
@@ -47,13 +46,15 @@
                     </mat-icon>
                     <mat-icon class="negative-color" mat-list-icon *ngIf="transaction.entryType == 'send'">remove
                     </mat-icon>
-                    <div mat-line>{{transaction.value | amount}}</div>
+                    <div mat-line>
+                        {{calculateAmount(transaction) | amount}}
+                        <span *ngIf="uiState.persisted.settings.developer"><br>Transacted total: {{transaction.value | amount}}</span>
+                    </div>
                     <!-- <div mat-line> {{transaction.confirmations}} confirmations</div> -->
                 </a>
             </mat-nav-list>
-
-
         </mat-tab>
+
 
         <mat-tab>
             <ng-template mat-tab-label>
@@ -77,7 +78,6 @@
                     <div mat-line>R:{{address.totalReceived | amount}} / S:{{address.totalSent | amount}} </div>
                 </a>
             </mat-nav-list>
-
         </mat-tab>
 
         <mat-tab>
@@ -88,20 +88,14 @@
             <br>
 
             <mat-nav-list>
- 
                 <a mat-list-item (click)="scan(true)">
                     <mat-icon mat-list-icon>history</mat-icon>
                     <div mat-line>Refresh History</div>
                 </a>
-
                 <a mat-list-item (click)="toggleNetwork()">
                     <mat-icon mat-list-icon>public</mat-icon>
                     <div mat-line>Network Status</div>
                 </a>
-
-
-
-
             </mat-nav-list>
 
             <mat-card *ngIf="networkStatus">
@@ -116,6 +110,35 @@
             </mat-card>
 
         </mat-tab>
+
+        <mat-tab *ngIf="uiState.persisted.settings.developer">
+            <ng-template mat-tab-label>
+                <mat-icon class="example-tab-icon">bug_report</mat-icon>
+            </ng-template>
+
+            <br>
+            <p>Transactions:</p>
+
+            <p>
+                {{transactions | json}}
+            </p>
+        </mat-tab>
+
+        <mat-tab *ngIf="uiState.persisted.settings.developer">
+            <ng-template mat-tab-label>
+                <mat-icon class="example-tab-icon">bug_report</mat-icon>
+            </ng-template>
+
+            <br>
+            <p>Wallets Persisted State:</p>
+
+            <p>Contains your encrypted secret recovery phrase. Do NOT share this with anyone!</p>
+
+            <p>
+                {{uiState.persisted.wallets | json}}
+            </p>
+        </mat-tab>
+
     </mat-tab-group>
 
     <!-- {{this.uiState.activeAccount.state.receive | json}} -->

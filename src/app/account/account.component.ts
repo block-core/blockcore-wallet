@@ -113,12 +113,53 @@ export class AccountComponent implements OnInit, OnDestroy {
     }
   }
 
+  calculateAmount(transaction: Transaction) {
+    if (transaction.entryType == 'send') {
+      const externalOutputs = transaction.details.outputs.filter(o => this.addresses.indexOf(o.address) === -1);
+      const internalOutputs = transaction.details.outputs.filter(o => this.addresses.indexOf(o.address) > -1);
+
+      // If we performed a send and there was no external outputs, most likely user performed a consolidation.
+      if (externalOutputs.length == 0) {
+
+        if (internalOutputs.length > 0) {
+          // Consolidation of UTXO in the wallet.
+          return 0;
+        } else {
+          return 0;
+        }
+      }
+
+      const output = externalOutputs.map(x => x.balance).reduce((x: any, y: any) => x + y);
+      return output;
+    }
+
+    if (transaction.entryType == 'receive') {
+      const internalOutputs = transaction.details.outputs.filter(o => this.addresses.indexOf(o.address) > -1);
+
+      if (internalOutputs.length == 0) {
+        return 0;
+      }
+
+      const output = internalOutputs.map(x => x.balance).reduce((x: any, y: any) => x + y);
+      return output;
+    }
+
+    return -1;
+  }
+
+  addresses: string[];
+
   async ngOnInit() {
+    const account = this.uiState.activeAccount;
+
     // Get a full list of transactions. We run filter at the end to remove empty entries.
-    const transactions = this.uiState.activeAccount.state.receive.flatMap(item => item.transactions).filter((el) => el != null);
+    const transactions = account.state.receive.flatMap(item => item.transactions).filter((el) => el != null);
 
     // Sort the transactions by blockIndex, having the highest number first.
     const sortedTransactions = transactions.sort((a: any, b: any) => { if (a.blockIndex > b.blockIndex) return -1; return 0; });
+
+    // Create an array with all addresses that exists.
+    this.addresses = [...account.state.receive.map(r => r.address), ...account.state.change.map(c => c.address)];
 
     this.transactions = sortedTransactions;
 
