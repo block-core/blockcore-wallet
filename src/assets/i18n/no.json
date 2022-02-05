@@ -1,9 +1,25 @@
 {
 	"en": "English",
 	"no": "Norsk",
+	"fr": "French",
 	"APP": {
 		"ADD_ACCOUNT": "Ny konto",
-		"SELECT": "Change language"
+		"CHOOSE_WALLET": "Valg lommebok",
+		"CREATE_NEW_WALLET": "Lag ny lommebok",
+		"UNLOCK_WALLET": "Lås opp lommebok",
+		"LOCK_WALLET": "Lås lommebok",
+		"VIEW_WALLET": "Vis lommebok",
+		"EDIT_WALLET": "Endre lommebok",
+		"REMOVE_WALLET": "Slett lommebok",
+		"SETTINGS": "Innstillinger",
+		"EDIT_ACCOUNT": "Endre konto"
+	},
+	"DASHBOARD": {
+		"ACCOUNTS": "Kontoer",
+		"ACTIONS": "Handlinger",
+		"VAULTS": "Hvelv",
+		"COLLECTIBLES": "Samleobjekter",
+		"INBOX": "Innboks"
 	},
 	"SETTINGS": {
 		"SAVE": "Lagre"

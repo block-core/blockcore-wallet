@@ -32,7 +32,7 @@ export class AppComponent implements OnInit {
     public networkService: NetworksService,
     @Inject(DOCUMENT) private document: Document) {
 
-    translate.addLangs(['en', 'no']);
+    translate.addLangs(['en', 'no', 'fr']);
     translate.setDefaultLang('en');
 
     const browserLang = translate.getBrowserLang();
@@ -53,6 +53,10 @@ export class AppComponent implements OnInit {
         this.renderer.removeClass(document.body, 'dark-theme');
       } else {
         this.renderer.addClass(document.body, 'dark-theme');
+      }
+
+      if (this.uiState.persisted.settings.language) {
+        translate.use(this.uiState.persisted.settings.language);
       }
 
       // if (this.uiState.persisted?.settings.theme === 'light') {
