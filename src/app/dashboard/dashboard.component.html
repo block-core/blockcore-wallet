@@ -2,12 +2,12 @@
     <mat-tab>
         <ng-template mat-tab-label>
             <mat-icon class="example-tab-icon">manage_accounts</mat-icon>&nbsp;
-            <span>{{ 'DASHBOARD.ACCOUNTS' | translate }}</span>
+            <span>{{ 'Dashboard.Accounts' | translate }}</span>
         </ng-template>
 
         <div>
             <mat-nav-list>
-                <div mat-subheader>{{ 'DASHBOARD.ACCOUNTS' | translate }}</div>
+                <div mat-subheader>{{ 'Dashboard.Accounts' | translate }}</div>
 
                 <a mat-list-item *ngFor="let account of uiState.activeWallet.accounts; let i = index"
                     routerLinkActive="active-link" [routerLink]="['/', 'account', 'view', i]">
@@ -30,7 +30,7 @@
                 </a> -->
 
                 <mat-divider></mat-divider>
-                <div mat-subheader>{{ 'DASHBOARD.ACTIONS' | translate }}</div>
+                <div mat-subheader>{{ 'Dashboard.Actions' | translate }}</div>
 
                 <a mat-list-item *ngIf="uiState.activeWallet && uiState.unlocked" [routerLink]="['/account/create']"
                     routerLinkActive="active-link">
@@ -66,13 +66,13 @@
         <ng-template mat-tab-label>
             <mat-icon class="example-tab-icon">folder_shared</mat-icon>
             &nbsp;
-            <span>{{ 'DASHBOARD.VAULTS' | translate }}</span>
+            <span>{{ 'Dashboard.Vaults' | translate }}</span>
         </ng-template>
 
         <div>
             <mat-nav-list>
 
-                <div mat-subheader>{{ 'DASHBOARD.VAULTS' | translate }}</div>
+                <div mat-subheader>{{ 'Dashboard.Vaults' | translate }}</div>
 
                 <mat-list-item>
                     <mat-icon mat-list-icon>folder_shared</mat-icon>
@@ -120,7 +120,7 @@
         <ng-template mat-tab-label>
             <mat-icon class="example-tab-icon">category</mat-icon>
             &nbsp;
-            <span>{{ 'DASHBOARD.COLLECTIBLES' | translate }}</span>
+            <span>{{ 'Dashboard.Collectibles' | translate }}</span>
         </ng-template>
     </mat-tab>
 
@@ -128,7 +128,7 @@
         <ng-template mat-tab-label>
             <mat-icon class="example-tab-icon">mail</mat-icon>
             &nbsp;
-            <span matBadge="2" matBadgeOverlap="false">{{ 'DASHBOARD.INBOX' | translate }}</span>
+            <span matBadge="2" matBadgeOverlap="false">{{ 'Dashboard.Inbox' | translate }}</span>
         </ng-template>
     </mat-tab>
 

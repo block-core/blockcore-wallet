@@ -2,25 +2,26 @@
 	"en": "English",
 	"no": "Norsk",
 	"fr": "French",
-	"APP": {
-		"ADD_ACCOUNT": "Add Account",
-		"CHOOSE_WALLET": "Choose Wallet",
-		"CREATE_NEW_WALLET": "Create new wallet",
-		"UNLOCK_WALLET": "Unlock Wallet",
-		"LOCK_WALLET": "Lock Wallet",
-		"VIEW_WALLET": "View Wallet",
-		"EDIT_WALLET": "Edit Wallet",
-		"REMOVE_WALLET": "Remove Wallet",
-		"SETTINGS": "Settings",
-		"EDIT_ACCOUNT": "Edit account"
+	"App": {
+		"AddAccount": "Add Account",
+		"ChooseWallet": "Choose Wallet",
+		"CreateNewWallet": "Create new wallet",
+		"UnlockWallet": "Unlock Wallet",
+		"LockWallet": "Lock Wallet",
+		"ViewWallet": "View Wallet",
+		"EditWallet": "Edit Wallet",
+		"RemoveWallet": "Remove Wallet",
+		"Settings": "Settings",
+		"EditAccount": "Edit account"
 	},
-	"DASHBOARD": {
-		"ACCOUNTS": "Accounts",
-		"ACTIONS": "Actions",
-		"VAULTS": "Vaults",
-		"COLLECTIBLES": "Collectibles"
+	"Dashboard": {
+		"Accounts": "Accounts",
+		"Actions": "Actions",
+		"Vaults": "Vaults",
+		"Collectibles": "Collectibles",
+		"Inbox": "Inbox"
 	},
-	"SETTINGS": {
-		"SAVE": "Save"
+	"Settings": {
+		"Save": "Save"
 	}
 }
