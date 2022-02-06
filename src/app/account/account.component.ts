@@ -74,6 +74,13 @@ export class AccountComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     if (this.sub) {
       this.communication.unlisten(this.sub);
+      this.sub = null;
+    }
+
+    if (this.sub2) {
+      console.log('UNSUBSCRIBE!!!');
+      this.sub2.unsubscribe();
+      this.sub2 = null;
     }
 
     clearInterval(this.scanTimer);
@@ -114,7 +121,7 @@ export class AccountComponent implements OnInit, OnDestroy {
     }
   }
 
-  async ngOnInit() {
+  private refreshTransactionHistory() {
     const account = this.uiState.activeAccount;
 
     // Get a full list of transactions. We run filter at the end to remove empty entries.
@@ -167,8 +174,16 @@ export class AccountComponent implements OnInit, OnDestroy {
     console.log(filteredTransactions);
 
     this.transactions = filteredTransactions as TransactionHistory[];
+  }
 
-    this.sub2 = this.communication.listen('account-scanned', async (data: { accountId: string }) => {
+  async ngOnInit() {
+    // This will be triggered when user navigates into the account, since active account state is changed.
+    this.sub2 = this.uiState.persisted$.subscribe(() => {
+      console.log('NO!!!!!!!!');
+      this.refreshTransactionHistory();
+    });
+
+    this.sub = this.communication.listen('account-scanned', async (data: { accountId: string }) => {
       this.loading = false;
     });
 

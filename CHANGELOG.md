@@ -1,3 +1,10 @@
+## <small>0.0.10 (2022-02-06)</small>
+
+* Make the transaction history unique ([636d8ae](https://github.com/block-core/blockcore-extension/commit/636d8ae)), closes [#65](https://github.com/block-core/blockcore-extension/issues/65)
+* Update changelog ([0ad5a36](https://github.com/block-core/blockcore-extension/commit/0ad5a36))
+
+
+
 ## <small>0.0.9 (2022-02-05)</small>
 
 * Add developer mode in settings ([cde814d](https://github.com/block-core/blockcore-extension/commit/cde814d))
