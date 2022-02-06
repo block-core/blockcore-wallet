@@ -60,7 +60,7 @@
                         <!-- <span *ngIf="uiState.persisted.settings.developer"><br>Transacted total: {{transaction.value |
                             amount}}</span> -->
                     </div>
-                    <div mat-line class="positive-color" *ngIf="transaction.description">
+                    <div mat-line class="other-color" *ngIf="transaction.description">
                         {{transaction.description}}
                     </div>
                     <div mat-line class="address" [innerHTML]="transaction.calculatedAddress">

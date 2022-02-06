@@ -158,8 +158,15 @@ export class AccountComponent implements OnInit, OnDestroy {
       return tx;
     });
 
-    this.transactions = sortedTransactions as TransactionHistory[];
-    console.log(this.transactions);
+    // Remove duplicates based upon transactionhex as it only means that there was multiple inputs in our history
+    // and that results in duplicate entries. The unique filtering of transactions is a bit naïve, and if there is 
+    // different between "receive" and "send" on the same transaction entry, then either one will show.
+    const filteredTransactions = sortedTransactions.filter((value, index, self) => self.map(x => x.transactionHash).indexOf(value.transactionHash) == index);
+
+    console.log(sortedTransactions);
+    console.log(filteredTransactions);
+
+    this.transactions = filteredTransactions as TransactionHistory[];
 
     this.sub2 = this.communication.listen('account-scanned', async (data: { accountId: string }) => {
       this.loading = false;
