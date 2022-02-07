@@ -44,11 +44,13 @@ export class AccountSendComponent implements OnInit, OnDestroy {
         sendService.reset();
 
         const account = this.uiState.activeAccount;
+        const network = this.networks.getNetwork(account.networkType);
+
         sendService.account = account;
-        sendService.network = this.networks.getNetwork(account.network, account.purposeAddress);
+        sendService.network = network;
         sendService.resetFee(); // Reset fee after we have network available.
 
-        this.network = this.networks.getNetwork(account.network, account.purposeAddress);
+        this.network = network;
     }
 
     // send() {

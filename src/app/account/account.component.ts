@@ -94,7 +94,7 @@ export class AccountComponent implements OnInit, OnDestroy {
   async toggleNetwork() {
     if (!this.networkStatus) {
       try {
-        const network = this.network.getNetwork(this.uiState.activeAccount.network, this.uiState.activeAccount.purpose);
+        const network = this.network.getNetwork(this.uiState.activeAccount.networkType);
         const indexerUrl = this.uiState.persisted.settings.indexer.replace('{id}', network.id.toLowerCase());
         let result: any = await this.http.get(`${indexerUrl}/api/stats/info`).toPromise();
         this.networkStatus = result;

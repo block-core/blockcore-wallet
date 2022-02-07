@@ -20,7 +20,7 @@ export class WalletManager {
 
     async createTransaction(wallet: Wallet, account: Account, address: string, amount: number, fee: number): Promise<{ addresses: string[], transactionHex: string, fee: number, feeRate: number, virtualSize: number, weight: number }> {
         // TODO: Verify the address for this network!! ... Help the user avoid sending transactions on very wrong addresses.
-        const network = this.manager.getNetwork(account.network, account.purpose);
+        const network = this.manager.getNetwork(account.networkType);
         const affectedAddresses = [];
 
         // We currently only support BTC-compatible transactions such as STRAX. We do not support other Blockcore chains that are not PoS v4.
@@ -359,7 +359,7 @@ export class WalletManager {
         // First derive the xpub and store that on the account.
         const secret = this.walletSecrets.get(wallet.id);
 
-        const network = this.manager.getNetwork(account.network, account.purpose);
+        const network = this.manager.getNetwork(account.networkType);
 
         const masterNode = HDKey.fromMasterSeed(Buffer.from(secret.seed), network.bip32);
 
@@ -430,7 +430,7 @@ export class WalletManager {
             // Generate a new address.
             const addressIndex = index + 1;
 
-            const network = this.manager.getNetwork(account.network, account.purpose);
+            const network = this.manager.getNetwork(account.networkType);
             const accountNode = HDKey.fromExtendedKey(account.xpub, network.bip32);
             const addressNode = accountNode.deriveChild(type).deriveChild(addressIndex);
             const address = this.manager.crypto.getAddressByNetwork(Buffer.from(addressNode.publicKey), network, account.purposeAddress);

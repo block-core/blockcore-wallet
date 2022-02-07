@@ -16,6 +16,7 @@ export class BTC44 implements Network {
     scriptHash = 5;
     wif = 0x08;
     feeRate = '0.00010000';
+    testnet = false;
 }
 
 // WE DO NOT SUPPORT THESE ADDRESS TYPES AS THEY WAS TRANSITIONAL.
@@ -53,4 +54,5 @@ export class BTC84 implements Network {
     scriptHash = 5;
     wif = 0x08;
     feeRate = '0.00010000';
+    testnet = false;
 }

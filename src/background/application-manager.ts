@@ -45,13 +45,18 @@ export class AppManager {
     }
 
     /** Get the network definition based upon the id, e.g. BTC, STRAX, CRS, CITY. */
-    getNetworkById(id: string) {
-        const network = this.allNetworks.find(w => w.id == id);
-        return network;
+    // getNetworkById(id: string) {
+    //     const network = this.allNetworks.find(w => w.id == id);
+    //     return network;
+    // }
+
+    /** Get the network definition based upon the network identifier. */
+    getNetwork(networkType: string) {
+        return this.allNetworks.find(w => w.id == networkType);
     }
 
     /** Get the network definition based upon the network number and purpose. The purpose defaults to 44. */
-    getNetwork(network: number, purpose: number = 44) {
+    getNetworkByPurpose(network: number, purpose: number = 44) {
         return this.allNetworks.find(w => w.network == network && w.purpose == purpose);
     }
 

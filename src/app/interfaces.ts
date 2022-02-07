@@ -25,6 +25,10 @@ interface IStructures {
  * transaction history, addresses and more. */
 interface Account {
     name: string | undefined;
+
+    /** The unique identifier for this network. */
+    networkType: string;
+
     network: number;
     index: number;
 

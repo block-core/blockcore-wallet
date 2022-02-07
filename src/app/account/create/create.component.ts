@@ -9,6 +9,7 @@ import { OrchestratorService } from '../../services/orchestrator.service';
 import { CommunicationService } from '../../services/communication.service';
 import { IconService } from '../../services/icon.service';
 import { NetworksService } from '../../services/networks.service';
+import { Network } from '../../../background/networks';
 
 @Component({
     selector: 'app-account-create',
@@ -31,6 +32,7 @@ export class AccountCreateComponent implements OnInit, OnDestroy {
     name = 'New account';
     sub: any;
     icon: string | undefined;
+    selectedNetwork: Network;
 
     get passwordValidated(): boolean {
         return this.password === this.password2 && this.secondFormGroup.valid;
@@ -56,7 +58,9 @@ export class AccountCreateComponent implements OnInit, OnDestroy {
         this.uiState.showBackButton = true;
 
         // Default to the first available network.
-        this.network = this.networkService.getDerivationPathForNetwork(this.networkService.networks[0]);
+        this.network = this.networkService.networks[0].id;
+
+        this.onNetworkChanged();
     }
 
     ngOnInit() {
@@ -131,11 +135,12 @@ export class AccountCreateComponent implements OnInit, OnDestroy {
     }
 
     getDerivationPath() {
-        return `${this.network.toString()}/${this.index.toString()}'`;
+        const derivationPath = this.networkService.getDerivationPathForNetwork(this.selectedNetwork);
+        return `${derivationPath}/${this.index.toString()}'`;
     }
 
-    async onNetworkChanged(event: any) {
-        // this.network = event.value;
+    onNetworkChanged() {
+        this.selectedNetwork = this.networkService.getNetwork(this.network);
         this.derivationPath = this.getDerivationPath();
     }
 
@@ -155,6 +160,7 @@ export class AccountCreateComponent implements OnInit, OnDestroy {
         // TODO: Get the account index from the derivation path if user customizes it.
         const account: Account = {
             type: 'coin', // TODO: Change this depending on what user selects.
+            networkType: this.selectedNetwork.id,
             name: this.name,
             index: parsedIndex,
             network: parsedNetwork,

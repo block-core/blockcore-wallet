@@ -9,12 +9,12 @@ export class NetworkPipe implements PipeTransform {
 
     }
 
-    transform(value: { network: number, purpose: number }): any {
-        if (!value == null || !value.network == null || !value.purpose == null) {
+    transform(value: { networkType: string }): any {
+        if (!value == null || !value.networkType == null) {
             return '?';
         }
 
-        const network = this.networkService.getNetwork(value.network, value.purpose);
+        const network = this.networkService.getNetwork(value.networkType);
         return network.symbol;
     }
 }

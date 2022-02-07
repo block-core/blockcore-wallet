@@ -38,7 +38,7 @@ export class AccountTransactionComponent implements OnInit, OnDestroy {
         this.uiState.goBackHome = false;
 
         const account = this.uiState.activeAccount;
-        this.network = this.networks.getNetwork(account.network, account.purposeAddress);
+        this.network = this.networks.getNetwork(account.networkType);
 
         this.activatedRoute.paramMap.subscribe(async params => {
             this.txid = params.get('txid');

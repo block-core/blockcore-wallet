@@ -2,7 +2,7 @@
     "name": "CoinVault",
     "version": "0.0.11",
     "manifest_version": 2,
-    "description": "An Stratis and Cirrus Wallet Non-Custodial HD wallet for Coins, Tokens, Identities, NFTs and more.",
+    "description": "Non-Custodial wallet for Coins, Tokens, Identities, NFTs and more.",
     "author": "Softchains Ltd",
     "icons": {
         "16": "assets/icon-16x16.png",

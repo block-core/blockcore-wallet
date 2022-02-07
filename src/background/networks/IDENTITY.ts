@@ -16,4 +16,5 @@ export class IDENTITY implements Network {
     scriptHash = 117;
     wif = 0x08;
     feeRate = '0.00000000';
+    testnet = false;
 }

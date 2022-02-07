@@ -3,9 +3,9 @@
     <mat-form-field appearance="fill" *ngIf="uiState.hasWallets">
         <mat-label>Network</mat-label>
 
-        <mat-select (selectionChange)="onNetworkChanged($event)" [(value)]="network">
+        <mat-select (selectionChange)="onNetworkChanged()" [(value)]="network">
             <mat-option *ngFor="let net of this.networkService.networks;"
-                [value]="networkService.getDerivationPathForNetwork(net)">{{net.name}}
+                [value]="net.id">{{net.name}}
             </mat-option>
         </mat-select>
 

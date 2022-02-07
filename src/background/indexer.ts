@@ -96,7 +96,7 @@ export class IndexerService {
     }
 
     async getTransactionHex(account: Account, txid: string) {
-        const network = this.manager.getNetwork(account.network, account.purpose);
+        const network = this.manager.getNetwork(account.networkType);
         const indexerUrl = this.manager.state.persisted.settings.indexer.replace('{id}', network.id.toLowerCase());
 
         const responseTransactionHex = await axios.get(`${indexerUrl}/api/query/transaction/${txid}/hex`);
@@ -116,7 +116,7 @@ export class IndexerService {
 
     async broadcastTransaction(account: Account, txhex: string) {
         // These two entries has been sent from
-        const network = this.manager.getNetwork(account.network, account.purpose);
+        const network = this.manager.getNetwork(account.networkType);
         const indexerUrl = this.manager.state.persisted.settings.indexer.replace('{id}', network.id.toLowerCase());
 
         const response = await axios.post(`${indexerUrl}/api/command/send`, txhex, {
@@ -144,7 +144,7 @@ export class IndexerService {
             const account = item.account as Account;
             const wallet = item.wallet as Wallet;
 
-            const network = this.manager.getNetwork(account.network, account.purpose);
+            const network = this.manager.getNetwork(account.networkType);
             const indexerUrl = this.manager.state.persisted.settings.indexer.replace('{id}', network.id.toLowerCase());
 
             // Loop through all receive addresses until no more data is found:
@@ -409,7 +409,7 @@ export class IndexerService {
         this.a.forEach(async (value, key) => {
             const account = value.account;
             const addressEntry = value.addressEntry;
-            const network = this.manager.getNetwork(account.network, account.purpose);
+            const network = this.manager.getNetwork(account.networkType);
             const indexerUrl = this.manager.state.persisted.settings.indexer.replace('{id}', network.id.toLowerCase());
 
             try {

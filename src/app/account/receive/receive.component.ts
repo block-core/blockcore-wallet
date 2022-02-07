@@ -34,7 +34,7 @@ export class AccountReceiveComponent implements OnInit, OnDestroy {
         this.uiState.goBackHome = false;
 
         const account = this.uiState.activeAccount;
-        this.network = this.networks.getNetwork(account.network, account.purposeAddress);
+        this.network = this.networks.getNetwork(account.networkType);
     }
 
     ngOnDestroy(): void {

@@ -29,6 +29,8 @@ export interface Network {
 
     feeRate: string;
 
+    testnet: boolean;
+
     /** A logo that can be displayed in UI for the specific network. */
     // logo: ''; 
 }

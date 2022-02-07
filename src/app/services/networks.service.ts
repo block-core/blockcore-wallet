@@ -30,13 +30,12 @@ export class NetworksService {
     }
 
     /** Get the network definition based upon the id, e.g. BTC, STRAX, CRS, CITY. */
-    getNetworkById(id: string) {
-        const network = this.networks.find(w => w.id == id);
-        return network;
+    getNetwork(networkType: string) {
+        return this.networks.find(w => w.id == networkType);
     }
 
     /** Get the network definition based upon the id, e.g. BTC, STRAX, CRS, CITY. The purpose defaults to 44. */
-    getNetwork(network: number, purpose: number = 44) {
+    getNetworkByPurpose(network: number, purpose: number = 44) {
         return this.networks.find(w => w.network == network && w.purpose == purpose);
     }
 
@@ -48,6 +47,7 @@ export class NetworksService {
             case Environments.Blockcore:
                 accounts = [{
                     selected: true,
+                    networkType: 'STRAX',
                     index: 0,
                     name: 'Stratis',
                     type: 'coin',
@@ -63,6 +63,7 @@ export class NetworksService {
                     }
                 }, {
                     selected: true,
+                    networkType: 'CRS',
                     index: 0,
                     name: 'Cirrus',
                     type: 'coin',
@@ -76,6 +77,38 @@ export class NetworksService {
                         receive: [],
                         change: []
                     }
+                }, {
+                    index: 0,
+                    networkType: 'TSTRAX',
+                    selected: false,
+                    name: 'StratisTest',
+                    type: 'coin',
+                    network: 105105,
+                    purpose: 44,
+                    purposeAddress: 44,
+                    icon: 'account_circle',
+                    state: {
+                        balance: 0,
+                        retrieved: null,
+                        receive: [],
+                        change: []
+                    },
+                }, {
+                    index: 0,
+                    networkType: 'TCRS',
+                    selected: false,
+                    name: 'CirrusTest',
+                    type: 'coin',
+                    network: 401,
+                    purpose: 44,
+                    purposeAddress: 44,
+                    icon: 'account_circle',
+                    state: {
+                        balance: 0,
+                        retrieved: null,
+                        receive: [],
+                        change: []
+                    },
                 }
                     // , {
                     //     index: 0,
@@ -125,6 +158,7 @@ export class NetworksService {
             case Environments.CoinVault:
                 accounts = [{
                     index: 0,
+                    networkType: 'STRAX',
                     selected: true,
                     name: 'Stratis',
                     type: 'coin',
@@ -140,8 +174,41 @@ export class NetworksService {
                     },
                 }, {
                     index: 0,
+                    networkType: 'CRS',
                     selected: true,
                     name: 'Cirrus',
+                    type: 'coin',
+                    network: 401,
+                    purpose: 44,
+                    purposeAddress: 44,
+                    icon: 'account_circle',
+                    state: {
+                        balance: 0,
+                        retrieved: null,
+                        receive: [],
+                        change: []
+                    },
+                }, {
+                    index: 0,
+                    networkType: 'TSTRAX',
+                    selected: false,
+                    name: 'StratisTest',
+                    type: 'coin',
+                    network: 105105,
+                    purpose: 44,
+                    purposeAddress: 44,
+                    icon: 'account_circle',
+                    state: {
+                        balance: 0,
+                        retrieved: null,
+                        receive: [],
+                        change: []
+                    },
+                }, {
+                    index: 0,
+                    networkType: 'TCRS',
+                    selected: false,
+                    name: 'CirrusTest',
                     type: 'coin',
                     network: 401,
                     purpose: 44,
@@ -158,6 +225,7 @@ export class NetworksService {
             case Environments.SmartCityPlatform:
                 accounts = [{
                     index: 0,
+                    networkType: 'CITY',
                     selected: true,
                     name: 'City Coin',
                     type: 'coin',
@@ -174,6 +242,7 @@ export class NetworksService {
                 }, {
                     index: 0,
                     selected: true,
+                    networkType: 'IDENTITY',
                     name: 'Identity',
                     type: 'other',
                     network: 616,
@@ -188,6 +257,7 @@ export class NetworksService {
                     },
                 }, {
                     index: 0,
+                    networkType: 'NOSTR',
                     name: 'Nostr',
                     type: 'other',
                     network: 1237,
