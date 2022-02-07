@@ -1,4 +1,4 @@
-import { Account, State, Wallet, Action, DIDPayload, Settings, Identity, Vault } from '../app/interfaces';
+import { Account, State, Wallet, Action, DIDPayload, Settings, Identity, Vault, NetworkStatus } from '../app/interfaces';
 import { MINUTE, NETWORK_IDENTITY } from '../app/shared/constants';
 import { AppState } from './application-state';
 import { CommunicationBackgroundService } from './communication';
@@ -26,6 +26,10 @@ export class OrchestratorBackgroundService {
 
     active() {
         this.manager.walletManager.resetTimer();
+    }
+
+    updateNetworkStatus(networkStatus: NetworkStatus[]) {
+        this.manager.communication.sendToAll('network-status', networkStatus)
     }
 
     // REFACTORY IDENTITY LATER!

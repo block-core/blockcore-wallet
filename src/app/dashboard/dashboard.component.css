@@ -1,4 +1,9 @@
 .account-balance {
-    float: right;
-    color: gray;
+  float: right;
+  color: gray;
+}
+
+.network-status-widget {
+  position: absolute;
+  left: 2.6em;
 }

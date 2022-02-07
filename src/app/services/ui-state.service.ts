@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { EventEmitter, Injectable, NgZone } from '@angular/core';
-import { Account, Action, Persisted, Store, Wallet } from '../interfaces';
+import { Account, Action, NetworkStatus, Persisted, Store, Wallet } from '../interfaces';
 import { MINUTE } from '../shared/constants';
 import { Router } from '@angular/router';
 import { CommunicationService } from './communication.service';
@@ -30,6 +30,8 @@ export class UIState {
     showBackButton = false;
 
     goBackHome = true;
+
+    networkStatus: NetworkStatus[];
 
     // getAllAccounts() {
     //     return this.flatDeep(this.activeWallet?.accounts);

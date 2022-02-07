@@ -21,6 +21,12 @@ interface IStructures {
     [key: string]: INumbers | IBooleans | IValues;
 }
 
+interface NetworkStatus {
+    networkType: string;
+    status: string;
+    available: boolean;
+}
+
 /** The user account, most of this data should be considered immutable. The index, etc. should never change after creation. See "AccountState" to get balance, 
  * transaction history, addresses and more. */
 interface Account {
@@ -28,6 +34,9 @@ interface Account {
 
     /** The unique identifier for this network. */
     networkType: string;
+
+    /** Latest status of this network. */
+    networkStatus?: string;
 
     network: number;
     index: number;
@@ -324,5 +333,6 @@ export {
     Settings,
     Vault,
     Logger,
-    TransactionHistory
+    TransactionHistory,
+    NetworkStatus
 }

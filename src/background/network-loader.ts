@@ -1,9 +1,10 @@
+import { NetworkStatus } from '../app/interfaces';
 import { Network, BTC44, BTC84, CITY, CRS, IDENTITY, NOSTR, STRAX, TSTRAX, TCRS } from './networks';
 
 /** Holds a list of networks that is available. */
 export class NetworkLoader {
     private networks: Network[] = [];
-
+    
     constructor() {
         this.createNetworks();
     }
@@ -34,6 +35,5 @@ export class NetworkLoader {
         this.networks.push(new NOSTR());
         this.networks.push(new BTC44());
         this.networks.push(new BTC84());
-
     }
 }

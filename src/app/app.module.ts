@@ -73,6 +73,7 @@ import { LogWriterService } from './services/log-writer.service';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { HttpClient } from '@angular/common/http';
+import { NetworkStatusComponent } from './shared/network-status/network-status.component';
 
 // required for AOT compilation
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
@@ -120,7 +121,8 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     AccountSendAddressComponent,
     AccountSendConfirmComponent,
     AccountSendSuccessComponent,
-    AccountSendSendingComponent
+    AccountSendSendingComponent,
+    NetworkStatusComponent
   ],
   imports: [
     BrowserModule,

@@ -1,5 +1,5 @@
 import { networkInterfaces } from "os";
-import { Action, Settings, State } from "../app/interfaces";
+import { Action, NetworkStatus, Settings, State } from "../app/interfaces";
 import { INDEXER_URL, MINUTE } from "../app/shared/constants";
 import { environment } from "../environments/environment";
 import { AppState } from "./application-state";
@@ -25,6 +25,8 @@ export class AppManager {
     allNetworks: Network[];
     logger: BackgroundLoggerService;
 
+    private networkStatus = new Map<string, NetworkStatus>();
+
     /** Initializes the app, loads the AppState and other operations. */
     // configure(): [AppState, CryptoUtility, CommunicationBackgroundService, OrchestratorBackgroundService, DataSyncService] {
     configure() {
@@ -42,6 +44,19 @@ export class AppManager {
         // Keep a local state of all networks that exists. We'll use this to allow get operations
         // that always work, even when a certain network is disabled in the UI.
         this.allNetworks = networkLoader.getAllNetworks();
+
+        this.allNetworks.forEach(n => {
+            this.networkStatus.set(n.id, <NetworkStatus>{ networkType: n.id });
+        });
+    }
+
+    updateNetworkStatus(status: NetworkStatus) {
+        this.networkStatus.set(status.networkType, status);
+        this.orchestrator.updateNetworkStatus(this.getAllNetworkStatus());
+    }
+
+    getAllNetworkStatus(): NetworkStatus[] {
+        return Array.from(this.networkStatus.values());
     }
 
     /** Get the network definition based upon the id, e.g. BTC, STRAX, CRS, CITY. */

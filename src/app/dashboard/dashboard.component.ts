@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { FeatureService } from '../services/features.service';
 import { copyToClipboard } from '../shared/utilities';
 import { LoggerService } from '../services/logger.service';
+import { NetworksService } from '../services/networks.service';
 
 export interface Section {
   name: string;
@@ -33,6 +34,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     private crypto: CryptoService,
     private router: Router,
     private logger: LoggerService,
+    private network: NetworksService,
     private cd: ChangeDetectorRef) {
 
     this.uiState.showBackButton = false;
@@ -57,6 +59,15 @@ export class DashboardComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     if (this.sub) {
       this.sub.unsubscribe();
+    }
+  }
+
+  getNetworkStatus(networkType: string) {
+    if (this.uiState.networkStatus) {
+      const networkStatus = this.uiState.networkStatus.find(n => n.networkType == networkType);
+      return networkStatus;
+    } else {
+      return null;
     }
   }
 

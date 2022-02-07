@@ -15,6 +15,9 @@
                     <div mat-line>{{account.name}}<span class="account-balance">{{account.state.balance |
                             amount}}</span></div>
                     <div mat-line>{{account | network}}</div>
+                    <div class="network-status-widget">
+                        <app-network-status [status]="getNetworkStatus(account.networkType)"></app-network-status>
+                    </div>
                 </a>
 
                 <!-- TODO: Hidden until fully implemented -->

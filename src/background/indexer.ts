@@ -194,6 +194,8 @@ export class IndexerService {
                             changes = true;
                         }
                     } catch (error) {
+                        this.manager.updateNetworkStatus({ networkType: account.networkType, status: 'Error', available: false });
+
                         this.logger.error(error);
 
                         // TODO: Implement error handling in background and how to send it to UI.
@@ -289,6 +291,8 @@ export class IndexerService {
                             changes = true;
                         }
                     } catch (error) {
+                        this.manager.updateNetworkStatus({ networkType: account.networkType, status: 'Error', available: false });
+
                         this.logger.error(error);
 
                         // TODO: Implement error handling in background and how to send it to UI.
@@ -452,6 +456,9 @@ export class IndexerService {
                     }
                 }
             } catch (error) {
+                this.manager.updateNetworkStatus({ networkType: account.networkType, status: 'Error', available: false });
+                account.networkStatus = 'Error';
+
                 this.logger.error(error);
                 // TODO: Implement error handling in background and how to send it to UI.
                 // We should probably have an error log in settings, so users can see background problems as well.

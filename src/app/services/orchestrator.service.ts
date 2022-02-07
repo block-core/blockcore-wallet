@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { UIState } from './ui-state.service';
 import { CommunicationService } from './communication.service';
-import { Account, Action, Identity, Settings, State, Vault } from '../interfaces';
+import { Account, Action, Identity, NetworkStatus, Settings, State, Vault } from '../interfaces';
 import {
     MatSnackBar,
     MatSnackBarHorizontalPosition,
@@ -132,6 +132,10 @@ export class OrchestratorService {
             if (!action.action) {
                 this.router.navigateByUrl('/');
             }
+        });
+
+        this.communication.listen('network-status', (value: NetworkStatus[]) => {
+            this.uiState.networkStatus = value;
         });
 
         // When a wallet is removed, we must update UI.
