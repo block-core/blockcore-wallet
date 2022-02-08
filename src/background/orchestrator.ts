@@ -28,8 +28,8 @@ export class OrchestratorBackgroundService {
         this.manager.walletManager.resetTimer();
     }
 
-    updateNetworkStatus(networkStatus: NetworkStatus[]) {
-        this.manager.communication.sendToAll('network-status', networkStatus)
+    updateNetworkStatus(networkStatus: NetworkStatus) {
+        this.manager.communication.sendToAll('network-status', networkStatus);
     }
 
     // REFACTORY IDENTITY LATER!

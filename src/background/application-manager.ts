@@ -52,28 +52,31 @@ export class AppManager {
             this.networkStatus.set(n.id, <NetworkStatus>{ networkType: n.id });
         });
 
-        this.statusManager = new NetworkStatusManager();
+        this.statusManager = new NetworkStatusManager(this);
 
-        setInterval(async () => {
+        // setInterval(async () => {
+        //     await this.refreshNetworkStatus();
+        // }, 10000);
+
+        this.refreshNetworkStatus();
+    }
+
+    /** Iterate over all active accounts and check the latest networks status. */
+    async refreshNetworkStatus() {
+        try {
+            await this.statusManager.updateAll(this.walletManager.activeWallet.accounts);
+        }
+        catch (err) {
+
+        }
+
+        setTimeout(async () => {
             await this.refreshNetworkStatus();
         }, 10000);
     }
 
-    updateNetworkStatus(status: NetworkStatus) {
-        this.networkStatus.set(status.networkType, status);
-        this.orchestrator.updateNetworkStatus(this.getAllNetworkStatus());
-    }
-
-    getAllNetworkStatus(): NetworkStatus[] {
-        return Array.from(this.networkStatus.values());
-    }
-
-    async refreshNetworkStatus() {
-        // Provide what accounts are currently active and to be refresh by the status manager.
-        const networks = await this.statusManager.updateAll(this.walletManager.activeWallet.accounts);
-
-        // Update the UI using orchestrator with a message on latest networks status.
-        this.orchestrator.updateNetworkStatus(networks);
+    async updateNetworkStatus(networkStatus: NetworkStatus) {
+        this.statusManager.update(networkStatus);
     }
 
     /** Get the network definition based upon the id, e.g. BTC, STRAX, CRS, CITY. */

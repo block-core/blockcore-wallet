@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { NetworkStatus } from '../../interfaces';
+import { NetworkStatusService } from '../../services/network-status.service';
 
 @Component({
     selector: 'app-network-status',
@@ -8,6 +9,14 @@ import { NetworkStatus } from '../../interfaces';
 })
 export class NetworkStatusComponent {
     @Input() status: NetworkStatus;
+
+    sub: any;
+
+    constructor(private networkStatus: NetworkStatusService) {
+        // this.sub = networkStatus.networks$.subscribe(() => {
+
+        // });
+    }
 
     get class(): string {
         if (this.status) {
@@ -19,8 +28,5 @@ export class NetworkStatusComponent {
         } else {
             return 'network-status-uknown';
         }
-    }
-
-    constructor() {
     }
 }

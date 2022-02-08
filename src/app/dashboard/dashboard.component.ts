@@ -1,5 +1,4 @@
 import { Component, Inject, HostBinding, ChangeDetectorRef, OnInit, OnDestroy } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { CryptoService } from '../services/crypto.service';
 import { UIState } from '../services/ui-state.service';
 import { Router } from '@angular/router';
@@ -7,6 +6,9 @@ import { FeatureService } from '../services/features.service';
 import { copyToClipboard } from '../shared/utilities';
 import { LoggerService } from '../services/logger.service';
 import { NetworksService } from '../services/networks.service';
+import { NetworkStatusService } from '../services/network-status.service';
+import { Observable } from 'rxjs';
+import { NetworkStatus } from '../interfaces';
 
 export interface Section {
   name: string;
@@ -27,10 +29,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
   wallet: any;
   sub: any;
   history: Section[] = [];
+  networkStatus$: Observable<NetworkStatus[]>;
 
   constructor(
     public feature: FeatureService,
     public uiState: UIState,
+    public networkStatus: NetworkStatusService,
     private crypto: CryptoService,
     private router: Router,
     private logger: LoggerService,
@@ -44,7 +48,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
     if (this.uiState.activeWallet) {
       this.uiState.title = this.uiState.activeWallet.name;
     }
-
   }
 
   ngOnInit(): void {
@@ -59,15 +62,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     if (this.sub) {
       this.sub.unsubscribe();
-    }
-  }
-
-  getNetworkStatus(networkType: string) {
-    if (this.uiState.networkStatus) {
-      const networkStatus = this.uiState.networkStatus.find(n => n.networkType == networkType);
-      return networkStatus;
-    } else {
-      return null;
     }
   }
 

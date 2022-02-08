@@ -4,6 +4,7 @@ import { UIState } from '../services/ui-state.service';
 import { Router } from '@angular/router';
 import { OrchestratorService } from '../services/orchestrator.service';
 import { CommunicationService } from '../services/communication.service';
+import { NetworkStatusService } from '../services/network-status.service';
 
 @Component({
   selector: 'app-home',

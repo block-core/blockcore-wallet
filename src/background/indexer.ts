@@ -194,6 +194,7 @@ export class IndexerService {
                             changes = true;
                         }
                     } catch (error) {
+                        this.manager.updateNetworkStatus
                         this.manager.updateNetworkStatus({ networkType: account.networkType, status: 'Error', available: false });
 
                         this.logger.error(error);

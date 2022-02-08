@@ -1,23 +1,17 @@
-import { environment } from '../../environments/environment';
 import { Injectable } from '@angular/core';
-import * as bip39 from 'bip39';
-import { Base64 } from 'js-base64';
-import { NetworkLoader } from '../../background/network-loader';
-import { Network } from '../../background/networks';
-import { Account, NetworkStatus, Wallet } from '../interfaces';
-import { BehaviorSubject } from 'rxjs';
+import { NetworkStatus } from '../interfaces';
 
 @Injectable({
     providedIn: 'root'
 })
 export class NetworkStatusService {
-    public networks$ = new BehaviorSubject<NetworkStatus[]>([]);
+    private networks: Map<string, NetworkStatus> = new Map<string, NetworkStatus>();
 
-    constructor() {
-
+    set(network: NetworkStatus) {
+        this.networks.set(network.networkType, network);
     }
 
-    async updateAll(networks: NetworkStatus[]) {
-        this.networks$.next(networks);
+    get(networkType: string) {
+        return this.networks.get(networkType);
     }
 }

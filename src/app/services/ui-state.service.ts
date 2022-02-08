@@ -31,7 +31,7 @@ export class UIState {
 
     goBackHome = true;
 
-    networkStatus: NetworkStatus[];
+    // networkStatus: NetworkStatus[];
 
     // getAllAccounts() {
     //     return this.flatDeep(this.activeWallet?.accounts);

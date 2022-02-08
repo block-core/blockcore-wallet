@@ -9,6 +9,7 @@ import {
     MatSnackBarVerticalPosition,
 } from '@angular/material/snack-bar';
 import { stringify } from 'querystring';
+import { NetworkStatusService } from './network-status.service';
 
 @Injectable({
     providedIn: 'root'
@@ -18,6 +19,7 @@ export class OrchestratorService {
         private communication: CommunicationService,
         private uiState: UIState,
         private router: Router,
+        private networkStatus: NetworkStatusService,
         private snackBar: MatSnackBar
     ) {
 
@@ -134,8 +136,8 @@ export class OrchestratorService {
             }
         });
 
-        this.communication.listen('network-status', (value: NetworkStatus[]) => {
-            this.uiState.networkStatus = value;
+        this.communication.listen('network-status', (networkStatus: NetworkStatus) => {
+            this.networkStatus.set(networkStatus);
         });
 
         // When a wallet is removed, we must update UI.
