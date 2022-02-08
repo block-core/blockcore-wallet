@@ -26,8 +26,7 @@ export class AppManager {
     indexer!: IndexerService;
     allNetworks: Network[];
     logger: BackgroundLoggerService;
-
-    private statusManager: NetworkStatusManager;
+    status: NetworkStatusManager;
     private networkStatus = new Map<string, NetworkStatus>();
 
     /** Initializes the app, loads the AppState and other operations. */
@@ -52,7 +51,7 @@ export class AppManager {
             this.networkStatus.set(n.id, <NetworkStatus>{ networkType: n.id });
         });
 
-        this.statusManager = new NetworkStatusManager(this);
+        this.status = new NetworkStatusManager(this);
 
         // setInterval(async () => {
         //     await this.refreshNetworkStatus();
@@ -64,7 +63,7 @@ export class AppManager {
     /** Iterate over all active accounts and check the latest networks status. */
     async refreshNetworkStatus() {
         try {
-            await this.statusManager.updateAll(this.walletManager.activeWallet.accounts);
+            await this.status.updateAll(this.walletManager.activeWallet.accounts);
         }
         catch (err) {
 
@@ -75,9 +74,13 @@ export class AppManager {
         }, 10000);
     }
 
-    async updateNetworkStatus(networkStatus: NetworkStatus) {
-        this.statusManager.update(networkStatus);
-    }
+    // getNetworkStatus() {
+    //     this.status.getAll();
+    // }
+
+    // async updateNetworkStatus(networkStatus: NetworkStatus) {
+    //     this.status.update(networkStatus);
+    // }
 
     /** Get the network definition based upon the id, e.g. BTC, STRAX, CRS, CITY. */
     // getNetworkById(id: string) {

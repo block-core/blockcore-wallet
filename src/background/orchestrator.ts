@@ -433,6 +433,14 @@ export class OrchestratorBackgroundService {
             this.manager.communication.send(port, 'account-updated');
         });
 
+        /** Called whenever a new UI instance has been activated. Use this method to retrieve the existing state of data that is outside of the normal persisted state ('state-load' event). */
+        this.manager.communication.listen('ui-activated', async (port: any, data: any) => {
+            // TODO: Add more non-persisted state updates to be populated in the UI when new instance of extension is activated.
+
+            // Get the latest known network statuses:
+            this.manager.communication.send(port, 'network-statuses', this.manager.status.getAll());
+        });
+
         this.manager.communication.listen('set-wallet-name', async (port: any, data: { walletId: string, name: string }) => {
             const wallet = this.manager.walletManager.getWallet(data.walletId);
 

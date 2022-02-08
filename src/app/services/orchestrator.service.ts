@@ -84,6 +84,9 @@ export class OrchestratorService {
                     }
                 }
             }
+
+            // After the initial state has been loaded into the new UI instance, we'll inform the background that new UI has activated.
+            this.communication.send('ui-activated');
         });
 
         // Whenever the state is updated, we'll update in the UI.
@@ -138,6 +141,12 @@ export class OrchestratorService {
 
         this.communication.listen('network-status', (networkStatus: NetworkStatus) => {
             this.networkStatus.set(networkStatus);
+        });
+
+        this.communication.listen('network-statuses', (networkStatuses: NetworkStatus[]) => {
+            networkStatuses.forEach((status) => {
+                this.networkStatus.set(status);
+            });
         });
 
         // When a wallet is removed, we must update UI.
