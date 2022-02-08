@@ -28,20 +28,29 @@ export class NetworkStatusManager {
                 });
 
                 const data = response.data;
-                const blocksBehind = (data.blockchain.blocks - data.syncBlockIndex);
 
-                if (blocksBehind > 10) {
+                if (data.error) {
                     networkStatus = {
                         networkType: account.networkType,
-                        availability: IndexerApiStatus.Syncing,
-                        status: 'Syncing'
+                        availability: IndexerApiStatus.Error,
+                        status: 'Error: ' + data.error
                     };
                 } else {
-                    networkStatus = {
-                        networkType: account.networkType,
-                        availability: IndexerApiStatus.Online,
-                        status: 'Online'
-                    };
+                    const blocksBehind = (data.blockchain.blocks - data.syncBlockIndex);
+
+                    if (blocksBehind > 10) {
+                        networkStatus = {
+                            networkType: account.networkType,
+                            availability: IndexerApiStatus.Syncing,
+                            status: 'Syncing'
+                        };
+                    } else {
+                        networkStatus = {
+                            networkType: account.networkType,
+                            availability: IndexerApiStatus.Online,
+                            status: 'Online'
+                        };
+                    }
                 }
             } catch (error: any) {
                 if (error.response) {
