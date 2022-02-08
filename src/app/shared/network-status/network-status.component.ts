@@ -1,32 +1,24 @@
 import { Component, Input } from '@angular/core';
-import { NetworkStatus } from '../../interfaces';
-import { NetworkStatusService } from '../../services/network-status.service';
+import { IndexerApiStatus, NetworkStatus } from '../../interfaces';
 
 @Component({
     selector: 'app-network-status',
     template: '<span class="network-status" [matTooltip]="status?.status" [ngClass]="class">.</span>',
-    styles: ['.network-status { font-size: 3em;} .network-status-positive { color: green; }  .network-status-negative { color: red; } .network-status-uknown { color: gray; }']
+    styles: ['.network-status { font-size: 3em;} .network-status-syncing { color: orange; } .network-status-online { color: green; }  .network-status-error { color: red; } .network-status-offline { color: red; } .network-status-unknown { color: gray; }']
 })
 export class NetworkStatusComponent {
     @Input() status: NetworkStatus;
 
-    sub: any;
-
-    constructor(private networkStatus: NetworkStatusService) {
-        // this.sub = networkStatus.networks$.subscribe(() => {
-
-        // });
+    constructor() {
     }
 
     get class(): string {
         if (this.status) {
-            if (this.status.available == false) {
-                return 'network-status-negative';
-            } else {
-                return 'network-status-positive';
-            }
+            const apiStatus = IndexerApiStatus[this.status.availability].toLowerCase();
+            return `network-status-${apiStatus}`;
+
         } else {
-            return 'network-status-uknown';
+            return 'network-status-unknown';
         }
     }
 }

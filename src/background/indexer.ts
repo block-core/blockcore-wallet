@@ -1,5 +1,5 @@
 import { address } from '@blockcore/blockcore-js';
-import { Account, Address, Logger, Transaction, UnspentTransactionOutput, Wallet } from '../app/interfaces';
+import { Account, Address, IndexerApiStatus, Logger, Transaction, UnspentTransactionOutput, Wallet } from '../app/interfaces';
 import { AppManager } from './application-manager';
 import axiosRetry from 'axios-retry';
 
@@ -194,7 +194,7 @@ export class IndexerService {
                             changes = true;
                         }
                     } catch (error) {
-                        this.manager.status.update({ networkType: account.networkType, status: 'Error', available: false });
+                        this.manager.status.update({ networkType: account.networkType, status: 'Error', availability: IndexerApiStatus.Error });
 
                         this.logger.error(error);
 
@@ -291,7 +291,7 @@ export class IndexerService {
                             changes = true;
                         }
                     } catch (error) {
-                        this.manager.status.update({ networkType: account.networkType, status: 'Error', available: false });
+                        this.manager.status.update({ networkType: account.networkType, status: 'Error', availability: IndexerApiStatus.Error });
 
                         this.logger.error(error);
 
@@ -456,7 +456,7 @@ export class IndexerService {
                     }
                 }
             } catch (error) {
-                this.manager.status.update({ networkType: account.networkType, status: 'Error', available: false });
+                this.manager.status.update({ networkType: account.networkType, status: 'Error', availability: IndexerApiStatus.Error });
                 account.networkStatus = 'Error';
 
                 this.logger.error(error);

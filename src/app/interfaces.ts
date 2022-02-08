@@ -21,10 +21,18 @@ interface IStructures {
     [key: string]: INumbers | IBooleans | IValues;
 }
 
+enum IndexerApiStatus {
+    Unknown = 0,
+    Online = 1,
+    Offline = 2,
+    Syncing = 3,
+    Error = 4
+}
+
 interface NetworkStatus {
     networkType: string;
     status: string;
-    available: boolean;
+    availability: IndexerApiStatus;
 }
 
 /** The user account, most of this data should be considered immutable. The index, etc. should never change after creation. See "AccountState" to get balance, 
@@ -334,5 +342,6 @@ export {
     Vault,
     Logger,
     TransactionHistory,
-    NetworkStatus
+    NetworkStatus,
+    IndexerApiStatus
 }
