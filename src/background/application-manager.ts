@@ -69,7 +69,10 @@ export class AppManager {
     }
 
     async refreshNetworkStatus() {
+        // Provide what accounts are currently active and to be refresh by the status manager.
         const networks = await this.statusManager.updateAll(this.walletManager.activeWallet.accounts);
+
+        // Update the UI using orchestrator with a message on latest networks status.
         this.orchestrator.updateNetworkStatus(networks);
     }
 

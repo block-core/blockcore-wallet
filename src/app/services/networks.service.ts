@@ -6,12 +6,12 @@ import { NetworkLoader } from '../../background/network-loader';
 import { Network } from '../../background/networks';
 import { Account, Wallet } from '../interfaces';
 import { Environments } from '../../environments/environments';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
     providedIn: 'root'
 })
 export class NetworksService {
-
     networks: Network[];
     allNetworks: Network[];
 
