@@ -21,11 +21,14 @@ export class NetworkStatusManager {
             let networkStatus: NetworkStatus;
 
             try {
-                const response = await axios.get(`${indexerUrl}/api/stats`);
-                const data = response.data;
+                const response = await axios.get(`${indexerUrl}/api/stats`, {
+                    'axios-retry': {
+                        retries: 0
+                    }
+                });
 
-                const blocksBehind = data.blockchain.blocks - data.syncBlockIndex;
-                console.log('BLOCKS BEHIND', blocksBehind);
+                const data = response.data;
+                const blocksBehind = (data.blockchain.blocks - data.syncBlockIndex);
 
                 if (blocksBehind > 10) {
                     networkStatus = {
@@ -40,12 +43,42 @@ export class NetworkStatusManager {
                         status: 'Online'
                     };
                 }
-            } catch (err) {
-                networkStatus = {
-                    networkType: account.networkType,
-                    availability: IndexerApiStatus.Offline,
-                    status: 'Offline'
-                };
+            } catch (error: any) {
+                if (error.response) {
+                    // The request was made and the server responded with a status code
+                    // that falls out of the range of 2xx
+                    console.log(error.response.data);
+                    console.log(error.response.status);
+                    console.log(error.response.headers);
+
+                    // When there is response, we'll set status to error.
+                    networkStatus = {
+                        networkType: account.networkType,
+                        availability: IndexerApiStatus.Error,
+                        status: 'Error'
+                    };
+                } else if (error.request) {
+                    // The request was made but no response was received
+                    // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+                    // http.ClientRequest in node.js
+                    console.log(error.request);
+
+                    // When there is no response, we'll set status to offline.
+                    networkStatus = {
+                        networkType: account.networkType,
+                        availability: IndexerApiStatus.Offline,
+                        status: 'Offline'
+                    };
+                } else {
+                    // Something happened in setting up the request that triggered an Error
+                    console.log('Error', error.message);
+
+                    networkStatus = {
+                        networkType: account.networkType,
+                        availability: IndexerApiStatus.Unknown,
+                        status: error.message
+                    };
+                }
             }
 
             this.update(networkStatus);
