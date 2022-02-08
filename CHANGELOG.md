@@ -1,3 +1,18 @@
+## <small>0.0.11 (2022-02-08)</small>
+
+* Add a rudimentary network status indicator ([65c5528](https://github.com/block-core/blockcore-extension/commit/65c5528))
+* Add refresh of transactions on account view ([c93a78d](https://github.com/block-core/blockcore-extension/commit/c93a78d)), closes [#65](https://github.com/block-core/blockcore-extension/issues/65)
+* Add some improved error handling and logging for different network status ([35caf66](https://github.com/block-core/blockcore-extension/commit/35caf66))
+* Add syncing status (behind tip) to the network status indicator ([d7d00f6](https://github.com/block-core/blockcore-extension/commit/d7d00f6))
+* Change how network is connected to accounts ([1cc6495](https://github.com/block-core/blockcore-extension/commit/1cc6495))
+* Improve the networks status code ([e00fa88](https://github.com/block-core/blockcore-extension/commit/e00fa88))
+* Introduce a new 'ui-activated' event used to get additional state information ([d17bc29](https://github.com/block-core/blockcore-extension/commit/d17bc29))
+* Skip querying the indexer if the status is not online ([84b90d4](https://github.com/block-core/blockcore-extension/commit/84b90d4))
+* Starts implementing an improve network status manager ([8982d17](https://github.com/block-core/blockcore-extension/commit/8982d17))
+* WIP: Work on the NetworkStatusManager ([ec4ca51](https://github.com/block-core/blockcore-extension/commit/ec4ca51))
+
+
+
 ## <small>0.0.10 (2022-02-06)</small>
 
 * Make the transaction history unique ([636d8ae](https://github.com/block-core/blockcore-extension/commit/636d8ae)), closes [#65](https://github.com/block-core/blockcore-extension/issues/65)
