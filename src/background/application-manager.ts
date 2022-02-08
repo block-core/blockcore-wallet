@@ -1,3 +1,4 @@
+import { timeStamp } from "console";
 import { networkInterfaces } from "os";
 import { Action, NetworkStatus, Settings, State } from "../app/interfaces";
 import { INDEXER_URL, MINUTE } from "../app/shared/constants";
@@ -9,6 +10,7 @@ import { DataSyncService } from "./data-sync";
 import { IndexerService } from "./indexer";
 import { BackgroundLoggerService } from "./logger";
 import { NetworkLoader } from "./network-loader";
+import { NetworkStatusManager } from "./network-status";
 import { Network } from "./networks";
 import { OrchestratorBackgroundService } from "./orchestrator";
 import { WalletManager } from "./wallet-manager";
@@ -25,6 +27,7 @@ export class AppManager {
     allNetworks: Network[];
     logger: BackgroundLoggerService;
 
+    private statusManager: NetworkStatusManager;
     private networkStatus = new Map<string, NetworkStatus>();
 
     /** Initializes the app, loads the AppState and other operations. */
@@ -48,6 +51,12 @@ export class AppManager {
         this.allNetworks.forEach(n => {
             this.networkStatus.set(n.id, <NetworkStatus>{ networkType: n.id });
         });
+
+        this.statusManager = new NetworkStatusManager();
+
+        setInterval(async () => {
+            await this.refreshNetworkStatus();
+        }, 10000);
     }
 
     updateNetworkStatus(status: NetworkStatus) {
@@ -57,6 +66,11 @@ export class AppManager {
 
     getAllNetworkStatus(): NetworkStatus[] {
         return Array.from(this.networkStatus.values());
+    }
+
+    async refreshNetworkStatus() {
+        const networks = await this.statusManager.updateAll(this.walletManager.activeWallet.accounts);
+        this.orchestrator.updateNetworkStatus(networks);
     }
 
     /** Get the network definition based upon the id, e.g. BTC, STRAX, CRS, CITY. */
