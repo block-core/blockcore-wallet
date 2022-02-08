@@ -145,6 +145,14 @@ export class IndexerService {
             const wallet = item.wallet as Wallet;
 
             const network = this.manager.getNetwork(account.networkType);
+            const networkStatus = this.manager.status.get(account.networkType);
+
+            // If the current network status is anything other than online, skip indexing.
+            if (networkStatus && networkStatus.availability != IndexerApiStatus.Online) {
+                this.logger.warn(`Network ${account.networkType} is not online. Skipping query for indexer state.`);
+                continue;
+            }
+
             const indexerUrl = this.manager.state.persisted.settings.indexer.replace('{id}', network.id.toLowerCase());
 
             // Loop through all receive addresses until no more data is found:

@@ -89,6 +89,10 @@ export class NetworkStatusManager {
         return Array.from(this.networks.values());
     }
 
+    get(networkType: string) {
+        return this.networks.get(networkType);
+    }
+
     /** Update the network status. This can be done internally or externally, depending on the scenario. */
     update(networkStatus: NetworkStatus) {
         this.networks.set(networkStatus.networkType, networkStatus);
