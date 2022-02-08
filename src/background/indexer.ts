@@ -423,54 +423,61 @@ export class IndexerService {
             const addressEntry = value.addressEntry;
             const network = this.manager.getNetwork(account.networkType);
             const indexerUrl = this.manager.state.persisted.settings.indexer.replace('{id}', network.id.toLowerCase());
+            const networkStatus = this.manager.status.get(account.networkType);
 
-            try {
-                // We don't have Angular context available in the background, we we'll rely on axios to perform queries:
-                const date = new Date().toISOString();
-                const response = await axios.get(`${indexerUrl}/api/query/address/${addressEntry.address}`);
-                const data = response.data;
+            // If the current network status is anything other than online, skip indexing.
+            if (networkStatus && networkStatus.availability != IndexerApiStatus.Online) {
+                this.logger.warn(`Network ${account.networkType} is not online. Skipping query for indexer state.`);
 
-                // If there is any difference in the balance, make sure we update!
-                if (addressEntry.balance != data.balance) {
-                    this.logger.info('BALANCE IS DIFFERENT, UPDATE STATE!', addressEntry.balance, data.balance, data);
-                    debugger;
-                    await this.updateAddressState(indexerUrl, value.addressEntry, value.change, data, account);
+            } else {
+                try {
+                    // We don't have Angular context available in the background, we we'll rely on axios to perform queries:
+                    const date = new Date().toISOString();
+                    const response = await axios.get(`${indexerUrl}/api/query/address/${addressEntry.address}`);
+                    const data = response.data;
 
-                    // Stop watching this address.
-                    this.a.delete(key);
-                } else if (data.pendingSent > 0 || data.pendingReceived > 0) {
-                    this.logger.info('PENDING, UPDATE STATE!');
+                    // If there is any difference in the balance, make sure we update!
+                    if (addressEntry.balance != data.balance) {
+                        this.logger.info('BALANCE IS DIFFERENT, UPDATE STATE!', addressEntry.balance, data.balance, data);
+                        debugger;
+                        await this.updateAddressState(indexerUrl, value.addressEntry, value.change, data, account);
 
-                    // If there is any pending, we'll continue watching this address.
-                    await this.updateAddressState(indexerUrl, value.addressEntry, value.change, data, account);
-                    // Continue watching this address as long as there is pending, when pending becomes 0, the balance should hopefully
-                    // be updated and one final update will be performed before removing this watch entry.
-                } else {
-                    // -1 means we will process forever until this address has been used and spent.
-                    if (value.count === -1) {
-                        this.logger.debug('Will continue to process until change discovered: ', value);
+                        // Stop watching this address.
+                        this.a.delete(key);
+                    } else if (data.pendingSent > 0 || data.pendingReceived > 0) {
+                        this.logger.info('PENDING, UPDATE STATE!');
+
+                        // If there is any pending, we'll continue watching this address.
+                        await this.updateAddressState(indexerUrl, value.addressEntry, value.change, data, account);
+                        // Continue watching this address as long as there is pending, when pending becomes 0, the balance should hopefully
+                        // be updated and one final update will be performed before removing this watch entry.
                     } else {
-                        // If there are no difference in balance and no pending and we've queried already 10 times (10 * 10 seconds), we'll
-                        // stop watching this address.
-                        value.count = value.count + 1;
+                        // -1 means we will process forever until this address has been used and spent.
+                        if (value.count === -1) {
+                            this.logger.debug('Will continue to process until change discovered: ', value);
+                        } else {
+                            // If there are no difference in balance and no pending and we've queried already 10 times (10 * 10 seconds), we'll
+                            // stop watching this address.
+                            value.count = value.count + 1;
 
-                        this.logger.debug('Will continue to process for a little longer: ', value.count);
+                            this.logger.debug('Will continue to process for a little longer: ', value.count);
 
-                        if (value.count > 10) {
-                            // When finished, remove from the list.
-                            this.logger.debug('Watching was finished, removing: ', key);
-                            this.a.delete(key);
+                            if (value.count > 10) {
+                                // When finished, remove from the list.
+                                this.logger.debug('Watching was finished, removing: ', key);
+                                this.a.delete(key);
+                            }
                         }
                     }
-                }
-            } catch (error) {
-                this.manager.status.update({ networkType: account.networkType, status: 'Error', availability: IndexerApiStatus.Error });
-                account.networkStatus = 'Error';
+                } catch (error) {
+                    this.manager.status.update({ networkType: account.networkType, status: 'Error', availability: IndexerApiStatus.Error });
+                    account.networkStatus = 'Error';
 
-                this.logger.error(error);
-                // TODO: Implement error handling in background and how to send it to UI.
-                // We should probably have an error log in settings, so users can see background problems as well.
-                this.manager.communication.sendToAll('error', error);
+                    this.logger.error(error);
+                    // TODO: Implement error handling in background and how to send it to UI.
+                    // We should probably have an error log in settings, so users can see background problems as well.
+                    this.manager.communication.sendToAll('error', error);
+                }
             }
         });
     }
