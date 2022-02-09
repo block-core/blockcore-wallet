@@ -12,6 +12,7 @@ import * as QRCode from 'qrcode';
 import { Address, Transaction, TransactionView } from '../../interfaces';
 import { NetworksService } from '../../services/networks.service';
 import { Network } from '../../../background/networks';
+import { environment } from '../../../environments/environment';
 var QRCode2 = require('qrcode');
 
 @Component({
@@ -83,12 +84,10 @@ export class AccountTransactionComponent implements OnInit, OnDestroy {
             // this.icon = this.uiState.activeAccount?.icon;
             // console.log('ROUTE CHANGE 2');
         });
-
-
     }
 
     openExplorer(txid: string) {
-        chrome.tabs.create({ url: `https://explorer.blockcore.net/${this.network.id}/explorer/transaction/${txid}`, active: false });
+        chrome.tabs.create({ url: `${environment.instanceExplorerUrl}/${this.network.id}/explorer/transaction/${txid}`, active: false });
     }
 
     ngOnDestroy(): void {

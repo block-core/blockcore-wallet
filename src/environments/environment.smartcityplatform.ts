@@ -7,5 +7,6 @@ export const environment = {
   instance: 'smartcityplatform',
   instanceName: 'Smart City Platform',
   instanceUrl: 'https://www.city-chain.org/',
+  instanceExplorerUrl: 'https://explorer.city-chain.org',
   networks: ['CITY', 'IDENTITY', 'NOSTR']
 };
