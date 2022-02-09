@@ -4,7 +4,7 @@ export class TCRS implements Network {
     id: string = 'TCRS';
     name: string = 'CirrusTest';
     symbol = 'TCRS';
-    network: number = 401;
+    network: number = 400;
     purpose: number = 44;
     messagePrefix = '\x18Bitcoin Signed Message:\n';
     bech32 = 'tb';

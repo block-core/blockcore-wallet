@@ -4,7 +4,7 @@ export class TSTRAX implements Network {
     id: string = 'TSTRAX';
     name: string = 'StratisTest';
     symbol = 'TSTRAX';
-    network: number = 105105;
+    network: number = 1;
     purpose: number = 44;
     messagePrefix = '\x18Bitcoin Signed Message:\n';
     bech32 = 'tstrax';
