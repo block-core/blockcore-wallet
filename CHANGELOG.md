@@ -1,3 +1,12 @@
+## <small>0.0.12 (2022-02-09)</small>
+
+* Add handling of indexer online but node is offline ([0dacaa6](https://github.com/block-core/blockcore-extension/commit/0dacaa6))
+* Add the network status check to watch indexer also ([6401991](https://github.com/block-core/blockcore-extension/commit/6401991))
+* Fixing the network configuration for test networks ([283ac79](https://github.com/block-core/blockcore-extension/commit/283ac79))
+* Update the changelog and version ([e759009](https://github.com/block-core/blockcore-extension/commit/e759009))
+
+
+
 ## <small>0.0.11 (2022-02-08)</small>
 
 * Add a rudimentary network status indicator ([65c5528](https://github.com/block-core/blockcore-extension/commit/65c5528))
