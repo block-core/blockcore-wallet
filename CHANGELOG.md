@@ -1,3 +1,11 @@
+## <small>0.0.13 (2022-02-10)</small>
+
+* Fix issue with accounts not having identifier ([5a9e3cf](https://github.com/block-core/blockcore-extension/commit/5a9e3cf))
+* Make the explorer link dependent on instance of extension ([4588833](https://github.com/block-core/blockcore-extension/commit/4588833))
+* Update changelog and version ([01d1624](https://github.com/block-core/blockcore-extension/commit/01d1624))
+
+
+
 ## <small>0.0.12 (2022-02-09)</small>
 
 * Add handling of indexer online but node is offline ([0dacaa6](https://github.com/block-core/blockcore-extension/commit/0dacaa6))
