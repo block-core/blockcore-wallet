@@ -231,6 +231,8 @@ export class IndexerService {
                 if (counter > 4) {
                     if (changes) {
                         account.state.balance = this.manager.walletManager.calculateBalance(account);
+                        account.state.pendingReceived = this.manager.walletManager.calculatePendingReceived(account);
+                        account.state.pendingSent = this.manager.walletManager.calculatePendingSent(account);
                         await this.manager.state.save();
                         this.manager.broadcastState();
                     }
@@ -329,6 +331,8 @@ export class IndexerService {
 
                     if (changes) {
                         account.state.balance = this.manager.walletManager.calculateBalance(account);
+                        account.state.pendingReceived = this.manager.walletManager.calculatePendingReceived(account);
+                        account.state.pendingSent = this.manager.walletManager.calculatePendingSent(account);
                         await this.manager.state.save();
                         this.manager.broadcastState();
                     }
@@ -355,6 +359,8 @@ export class IndexerService {
                 // Finally set the date on the account itself.
                 account.state.retrieved = new Date().toISOString();
                 account.state.balance = this.manager.walletManager.calculateBalance(account);
+                account.state.pendingReceived = this.manager.walletManager.calculatePendingReceived(account);
+                account.state.pendingSent = this.manager.walletManager.calculatePendingSent(account);
                 // Save and broadcast for every full account query
                 await this.manager.state.save();
                 this.manager.broadcastState();
@@ -410,6 +416,8 @@ export class IndexerService {
         // Finally set the date on the account itself.
         account.state.retrieved = new Date().toISOString();
         account.state.balance = this.manager.walletManager.calculateBalance(account);
+        account.state.pendingReceived = this.manager.walletManager.calculatePendingReceived(account);
+        account.state.pendingSent = this.manager.walletManager.calculatePendingSent(account);
 
         await this.manager.state.save();
         this.manager.broadcastState();
@@ -438,13 +446,14 @@ export class IndexerService {
 
                     // If there is any difference in the balance, make sure we update!
                     if (addressEntry.balance != data.balance) {
-                        this.logger.info('BALANCE IS DIFFERENT, UPDATE STATE!', addressEntry.balance, data.balance, data);
                         debugger;
+                        this.logger.info('BALANCE IS DIFFERENT, UPDATE STATE!', addressEntry.balance, data.balance, data);
                         await this.updateAddressState(indexerUrl, value.addressEntry, value.change, data, account);
 
                         // Stop watching this address.
                         this.a.delete(key);
                     } else if (data.pendingSent > 0 || data.pendingReceived > 0) {
+                        debugger;
                         this.logger.info('PENDING, UPDATE STATE!');
 
                         // If there is any pending, we'll continue watching this address.

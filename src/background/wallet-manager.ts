@@ -152,6 +152,20 @@ export class WalletManager {
         return (<any>balanceReceive + <any>balanceChange);
     }
 
+    calculatePendingReceived(account: Account) {
+        let balanceReceive = account.state.receive.map(x => x.pendingReceived).reduce((x: any, y: any) => x + y);
+        let balanceChange = account.state.change.map(x => x.pendingReceived).reduce((x: any, y: any) => x + y);
+
+        return (<any>balanceReceive + <any>balanceChange);
+    }
+
+    calculatePendingSent(account: Account) {
+        let balanceReceive = account.state.receive.map(x => x.pendingSent).reduce((x: any, y: any) => x + y);
+        let balanceChange = account.state.change.map(x => x.pendingSent).reduce((x: any, y: any) => x + y);
+
+        return (<any>balanceReceive + <any>balanceChange);
+    }
+
     async revealSecretRecoveryPhrase(walletId: string, password: string) {
         var wallet = this.manager.walletManager.getWallet(walletId);
         let unlockedMnemonic = null;

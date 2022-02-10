@@ -56,3 +56,9 @@ textarea {
 .account-tabs {
   margin-top: 1em;
 }
+
+.unconfirmed {
+  font-style: italic !important;
+  /* TODO: Use variables from the theme */
+  color: gray !important;
+}

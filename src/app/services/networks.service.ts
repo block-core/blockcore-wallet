@@ -7,6 +7,7 @@ import { Network } from '../../background/networks';
 import { Account, Wallet } from '../interfaces';
 import { Environments } from '../../environments/environments';
 import { BehaviorSubject } from 'rxjs';
+const { v4: uuidv4 } = require('uuid');
 
 @Injectable({
     providedIn: 'root'
@@ -46,6 +47,7 @@ export class NetworksService {
         switch (environment.instance) {
             case Environments.Blockcore:
                 accounts = [{
+                    identifier: uuidv4(),
                     selected: true,
                     networkType: 'STRAX',
                     index: 0,
@@ -62,6 +64,7 @@ export class NetworksService {
                         change: []
                     }
                 }, {
+                    identifier: uuidv4(),
                     selected: true,
                     networkType: 'CRS',
                     index: 0,
@@ -78,6 +81,7 @@ export class NetworksService {
                         change: []
                     }
                 }, {
+                    identifier: uuidv4(),
                     index: 0,
                     networkType: 'TSTRAX',
                     selected: false,
@@ -94,6 +98,7 @@ export class NetworksService {
                         change: []
                     },
                 }, {
+                    identifier: uuidv4(),
                     index: 0,
                     networkType: 'TCRS',
                     selected: false,
@@ -157,6 +162,7 @@ export class NetworksService {
                 break;
             case Environments.CoinVault:
                 accounts = [{
+                    identifier: uuidv4(),
                     index: 0,
                     networkType: 'STRAX',
                     selected: true,
@@ -173,6 +179,7 @@ export class NetworksService {
                         change: []
                     },
                 }, {
+                    identifier: uuidv4(),
                     index: 0,
                     networkType: 'CRS',
                     selected: true,
@@ -189,6 +196,7 @@ export class NetworksService {
                         change: []
                     },
                 }, {
+                    identifier: uuidv4(),
                     index: 0,
                     networkType: 'TSTRAX',
                     selected: false,
@@ -205,6 +213,7 @@ export class NetworksService {
                         change: []
                     },
                 }, {
+                    identifier: uuidv4(),
                     index: 0,
                     networkType: 'TCRS',
                     selected: false,
@@ -224,6 +233,7 @@ export class NetworksService {
                 break;
             case Environments.SmartCityPlatform:
                 accounts = [{
+                    identifier: uuidv4(),
                     index: 0,
                     networkType: 'CITY',
                     selected: true,
@@ -240,6 +250,7 @@ export class NetworksService {
                         change: []
                     },
                 }, {
+                    identifier: uuidv4(),
                     index: 0,
                     selected: true,
                     networkType: 'IDENTITY',
@@ -256,6 +267,7 @@ export class NetworksService {
                         change: []
                     },
                 }, {
+                    identifier: uuidv4(),
                     index: 0,
                     networkType: 'NOSTR',
                     name: 'Nostr',

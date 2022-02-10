@@ -7,12 +7,19 @@
 <div class="page" *ngIf="uiState.activeAccount && uiState.activeAccount.network != 401">
     <mat-card>
         <!-- <mat-card-subtitle>{{uiState.activeAccount.name}}</mat-card-subtitle> -->
-        <mat-card-subtitle>Balance</mat-card-subtitle>
+        <mat-card-subtitle>Balance <span
+                *ngIf="uiState.activeAccount.state?.pendingReceived || uiState.activeAccount.state?.pendingReceived">
+                ({{uiState.activeAccount.state?.pendingReceived
+                || 0 | amount}} unconfirmed)
+            </span></mat-card-subtitle>
         <mat-card-title>{{uiState.activeAccount.state?.balance || 0 | amount}} {{uiState.activeAccount |
             network}}
         </mat-card-title>
         <!-- <mat-card-content>
-            <p>$0</p>
+            <p>
+                Pending receive: <br>
+                Pending sending: 
+            </p>
         </mat-card-content> -->
         <mat-divider inset></mat-divider>
         <mat-card-actions class="full-action-buttons">
@@ -54,9 +61,11 @@
                         <mat-icon class="negative-color" *ngIf="transaction.entryType == 'send'">remove
                         </mat-icon> -->
 
-                        <span class="positive-color" *ngIf="transaction.entryType == 'receive'">+{{transaction.calculatedValue | amount}}</span>
-                        <span class="negative-color" *ngIf="transaction.entryType == 'send'">-{{transaction.calculatedValue | amount}}</span>
-                        
+                        <span class="positive-color" [ngClass]="{unconfirmed: transaction.confirmations == 0}"
+                            *ngIf="transaction.entryType == 'receive'">+{{transaction.calculatedValue | amount}}</span>
+                        <span class="negative-color" [ngClass]="{unconfirmed: transaction.confirmations == 0}"
+                            *ngIf="transaction.entryType == 'send'">-{{transaction.calculatedValue | amount}}</span>
+
                         <!-- <span *ngIf="uiState.persisted.settings.developer"><br>Transacted total: {{transaction.value |
                             amount}}</span> -->
                     </div>

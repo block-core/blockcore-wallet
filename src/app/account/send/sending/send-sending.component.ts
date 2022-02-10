@@ -31,7 +31,6 @@ export class AccountSendSendingComponent implements OnInit, OnDestroy {
         this.sendService.loading = true;
 
         this.sub = this.communication.listen('transaction-sent', async (data: { transactionId: string, transactionHex: string }) => {
-            debugger;
             this.sendService.loading = false;
             this.sendService.transactionId = data.transactionId;
             this.sendService.transactionHex = data.transactionHex;

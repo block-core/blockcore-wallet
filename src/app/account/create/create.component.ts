@@ -10,6 +10,7 @@ import { CommunicationService } from '../../services/communication.service';
 import { IconService } from '../../services/icon.service';
 import { NetworksService } from '../../services/networks.service';
 import { Network } from '../../../background/networks';
+const { v4: uuidv4 } = require('uuid');
 
 @Component({
     selector: 'app-account-create',
@@ -159,6 +160,7 @@ export class AccountCreateComponent implements OnInit, OnDestroy {
 
         // TODO: Get the account index from the derivation path if user customizes it.
         const account: Account = {
+            identifier: uuidv4(),
             type: 'coin', // TODO: Change this depending on what user selects.
             networkType: this.selectedNetwork.id,
             name: this.name,

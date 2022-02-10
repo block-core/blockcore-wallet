@@ -58,7 +58,9 @@ interface Account {
     purposeAddress: number;
 
     icon?: string;
-    identifier?: string;
+
+    /** The unique identifier for this account. */
+    identifier: string;
 
     /** Extended Public Key for this account. */
     xpub?: string;
@@ -78,8 +80,16 @@ interface AccountState {
     /** The time when this account data was updated */
     retrieved: string;
 
+    /** The total amount of pending received on this account */
+    pendingReceived?: number;
+
+    /** The total amount of pending sent on this account. */
+    pendingSent?: number;
+
+    /** All the known used and one unused receive address. */
     receive: Address[];
 
+    /** All the known used and one unused change address. */
     change: Address[];
 }
 
@@ -97,8 +107,8 @@ interface Address {
     totalSentCount?: BigInt;
     totalStakeCount?: BigInt;
     totalMineCount?: BigInt;
-    pendingSent?: BigInt;
-    pendingReceived?: BigInt;
+    pendingSent?: number;
+    pendingReceived?: number;
 
     retrieved?: string;
 
@@ -124,7 +134,7 @@ interface Transaction {
     transactionHash: string;
     value: BigInt;
     blockIndex: BigInt;
-    confirmations: BigInt;
+    confirmations: BigInt | number;
     details: TransactionInfo;
     hex: string;
 }
@@ -139,7 +149,7 @@ interface TransactionInfo {
     blockIndex: BigInt;
     timestamp: BigInt;
     transactionId: string;
-    confirmations: BigInt;
+    confirmations: BigInt | number;
     isCoinbase: boolean;
     isCoinstake: boolean;
     lockTime: string;
