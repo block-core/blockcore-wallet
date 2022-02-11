@@ -38,10 +38,14 @@ jobs:
           echo RELEASE_NAME_SMARTCITYPLATFORM=${{ env.SMARTCITYPLATFORM }}-${{ env.VERSION }}.zip >> $GITHUB_ENV
         shell: bash
 
-      - name: Install and Build
-        run: |
-          npm ci
-          npm run all
+      - name: Setup
+        run: npm ci
+
+      - name: Test
+        run: npm test -- --no-watch --no-progress --browsers=ChromeHeadlessCI
+
+      - name: Build
+        run: npm run all
 
       - name: Package Blockcore
         run: |
