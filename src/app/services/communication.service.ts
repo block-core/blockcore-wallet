@@ -11,28 +11,30 @@ export class CommunicationService {
     private consumers = new Map<string, any[]>();
 
     constructor(private ngZone: NgZone) {
-        this.port = chrome.runtime.connect({ name: 'extension-channel' });
+        if (chrome.runtime) {
+            this.port = chrome.runtime.connect({ name: 'extension-channel' });
 
-        this.port.onDisconnect.addListener(d => {
-            console.warn('We have disconnected the Port with background process.');
-            this.port = null;
-        });
+            this.port.onDisconnect.addListener(d => {
+                console.warn('We have disconnected the Port with background process.');
+                this.port = null;
+            });
 
-        this.port.onMessage.addListener(message => {
-            console.log('UI:onMessage:', message);
+            this.port.onMessage.addListener(message => {
+                console.log('UI:onMessage:', message);
 
-            if (!message.method) {
-                return;
-            }
+                if (!message.method) {
+                    return;
+                }
 
-            // TODO: Do we want to and need to protect ourself by verifying method and data structures?
-            // As a minimum, we'll serialize to JSON and back to Object.
-            // UPDATE: JSON serialization was removed since it destroyed the "Map" object instances.
-            const data = message.data; // message.data ? JSON.parse(JSON.stringify(message.data)) : undefined;
-            const method = message.method; // JSON.parse(JSON.stringify(message.method));
+                // TODO: Do we want to and need to protect ourself by verifying method and data structures?
+                // As a minimum, we'll serialize to JSON and back to Object.
+                // UPDATE: JSON serialization was removed since it destroyed the "Map" object instances.
+                const data = message.data; // message.data ? JSON.parse(JSON.stringify(message.data)) : undefined;
+                const method = message.method; // JSON.parse(JSON.stringify(message.method));
 
-            this.trigger(method, data);
-        });
+                this.trigger(method, data);
+            });
+        }
     }
 
     private trigger(method: string, data: any) {
