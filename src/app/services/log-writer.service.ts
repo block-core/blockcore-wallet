@@ -7,7 +7,7 @@ export class LogWriterService extends NGXLoggerWriterService {
     errors: INGXLoggerMetadata[] = [];
 
     /** Write the content sent to the log function to the sessionStorage */
-    public writeMessage(metadata: INGXLoggerMetadata, config: INGXLoggerConfig): void {
+    public override writeMessage(metadata: INGXLoggerMetadata, config: INGXLoggerConfig): void {
         super.writeMessage(metadata, config);
 
         // If the log has 100 items or more, clear 50 oldest.
