@@ -45,7 +45,7 @@ jobs:
         run: npm i -D puppeteer karma-chrome-launcher
 
       - name: Test
-        run: npm test -- --no-watch --no-progress --browsers=ChromeHeadlessCI
+        run: npm test -- --no-watch --no-progress --browsers=ChromeHeadless
 
       - name: Build
         run: npm run all
