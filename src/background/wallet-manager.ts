@@ -337,9 +337,9 @@ export class WalletManager {
         return false;
     }
 
-    async setActiveAccount(index: number) {
-        if (this.activeWallet.activeAccountIndex != index) {
-            this.activeWallet.activeAccountIndex = index;
+    async setActiveAccount(id: string) {
+        if (this.activeWallet.activeAccountId != id) {
+            this.activeWallet.activeAccountId = id;
             return true;
         }
 
@@ -385,7 +385,7 @@ export class WalletManager {
         wallet.accounts.push(account);
 
         // Update the active account index to new account.
-        wallet.activeAccountIndex = (wallet.accounts.length - 1);
+        wallet.activeAccountId = account.identifier;
 
         // After new account has been added and set as active, we'll generate some addresses:
 

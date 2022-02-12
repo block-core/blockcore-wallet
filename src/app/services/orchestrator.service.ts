@@ -191,13 +191,15 @@ export class OrchestratorService {
         this.communication.send('set-active-wallet-id', { id });
     }
 
-    setActiveAccountId(index: number) {
+    setActiveAccountId(identifier: string) {
         // Update local state as well.
         if (this.uiState.activeWallet) {
-            this.uiState.activeWallet.activeAccountIndex = index;
+            this.uiState.activeWallet.activeAccountId = identifier;
+            // this.uiState.activeWallet.activeAccountIndex
+            // this.uiState.activeWallet.activeAccountIndex = index;
         }
 
-        this.communication.send('set-active-account', { walletId: this.uiState.activeWallet.id, index });
+        this.communication.send('set-active-account', { walletId: this.uiState.activeWallet.id, accountId: identifier });
     }
 
     generateVaultConfiguration(domain: string) {
@@ -216,8 +218,8 @@ export class OrchestratorService {
         this.communication.send('identity-publish', identity);
     }
 
-    updateAccount(walletId: string, index: number, fields: { name: string, icon?: string }) {
-        this.communication.send('account-update', { walletId, index, fields });
+    updateAccount(walletId: string, accountId: string, fields: { name: string, icon?: string }) {
+        this.communication.send('account-update', { walletId, accountId, fields });
     }
 
     setWalletName(walletId: string, name: string) {
@@ -228,8 +230,8 @@ export class OrchestratorService {
         this.communication.send('wallet-unlock', { walletId, password, hideFromLog: true });
     }
 
-    removeAccount(walletId: string, index: number) {
-        this.communication.send('account-remove', { walletId, index });
+    removeAccount(walletId: string, accountId: string) {
+        this.communication.send('account-remove', { walletId, accountId });
     }
 
     lock(walletId: string) {

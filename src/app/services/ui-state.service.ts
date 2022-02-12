@@ -88,15 +88,13 @@ export class UIState {
             return undefined;
         }
 
-        if (activeWallet.activeAccountIndex == null || activeWallet.activeAccountIndex == -1) {
-            activeWallet.activeAccountIndex = 0;
-        }
-        // If the active index is higher than available accounts, reset to zero.
-        else if (activeWallet.activeAccountIndex >= activeWallet.accounts.length) {
-            activeWallet.activeAccountIndex = 0;
+        if (activeWallet.activeAccountId == null) {
+            return undefined;
         }
 
-        return this.activeWallet.accounts[activeWallet.activeAccountIndex];
+        const accountIndex = activeWallet.accounts.findIndex(a => a.identifier == activeWallet.activeAccountId);
+
+        return this.activeWallet.accounts[accountIndex];
     }
 
     action?: Action;

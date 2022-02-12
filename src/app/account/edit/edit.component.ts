@@ -82,7 +82,7 @@ export class AccountEditComponent implements OnInit, OnDestroy {
 
     // We won't allow empty names for accounts.
     if (this.accountName) {
-      this.manager.updateAccount(this.uiState.activeWallet.id, this.uiState.activeWallet.activeAccountIndex, { name: this.accountName, icon: this.icon });
+      this.manager.updateAccount(this.uiState.activeWallet.id, this.uiState.activeWallet.activeAccountId, { name: this.accountName, icon: this.icon });
     }
   }
 

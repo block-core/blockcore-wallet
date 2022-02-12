@@ -53,20 +53,21 @@ export class AccountComponent implements OnInit, OnDestroy {
 
     this.activatedRoute.paramMap.subscribe(async params => {
       console.log('PARAMS:', params);
-      const index: any = params.get('index');
+      const accountIdentifier: any = params.get('index');
 
       if (!this.uiState.activeWallet) {
         return;
       }
 
-      this.manager.setActiveAccountId(index);
+      // this.manager.setActiveAccountId(index);
+      this.manager.setActiveAccountId(accountIdentifier);
       this.uiState.title = this.uiState.activeAccount?.name || '';
-      this.previousIndex = index;
+      // this.previousIndex = index;
 
       if (this.uiState.activeAccount?.network == NETWORK_IDENTITY) {
-        this.router.navigate(['account', 'view', 'identity', index]);
+        this.router.navigate(['account', 'view', 'identity', accountIdentifier]);
       } else if (this.uiState.activeAccount?.network == NETWORK_NOSTR) {
-        this.router.navigate(['account', 'view', 'nostr', index]);
+        this.router.navigate(['account', 'view', 'nostr', accountIdentifier]);
       }
     });
   }

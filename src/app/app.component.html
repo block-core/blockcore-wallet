@@ -140,7 +140,7 @@
         </div>
       </div>
 
-      <button mat-button [routerLink]="['account', 'edit', uiState.activeWallet?.activeAccountIndex]"
+      <button mat-button [routerLink]="['account', 'edit', uiState.activeWallet?.activeAccountId]"
         (click)="draweraccount.toggle()">{{ 'App.EditAccount' | translate}}</button>
 
     </div>
@@ -164,7 +164,7 @@
       </mat-form-field> -->
 
       <a mat-list-item *ngFor="let account of uiState.activeWallet.accounts; let i = index"
-        (click)="onAccountChanged(i)" routerLinkActive="active-link">
+        (click)="onAccountChanged(account.identifier)" routerLinkActive="active-link">
         <mat-icon mat-list-icon>{{account.icon}}</mat-icon>
         <div mat-line class="name-field">{{account.name | truncate}}</div>
         <div mat-line>{{account | network}}</div>

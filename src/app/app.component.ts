@@ -140,10 +140,10 @@ export class AppComponent implements OnInit {
     // this.router.navigateByUrl('/home');
   }
 
-  onAccountChanged(index: number) {
+  onAccountChanged(accountId: string) {
     this.draweraccount.toggle();
 
-    this.manager.setActiveAccountId(Number(index));
+    this.manager.setActiveAccountId(accountId);
 
     this.cd.detectChanges();
   }

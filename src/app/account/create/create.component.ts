@@ -78,7 +78,8 @@ export class AccountCreateComponent implements OnInit, OnDestroy {
 
         this.sub = this.communication.listen('account-created', () => {
             if (this.uiState.activeWallet) {
-                this.router.navigateByUrl('/account/view/' + (this.uiState.activeWallet.accounts.length - 1));
+                const mostRecentAccount = this.uiState.activeWallet.accounts[this.uiState.activeWallet.accounts.length - 1];
+                this.router.navigateByUrl('/account/view/' + mostRecentAccount.identifier);
             }
         });
     }

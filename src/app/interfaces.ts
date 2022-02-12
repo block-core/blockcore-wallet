@@ -204,7 +204,8 @@ interface Wallet {
     /** Accounts that belong to a wallet. Do not manipulate this list directly, but do all operations through the WalletManager. */
     accounts: Account[];
     mnemonic: string;
-    activeAccountIndex: number;
+    // activeAccountIndex: number;
+    activeAccountId: string;
 }
 
 interface Persisted {

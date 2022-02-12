@@ -212,7 +212,7 @@ export class VaultIdentityComponent implements OnInit, OnDestroy {
       this.identity = this.uiState.store.identities.find(i => i.id == this.identity?.id);
     });
 
-    this.sub = this.communication.listen('active-account-changed', (data: any) => {
+    this.sub = this.communication.listen('active-account-changed', (data: { walletId: string, accountId: string }) => {
       // If we are currently viewing an account and the user changes, we'll refresh this view.
       // if (this.previousIndex != data.index) {
       //   this.router.navigate(['account', 'view', data.index]);
@@ -220,9 +220,9 @@ export class VaultIdentityComponent implements OnInit, OnDestroy {
 
       // console.log('PARAMS:', params);
       // const index: any = params.get('index');
-      const index = data.index;
+      // const index = data.index;
 
-      console.log('Index to view:', index);
+      // console.log('Index to view:', index);
 
       if (!this.uiState.activeWallet) {
         return;
@@ -236,7 +236,7 @@ export class VaultIdentityComponent implements OnInit, OnDestroy {
       // Persist when changing accounts.
       // this.uiState.save();
 
-      this.previousIndex = index;
+      // this.previousIndex = index;
 
       var did = this.uiState.activeAccount?.identifier;
       this.identity = this.uiState.store.identities.find(i => i.id == did);

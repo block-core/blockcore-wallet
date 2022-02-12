@@ -10,7 +10,7 @@
                 <div mat-subheader>{{ 'Dashboard.Accounts' | translate }}</div>
 
                 <a mat-list-item *ngFor="let account of uiState.activeWallet.accounts; let i = index"
-                    routerLinkActive="active-link" [routerLink]="['/', 'account', 'view', i]">
+                    routerLinkActive="active-link" [routerLink]="['/', 'account', 'view', account.identifier]">
                     <mat-icon mat-list-icon>{{account.icon}}</mat-icon>
                     <div mat-line>{{account.name}}<span class="account-balance">{{account.state.balance |
                             amount}}</span></div>

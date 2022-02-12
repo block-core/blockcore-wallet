@@ -415,14 +415,15 @@ export class OrchestratorBackgroundService {
         //     this.manager.communication.send(port, 'vault-configuration', vaultConfiguration);
         // });
 
-        this.manager.communication.listen('account-update', async (port: any, data: { walletId: string, index: number, fields: { name: string, icon: string } }) => {
+        this.manager.communication.listen('account-update', async (port: any, data: { walletId: string, accountId: string, fields: { name: string, icon: string } }) => {
             const wallet = this.manager.walletManager.getWallet(data.walletId);
 
             if (!wallet) {
                 return;
             }
 
-            const account = wallet.accounts[data.index];
+            const accountIndex = wallet.accounts.findIndex(a => a.identifier == data.accountId);
+            const account = wallet.accounts[accountIndex];
             account.name = data.fields.name;
             account.icon = data.fields.icon;
 
@@ -455,20 +456,20 @@ export class OrchestratorBackgroundService {
             this.refreshState();
         });
 
-        this.manager.communication.listen('account-remove', async (port: any, data: { walletId: string, index: number }) => {
+        this.manager.communication.listen('account-remove', async (port: any, data: { walletId: string, accountId: string }) => {
             const wallet = this.manager.walletManager.getWallet(data.walletId);
 
             if (!wallet) {
                 return;
             }
 
-            // Remove the active account from the array.
-            wallet.accounts.splice(data.index, 1);
+            const accountIndex = wallet.accounts.findIndex(a => a.identifier == data.accountId);
+            wallet.accounts.splice(accountIndex, 1);
 
             if (wallet.accounts.length > 0) {
-                wallet.activeAccountIndex = 0;
+                wallet.activeAccountId = wallet.accounts[0].identifier;
             } else {
-                wallet.activeAccountIndex = -1;
+                wallet.activeAccountId = null;
             }
 
             await this.manager.state.save();
@@ -866,12 +867,12 @@ export class OrchestratorBackgroundService {
             this.refreshState();
         });
 
-        this.manager.communication.listen('set-active-account', async (port: any, data: { walletId: string, index: number }) => {
+        this.manager.communication.listen('set-active-account', async (port: any, data: { walletId: string, accountId: string }) => {
             // Set the new active wallet, if different from before.
             const changedWallet = await this.manager.walletManager.setActiveWallet(data.walletId);
 
             // Set the new active account, if different from before.
-            const changedAccount = await this.manager.walletManager.setActiveAccount(data.index);
+            const changedAccount = await this.manager.walletManager.setActiveAccount(data.accountId);
 
             if (changedWallet || changedAccount) {
                 await this.manager.state.save();
@@ -883,7 +884,7 @@ export class OrchestratorBackgroundService {
             }
 
             if (changedAccount) {
-                this.manager.communication.sendToAll('active-account-changed', { walletId: data.walletId, index: data.index });
+                this.manager.communication.sendToAll('active-account-changed', { walletId: data.walletId, accountId: data.accountId });
             }
         });
 

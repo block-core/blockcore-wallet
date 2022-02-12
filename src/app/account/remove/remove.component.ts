@@ -23,15 +23,15 @@ export class AccountRemoveComponent {
     this.activatedRoute.paramMap.subscribe(async params => {
 
       console.log('PARAMS:', params);
-      const index: any = params.get('index');
-      console.log('Account Index:', Number(index));
+      const accountId: any = params.get('index');
+      console.log('Account Index:', accountId);
 
       const accountCount = this.uiState.activeWallet?.accounts?.length;
 
       if (this.uiState.activeWallet) {
         // Check if the index is available before allowing to change.
-        if (index != -1 && accountCount != null && index < accountCount) {
-          this.uiState.activeWallet.activeAccountIndex = Number(index);
+        if (accountId && accountCount != null) {
+          this.uiState.activeWallet.activeAccountId = accountId;
         }
         else {
           console.log('Attempting to show account that does not exists.');
@@ -52,7 +52,7 @@ export class AccountRemoveComponent {
 
     var activeWallet = this.uiState.activeWallet;
 
-    this.manager.removeAccount(activeWallet.id, activeWallet.activeAccountIndex);
+    this.manager.removeAccount(activeWallet.id, activeWallet.activeAccountId);
   }
 
   cancel() {
