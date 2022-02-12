@@ -883,9 +883,10 @@ export class OrchestratorBackgroundService {
                 this.manager.communication.sendToAll('active-wallet-changed', { walletId: data.walletId });
             }
 
-            if (changedAccount) {
+            // Trigger the event even though no account was really changed.
+            // if (changedAccount) {
                 this.manager.communication.sendToAll('active-account-changed', { walletId: data.walletId, accountId: data.accountId });
-            }
+            // }
         });
 
         this.manager.communication.listen('wallet-create', async (port: any, data: Wallet) => {

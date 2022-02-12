@@ -45,7 +45,7 @@ export class AccountComponent implements OnInit, OnDestroy {
     private snackBar: MatSnackBar,
     private cd: ChangeDetectorRef) {
 
-    this.uiState.title = 'Account...';
+    this.uiState.title = '';
     this.uiState.showBackButton = true;
 
     if (!this.uiState.hasAccounts) {
