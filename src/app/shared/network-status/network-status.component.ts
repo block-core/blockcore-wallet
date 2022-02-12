@@ -3,8 +3,8 @@ import { IndexerApiStatus, NetworkStatus } from '../../interfaces';
 
 @Component({
     selector: 'app-network-status',
-    template: '<span class="network-status" [matTooltip]="status?.status" [ngClass]="class">.</span>',
-    styles: ['.network-status { font-size: 3em;} .network-status-syncing { color: orange; } .network-status-online { color: green; }  .network-status-error { color: red; } .network-status-offline { color: red; } .network-status-unknown { color: gray; }']
+    template: '<mat-icon class="network-status" [matTooltip]="status?.status" [ngClass]="class">circle</mat-icon>',
+    styles: ['.network-status { font-size: 0.6em;} .network-status-syncing { color: orange; } .network-status-online { color: green; }  .network-status-error { color: red; } .network-status-offline { color: red; } .network-status-unknown { color: gray; }']
 })
 export class NetworkStatusComponent {
     @Input() status: NetworkStatus;

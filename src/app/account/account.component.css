@@ -62,3 +62,7 @@ textarea {
   /* TODO: Use variables from the theme */
   color: gray !important;
 }
+
+.network-status-card {
+  margin-bottom: 1em;
+}

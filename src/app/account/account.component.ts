@@ -8,7 +8,8 @@ import { CommunicationService } from '../services/communication.service';
 import { NETWORK_IDENTITY, NETWORK_NOSTR } from '../shared/constants';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { NetworksService } from '../services/networks.service';
-import { Transaction, TransactionHistory } from '../interfaces';
+import { IndexerApiStatus, NetworkStatus, Transaction, TransactionHistory } from '../interfaces';
+import { NetworkStatusService } from '../services/network-status.service';
 
 @Component({
   selector: 'app-account',
@@ -32,6 +33,7 @@ export class AccountComponent implements OnInit, OnDestroy {
   public networkStatus: any;
   private scanTimer: any;
   addresses: string[];
+  currentNetworkStatus: NetworkStatus;
 
   constructor(
     private http: HttpClient,
@@ -39,6 +41,7 @@ export class AccountComponent implements OnInit, OnDestroy {
     private crypto: CryptoService,
     private router: Router,
     private network: NetworksService,
+    private networkStatusService: NetworkStatusService,
     private manager: OrchestratorService,
     private communication: CommunicationService,
     private activatedRoute: ActivatedRoute,
@@ -65,6 +68,10 @@ export class AccountComponent implements OnInit, OnDestroy {
     });
   }
 
+  getNetworkStatusLabel(status: IndexerApiStatus) {
+    return IndexerApiStatus[status];
+  }
+
   ngOnDestroy(): void {
     if (this.sub) {
       this.communication.unlisten(this.sub);
@@ -88,6 +95,9 @@ export class AccountComponent implements OnInit, OnDestroy {
   scan(force: boolean = false) {
     this.loading = true;
     this.communication.send('account-scan', { force: force, accountId: this.uiState.activeAccount.identifier, walletId: this.uiState.activeWallet.id });
+
+    // Update the network status on every scan.
+    this.currentNetworkStatus = this.networkStatusService.get(this.uiState.activeAccount.networkType);
   }
 
   async toggleNetwork() {
@@ -175,7 +185,13 @@ export class AccountComponent implements OnInit, OnDestroy {
     this.transactions = filteredTransactions as TransactionHistory[];
   }
 
+  updateNetworkStatus() {
+    this.currentNetworkStatus = this.networkStatusService.get(this.uiState.activeAccount.networkType);
+  }
+
   async ngOnInit() {
+    this.updateNetworkStatus();
+
     // This will be triggered when user navigates into the account, since active account state is changed.
     this.sub2 = this.uiState.persisted$.subscribe(() => {
       console.log('NO!!!!!!!!');
@@ -187,6 +203,8 @@ export class AccountComponent implements OnInit, OnDestroy {
     });
 
     this.sub3 = this.communication.listen('active-account-changed', async (data: { walletId: string, accountId: string }) => {
+      this.updateNetworkStatus();
+
       // When the active account has changed, let's update the title:
       // We cannot set title yet, we must wait for callback for changing account...
       this.uiState.title = this.uiState.activeAccount?.name || '';

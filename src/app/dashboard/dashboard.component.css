@@ -5,5 +5,7 @@
 
 .network-status-widget {
   position: absolute;
-  left: 2.4em;
+  left: 3em;
+  top: 2.8em;
+  font-size: 0.8em !important;
 }
