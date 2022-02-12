@@ -41,6 +41,9 @@ jobs:
       - name: Setup
         run: npm ci
 
+      - name: Tooling
+        run: npm i -D puppeteer karma-chrome-launcher
+
       - name: Test
         run: npm test -- --no-watch --no-progress --browsers=ChromeHeadlessCI
 
