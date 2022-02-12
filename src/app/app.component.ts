@@ -89,7 +89,7 @@ export class AppComponent implements OnInit {
 
   verifyPopup() {
     const isInPopup = function () {
-      return (typeof chrome != undefined && chrome.extension) ?
+      return (globalThis.chrome && globalThis.chrome.extension) ?
         chrome.extension.getViews({ type: "popup" }).length > 0 : null;
     }
 

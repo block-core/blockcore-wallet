@@ -11,7 +11,7 @@ export class CommunicationService {
     private consumers = new Map<string, any[]>();
 
     constructor(private ngZone: NgZone) {
-        if (chrome.runtime) {
+        if (globalThis.chrome && globalThis.chrome.runtime) {
             this.port = chrome.runtime.connect({ name: 'extension-channel' });
 
             this.port.onDisconnect.addListener(d => {

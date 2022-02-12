@@ -11,6 +11,7 @@
     "build": "ng build --configuration=production",
     "watch": "ng build --watch",
     "test": "ng test",
+    "test:headless": "ng test --no-watch --no-progress --browsers=ChromeHeadless",
     "test:web": "cd test/web && http-server",
     "version": "node -p \"require('./package.json').version\"",
     "changelog": "conventional-changelog -i CHANGELOG.md -s -r 0 && git add CHANGELOG.md",
