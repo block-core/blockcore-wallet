@@ -31,6 +31,8 @@ export class UIState {
 
     goBackHome = true;
 
+    backUrl: string;
+
     // networkStatus: NetworkStatus[];
 
     // getAllAccounts() {

@@ -12,7 +12,9 @@ export class AccountSendSuccessComponent implements OnInit, OnDestroy {
         public sendService: SendService,
         public uiState: UIState) {
         // When the transaction is done, we'll make sure the back button sends back to home.
-        this.uiState.goBackHome = true;
+        this.uiState.showBackButton = true;
+        this.uiState.goBackHome = false;
+        this.uiState.backUrl = '/account/view/' + sendService.account.identifier;
     }
 
     ngOnDestroy() {

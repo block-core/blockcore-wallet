@@ -130,17 +130,32 @@ export class AccountComponent implements OnInit, OnDestroy {
     const account = this.uiState.activeAccount;
 
     // Get a full list of transactions. We run filter at the end to remove empty entries.
-    const transactions = account.state.receive.flatMap(item => item.transactions).filter((el) => el != null);
+    const transactionsReceive = account.state.receive.flatMap(item => item.transactions).filter((el) => el != null);
+    const transactionsChange = account.state.change.flatMap(item => item.transactions).filter((el) => el != null);
+
+    // console.log('VERIFY TRANSACTIONS1:');
+    // console.log(transactionsReceive);
+
+    // console.log('VERIFY TRANSACTIONS2:');
+    // console.log(transactionsChange);
 
     // Sort the transactions by blockIndex, having the highest number first.
-    const sortedTransactions = transactions.sort((a: any, b: any) => { if (a.blockIndex > b.blockIndex) return -1; return 0; });
+    const sortedReceiveTransactions = transactionsReceive.sort((a: any, b: any) => { if (a.blockIndex > b.blockIndex) return -1; return 0; });
+    const sortedChangeTransactions = transactionsChange.sort((a: any, b: any) => { if (a.blockIndex > b.blockIndex) return -1; return 0; });
+
+    console.log('VERIFY TRANSACTIONS3:');
+    console.log(sortedReceiveTransactions);
+
+    console.log('VERIFY TRANSACTIONS4:');
+    console.log(sortedChangeTransactions);
 
     // Create an array with all addresses that exists.
     this.addresses = [...account.state.receive.map(r => r.address), ...account.state.change.map(c => c.address)];
 
+    console.log('VERIFY TRANSACTIONS5:');
     console.log(this.addresses);
 
-    sortedTransactions.map(t => {
+    sortedReceiveTransactions.map(t => {
       const tx = t as TransactionHistory;
 
       const externalOutputs = t.details.outputs.filter(o => this.addresses.indexOf(o.address) === -1);
@@ -170,15 +185,53 @@ export class AccountComponent implements OnInit, OnDestroy {
       return tx;
     });
 
+    sortedChangeTransactions.map(t => {
+      const tx = t as TransactionHistory;
+
+      const externalOutputs = t.details.outputs.filter(o => this.addresses.indexOf(o.address) === -1);
+      const internalOutputs = t.details.outputs.filter(o => this.addresses.indexOf(o.address) > -1);
+      const externalInputs = t.details.inputs.filter(o => this.addresses.indexOf(o.inputAddress) === -1);
+      const internalInputs = t.details.inputs.filter(o => this.addresses.indexOf(o.inputAddress) > -1);
+
+      // Check if there is any external outputs or inputs. If not, user is sending to themselves:
+      if (externalOutputs.length == 0 && externalInputs.length == 0) {
+        tx.description = 'Consolidated';
+        tx.calculatedAddress = internalOutputs.map(o => o.address).join('<br>');
+      } else {
+
+        if (t.entryType == 'send') {
+          const amount = externalOutputs.map(x => x.balance).reduce((x: any, y: any) => x + y);
+          tx.calculatedValue = amount;
+          tx.calculatedAddress = externalOutputs.map(o => o.address).join('<br>');
+        }
+
+        if (t.entryType == 'receive') {
+          const receivedAmount = internalOutputs.map(x => x.balance).reduce((x: any, y: any) => x + y);
+          tx.calculatedAddress = internalOutputs.map(o => o.address).join('<br>');
+          tx.calculatedValue = receivedAmount;
+        }
+      }
+
+      return tx;
+    });
+
+    console.log('VERIFY TRANSACTIONS6:');
+    console.log(sortedReceiveTransactions);
+
+    console.log('VERIFY TRANSACTIONS7:');
+    console.log(sortedChangeTransactions);
+
+    this.transactions = [...sortedReceiveTransactions, ...sortedChangeTransactions] as TransactionHistory[];
+
     // Remove duplicates based upon transactionhex as it only means that there was multiple inputs in our history
     // and that results in duplicate entries. The unique filtering of transactions is a bit naïve, and if there is 
     // different between "receive" and "send" on the same transaction entry, then either one will show.
-    const filteredTransactions = sortedTransactions.filter((value, index, self) => self.map(x => x.transactionHash).indexOf(value.transactionHash) == index);
+    const filteredTransactions = sortedReceiveTransactions.filter((value, index, self) => self.map(x => x.transactionHash).indexOf(value.transactionHash) == index);
 
-    console.log(sortedTransactions);
+    console.log('VERIFY TRANSACTIONS7:');
     console.log(filteredTransactions);
 
-    this.transactions = filteredTransactions as TransactionHistory[];
+    // this.transactions = filteredTransactions as TransactionHistory[];
   }
 
   updateNetworkStatus() {

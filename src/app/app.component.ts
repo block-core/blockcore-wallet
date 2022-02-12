@@ -83,8 +83,14 @@ export class AppComponent implements OnInit {
     if (this.uiState.goBackHome) {
       this.router.navigateByUrl('/dashboard');
     } else {
-      this.location.back();
+      if (this.uiState.backUrl) {
+        this.router.navigateByUrl(this.uiState.backUrl);
+      } else {
+        this.location.back();
+      }
     }
+
+    this.uiState.backUrl = null;
   }
 
   verifyPopup() {

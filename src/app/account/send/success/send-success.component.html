@@ -12,10 +12,4 @@
 
 <br><br>
 
-<button class="full-width" mat-raised-button routerLink="/dashboard" color="primary">OK</button>
-
-<!-- <br>
-
-<button class="full-width" mat-raised-button routerLink="../success" color="primary">OK</button> -->
-
-<!-- <mat-spinner class="loader"></mat-spinner> -->
+<button class="full-width" mat-raised-button [routerLink]="['/account', 'view', sendService.account.identifier]" color="primary">OK</button>
