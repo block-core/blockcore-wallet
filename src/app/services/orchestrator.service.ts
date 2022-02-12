@@ -185,6 +185,14 @@ export class OrchestratorService {
                 this.router.navigateByUrl('/account/create');
             }
         });
+
+        this.communication.listen('active-account-changed', (value: { walletId: string, accountId: string }) => {
+            console.log('active-account-changed!!', value);
+        });
+
+        this.communication.listen('active-wallet-changed', (value: { walletId: string }) => {
+            console.log('active-account-changed!!', value);
+        });
     }
 
     setActiveWalletId(id: string) {
@@ -192,13 +200,14 @@ export class OrchestratorService {
     }
 
     setActiveAccountId(identifier: string) {
-        // Update local state as well.
-        if (this.uiState.activeWallet) {
-            this.uiState.activeWallet.activeAccountId = identifier;
-            // this.uiState.activeWallet.activeAccountIndex
-            // this.uiState.activeWallet.activeAccountIndex = index;
-        }
+        // // Update local state as well.
+        // if (this.uiState.activeWallet) {
+        //     this.uiState.activeWallet.activeAccountId = identifier;
+        //     // this.uiState.activeWallet.activeAccountIndex
+        //     // this.uiState.activeWallet.activeAccountIndex = index;
+        // }
 
+        // Don't update local state yet, wait for this event to happen.
         this.communication.send('set-active-account', { walletId: this.uiState.activeWallet.id, accountId: identifier });
     }
 

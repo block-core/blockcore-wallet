@@ -142,10 +142,7 @@ export class AppComponent implements OnInit {
 
   onAccountChanged(accountId: string) {
     this.draweraccount.toggle();
-
     this.manager.setActiveAccountId(accountId);
-
-    this.cd.detectChanges();
   }
 
   async onWalletChanged(event: any) {

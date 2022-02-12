@@ -41,8 +41,6 @@ export class AccountSendComponent implements OnInit, OnDestroy {
         // this.uiState.title = 'Receive Address';
         this.uiState.goBackHome = false;
 
-        debugger;
-
         sendService.reset();
 
         const account = this.uiState.activeAccount;

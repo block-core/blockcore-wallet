@@ -25,6 +25,7 @@ export class AccountComponent implements OnInit, OnDestroy {
   previousIndex!: number;
   sub: any;
   sub2: any;
+  sub3: any;
   loading = false;
   activities: any[] = [];
   public transactions: TransactionHistory[];
@@ -61,14 +62,6 @@ export class AccountComponent implements OnInit, OnDestroy {
 
       // this.manager.setActiveAccountId(index);
       this.manager.setActiveAccountId(accountIdentifier);
-      this.uiState.title = this.uiState.activeAccount?.name || '';
-      // this.previousIndex = index;
-
-      if (this.uiState.activeAccount?.network == NETWORK_IDENTITY) {
-        this.router.navigate(['account', 'view', 'identity', accountIdentifier]);
-      } else if (this.uiState.activeAccount?.network == NETWORK_NOSTR) {
-        this.router.navigate(['account', 'view', 'nostr', accountIdentifier]);
-      }
     });
   }
 
@@ -85,6 +78,11 @@ export class AccountComponent implements OnInit, OnDestroy {
     }
 
     clearInterval(this.scanTimer);
+
+    if (this.sub3) {
+      this.communication.unlisten(this.sub3);
+      this.sub3 = null;
+    }
   }
 
   scan(force: boolean = false) {
@@ -186,6 +184,18 @@ export class AccountComponent implements OnInit, OnDestroy {
 
     this.sub = this.communication.listen('account-scanned', async (data: { accountId: string }) => {
       this.loading = false;
+    });
+
+    this.sub3 = this.communication.listen('active-account-changed', async (data: { walletId: string, accountId: string }) => {
+      // When the active account has changed, let's update the title:
+      // We cannot set title yet, we must wait for callback for changing account...
+      this.uiState.title = this.uiState.activeAccount?.name || '';
+
+      // if (this.uiState.activeAccount?.network == NETWORK_IDENTITY) {
+      //   this.router.navigate(['account', 'view', 'identity', accountIdentifier]);
+      // } else if (this.uiState.activeAccount?.network == NETWORK_NOSTR) {
+      //   this.router.navigate(['account', 'view', 'nostr', accountIdentifier]);
+      // }
     });
 
     this.scanTimer = setInterval(() => {
