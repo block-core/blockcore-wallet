@@ -68,10 +68,6 @@ export class AccountComponent implements OnInit, OnDestroy {
     });
   }
 
-  getNetworkStatusLabel(status: IndexerApiStatus) {
-    return IndexerApiStatus[status];
-  }
-
   ngOnDestroy(): void {
     if (this.sub) {
       this.communication.unlisten(this.sub);

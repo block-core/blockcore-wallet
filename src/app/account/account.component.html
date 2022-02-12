@@ -1,15 +1,6 @@
 <div class="page" *ngIf="uiState.activeAccount && uiState.activeAccount.network == 401">
 
-    <mat-card class="network-status-card" *ngIf="currentNetworkStatus">
-        <mat-card-subtitle>There are issues with the network</mat-card-subtitle>
-        <mat-card-title>
-            <app-network-status class="network-status-widget" [status]="currentNetworkStatus"></app-network-status>
-            {{getNetworkStatusLabel(currentNetworkStatus.availability)}}
-        </mat-card-title>
-        <mat-card-content>
-            {{currentNetworkStatus.status}}
-        </mat-card-content>
-    </mat-card>
+    <app-network-status-card class="balance-card" [status]="currentNetworkStatus"></app-network-status-card>
 
     <div *ngIf="uiState.activeAccount.network == 401">
         Cirrus is currently not supported. Check back later!
@@ -18,20 +9,18 @@
 
 <div class="page" *ngIf="uiState.activeAccount && uiState.activeAccount.network != 401">
 
-    <mat-card class="network-status-card" *ngIf="currentNetworkStatus && currentNetworkStatus.availability > 1">
+    <app-network-status-card class="balance-card" [status]="currentNetworkStatus"></app-network-status-card>
+
+    <!-- <mat-card class="network-status-card" *ngIf="currentNetworkStatus && currentNetworkStatus.availability > 1">
         <mat-card-subtitle>There are issues with the network</mat-card-subtitle>
         <mat-card-title>
-            <!-- <mat-icon>error</mat-icon>
-            <mat-icon>trip_origin</mat-icon>
-            <mat-icon>circle</mat-icon>
-            <mat-icon>noise_control_off</mat-icon> -->
             <app-network-status class="network-status-widget" [status]="currentNetworkStatus"></app-network-status>
             {{getNetworkStatusLabel(currentNetworkStatus.availability)}}
         </mat-card-title>
         <mat-card-content>
             {{currentNetworkStatus.status}}
         </mat-card-content>
-    </mat-card>
+    </mat-card> -->
 
     <mat-card>
         <!-- <mat-card-subtitle>{{uiState.activeAccount.name}}</mat-card-subtitle> -->
