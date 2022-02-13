@@ -9,10 +9,11 @@ import { IconService } from '../../services/icon.service';
 import { copyToClipboard } from '../../shared/utilities';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import * as QRCode from 'qrcode';
-import { Address, Transaction, TransactionView } from '../../interfaces';
+import { Address, NetworkStatus, Transaction, TransactionView } from '../../interfaces';
 import { NetworksService } from '../../services/networks.service';
 import { Network } from '../../../background/networks';
 import { environment } from '../../../environments/environment';
+import { NetworkStatusService } from '../../services/network-status.service';
 var QRCode2 = require('qrcode');
 
 @Component({
@@ -28,12 +29,14 @@ export class AccountTransactionComponent implements OnInit, OnDestroy {
     network: Network;
     public transaction: TransactionView;
     txid: string;
+    currentNetworkStatus: NetworkStatus;
 
     constructor(public uiState: UIState,
         private renderer: Renderer2,
         private networks: NetworksService,
         private manager: OrchestratorService,
         private activatedRoute: ActivatedRoute,
+        private networkStatusService: NetworkStatusService,
         private snackBar: MatSnackBar) {
         // this.uiState.title = 'Receive Address';
         this.uiState.goBackHome = false;
@@ -43,6 +46,8 @@ export class AccountTransactionComponent implements OnInit, OnDestroy {
 
         this.activatedRoute.paramMap.subscribe(async params => {
             this.txid = params.get('txid');
+
+            this.currentNetworkStatus = this.networkStatusService.get(this.uiState.activeAccount.networkType);
 
             // TODO: Move this logic to an service.
             const account = this.uiState.activeAccount;

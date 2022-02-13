@@ -30,6 +30,7 @@ enum IndexerApiStatus {
 }
 
 interface NetworkStatus {
+    blockSyncHeight?: number,
     networkType: string;
     status: string;
     availability: IndexerApiStatus;
@@ -124,7 +125,7 @@ interface UnspentTransactionOutput {
     address: string;
     scriptHex: string;
     value: BigInt | number;
-    blockIndex: BigInt | number;
+    blockIndex: number;
     coinBase: boolean;
     coinStake: boolean;
 }
@@ -133,7 +134,7 @@ interface Transaction {
     entryType: string;
     transactionHash: string;
     value: BigInt;
-    blockIndex: BigInt;
+    blockIndex: number;
     confirmations: BigInt | number;
     details: TransactionInfo;
     hex: string;
@@ -146,7 +147,7 @@ interface TransactionView extends Transaction {
 interface TransactionInfo {
     symbol: string;
     blockHash: string;
-    blockIndex: BigInt;
+    blockIndex: number;
     timestamp: BigInt;
     transactionId: string;
     confirmations: BigInt | number;

@@ -31,6 +31,7 @@ export class NetworkStatusManager {
 
                 if (data.error) {
                     networkStatus = {
+                        blockSyncHeight: -1,
                         networkType: account.networkType,
                         availability: IndexerApiStatus.Error,
                         status: 'Error: ' + data.error
@@ -40,12 +41,14 @@ export class NetworkStatusManager {
 
                     if (blocksBehind > 10) {
                         networkStatus = {
+                            blockSyncHeight: data.syncBlockIndex,
                             networkType: account.networkType,
                             availability: IndexerApiStatus.Syncing,
                             status: 'Syncing'
                         };
                     } else {
                         networkStatus = {
+                            blockSyncHeight: data.syncBlockIndex,
                             networkType: account.networkType,
                             availability: IndexerApiStatus.Online,
                             status: 'Online'
@@ -62,6 +65,7 @@ export class NetworkStatusManager {
 
                     // When there is response, we'll set status to error.
                     networkStatus = {
+                        blockSyncHeight: -1,
                         networkType: account.networkType,
                         availability: IndexerApiStatus.Error,
                         status: 'Error'
@@ -74,6 +78,7 @@ export class NetworkStatusManager {
 
                     // When there is no response, we'll set status to offline.
                     networkStatus = {
+                        blockSyncHeight: -1,
                         networkType: account.networkType,
                         availability: IndexerApiStatus.Offline,
                         status: 'Offline'
@@ -83,6 +88,7 @@ export class NetworkStatusManager {
                     console.log('Error', error.message);
 
                     networkStatus = {
+                        blockSyncHeight: -1,
                         networkType: account.networkType,
                         availability: IndexerApiStatus.Unknown,
                         status: error.message
@@ -104,6 +110,11 @@ export class NetworkStatusManager {
 
     /** Update the network status. This can be done internally or externally, depending on the scenario. */
     update(networkStatus: NetworkStatus) {
+        // If there are no block height provided, copy the latest:
+        if (!networkStatus.blockSyncHeight) {
+            networkStatus.blockSyncHeight = this.networks.get(networkStatus.networkType).blockSyncHeight;
+        }
+
         this.networks.set(networkStatus.networkType, networkStatus);
 
         // Update the UI with latest network status.

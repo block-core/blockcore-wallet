@@ -91,6 +91,8 @@
                     </div>
                     <div mat-line class="address" [innerHTML]="transaction.calculatedAddress">
                     </div>
+                    <div *ngIf="currentNetworkStatus" mat-line class="address">Confirmations: {{currentNetworkStatus.blockSyncHeight - transaction.blockIndex}}
+                    </div>
                     <!-- <div mat-line> {{transaction.confirmations}} confirmations</div> -->
                 </a>
             </mat-nav-list>
