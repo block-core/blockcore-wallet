@@ -249,7 +249,9 @@ interface Store {
     identities: Identity[] // Contains the users own identities and queries/cached identities.
     cache: {
         identities: Identity[]
-    }
+    },
+    // TODO: Move transaction history to store, which is easier migrated to IndexedDB later on.
+    // transactions: Transaction[]
 }
 
 interface Identity {

@@ -114,6 +114,14 @@ export class IndexerService {
         }
     }
 
+    async updateTransactionInfo(transaction: Transaction, indexerUrl: string) {
+        const responseTransaction = await axios.get(`${indexerUrl}/api/query/transaction/${transaction.transactionHash}`);
+        transaction.details = responseTransaction.data;
+
+        const responseTransactionHex = await axios.get(`${indexerUrl}/api/query/transaction/${transaction.transactionHash}/hex`);
+        transaction.hex = responseTransactionHex.data;
+    }
+
     async broadcastTransaction(account: Account, txhex: string) {
         // These two entries has been sent from
         const network = this.manager.getNetwork(account.networkType);
@@ -166,12 +174,14 @@ export class IndexerService {
 
             const indexerUrl = this.manager.state.persisted.settings.indexer.replace('{id}', network.id.toLowerCase());
 
+            debugger;
+
             // Loop through all receive addresses until no more data is found:
             for (let i = 0; i < account.state.receive.length; i++) {
                 let receiveAddress = account.state.receive[i];
 
                 try {
-                    let nextLink = `/api/query/address/${receiveAddress.address}/transactions?confirmations=0&offset=0&limit=1`;
+                    let nextLink = `/api/query/address/${receiveAddress.address}/transactions?offset=0&limit=1`;
                     // debugger;
 
                     const date = new Date().toISOString();
@@ -200,7 +210,10 @@ export class IndexerService {
                             // replace the item at the right index for each page. This should update with new metadata,
                             // if there is anything new.
                             for (let j = 0; j < transactions.length; j++) {
-                                receiveAddress.transactions[offset + j] = transactions[j];
+                                const transaction = transactions[j];
+                                receiveAddress.transactions[offset + j] = transaction;
+
+                                await this.updateTransactionInfo(transaction, indexerUrl);
                             }
 
                             // Get all the transaction info for each of the transactions discovered on this address.
@@ -229,7 +242,68 @@ export class IndexerService {
                     // We should probably have an error log in settings, so users can see background problems as well.
                     this.manager.communication.sendToAll('error', error);
                 }
+
+                debugger;
+
+                try {
+                    let nextLink = `/api/query/address/${receiveAddress.address}/transactions/unspent?confirmations=0&offset=0&limit=1`;
+                    // debugger;
+
+                    const date = new Date().toISOString();
+
+                    // Loop through all pages until finished.
+                    while (nextLink != null) {
+
+                        // If there was no transactions from before, create an empty array.
+                        if (receiveAddress.unspent == null) {
+                            receiveAddress.unspent = [];
+                        }
+
+                        const responseTransactions = await axios.get(`${indexerUrl}${nextLink}`);
+                        const unspentTransactions: UnspentTransactionOutput[] = responseTransactions.data;
+                        receiveAddress.unspent = unspentTransactions;
+
+                        const links = this.parseLinkHeader(responseTransactions.headers.link);
+
+                        const limit = responseTransactions.headers['pagination-limit'];
+                        const offset = Number(responseTransactions.headers['pagination-offset']);
+                        const total = responseTransactions.headers['pagination-total'];
+
+                        if (responseTransactions.status == 200) {
+                            // var updatedReceiveAddress: Address = { ...receiveAddress };
+                            console.log(unspentTransactions);
+
+                            // Since we are paging, and all items in pages should be sorted correctly, we can simply
+                            // replace the item at the right index for each page. This should update with new metadata,
+                            // if there is anything new.
+                            for (let j = 0; j < unspentTransactions.length; j++) {
+                                const unspent = unspentTransactions[j];
+                                receiveAddress.unspent[offset + j] = unspent;
+                            }
+
+                        }
+
+                        nextLink = links.next;
+                    }
+
+                    // Persist the date we got this data:
+                    receiveAddress.retrieved = date;
+                    changes = true;
+                } catch (error) {
+                    this.manager.status.update({ networkType: account.networkType, status: 'Error', availability: IndexerApiStatus.Error });
+
+                    this.logger.error(error);
+
+                    // TODO: Implement error handling in background and how to send it to UI.
+                    // We should probably have an error log in settings, so users can see background problems as well.
+                    this.manager.communication.sendToAll('error', error);
+                }
             }
+
+            console.log(account);
+            console.log(JSON.stringify(account));
+
+            debugger;
 
             // if (changes) {
             //     this.logger.info('There are updated data found during an normal account scan.');
