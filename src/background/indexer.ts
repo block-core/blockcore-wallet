@@ -131,8 +131,135 @@ export class IndexerService {
         return data;
     }
 
+    parseLinkHeader(linkHeader: string) {
+        const sections = linkHeader.split(', ');
+        //const links: Record<string, string> = { };
+        const links = { first: null as string, last: null as string, previous: null as string, next: null as string } as any;
+
+        sections.forEach(section => {
+            const key = section.substring(section.indexOf('rel="') + 5).replace('"', '');
+            const value = section.substring(section.indexOf('<') + 1, section.indexOf('>'));
+            links[key] = value;
+        });
+
+        return links;
+    }
+
     async queryIndexer() {
         this.logger.debug('queryIndexer executing.');
+
+        let changes = false;
+        let counter = 0;
+
+        while (!this.q.isEmpty()) {
+            const item = this.q.dequeue();
+            const account = item.account as Account;
+            const wallet = item.wallet as Wallet;
+            const network = this.manager.getNetwork(account.networkType);
+            const networkStatus = this.manager.status.get(account.networkType);
+
+            // If the current network status is anything other than online, skip indexing.
+            if (networkStatus && networkStatus.availability != IndexerApiStatus.Online) {
+                this.logger.warn(`Network ${account.networkType} is not online. Skipping query for indexer state.`);
+                continue;
+            }
+
+            const indexerUrl = this.manager.state.persisted.settings.indexer.replace('{id}', network.id.toLowerCase());
+
+            // Loop through all receive addresses until no more data is found:
+            for (let i = 0; i < account.state.receive.length; i++) {
+                let receiveAddress = account.state.receive[i];
+
+                try {
+                    let nextLink = `/api/query/address/${receiveAddress.address}/transactions?confirmations=0&offset=0&limit=1`;
+                    // debugger;
+
+                    const date = new Date().toISOString();
+
+                    // Loop through all pages until finished.
+                    while (nextLink != null) {
+
+                        // If there was no transactions from before, create an empty array.
+                        if (receiveAddress.transactions == null) {
+                            receiveAddress.transactions = [];
+                        }
+
+                        const responseTransactions = await axios.get(`${indexerUrl}${nextLink}`);
+                        const transactions = responseTransactions.data;
+                        const links = this.parseLinkHeader(responseTransactions.headers.link);
+
+                        const limit = responseTransactions.headers['pagination-limit'];
+                        const offset = Number(responseTransactions.headers['pagination-offset']);
+                        const total = responseTransactions.headers['pagination-total'];
+
+                        if (responseTransactions.status == 200) {
+                            // var updatedReceiveAddress: Address = { ...receiveAddress };
+                            console.log(responseTransactions);
+
+                            // Since we are paging, and all items in pages should be sorted correctly, we can simply
+                            // replace the item at the right index for each page. This should update with new metadata,
+                            // if there is anything new.
+                            for (let j = 0; j < transactions.length; j++) {
+                                receiveAddress.transactions[offset + j] = transactions[j];
+                            }
+
+                            // Get all the transaction info for each of the transactions discovered on this address.
+                            // await this.updateWithTransactionInfo(transactions, indexerUrl);
+                            // receiveAddress.transactions = transactions;
+
+                            // TODO: Add support for paging.
+                            // Get the unspent outputs. We need to figure out how we should refresh this, as this might change depending on many factors.
+                            // const responseUnspentTransactions = await axios.get(`${indexerUrl}/api/query/address/${receiveAddress.address}/transactions/unspent?confirmations=0&offset=0&limit=20`);
+                            // const unspentTransactions: UnspentTransactionOutput[] = responseUnspentTransactions.data;
+                            // updatedReceiveAddress.unspent = unspentTransactions;
+                        }
+
+                        nextLink = links.next;
+                    }
+
+                    // Persist the date we got this data:
+                    receiveAddress.retrieved = date;
+                    changes = true;
+                } catch (error) {
+                    this.manager.status.update({ networkType: account.networkType, status: 'Error', availability: IndexerApiStatus.Error });
+
+                    this.logger.error(error);
+
+                    // TODO: Implement error handling in background and how to send it to UI.
+                    // We should probably have an error log in settings, so users can see background problems as well.
+                    this.manager.communication.sendToAll('error', error);
+                }
+            }
+
+            // if (changes) {
+            //     this.logger.info('There are updated data found during an normal account scan.');
+            //     // Finally set the date on the account itself.
+            //     account.state.retrieved = new Date().toISOString();
+            //     account.state.balance = this.manager.walletManager.calculateBalance(account);
+            //     account.state.pendingReceived = this.manager.walletManager.calculatePendingReceived(account);
+            //     account.state.pendingSent = this.manager.walletManager.calculatePendingSent(account);
+            //     // Save and broadcast for every full account query
+            //     await this.manager.state.save();
+            //     this.manager.broadcastState();
+            // } else {
+            //     this.logger.debug('No changes during account scan.');
+            // }
+
+            // // Make sure we always watch the latest receive/change addresses.
+            // // Register watcher for the last receive/change addresses.
+            // const lastChange = account.state.change[account.state.change.length - 1];
+            // const lastReceive = account.state.receive[account.state.receive.length - 1];
+
+            // // Make the count "-1" which means we'll continue looking at these addresses forever.
+            // this.a.set(lastChange.address, { change: true, account: account, addressEntry: lastChange, count: -1 });
+            // this.a.set(lastReceive.address, { change: false, account: account, addressEntry: lastReceive, count: -1 });
+        }
+
+        this.manager.communication.sendToAll('account-scanned');
+    }
+
+    async queryIndexerLegacy() {
+        this.logger.debug('queryIndexerLegacy executing.');
 
         let changes = false;
         let counter = 0;
@@ -183,7 +310,7 @@ export class IndexerService {
                                 // TODO: Add support for paging.
                                 // TODO: Figure out if we will actually get the full transaction history and persist that to storage. We might simply only query this 
                                 // when the user want to look at transaction details. Instead we can rely on the unspent API, which give us much less data.
-                                const responseTransactions = await axios.get(`${indexerUrl}/api/query/address/${receiveAddress.address}/transactions?confirmations=0&offset=0&limit=20`);
+                                const responseTransactions = await axios.get(`${indexerUrl}/api/query/address/${receiveAddress.address}/transactions?offset=35&limit=10`);
                                 const transactions = responseTransactions.data;
 
                                 // Get all the transaction info for each of the transactions discovered on this address.
