@@ -1,0 +1,36 @@
+<div class="page centered">
+    <mat-icon class="large-icon">search</mat-icon>
+    <br>
+    <h1>Register Protocol Handler</h1>
+
+    <p>
+        You can register this extension as handler for different protocols. This action must be done in full window
+        mode, it
+        is not possible to do in extension popup view.
+        <!-- TODO: Check if currently display in popup or not! -->
+    </p>
+
+    <p>
+        If you click X on the request or block the request, the request will never be displayed again until you manually
+        unblock the extension.
+    </p>
+    <p>chrome://settings/content/handlers</p>
+    <p>
+        Copy the link manually and open
+        in a new tab.
+        <!-- TODO: Make this link work cross-browsers. -->
+    </p>
+
+    <!-- <br>
+    <button class="signup-button" mat-flat-button (click)="cancel()">Cancel</button> -->
+    <br>
+    <button class="signup-button" mat-flat-button color="primary" (click)="registerHandler('did', 'identity')">Identity
+        Handler</button>
+    <br>
+    <button class="signup-button" mat-flat-button color="primary" (click)="registerHandler('web+vault', 'vault')">Data
+        Vault
+        Handler</button>
+    <br>
+    <button class="signup-button" mat-flat-button color="primary" (click)="registerHandler('bitcoin', 'vault')">Bitcoin
+        Handler</button>
+</div>

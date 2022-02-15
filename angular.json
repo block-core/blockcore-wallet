@@ -58,6 +58,7 @@
                 }
               ],
               "assets": [
+                "src/net_request_rules.json",
                 "src/provider.js",
                 "src/content.js",
                 {
@@ -86,6 +87,7 @@
             },
             "development": {
               "assets": [
+                "src/net_request_rules.json",
                 "src/provider.js",
                 "src/content.js",
                 {
@@ -143,6 +145,7 @@
                 }
               ],
               "assets": [
+                "src/net_request_rules.json",
                 "src/provider.js",
                 "src/content.js",
                 {
@@ -186,6 +189,7 @@
                 }
               ],
               "assets": [
+                "src/net_request_rules.json",
                 "src/provider.js",
                 "src/content.js",
                 {

@@ -260,6 +260,14 @@ export class IndexerService {
                         }
 
                         const responseTransactions = await axios.get(`${indexerUrl}${nextLink}`);
+
+                        debugger;
+
+                        // There are no more items, simply break the loop.
+                        if (responseTransactions.status == 404) {
+                            break;
+                        }
+
                         const unspentTransactions: UnspentTransactionOutput[] = responseTransactions.data;
                         receiveAddress.unspent = unspentTransactions;
 

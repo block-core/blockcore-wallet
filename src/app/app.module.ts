@@ -75,6 +75,7 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { HttpClient } from '@angular/common/http';
 import { NetworkStatusComponent } from './shared/network-status/network-status.component';
 import { NetworkStatusCardComponent } from './shared/network-status-card/network-status.component';
+import { HandlerComponent } from './settings/handler/handler.component';
 
 // required for AOT compilation
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
@@ -124,7 +125,8 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     AccountSendSuccessComponent,
     AccountSendSendingComponent,
     NetworkStatusComponent,
-    NetworkStatusCardComponent
+    NetworkStatusCardComponent,
+    HandlerComponent
   ],
   imports: [
     BrowserModule,
