@@ -57,6 +57,18 @@ export class OrchestratorService {
             this.uiState.activeWalletSubject.next(this.uiState.activeWallet);
             this.uiState.activeAccountSubject.next(this.uiState.activeAccount);
 
+            // If there is any params, it means there might be an action triggered by protocol handlers. Parse the params and set action.
+            if (this.uiState.params) {
+                if (this.uiState.params.sid) {
+                    this.uiState.action = {
+                        action: 'sid',
+                        document: this.uiState.params.sid
+                    }
+                }
+            }
+
+            console.log('ACTION:', this.uiState.action);
+
             // If an action has been triggered, we'll always show action until user closes the action.
             if (this.uiState.action?.action && this.uiState.activeWallet && this.uiState.unlocked.indexOf(this.uiState.activeWallet.id) > -1) {
                 // TODO: Add support for more actions.

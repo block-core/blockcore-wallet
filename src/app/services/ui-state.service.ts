@@ -33,6 +33,8 @@ export class UIState {
 
     backUrl: string;
 
+    params: any;
+
     // networkStatus: NetworkStatus[];
 
     // getAllAccounts() {

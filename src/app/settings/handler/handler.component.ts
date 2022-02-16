@@ -35,6 +35,7 @@ export class HandlerComponent implements OnDestroy {
     }
 
     registerHandler(protocol: string, parameter: string) {
-        navigator.registerProtocolHandler(protocol, `./?${parameter}=%s`);
+        // navigator.registerProtocolHandler(protocol, `./index.html?${parameter}=%s`);
+        navigator.registerProtocolHandler(protocol, `chrome-extension://fdinpkgahmbppjogpdaoanidkapmphmh/index.html?${parameter}=%s`);
     }
 }

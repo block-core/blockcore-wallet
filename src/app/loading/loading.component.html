@@ -2,4 +2,14 @@
   <img class="loader-logo" src="/assets/icon-light-128x128.png">
 
   <mat-spinner class="loader"></mat-spinner>
+
+  <div *ngIf="problems" class="tools">
+
+    <p class="problems-text">Unable to fully load the extension. Try to reload, or if problem continues, please
+      remove and reinstall the extension. Removing extension will delete your wallet, DO NOT REMOVE unless you have
+      backup.</p>
+
+    <button class="signup-button" mat-flat-button color="primary" (click)="reload()">Reload Extension</button>
+  </div>
+
 </div>

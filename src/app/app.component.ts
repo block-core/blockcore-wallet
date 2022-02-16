@@ -1,7 +1,7 @@
 import { DOCUMENT } from '@angular/common';
 import { ChangeDetectorRef, Component, Inject, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
-import { NavigationEnd, Router } from '@angular/router';
+import { ActivatedRoute, ActivatedRouteSnapshot, NavigationEnd, Router } from '@angular/router';
 import { UIState } from './services/ui-state.service';
 import { CommunicationService } from './services/communication.service';
 import { OrchestratorService } from './services/orchestrator.service';
@@ -29,6 +29,7 @@ export class AppComponent implements OnInit {
     private manager: OrchestratorService,
     private location: Location,
     private cd: ChangeDetectorRef,
+    private route: ActivatedRoute,
     public networkService: NetworksService,
     @Inject(DOCUMENT) private document: Document) {
 
@@ -39,6 +40,21 @@ export class AppComponent implements OnInit {
     translate.use(browserLang.match(/en|no/) ? browserLang : 'en');
 
     document.title = environment.instanceName;
+
+    const queryParam = window.location.search;
+    console.log('queryParam:', queryParam);
+
+    if (queryParam) {
+      this.uiState.params = this.getQueryStringParams(queryParam);
+    }
+
+    this.route.queryParams
+      .subscribe(params => {
+        console.log('PARAMS:');
+        console.log(params); // { orderby: "price" }
+        // this.orderby = params.orderby;
+        // console.log(this.orderby); // price
+      });
 
     router.events.subscribe((val) => {
       if (val instanceof NavigationEnd) {
@@ -70,6 +86,19 @@ export class AppComponent implements OnInit {
     // Make sure we initialize the orchestrator early and hook up event handlers.
     manager.initialize();
   }
+
+  getQueryStringParams(query: string) {
+    return query
+      ? (/^[?#]/.test(query) ? query.slice(1) : query)
+        .split('&')
+        .reduce((params: any, param) => {
+          let [key, value] = param.split('=');
+          params[key] = value ? decodeURIComponent(value.replace(/\+/g, ' ')) : '';
+          return params;
+        }, {}
+        )
+      : {}
+  };
 
   async wipe() {
     this.uiState.wipe();

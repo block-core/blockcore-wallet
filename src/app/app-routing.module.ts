@@ -37,6 +37,7 @@ import { AccountSendConfirmComponent } from './account/send/confirm/send-confirm
 import { AccountSendSuccessComponent } from './account/send/success/send-success.component';
 import { AccountSendSendingComponent } from './account/send/sending/send-sending.component';
 import { HandlerComponent } from './settings/handler/handler.component';
+import { ActionStratisIdentityComponent } from './action/sid/sid.component';
 
 const routes: Routes = [
   {
@@ -158,6 +159,12 @@ const routes: Routes = [
   },
   {
     path: 'action/login', component: ActionLoginComponent
+  },
+  {
+    path: 'action/sid', component: ActionStratisIdentityComponent
+  },
+  {
+    path: '**', redirectTo: '/'
   }
 ];
 
