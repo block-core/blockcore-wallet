@@ -25,10 +25,10 @@
     <button class="signup-button" mat-flat-button (click)="cancel()">Cancel</button> -->
     <br>
     <button *ngIf="feature.enabledGroup('handler:sid')" class="signup-button" mat-flat-button color="primary"
-        (click)="registerHandler('did', 'identity')">Stratis Identity (SID)</button>
+        (click)="registerHandler('sid', 'sid')">Stratis Identity (SID)</button>
     <br>
     <button *ngIf="feature.enabledGroup('handler:did')" class="signup-button" mat-flat-button color="primary"
-        (click)="registerHandler('did', 'identity')">Decentralized Identity (DID)</button>
+        (click)="registerHandler('did', 'did')">Decentralized Identity (DID)</button>
     <br>
     <button *ngIf="feature.enabledGroup('handler:vault')" class="signup-button" mat-flat-button color="primary"
         (click)="registerHandler('web+vault', 'vault')">Data
@@ -36,6 +36,6 @@
         Handler</button>
     <br>
     <button *ngIf="feature.enabledGroup('handler:bitcoin')" class="signup-button" mat-flat-button color="primary"
-        (click)="registerHandler('bitcoin', 'vault')">Bitcoin
+        (click)="registerHandler('bitcoin', 'btc')">Bitcoin
         Handler</button>
 </div>
