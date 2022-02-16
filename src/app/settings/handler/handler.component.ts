@@ -3,6 +3,7 @@ import { Component, HostBinding, OnDestroy, ViewEncapsulation } from '@angular/c
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { UIState } from 'src/app/services/ui-state.service';
 import { CommunicationService } from '../../services/communication.service';
+import { FeatureService } from '../../services/features.service';
 import { OrchestratorService } from '../../services/orchestrator.service';
 
 @Component({
@@ -17,7 +18,8 @@ export class HandlerComponent implements OnDestroy {
         public location: Location,
         private snackBar: MatSnackBar,
         private manager: OrchestratorService,
-        private communication: CommunicationService
+        private communication: CommunicationService,
+        public feature: FeatureService,
     ) {
         this.uiState.title = 'Protocol Handlers';
         this.uiState.showBackButton = true;
