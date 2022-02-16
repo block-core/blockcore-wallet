@@ -10,7 +10,6 @@ const dec = new TextDecoder();
     providedIn: 'root'
 })
 export class FeatureService {
-
     features: string[];
 
     constructor() {
@@ -19,5 +18,10 @@ export class FeatureService {
 
     enabled(feature: string) {
         return this.features.includes(feature);
+    }
+
+    enabledGroup(featurePrefix: string) {
+        // Check if any features starts with the prefix:
+        return this.features.some(f => f.startsWith(featurePrefix));
     }
 }

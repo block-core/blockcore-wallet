@@ -112,7 +112,7 @@
       <div mat-line>Trusted Web Sites</div>
     </a> -->
 
-    <a mat-list-item routerLinkActive="active-link" [routerLink]="['handler']">
+    <a *ngIf="feature.enabledGroup('handler')" mat-list-item routerLinkActive="active-link" [routerLink]="['handler']">
       <mat-icon mat-list-icon>search</mat-icon>
       <div mat-line>Register Protocol Handler</div>
     </a>
