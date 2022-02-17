@@ -41,16 +41,18 @@ export class AppComponent implements OnInit {
 
     document.title = environment.instanceName;
 
-    const queryParam = window.location.search;
+    const queryParam = globalThis.location.search;
     console.log('queryParam:', queryParam);
 
     if (queryParam) {
-      this.uiState.params = Object.fromEntries(new URLSearchParams(queryParam)) as any;
-      console.log('this.uiState.params', this.uiState.params);
+      const param = Object.fromEntries(new URLSearchParams(queryParam)) as any;
 
-      var referrer = document.referrer;
-      console.log('referrer', referrer);
-
+      // Only when the param is different than before, will we re-trigger the action.
+      if (JSON.stringify(param) != JSON.stringify(this.uiState.params)) {
+        this.uiState.params = param;
+      } else {
+        console.log('PARAMS IS NOT DIFFERENT!! CONTINUE AS BEFORE!');
+      }
     }
 
     router.events.subscribe((val) => {

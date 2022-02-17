@@ -64,6 +64,11 @@ export class OrchestratorService {
                         action: 'sid',
                         document: this.uiState.params.sid
                     }
+
+                    setTimeout(() => {
+                        // Persist the action, but don't broadcast this change as we've already written local state.
+                        this.setAction(this.uiState.action, true);
+                    }, 0);
                 }
             }
 
@@ -146,7 +151,9 @@ export class OrchestratorService {
 
         // When action has been reset, ensure that UI instances redirect to root.
         this.communication.listen('action-changed', (action: Action) => {
+            debugger;
             if (!action.action) {
+                debugger;
                 this.router.navigateByUrl('/');
             }
         });
@@ -259,12 +266,12 @@ export class OrchestratorService {
         this.communication.send('wallet-lock', { walletId });
     }
 
-    setAction(action: Action) {
-        this.communication.send('set-action', action);
+    setAction(action: Action, broadcast = true) {
+        this.communication.send('set-action', { action, broadcast });
     }
 
     clearAction() {
-        this.communication.send('set-action', { action: '' });
+        this.communication.send('set-action', { action: { action: '' } });
     }
 
     createAccount(walletId: string, account: Account) {

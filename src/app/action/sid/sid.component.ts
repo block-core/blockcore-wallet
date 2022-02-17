@@ -51,10 +51,6 @@ export class ActionStratisIdentityComponent implements OnInit {
         this.content = payload.replace('web+sid://', '');
 
         this.sub = this.communication.listen('signed-content-and-callback-to-url', (data: { success: boolean, data: any }) => {
-
-            debugger;
-
-
             if (data.success) {
                 this.status = 1;
                 this.success = true;
@@ -71,6 +67,10 @@ export class ActionStratisIdentityComponent implements OnInit {
     }
 
     exit() {
+        this.manager.clearAction();
+    }
+    
+    close() {
         this.manager.clearAction();
         window.close();
     }

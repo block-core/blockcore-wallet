@@ -30,11 +30,11 @@
 
     <div *ngIf="success === false">Failed to authenticate.<br>{{result}}</div>
 
-    <button class="signup-button" mat-flat-button (click)="exit()">Close Window</button>
+    <button class="signup-button" mat-flat-button (click)="close()">Close Window</button>
 </div>
 
 <div class="page" *ngIf="status == 2">
     <h2>Failed to authenticate</h2>
 
-    <button class="signup-button" mat-flat-button (click)="exit()">Close Window</button>
+    <button class="signup-button" mat-flat-button (click)="close()">Close Window</button>
 </div>

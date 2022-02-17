@@ -292,8 +292,8 @@ export class OrchestratorBackgroundService {
         this.manager.broadcastState();
     };
 
-    async setAction(data: Action) {
-        this.manager.setAction(data);
+    async setAction(data: Action, broadcast = true) {
+        this.manager.setAction(data, broadcast);
     }
 
     private eventHandlers() {
@@ -317,8 +317,8 @@ export class OrchestratorBackgroundService {
             this.active();
         });
 
-        this.manager.communication.listen('set-action', async (port: any, data: Action) => {
-            this.setAction(data);
+        this.manager.communication.listen('set-action', async (port: any, data: { action: Action, broadcast: boolean }) => {
+            this.setAction(data.action, data.broadcast);
         });
 
         this.manager.communication.listen('sign-content', async (port: any, data: { content: string, tabId: string, walletId: string, accountId: string }) => {

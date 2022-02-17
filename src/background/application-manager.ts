@@ -177,7 +177,8 @@ export class AppManager {
         this.communication.sendToAll(eventName, currentState);
     }
 
-    async setAction(data: Action) {
+    async setAction(data: Action, broadcast: boolean) {
+        debugger;
         if (typeof data.action !== 'string') {
             console.error('Only objects that are string are allowed as actions.');
             return;
@@ -190,9 +191,13 @@ export class AppManager {
 
         this.state.action = data;
 
+        console.log('SAVING ACTION....');
+
         await this.state.saveAction();
 
-        this.broadcastState();
+        if (broadcast) {
+            this.broadcastState();
+        }
 
         // Raise this after state has been updated, so orchestrator in UI can redirect correctly.
         this.communication.sendToAll('action-changed', this.state.action);
