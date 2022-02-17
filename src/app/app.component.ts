@@ -44,6 +44,8 @@ export class AppComponent implements OnInit {
     const queryParam = globalThis.location.search;
     console.log('queryParam:', queryParam);
 
+    // TODO: IT IS NOT POSSIBLE TO "EXIT" ACTIONS THAT ARE TRIGGERED WITH QUERY PARAMS.
+    // FIX THIS ... attempted to check previous, but that does not work...
     if (queryParam) {
       const param = Object.fromEntries(new URLSearchParams(queryParam)) as any;
 
