@@ -22,6 +22,8 @@
     "target": "es2020",
     "module": "es2020",
     "lib": [
+      "ES6",
+      "DOM.Iterable",
       "es2021",
       "es2020",
       "es2018",

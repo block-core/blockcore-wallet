@@ -1,5 +1,4 @@
-import { Component, Inject, HostBinding, ChangeDetectorRef, ApplicationRef, NgZone } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { Component, ChangeDetectorRef, ApplicationRef, NgZone, OnInit } from '@angular/core';
 import { CryptoService } from '../../services/crypto.service';
 import { UIState } from '../../services/ui-state.service';
 import { Router } from '@angular/router';
@@ -11,8 +10,11 @@ import { NetworksService } from '../../services/networks.service';
     templateUrl: './sid.component.html',
     styleUrls: ['./sid.component.css']
 })
-export class ActionStratisIdentityComponent {
+export class ActionStratisIdentityComponent implements OnInit {
     content?: string;
+    parameters?: any;
+    expiryDate: Date;
+    callback: string;
 
     constructor(
         public uiState: UIState,
@@ -25,7 +27,16 @@ export class ActionStratisIdentityComponent {
         private cd: ChangeDetectorRef) {
         this.uiState.title = 'Stratis Identity';
 
-        this.content = this.uiState.action?.document;
+    }
+
+    ngOnInit() {
+        const payload = this.uiState.action?.document;
+        const parts = payload.split('?');
+        this.parameters = Object.fromEntries(new URLSearchParams(parts[1])) as any;
+
+        this.expiryDate = new Date(this.parameters.exp * 1000);
+        this.callback = payload.replace('web+sid', 'https');
+        this.content = payload.replace('web+sid://', '');
     }
 
     sign() {

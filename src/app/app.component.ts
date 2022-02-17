@@ -45,7 +45,8 @@ export class AppComponent implements OnInit {
     console.log('queryParam:', queryParam);
 
     if (queryParam) {
-      this.uiState.params = this.getQueryStringParams(queryParam);
+      this.uiState.params = Object.fromEntries(new URLSearchParams(queryParam)) as any;
+      console.log('this.uiState.params', this.uiState.params);
     }
 
     this.route.queryParams
@@ -86,19 +87,6 @@ export class AppComponent implements OnInit {
     // Make sure we initialize the orchestrator early and hook up event handlers.
     manager.initialize();
   }
-
-  getQueryStringParams(query: string) {
-    return query
-      ? (/^[?#]/.test(query) ? query.slice(1) : query)
-        .split('&')
-        .reduce((params: any, param) => {
-          let [key, value] = param.split('=');
-          params[key] = value ? decodeURIComponent(value.replace(/\+/g, ' ')) : '';
-          return params;
-        }, {}
-        )
-      : {}
-  };
 
   async wipe() {
     this.uiState.wipe();
