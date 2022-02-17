@@ -30,6 +30,9 @@
     <button *ngIf="feature.enabledGroup('handler:did')" class="signup-button" mat-flat-button color="primary"
         (click)="registerHandler('did', 'did')">Decentralized Identity (DID)</button>
     <br>
+    <button *ngIf="feature.enabledGroup('handler:nostr')" class="signup-button" mat-flat-button color="primary"
+        (click)="registerHandler('web+nostrid', 'nostr')">Nostr Identity</button>
+    <br>
     <button *ngIf="feature.enabledGroup('handler:vault')" class="signup-button" mat-flat-button color="primary"
         (click)="registerHandler('web+vault', 'vault')">Data
         Vault

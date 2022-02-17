@@ -70,6 +70,18 @@ export class OrchestratorService {
                         this.setAction(this.uiState.action, true);
                     }, 0);
                 }
+
+                if (this.uiState.params.nostr) {
+                    this.uiState.action = {
+                        action: 'nostr',
+                        document: this.uiState.params.nostr
+                    }
+
+                    setTimeout(() => {
+                        // Persist the action, but don't broadcast this change as we've already written local state.
+                        this.setAction(this.uiState.action, true);
+                    }, 0);
+                }
             }
 
             console.log('ACTION:', this.uiState.action);

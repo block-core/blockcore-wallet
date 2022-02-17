@@ -78,6 +78,7 @@ import { NetworkStatusCardComponent } from './shared/network-status-card/network
 import { HandlerComponent } from './settings/handler/handler.component';
 import { ActivatedRoute, ActivatedRouteSnapshot } from '@angular/router';
 import { ActionStratisIdentityComponent } from './action/sid/sid.component';
+import { ActionNostrIdentityComponent } from './action/nostr/nostr.component';
 
 // required for AOT compilation
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
@@ -129,7 +130,8 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     NetworkStatusComponent,
     NetworkStatusCardComponent,
     HandlerComponent,
-    ActionStratisIdentityComponent
+    ActionStratisIdentityComponent,
+    ActionNostrIdentityComponent
   ],
   imports: [
     BrowserModule,
