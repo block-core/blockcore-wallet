@@ -282,4 +282,8 @@ export class OrchestratorService {
     sign(content?: string, tabId?: string) {
         this.communication.send('sign-content', { content, tabId, walletId: this.uiState.activeWallet.id, accountId: this.uiState.activeAccount.identifier });
     }
+
+    signCallbackToUrl(content?: string, tabId?: string, callbackUrl?: string) {
+        this.communication.send('sign-content-and-callback-to-url', { content, tabId, callbackUrl, walletId: this.uiState.activeWallet.id, accountId: this.uiState.activeAccount.identifier });
+    }
 }

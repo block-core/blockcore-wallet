@@ -174,15 +174,12 @@ export class IndexerService {
 
             const indexerUrl = this.manager.state.persisted.settings.indexer.replace('{id}', network.id.toLowerCase());
 
-            debugger;
-
             // Loop through all receive addresses until no more data is found:
             for (let i = 0; i < account.state.receive.length; i++) {
                 let receiveAddress = account.state.receive[i];
 
                 try {
                     let nextLink = `/api/query/address/${receiveAddress.address}/transactions?offset=0&limit=1`;
-                    // debugger;
 
                     const date = new Date().toISOString();
 
@@ -243,8 +240,6 @@ export class IndexerService {
                     this.manager.communication.sendToAll('error', error);
                 }
 
-                debugger;
-
                 try {
                     let nextLink = `/api/query/address/${receiveAddress.address}/transactions/unspent?confirmations=0&offset=0&limit=1`;
                     // debugger;
@@ -260,8 +255,6 @@ export class IndexerService {
                         }
 
                         const responseTransactions = await axios.get(`${indexerUrl}${nextLink}`);
-
-                        debugger;
 
                         // There are no more items, simply break the loop.
                         if (responseTransactions.status == 404) {
@@ -310,8 +303,6 @@ export class IndexerService {
 
             console.log(account);
             console.log(JSON.stringify(account));
-
-            debugger;
 
             // if (changes) {
             //     this.logger.info('There are updated data found during an normal account scan.');
@@ -655,14 +646,12 @@ export class IndexerService {
 
                     // If there is any difference in the balance, make sure we update!
                     if (addressEntry.balance != data.balance) {
-                        debugger;
                         this.logger.info('BALANCE IS DIFFERENT, UPDATE STATE!', addressEntry.balance, data.balance, data);
                         await this.updateAddressState(indexerUrl, value.addressEntry, value.change, data, account);
 
                         // Stop watching this address.
                         this.a.delete(key);
                     } else if (data.pendingSent > 0 || data.pendingReceived > 0) {
-                        debugger;
                         this.logger.info('PENDING, UPDATE STATE!');
 
                         // If there is any pending, we'll continue watching this address.

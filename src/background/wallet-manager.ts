@@ -7,6 +7,7 @@ import { Psbt } from '@blockcore/blockcore-js';
 import * as ecc from 'tiny-secp256k1';
 import ECPairFactory from 'ecpair';
 const ECPair = ECPairFactory(ecc);
+var bitcoinMessage = require('bitcoinjs-message');
 
 /** Manager that keeps state and operations for a single wallet. This object does not keep the password, which must be supplied for signing operations. */
 export class WalletManager {
@@ -16,6 +17,42 @@ export class WalletManager {
     constructor(
         private manager: AppManager) {
         this.logger = manager.logger;
+    }
+
+    async signData(wallet: Wallet, account: Account, address: string, content: string): Promise<string> {
+        // TODO: Verify the address for this network!! ... Help the user avoid sending transactions on very wrong addresses.
+        const network = this.manager.getNetwork(account.networkType);
+
+        // Get the address from receive or change.
+        let addressItem = account.state.receive.find(a => a.address == address);
+        let addressType = 0;
+
+        if (!addressItem) {
+            addressItem = account.state.change.find(a => a.address == address);
+            addressType = 1;
+        }
+
+        // Get the secret seed.
+        const secret = this.walletSecrets.get(wallet.id);
+
+        // Create the master node.
+        const masterNode = HDKey.fromMasterSeed(Buffer.from(secret.seed), network.bip32);
+
+        let addressNode: HDKey;
+        addressNode = masterNode.derive(`m/${account.purpose}'/${account.network}'/${account.index}'/${addressType}/${addressItem.index}`);
+
+        try {
+            const ecPair = ECPair.fromPrivateKey(Buffer.from(addressNode.privateKey), { network: network });
+            const privateKey = ecPair.privateKey;
+
+            var signature = bitcoinMessage.sign(content, privateKey, ecPair.compressed)
+            console.log(signature.toString('base64'));
+            return signature.toString('base64');
+        }
+        catch (error) {
+            this.logger.error(error);
+            throw Error('Unable to sign the transaction. Unable to continue.');
+        }
     }
 
     async createTransaction(wallet: Wallet, account: Account, address: string, amount: number, fee: number): Promise<{ addresses: string[], transactionHex: string, fee: number, feeRate: number, virtualSize: number, weight: number }> {

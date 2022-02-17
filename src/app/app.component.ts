@@ -47,15 +47,11 @@ export class AppComponent implements OnInit {
     if (queryParam) {
       this.uiState.params = Object.fromEntries(new URLSearchParams(queryParam)) as any;
       console.log('this.uiState.params', this.uiState.params);
-    }
 
-    this.route.queryParams
-      .subscribe(params => {
-        console.log('PARAMS:');
-        console.log(params); // { orderby: "price" }
-        // this.orderby = params.orderby;
-        // console.log(this.orderby); // price
-      });
+      var referrer = document.referrer;
+      console.log('referrer', referrer);
+
+    }
 
     router.events.subscribe((val) => {
       if (val instanceof NavigationEnd) {

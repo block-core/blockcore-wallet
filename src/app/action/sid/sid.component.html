@@ -1,5 +1,4 @@
-<div class="page">
-
+<div class="page" *ngIf="status == 0">
     <h2>Confirm Login Message</h2>
 
     Wallet: {{uiState.activeWallet?.name}}<br>
@@ -8,7 +7,6 @@
 
     Expiry: {{expiryDate}}<br>
     Expiry: {{expiryDate.toISOString()}}<br><br>
-
     Callback URL: {{callback}}<br><br>
 
     You attest with your select account to the following content:
@@ -18,6 +16,25 @@
         <textarea class="signing-content" matInput [ngModel]="content"></textarea>
     </mat-form-field>
 
+    <div *ngIf="success === true">You have successfully logged in. You can now close this window</div>
+    <div *ngIf="success === false">Failed to authenticate.<br>{{result}}</div>
+
     <button class="signup-button" mat-flat-button color="primary" (click)="sign()">Sign & Callback</button>&nbsp;
     <button class="signup-button" mat-flat-button (click)="exit()">Exit Action</button>
+</div>
+
+<div class="page" *ngIf="status == 1">
+    <h2>Login Successsful</h2>
+
+    <p>You have successfully logged in. You can now close this window.</p>
+
+    <div *ngIf="success === false">Failed to authenticate.<br>{{result}}</div>
+
+    <button class="signup-button" mat-flat-button (click)="exit()">Close Window</button>
+</div>
+
+<div class="page" *ngIf="status == 2">
+    <h2>Failed to authenticate</h2>
+
+    <button class="signup-button" mat-flat-button (click)="exit()">Close Window</button>
 </div>

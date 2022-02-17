@@ -16,6 +16,7 @@ import { getPublicKey } from 'nostr-tools';
 import { AppManager } from './application-manager';
 import { AccountReceiveComponent } from '../app/account/receive/receive.component';
 import { Transaction } from '@blockcore/blockcore-js';
+import axios from 'axios';
 
 /** Service that handles orchestration between background and frontend. Maps messages between managers and actions initiated in the UI. */
 export class OrchestratorBackgroundService {
@@ -333,6 +334,8 @@ export class OrchestratorBackgroundService {
                 throw Error('Active wallet is not unlocked.');
             }
 
+
+
             // TODO: REFACTOR!
 
             // let unlockedMnemonic = null;
@@ -403,6 +406,47 @@ export class OrchestratorBackgroundService {
             // // });
 
         });
+
+        this.manager.communication.listen('sign-content-and-callback-to-url', async (port: any, data: { content: string, tabId: string, callbackUrl: string, walletId: string, accountId: string }) => {
+            const wallet = this.manager.walletManager.getWallet(data.walletId);
+            const account = this.manager.walletManager.getAccount(wallet, data.accountId);
+
+            if (!wallet || !account) {
+                chrome.tabs.sendMessage(Number(data.tabId), { content: 'No wallet/account active.' });
+                return;
+            }
+
+            if (!this.manager.walletManager.isActiveWalletUnlocked()) {
+                throw Error('Active wallet is not unlocked.');
+            }
+
+            // TODO: Provide the address from the Action UI.
+            const address = account.state.receive[0].address;
+
+            const signature = await this.manager.walletManager.signData(wallet, account, address, data.content);
+
+            const payload = {
+                "signature": signature,
+                "publicKey": address
+            };
+
+            console.log(payload);
+
+            // Perform HTTP post call with payload!
+            const authRequest = await axios.post(data.callbackUrl, payload);
+            console.log(authRequest);
+
+            if (authRequest.status == 204) {
+                // TODO: Figure out if we should inform all or just source for this event.
+                this.manager.communication.sendToAll('signed-content-and-callback-to-url', { success: true });
+                // this.manager.communication.send(port, 'signed-content-and-callback-to-url');
+            } else {
+                // TODO: Figure out if we should inform all or just source for this event.
+                this.manager.communication.sendToAll('signed-content-and-callback-to-url', { success: false, data: authRequest.data });
+                // this.manager.communication.send(port, 'signed-content-and-callback-to-url');
+            }
+        });
+
 
         this.manager.communication.listen('set-settings', async (port: any, data: Settings) => {
             await this.manager.setSettings(data);
@@ -886,7 +930,7 @@ export class OrchestratorBackgroundService {
 
             // Trigger the event even though no account was really changed.
             // if (changedAccount) {
-                this.manager.communication.sendToAll('active-account-changed', { walletId: data.walletId, accountId: data.accountId });
+            this.manager.communication.sendToAll('active-account-changed', { walletId: data.walletId, accountId: data.accountId });
             // }
         });
 

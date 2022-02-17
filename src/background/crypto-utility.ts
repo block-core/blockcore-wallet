@@ -44,7 +44,7 @@ export class CryptoUtility {
             //     pubkey: publicKey,
             //     network: network,
             // });
-    
+
             // return address;
         } else if (addressPurpose == 84) {
             const { address } = payments.p2wpkh({
@@ -70,7 +70,7 @@ export class CryptoUtility {
         return address;
     }
 
-    FgetAddressByNetworkp2pkh(node: any, network: any) {
+    getAddressByNetworkp2pkh(node: any, network: any) {
         const { address } = payments.p2pkh({
             pubkey: node.publicKey,
             network: network,
