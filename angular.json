@@ -34,19 +34,18 @@
           },
           "configurations": {
             "production": {
-              "optimization": {
-                "scripts": true,
-                "styles": {
-                  "minify": true,
-                  "inlineCritical": false
-                },
-                "fonts": true
-              },
+              "buildOptimizer": false,
+              "optimization": {},
+              "vendorChunk": false,
+              "extractLicenses": true,
+              "sourceMap": false,
+              "namedChunks": true,
+              "outputHashing": "all",
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "3mb",
-                  "maximumError": "5mb"
+                  "maximumWarning": "6mb",
+                  "maximumError": "10mb"
                 },
                 {
                   "type": "anyComponentStyle",
@@ -79,10 +78,15 @@
                   "replace": "angular/src/environments/environment.ts",
                   "with": "angular/src/environments/environment.prod.ts"
                 }
-              ],
-              "outputHashing": "none"
+              ]
             },
             "development": {
+              "buildOptimizer": false,
+              "optimization": false,
+              "vendorChunk": true,
+              "extractLicenses": true,
+              "sourceMap": true,
+              "namedChunks": true,
               "assets": [
                 "angular/src/net_request_rules.json",
                 "angular/src/provider.js",
@@ -102,24 +106,17 @@
                   "output": "/",
                   "glob": "manifest.json"
                 }
-              ],
-              "buildOptimizer": false,
-              "optimization": false,
-              "vendorChunk": true,
-              "extractLicenses": true,
-              "sourceMap": true,
-              "namedChunks": true
+              ]
             },
             "coinvault": {
+              "buildOptimizer": false,
+              "optimization": {},
+              "vendorChunk": false,
+              "extractLicenses": true,
+              "sourceMap": false,
+              "namedChunks": true,
+              "outputHashing": "all",
               "outputPath": "dist/extension",
-              "optimization": {
-                "scripts": true,
-                "styles": {
-                  "minify": true,
-                  "inlineCritical": false
-                },
-                "fonts": true
-              },
               "budgets": [
                 {
                   "type": "initial",
@@ -157,19 +154,17 @@
                   "output": "/",
                   "glob": "manifest.json"
                 }
-              ],
-              "outputHashing": "none"
+              ]
             },
             "smartcityplatform": {
+              "buildOptimizer": false,
+              "optimization": {},
+              "vendorChunk": false,
+              "extractLicenses": true,
+              "sourceMap": false,
+              "namedChunks": true,
+              "outputHashing": "all",
               "outputPath": "dist/extension",
-              "optimization": {
-                "scripts": true,
-                "styles": {
-                  "minify": true,
-                  "inlineCritical": false
-                },
-                "fonts": true
-              },
               "budgets": [
                 {
                   "type": "initial",
@@ -207,8 +202,7 @@
                   "replace": "angular/src/environments/environment.ts",
                   "with": "angular/src/environments/environment.smartcityplatform.ts"
                 }
-              ],
-              "outputHashing": "none"
+              ]
             }
           },
           "defaultConfiguration": "production"
