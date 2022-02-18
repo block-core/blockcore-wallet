@@ -18,7 +18,6 @@ chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
     .catch(error => console.error(error));
 });
 
-
 // if (environment.production) {
 //   enableProdMode();
 // }

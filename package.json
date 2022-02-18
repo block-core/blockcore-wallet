@@ -3,6 +3,9 @@
   "version": "0.0.14",
   "description": "An Non-Custodial HD wallet in your browser for Coins, Tokens, Identities, NFTs and more",
   "scripts": {
+    "version": "node -p \"require('./package.json').version\"",
+    "changelog": "conventional-changelog -i CHANGELOG.md -s -r 0 && git add CHANGELOG.md",
+    "all": "npm run build:production && npm run build:coinvault && npm run build:smartcityplatform",
     "ng": "ng",
     "start": "npm run watch",
     "build:angular": "ng build --configuration development --extra-webpack-config ./angular/webpack.config.js",
@@ -14,13 +17,17 @@
     "build:extension-production": "webpack --config extension/webpack.config.prod.js",
     "watch:extension": "webpack --config extension/webpack.config.js -w",
     "build": "npm run clean && npm run build:angular && npm run build:extension",
-    "build:production": "npm run build:angular-production && npm run build:extension-production && npm run pack",
-    "build:coinvault": "npm run build:angular-coinvault && npm run build:extension-production && npm run pack",
-    "build:smartcityplatform": "npm run build:angular-smartcityplatform && npm run build:extension-production && npm run pack",
+    "build:production": "npm run build:angular-production && npm run build:extension-production",
+    "build:coinvault": "npm run build:angular-coinvault && npm run build:extension-production",
+    "build:smartcityplatform": "npm run build:angular-smartcityplatform && npm run build:extension-production",
     "watch": "npm run clean && npm-run-all --parallel watch:*",
     "clean": "rimraf dist/extension",
+    "pack:production": "npm run build:angular-production && npm run build:extension-production && npm run pack",
     "pack": "cd dist/extension && bestzip ../../extension.zip *",
-    "test": "ng test --source-map=false --plugin ~angular/sourcemaps-plugin.js --extra-webpack-config ./angular/webpack.config.js"
+    "test": "ng test --source-map=false --plugin ~angular/sourcemaps-plugin.js --extra-webpack-config ./angular/webpack.config.js",
+    "test:headless": "ng test --no-watch --no-progress --browsers=ChromeHeadless --plugin ~angular/sourcemaps-plugin.js --extra-webpack-config ./angular/webpack.config.js",
+    "i18n:init": "ngx-translate-extract --input ./src --output ./src/assets/i18n/template.json --key-as-default-value --replace --format json",
+    "i18n:extract": "ngx-translate-extract --input ./src --output ./src/assets/i18n/{en,da,de,fi,nb,nl,sv}.json --clean --format json"
   },
   "private": true,
   "dependencies": {
