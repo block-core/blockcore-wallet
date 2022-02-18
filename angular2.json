@@ -1,0 +1,99 @@
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "version": 1,
+  "newProjectRoot": "projects",
+  "projects": {
+    "angular-chrome-extension": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        },
+        "@schematics/angular:application": {
+          "strict": true
+        }
+      },
+      "root": "angular",
+      "sourceRoot": "angular/src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "ngx-build-plus:browser",
+          "options": {
+            "outputPath": "angular/dist",
+            "index": "angular/src/index.html",
+            "main": "angular/src/main.ts",
+            "polyfills": "angular/src/polyfills.ts",
+            "tsConfig": "angular/tsconfig.app.json",
+            "inlineStyleLanguage": "scss",
+            "assets": [
+              "angular/src/favicon.ico",
+              "angular/src/assets",
+              "angular/src/manifest.json"
+            ],
+            "styles": [
+              "angular/src/styles.scss"
+            ],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "optimization": {
+                "styles": {
+                  "inlineCritical": false
+                }
+              },              
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "500kb",
+                  "maximumError": "1mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "2kb",
+                  "maximumError": "4kb"
+                }
+              ],
+              "fileReplacements": [
+                {
+                  "replace": "angular/src/environments/environment.ts",
+                  "with": "angular/src/environments/environment.prod.ts"
+                }
+              ],
+              "outputHashing": "all"
+            },
+            "development": {
+              "buildOptimizer": false,
+              "optimization": false,
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "builder": "ngx-build-plus:dev-server",    
+          "configurations": {
+            "production": {
+              "browserTarget": "angular-chrome-extension:build:production"
+            },
+            "development": {
+              "browserTarget": "angular-chrome-extension:build:development"
+            }
+          },
+          "defaultConfiguration": "development"
+        },
+        "extract-i18n": {
+          "builder": "ngx-build-plus:extract-i18n",
+          "options": {
+            "browserTarget": "angular-chrome-extension:build"
+          }
+        }
+      }
+    }
+  },
+  "defaultProject": "angular-chrome-extension"
+}

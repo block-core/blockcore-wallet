@@ -1,22 +1,21 @@
 {
   "name": "blockcore-extension",
   "version": "0.0.14",
+  "description": "An Non-Custodial HD wallet in your browser for Coins, Tokens, Identities, NFTs and more",
   "scripts": {
     "ng": "ng",
-    "start": "ng build --watch --configuration=development",
-    "coinvault": "ng build --watch --configuration=coinvault",
-    "smartcityplatform": "ng build --watch --configuration=smartcityplatform",
-    "all": "ng build --configuration=production && ng build --configuration=coinvault && ng build --configuration=smartcityplatform",
-    "serve": "ng serve",
-    "build": "ng build --configuration=production",
-    "watch": "ng build --watch",
-    "test": "ng test",
-    "test:headless": "ng test --no-watch --no-progress --browsers=ChromeHeadless",
-    "test:web": "cd test/web && http-server",
-    "version": "node -p \"require('./package.json').version\"",
-    "changelog": "conventional-changelog -i CHANGELOG.md -s -r 0 && git add CHANGELOG.md",
-    "i18n:init": "ngx-translate-extract --input ./src --output ./src/assets/i18n/template.json --key-as-default-value --replace --format json",
-    "i18n:extract": "ngx-translate-extract --input ./src --output ./src/assets/i18n/{en,da,de,fi,nb,nl,sv}.json --clean --format json"
+    "start": "npm run watch",
+    "build:angular": "ng build --configuration development",
+    "build:angular-production": "ng build --configuration production",
+    "watch:angular": "ng build --watch --configuration development --delete-output-path false --source-map=true --plugin ~angular/sourcemaps-plugin.js --extra-webpack-config ./angular/webpack.config.js",
+    "build:extension": "webpack --config extension/webpack.config.js",
+    "build:extension-production": "webpack --config extension/webpack.config.prod.js",
+    "watch:extension": "webpack --config extension/webpack.config.js -w",
+    "build": "npm run clean && npm run build:angular && npm run build:extension",
+    "build:production": "npm run build:angular-production && npm run build:extension-production && npm run pack",
+    "watch": "npm run clean && npm-run-all --parallel watch:*",
+    "clean": "rimraf dist/extension",
+    "pack": "cd dist/extension && bestzip ../../extension-build.zip *"
   },
   "private": true,
   "dependencies": {
@@ -30,6 +29,7 @@
     "@angular/platform-browser": "13.2.0",
     "@angular/platform-browser-dynamic": "13.2.0",
     "@angular/router": "13.2.0",
+    "ngx-build-plus": "^12.2.0",
     "@blockcore/blockcore-js": "^7.0.0",
     "@blockcore/identity": "0.0.1",
     "@ngx-translate/core": "^14.0.0",
@@ -78,6 +78,13 @@
     "karma-jasmine-html-reporter": "~1.7.0",
     "sinon-chrome": "^3.0.1",
     "typescript": "4.4.4",
-    "webpack-ext-reloader": "1.1.9"
+    "webpack-ext-reloader": "1.1.9",
+    "awesome-typescript-loader": "^5.2.1",
+    "bestzip": "^2.1.7",
+    "npm-run-all": "^4.1.5",
+    "rimraf": "^2.7.1",
+    "ts-node": "~10.3.0",
+    "ts-loader": "^9.2.6",
+    "webpack-cli": "^4.9.0"
   }
 }
