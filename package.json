@@ -15,7 +15,8 @@
     "build:production": "npm run build:angular-production && npm run build:extension-production && npm run pack",
     "watch": "npm run clean && npm-run-all --parallel watch:*",
     "clean": "rimraf dist/extension",
-    "pack": "cd dist/extension && bestzip ../../extension-build.zip *"
+    "pack": "cd dist/extension && bestzip ../../extension-build.zip *",
+    "test": "ng test --source-map=false --plugin ~angular/sourcemaps-plugin.js --extra-webpack-config ./angular/webpack.config.js"
   },
   "private": true,
   "dependencies": {
