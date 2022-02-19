@@ -168,9 +168,6 @@ const routes: Routes = [
     path: 'action/nostr', component: ActionNostrIdentityComponent
   },
   {
-    path: '**', redirectTo: '/'
-  },
-  {
     path: 'popup',
     loadChildren: () => import('./modules/popup/popup.module').then(m => m.PopupModule)
   },
@@ -181,12 +178,15 @@ const routes: Routes = [
   {
     path: 'options',
     loadChildren: () => import('./modules/options/options.module').then(m => m.OptionsModule)
-  }
+  },
+  {
+    path: '**', redirectTo: '/'
+  },
 ];
 
 @NgModule({
   // imports: [RouterModule.forRoot(routes)],
-  imports: [RouterModule.forRoot(routes, { useHash: true, relativeLinkResolution: 'legacy' })],
+  imports: [RouterModule.forRoot(routes, { enableTracing: false, useHash: true })],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

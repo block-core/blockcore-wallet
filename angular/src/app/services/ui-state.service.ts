@@ -122,41 +122,14 @@ export class UIState {
 
     unlocked!: string[];
 
-    // unlockedMnemonic!: string;
-
     timer: any;
 
-    // password!: string | null;
-
     port!: chrome.runtime.Port | null;
-
-    // changeAccount(index: number) {
-    //     if (index < 0) {
-    //         this.persisted.activeAccountIndex = -1;
-    //     }
-    //     // Check if the index is available before allowing to change.
-    //     if (index != -1 && index < this.appState.activeWallet.accounts.length) {
-    //         this.appState.persisted.activeAccountIndex = index;
-    //     }
-    //     else {
-    //         console.log('Attempting to show account that does not exists.');
-    //         this.router.navigateByUrl('/account');
-    //     }
-    // }
 
     active() {
         console.log('active:');
         this.resetTimer();
     }
-
-    // onInactiveTimeout() {
-    //     console.log('onInactiveTimeout:');
-    //     this.unlockedMnemonic = '';
-
-    //     console.log('redirect to root:');
-    //     // Redirect to root and log user out of their wallet.
-    //     this.router.navigateByUrl('/');
-    // }
 
     resetTimer() {
         this.communication.send('timer-reset');
