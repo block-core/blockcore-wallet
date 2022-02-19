@@ -13,43 +13,39 @@
           "strict": true
         }
       },
-      "root": "",
-      "sourceRoot": "src",
+      "root": "angular",
+      "sourceRoot": "angular/src",
       "prefix": "app",
       "architect": {
         "build": {
-          "builder": "@angular-builders/custom-webpack:browser",
+          "builder": "ngx-build-plus:browser",
           "options": {
             "aot": true,
-            "outputPath": "dist/blockcore",
-            "index": "src/index.html",
-            "main": "src/main.ts",
-            "polyfills": "src/polyfills.ts",
-            "tsConfig": "tsconfig.app.json",
+            "outputPath": "dist/extension",
+            "index": "angular/src/index.html",
+            "main": "angular/src/main.ts",
+            "polyfills": "angular/src/polyfills.ts",
+            "tsConfig": "angular/tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "styles": [
-              "src/styles.scss"
+              "angular/src/styles.scss"
             ],
-            "scripts": [],
-            "customWebpackConfig": {
-              "path": "./webpack.config.ts"
-            }
+            "scripts": []
           },
           "configurations": {
             "production": {
-              "optimization": {
-                "scripts": true,
-                "styles": {
-                  "minify": true,
-                  "inlineCritical": false
-                },
-                "fonts": true
-              },
+              "buildOptimizer": false,
+              "optimization": {},
+              "vendorChunk": false,
+              "extractLicenses": true,
+              "sourceMap": false,
+              "namedChunks": true,
+              "outputHashing": "all",
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "3mb",
-                  "maximumError": "5mb"
+                  "maximumWarning": "6mb",
+                  "maximumError": "10mb"
                 },
                 {
                   "type": "anyComponentStyle",
@@ -58,74 +54,69 @@
                 }
               ],
               "assets": [
-                "src/net_request_rules.json",
-                "src/provider.js",
-                "src/content.js",
+                "angular/src/net_request_rules.json",
+                "angular/src/provider.js",
+                "angular/src/content.js",
                 {
-                  "input": "src/assets/blockcore/",
+                  "input": "angular/src/assets/blockcore/",
                   "output": "/assets",
                   "glob": "*"
                 },
                 {
-                  "input": "src/assets/i18n/",
+                  "input": "angular/src/assets/i18n/",
                   "output": "/assets/i18n",
                   "glob": "*"
                 },
                 {
-                  "input": "src/manifest/blockcore/",
+                  "input": "angular/src/manifest/blockcore/",
                   "output": "/",
                   "glob": "manifest.json"
                 }
               ],
               "fileReplacements": [
                 {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.prod.ts"
+                  "replace": "angular/src/environments/environment.ts",
+                  "with": "angular/src/environments/environment.prod.ts"
                 }
-              ],
-              "outputHashing": "none"
+              ]
             },
             "development": {
-              "assets": [
-                "src/net_request_rules.json",
-                "src/provider.js",
-                "src/content.js",
-                {
-                  "input": "src/assets/blockcore/",
-                  "output": "/assets",
-                  "glob": "*"
-                },
-                {
-                  "input": "src/assets/i18n/",
-                  "output": "/assets/i18n",
-                  "glob": "*"
-                },
-                {
-                  "input": "src/manifest/blockcore/",
-                  "output": "/",
-                  "glob": "manifest.json"
-                }
-              ],
               "buildOptimizer": false,
               "optimization": false,
               "vendorChunk": true,
               "extractLicenses": true,
               "sourceMap": true,
               "namedChunks": true,
-              "customWebpackConfig": {
-                "path": "./webpack-dev.config.ts"
-              }
+              "assets": [
+                "angular/src/net_request_rules.json",
+                "angular/src/provider.js",
+                "angular/src/content.js",
+                {
+                  "input": "angular/src/assets/blockcore/",
+                  "output": "/assets",
+                  "glob": "*"
+                },
+                {
+                  "input": "angular/src/assets/i18n/",
+                  "output": "/assets/i18n",
+                  "glob": "*"
+                },
+                {
+                  "input": "angular/src/manifest/blockcore/",
+                  "output": "/",
+                  "glob": "manifest.json"
+                }
+              ]
             },
             "coinvault": {
-              "outputPath": "dist/coinvault",
-              "optimization": {
-                "scripts": true,
-                "styles": {
-                  "minify": true,
-                  "inlineCritical": false
-                },
-                "fonts": true
-              },
+              "buildOptimizer": false,
+              "optimization": {},
+              "vendorChunk": false,
+              "extractLicenses": true,
+              "sourceMap": false,
+              "namedChunks": true,
+              "outputHashing": "all",
+              "outputPath": "dist/extension",
               "budgets": [
                 {
                   "type": "initial",
@@ -140,42 +131,40 @@
               ],
               "fileReplacements": [
                 {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.coinvault.ts"
+                  "replace": "angular/src/environments/environment.ts",
+                  "with": "angular/src/environments/environment.coinvault.ts"
                 }
               ],
               "assets": [
-                "src/net_request_rules.json",
-                "src/provider.js",
-                "src/content.js",
+                "angular/src/net_request_rules.json",
+                "angular/src/provider.js",
+                "angular/src/content.js",
                 {
-                  "input": "src/assets/coinvault/",
+                  "input": "angular/src/assets/coinvault/",
                   "output": "/assets",
                   "glob": "*"
                 },
                 {
-                  "input": "src/assets/i18n/",
+                  "input": "angular/src/assets/i18n/",
                   "output": "/assets/i18n",
                   "glob": "*"
                 },
                 {
-                  "input": "src/manifest/coinvault/",
+                  "input": "angular/src/manifest/coinvault/",
                   "output": "/",
                   "glob": "manifest.json"
                 }
-              ],
-              "outputHashing": "none"
+              ]
             },
             "smartcityplatform": {
-              "outputPath": "dist/smartcityplatform",
-              "optimization": {
-                "scripts": true,
-                "styles": {
-                  "minify": true,
-                  "inlineCritical": false
-                },
-                "fonts": true
-              },
+              "buildOptimizer": false,
+              "optimization": {},
+              "vendorChunk": false,
+              "extractLicenses": true,
+              "sourceMap": false,
+              "namedChunks": true,
+              "outputHashing": "all",
+              "outputPath": "dist/extension",
               "budgets": [
                 {
                   "type": "initial",
@@ -189,32 +178,31 @@
                 }
               ],
               "assets": [
-                "src/net_request_rules.json",
-                "src/provider.js",
-                "src/content.js",
+                "angular/src/net_request_rules.json",
+                "angular/src/provider.js",
+                "angular/src/content.js",
                 {
-                  "input": "src/assets/smartcityplatform/",
+                  "input": "angular/src/assets/smartcityplatform/",
                   "output": "/assets",
                   "glob": "*"
                 },
                 {
-                  "input": "src/assets/i18n/",
+                  "input": "angular/src/assets/i18n/",
                   "output": "/assets/i18n",
                   "glob": "*"
                 },
                 {
-                  "input": "src/manifest/smartcityplatform/",
+                  "input": "angular/src/manifest/smartcityplatform/",
                   "output": "/",
                   "glob": "manifest.json"
                 }
               ],
               "fileReplacements": [
                 {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.smartcityplatform.ts"
+                  "replace": "angular/src/environments/environment.ts",
+                  "with": "angular/src/environments/environment.smartcityplatform.ts"
                 }
-              ],
-              "outputHashing": "none"
+              ]
             }
           },
           "defaultConfiguration": "production"
@@ -223,7 +211,7 @@
           "options": {
             "port": 4201
           },
-          "builder": "@angular-devkit/build-angular:dev-server",
+          "builder": "ngx-build-plus:dev-server",
           "configurations": {
             "production": {
               "browserTarget": "blockcore-extension:build:production"
@@ -247,24 +235,21 @@
           }
         },
         "test": {
-          "builder": "@angular-builders/custom-webpack:karma",
+          "builder": "ngx-build-plus:karma",
           "options": {
-            "main": "src/test.ts",
-            "polyfills": "src/polyfills.ts",
-            "tsConfig": "tsconfig.spec.json",
-            "karmaConfig": "karma.conf.js",
+            "main": "angular/src/test.ts",
+            "polyfills": "angular/src/polyfills.ts",
+            "tsConfig": "angular/tsconfig.spec.json",
+            "karmaConfig": "angular/karma.conf.js",
             "inlineStyleLanguage": "scss",
             "assets": [
-              "src/favicon.ico",
-              "src/assets"
+              "angular/src/favicon.ico",
+              "angular/src/assets"
             ],
             "styles": [
-              "src/styles.scss"
+              "angular/src/styles.scss"
             ],
-            "scripts": [],
-            "customWebpackConfig": {
-              "path": "./webpack-test.config.ts"
-            }
+            "scripts": []
           }
         }
       }

@@ -1,0 +1,48 @@
+name: Build and Release
+
+on:
+  pull_request:
+    branches:
+      - master
+      - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build and Test
+    runs-on: ubuntu-latest
+
+    env:
+      BLOCKCORE: "blockcore"
+      COINVAULT: "coinvault"
+      SMARTCITYPLATFORM: "smartcityplatform"
+
+    steps:
+      - uses: actions/checkout@master
+        name: Checkout
+
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 16
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Variables
+        run: |
+          echo VERSION=$(npm run version --silent) >> $GITHUB_ENV
+        shell: bash
+
+      - name: Package Name
+        run: |
+          echo RELEASE_NAME_BLOCKCORE=${{ env.BLOCKCORE }}-${{ env.VERSION }}.zip >> $GITHUB_ENV
+          echo RELEASE_NAME_COINVAULT=${{ env.COINVAULT }}-${{ env.VERSION }}.zip >> $GITHUB_ENV
+          echo RELEASE_NAME_SMARTCITYPLATFORM=${{ env.SMARTCITYPLATFORM }}-${{ env.VERSION }}.zip >> $GITHUB_ENV
+        shell: bash
+
+      - name: Setup
+        run: npm ci
+
+      - name: Test
+        run: npm test -- --no-watch --no-progress --browsers=ChromeHeadless
+
+      - name: Build
+        run: npm run all
