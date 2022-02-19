@@ -6,22 +6,37 @@ import { AppManager } from "./application-manager";
 import { Psbt } from '@blockcore/blockcore-js';
 import * as ecc from 'tiny-secp256k1';
 import ECPairFactory from 'ecpair';
+import { Injectable } from "@angular/core";
+import { NetworkStatusManager } from "./network-status";
+import { LoggerService } from "../app/services/logger.service";
+import { IndexerService } from "./indexer";
+import { AppState } from "./application-state";
+import { CryptoUtility } from "./crypto-utility";
 const ECPair = ECPairFactory(ecc);
 var bitcoinMessage = require('bitcoinjs-message');
 
+@Injectable({
+    providedIn: 'root'
+})
 /** Manager that keeps state and operations for a single wallet. This object does not keep the password, which must be supplied for signing operations. */
 export class WalletManager {
     private timer: any;
-    private logger: Logger
 
     constructor(
-        private manager: AppManager) {
-        this.logger = manager.logger;
+        public status: NetworkStatusManager,
+        private indexer: IndexerService,
+        private state: AppState,
+        private crypto: CryptoUtility,
+        private walletManager: WalletManager,
+        private logger: LoggerService) {
+
+        // This should be done outside of the service.
+        this.resetTimer();
     }
 
     async signData(wallet: Wallet, account: Account, address: string, content: string): Promise<string> {
         // TODO: Verify the address for this network!! ... Help the user avoid sending transactions on very wrong addresses.
-        const network = this.manager.getNetwork(account.networkType);
+        const network = this.status.getNetwork(account.networkType);
 
         // Get the address from receive or change.
         let addressItem = account.state.receive.find(a => a.address == address);
@@ -57,7 +72,7 @@ export class WalletManager {
 
     async createTransaction(wallet: Wallet, account: Account, address: string, amount: number, fee: number): Promise<{ addresses: string[], transactionHex: string, fee: number, feeRate: number, virtualSize: number, weight: number }> {
         // TODO: Verify the address for this network!! ... Help the user avoid sending transactions on very wrong addresses.
-        const network = this.manager.getNetwork(account.networkType);
+        const network = this.status.getNetwork(account.networkType);
         const affectedAddresses = [];
 
         // We currently only support BTC-compatible transactions such as STRAX. We do not support other Blockcore chains that are not PoS v4.
@@ -87,7 +102,7 @@ export class WalletManager {
 
         for (let i = 0; i < inputs.length; i++) {
             const input = inputs[i];
-            const hex = await this.manager.indexer.getTransactionHex(account, input.outpoint.transactionId);
+            const hex = await this.indexer.getTransactionHex(account, input.outpoint.transactionId);
 
             affectedAddresses.push(input.address);
 
@@ -157,13 +172,13 @@ export class WalletManager {
 
     async sendTransaction(account: Account, transactionHex: string): Promise<{ transactionId: string, transactionHex: string }> {
         this.logger.debug('TransactionHex', transactionHex);
-        const transactionId = await this.manager.indexer.broadcastTransaction(account, transactionHex);
+        const transactionId = await this.indexer.broadcastTransaction(account, transactionHex);
         this.logger.debug('TransactionId', transactionId);
         return { transactionId, transactionHex };
     }
 
     getWallets() {
-        return this.manager.state.persisted.wallets;
+        return this.state.persisted.wallets;
     }
 
     lockWallets() {
@@ -173,13 +188,15 @@ export class WalletManager {
         // await this.state.save();
         // this.refreshState();
 
-        this.manager.communication.sendToAll('wallet-locked');
+        // TODO: FIX!!!
+        // this.communication.sendToAll('wallet-locked');
     }
 
     lockWallet(id: string) {
         this.walletSecrets.delete(id);
 
-        this.manager.broadcastState();
+        // TODO: FIX!!!
+        // this.manager.broadcastState();
     }
 
     calculateBalance(account: Account) {
@@ -204,7 +221,7 @@ export class WalletManager {
     }
 
     async revealSecretRecoveryPhrase(walletId: string, password: string) {
-        var wallet = this.manager.walletManager.getWallet(walletId);
+        var wallet = this.walletManager.getWallet(walletId);
         let unlockedMnemonic = null;
 
         if (!wallet) {
@@ -212,7 +229,7 @@ export class WalletManager {
         }
 
         try {
-            unlockedMnemonic = await this.manager.crypto.decryptData(wallet.mnemonic, password);
+            unlockedMnemonic = await this.crypto.decryptData(wallet.mnemonic, password);
         }
         catch (error) {
             this.logger.error(error);
@@ -230,17 +247,17 @@ export class WalletManager {
     };
 
     async unlockWallet(walletId: string, password: string) {
-        var wallet = this.manager.walletManager.getWallet(walletId);
+        var wallet = this.walletManager.getWallet(walletId);
         let unlockedMnemonic = null;
 
         if (!wallet) {
             return unlockedMnemonic;
         }
 
-        unlockedMnemonic = await this.manager.crypto.decryptData(wallet.mnemonic, password);
+        unlockedMnemonic = await this.crypto.decryptData(wallet.mnemonic, password);
 
         if (unlockedMnemonic) {
-            this.manager.state.persisted.activeWalletId = wallet.id;
+            this.state.persisted.activeWalletId = wallet.id;
 
             // From the secret receovery phrase, the master seed is derived.
             // Learn more about the HD keys: https://raw.githubusercontent.com/bitcoin/bips/master/bip-0032/derivation.png
@@ -259,23 +276,23 @@ export class WalletManager {
 
     /** Cange the wallet password in one operation. */
     async changeWalletPassword(walletId: string, oldpassword: string, newpassword: string) {
-        var wallet = this.manager.walletManager.getWallet(walletId);
+        var wallet = this.walletManager.getWallet(walletId);
         let unlockedMnemonic = null;
 
         if (!wallet) {
             return unlockedMnemonic;
         }
 
-        unlockedMnemonic = await this.manager.crypto.decryptData(wallet.mnemonic, oldpassword);
+        unlockedMnemonic = await this.crypto.decryptData(wallet.mnemonic, oldpassword);
 
         if (unlockedMnemonic) {
 
             // Encrypt the recovery phrase with new password and persist.
-            let encryptedRecoveryPhrase = await this.manager.crypto.encryptData(unlockedMnemonic, newpassword);
+            let encryptedRecoveryPhrase = await this.crypto.encryptData(unlockedMnemonic, newpassword);
             wallet.mnemonic = encryptedRecoveryPhrase;
 
             // Make sure we persist the newly encrypted recovery phrase.
-            await this.manager.state.save();
+            await this.state.save();
 
             // Make sure we delete the existing wallet secret for this wallet.
             this.walletSecrets.delete(walletId);
@@ -285,7 +302,7 @@ export class WalletManager {
             // Add this wallet to list of unlocked.
             this.walletSecrets.set(walletId, { password: newpassword, seed: masterSeed });
 
-            this.manager.state.persisted.activeWalletId = wallet.id;
+            this.state.persisted.activeWalletId = wallet.id;
 
             return true;
 
@@ -295,7 +312,7 @@ export class WalletManager {
     }
 
     resetTimer() {
-        this.logger.info('resetTimer:', this.manager.state.persisted.settings.autoTimeout * MINUTE);
+        this.logger.info('resetTimer:', this.state.persisted.settings.autoTimeout * MINUTE);
 
         if (this.timer) {
             clearTimeout(this.timer);
@@ -308,7 +325,7 @@ export class WalletManager {
                 () => {
                     this.lockWallets();
                 },
-                this.manager.state.persisted.settings.autoTimeout * MINUTE
+                this.state.persisted.settings.autoTimeout * MINUTE
             );
         } else {
             this.logger.info('Timer not set since wallet is not unlocked.');
@@ -316,12 +333,12 @@ export class WalletManager {
     }
 
     get hasWallets(): boolean {
-        return this.manager.state.persisted.wallets.length > 0;
+        return this.state.persisted.wallets.length > 0;
     }
 
     get activeWallet() {
-        if (this.manager.state.persisted.activeWalletId) {
-            return this.manager.state.persisted.wallets.find(w => w.id == this.manager.state.persisted.activeWalletId);
+        if (this.state.persisted.activeWalletId) {
+            return this.state.persisted.wallets.find(w => w.id == this.state.persisted.activeWalletId);
             // return this.persisted.wallets.get(this.persisted.activeWalletId);
             // return this.persisted.wallets[this.persisted.activeWalletIndex];
         } else {
@@ -366,8 +383,8 @@ export class WalletManager {
     }
 
     async setActiveWallet(id: string) {
-        if (this.manager.state.persisted.activeWalletId != id) {
-            this.manager.state.persisted.activeWalletId = id;
+        if (this.state.persisted.activeWalletId != id) {
+            this.state.persisted.activeWalletId = id;
             return true;
         }
 
@@ -388,29 +405,30 @@ export class WalletManager {
     }
 
     getWallet(id: string) {
-        const wallet = this.manager.state.persisted.wallets.find(w => w.id == id);
+        const wallet = this.state.persisted.wallets.find(w => w.id == id);
         return wallet;
     }
 
     async removeWallet(id: string) {
-        const walletIndex = this.manager.state.persisted.wallets.findIndex(w => w.id == id);
+        const walletIndex = this.state.persisted.wallets.findIndex(w => w.id == id);
 
         // Remove the wallet.
-        this.manager.state.persisted.wallets.splice(walletIndex, 1);
+        this.state.persisted.wallets.splice(walletIndex, 1);
 
         // Remove the password for this wallet, if it was unlocked.
-        this.manager.walletManager.walletSecrets.delete(id);
+        this.walletManager.walletSecrets.delete(id);
 
-        await this.manager.state.save();
+        await this.state.save();
 
-        this.manager.broadcastState();
+        // TODO: FIX!!
+        // this.manager.broadcastState();
     }
 
     async addAccount(account: Account, wallet: Wallet) {
         // First derive the xpub and store that on the account.
         const secret = this.walletSecrets.get(wallet.id);
 
-        const network = this.manager.getNetwork(account.networkType);
+        const network = this.status.getNetwork(account.networkType);
 
         const masterNode = HDKey.fromMasterSeed(Buffer.from(secret.seed), network.bip32);
 
@@ -446,7 +464,7 @@ export class WalletManager {
         // const id3Array = secp256k1.schnorr.getPublicKey(id3hex);
         // const id3 = Buffer.from(id3Array).toString('hex');
 
-        await this.manager.state.save();
+        await this.state.save();
 
         if (wallet.restored) {
             // Schedule background processing of the account against the blockchain APIs.
@@ -455,7 +473,7 @@ export class WalletManager {
             // TODO: Perform blockchain / vault data query and recovery.
             // If there are transactions, DID Documents, NFTs or anythign else, we should launch the
             // query probe here.
-            this.manager.indexer.process(account, wallet, false);
+            this.indexer.process(account, wallet, false);
         }
     }
 
@@ -481,17 +499,17 @@ export class WalletManager {
             // Generate a new address.
             const addressIndex = index + 1;
 
-            const network = this.manager.getNetwork(account.networkType);
+            const network = this.status.getNetwork(account.networkType);
             const accountNode = HDKey.fromExtendedKey(account.xpub, network.bip32);
             const addressNode = accountNode.deriveChild(type).deriveChild(addressIndex);
-            const address = this.manager.crypto.getAddressByNetwork(Buffer.from(addressNode.publicKey), network, account.purposeAddress);
+            const address = this.crypto.getAddressByNetwork(Buffer.from(addressNode.publicKey), network, account.purposeAddress);
 
             addresses.push({
                 index: addressIndex,
                 address: address
             });
 
-            await this.manager.state.save();
+            await this.state.save();
         }
 
         return address;
@@ -516,9 +534,9 @@ export class WalletManager {
     }
 
     async addWallet(wallet: Wallet) {
-        this.manager.state.persisted.wallets.push(wallet);
+        this.state.persisted.wallets.push(wallet);
 
         // Persist the newly created wallet.
-        await this.manager.state.save();
+        await this.state.save();
     }
 }

@@ -6,7 +6,6 @@ import { CryptoUtility } from './crypto-utility';
 import * as bip39 from 'bip39';
 import * as bip32 from 'bip32';
 import { decodeJWT, verifyJWT } from 'did-jwt';
-import { settings } from 'cluster';
 import { ServiceEndpoint } from 'did-resolver';
 import { DataSyncService } from './data-sync';
 import { HDKey } from 'micro-bip32';
@@ -17,20 +16,32 @@ import { AppManager } from './application-manager';
 import { AccountReceiveComponent } from '../app/account/receive/receive.component';
 import { Transaction } from '@blockcore/blockcore-js';
 import axios from 'axios';
+import { Injectable } from '@angular/core';
+import { WalletManager } from './wallet-manager';
+import { NetworkStatusManager } from './network-status';
+import { IndexerService } from './indexer';
 
+@Injectable({
+    providedIn: 'root'
+})
 /** Service that handles orchestration between background and frontend. Maps messages between managers and actions initiated in the UI. */
 export class OrchestratorBackgroundService {
     constructor(
-        private manager: AppManager) {
+        private walletManager: WalletManager,
+        private state: AppState,
+        private indexer: IndexerService,
+        private status: NetworkStatusManager,
+        private communication: CommunicationBackgroundService
+    ) {
         this.eventHandlers();
     }
 
     active() {
-        this.manager.walletManager.resetTimer();
+        this.walletManager.resetTimer();
     }
 
     updateNetworkStatus(networkStatus: NetworkStatus) {
-        this.manager.communication.sendToAll('network-status', networkStatus);
+        this.communication.sendToAll('network-status', networkStatus);
     }
 
     // REFACTORY IDENTITY LATER!
@@ -289,19 +300,19 @@ export class OrchestratorBackgroundService {
         // Whenever we refresh the state, we'll also reset the timer. State changes should occur based on user-interaction.
         this.active();
 
-        this.manager.broadcastState();
+        // this.manager.broadcastState();
     };
 
     async setAction(data: Action, broadcast = true) {
-        this.manager.setAction(data, broadcast);
+        // this.manager.setAction(data, broadcast);
     }
 
     private eventHandlers() {
         // "state" is the first request from the UI.
-        this.manager.communication.listen('state-load', async (port: any, data: any) => {
+        this.communication.listen('state-load', async (port: any, data: any) => {
             // If the local state has not yet initialized, we'll log error. This should normally not happen
             // and we have a race-condition that should be mitigated differently.
-            if (!this.manager.state.initialized) {
+            if (!this.state.initialized) {
                 console.error('State was requested before initialized. This is a race-condition that should not occurr.');
                 return;
             }
@@ -310,27 +321,27 @@ export class OrchestratorBackgroundService {
             const url = data.url;
             console.log('Getting last state for: ', url);
 
-            this.manager.broadcastState(true);
+            // this.manager.broadcastState(true);
         });
 
-        this.manager.communication.listen('timer-reset', (port: any, data: any) => {
+        this.communication.listen('timer-reset', (port: any, data: any) => {
             this.active();
         });
 
-        this.manager.communication.listen('set-action', async (port: any, data: { action: Action, broadcast: boolean }) => {
+        this.communication.listen('set-action', async (port: any, data: { action: Action, broadcast: boolean }) => {
             this.setAction(data.action, data.broadcast);
         });
 
-        this.manager.communication.listen('sign-content', async (port: any, data: { content: string, tabId: string, walletId: string, accountId: string }) => {
-            const wallet = this.manager.walletManager.getWallet(data.walletId);
-            const account = this.manager.walletManager.getAccount(wallet, data.accountId);
+        this.communication.listen('sign-content', async (port: any, data: { content: string, tabId: string, walletId: string, accountId: string }) => {
+            const wallet = this.walletManager.getWallet(data.walletId);
+            const account = this.walletManager.getAccount(wallet, data.accountId);
 
             if (!wallet || !account) {
                 chrome.tabs.sendMessage(Number(data.tabId), { content: 'No wallet/account active.' });
                 return;
             }
 
-            if (!this.manager.walletManager.isActiveWalletUnlocked()) {
+            if (!this.walletManager.isActiveWalletUnlocked()) {
                 throw Error('Active wallet is not unlocked.');
             }
 
@@ -407,23 +418,23 @@ export class OrchestratorBackgroundService {
 
         });
 
-        this.manager.communication.listen('sign-content-and-callback-to-url', async (port: any, data: { content: string, tabId: string, callbackUrl: string, walletId: string, accountId: string }) => {
-            const wallet = this.manager.walletManager.getWallet(data.walletId);
-            const account = this.manager.walletManager.getAccount(wallet, data.accountId);
+        this.communication.listen('sign-content-and-callback-to-url', async (port: any, data: { content: string, tabId: string, callbackUrl: string, walletId: string, accountId: string }) => {
+            const wallet = this.walletManager.getWallet(data.walletId);
+            const account = this.walletManager.getAccount(wallet, data.accountId);
 
             if (!wallet || !account) {
                 chrome.tabs.sendMessage(Number(data.tabId), { content: 'No wallet/account active.' });
                 return;
             }
 
-            if (!this.manager.walletManager.isActiveWalletUnlocked()) {
+            if (!this.walletManager.isActiveWalletUnlocked()) {
                 throw Error('Active wallet is not unlocked.');
             }
 
             // TODO: Provide the address from the Action UI.
             const address = account.state.receive[0].address;
 
-            const signature = await this.manager.walletManager.signData(wallet, account, address, data.content);
+            const signature = await this.walletManager.signData(wallet, account, address, data.content);
 
             const payload = {
                 "signature": signature,
@@ -438,18 +449,19 @@ export class OrchestratorBackgroundService {
 
             if (authRequest.status == 204) {
                 // TODO: Figure out if we should inform all or just source for this event.
-                this.manager.communication.sendToAll('signed-content-and-callback-to-url', { success: true });
+                this.communication.sendToAll('signed-content-and-callback-to-url', { success: true });
                 // this.manager.communication.send(port, 'signed-content-and-callback-to-url');
             } else {
                 // TODO: Figure out if we should inform all or just source for this event.
-                this.manager.communication.sendToAll('signed-content-and-callback-to-url', { success: false, data: authRequest.data });
+                this.communication.sendToAll('signed-content-and-callback-to-url', { success: false, data: authRequest.data });
                 // this.manager.communication.send(port, 'signed-content-and-callback-to-url');
             }
         });
 
 
-        this.manager.communication.listen('set-settings', async (port: any, data: Settings) => {
-            await this.manager.setSettings(data);
+        this.communication.listen('set-settings', async (port: any, data: Settings) => {
+            // TODO: FIX!!!
+            // await this.manager.setSettings(data);
         });
 
         // TODO: REFACTOR!
@@ -459,8 +471,8 @@ export class OrchestratorBackgroundService {
         //     this.manager.communication.send(port, 'vault-configuration', vaultConfiguration);
         // });
 
-        this.manager.communication.listen('account-update', async (port: any, data: { walletId: string, accountId: string, fields: { name: string, icon: string } }) => {
-            const wallet = this.manager.walletManager.getWallet(data.walletId);
+        this.communication.listen('account-update', async (port: any, data: { walletId: string, accountId: string, fields: { name: string, icon: string } }) => {
+            const wallet = this.walletManager.getWallet(data.walletId);
 
             if (!wallet) {
                 return;
@@ -471,24 +483,25 @@ export class OrchestratorBackgroundService {
             account.name = data.fields.name;
             account.icon = data.fields.icon;
 
-            await this.manager.state.save();
+            await this.state.save();
             this.refreshState();
 
             // When this happens, the handlers will perform an routing change.
-            this.manager.communication.send(port, 'account-updated');
+            // TODO: FIX!!!
+            // this.manager.communication.send(port, 'account-updated');
         });
 
         /** Called whenever a new UI instance has been activated. Use this method to retrieve the existing state of data that is outside of the normal persisted state ('state-load' event). */
-        this.manager.communication.listen('ui-activated', async (port: any, data: any) => {
+        this.communication.listen('ui-activated', async (port: any, data: any) => {
             // TODO: Add more non-persisted state updates to be populated in the UI when new instance of extension is activated.
             console.log('UI ACTIVATED!!!!');
 
             // Get the latest known network statuses:
-            this.manager.communication.send(port, 'network-statuses', this.manager.status.getAll());
+            this.communication.send(port, 'network-statuses', this.status.getAll());
         });
 
-        this.manager.communication.listen('set-wallet-name', async (port: any, data: { walletId: string, name: string }) => {
-            const wallet = this.manager.walletManager.getWallet(data.walletId);
+        this.communication.listen('set-wallet-name', async (port: any, data: { walletId: string, name: string }) => {
+            const wallet = this.walletManager.getWallet(data.walletId);
 
             if (!wallet) {
                 return;
@@ -496,13 +509,13 @@ export class OrchestratorBackgroundService {
 
             wallet.name = data.name;
 
-            await this.manager.state.save();
+            await this.state.save();
 
             this.refreshState();
         });
 
-        this.manager.communication.listen('account-remove', async (port: any, data: { walletId: string, accountId: string }) => {
-            const wallet = this.manager.walletManager.getWallet(data.walletId);
+        this.communication.listen('account-remove', async (port: any, data: { walletId: string, accountId: string }) => {
+            const wallet = this.walletManager.getWallet(data.walletId);
 
             if (!wallet) {
                 return;
@@ -517,118 +530,119 @@ export class OrchestratorBackgroundService {
                 wallet.activeAccountId = null;
             }
 
-            await this.manager.state.save();
+            await this.state.save();
             this.refreshState();
 
             // Raise this after state has been updated, so orchestrator in UI can redirect correctly.
-            this.manager.communication.sendToAll('account-removed', data);
+            this.communication.sendToAll('account-removed', data);
         });
 
-        this.manager.communication.listen('account-scan', async (port: any, data: { force: boolean, accountId: string, walletId: string }) => {
-            const wallet = this.manager.walletManager.getWallet(data.walletId);
-            const account = this.manager.walletManager.getAccount(wallet, data.accountId);
+        this.communication.listen('account-scan', async (port: any, data: { force: boolean, accountId: string, walletId: string }) => {
+            const wallet = this.walletManager.getWallet(data.walletId);
+            const account = this.walletManager.getAccount(wallet, data.accountId);
 
             console.log('Performing account scan', data);
 
-            this.manager.indexer.process(account, wallet, data.force);
+            this.indexer.process(account, wallet, data.force);
         });
 
-        this.manager.communication.listen('wallet-remove', async (port: any, data: { walletId: string, index: number }) => {
-            await this.manager.walletManager.removeWallet(data.walletId);
+        this.communication.listen('wallet-remove', async (port: any, data: { walletId: string, index: number }) => {
+            await this.walletManager.removeWallet(data.walletId);
 
             // Raise this after state has been updated, so orchestrator in UI can redirect correctly.
-            this.manager.communication.sendToAll('wallet-removed', data);
+            this.communication.sendToAll('wallet-removed', data);
         });
 
-        this.manager.communication.listen('transaction-send', async (port: any, data: { walletId: string, accountId: string, transactionHex: string, addresses: string[] }) => {
-            const wallet = this.manager.walletManager.getWallet(data.walletId);
-            const account = this.manager.walletManager.getAccount(wallet, data.accountId);
+        this.communication.listen('transaction-send', async (port: any, data: { walletId: string, accountId: string, transactionHex: string, addresses: string[] }) => {
+            const wallet = this.walletManager.getWallet(data.walletId);
+            const account = this.walletManager.getAccount(wallet, data.accountId);
 
             // Watch the address that belongs to the selected inputs used in the transaction.
             for (let i = 0; i < data.addresses.length; i++) {
-                this.manager.indexer.watchAddress(data.addresses[i], account);
+                this.indexer.watchAddress(data.addresses[i], account);
             }
 
-            const transactionDetails = await this.manager.walletManager.sendTransaction(account, data.transactionHex);
+            const transactionDetails = await this.walletManager.sendTransaction(account, data.transactionHex);
 
-            this.manager.communication.sendToAll('transaction-sent', transactionDetails);
+            this.communication.sendToAll('transaction-sent', transactionDetails);
         });
 
-        this.manager.communication.listen('transaction-create', async (port: any, data: { walletId: string, accountId: string, address: string, amount: string, fee: string }) => {
-            const wallet = this.manager.walletManager.getWallet(data.walletId);
-            const account = this.manager.walletManager.getAccount(wallet, data.accountId);
+        this.communication.listen('transaction-create', async (port: any, data: { walletId: string, accountId: string, address: string, amount: string, fee: string }) => {
+            const wallet = this.walletManager.getWallet(data.walletId);
+            const account = this.walletManager.getAccount(wallet, data.accountId);
 
             try {
-                const transactionDetails = await this.manager.walletManager.createTransaction(wallet, account, data.address, Number(data.amount), Number(data.fee));
+                const transactionDetails = await this.walletManager.createTransaction(wallet, account, data.address, Number(data.amount), Number(data.fee));
                 console.log('transactionDetails', transactionDetails);
-                this.manager.communication.sendToAll('transaction-created', transactionDetails);
+                this.communication.sendToAll('transaction-created', transactionDetails);
             } catch (error) {
-                this.manager.communication.send(port, 'error', { exception: error, message: error.toString() });
+                this.communication.send(port, 'error', { exception: error, message: error.toString() });
             }
         });
 
-        this.manager.communication.listen('wallet-password-change', async (port: any, data: { walletId: string, oldpassword: string, newpassword: string }) => {
+        this.communication.listen('wallet-password-change', async (port: any, data: { walletId: string, oldpassword: string, newpassword: string }) => {
             try {
                 // First make sure that existing password is valid:
-                const validOldPassword = await this.manager.walletManager.unlockWallet(data.walletId, data.oldpassword);
+                const validOldPassword = await this.walletManager.unlockWallet(data.walletId, data.oldpassword);
 
                 if (!validOldPassword) {
-                    this.manager.communication.send(port, 'error', { message: 'The existing password is incorrect.' });
+                    this.communication.send(port, 'error', { message: 'The existing password is incorrect.' });
                     return;
                 }
 
-                const walletWasChanged = await this.manager.walletManager.changeWalletPassword(data.walletId, data.oldpassword, data.newpassword);
+                const walletWasChanged = await this.walletManager.changeWalletPassword(data.walletId, data.oldpassword, data.newpassword);
 
                 if (walletWasChanged) {
-                    this.manager.communication.sendToAll('wallet-password-changed', null);
+                    this.communication.sendToAll('wallet-password-changed', null);
                 } else {
-                    this.manager.communication.send(port, 'error', { message: 'Unable to change password on wallet for unknown reason.' });
+                    this.communication.send(port, 'error', { message: 'Unable to change password on wallet for unknown reason.' });
                 }
 
             } catch (error) {
-                this.manager.communication.send(port, 'error', { exception: error, message: error.toString() });
+                this.communication.send(port, 'error', { exception: error, message: error.toString() });
             }
         });
 
-        this.manager.communication.listen('wallet-lock', async (port: any, data: { walletId: string }) => {
-            this.manager.walletManager.lockWallet(data.walletId);
+        this.communication.listen('wallet-lock', async (port: any, data: { walletId: string }) => {
+            this.walletManager.lockWallet(data.walletId);
 
             // Make sure we inform all instances when a wallet is unlocked.
-            this.manager.communication.sendToAll('wallet-locked');
+            this.communication.sendToAll('wallet-locked');
         });
 
-        this.manager.communication.listen('wallet-unlock', async (port: any, data: { walletId: string, password: string }) => {
-            const unlocked = await this.manager.walletManager.unlockWallet(data.walletId, data.password);
+        this.communication.listen('wallet-unlock', async (port: any, data: { walletId: string, password: string }) => {
+            const unlocked = await this.walletManager.unlockWallet(data.walletId, data.password);
 
             // After the wallet has been unlocked, we must ensure that the UI state has latest information about 
             // which wallets is unlocked.
-            this.manager.broadcastState();
+            // TODO: FIX!!
+            // this.manager.broadcastState();
 
             if (unlocked) {
-                this.manager.communication.sendToAll('wallet-unlocked');
+                this.communication.sendToAll('wallet-unlocked');
             } else {
-                this.manager.communication.send(port, 'error', { exception: null, message: 'Invalid password' });
+                this.communication.send(port, 'error', { exception: null, message: 'Invalid password' });
             }
         });
 
-        this.manager.communication.listen('wallet-export-recovery-phrase', async (port: any, data: { walletId: string, password: string }) => {
-            var recoveryPhrase = await this.manager.walletManager.revealSecretRecoveryPhrase(data.walletId, data.password);
+        this.communication.listen('wallet-export-recovery-phrase', async (port: any, data: { walletId: string, password: string }) => {
+            var recoveryPhrase = await this.walletManager.revealSecretRecoveryPhrase(data.walletId, data.password);
 
             if (recoveryPhrase) {
                 // Make sure we inform all instances when a wallet is unlocked.
-                this.manager.communication.sendToAll('wallet-exported-recovery-phrase', recoveryPhrase);
+                this.communication.sendToAll('wallet-exported-recovery-phrase', recoveryPhrase);
             } else {
-                this.manager.communication.send(port, 'error', { exception: null, message: 'Invalid password' });
+                this.communication.send(port, 'error', { exception: null, message: 'Invalid password' });
             }
         });
 
         // TODO: Expand the address generation APIs to keep track of indexes for both change and non-change.
-        this.manager.communication.listen('address-generate', async (port: any, data: { walletId: string, accountId: string, index: number }) => {
-            const wallet = this.manager.walletManager.getWallet(data.walletId);
-            const account = this.manager.walletManager.getAccount(wallet, data.accountId);
-            const address = this.manager.walletManager.getReceiveAddress(account);
+        this.communication.listen('address-generate', async (port: any, data: { walletId: string, accountId: string, index: number }) => {
+            const wallet = this.walletManager.getWallet(data.walletId);
+            const account = this.walletManager.getAccount(wallet, data.accountId);
+            const address = this.walletManager.getReceiveAddress(account);
 
-            this.manager.communication.send(port, 'address-generated', { address: address })
+            this.communication.send(port, 'address-generated', { address: address })
         });
 
         // TODO: REFACTOR THIS INTO THE NETWORK DEFINITION OR WALLET MANAGER.
@@ -790,33 +804,33 @@ export class OrchestratorBackgroundService {
         //     this.communication.send(port, 'nostr-generated', { id: id })
         // });
 
-        this.manager.communication.listen('accounts-create', async (port: any, data: { walletId: string, accounts: Account[] }) => {
-            const wallet = this.manager.walletManager.getWallet(data.walletId);
+        this.communication.listen('accounts-create', async (port: any, data: { walletId: string, accounts: Account[] }) => {
+            const wallet = this.walletManager.getWallet(data.walletId);
 
             for (const account of data.accounts) {
                 // Don't persist the selected value.
                 delete account.selected;
-                await this.manager.walletManager.addAccount(account, wallet);
+                await this.walletManager.addAccount(account, wallet);
             }
 
             this.refreshState();
 
-            this.manager.communication.sendToAll('account-created');
+            this.communication.sendToAll('account-created');
 
             // TODO: REFACTOR WHEN TIME COMES!
             // this.manager.communication.sendToAll('identity-created');
         });
 
-        this.manager.communication.listen('account-create', async (port: any, data: { walletId: string, account: Account }) => {
-            const wallet = this.manager.walletManager.getWallet(data.walletId);
+        this.communication.listen('account-create', async (port: any, data: { walletId: string, account: Account }) => {
+            const wallet = this.walletManager.getWallet(data.walletId);
 
             // Don't persist the selected value.
             delete data.account.selected;
-            await this.manager.walletManager.addAccount(data.account, wallet);
+            await this.walletManager.addAccount(data.account, wallet);
 
             this.refreshState();
 
-            this.manager.communication.sendToAll('account-created');
+            this.communication.sendToAll('account-created');
 
             // TODO: REFACTOR WHEN TIME COMES!
             // this.manager.communication.sendToAll('identity-created');
@@ -905,44 +919,44 @@ export class OrchestratorBackgroundService {
         //     // Begin verification
         // });
 
-        this.manager.communication.listen('set-active-wallet-id', async (port: any, data: any) => {
-            await this.manager.walletManager.setActiveWallet(data.id);
+        this.communication.listen('set-active-wallet-id', async (port: any, data: any) => {
+            await this.walletManager.setActiveWallet(data.id);
 
-            await this.manager.state.save();
+            await this.state.save();
             this.refreshState();
         });
 
-        this.manager.communication.listen('set-active-account', async (port: any, data: { walletId: string, accountId: string }) => {
+        this.communication.listen('set-active-account', async (port: any, data: { walletId: string, accountId: string }) => {
             // Set the new active wallet, if different from before.
-            const changedWallet = await this.manager.walletManager.setActiveWallet(data.walletId);
+            const changedWallet = await this.walletManager.setActiveWallet(data.walletId);
 
             // Set the new active account, if different from before.
-            const changedAccount = await this.manager.walletManager.setActiveAccount(data.accountId);
+            const changedAccount = await this.walletManager.setActiveAccount(data.accountId);
 
             if (changedWallet || changedAccount) {
-                await this.manager.state.save();
+                await this.state.save();
                 this.refreshState();
             }
 
             if (changedWallet) {
-                this.manager.communication.sendToAll('active-wallet-changed', { walletId: data.walletId });
+                this.communication.sendToAll('active-wallet-changed', { walletId: data.walletId });
             }
 
             // Trigger the event even though no account was really changed.
             // if (changedAccount) {
-            this.manager.communication.sendToAll('active-account-changed', { walletId: data.walletId, accountId: data.accountId });
+            this.communication.sendToAll('active-account-changed', { walletId: data.walletId, accountId: data.accountId });
             // }
         });
 
-        this.manager.communication.listen('wallet-create', async (port: any, data: Wallet) => {
+        this.communication.listen('wallet-create', async (port: any, data: Wallet) => {
             // Add the new wallet.
             // TODO: Do we first want to validate if the wallet is not already added with same ID?
             // If so... we must ensure that mnemonics are not different, or a call might wipe existing wallet.
-            await this.manager.walletManager.addWallet(data);
+            await this.walletManager.addWallet(data);
 
-            await this.manager.walletManager.setActiveWallet(data.id);
+            await this.walletManager.setActiveWallet(data.id);
 
-            await this.manager.state.save();
+            await this.state.save();
 
             this.refreshState();
 
@@ -954,7 +968,7 @@ export class OrchestratorBackgroundService {
             // }
 
             // Make sure we inform all instances when a wallet is deleted.
-            this.manager.communication.sendToAll('wallet-created');
+            this.communication.sendToAll('wallet-created');
 
             // TODO: REFATOR IN FUTURE.
             //this.communication.sendToAll('identity-created');

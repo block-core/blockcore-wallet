@@ -1,7 +1,11 @@
+import { Injectable } from "@angular/core";
 import { Action, Persisted, Store, Settings, Wallet } from "../app/interfaces";
 import { AUTO_TIMEOUT, INDEXER_URL, MINUTE, VAULT_URL } from "../app/shared/constants";
 import { Network } from "./networks";
 
+@Injectable({
+    providedIn: 'root'
+})
 export class AppState {
 
     networks: Network[] = [];

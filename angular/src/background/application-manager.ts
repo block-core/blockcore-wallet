@@ -1,3 +1,4 @@
+import { Injectable } from "@angular/core";
 import { timeStamp } from "console";
 import { networkInterfaces } from "os";
 import { Action, NetworkStatus, Settings, State } from "../app/interfaces";
@@ -15,87 +16,30 @@ import { Network } from "./networks";
 import { OrchestratorBackgroundService } from "./orchestrator";
 import { WalletManager } from "./wallet-manager";
 
+@Injectable({
+    providedIn: 'root'
+})
 /** Main logic that is responsible for orchestration of the background service. */
 export class AppManager {
-    state!: AppState;
-    walletManager!: WalletManager;
-    crypto!: CryptoUtility;
-    sync!: DataSyncService;
-    communication!: CommunicationBackgroundService;
-    orchestrator!: OrchestratorBackgroundService;
-    indexer!: IndexerService;
-    allNetworks: Network[];
-    logger: BackgroundLoggerService;
-    status: NetworkStatusManager;
-    private networkStatus = new Map<string, NetworkStatus>();
+    constructor(
+        public sync: DataSyncService,
+        public logger: BackgroundLoggerService,
+        public state: AppState,
+        public status: NetworkStatusManager,
+        public walletManager: WalletManager,
+        public communication: CommunicationBackgroundService,
+        public orchestrator: OrchestratorBackgroundService,
+        public indexer: IndexerService,
+        public networkLoader: NetworkLoader,
+        public crypto: CryptoUtility
+    ) {
+
+    }
 
     /** Initializes the app, loads the AppState and other operations. */
     // configure(): [AppState, CryptoUtility, CommunicationBackgroundService, OrchestratorBackgroundService, DataSyncService] {
     configure() {
-        this.logger = new BackgroundLoggerService();
-        this.crypto = new CryptoUtility();
-        this.state = new AppState();
-        this.communication = new CommunicationBackgroundService();
-        this.sync = new DataSyncService(this);
-        this.orchestrator = new OrchestratorBackgroundService(this);
-        this.indexer = new IndexerService(this);
 
-        const networkLoader = new NetworkLoader();
-        this.state.networks = networkLoader.getNetworks(environment.networks);
-
-        // Keep a local state of all networks that exists. We'll use this to allow get operations
-        // that always work, even when a certain network is disabled in the UI.
-        this.allNetworks = networkLoader.getAllNetworks();
-
-        this.allNetworks.forEach(n => {
-            this.networkStatus.set(n.id, <NetworkStatus>{ networkType: n.id });
-        });
-
-        this.status = new NetworkStatusManager(this);
-
-        // setInterval(async () => {
-        //     await this.refreshNetworkStatus();
-        // }, 10000);
-
-        this.refreshNetworkStatus();
-    }
-
-    /** Iterate over all active accounts and check the latest networks status. */
-    async refreshNetworkStatus() {
-        try {
-            await this.status.updateAll(this.walletManager.activeWallet.accounts);
-        }
-        catch (err) {
-
-        }
-
-        setTimeout(async () => {
-            await this.refreshNetworkStatus();
-        }, 10000);
-    }
-
-    // getNetworkStatus() {
-    //     this.status.getAll();
-    // }
-
-    // async updateNetworkStatus(networkStatus: NetworkStatus) {
-    //     this.status.update(networkStatus);
-    // }
-
-    /** Get the network definition based upon the id, e.g. BTC, STRAX, CRS, CITY. */
-    // getNetworkById(id: string) {
-    //     const network = this.allNetworks.find(w => w.id == id);
-    //     return network;
-    // }
-
-    /** Get the network definition based upon the network identifier. */
-    getNetwork(networkType: string) {
-        return this.allNetworks.find(w => w.id == networkType);
-    }
-
-    /** Get the network definition based upon the network number and purpose. The purpose defaults to 44. */
-    getNetworkByPurpose(network: number, purpose: number = 44) {
-        return this.allNetworks.find(w => w.network == network && w.purpose == purpose);
     }
 
     initialize = async () => {
@@ -104,12 +48,7 @@ export class AppManager {
         // });
 
         // First load the existing state.
-        await this.loadState();
-
-        // Create the wallet manager, which act as root container for all the wallets and accounts.
-        this.walletManager = new WalletManager(this);
-
-        this.walletManager.resetTimer();
+        // await this.loadState();
 
         // After initialize is finished, broadcast the state to the UI.
         this.broadcastState();
@@ -136,32 +75,32 @@ export class AppManager {
         }, MINUTE);
     }
 
-    loadState = async () => {
-        // CLEAR DATA FOR DEBUG PURPOSES:
-        // chrome.storage.local.set({ 'data': null }, () => {
-        // });
+    // loadState = async () => {
+    //     // CLEAR DATA FOR DEBUG PURPOSES:
+    //     // chrome.storage.local.set({ 'data': null }, () => {
+    //     // });
 
-        let { data, ui, action, store } = await this.state.load();
+    //     let { data, ui, action, store } = await this.state.load();
 
-        // Only set if data is available, will use default if not.
-        if (data) {
-            this.state.persisted = data;
-        }
+    //     // Only set if data is available, will use default if not.
+    //     if (data) {
+    //         this.state.persisted = data;
+    //     }
 
-        if (store) {
-            this.state.store = store;
-        }
+    //     if (store) {
+    //         this.state.store = store;
+    //     }
 
-        this.state.initialized = true;
-        this.state.ui = ui ?? {};
+    //     this.state.initialized = true;
+    //     this.state.ui = ui ?? {};
 
-        if (action) {
-            this.state.action = action;
-        }
+    //     if (action) {
+    //         this.state.action = action;
+    //     }
 
-        console.log('Load State Completed!');
-        console.log(this.state);
-    };
+    //     console.log('Load State Completed!');
+    //     console.log(this.state);
+    // };
 
     broadcastState(initial: boolean = false) {
         const currentState: State = {

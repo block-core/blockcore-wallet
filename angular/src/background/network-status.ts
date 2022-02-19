@@ -1,12 +1,63 @@
+import { Injectable } from '@angular/core';
 import { Account, IndexerApiStatus, NetworkStatus } from '../app/interfaces';
+import { EnvironmentService } from '../app/services/environment.service';
 import { AppManager } from './application-manager';
+import { AppState } from './application-state';
+import { NetworkLoader } from './network-loader';
+import { Network } from './networks';
+import { OrchestratorBackgroundService } from './orchestrator';
 const axios = require('axios').default;
 
+@Injectable({
+    providedIn: 'root'
+})
 export class NetworkStatusManager {
     private networks = new Map<string, NetworkStatus>();
+    allNetworks: Network[];
+    private networkStatus = new Map<string, NetworkStatus>();
 
-    constructor(private manager: AppManager) {
+    constructor(
+        private networkLoader: NetworkLoader,
+        private env: EnvironmentService,
+        private orchestrator: OrchestratorBackgroundService,
+        private state: AppState) {
 
+        this.state.networks = this.networkLoader.getNetworks(env.networks);
+
+        // Keep a local state of all networks that exists. We'll use this to allow get operations
+        // that always work, even when a certain network is disabled in the UI.
+        this.allNetworks = this.networkLoader.getAllNetworks();
+
+        this.allNetworks.forEach(n => {
+            this.networkStatus.set(n.id, <NetworkStatus>{ networkType: n.id });
+        });
+
+        this.refreshNetworkStatus();
+    }
+
+    /** Get the network definition based upon the network identifier. */
+    getNetwork(networkType: string) {
+        return this.allNetworks.find(w => w.id == networkType);
+    }
+
+    /** Get the network definition based upon the network number and purpose. The purpose defaults to 44. */
+    getNetworkByPurpose(network: number, purpose: number = 44) {
+        return this.allNetworks.find(w => w.network == network && w.purpose == purpose);
+    }
+
+    /** Iterate over all active accounts and check the latest networks status. */
+    async refreshNetworkStatus() {
+        try {
+            // TODO: FIX THIS SO IT WILL REFRESH ACTIVE WALLET!
+            // await this.updateAll(this.walletManager.activeWallet.accounts);
+        }
+        catch (err) {
+
+        }
+
+        setTimeout(async () => {
+            await this.refreshNetworkStatus();
+        }, 10000);
     }
 
     /** Will attempt to query all the networks that are used in active wallet. */
@@ -16,8 +67,8 @@ export class NetworkStatusManager {
 
         for (let i = 0; i < uniqueAccounts.length; i++) {
             const account = accounts[i];
-            const network = this.manager.getNetwork(account.networkType);
-            const indexerUrl = this.manager.state.persisted.settings.indexer.replace('{id}', network.id.toLowerCase());
+            const network = this.getNetwork(account.networkType);
+            const indexerUrl = this.state.persisted.settings.indexer.replace('{id}', network.id.toLowerCase());
             let networkStatus: NetworkStatus;
 
             try {
@@ -118,6 +169,6 @@ export class NetworkStatusManager {
         this.networks.set(networkStatus.networkType, networkStatus);
 
         // Update the UI with latest network status.
-        this.manager.orchestrator.updateNetworkStatus(networkStatus);
+        this.orchestrator.updateNetworkStatus(networkStatus);
     }
 }

@@ -2,6 +2,11 @@ import { address } from '@blockcore/blockcore-js';
 import { Account, Address, IndexerApiStatus, Logger, Transaction, UnspentTransactionOutput, Wallet } from '../app/interfaces';
 import { AppManager } from './application-manager';
 import axiosRetry from 'axios-retry';
+import { Injectable } from '@angular/core';
+import { NetworkStatusManager } from './network-status';
+import { LoggerService } from '../app/services/logger.service';
+import { AppState } from './application-state';
+import { WalletManager } from './wallet-manager';
 
 //const axios = require('axios');
 // In order to gain the TypeScript typings (for intellisense / autocomplete) while using CommonJS imports with require() use the following approach:
@@ -40,16 +45,20 @@ class Queue {
     }
 }
 
+@Injectable({
+    providedIn: 'root'
+})
 /** Service that handles queries against the blockchain indexer to retrieve data for accounts. Runs in the background. */
 export class IndexerService {
     private q = new Queue();
     private a = new Map<string, { change: boolean, account: Account, addressEntry: Address, count: number }>();
-    private logger: Logger;
 
     constructor(
-        private manager: AppManager,
+        private status: NetworkStatusManager,
+        private state: AppState,
+        private logger: LoggerService,
+        private walletManager: WalletManager
     ) {
-        this.logger = manager.logger;
         // On interval loop through all watched addresses.
         setInterval(async () => {
             await this.watchIndexer();
@@ -96,8 +105,8 @@ export class IndexerService {
     }
 
     async getTransactionHex(account: Account, txid: string) {
-        const network = this.manager.getNetwork(account.networkType);
-        const indexerUrl = this.manager.state.persisted.settings.indexer.replace('{id}', network.id.toLowerCase());
+        const network = this.status.getNetwork(account.networkType);
+        const indexerUrl = this.state.persisted.settings.indexer.replace('{id}', network.id.toLowerCase());
 
         const responseTransactionHex = await axios.get(`${indexerUrl}/api/query/transaction/${txid}/hex`);
         return responseTransactionHex.data;
@@ -124,8 +133,8 @@ export class IndexerService {
 
     async broadcastTransaction(account: Account, txhex: string) {
         // These two entries has been sent from
-        const network = this.manager.getNetwork(account.networkType);
-        const indexerUrl = this.manager.state.persisted.settings.indexer.replace('{id}', network.id.toLowerCase());
+        const network = this.status.getNetwork(account.networkType);
+        const indexerUrl = this.state.persisted.settings.indexer.replace('{id}', network.id.toLowerCase());
 
         const response = await axios.post(`${indexerUrl}/api/command/send`, txhex, {
             headers: {
@@ -163,8 +172,8 @@ export class IndexerService {
             const item = this.q.dequeue();
             const account = item.account as Account;
             const wallet = item.wallet as Wallet;
-            const network = this.manager.getNetwork(account.networkType);
-            const networkStatus = this.manager.status.get(account.networkType);
+            const network = this.status.getNetwork(account.networkType);
+            const networkStatus = this.status.get(account.networkType);
 
             // If the current network status is anything other than online, skip indexing.
             if (networkStatus && networkStatus.availability != IndexerApiStatus.Online) {
@@ -172,7 +181,7 @@ export class IndexerService {
                 continue;
             }
 
-            const indexerUrl = this.manager.state.persisted.settings.indexer.replace('{id}', network.id.toLowerCase());
+            const indexerUrl = this.state.persisted.settings.indexer.replace('{id}', network.id.toLowerCase());
 
             // Loop through all receive addresses until no more data is found:
             for (let i = 0; i < account.state.receive.length; i++) {
@@ -231,13 +240,15 @@ export class IndexerService {
                     receiveAddress.retrieved = date;
                     changes = true;
                 } catch (error) {
-                    this.manager.status.update({ networkType: account.networkType, status: 'Error', availability: IndexerApiStatus.Error });
+                    this.status.update({ networkType: account.networkType, status: 'Error', availability: IndexerApiStatus.Error });
 
                     this.logger.error(error);
 
                     // TODO: Implement error handling in background and how to send it to UI.
                     // We should probably have an error log in settings, so users can see background problems as well.
-                    this.manager.communication.sendToAll('error', error);
+                    
+                    // TODO: FIX THIS!!
+                    // this.communication.sendToAll('error', error);
                 }
 
                 try {
@@ -291,13 +302,14 @@ export class IndexerService {
                     receiveAddress.retrieved = date;
                     changes = true;
                 } catch (error) {
-                    this.manager.status.update({ networkType: account.networkType, status: 'Error', availability: IndexerApiStatus.Error });
+                    this.status.update({ networkType: account.networkType, status: 'Error', availability: IndexerApiStatus.Error });
 
                     this.logger.error(error);
 
                     // TODO: Implement error handling in background and how to send it to UI.
                     // We should probably have an error log in settings, so users can see background problems as well.
-                    this.manager.communication.sendToAll('error', error);
+                    // TODO: FIX THIS!!!
+                    // this.communication.sendToAll('error', error);
                 }
             }
 
@@ -328,7 +340,8 @@ export class IndexerService {
             // this.a.set(lastReceive.address, { change: false, account: account, addressEntry: lastReceive, count: -1 });
         }
 
-        this.manager.communication.sendToAll('account-scanned');
+        // TODO: FIX THIS!!
+        //this.manager.communication.sendToAll('account-scanned');
     }
 
     async queryIndexerLegacy() {
@@ -344,8 +357,8 @@ export class IndexerService {
             const account = item.account as Account;
             const wallet = item.wallet as Wallet;
 
-            const network = this.manager.getNetwork(account.networkType);
-            const networkStatus = this.manager.status.get(account.networkType);
+            const network = this.status.getNetwork(account.networkType);
+            const networkStatus = this.status.get(account.networkType);
 
             // If the current network status is anything other than online, skip indexing.
             if (networkStatus && networkStatus.availability != IndexerApiStatus.Online) {
@@ -353,7 +366,7 @@ export class IndexerService {
                 continue;
             }
 
-            const indexerUrl = this.manager.state.persisted.settings.indexer.replace('{id}', network.id.toLowerCase());
+            const indexerUrl = this.state.persisted.settings.indexer.replace('{id}', network.id.toLowerCase());
 
             // Loop through all receive addresses until no more data is found:
             for (let i = 0; i < account.state.receive.length; i++) {
@@ -379,7 +392,7 @@ export class IndexerService {
                             updatedReceiveAddress.retrieved = date;
 
                             // Check if the address has been used, then retrieve transaction history.
-                            if (this.manager.walletManager.hasBeenUsed(updatedReceiveAddress)) {
+                            if (this.walletManager.hasBeenUsed(updatedReceiveAddress)) {
                                 // TODO: Add support for paging.
                                 // TODO: Figure out if we will actually get the full transaction history and persist that to storage. We might simply only query this 
                                 // when the user want to look at transaction details. Instead we can rely on the unspent API, which give us much less data.
@@ -402,13 +415,14 @@ export class IndexerService {
                             changes = true;
                         }
                     } catch (error) {
-                        this.manager.status.update({ networkType: account.networkType, status: 'Error', availability: IndexerApiStatus.Error });
+                        this.status.update({ networkType: account.networkType, status: 'Error', availability: IndexerApiStatus.Error });
 
                         this.logger.error(error);
 
                         // TODO: Implement error handling in background and how to send it to UI.
                         // We should probably have an error log in settings, so users can see background problems as well.
-                        this.manager.communication.sendToAll('error', error);
+                        // TODO: FIX!!
+                        // this.manager.communication.sendToAll('error', error);
 
                         // if (error.error?.title) {
                         //     this.snackBar.open('Error: ' + error.error.title, 'Hide', {
@@ -430,11 +444,13 @@ export class IndexerService {
                 // TODO: Verify what this should be based upon user testing and verification of experience.
                 if (counter > 4) {
                     if (changes) {
-                        account.state.balance = this.manager.walletManager.calculateBalance(account);
-                        account.state.pendingReceived = this.manager.walletManager.calculatePendingReceived(account);
-                        account.state.pendingSent = this.manager.walletManager.calculatePendingSent(account);
-                        await this.manager.state.save();
-                        this.manager.broadcastState();
+                        account.state.balance = this.walletManager.calculateBalance(account);
+                        account.state.pendingReceived = this.walletManager.calculatePendingReceived(account);
+                        account.state.pendingSent = this.walletManager.calculatePendingSent(account);
+                        await this.state.save();
+                        
+                        // TODO!!
+                        // this.manager.broadcastState();
                     }
 
                     counter = 0;
@@ -446,8 +462,8 @@ export class IndexerService {
                     const lastReceiveAddress = account.state.receive[account.state.receive.length - 1];
 
                     // If the last address has been used, generate a new one and query that and continue until all is found.
-                    if (this.manager.walletManager.hasBeenUsed(lastReceiveAddress)) {
-                        await this.manager.walletManager.getReceiveAddress(account);
+                    if (this.walletManager.hasBeenUsed(lastReceiveAddress)) {
+                        await this.walletManager.getReceiveAddress(account);
                         changes = true;
                         // Now the .receive array should have one more entry and the loop should continue.
                     }
@@ -478,7 +494,7 @@ export class IndexerService {
                             updatedChangeAddress.retrieved = date;
 
                             // Check if the address has been used, then retrieve transaction history.
-                            if (this.manager.walletManager.hasBeenUsed(updatedChangeAddress)) {
+                            if (this.walletManager.hasBeenUsed(updatedChangeAddress)) {
                                 // TODO: Add support for paging.
                                 // TODO: Figure out if we will actually get the full transaction history and persist that to storage. We might simply only query this 
                                 // when the user want to look at transaction details. Instead we can rely on the unspent API, which give us much less data.
@@ -501,13 +517,14 @@ export class IndexerService {
                             changes = true;
                         }
                     } catch (error) {
-                        this.manager.status.update({ networkType: account.networkType, status: 'Error', availability: IndexerApiStatus.Error });
+                        this.status.update({ networkType: account.networkType, status: 'Error', availability: IndexerApiStatus.Error });
 
                         this.logger.error(error);
 
                         // TODO: Implement error handling in background and how to send it to UI.
                         // We should probably have an error log in settings, so users can see background problems as well.
-                        this.manager.communication.sendToAll('error', error);
+                        // TODO: FIX!
+                        //this.manager.communication.sendToAll('error', error);
 
                         // if (error.error?.title) {
                         //     this.snackBar.open('Error: ' + error.error.title, 'Hide', {
@@ -530,11 +547,13 @@ export class IndexerService {
                 if (counter > 4) {
 
                     if (changes) {
-                        account.state.balance = this.manager.walletManager.calculateBalance(account);
-                        account.state.pendingReceived = this.manager.walletManager.calculatePendingReceived(account);
-                        account.state.pendingSent = this.manager.walletManager.calculatePendingSent(account);
-                        await this.manager.state.save();
-                        this.manager.broadcastState();
+                        account.state.balance = this.walletManager.calculateBalance(account);
+                        account.state.pendingReceived = this.walletManager.calculatePendingReceived(account);
+                        account.state.pendingSent = this.walletManager.calculatePendingSent(account);
+                        await this.state.save();
+                        
+                        // TODO: FIX!
+                        // this.manager.broadcastState();
                     }
 
                     counter = 0;
@@ -546,8 +565,8 @@ export class IndexerService {
                     const lastChangeAddress = account.state.change[account.state.change.length - 1];
 
                     // If the last address has been used, generate a new one and query that and continue until all is found.
-                    if (this.manager.walletManager.hasBeenUsed(lastChangeAddress)) {
-                        await this.manager.walletManager.getChangeAddress(account);
+                    if (this.walletManager.hasBeenUsed(lastChangeAddress)) {
+                        await this.walletManager.getChangeAddress(account);
                         // Now the .change array should have one more entry and the loop should continue.
                         changes = true;
                     }
@@ -558,12 +577,14 @@ export class IndexerService {
                 this.logger.info('There are updated data found during an normal account scan.');
                 // Finally set the date on the account itself.
                 account.state.retrieved = new Date().toISOString();
-                account.state.balance = this.manager.walletManager.calculateBalance(account);
-                account.state.pendingReceived = this.manager.walletManager.calculatePendingReceived(account);
-                account.state.pendingSent = this.manager.walletManager.calculatePendingSent(account);
+                account.state.balance = this.walletManager.calculateBalance(account);
+                account.state.pendingReceived = this.walletManager.calculatePendingReceived(account);
+                account.state.pendingSent = this.walletManager.calculatePendingSent(account);
                 // Save and broadcast for every full account query
-                await this.manager.state.save();
-                this.manager.broadcastState();
+                await this.state.save();
+
+                // TODO: FIX!!
+                // this.manager.broadcastState();
             } else {
                 this.logger.debug('No changes during account scan.');
             }
@@ -578,7 +599,8 @@ export class IndexerService {
             this.a.set(lastReceive.address, { change: false, account: account, addressEntry: lastReceive, count: -1 });
         }
 
-        this.manager.communication.sendToAll('account-scanned');
+        // TODO: FIX!
+        //this.manager.communication.sendToAll('account-scanned');
     }
 
     async updateAddressState(indexerUrl: string, addressEntry: Address, change: boolean, data: any, account: Account) {
@@ -615,12 +637,14 @@ export class IndexerService {
 
         // Finally set the date on the account itself.
         account.state.retrieved = new Date().toISOString();
-        account.state.balance = this.manager.walletManager.calculateBalance(account);
-        account.state.pendingReceived = this.manager.walletManager.calculatePendingReceived(account);
-        account.state.pendingSent = this.manager.walletManager.calculatePendingSent(account);
+        account.state.balance = this.walletManager.calculateBalance(account);
+        account.state.pendingReceived = this.walletManager.calculatePendingReceived(account);
+        account.state.pendingSent = this.walletManager.calculatePendingSent(account);
 
-        await this.manager.state.save();
-        this.manager.broadcastState();
+        await this.state.save();
+
+        // TODO: FIX!!
+        // this.manager.broadcastState();
     }
 
     async watchIndexer() {
@@ -629,9 +653,9 @@ export class IndexerService {
         this.a.forEach(async (value, key) => {
             const account = value.account;
             const addressEntry = value.addressEntry;
-            const network = this.manager.getNetwork(account.networkType);
-            const indexerUrl = this.manager.state.persisted.settings.indexer.replace('{id}', network.id.toLowerCase());
-            const networkStatus = this.manager.status.get(account.networkType);
+            const network = this.status.getNetwork(account.networkType);
+            const indexerUrl = this.state.persisted.settings.indexer.replace('{id}', network.id.toLowerCase());
+            const networkStatus = this.status.get(account.networkType);
 
             // If the current network status is anything other than online, skip indexing.
             if (networkStatus && networkStatus.availability != IndexerApiStatus.Online) {
@@ -677,13 +701,14 @@ export class IndexerService {
                         }
                     }
                 } catch (error) {
-                    this.manager.status.update({ networkType: account.networkType, status: 'Error', availability: IndexerApiStatus.Error });
+                    this.status.update({ networkType: account.networkType, status: 'Error', availability: IndexerApiStatus.Error });
                     account.networkStatus = 'Error';
 
                     this.logger.error(error);
                     // TODO: Implement error handling in background and how to send it to UI.
                     // We should probably have an error log in settings, so users can see background problems as well.
-                    this.manager.communication.sendToAll('error', error);
+                    // TODO: FIX!!
+                    //this.manager.communication.sendToAll('error', error);
                 }
             }
         });

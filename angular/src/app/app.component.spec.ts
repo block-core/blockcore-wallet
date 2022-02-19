@@ -77,6 +77,8 @@ import { TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { HttpClient } from '@angular/common/http';
 import { NetworkStatusComponent } from './shared/network-status/network-status.component';
+import { IEnvironment } from './interfaces';
+import { EnvironmentService } from './services/environment.service';
 
 // required for AOT compilation
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
@@ -84,6 +86,15 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
 }
 
 describe('AppComponent', () => {
+
+  const mockEnvironment: IEnvironment = {
+    apiHost: '',
+    apiUrl: 'test test test',
+    enableDebugTools: false,
+    logLevel: 'debug',
+    production: false
+  };
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
@@ -179,7 +190,7 @@ describe('AppComponent', () => {
         AccountSendSendingComponent,
         NetworkStatusComponent
       ],
-      providers: [],
+      providers: [{ provide: EnvironmentService, useValue: mockEnvironment }],
     }).compileComponents();
   });
 
@@ -202,5 +213,10 @@ describe('AppComponent', () => {
 
     // console.log(compiled);
     // expect(compiled.querySelector('h2')?.textContent).toContain('Enter your password to unlock');
+  });
+
+  it('should be using the configured environment settings', () => {
+    const fixture = TestBed.createComponent(AppComponent);
+    expect(fixture.componentInstance.apiUrl).toBe(mockEnvironment.apiUrl);
   });
 });

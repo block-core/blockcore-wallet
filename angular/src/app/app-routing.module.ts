@@ -43,9 +43,6 @@ import { ActionNostrIdentityComponent } from './action/nostr/nostr.component';
 const routes: Routes = [
   {
     path: '', component: LoadingComponent, pathMatch: 'full',
-    // resolve: {
-    //   chain: LoadingResolverService
-    // }
   },
   {
     path: 'home', component: HomeComponent

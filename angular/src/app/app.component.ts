@@ -9,6 +9,7 @@ import { Location } from '@angular/common'
 import { NetworksService } from './services/networks.service';
 import { environment } from '../environments/environment';
 import { TranslateService } from '@ngx-translate/core';
+import { EnvironmentService } from './services/environment.service';
 
 @Component({
   selector: 'app-root',
@@ -21,6 +22,8 @@ export class AppComponent implements OnInit {
   @ViewChild('drawer') drawer!: MatSidenav;
   @ViewChild('draweraccount') draweraccount!: MatSidenav;
 
+  instanceName: string;
+
   constructor(public uiState: UIState,
     private router: Router,
     private renderer: Renderer2,
@@ -30,8 +33,11 @@ export class AppComponent implements OnInit {
     private location: Location,
     private cd: ChangeDetectorRef,
     private route: ActivatedRoute,
+    private env: EnvironmentService,
     public networkService: NetworksService,
     @Inject(DOCUMENT) private document: Document) {
+
+    this.instanceName = env.instanceName;
 
     translate.addLangs(['en', 'no', 'fr']);
     translate.setDefaultLang('en');

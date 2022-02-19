@@ -6,26 +6,26 @@ import { CryptoUtility } from './crypto-utility';
 import * as bip39 from 'bip39';
 import * as bip32 from 'bip32';
 import { decodeJWT, verifyJWT } from 'did-jwt';
-import { settings } from 'cluster';
 import { ServiceEndpoint } from 'did-resolver';
 import { keyUtils, Secp256k1KeyPair } from '@transmute/did-key-secp256k1';
 import { BlockcoreIdentity } from '@blockcore/identity';
 import { Issuer } from 'did-jwt-vc';
 import { AppManager } from './application-manager';
+import { Injectable } from '@angular/core';
 const axios = require('axios');
 
+@Injectable({
+    providedIn: 'root'
+})
 /** Responsible for syncing data between the extension and vault instances. */
 export class DataSyncService {
-    private communication!: CommunicationBackgroundService;
-    private state!: AppState;
-    private crypto!: CryptoUtility;
     timer: any;
 
     // The Blockcore Vault instances operate on a log of operations, this DataSyncService must be 
     // refactored to perform similar logic. If the user edits an identity twice while being offline 
     // then we must be sure of syncing the first edit first in a queue when user come back online.
 
-    constructor(private manager: AppManager) {
+    constructor() {
 
     }
 

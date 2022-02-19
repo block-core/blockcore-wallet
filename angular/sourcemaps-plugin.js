@@ -24,7 +24,7 @@ exports.default = {
     result.plugins.splice(index, 1);
 
     result.plugins.push(new webpack.DefinePlugin({
-      "VERSION": JSON.stringify("4711")
+      "VERSION": JSON.stringify("0.0.1")
     }));
 
     return result;

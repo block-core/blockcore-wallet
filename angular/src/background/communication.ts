@@ -1,5 +1,10 @@
+import { Injectable } from "@angular/core";
+
 const { v4: uuidv4 } = require('uuid');
 
+@Injectable({
+    providedIn: 'root'
+})
 /** Service that handles channels between background and frontend, with subscriptions. */
 export class CommunicationBackgroundService {
     private port!: chrome.runtime.Port | null;

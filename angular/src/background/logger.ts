@@ -1,5 +1,9 @@
+import { Injectable } from '@angular/core';
 import { Logger } from '../app/interfaces';
 
+@Injectable({
+    providedIn: 'root'
+})
 /** Logger used in the background service. Currently only performs console logging. */
 export class BackgroundLoggerService implements Logger {
     // TODO: Implement similar functionality to the logger in Angular:

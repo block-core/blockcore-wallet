@@ -29,6 +29,25 @@ enum IndexerApiStatus {
     Error = 4
 }
 
+type LogLevel = 'debug' | 'info' | 'warn' | 'error';
+
+interface IEnvironment {
+    production: boolean;
+
+    // Enables use of ng.profiler.timeChangeDetection(); in browser console
+    enableDebugTools: boolean;
+    logLevel: LogLevel;
+    version: string;
+    features: string[];
+    releaseUrl: string;
+    sourceUrl: string;
+    instance: string;
+    instanceName: string;
+    instanceUrl: string;
+    instanceExplorerUrl: string;
+    networks: string[];
+}
+
 interface NetworkStatus {
     blockSyncHeight?: number,
     networkType: string;
@@ -357,5 +376,7 @@ export {
     Logger,
     TransactionHistory,
     NetworkStatus,
-    IndexerApiStatus
+    IndexerApiStatus,
+    LogLevel,
+    IEnvironment
 }

@@ -3,6 +3,7 @@ import { UIState } from '../services/ui-state.service';
 import { CryptoService } from '../services/crypto.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommunicationService } from '../services/communication.service';
+import { AppManager } from '../../background/application-manager';
 
 @Component({
   selector: 'app-loading',
@@ -14,6 +15,8 @@ export class LoadingComponent implements OnInit, OnDestroy {
 
   constructor(
     public uiState: UIState,
+    // private appManager: ApplicationManagerService,
+    private appManager: AppManager,
     private communication: CommunicationService
   ) {
     this.uiState.title = 'Loading...';
@@ -29,18 +32,20 @@ export class LoadingComponent implements OnInit, OnDestroy {
   }
 
   async ngOnInit() {
+    await this.appManager.initialize();
+    // await this.appManager.initialize();
 
     // When the extension has been initialized, we'll send 'state' to background to get the current state. The UI will show loading
     // indicator until 'state-changed' is triggered.
-    chrome.tabs.query({
-      active: true,
-      lastFocusedWindow: true
-    }, (tabs) => {
-      // debugger;
-      var tab = tabs[0];
-      // Provide the tab URL with the state query, because wallets and accounts is connected to domains.
-      this.communication.send('state-load', { url: tab?.url });
-    });
+    // chrome.tabs.query({
+    //   active: true,
+    //   lastFocusedWindow: true
+    // }, (tabs) => {
+    //   // debugger;
+    //   var tab = tabs[0];
+    //   // Provide the tab URL with the state query, because wallets and accounts is connected to domains.
+    //   this.communication.send('state-load', { url: tab?.url });
+    // });
 
     // If the state has not loaded or triggered after a timeout, display reload button / reset options.
     setTimeout(() => {
