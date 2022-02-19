@@ -9,11 +9,14 @@ import ECPairFactory from 'ecpair';
 import { Injectable } from "@angular/core";
 import { NetworkStatusManager } from "./network-status";
 import { LoggerService } from "../app/services/logger.service";
-import { IndexerService } from "./indexer";
 import { AppState } from "./application-state";
 import { CryptoUtility } from "./crypto-utility";
+import axiosRetry from 'axios-retry';
+
 const ECPair = ECPairFactory(ecc);
 var bitcoinMessage = require('bitcoinjs-message');
+const axios = require('axios').default;
+axiosRetry(axios, { retries: 3 });
 
 @Injectable({
     providedIn: 'root'
@@ -24,7 +27,6 @@ export class WalletManager {
 
     constructor(
         public status: NetworkStatusManager,
-        private indexer: IndexerService,
         private state: AppState,
         private crypto: CryptoUtility,
         private logger: LoggerService) {
@@ -69,6 +71,34 @@ export class WalletManager {
         }
     }
 
+    // TODO: This method is duplicate of Indexer due to circular dependency after refactoring away from background process.
+    async getTransactionHex(account: Account, txid: string) {
+        const network = this.status.getNetwork(account.networkType);
+        const indexerUrl = this.state.persisted.settings.indexer.replace('{id}', network.id.toLowerCase());
+
+        const responseTransactionHex = await axios.get(`${indexerUrl}/api/query/transaction/${txid}/hex`);
+        return responseTransactionHex.data;
+    }
+
+    // TODO: This method is duplicate of Indexer due to circular dependency after refactoring away from background process.
+    async broadcastTransaction(account: Account, txhex: string) {
+        // These two entries has been sent from
+        const network = this.status.getNetwork(account.networkType);
+        const indexerUrl = this.state.persisted.settings.indexer.replace('{id}', network.id.toLowerCase());
+
+        const response = await axios.post(`${indexerUrl}/api/command/send`, txhex, {
+            headers: {
+                'Content-Type': 'application/json-patch+json',
+            }
+        });
+        const data = response.data;
+
+        this.logger.debug('Should contain transaction ID if broadcast was OK:', data);
+
+        return data;
+    }
+
+
     async createTransaction(wallet: Wallet, account: Account, address: string, amount: number, fee: number): Promise<{ addresses: string[], transactionHex: string, fee: number, feeRate: number, virtualSize: number, weight: number }> {
         // TODO: Verify the address for this network!! ... Help the user avoid sending transactions on very wrong addresses.
         const network = this.status.getNetwork(account.networkType);
@@ -101,7 +131,7 @@ export class WalletManager {
 
         for (let i = 0; i < inputs.length; i++) {
             const input = inputs[i];
-            const hex = await this.indexer.getTransactionHex(account, input.outpoint.transactionId);
+            const hex = await this.getTransactionHex(account, input.outpoint.transactionId);
 
             affectedAddresses.push(input.address);
 
@@ -171,7 +201,7 @@ export class WalletManager {
 
     async sendTransaction(account: Account, transactionHex: string): Promise<{ transactionId: string, transactionHex: string }> {
         this.logger.debug('TransactionHex', transactionHex);
-        const transactionId = await this.indexer.broadcastTransaction(account, transactionHex);
+        const transactionId = await this.broadcastTransaction(account, transactionHex);
         this.logger.debug('TransactionId', transactionId);
         return { transactionId, transactionHex };
     }
@@ -472,7 +502,10 @@ export class WalletManager {
             // TODO: Perform blockchain / vault data query and recovery.
             // If there are transactions, DID Documents, NFTs or anythign else, we should launch the
             // query probe here.
-            this.indexer.process(account, wallet, false);
+
+            // TODO: RAISE AN EVENT THAT INDEXER SHOULD TRIGGER ON?!
+            // PERHAPS ORCHESTRATOR SOMEHOW?!
+            // this.process(account, wallet, false);
         }
     }
 
