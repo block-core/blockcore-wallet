@@ -1,5 +1,4 @@
 import { HttpClient } from '@angular/common/http';
-import { environment } from '../../environments/environment';
 import { EventEmitter, Injectable, NgZone } from '@angular/core';
 import { Account, Action, NetworkStatus, Persisted, Store, Wallet } from '../interfaces';
 import { MINUTE } from '../shared/constants';

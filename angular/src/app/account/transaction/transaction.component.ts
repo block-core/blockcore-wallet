@@ -12,8 +12,8 @@ import * as QRCode from 'qrcode';
 import { Address, NetworkStatus, Transaction, TransactionView } from '../../interfaces';
 import { NetworksService } from '../../services/networks.service';
 import { Network } from '../../../background/networks';
-import { environment } from '../../../environments/environment';
 import { NetworkStatusService } from '../../services/network-status.service';
+import { EnvironmentService } from '../../services/environment.service';
 var QRCode2 = require('qrcode');
 
 @Component({
@@ -36,6 +36,7 @@ export class AccountTransactionComponent implements OnInit, OnDestroy {
         private networks: NetworksService,
         private manager: OrchestratorService,
         private activatedRoute: ActivatedRoute,
+        private env: EnvironmentService,
         private networkStatusService: NetworkStatusService,
         private snackBar: MatSnackBar) {
         // this.uiState.title = 'Receive Address';
@@ -92,7 +93,7 @@ export class AccountTransactionComponent implements OnInit, OnDestroy {
     }
 
     openExplorer(txid: string) {
-        chrome.tabs.create({ url: `${environment.instanceExplorerUrl}/${this.network.id}/explorer/transaction/${txid}`, active: false });
+        chrome.tabs.create({ url: `${this.env.instanceExplorerUrl}/${this.network.id}/explorer/transaction/${txid}`, active: false });
     }
 
     ngOnDestroy(): void {

@@ -1,7 +1,8 @@
-import { environment } from '../../environments/environment';
+
 import { Injectable } from '@angular/core';
 import * as bip39 from 'bip39';
 import { Base64 } from 'js-base64';
+import { EnvironmentService } from './environment.service';
 
 const enc = new TextEncoder();
 const dec = new TextDecoder();
@@ -12,8 +13,8 @@ const dec = new TextDecoder();
 export class FeatureService {
     features: string[];
 
-    constructor() {
-        this.features = environment.features;
+    constructor(private env: EnvironmentService) {
+        this.features = env.features;
     }
 
     enabled(feature: string) {

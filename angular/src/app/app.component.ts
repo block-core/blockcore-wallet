@@ -7,7 +7,6 @@ import { CommunicationService } from './services/communication.service';
 import { OrchestratorService } from './services/orchestrator.service';
 import { Location } from '@angular/common'
 import { NetworksService } from './services/networks.service';
-import { environment } from '../environments/environment';
 import { TranslateService } from '@ngx-translate/core';
 import { EnvironmentService } from './services/environment.service';
 
@@ -45,7 +44,7 @@ export class AppComponent implements OnInit {
     const browserLang = translate.getBrowserLang();
     translate.use(browserLang.match(/en|no/) ? browserLang : 'en');
 
-    document.title = environment.instanceName;
+    document.title = env.instanceName;
 
     const queryParam = globalThis.location.search;
     console.log('queryParam:', queryParam);

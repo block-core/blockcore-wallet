@@ -3,7 +3,6 @@ import { timeStamp } from "console";
 import { networkInterfaces } from "os";
 import { Action, NetworkStatus, Settings, State } from "../app/interfaces";
 import { INDEXER_URL, MINUTE } from "../app/shared/constants";
-import { environment } from "../environments/environment";
 import { AppState } from "./application-state";
 import { CommunicationBackgroundService } from "./communication";
 import { CryptoUtility } from "./crypto-utility";

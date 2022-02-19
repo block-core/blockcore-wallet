@@ -4,10 +4,10 @@ import { Location } from '@angular/common'
 import { OrchestratorService } from '../services/orchestrator.service';
 import { Settings } from '../interfaces';
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { environment } from '../../environments/environment';
 import { INDEXER_URL } from '../shared/constants';
 import { TranslateService } from '@ngx-translate/core';
 import { FeatureService } from '../services/features.service';
+import { EnvironmentService } from '../services/environment.service';
 
 @Component({
   selector: 'app-settings',
@@ -18,17 +18,15 @@ export class SettingsComponent {
   theme: string = 'dark';
   themeColor: 'primary' | 'accent' | 'warn' = 'accent';
   isDark = false;
-  env: any;
 
   constructor(
-    private renderer: Renderer2,
     public uiState: UIState,
     public translate: TranslateService,
-    private manager: OrchestratorService,
     public feature: FeatureService,
+    public env: EnvironmentService,
+    private renderer: Renderer2,
+    private manager: OrchestratorService,
     private location: Location) {
-
-    this.env = environment;
 
     // Reset to default if missing.
     if (!this.uiState.persisted.settings.indexer) {

@@ -1,4 +1,3 @@
-import { environment } from '../../environments/environment';
 import { Injectable } from '@angular/core';
 import * as bip39 from 'bip39';
 import { Base64 } from 'js-base64';
@@ -7,6 +6,7 @@ import { Network } from '../../background/networks';
 import { Account, Wallet } from '../interfaces';
 import { Environments } from '../../environments/environments';
 import { BehaviorSubject } from 'rxjs';
+import { EnvironmentService } from './environment.service';
 const { v4: uuidv4 } = require('uuid');
 
 @Injectable({
@@ -16,9 +16,9 @@ export class NetworksService {
     networks: Network[];
     allNetworks: Network[];
 
-    constructor() {
+    constructor(private env: EnvironmentService) {
         const networkLoader = new NetworkLoader();
-        this.networks = networkLoader.getNetworks(environment.networks);
+        this.networks = networkLoader.getNetworks(env.networks);
         this.allNetworks = networkLoader.getAllNetworks();
     }
 
@@ -44,7 +44,7 @@ export class NetworksService {
     getDefaultAccounts(wallet: Wallet) {
         let accounts: Account[] = [];
 
-        switch (environment.instance) {
+        switch (this.env.instance) {
             case Environments.Blockcore:
                 accounts = [{
                     identifier: uuidv4(),
