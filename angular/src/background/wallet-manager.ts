@@ -27,7 +27,6 @@ export class WalletManager {
         private indexer: IndexerService,
         private state: AppState,
         private crypto: CryptoUtility,
-        private walletManager: WalletManager,
         private logger: LoggerService) {
 
         // This should be done outside of the service.
@@ -221,7 +220,7 @@ export class WalletManager {
     }
 
     async revealSecretRecoveryPhrase(walletId: string, password: string) {
-        var wallet = this.walletManager.getWallet(walletId);
+        var wallet = this.getWallet(walletId);
         let unlockedMnemonic = null;
 
         if (!wallet) {
@@ -247,7 +246,7 @@ export class WalletManager {
     };
 
     async unlockWallet(walletId: string, password: string) {
-        var wallet = this.walletManager.getWallet(walletId);
+        var wallet = this.getWallet(walletId);
         let unlockedMnemonic = null;
 
         if (!wallet) {
@@ -276,7 +275,7 @@ export class WalletManager {
 
     /** Cange the wallet password in one operation. */
     async changeWalletPassword(walletId: string, oldpassword: string, newpassword: string) {
-        var wallet = this.walletManager.getWallet(walletId);
+        var wallet = this.getWallet(walletId);
         let unlockedMnemonic = null;
 
         if (!wallet) {
@@ -416,7 +415,7 @@ export class WalletManager {
         this.state.persisted.wallets.splice(walletIndex, 1);
 
         // Remove the password for this wallet, if it was unlocked.
-        this.walletManager.walletSecrets.delete(id);
+        this.walletSecrets.delete(id);
 
         await this.state.save();
 

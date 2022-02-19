@@ -19,7 +19,7 @@ export class NetworkStatusManager {
     constructor(
         private networkLoader: NetworkLoader,
         private env: EnvironmentService,
-        private orchestrator: OrchestratorBackgroundService,
+        // private orchestrator: OrchestratorBackgroundService,
         private state: AppState) {
 
         this.state.networks = this.networkLoader.getNetworks(env.networks);
@@ -168,7 +168,8 @@ export class NetworkStatusManager {
 
         this.networks.set(networkStatus.networkType, networkStatus);
 
+        // TODO: INSTEAD OF UPDATING, THIS SHOULD RETURN NEW NETWORK STATUS?!
         // Update the UI with latest network status.
-        this.orchestrator.updateNetworkStatus(networkStatus);
+        // this.orchestrator.updateNetworkStatus(networkStatus);
     }
 }
