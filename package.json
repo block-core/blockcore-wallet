@@ -45,7 +45,7 @@
     "@blockcore/identity": "0.0.1",
     "@ngx-translate/core": "^14.0.0",
     "@ngx-translate/http-loader": "^7.0.0",
-    "@noble/secp256k1": "1.5.3",
+    "@noble/secp256k1": "^1.5.4",
     "axios": "0.26.0",
     "axios-retry": "^3.2.4",
     "bip32": "^3.0.1",
