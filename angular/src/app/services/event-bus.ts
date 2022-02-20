@@ -1,3 +1,4 @@
+import { Injectable } from "@angular/core";
 import { filter, Observable, Subject, map } from "rxjs";
 const { v4: uuidv4 } = require('uuid');
 
@@ -42,6 +43,9 @@ export interface IEventBusMessage {
     metadata: EventBusMetaData;
 }
 
+@Injectable({
+    providedIn: 'root'
+})
 export class EventBus {
     private eventBus: Subject<IEventBusMessage>;
 

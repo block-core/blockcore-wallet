@@ -88,8 +88,15 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
 describe('AppComponent', () => {
 
   const mockEnvironment: IEnvironment = {
-    apiHost: '',
-    apiUrl: 'test test test',
+    instanceName: 'UnitTest',
+    features: [],
+    instance: '',
+    instanceExplorerUrl: '',
+    instanceUrl: '',
+    networks: [],
+    releaseUrl: '',
+    sourceUrl: '',
+    version : '10.10.10',
     enableDebugTools: false,
     logLevel: 'debug',
     production: false
@@ -217,6 +224,6 @@ describe('AppComponent', () => {
 
   it('should be using the configured environment settings', () => {
     const fixture = TestBed.createComponent(AppComponent);
-    expect(fixture.componentInstance.apiUrl).toBe(mockEnvironment.apiUrl);
+    expect(fixture.componentInstance.instanceName).toBe(mockEnvironment.instanceName);
   });
 });

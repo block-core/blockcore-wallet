@@ -1,8 +1,9 @@
+import { EnvironmentService } from "./environment.service";
 import { FeatureService } from "./features.service";
 
 describe('FeatureService', () => {
     let service: FeatureService;
-    beforeEach(() => { service = new FeatureService(); });
+    beforeEach(() => { service = new FeatureService(new EnvironmentService()); });
 
     it('Validate that wallet is enabled feature', () => {
         expect(service.enabled('wallet')).toBeTrue();
