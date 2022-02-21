@@ -547,10 +547,7 @@ export class OrchestratorBackgroundService {
         });
 
         this.communication.listen('wallet-remove', async (port: any, data: { walletId: string, index: number }) => {
-            await this.walletManager.removeWallet(data.walletId);
 
-            // Raise this after state has been updated, so orchestrator in UI can redirect correctly.
-            this.communication.sendToAll('wallet-removed', data);
         });
 
         this.communication.listen('transaction-send', async (port: any, data: { walletId: string, accountId: string, transactionHex: string, addresses: string[] }) => {

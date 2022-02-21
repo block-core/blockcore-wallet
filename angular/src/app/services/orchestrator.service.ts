@@ -180,23 +180,21 @@ export class OrchestratorService {
             });
         });
 
-        // When a wallet is removed, we must update UI.
-        this.communication.listen('wallet-removed', (value: any) => {
-            // We'll always redirect to root when a wallet is removed.
-            this.router.navigateByUrl('/');
+        // // When a wallet is removed, we must update UI.
+        // this.communication.listen('wallet-removed', (value: any) => {
+        //     // We'll always redirect to root when a wallet is removed.
+        //     this.router.navigateByUrl('/');
 
-            // this.uiState.persisted.wallets.splice(this.uiState.persisted.activeWalletIndex, 1);
+        //     // this.uiState.persisted.wallets.splice(this.uiState.persisted.activeWalletIndex, 1);
 
-            // if (this.uiState.hasWallets) {
-            //   this.uiState.persisted.activeWalletIndex = 0;
-            // } else {
-            //   this.uiState.persisted.activeWalletIndex = -1;
-            // }
+        //     // if (this.uiState.hasWallets) {
+        //     //   this.uiState.persisted.activeWalletIndex = 0;
+        //     // } else {
+        //     //   this.uiState.persisted.activeWalletIndex = -1;
+        //     // }
 
-            // await this.uiState.save();
-
-
-        });
+        //     // await this.uiState.save();
+        // });
 
         // When a wallet is removed, we must update UI.
         this.communication.listen('error', (value: { exception: any, message: string }) => {
