@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
 import { timeStamp } from "console";
 import { networkInterfaces } from "os";
+import { SecureStateService } from "src/app/services/secure-state.service";
 import { Action, NetworkStatus, Settings, State } from "../app/interfaces";
 import { INDEXER_URL, MINUTE } from "../app/shared/constants";
 import { AppState } from "./application-state";
@@ -18,7 +19,7 @@ import { WalletManager } from "./wallet-manager";
 @Injectable({
     providedIn: 'root'
 })
-/** Main logic that is responsible for orchestration of the background service. */
+/** Main logic that is responsible for orchestration of the app. */
 export class AppManager {
     constructor(
         public sync: DataSyncService,
@@ -30,14 +31,9 @@ export class AppManager {
         public orchestrator: OrchestratorBackgroundService,
         public indexer: IndexerService,
         public networkLoader: NetworkLoader,
-        public crypto: CryptoUtility
+        public crypto: CryptoUtility,
+        public secure: SecureStateService
     ) {
-
-    }
-
-    /** Initializes the app, loads the AppState and other operations. */
-    // configure(): [AppState, CryptoUtility, CommunicationBackgroundService, OrchestratorBackgroundService, DataSyncService] {
-    configure() {
 
     }
 
@@ -46,14 +42,19 @@ export class AppManager {
         // chrome.storage.local.set({ 'data': null }, () => {
         // });
 
-        // First load the existing state.
-        // await this.loadState();
+        // Set the active date from startup.
+        await globalThis.chrome.storage.local.set({ 'active': new Date().toJSON() });
 
-        // After initialize is finished, broadcast the state to the UI.
-        this.broadcastState();
+        // TODO: This will be set by settings and loaded in the code below instead. Temporary fix to have a value on timeout.
+        await globalThis.chrome.storage.local.set({ 'timeout': 1 });
+
+        // First load the existing state.
+        await this.state.load();
+
+        // Load the secure state.
+        await this.secure.load();
 
         this.scheduledIndexer();
-
     };
 
     scheduledIndexer() {
@@ -74,46 +75,19 @@ export class AppManager {
         }, MINUTE);
     }
 
-    // loadState = async () => {
-    //     // CLEAR DATA FOR DEBUG PURPOSES:
-    //     // chrome.storage.local.set({ 'data': null }, () => {
-    //     // });
-
-    //     let { data, ui, action, store } = await this.state.load();
-
-    //     // Only set if data is available, will use default if not.
-    //     if (data) {
-    //         this.state.persisted = data;
+    // broadcastState(initial: boolean = false) {
+    //     const currentState: State = {
+    //         action: this.state.action,
+    //         persisted: this.state.persisted,
+    //         unlocked: this.walletManager.unlocked,
+    //         store: this.state.store
     //     }
 
-    //     if (store) {
-    //         this.state.store = store;
-    //     }
+    //     const eventName = initial ? 'state-loaded' : 'state-changed';
 
-    //     this.state.initialized = true;
-    //     this.state.ui = ui ?? {};
-
-    //     if (action) {
-    //         this.state.action = action;
-    //     }
-
-    //     console.log('Load State Completed!');
-    //     console.log(this.state);
-    // };
-
-    broadcastState(initial: boolean = false) {
-        const currentState: State = {
-            action: this.state.action,
-            persisted: this.state.persisted,
-            unlocked: this.walletManager.unlocked,
-            store: this.state.store
-        }
-
-        const eventName = initial ? 'state-loaded' : 'state-changed';
-
-        // Send new state to UI instances.
-        this.communication.sendToAll(eventName, currentState);
-    }
+    //     // Send new state to UI instances.
+    //     this.communication.sendToAll(eventName, currentState);
+    // }
 
     async setAction(data: Action, broadcast: boolean) {
         debugger;
@@ -133,17 +107,17 @@ export class AppManager {
 
         await this.state.saveAction();
 
-        if (broadcast) {
-            this.broadcastState();
-        }
+        // if (broadcast) {
+        //     this.broadcastState();
+        // }
 
         // Raise this after state has been updated, so orchestrator in UI can redirect correctly.
-        this.communication.sendToAll('action-changed', this.state.action);
+        // this.communication.sendToAll('action-changed', this.state.action);
     }
 
-    async setSettings(data: Settings) {
-        this.state.persisted.settings = data;
-        await this.state.save();
-        this.broadcastState();
-    }
+    // async setSettings(data: Settings) {
+    //     this.state.persisted.settings = data;
+    //     await this.state.save();
+    //     this.broadcastState();
+    // }
 }

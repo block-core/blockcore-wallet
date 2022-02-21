@@ -9,6 +9,7 @@ import { Location } from '@angular/common'
 import { NetworksService } from './services/networks.service';
 import { TranslateService } from '@ngx-translate/core';
 import { EnvironmentService } from './services/environment.service';
+import { AppManager } from 'src/background/application-manager';
 
 @Component({
   selector: 'app-root',
@@ -29,12 +30,17 @@ export class AppComponent implements OnInit {
     public translate: TranslateService,
     private communication: CommunicationService,
     private manager: OrchestratorService,
+    private appManager: AppManager,
     private location: Location,
     private cd: ChangeDetectorRef,
     private route: ActivatedRoute,
     private env: EnvironmentService,
     public networkService: NetworksService,
     @Inject(DOCUMENT) private document: Document) {
+
+    this.appManager.initialize();
+
+    this.manager.initialize();
 
     this.instanceName = env.instanceName;
 
@@ -88,9 +94,6 @@ export class AppComponent implements OnInit {
       // }
 
     });
-
-    // Make sure we initialize the orchestrator early and hook up event handlers.
-    manager.initialize();
   }
 
   async wipe() {

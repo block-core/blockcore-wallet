@@ -12,6 +12,7 @@ import { LoggerService } from "../app/services/logger.service";
 import { AppState } from "./application-state";
 import { CryptoUtility } from "./crypto-utility";
 import axiosRetry from 'axios-retry';
+import { SecureStateService } from "src/app/services/secure-state.service";
 
 const ECPair = ECPairFactory(ecc);
 var bitcoinMessage = require('bitcoinjs-message');
@@ -29,10 +30,15 @@ export class WalletManager {
         public status: NetworkStatusManager,
         private state: AppState,
         private crypto: CryptoUtility,
+        private secure: SecureStateService,
         private logger: LoggerService) {
 
         // This should be done outside of the service.
         this.resetTimer();
+    }
+
+    get hasUnlockedWallets() {
+        return (this.secure.unlockedWalletsSubject.value.length > 0);
     }
 
     async signData(wallet: Wallet, account: Account, address: string, content: string): Promise<string> {

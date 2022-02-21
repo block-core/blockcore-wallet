@@ -6,6 +6,8 @@ import { CommunicationService } from '../services/communication.service';
 import { AppManager } from '../../background/application-manager';
 import { SecureStateService } from '../services/secure-state.service';
 import * as secp from "@noble/secp256k1";
+import { WalletManager } from '../../background/wallet-manager';
+import { Action } from '../interfaces';
 
 @Component({
   selector: 'app-loading',
@@ -20,6 +22,8 @@ export class LoadingComponent implements OnInit, OnDestroy {
     // private appManager: ApplicationManagerService,
     private appManager: AppManager,
     public secure: SecureStateService,
+    private router: Router,
+    private walletManager: WalletManager,
     private communication: CommunicationService
   ) {
     this.uiState.title = 'Loading...';
@@ -34,22 +38,88 @@ export class LoadingComponent implements OnInit, OnDestroy {
     window.location.href = 'index.html';
   }
 
-  async update() {
-    await this.secure.set('123', '222');
-  }
-
-  async getSession() {
-    console.log(this.secure.get('123'));
+  setAction(action: Action, broadcast = true) {
+    this.communication.send('set-action', { action, broadcast });
   }
 
   async ngOnInit() {
 
-    console.log('SECURE:LOAD:');
+    // When this happens, the appManager should already be initilized by the AppComponent.
+    // All we want to do here, is check if there is any unlocked wallets or not, and then redirect
+    // either to Home (to unlock) or Dashboard (unlocked).
 
-    // await this.secure.clear();
+    // if (this.walletManager.hasUnlockedWallets) {
+    //   this.router.navigateByUrl('/dashboard');
+    // } else {
+    //   this.router.navigateByUrl('/home');
+    // }
 
-    await globalThis.chrome.storage.local.set({ 'active': new Date().toJSON() });
-    await globalThis.chrome.storage.local.set({ 'timeout': 1 });
+    // If there is any params, it means there might be an action triggered by protocol handlers. Parse the params and set action.
+    if (this.uiState.params) {
+      if (this.uiState.params.sid) {
+        this.uiState.action = {
+          action: 'sid',
+          document: this.uiState.params.sid
+        }
+
+        setTimeout(() => {
+          // Persist the action, but don't broadcast this change as we've already written local state.
+          this.setAction(this.uiState.action, true);
+        }, 0);
+      }
+
+      if (this.uiState.params.nostr) {
+        this.uiState.action = {
+          action: 'nostr',
+          document: this.uiState.params.nostr
+        }
+
+        setTimeout(() => {
+          // Persist the action, but don't broadcast this change as we've already written local state.
+          this.setAction(this.uiState.action, true);
+        }, 0);
+      }
+    }
+
+    console.log('ACTION:', this.uiState.action);
+
+    // If an action has been triggered, we'll always show action until user closes the action.
+    if (this.uiState.action?.action && this.uiState.activeWallet && this.uiState.unlocked.indexOf(this.uiState.activeWallet.id) > -1) {
+      // TODO: Add support for more actions.
+      this.router.navigate(['action', this.uiState.action?.action]);
+    } else {
+      // If the state was changed and there is no wallets, send user to create wallet UI.
+      if (!this.uiState.hasWallets) {
+        this.router.navigateByUrl('/wallet/create');
+      } else {
+
+
+        // if (this.walletManager.hasUnlockedWallets) {
+        //   this.router.navigateByUrl('/dashboard');
+        // } else {
+        //   this.router.navigateByUrl('/home');
+        // }
+
+        // If the active wallet is unlocked, we'll redirect accordingly.
+        if (this.uiState.activeWallet && this.uiState.unlocked.indexOf(this.uiState.activeWallet.id) > -1) {
+
+          // If user has zero accounts, we'll show the account select screen that will auto-create accounts the user chooses.
+          if (this.uiState.hasAccounts) {
+            this.router.navigateByUrl('/dashboard');
+            //this.router.navigateByUrl('/account/view/' + this.uiState.activeWallet.activeAccountIndex);
+          } else {
+            this.router.navigateByUrl('/account/select');
+          }
+
+        } else {
+          // When the initial state is loaded and user has not unlocked any wallets, we'll show the unlock screen on home.
+          console.log('LOADING REDIRECT TO HOME');
+          this.router.navigateByUrl('/home');
+        }
+      }
+    }
+
+    // await this.appManager.initialize();
 
     // chrome.storage.onChanged.addListener((changes, area) => {
     //   console.log('chrome.storage.onChanged:changes:', changes);
@@ -80,58 +150,9 @@ export class LoadingComponent implements OnInit, OnDestroy {
     // await storage.session.set({ 'password': '123@!22' });
 
     // Make sure that the secure values are loaded.
-    await this.secure.load();
+    // await this.secure.load();
 
-    const privateKey = secp.utils.randomPrivateKey();
-    this.secure.set('12345', Buffer.from(privateKey).toString('hex'))
-    this.secure.set('12346', Buffer.from(privateKey).toString('base64'))
-
-    setTimeout(() => {
-      console.log('this.secure.get', this.secure.get('12345'));
-      console.log('this.secure.get', this.secure.get('12346'));
-    }, 0);
-
-    setTimeout(async () => {
-      console.log('set 1');
-      await this.secure.set('12345', '1123123123');
-    }, 2000);
-
-    setTimeout(async () => {
-      console.log('set 2');
-      await this.secure.set('12345', '654411aaa');
-    }, 6000);
-
-    setTimeout(async () => {
-      console.log('set 3');
-      await this.secure.set('123', '654411aa123123a');
-    }, 8000);
-
-    setTimeout(() => {
-      console.log('this.secure.get', this.secure.get('12345'));
-    }, 4000);
-
-    setTimeout(() => {
-      console.log('this.secure.get', this.secure.get('123'));
-    }, 10000);
-
-    // const enc = new TextEncoder();
-    // const val = enc.encode("This is a string converted to a Uint8Array");
-    // await this.secure.set('password1', val);
-
-    // console.log(this.secure.get('password1'));
-    // console.log('DONE!!!');
-
-    setInterval(() => {
-
-      // let date2 = new Date();
-      // console.log('interval password:', this.secure.get('password1'));
-      //console.log('Settings stored in2: ' + (new Date().valueOf() - date2.valueOf()) + 'ms');
-
-      // this.secure.resetTimer();
-
-    }, 2000);
-
-    await this.appManager.initialize();
+    // await this.appManager.initialize();
     // await this.appManager.initialize();
 
     // When the extension has been initialized, we'll send 'state' to background to get the current state. The UI will show loading

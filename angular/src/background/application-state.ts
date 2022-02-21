@@ -94,103 +94,36 @@ export class AppState {
     // }
 
     async save(): Promise<void> {
-        // Immediately return a promise and start asynchronous work
-        return new Promise((resolve, reject) => {
-            // Asynchronously fetch all data from storage.sync.
-            console.log('SAVING PROMISE:');
-            console.log(JSON.stringify(this.persisted));
-
-            // this.persisted.wallets = Object.fromEntries(this.persisted.wallets);
-
-            chrome.storage.local.set({ 'data': this.persisted }, () => {
-                console.log('SAVED!');
-
-                // Update the timer, the timeout might have changed.
-                // TODO: Figure out if we need this, cause other actions will reset the timer anyway.
-                // this.resetTimer();
-                // this.active
-
-                // Pass any observed errors down the promise chain.
-                if (chrome.runtime.lastError) {
-                    return reject(chrome.runtime.lastError);
-                }
-                // Pass the data retrieved from storage down the promise chain.
-                resolve();
-            });
-        });
+        return chrome.storage.local.set({ 'data': this.persisted });
     }
 
     /** Loads all the persisted state into the extension. This might become bloated on large wallets. */
-    async load(): Promise<{ data: Persisted, ui: any, action: Action, store: Store }> {
-        // Immediately return a promise and start asynchronous work
-        return new Promise((resolve, reject) => {
-            // Asynchronously fetch all data from storage.sync.
+    async load() {
+        const { data, ui, action, store } = await chrome.storage.local.get(['data', 'ui', 'action', 'store']);
 
-            // data = AppState.
-            // ui = Some UI state.
-            // action = Action triggered by web apps.
-            // store = local copy of blockchain and other cloud data.
+        // Only set if data is available, will use default if not.
+        if (data) {
+            this.persisted = data;
+        }
 
-            chrome.storage.local.get(['data', 'ui', 'action', 'store'], (items: any) => {
-                // Pass any observed errors down the promise chain.
-                if (chrome.runtime.lastError) {
-                    return reject(chrome.runtime.lastError);
-                }
+        if (store) {
+            this.store = store;
+        }
 
-                // debugger;
-                // items.data.wallets = new Map(Object.entries(items.data.wallets));
+        this.ui = ui ?? {};
 
-                // resolve(null);
+        if (action) {
+            this.action = action;
+        }
 
-                // if (items.data.wallets?.length > 0) {
-                //     items.data.wallets[0].accounts = [];
-                // }
-
-                // // Pass the data retrieved from storage down the promise chain.
-                resolve(items);
-            });
-        });
+        this.initialized = true;
     }
 
     async saveAction(): Promise<void> {
-        return new Promise((resolve, reject) => {
-            chrome.storage.local.set({ 'action': this.action }, () => {
-                console.log('SAVED ACTION!');
-
-                if (chrome.runtime.lastError) {
-                    return reject(chrome.runtime.lastError);
-                }
-
-                resolve();
-            });
-        });
+        return chrome.storage.local.set({ 'action': this.action });
     }
 
     async saveStore(store: Store): Promise<void> {
-        // Immediately return a promise and start asynchronous work
-        return new Promise((resolve, reject) => {
-            // Asynchronously fetch all data from storage.sync.
-            console.log('SAVING STORE:');
-            console.log(JSON.stringify(store));
-
-            // this.persisted.wallets = Object.fromEntries(this.persisted.wallets);
-
-            chrome.storage.local.set({ 'store': store }, () => {
-                console.log('SAVED STORE!');
-                console.log(JSON.stringify(store));
-
-                // Update the timer, the timeout might have changed.
-                // TODO: Figure out if we need this, cause other actions will reset the timer anyway.
-                // this.resetTimer();
-                // this.active
-
-                // Pass any observed errors down the promise chain.
-                if (chrome.runtime.lastError) {
-                    return reject(chrome.runtime.lastError);
-                }
-                // Pass the data retrieved from storage down the promise chain.
-                resolve();
-            });
-        });
+        return chrome.storage.local.set({ 'store': store });
     }
 }
