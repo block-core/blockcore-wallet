@@ -6,6 +6,7 @@ import { OrchestratorService } from '../services/orchestrator.service';
 import { CommunicationService } from '../services/communication.service';
 import { NetworkStatusService } from '../services/network-status.service';
 import { SecureStateService } from '../services/secure-state.service';
+import { WalletManager } from '../../background/wallet-manager';
 
 @Component({
   selector: 'app-home',
@@ -30,25 +31,26 @@ export class HomeComponent implements OnInit, OnDestroy {
     private communication: CommunicationService,
     private manager: OrchestratorService,
     private secure: SecureStateService,
+    private walletManager: WalletManager,
     private cd: ChangeDetectorRef) {
 
     // this.uiState.title = 'Unlock wallet';
     this.activateAlarm();
 
     // When on home page and when unlocked, open account.
-    this.sub = this.communication.listen('wallet-unlocked', () => {
-      if (this.uiState.action?.action) {
-        this.router.navigate(['action', this.uiState.action.action]);
-      } else {
-        // If user has zero accounts, we'll show the account select screen that will auto-create accounts the user chooses.
-        if (this.uiState.hasAccounts) {
-          this.router.navigateByUrl('/dashboard');
-          //this.router.navigateByUrl('/account/view/' + this.uiState.activeWallet.activeAccountIndex);
-        } else {
-          this.router.navigateByUrl('/account/select');
-        }
-      }
-    });
+    // this.sub = this.communication.listen('wallet-unlocked', () => {
+    //   if (this.uiState.action?.action) {
+    //     this.router.navigate(['action', this.uiState.action.action]);
+    //   } else {
+    //     // If user has zero accounts, we'll show the account select screen that will auto-create accounts the user chooses.
+    //     if (this.uiState.hasAccounts) {
+    //       this.router.navigateByUrl('/dashboard');
+    //       //this.router.navigateByUrl('/account/view/' + this.uiState.activeWallet.activeAccountIndex);
+    //     } else {
+    //       this.router.navigateByUrl('/account/select');
+    //     }
+    //   }
+    // });
   }
 
   ngOnDestroy(): void {
@@ -109,7 +111,24 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   async unlock() {
     if (this.uiState.activeWallet) {
-      this.manager.unlock(this.uiState.activeWallet.id, this.unlockPassword);
+      const unlocked = await this.walletManager.unlockWallet(this.uiState.activeWallet.id, this.unlockPassword);
+      // this.manager.unlock(this.uiState.activeWallet.id, this.unlockPassword);
+
+      if (unlocked) {
+        if (this.uiState.action?.action) {
+          this.router.navigate(['action', this.uiState.action.action]);
+        } else {
+          // If user has zero accounts, we'll show the account select screen that will auto-create accounts the user chooses.
+          if (this.uiState.hasAccounts) {
+            this.router.navigateByUrl('/dashboard');
+            //this.router.navigateByUrl('/account/view/' + this.uiState.activeWallet.activeAccountIndex);
+          } else {
+            this.router.navigateByUrl('/account/select');
+          }
+        }
+      } else {
+        // TODO: Display error!!! .. invalid password, etc.
+      }
     }
   }
 }
