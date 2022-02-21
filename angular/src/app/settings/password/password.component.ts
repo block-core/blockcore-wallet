@@ -56,8 +56,6 @@ export class PasswordComponent implements OnDestroy {
             return;
         }
 
-        this.communication.send('wallet-password-change', { walletId: this.uiState.activeWallet?.id, oldpassword: this.existingPassword, newpassword: this.confirmedPassword });
-
         try {
             // First make sure that existing password is valid:
             const validOldPassword = await this.walletManager.unlockWallet(this.uiState.activeWallet?.id, this.existingPassword);

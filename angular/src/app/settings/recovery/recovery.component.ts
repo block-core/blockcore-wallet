@@ -1,8 +1,10 @@
 import { Location } from '@angular/common';
 import { Component, HostBinding, OnDestroy, ViewEncapsulation } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { CommunicationService } from 'src/app/services/communication.service';
 import { UIState } from 'src/app/services/ui-state.service';
 import { copyToClipboard } from 'src/app/shared/utilities';
+import { WalletManager } from '../../../background/wallet-manager';
 
 @Component({
     selector: 'app-recovery',
@@ -15,33 +17,40 @@ export class RecoveryComponent implements OnDestroy {
 
     password?: string;
 
-    sub: any;
-
     mnemonic: string = '';
 
     constructor(
         public uiState: UIState,
+        private walletManager: WalletManager,
+        private snackBar: MatSnackBar,
         public location: Location,
         private communication: CommunicationService) {
         this.uiState.title = 'Recovery Phrase';
         this.uiState.showBackButton = true;
         this.uiState.goBackHome = false;
 
-        this.sub = this.communication.listen('wallet-exported-recovery-phrase', (mnemonic: string) => {
-            this.mnemonic = mnemonic;
-        });
     }
 
     ngOnDestroy() {
         this.mnemonic = '';
-
-        if (this.sub) {
-            this.communication.unlisten(this.sub);
-        }
     }
 
-    show() {
-        this.communication.send('wallet-export-recovery-phrase', { walletId: this.uiState.activeWallet?.id, password: this.password });
+    async show() {
+        var recoveryPhrase = await this.walletManager.revealSecretRecoveryPhrase(this.uiState.activeWallet?.id, this.password);
+
+        if (recoveryPhrase) {
+            this.mnemonic = recoveryPhrase;
+
+            // Make sure we inform all instances when a wallet is unlocked.
+            this.communication.sendToAll('wallet-exported-recovery-phrase', recoveryPhrase);
+        } else {
+            // TODO: MAKE ERROR HANDLING SERVICE!
+            this.snackBar.open('Invalid password', 'Hide', {
+                duration: 2500,
+                horizontalPosition: 'center',
+                verticalPosition: 'bottom',
+            });
+        }
     }
 
     cancel() {

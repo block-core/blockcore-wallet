@@ -580,13 +580,6 @@ export class OrchestratorBackgroundService {
             }
         });
 
-        this.communication.listen('wallet-lock', async (port: any, data: { walletId: string }) => {
-            this.walletManager.lockWallet(data.walletId);
-
-            // Make sure we inform all instances when a wallet is unlocked.
-            this.communication.sendToAll('wallet-locked');
-        });
-
         // this.communication.listen('wallet-unlock', async (port: any, data: { walletId: string, password: string }) => {
         //     const unlocked = await this.walletManager.unlockWallet(data.walletId, data.password);
 
@@ -601,17 +594,6 @@ export class OrchestratorBackgroundService {
         //         this.communication.send(port, 'error', { exception: null, message: 'Invalid password' });
         //     }
         // });
-
-        this.communication.listen('wallet-export-recovery-phrase', async (port: any, data: { walletId: string, password: string }) => {
-            var recoveryPhrase = await this.walletManager.revealSecretRecoveryPhrase(data.walletId, data.password);
-
-            if (recoveryPhrase) {
-                // Make sure we inform all instances when a wallet is unlocked.
-                this.communication.sendToAll('wallet-exported-recovery-phrase', recoveryPhrase);
-            } else {
-                this.communication.send(port, 'error', { exception: null, message: 'Invalid password' });
-            }
-        });
 
         // TODO: Expand the address generation APIs to keep track of indexes for both change and non-change.
         this.communication.listen('address-generate', async (port: any, data: { walletId: string, accountId: string, index: number }) => {
