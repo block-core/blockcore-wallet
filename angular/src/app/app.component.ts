@@ -11,6 +11,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { EnvironmentService } from './services/environment.service';
 import { AppManager } from 'src/background/application-manager';
 import { SecureStateService } from './services/secure-state.service';
+import { WalletManager } from '../background/wallet-manager';
 
 @Component({
   selector: 'app-root',
@@ -35,6 +36,7 @@ export class AppComponent implements OnInit {
     private location: Location,
     private cd: ChangeDetectorRef,
     private route: ActivatedRoute,
+    private walletManager: WalletManager,
     private secure: SecureStateService,
     private env: EnvironmentService,
     public networkService: NetworksService,
@@ -163,7 +165,7 @@ export class AppComponent implements OnInit {
       return;
     }
 
-    this.manager.lock(this.uiState.activeWallet.id);
+    this.walletManager.lockWallet(this.uiState.activeWallet.id);
 
     //this.uiState.port?.postMessage({ method: 'lock' });
     // this.uiState.password = null;

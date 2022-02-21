@@ -266,17 +266,13 @@ export class OrchestratorService {
         this.communication.send('set-wallet-name', { walletId, name });
     }
 
-    unlock(walletId: string, password: string) {
-        this.communication.send('wallet-unlock', { walletId, password, hideFromLog: true });
-    }
-
     removeAccount(walletId: string, accountId: string) {
         this.communication.send('account-remove', { walletId, accountId });
     }
 
-    lock(walletId: string) {
-        this.communication.send('wallet-lock', { walletId });
-    }
+    // lock(walletId: string) {
+    //     this.communication.send('wallet-lock', { walletId });
+    // }
 
     setAction(action: Action, broadcast = true) {
         this.communication.send('set-action', { action, broadcast });

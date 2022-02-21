@@ -2,6 +2,7 @@ import { Location } from '@angular/common';
 import { Component, HostBinding, OnDestroy, ViewEncapsulation } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { UIState } from 'src/app/services/ui-state.service';
+import { WalletManager } from '../../../background/wallet-manager';
 import { CommunicationService } from '../../services/communication.service';
 import { OrchestratorService } from '../../services/orchestrator.service';
 
@@ -17,12 +18,12 @@ export class PasswordComponent implements OnDestroy {
     existingPassword?: string;
     newPassword?: string;
     confirmedPassword?: string;
-    sub: any;
 
     constructor(
         public uiState: UIState,
         public location: Location,
         private snackBar: MatSnackBar,
+        private walletManager: WalletManager,
         private manager: OrchestratorService,
         private communication: CommunicationService
     ) {
@@ -30,19 +31,13 @@ export class PasswordComponent implements OnDestroy {
         this.uiState.showBackButton = true;
         this.uiState.goBackHome = false;
 
-        this.sub = this.communication.listen('wallet-password-changed', (mnemonic: string) => {
-            // When the password has changed, we'll lock the wallet so user must re-confirm the new password.
-            this.manager.lock(this.uiState.activeWallet.id);
-        });
     }
 
     ngOnDestroy() {
-        if (this.sub) {
-            this.communication.unlisten(this.sub);
-        }
+
     }
 
-    save() {
+    async save() {
         if (this.newPassword !== this.confirmedPassword) {
             this.snackBar.open('The password input must be the same.', 'Hide', {
                 duration: 4000,
@@ -62,6 +57,44 @@ export class PasswordComponent implements OnDestroy {
         }
 
         this.communication.send('wallet-password-change', { walletId: this.uiState.activeWallet?.id, oldpassword: this.existingPassword, newpassword: this.confirmedPassword });
+
+        try {
+            // First make sure that existing password is valid:
+            const validOldPassword = await this.walletManager.unlockWallet(this.uiState.activeWallet?.id, this.existingPassword);
+
+            if (!validOldPassword) {
+                // TODO: ERROR MESSAGE!
+                this.snackBar.open('The existing password is incorrect.', 'Hide', {
+                    duration: 8000,
+                    horizontalPosition: 'center',
+                    verticalPosition: 'bottom',
+                });
+
+                return;
+            }
+
+            const walletWasChanged = await this.walletManager.changeWalletPassword(this.uiState.activeWallet?.id, this.existingPassword, this.confirmedPassword);
+
+            if (walletWasChanged) {
+                // If password was changed, lock the wallet.
+                this.walletManager.lockWallet(this.uiState.activeWallet.id);
+            } else {
+                // TODO: ERROR MESSAGE!
+                this.snackBar.open('Unable to change password on wallet for unknown reason.', 'Hide', {
+                    duration: 8000,
+                    horizontalPosition: 'center',
+                    verticalPosition: 'bottom',
+                });
+            }
+
+        } catch (error) {
+            // TODO: ERROR MESSAGE!
+            this.snackBar.open('Error: ' + error.toString(), 'Hide', {
+                duration: 8000,
+                horizontalPosition: 'center',
+                verticalPosition: 'bottom',
+            });
+        }
     }
 
     cancel() {

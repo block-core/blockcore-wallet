@@ -580,29 +580,6 @@ export class OrchestratorBackgroundService {
             }
         });
 
-        this.communication.listen('wallet-password-change', async (port: any, data: { walletId: string, oldpassword: string, newpassword: string }) => {
-            try {
-                // First make sure that existing password is valid:
-                const validOldPassword = await this.walletManager.unlockWallet(data.walletId, data.oldpassword);
-
-                if (!validOldPassword) {
-                    this.communication.send(port, 'error', { message: 'The existing password is incorrect.' });
-                    return;
-                }
-
-                const walletWasChanged = await this.walletManager.changeWalletPassword(data.walletId, data.oldpassword, data.newpassword);
-
-                if (walletWasChanged) {
-                    this.communication.sendToAll('wallet-password-changed', null);
-                } else {
-                    this.communication.send(port, 'error', { message: 'Unable to change password on wallet for unknown reason.' });
-                }
-
-            } catch (error) {
-                this.communication.send(port, 'error', { exception: error, message: error.toString() });
-            }
-        });
-
         this.communication.listen('wallet-lock', async (port: any, data: { walletId: string }) => {
             this.walletManager.lockWallet(data.walletId);
 
@@ -610,20 +587,20 @@ export class OrchestratorBackgroundService {
             this.communication.sendToAll('wallet-locked');
         });
 
-        this.communication.listen('wallet-unlock', async (port: any, data: { walletId: string, password: string }) => {
-            const unlocked = await this.walletManager.unlockWallet(data.walletId, data.password);
+        // this.communication.listen('wallet-unlock', async (port: any, data: { walletId: string, password: string }) => {
+        //     const unlocked = await this.walletManager.unlockWallet(data.walletId, data.password);
 
-            // After the wallet has been unlocked, we must ensure that the UI state has latest information about 
-            // which wallets is unlocked.
-            // TODO: FIX!!
-            // this.manager.broadcastState();
+        //     // After the wallet has been unlocked, we must ensure that the UI state has latest information about 
+        //     // which wallets is unlocked.
+        //     // TODO: FIX!!
+        //     // this.manager.broadcastState();
 
-            if (unlocked) {
-                this.communication.sendToAll('wallet-unlocked');
-            } else {
-                this.communication.send(port, 'error', { exception: null, message: 'Invalid password' });
-            }
-        });
+        //     if (unlocked) {
+        //         this.communication.sendToAll('wallet-unlocked');
+        //     } else {
+        //         this.communication.send(port, 'error', { exception: null, message: 'Invalid password' });
+        //     }
+        // });
 
         this.communication.listen('wallet-export-recovery-phrase', async (port: any, data: { walletId: string, password: string }) => {
             var recoveryPhrase = await this.walletManager.revealSecretRecoveryPhrase(data.walletId, data.password);
@@ -948,30 +925,30 @@ export class OrchestratorBackgroundService {
             // }
         });
 
-        this.communication.listen('wallet-create', async (port: any, data: Wallet) => {
-            // Add the new wallet.
-            // TODO: Do we first want to validate if the wallet is not already added with same ID?
-            // If so... we must ensure that mnemonics are not different, or a call might wipe existing wallet.
-            await this.walletManager.addWallet(data);
+        // this.communication.listen('wallet-create', async (port: any, data: Wallet) => {
+        //     // Add the new wallet.
+        //     // TODO: Do we first want to validate if the wallet is not already added with same ID?
+        //     // If so... we must ensure that mnemonics are not different, or a call might wipe existing wallet.
+        //     await this.walletManager.addWallet(data);
 
-            await this.walletManager.setActiveWallet(data.id);
+        //     await this.walletManager.setActiveWallet(data.id);
 
-            await this.state.save();
+        //     await this.state.save();
 
-            this.refreshState();
+        //     this.refreshState();
 
-            // TODO: REFACTOR IDENTITY CREATION IN THE FUTURE.
-            // if (this.state.activeAccount?.network === NETWORK_IDENTITY) {
-            //     // Generate DID Document for the identity and persist it.
-            //     this.createIdentityDocument();
-            //     await this.state.saveStore(this.state.store);
-            // }
+        //     // TODO: REFACTOR IDENTITY CREATION IN THE FUTURE.
+        //     // if (this.state.activeAccount?.network === NETWORK_IDENTITY) {
+        //     //     // Generate DID Document for the identity and persist it.
+        //     //     this.createIdentityDocument();
+        //     //     await this.state.saveStore(this.state.store);
+        //     // }
 
-            // Make sure we inform all instances when a wallet is deleted.
-            this.communication.sendToAll('wallet-created');
+        //     // Make sure we inform all instances when a wallet is deleted.
+        //     this.communication.sendToAll('wallet-created');
 
-            // TODO: REFATOR IN FUTURE.
-            //this.communication.sendToAll('identity-created');
-        });
+        //     // TODO: REFATOR IN FUTURE.
+        //     //this.communication.sendToAll('identity-created');
+        // });
     }
 }
