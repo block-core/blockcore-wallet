@@ -1,6 +1,7 @@
 import { Location } from '@angular/common';
 import { Component, HostBinding, OnDestroy, ViewEncapsulation } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 import { UIState } from 'src/app/services/ui-state.service';
 import { WalletManager } from '../../../background/wallet-manager';
 import { CommunicationService } from '../../services/communication.service';
@@ -24,6 +25,7 @@ export class PasswordComponent implements OnDestroy {
         public location: Location,
         private snackBar: MatSnackBar,
         private walletManager: WalletManager,
+        private router: Router,
         private manager: OrchestratorService,
         private communication: CommunicationService
     ) {
@@ -47,7 +49,7 @@ export class PasswordComponent implements OnDestroy {
             return;
         }
 
-        if (this.confirmedPassword.length === 0) {
+        if (this.confirmedPassword == null || this.confirmedPassword.length === 0) {
             this.snackBar.open('The password cannot be empty.', 'Hide', {
                 duration: 4000,
                 horizontalPosition: 'center',
@@ -76,6 +78,7 @@ export class PasswordComponent implements OnDestroy {
             if (walletWasChanged) {
                 // If password was changed, lock the wallet.
                 this.walletManager.lockWallet(this.uiState.activeWallet.id);
+                this.router.navigateByUrl('/home');
             } else {
                 // TODO: ERROR MESSAGE!
                 this.snackBar.open('Unable to change password on wallet for unknown reason.', 'Hide', {

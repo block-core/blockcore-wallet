@@ -216,7 +216,7 @@ export class WalletManager {
 
     lockWallet(id: string) {
         this.walletSecrets.delete(id);
-
+        this.secure.set(id, undefined);
         // TODO: FIX!!!
         // this.manager.broadcastState();
     }
