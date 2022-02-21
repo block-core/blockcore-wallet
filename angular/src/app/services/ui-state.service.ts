@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { EventEmitter, Injectable, NgZone } from '@angular/core';
 import { Account, Action, NetworkStatus, Persisted, Store, Wallet } from '../interfaces';
-import { MINUTE } from '../shared/constants';
+import { AUTO_TIMEOUT, INDEXER_URL, MINUTE, VAULT_URL } from '../shared/constants';
 import { Router } from '@angular/router';
 import { CommunicationService } from './communication.service';
 import { BehaviorSubject, ReplaySubject, Subject } from 'rxjs';
@@ -24,13 +24,37 @@ export class UIState {
         console.log('Version: ' + VERSION);
     }
 
-    persisted$: Subject<Persisted> = new ReplaySubject();
-
-    persisted!: Persisted;
-
     manifest!: chrome.runtime.Manifest;
 
-    store!: Store;
+    persisted$: Subject<Persisted> = new ReplaySubject();
+
+    // persisted!: Persisted;
+
+    // store!: Store;
+
+    networks: Network[] = [];
+
+    persisted: Persisted = {
+        settings: {
+            autoTimeout: AUTO_TIMEOUT,
+            indexer: INDEXER_URL,
+            dataVault: VAULT_URL,
+            theme: 'dark',
+            themeColor: 'primary',
+            language: 'en',
+            amountFormat: 'bitcoin',
+            developer: false
+        },
+        wallets: [] as Wallet[],
+        activeWalletId: null
+    };
+
+    store: Store = {
+        identities: [],
+        cache: {
+            identities: []
+        }
+    };
 
     showBackButton = false;
 
@@ -54,7 +78,6 @@ export class UIState {
     // activeWalletIndex: number = 0;
 
     get hasWallets(): boolean {
-        console.log('HAS WALLETS', this.persisted?.wallets.length);
         return this.persisted?.wallets.length > 0;
     }
 
@@ -111,8 +134,10 @@ export class UIState {
 
     title!: string;
 
+    /** Indicates that the UIState has been initilized. */
     initialized = false;
 
+    /** Indicates that the extension is currently loading. This is not just for UIState, but for the whole app. */
     loading = true;
 
     get activeWalletUnlocked(): boolean {
@@ -161,6 +186,7 @@ export class UIState {
     async wipe(): Promise<void> {
         await chrome.storage.local.clear();
         await (<any>chrome.storage).session.clear();
+
     }
 
     // async save(): Promise<void> {
@@ -232,8 +258,6 @@ export class UIState {
     //     // });
     // }
 
-    networks: Network[] = [];
-
     // persisted: Persisted = {
     //     settings: {
     //         autoTimeout: AUTO_TIMEOUT,
@@ -280,8 +304,6 @@ export class UIState {
     /** Loads all the persisted state into the extension. This might become bloated on large wallets. */
     async load() {
         const { data, ui, action, store } = await chrome.storage.local.get(['data', 'ui', 'action', 'store']);
-
-        debugger;
 
         // Only set if data is available, will use default if not.
         if (data) {

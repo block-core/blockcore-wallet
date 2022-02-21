@@ -58,9 +58,10 @@ export class LoadingComponent implements OnInit, OnDestroy {
   instanceName: string;
 
   async ngOnInit() {
-
-
-    console.log('NGONINIT: APP COMPONENT');
+    // If the state has not loaded or triggered after a timeout, display reload button / reset options.
+    setTimeout(() => {
+      this.problems = true;
+    }, 5000);
 
     await this.appManager.initialize();
 
@@ -119,34 +120,13 @@ export class LoadingComponent implements OnInit, OnDestroy {
 
     });
 
+    // this.uiState.action = state.action;
+    // this.uiState.persisted = state.persisted;
+    // this.uiState.store = state.store;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    console.log('NGONINIT: LOADING COMPONENT');
-
-    // When this happens, the appManager should already be initilized by the AppComponent.
-    // All we want to do here, is check if there is any unlocked wallets or not, and then redirect
-    // either to Home (to unlock) or Dashboard (unlocked).
-
-    // if (this.walletManager.hasUnlockedWallets) {
-    //   this.router.navigateByUrl('/dashboard');
-    // } else {
-    //   this.router.navigateByUrl('/home');
-    // }
+    this.uiState.persisted$.next(this.uiState.persisted);
+    this.uiState.activeWalletSubject.next(this.uiState.activeWallet);
+    this.uiState.activeAccountSubject.next(this.uiState.activeAccount);
 
     // If there is any params, it means there might be an action triggered by protocol handlers. Parse the params and set action.
     if (this.uiState.params) {
@@ -176,7 +156,6 @@ export class LoadingComponent implements OnInit, OnDestroy {
     }
 
     console.log('ACTION:', this.uiState.action);
-    console.log('STATE:', this.uiState);
 
     // If an action has been triggered, we'll always show action until user closes the action.
     if (this.uiState.action?.action && this.uiState.activeWallet && this.secure.unlocked(this.uiState.activeWallet.id)) {
@@ -185,16 +164,8 @@ export class LoadingComponent implements OnInit, OnDestroy {
     } else {
       // If the state was changed and there is no wallets, send user to create wallet UI.
       if (!this.uiState.hasWallets) {
-        console.log('HAS NO WALLETS!!!!');
-        console.log(this.uiState);
         this.router.navigateByUrl('/wallet/create');
       } else {
-        // if (this.walletManager.hasUnlockedWallets) {
-        //   this.router.navigateByUrl('/dashboard');
-        // } else {
-        //   this.router.navigateByUrl('/home');
-        // }
-
         // If the active wallet is unlocked, we'll redirect accordingly.
         if (this.uiState.activeWallet && this.secure.unlocked(this.uiState.activeWallet.id)) {
 
@@ -214,57 +185,7 @@ export class LoadingComponent implements OnInit, OnDestroy {
       }
     }
 
-    // await this.appManager.initialize();
-
-    // chrome.storage.onChanged.addListener((changes, area) => {
-    //   console.log('chrome.storage.onChanged:changes:', changes);
-    //   console.log('chrome.storage.onChanged:area:', area);
-    // });
-
-    // const storage = globalThis.chrome.storage as any;
-    // await storage.session.set({ 'password': '123@!' });
-
-    // await storage.session.set({
-    //   ''
-    // });
-
-
-    // Each instance of extension need this listener when session is cleared.
-    // storage.session.onChanged.addListener(function (changes: any, namespace: any) {
-    //   console.log("change recived22222222!");
-    //   console.log(changes);
-    //   console.log(namespace);
-    // });
-
-    // storage.local.onChanged.addListener(function (changes: any, namespace: any) {
-    //   console.log("change recived111111111!");
-    //   console.log(changes);
-    //   console.log(namespace);
-    // });
-
-    // await storage.session.set({ 'password': '123@!22' });
-
-    // Make sure that the secure values are loaded.
-    // await this.secure.load();
-
-    // await this.appManager.initialize();
-    // await this.appManager.initialize();
-
-    // When the extension has been initialized, we'll send 'state' to background to get the current state. The UI will show loading
-    // indicator until 'state-changed' is triggered.
-    // chrome.tabs.query({
-    //   active: true,
-    //   lastFocusedWindow: true
-    // }, (tabs) => {
-    //   // debugger;
-    //   var tab = tabs[0];
-    //   // Provide the tab URL with the state query, because wallets and accounts is connected to domains.
-    //   this.communication.send('state-load', { url: tab?.url });
-    // });
-
-    // If the state has not loaded or triggered after a timeout, display reload button / reset options.
-    setTimeout(() => {
-      this.problems = true;
-    }, 5000);
+    // Loading has completed.
+    this.uiState.loading = false;
   }
 }

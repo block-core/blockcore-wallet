@@ -1,8 +1,8 @@
 import { Injectable } from "@angular/core";
 import { timeStamp } from "console";
 import { networkInterfaces } from "os";
-import { SecureStateService } from "src/app/services/secure-state.service";
-import { UIState } from "src/app/services/ui-state.service";
+import { SecureStateService } from "../app/services/secure-state.service";
+import { UIState } from "../app/services/ui-state.service";
 import { Action, NetworkStatus, Settings, State } from "../app/interfaces";
 import { INDEXER_URL, MINUTE } from "../app/shared/constants";
 import { CommunicationBackgroundService } from "./communication";

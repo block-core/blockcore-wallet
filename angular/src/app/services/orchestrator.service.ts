@@ -43,81 +43,81 @@ export class OrchestratorService {
         // });
 
         // Whenever the state is updated, we'll update in the UI.
-        this.communication.listen('state-loaded', (state: State) => {
+        // this.communication.listen('state-loaded', (state: State) => {
 
-            // Loading has completed.
-            this.uiState.loading = false;
+        //     // Loading has completed.
+        //     this.uiState.loading = false;
 
-            console.log('EVENT: state-loaded', state);
-            this.uiState.initialized = true;
-            this.uiState.action = state.action;
-            this.uiState.persisted = state.persisted;
-            this.uiState.store = state.store;
+        //     console.log('EVENT: state-loaded', state);
+        //     this.uiState.initialized = true;
+        //     this.uiState.action = state.action;
+        //     this.uiState.persisted = state.persisted;
+        //     this.uiState.store = state.store;
 
-            this.uiState.persisted$.next(this.uiState.persisted);
-            this.uiState.activeWalletSubject.next(this.uiState.activeWallet);
-            this.uiState.activeAccountSubject.next(this.uiState.activeAccount);
+        //     this.uiState.persisted$.next(this.uiState.persisted);
+        //     this.uiState.activeWalletSubject.next(this.uiState.activeWallet);
+        //     this.uiState.activeAccountSubject.next(this.uiState.activeAccount);
 
-            // If there is any params, it means there might be an action triggered by protocol handlers. Parse the params and set action.
-            if (this.uiState.params) {
-                if (this.uiState.params.sid) {
-                    this.uiState.action = {
-                        action: 'sid',
-                        document: this.uiState.params.sid
-                    }
+        //     // If there is any params, it means there might be an action triggered by protocol handlers. Parse the params and set action.
+        //     if (this.uiState.params) {
+        //         if (this.uiState.params.sid) {
+        //             this.uiState.action = {
+        //                 action: 'sid',
+        //                 document: this.uiState.params.sid
+        //             }
 
-                    setTimeout(() => {
-                        // Persist the action, but don't broadcast this change as we've already written local state.
-                        this.setAction(this.uiState.action, true);
-                    }, 0);
-                }
+        //             setTimeout(() => {
+        //                 // Persist the action, but don't broadcast this change as we've already written local state.
+        //                 this.setAction(this.uiState.action, true);
+        //             }, 0);
+        //         }
 
-                if (this.uiState.params.nostr) {
-                    this.uiState.action = {
-                        action: 'nostr',
-                        document: this.uiState.params.nostr
-                    }
+        //         if (this.uiState.params.nostr) {
+        //             this.uiState.action = {
+        //                 action: 'nostr',
+        //                 document: this.uiState.params.nostr
+        //             }
 
-                    setTimeout(() => {
-                        // Persist the action, but don't broadcast this change as we've already written local state.
-                        this.setAction(this.uiState.action, true);
-                    }, 0);
-                }
-            }
+        //             setTimeout(() => {
+        //                 // Persist the action, but don't broadcast this change as we've already written local state.
+        //                 this.setAction(this.uiState.action, true);
+        //             }, 0);
+        //         }
+        //     }
 
-            console.log('ACTION:', this.uiState.action);
+        //     console.log('ACTION:', this.uiState.action);
 
-            // If an action has been triggered, we'll always show action until user closes the action.
-            if (this.uiState.action?.action && this.uiState.activeWallet && this.secure.unlocked(this.uiState.activeWallet.id)) {
-                // TODO: Add support for more actions.
-                this.router.navigate(['action', this.uiState.action?.action]);
-            } else {
-                // If the state was changed and there is no wallets, send user to create wallet UI.
-                if (!this.uiState.hasWallets) {
-                    this.router.navigateByUrl('/wallet/create');
-                } else {
-                    // If the active wallet is unlocked, we'll redirect accordingly.
-                    if (this.uiState.activeWallet && this.secure.unlocked(this.uiState.activeWallet.id)) {
+        //     // If an action has been triggered, we'll always show action until user closes the action.
+        //     if (this.uiState.action?.action && this.uiState.activeWallet && this.secure.unlocked(this.uiState.activeWallet.id)) {
+        //         // TODO: Add support for more actions.
+        //         this.router.navigate(['action', this.uiState.action?.action]);
+        //     } else {
+        //         // If the state was changed and there is no wallets, send user to create wallet UI.
+        //         if (!this.uiState.hasWallets) {
+        //             this.router.navigateByUrl('/wallet/create');
+        //         } else {
+        //             // If the active wallet is unlocked, we'll redirect accordingly.
+        //             if (this.uiState.activeWallet && this.secure.unlocked(this.uiState.activeWallet.id)) {
 
-                        // If user has zero accounts, we'll show the account select screen that will auto-create accounts the user chooses.
-                        if (this.uiState.hasAccounts) {
-                            this.router.navigateByUrl('/dashboard');
-                            //this.router.navigateByUrl('/account/view/' + this.uiState.activeWallet.activeAccountIndex);
-                        } else {
-                            this.router.navigateByUrl('/account/select');
-                        }
+        //                 // If user has zero accounts, we'll show the account select screen that will auto-create accounts the user chooses.
+        //                 if (this.uiState.hasAccounts) {
+        //                     this.router.navigateByUrl('/dashboard');
+        //                     //this.router.navigateByUrl('/account/view/' + this.uiState.activeWallet.activeAccountIndex);
+        //                 } else {
+        //                     this.router.navigateByUrl('/account/select');
+        //                 }
 
-                    } else {
-                        // When the initial state is loaded and user has not unlocked any wallets, we'll show the unlock screen on home.
-                        console.log('LOADING REDIRECT TO HOME');
-                        this.router.navigateByUrl('/home');
-                    }
-                }
-            }
+        //             } else {
+        //                 // When the initial state is loaded and user has not unlocked any wallets, we'll show the unlock screen on home.
+        //                 console.log('LOADING REDIRECT TO HOME');
+        //                 this.router.navigateByUrl('/home');
+        //             }
+        //         }
+        //     }
 
-            // After the initial state has been loaded into the new UI instance, we'll inform the background that new UI has activated.
-            this.communication.send('ui-activated');
-        });
+        //     // After the initial state has been loaded into the new UI instance, we'll inform the background that new UI has activated.
+        //     this.communication.send('ui-activated');
+        // });
 
         // Whenever the state is updated, we'll update in the UI.
         this.communication.listen('state-changed', (state: State) => {
