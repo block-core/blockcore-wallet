@@ -34,10 +34,10 @@ describe('GenericTests', () => {
   it('Validate secure storage logic', () => {
 
     // The in-memory state and how we want it to be represented after loading.
-    const state = new Map<string, { password: string, seed: string }>();
+    const state = new Map<string, string>();
 
     const privateKey = secp.utils.randomPrivateKey();
-    state.set('12356-123', { password: '123@1', seed: Buffer.from(privateKey).toString('base64') });
+    state.set('12356-123', Buffer.from(privateKey).toString('base64'));
 
     console.log('state', state);
 
@@ -59,9 +59,9 @@ describe('GenericTests', () => {
 
     console.log('restoredMap', restoredState);
 
-    restoredState.forEach((value: any, key, map) => {
-      value.seed = new Uint8Array(Buffer.from(value.seed, 'base64'));
-    });
+    // restoredState.forEach((value: any, key, map) => {
+    //   value.seed = new Uint8Array(Buffer.from(value.seed, 'base64'));
+    // });
 
     console.log('restoredState', restoredState);
 

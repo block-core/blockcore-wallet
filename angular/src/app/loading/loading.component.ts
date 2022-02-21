@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CommunicationService } from '../services/communication.service';
 import { AppManager } from '../../background/application-manager';
 import { SecureStateService } from '../services/secure-state.service';
+import * as secp from "@noble/secp256k1";
 
 @Component({
   selector: 'app-loading',
@@ -18,7 +19,7 @@ export class LoadingComponent implements OnInit, OnDestroy {
     public uiState: UIState,
     // private appManager: ApplicationManagerService,
     private appManager: AppManager,
-    private secure: SecureStateService,
+    public secure: SecureStateService,
     private communication: CommunicationService
   ) {
     this.uiState.title = 'Loading...';
@@ -33,6 +34,14 @@ export class LoadingComponent implements OnInit, OnDestroy {
     window.location.href = 'index.html';
   }
 
+  async update() {
+    await this.secure.set('123', '222');
+  }
+
+  async getSession() {
+    console.log(this.secure.get('123'));
+  }
+
   async ngOnInit() {
 
     console.log('SECURE:LOAD:');
@@ -42,10 +51,13 @@ export class LoadingComponent implements OnInit, OnDestroy {
     await globalThis.chrome.storage.local.set({ 'active': new Date().toJSON() });
     await globalThis.chrome.storage.local.set({ 'timeout': 1 });
 
-    const storage = globalThis.chrome.storage as any;
-    await storage.session.set({ 'password': '123@!' });
+    // chrome.storage.onChanged.addListener((changes, area) => {
+    //   console.log('chrome.storage.onChanged:changes:', changes);
+    //   console.log('chrome.storage.onChanged:area:', area);
+    // });
 
-
+    // const storage = globalThis.chrome.storage as any;
+    // await storage.session.set({ 'password': '123@!' });
 
     // await storage.session.set({
     //   ''
@@ -53,31 +65,61 @@ export class LoadingComponent implements OnInit, OnDestroy {
 
 
     // Each instance of extension need this listener when session is cleared.
-    storage.session.onChanged.addListener(function (changes: any, namespace: any) {
-      console.log("change recived22222222!");
-      console.log(changes);
-      console.log(namespace);
-    });
+    // storage.session.onChanged.addListener(function (changes: any, namespace: any) {
+    //   console.log("change recived22222222!");
+    //   console.log(changes);
+    //   console.log(namespace);
+    // });
 
-    storage.local.onChanged.addListener(function (changes: any, namespace: any) {
-      console.log("change recived111111111!");
-      console.log(changes);
-      console.log(namespace);
-    });
+    // storage.local.onChanged.addListener(function (changes: any, namespace: any) {
+    //   console.log("change recived111111111!");
+    //   console.log(changes);
+    //   console.log(namespace);
+    // });
 
-    await storage.session.set({ 'password': '123@!22' });
+    // await storage.session.set({ 'password': '123@!22' });
 
     // Make sure that the secure values are loaded.
     await this.secure.load();
 
-    console.log(this.secure.get('password1'));
+    const privateKey = secp.utils.randomPrivateKey();
+    this.secure.set('12345', Buffer.from(privateKey).toString('hex'))
+    this.secure.set('12346', Buffer.from(privateKey).toString('base64'))
 
-    const enc = new TextEncoder();
-    const val = enc.encode("This is a string converted to a Uint8Array");
-    await this.secure.set('password1', val);
+    setTimeout(() => {
+      console.log('this.secure.get', this.secure.get('12345'));
+      console.log('this.secure.get', this.secure.get('12346'));
+    }, 0);
 
-    console.log(this.secure.get('password1'));
-    console.log('DONE!!!');
+    setTimeout(async () => {
+      console.log('set 1');
+      await this.secure.set('12345', '1123123123');
+    }, 2000);
+
+    setTimeout(async () => {
+      console.log('set 2');
+      await this.secure.set('12345', '654411aaa');
+    }, 6000);
+
+    setTimeout(async () => {
+      console.log('set 3');
+      await this.secure.set('123', '654411aa123123a');
+    }, 8000);
+
+    setTimeout(() => {
+      console.log('this.secure.get', this.secure.get('12345'));
+    }, 4000);
+
+    setTimeout(() => {
+      console.log('this.secure.get', this.secure.get('123'));
+    }, 10000);
+
+    // const enc = new TextEncoder();
+    // const val = enc.encode("This is a string converted to a Uint8Array");
+    // await this.secure.set('password1', val);
+
+    // console.log(this.secure.get('password1'));
+    // console.log('DONE!!!');
 
     setInterval(() => {
 
