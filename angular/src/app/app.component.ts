@@ -42,62 +42,7 @@ export class AppComponent implements OnInit {
     public networkService: NetworksService,
     @Inject(DOCUMENT) private document: Document) {
 
-    this.appManager.initialize();
-
-    this.manager.initialize();
-
-    this.instanceName = env.instanceName;
-
-    translate.addLangs(['en', 'no', 'fr']);
-    translate.setDefaultLang('en');
-
-    const browserLang = translate.getBrowserLang();
-    translate.use(browserLang.match(/en|no/) ? browserLang : 'en');
-
-    document.title = env.instanceName;
-
-    const queryParam = globalThis.location.search;
-    console.log('queryParam:', queryParam);
-
-    // TODO: IT IS NOT POSSIBLE TO "EXIT" ACTIONS THAT ARE TRIGGERED WITH QUERY PARAMS.
-    // FIX THIS ... attempted to check previous, but that does not work...
-    if (queryParam) {
-      const param = Object.fromEntries(new URLSearchParams(queryParam)) as any;
-
-      // Only when the param is different than before, will we re-trigger the action.
-      if (JSON.stringify(param) != JSON.stringify(this.uiState.params)) {
-        this.uiState.params = param;
-      } else {
-        console.log('PARAMS IS NOT DIFFERENT!! CONTINUE AS BEFORE!');
-      }
-    }
-
-    router.events.subscribe((val) => {
-      if (val instanceof NavigationEnd) {
-        // this.uiState.showBackButton = false;
-        // this.uiState.title = '';
-        this.uiState.active();
-      }
-    });
-
-    this.uiState.persisted$.subscribe(() => {
-      if (this.uiState.persisted?.settings.theme === 'light') {
-        this.renderer.removeClass(document.body, 'dark-theme');
-      } else {
-        this.renderer.addClass(document.body, 'dark-theme');
-      }
-
-      if (this.uiState.persisted.settings.language) {
-        translate.use(this.uiState.persisted.settings.language);
-      }
-
-      // if (this.uiState.persisted?.settings.theme === 'light') {
-      //   this.renderer.setAttribute(document.body, 'color', 'warn');
-      // } else {
-      //   this.renderer.addClass(document.body, 'dark-theme');
-      // }
-
-    });
+    this.instanceName = this.env.instanceName;
   }
 
   async wipe() {
@@ -136,7 +81,21 @@ export class AppComponent implements OnInit {
     }
   }
 
-  ngOnInit(): void {
+  async ngOnInit() {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     // TODO: Find an alternative method to discover if app renders in tab or popup.
     // The issue here is a race-condition, where he popup does not close fast enough 
     // for this logic to run. So the length is larger then 0, when run too early.
@@ -182,6 +141,8 @@ export class AppComponent implements OnInit {
 
   async onWalletChanged(event: any) {
     const walletId = event.value;
+
+    console.log('onWalletChanged!!!!!!!!!!!!', walletId);
 
     this.drawer.close();
 

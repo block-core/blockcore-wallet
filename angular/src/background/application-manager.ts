@@ -37,12 +37,10 @@ export class AppManager {
 
     }
 
-    initialize = async () => {
+    async initialize() {
         // CLEAR DATA FOR DEBUG PURPOSES:
         // chrome.storage.local.set({ 'data': null }, () => {
         // });
-
-
 
         // First load the existing state.
         await this.state.load();

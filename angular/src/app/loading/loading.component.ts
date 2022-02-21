@@ -1,13 +1,18 @@
-import { Component, ChangeDetectorRef, OnInit, OnDestroy } from '@angular/core';
+import { Component, ChangeDetectorRef, OnInit, OnDestroy, Renderer2 } from '@angular/core';
 import { UIState } from '../services/ui-state.service';
 import { CryptoService } from '../services/crypto.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { CommunicationService } from '../services/communication.service';
 import { AppManager } from '../../background/application-manager';
 import { SecureStateService } from '../services/secure-state.service';
 import * as secp from "@noble/secp256k1";
 import { WalletManager } from '../../background/wallet-manager';
 import { Action } from '../interfaces';
+import { TranslateService } from '@ngx-translate/core';
+import { OrchestratorService } from '../services/orchestrator.service';
+import { EnvironmentService } from '../services/environment.service';
+import { NetworksService } from '../services/networks.service';
+import { Location } from '@angular/common'
 
 @Component({
   selector: 'app-loading',
@@ -24,7 +29,15 @@ export class LoadingComponent implements OnInit, OnDestroy {
     public secure: SecureStateService,
     private router: Router,
     private walletManager: WalletManager,
-    private communication: CommunicationService
+    private communication: CommunicationService,
+    private renderer: Renderer2,
+    public translate: TranslateService,
+    private manager: OrchestratorService,
+    private location: Location,
+    private cd: ChangeDetectorRef,
+    private route: ActivatedRoute,
+    private env: EnvironmentService,
+    public networkService: NetworksService
   ) {
     this.uiState.title = 'Loading...';
     this.uiState.manifest = chrome.runtime.getManifest();
@@ -42,7 +55,88 @@ export class LoadingComponent implements OnInit, OnDestroy {
     this.communication.send('set-action', { action, broadcast });
   }
 
+  instanceName: string;
+
   async ngOnInit() {
+
+
+    console.log('NGONINIT: APP COMPONENT');
+
+    await this.appManager.initialize();
+
+    await this.manager.initialize();
+
+    console.log('INITILIZED DONE...');
+
+    this.translate.addLangs(['en', 'no', 'fr']);
+    this.translate.setDefaultLang('en');
+
+    const browserLang = this.translate.getBrowserLang();
+    this.translate.use(browserLang.match(/en|no/) ? browserLang : 'en');
+
+    document.title = this.env.instanceName;
+
+    const queryParam = globalThis.location.search;
+    console.log('queryParam:', queryParam);
+
+    // TODO: IT IS NOT POSSIBLE TO "EXIT" ACTIONS THAT ARE TRIGGERED WITH QUERY PARAMS.
+    // FIX THIS ... attempted to check previous, but that does not work...
+    if (queryParam) {
+      const param = Object.fromEntries(new URLSearchParams(queryParam)) as any;
+
+      // Only when the param is different than before, will we re-trigger the action.
+      if (JSON.stringify(param) != JSON.stringify(this.uiState.params)) {
+        this.uiState.params = param;
+      } else {
+        console.log('PARAMS IS NOT DIFFERENT!! CONTINUE AS BEFORE!');
+      }
+    }
+
+    this.router.events.subscribe((val) => {
+      if (val instanceof NavigationEnd) {
+        // this.uiState.showBackButton = false;
+        // this.uiState.title = '';
+        this.uiState.active();
+      }
+    });
+
+    this.uiState.persisted$.subscribe(() => {
+      if (this.uiState.persisted?.settings.theme === 'light') {
+        this.renderer.removeClass(document.body, 'dark-theme');
+      } else {
+        this.renderer.addClass(document.body, 'dark-theme');
+      }
+
+      if (this.uiState.persisted.settings.language) {
+        this.translate.use(this.uiState.persisted.settings.language);
+      }
+
+      // if (this.uiState.persisted?.settings.theme === 'light') {
+      //   this.renderer.setAttribute(document.body, 'color', 'warn');
+      // } else {
+      //   this.renderer.addClass(document.body, 'dark-theme');
+      // }
+
+    });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    console.log('NGONINIT: LOADING COMPONENT');
 
     // When this happens, the appManager should already be initilized by the AppComponent.
     // All we want to do here, is check if there is any unlocked wallets or not, and then redirect
@@ -82,6 +176,7 @@ export class LoadingComponent implements OnInit, OnDestroy {
     }
 
     console.log('ACTION:', this.uiState.action);
+    console.log('STATE:', this.uiState);
 
     // If an action has been triggered, we'll always show action until user closes the action.
     if (this.uiState.action?.action && this.uiState.activeWallet && this.secure.unlocked(this.uiState.activeWallet.id)) {
@@ -90,6 +185,8 @@ export class LoadingComponent implements OnInit, OnDestroy {
     } else {
       // If the state was changed and there is no wallets, send user to create wallet UI.
       if (!this.uiState.hasWallets) {
+        console.log('HAS NO WALLETS!!!!');
+        console.log(this.uiState);
         this.router.navigateByUrl('/wallet/create');
       } else {
         // if (this.walletManager.hasUnlockedWallets) {

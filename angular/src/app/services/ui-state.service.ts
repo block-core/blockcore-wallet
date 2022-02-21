@@ -54,6 +54,7 @@ export class UIState {
     // activeWalletIndex: number = 0;
 
     get hasWallets(): boolean {
+        console.log('HAS WALLETS', this.persisted?.wallets.length);
         return this.persisted?.wallets.length > 0;
     }
 
