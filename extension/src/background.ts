@@ -54,15 +54,13 @@ chrome.alarms.onAlarm.addListener(async () => {
     // Get both "active" (Date) and timeout (number of minutes) from local settings.
     const { active, timeout } = await chrome.storage.local.get(['active', 'timeout']);
 
-    const { password } = await storage.session.get(['password']);
-
-    console.log('password:', password);
     console.log('active:', active);
     console.log('timeout:', timeout);
 
     // Reset storage if there is no 'active' state data.
     if (!active) {
-        await storage.session.clear();
+        await storage.session.remove(['keys']);
+        // await storage.session.clear(); // Might be dramatic to clear to whole session storage?
         console.log('There are no active value, session storage is cleared.');
     } else {
         // Parse the active date.
@@ -79,7 +77,8 @@ chrome.alarms.onAlarm.addListener(async () => {
 
         // Check of the timeout has been reached and clear if it has.
         if (resetDate > currentResetDate) {
-            await storage.session.clear();
+            await storage.session.remove(['keys']);
+            // await storage.session.clear(); // Might be dramatic to clear to whole session storage?
             console.log('Timeout has been researched, session storage is cleared.');
         } else {
             console.log('TIMEOUT NOT REACHED YET!!');

@@ -17,7 +17,7 @@ export class SecureStateService {
         return this.unlockedWalletsSubject.asObservable();
     }
 
-    constructor( ) {
+    constructor() {
         const storage = globalThis.chrome.storage as any;
 
         // Each instance of extension need this listener when session is cleared.
@@ -41,6 +41,9 @@ export class SecureStateService {
             // This will trigger an onChange event and reload the same keys. This will happens twice
             // in the instance that called set, but only once for other instances of the extension.
             await storage.session.set({ 'keys': Object.fromEntries(this.keys.entries()) });
+
+            // Every time a new key is set, we'll update the active value as well.
+            await globalThis.chrome.storage.local.set({ 'active': new Date().toJSON() });
         }
     }
 
