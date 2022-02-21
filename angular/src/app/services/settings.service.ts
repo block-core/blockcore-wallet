@@ -3,6 +3,7 @@ import { __values } from "tslib";
 
 export class SettingsData {
     public theme: string;
+    public autoTimeout: number;
 }
 
 @Injectable({
