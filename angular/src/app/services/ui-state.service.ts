@@ -119,7 +119,7 @@ export class UIState {
             return false;
         }
 
-        return this.unlocked.findIndex(w => w === this.activeWallet?.id) > -1;
+        return this.secure.unlocked(this.activeWallet.id);
     }
 
     get unlocked() {

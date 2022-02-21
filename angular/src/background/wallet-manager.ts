@@ -288,6 +288,9 @@ export class WalletManager {
             // Add this wallet to list of unlocked.
             this.walletSecrets.set(walletId, { password, seed: masterSeed });
 
+            // Store the decrypted master seed in session state.
+            this.secure.set(walletId, Buffer.from(masterSeed).toString('base64'));
+
             // Make sure we inform all instances when a wallet is unlocked.
             return true;
 

@@ -286,13 +286,13 @@ export class OrchestratorService {
         this.communication.send('set-action', { action: { action: '' } });
     }
 
-    createAccount(walletId: string, account: Account) {
-        this.communication.send('account-create', { walletId, account });
-    }
+    // createAccount(walletId: string, account: Account) {
+    //     this.communication.send('account-create', { walletId, account });
+    // }
 
-    createAccounts(walletId: string, accounts: Account[]) {
-        this.communication.send('accounts-create', { walletId, accounts });
-    }
+    // createAccounts(walletId: string, accounts: Account[]) {
+    //     this.communication.send('accounts-create', { walletId, accounts });
+    // }
 
     createVault(data: Vault) {
         this.communication.send('vault-publish', data);

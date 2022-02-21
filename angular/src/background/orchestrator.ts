@@ -804,37 +804,37 @@ export class OrchestratorBackgroundService {
         //     this.communication.send(port, 'nostr-generated', { id: id })
         // });
 
-        this.communication.listen('accounts-create', async (port: any, data: { walletId: string, accounts: Account[] }) => {
-            const wallet = this.walletManager.getWallet(data.walletId);
+        // this.communication.listen('accounts-create', async (port: any, data: { walletId: string, accounts: Account[] }) => {
+        //     const wallet = this.walletManager.getWallet(data.walletId);
 
-            for (const account of data.accounts) {
-                // Don't persist the selected value.
-                delete account.selected;
-                await this.walletManager.addAccount(account, wallet);
-            }
+        //     for (const account of data.accounts) {
+        //         // Don't persist the selected value.
+        //         delete account.selected;
+        //         await this.walletManager.addAccount(account, wallet);
+        //     }
 
-            this.refreshState();
+        //     this.refreshState();
 
-            this.communication.sendToAll('account-created');
+        //     this.communication.sendToAll('account-created');
 
-            // TODO: REFACTOR WHEN TIME COMES!
-            // this.manager.communication.sendToAll('identity-created');
-        });
+        //     // TODO: REFACTOR WHEN TIME COMES!
+        //     // this.manager.communication.sendToAll('identity-created');
+        // });
 
-        this.communication.listen('account-create', async (port: any, data: { walletId: string, account: Account }) => {
-            const wallet = this.walletManager.getWallet(data.walletId);
+        // this.communication.listen('account-create', async (port: any, data: { walletId: string, account: Account }) => {
+        //     const wallet = this.walletManager.getWallet(data.walletId);
 
-            // Don't persist the selected value.
-            delete data.account.selected;
-            await this.walletManager.addAccount(data.account, wallet);
+        //     // Don't persist the selected value.
+        //     delete data.account.selected;
+        //     await this.walletManager.addAccount(data.account, wallet);
 
-            this.refreshState();
+        //     this.refreshState();
 
-            this.communication.sendToAll('account-created');
+        //     this.communication.sendToAll('account-created');
 
-            // TODO: REFACTOR WHEN TIME COMES!
-            // this.manager.communication.sendToAll('identity-created');
-        });
+        //     // TODO: REFACTOR WHEN TIME COMES!
+        //     // this.manager.communication.sendToAll('identity-created');
+        // });
 
         // TODO: REFACTOR IDENTITY IN THE FUTURE!
         // this.manager.communication.listen('identity-update', async (port: any, data: Identity) => {

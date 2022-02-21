@@ -10,6 +10,7 @@ import { CommunicationService } from '../../services/communication.service';
 import { IconService } from '../../services/icon.service';
 import { NetworksService } from '../../services/networks.service';
 import { Network } from '../../../background/networks';
+import { WalletManager } from '../../../background/wallet-manager';
 const { v4: uuidv4 } = require('uuid');
 
 @Component({
@@ -47,6 +48,7 @@ export class AccountCreateComponent implements OnInit, OnDestroy {
         public networkService: NetworksService,
         private communication: CommunicationService,
         private manager: OrchestratorService,
+        private walletManager: WalletManager,
         private cd: ChangeDetectorRef
     ) {
         this.uiState.title = 'Create new account';
@@ -151,7 +153,7 @@ export class AccountCreateComponent implements OnInit, OnDestroy {
         this.derivationPath = this.getDerivationPath();
     }
 
-    create() {
+    async create() {
         const splittedPath = this.derivationPath.split('/');
         const splittedPathReplaced = this.derivationPath.replaceAll(`'`, ``).split('/');
 
@@ -178,7 +180,12 @@ export class AccountCreateComponent implements OnInit, OnDestroy {
             }
         };
 
-        this.manager.createAccount(this.uiState.activeWallet.id, account);
+        // Don't persist the selected value.
+        delete account.selected;
+        await this.walletManager.addAccount(account, this.uiState.activeWallet);
+
+        // this.communication.sendToAll('account-created');
+        // this.manager.createAccount(this.uiState.activeWallet.id, account);
 
         // this.step = 1;
         // this.recover = false;
