@@ -6,6 +6,8 @@ import { Router } from '@angular/router';
 import { CommunicationService } from './communication.service';
 import { BehaviorSubject, ReplaySubject, Subject } from 'rxjs';
 import { Observable } from "rxjs";
+import { Network } from 'src/background/networks';
+import { SecureStateService } from './secure-state.service';
 
 declare const VERSION: string;
 
@@ -17,6 +19,7 @@ export class UIState {
     constructor(
         private communication: CommunicationService,
         private router: Router,
+        private secure: SecureStateService,
         private ngZone: NgZone) {
         console.log('Version: ' + VERSION);
     }
@@ -119,7 +122,9 @@ export class UIState {
         return this.unlocked.findIndex(w => w === this.activeWallet?.id) > -1;
     }
 
-    unlocked!: string[];
+    get unlocked() {
+        return this.secure.unlockedWalletsSubject.value;
+    }
 
     timer: any;
 
@@ -153,14 +158,8 @@ export class UIState {
     }
 
     async wipe(): Promise<void> {
-        return new Promise((resolve, reject) => {
-            chrome.storage.local.clear(() => {
-                if (chrome.runtime.lastError) {
-                    return reject(chrome.runtime.lastError);
-                }
-                resolve();
-            });
-        });
+        await chrome.storage.local.clear();
+        await (<any>chrome.storage).session.clear();
     }
 
     // async save(): Promise<void> {
@@ -231,4 +230,84 @@ export class UIState {
     //     //     }
     //     // });
     // }
+
+    networks: Network[] = [];
+
+    // persisted: Persisted = {
+    //     settings: {
+    //         autoTimeout: AUTO_TIMEOUT,
+    //         indexer: INDEXER_URL,
+    //         dataVault: VAULT_URL,
+    //         theme: 'dark',
+    //         themeColor: 'primary',
+    //         language: 'en',
+    //         amountFormat: 'bitcoin',
+    //         developer: false
+    //     },
+    //     wallets: [] as Wallet[],
+    //     activeWalletId: null
+    // };
+
+    // store: Store = {
+    //     identities: [],
+    //     cache: {
+    //         identities: []
+    //     }
+    // };
+
+    // ui: any;
+
+    background: any;
+
+    // initialized = false;
+
+    // loading = true;
+
+    // passwords = new Map<string, string>();
+
+    // /** Returns list of wallet IDs that is currently unlocked. */
+    // get unlocked(): string[] {
+    //     return Array.from(this.passwords.keys());
+    // };
+
+    // action!: Action;
+
+    async save(): Promise<void> {
+        return chrome.storage.local.set({ 'data': this.persisted });
+    }
+
+    /** Loads all the persisted state into the extension. This might become bloated on large wallets. */
+    async load() {
+        const { data, ui, action, store } = await chrome.storage.local.get(['data', 'ui', 'action', 'store']);
+
+        debugger;
+
+        // Only set if data is available, will use default if not.
+        if (data) {
+            this.persisted = data;
+        }
+
+        console.log('DATA', data);
+        console.log('PERSISTED', this.persisted);
+
+        if (store) {
+            this.store = store;
+        }
+
+        // this.ui = ui ?? {};
+
+        if (action) {
+            this.action = action;
+        }
+
+        this.initialized = true;
+    }
+
+    async saveAction(): Promise<void> {
+        return chrome.storage.local.set({ 'action': this.action });
+    }
+
+    async saveStore(store: Store): Promise<void> {
+        return chrome.storage.local.set({ 'store': store });
+    }
 }

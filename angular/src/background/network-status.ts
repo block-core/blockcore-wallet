@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
+import { UIState } from 'src/app/services/ui-state.service';
 import { Account, IndexerApiStatus, NetworkStatus } from '../app/interfaces';
 import { EnvironmentService } from '../app/services/environment.service';
 import { AppManager } from './application-manager';
-import { AppState } from './application-state';
 import { NetworkLoader } from './network-loader';
 import { Network } from './networks';
 import { OrchestratorBackgroundService } from './orchestrator';
@@ -20,7 +20,7 @@ export class NetworkStatusManager {
         private networkLoader: NetworkLoader,
         private env: EnvironmentService,
         // private orchestrator: OrchestratorBackgroundService,
-        private state: AppState) {
+        private state: UIState) {
 
         this.state.networks = this.networkLoader.getNetworks(env.networks);
 

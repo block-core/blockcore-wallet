@@ -1,129 +1,134 @@
-import { Injectable } from "@angular/core";
-import { Action, Persisted, Store, Settings, Wallet } from "../app/interfaces";
-import { AUTO_TIMEOUT, INDEXER_URL, MINUTE, VAULT_URL } from "../app/shared/constants";
-import { Network } from "./networks";
+// import { Injectable } from "@angular/core";
+// import { Action, Persisted, Store, Settings, Wallet } from "../app/interfaces";
+// import { AUTO_TIMEOUT, INDEXER_URL, MINUTE, VAULT_URL } from "../app/shared/constants";
+// import { Network } from "./networks";
 
-@Injectable({
-    providedIn: 'root'
-})
-export class AppState {
+// @Injectable({
+//     providedIn: 'root'
+// })
+// export class AppState {
 
-    networks: Network[] = [];
+//     networks: Network[] = [];
 
-    persisted: Persisted = {
-        settings: {
-            autoTimeout: AUTO_TIMEOUT,
-            indexer: INDEXER_URL,
-            dataVault: VAULT_URL,
-            theme: 'dark',
-            themeColor: 'primary',
-            language: 'en',
-            amountFormat: 'bitcoin',
-            developer: false
-        },
-        wallets: [] as Wallet[],
-        activeWalletId: null
-    };
+//     persisted: Persisted = {
+//         settings: {
+//             autoTimeout: AUTO_TIMEOUT,
+//             indexer: INDEXER_URL,
+//             dataVault: VAULT_URL,
+//             theme: 'dark',
+//             themeColor: 'primary',
+//             language: 'en',
+//             amountFormat: 'bitcoin',
+//             developer: false
+//         },
+//         wallets: [] as Wallet[],
+//         activeWalletId: null
+//     };
 
-    store: Store = {
-        identities: [],
-        cache: {
-            identities: []
-        }
-    };
+//     store: Store = {
+//         identities: [],
+//         cache: {
+//             identities: []
+//         }
+//     };
 
-    ui: any;
+//     ui: any;
 
-    background: any;
+//     background: any;
 
-    initialized = false;
+//     initialized = false;
 
-    loading = true;
+//     loading = true;
 
-    // passwords = new Map<string, string>();
+//     // passwords = new Map<string, string>();
 
-    // /** Returns list of wallet IDs that is currently unlocked. */
-    // get unlocked(): string[] {
-    //     return Array.from(this.passwords.keys());
-    // };
+//     // /** Returns list of wallet IDs that is currently unlocked. */
+//     // get unlocked(): string[] {
+//     //     return Array.from(this.passwords.keys());
+//     // };
 
-    action!: Action;
+//     action!: Action;
 
-    // get hasWallets(): boolean {
-    //     return this.persisted.wallets.length > 0;
-    // }
+//     // get hasWallets(): boolean {
+//     //     return this.persisted.wallets.length > 0;
+//     // }
 
-    // get activeWallet() {
-    //     if (this.persisted.activeWalletId) {
-    //         return this.persisted.wallets.find(w => w.id == this.persisted.activeWalletId);
-    //         // return this.persisted.wallets.get(this.persisted.activeWalletId);
-    //         // return this.persisted.wallets[this.persisted.activeWalletIndex];
-    //     } else {
-    //         return undefined;
-    //     }
-    // }
+//     // get activeWallet() {
+//     //     if (this.persisted.activeWalletId) {
+//     //         return this.persisted.wallets.find(w => w.id == this.persisted.activeWalletId);
+//     //         // return this.persisted.wallets.get(this.persisted.activeWalletId);
+//     //         // return this.persisted.wallets[this.persisted.activeWalletIndex];
+//     //     } else {
+//     //         return undefined;
+//     //     }
+//     // }
 
-    // get hasAccounts(): boolean {
-    //     if (!this.activeWallet) {
-    //         return false;
-    //     }
+//     // get hasAccounts(): boolean {
+//     //     if (!this.activeWallet) {
+//     //         return false;
+//     //     }
 
-    //     return this.activeWallet.accounts?.length > 0;
-    // }
+//     //     return this.activeWallet.accounts?.length > 0;
+//     // }
 
-    // get activeAccount() {
-    //     if (!this.activeWallet) {
-    //         return null;
-    //     }
+//     // get activeAccount() {
+//     //     if (!this.activeWallet) {
+//     //         return null;
+//     //     }
 
-    //     const activeWallet = this.activeWallet;
+//     //     const activeWallet = this.activeWallet;
 
-    //     if (!activeWallet.accounts) {
-    //         return null;
-    //     }
+//     //     if (!activeWallet.accounts) {
+//     //         return null;
+//     //     }
 
-    //     if (activeWallet.activeAccountIndex == null || activeWallet.activeAccountIndex == -1) {
-    //         activeWallet.activeAccountIndex = 0;
-    //     }
-    //     // If the active index is higher than available accounts, reset to zero.
-    //     else if (activeWallet.activeAccountIndex >= activeWallet.accounts.length) {
-    //         activeWallet.activeAccountIndex = 0;
-    //     }
+//     //     if (activeWallet.activeAccountIndex == null || activeWallet.activeAccountIndex == -1) {
+//     //         activeWallet.activeAccountIndex = 0;
+//     //     }
+//     //     // If the active index is higher than available accounts, reset to zero.
+//     //     else if (activeWallet.activeAccountIndex >= activeWallet.accounts.length) {
+//     //         activeWallet.activeAccountIndex = 0;
+//     //     }
 
-    //     return this.activeWallet.accounts[activeWallet.activeAccountIndex];
-    // }
+//     //     return this.activeWallet.accounts[activeWallet.activeAccountIndex];
+//     // }
 
-    async save(): Promise<void> {
-        return chrome.storage.local.set({ 'data': this.persisted });
-    }
+//     async save(): Promise<void> {
+//         return chrome.storage.local.set({ 'data': this.persisted });
+//     }
 
-    /** Loads all the persisted state into the extension. This might become bloated on large wallets. */
-    async load() {
-        const { data, ui, action, store } = await chrome.storage.local.get(['data', 'ui', 'action', 'store']);
+//     /** Loads all the persisted state into the extension. This might become bloated on large wallets. */
+//     async load() {
+//         const { data, ui, action, store } = await chrome.storage.local.get(['data', 'ui', 'action', 'store']);
 
-        // Only set if data is available, will use default if not.
-        if (data) {
-            this.persisted = data;
-        }
+//         debugger;
 
-        if (store) {
-            this.store = store;
-        }
+//         // Only set if data is available, will use default if not.
+//         if (data) {
+//             this.persisted = data;
+//         }
 
-        this.ui = ui ?? {};
+//         console.log('DATA', data);
+//         console.log('PERSISTED', this.persisted);
 
-        if (action) {
-            this.action = action;
-        }
+//         if (store) {
+//             this.store = store;
+//         }
 
-        this.initialized = true;
-    }
+//         this.ui = ui ?? {};
 
-    async saveAction(): Promise<void> {
-        return chrome.storage.local.set({ 'action': this.action });
-    }
+//         if (action) {
+//             this.action = action;
+//         }
 
-    async saveStore(store: Store): Promise<void> {
-        return chrome.storage.local.set({ 'store': store });
-    }
-}
+//         this.initialized = true;
+//     }
+
+//     async saveAction(): Promise<void> {
+//         return chrome.storage.local.set({ 'action': this.action });
+//     }
+
+//     async saveStore(store: Store): Promise<void> {
+//         return chrome.storage.local.set({ 'store': store });
+//     }
+// }

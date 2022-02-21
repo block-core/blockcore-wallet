@@ -9,10 +9,10 @@ import ECPairFactory from 'ecpair';
 import { Injectable } from "@angular/core";
 import { NetworkStatusManager } from "./network-status";
 import { LoggerService } from "../app/services/logger.service";
-import { AppState } from "./application-state";
 import { CryptoUtility } from "./crypto-utility";
 import axiosRetry from 'axios-retry';
-import { SecureStateService } from "src/app/services/secure-state.service";
+import { SecureStateService } from "../app/services/secure-state.service";
+import { UIState } from "../app/services/ui-state.service";
 
 const ECPair = ECPairFactory(ecc);
 var bitcoinMessage = require('bitcoinjs-message');
@@ -28,13 +28,11 @@ export class WalletManager {
 
     constructor(
         public status: NetworkStatusManager,
-        private state: AppState,
+        private state: UIState,
         private crypto: CryptoUtility,
         private secure: SecureStateService,
         private logger: LoggerService) {
 
-        // This should be done outside of the service.
-        this.resetTimer();
     }
 
     get hasUnlockedWallets() {
@@ -216,17 +214,6 @@ export class WalletManager {
         return this.state.persisted.wallets;
     }
 
-    lockWallets() {
-        this.walletSecrets.clear();
-
-        // Do we need to save the state and refresh? VERIFY!
-        // await this.state.save();
-        // this.refreshState();
-
-        // TODO: FIX!!!
-        // this.communication.sendToAll('wallet-locked');
-    }
-
     lockWallet(id: string) {
         this.walletSecrets.delete(id);
 
@@ -278,7 +265,7 @@ export class WalletManager {
 
     /** Returns list of wallet IDs that is currently unlocked. */
     get unlocked(): string[] {
-        return Array.from(this.walletSecrets.keys());
+        return this.secure.unlockedWalletsSubject.value;
     };
 
     async unlockWallet(walletId: string, password: string) {
@@ -346,25 +333,13 @@ export class WalletManager {
         }
     }
 
-    resetTimer() {
+    async resetTimer() {
         this.logger.info('resetTimer:', this.state.persisted.settings.autoTimeout * MINUTE);
 
-        if (this.timer) {
-            clearTimeout(this.timer);
-        }
+        await globalThis.chrome.storage.local.set({ 'timeout': this.state.persisted.settings.autoTimeout * MINUTE });
 
-        // We will only set timer if the wallet is actually unlocked.
-        if (this.walletSecrets.size > 0) {
-            this.logger.info('Setting timer to automatically unlock.');
-            this.timer = setTimeout(
-                () => {
-                    this.lockWallets();
-                },
-                this.state.persisted.settings.autoTimeout * MINUTE
-            );
-        } else {
-            this.logger.info('Timer not set since wallet is not unlocked.');
-        }
+        // Set the active date from startup.
+        await globalThis.chrome.storage.local.set({ 'active': new Date().toJSON() });
     }
 
     get hasWallets(): boolean {
@@ -573,6 +548,8 @@ export class WalletManager {
 
     async addWallet(wallet: Wallet) {
         this.state.persisted.wallets.push(wallet);
+
+        this.setActiveWallet(wallet.id);
 
         // Persist the newly created wallet.
         await this.state.save();

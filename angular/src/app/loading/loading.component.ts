@@ -84,7 +84,7 @@ export class LoadingComponent implements OnInit, OnDestroy {
     console.log('ACTION:', this.uiState.action);
 
     // If an action has been triggered, we'll always show action until user closes the action.
-    if (this.uiState.action?.action && this.uiState.activeWallet && this.uiState.unlocked.indexOf(this.uiState.activeWallet.id) > -1) {
+    if (this.uiState.action?.action && this.uiState.activeWallet && this.secure.unlocked(this.uiState.activeWallet.id)) {
       // TODO: Add support for more actions.
       this.router.navigate(['action', this.uiState.action?.action]);
     } else {
@@ -92,8 +92,6 @@ export class LoadingComponent implements OnInit, OnDestroy {
       if (!this.uiState.hasWallets) {
         this.router.navigateByUrl('/wallet/create');
       } else {
-
-
         // if (this.walletManager.hasUnlockedWallets) {
         //   this.router.navigateByUrl('/dashboard');
         // } else {
@@ -101,7 +99,7 @@ export class LoadingComponent implements OnInit, OnDestroy {
         // }
 
         // If the active wallet is unlocked, we'll redirect accordingly.
-        if (this.uiState.activeWallet && this.uiState.unlocked.indexOf(this.uiState.activeWallet.id) > -1) {
+        if (this.uiState.activeWallet && this.secure.unlocked(this.uiState.activeWallet.id)) {
 
           // If user has zero accounts, we'll show the account select screen that will auto-create accounts the user chooses.
           if (this.uiState.hasAccounts) {

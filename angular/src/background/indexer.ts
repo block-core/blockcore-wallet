@@ -5,8 +5,8 @@ import axiosRetry from 'axios-retry';
 import { Injectable } from '@angular/core';
 import { NetworkStatusManager } from './network-status';
 import { LoggerService } from '../app/services/logger.service';
-import { AppState } from './application-state';
 import { WalletManager } from './wallet-manager';
+import { UIState } from 'src/app/services/ui-state.service';
 
 //const axios = require('axios');
 // In order to gain the TypeScript typings (for intellisense / autocomplete) while using CommonJS imports with require() use the following approach:
@@ -55,7 +55,7 @@ export class IndexerService {
 
     constructor(
         private status: NetworkStatusManager,
-        private state: AppState,
+        private state: UIState,
         private logger: LoggerService,
         private walletManager: WalletManager
     ) {

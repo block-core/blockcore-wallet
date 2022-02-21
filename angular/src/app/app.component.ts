@@ -10,6 +10,7 @@ import { NetworksService } from './services/networks.service';
 import { TranslateService } from '@ngx-translate/core';
 import { EnvironmentService } from './services/environment.service';
 import { AppManager } from 'src/background/application-manager';
+import { SecureStateService } from './services/secure-state.service';
 
 @Component({
   selector: 'app-root',
@@ -34,6 +35,7 @@ export class AppComponent implements OnInit {
     private location: Location,
     private cd: ChangeDetectorRef,
     private route: ActivatedRoute,
+    private secure: SecureStateService,
     private env: EnvironmentService,
     public networkService: NetworksService,
     @Inject(DOCUMENT) private document: Document) {
@@ -189,15 +191,13 @@ export class AppComponent implements OnInit {
       // We also must update the local state immediately because we are not waiting for callback before redirect.
       this.uiState.persisted.activeWalletId = walletId;
 
-      if (this.uiState.unlocked.findIndex(id => id == walletId) > -1) {
+      if (this.secure.unlocked(walletId)) {
         this.router.navigateByUrl('/dashboard');
         //this.router.navigateByUrl('/account/view/' + this.uiState.activeWallet?.activeAccountIndex);
-      }
-      else {
+      } else {
         // Make sure we route to home to unlock the newly selected wallet.
         this.router.navigateByUrl('/home');
       }
-
     }
   }
 }

@@ -10,6 +10,7 @@ import {
 } from '@angular/material/snack-bar';
 import { stringify } from 'querystring';
 import { NetworkStatusService } from './network-status.service';
+import { SecureStateService } from './secure-state.service';
 
 @Injectable({
     providedIn: 'root'
@@ -20,7 +21,8 @@ export class OrchestratorService {
         private uiState: UIState,
         private router: Router,
         private networkStatus: NetworkStatusService,
-        private snackBar: MatSnackBar
+        private snackBar: MatSnackBar,
+        private secure: SecureStateService
     ) {
 
     }
@@ -51,7 +53,6 @@ export class OrchestratorService {
             this.uiState.action = state.action;
             this.uiState.persisted = state.persisted;
             this.uiState.store = state.store;
-            this.uiState.unlocked = state.unlocked;
 
             this.uiState.persisted$.next(this.uiState.persisted);
             this.uiState.activeWalletSubject.next(this.uiState.activeWallet);
@@ -87,7 +88,7 @@ export class OrchestratorService {
             console.log('ACTION:', this.uiState.action);
 
             // If an action has been triggered, we'll always show action until user closes the action.
-            if (this.uiState.action?.action && this.uiState.activeWallet && this.uiState.unlocked.indexOf(this.uiState.activeWallet.id) > -1) {
+            if (this.uiState.action?.action && this.uiState.activeWallet && this.secure.unlocked(this.uiState.activeWallet.id)) {
                 // TODO: Add support for more actions.
                 this.router.navigate(['action', this.uiState.action?.action]);
             } else {
@@ -96,7 +97,7 @@ export class OrchestratorService {
                     this.router.navigateByUrl('/wallet/create');
                 } else {
                     // If the active wallet is unlocked, we'll redirect accordingly.
-                    if (this.uiState.activeWallet && this.uiState.unlocked.indexOf(this.uiState.activeWallet.id) > -1) {
+                    if (this.uiState.activeWallet && this.secure.unlocked(this.uiState.activeWallet.id)) {
 
                         // If user has zero accounts, we'll show the account select screen that will auto-create accounts the user chooses.
                         if (this.uiState.hasAccounts) {
@@ -125,7 +126,6 @@ export class OrchestratorService {
             this.uiState.action = state.action;
             this.uiState.persisted = state.persisted;
             this.uiState.store = state.store;
-            this.uiState.unlocked = state.unlocked;
 
             this.uiState.persisted$.next(this.uiState.persisted);
             this.uiState.activeWalletSubject.next(this.uiState.activeWallet);

@@ -2,9 +2,9 @@ import { Injectable } from "@angular/core";
 import { timeStamp } from "console";
 import { networkInterfaces } from "os";
 import { SecureStateService } from "src/app/services/secure-state.service";
+import { UIState } from "src/app/services/ui-state.service";
 import { Action, NetworkStatus, Settings, State } from "../app/interfaces";
 import { INDEXER_URL, MINUTE } from "../app/shared/constants";
-import { AppState } from "./application-state";
 import { CommunicationBackgroundService } from "./communication";
 import { CryptoUtility } from "./crypto-utility";
 import { DataSyncService } from "./data-sync";
@@ -24,7 +24,7 @@ export class AppManager {
     constructor(
         public sync: DataSyncService,
         public logger: BackgroundLoggerService,
-        public state: AppState,
+        public state: UIState,
         public status: NetworkStatusManager,
         public walletManager: WalletManager,
         public communication: CommunicationBackgroundService,
@@ -42,17 +42,16 @@ export class AppManager {
         // chrome.storage.local.set({ 'data': null }, () => {
         // });
 
-        // Set the active date from startup.
-        await globalThis.chrome.storage.local.set({ 'active': new Date().toJSON() });
 
-        // TODO: This will be set by settings and loaded in the code below instead. Temporary fix to have a value on timeout.
-        await globalThis.chrome.storage.local.set({ 'timeout': 1 });
 
         // First load the existing state.
         await this.state.load();
 
         // Load the secure state.
         await this.secure.load();
+
+        // Reset the timer
+        this.walletManager.resetTimer();
 
         this.scheduledIndexer();
     };

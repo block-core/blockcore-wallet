@@ -51,6 +51,10 @@ export class SecureStateService {
         return this.keys.get(key);
     }
 
+    unlocked(key: string) {
+        return this.keys.get(key) != null;
+    }
+
     async load() {
         if (globalThis.chrome && globalThis.chrome.storage) {
             const storage = globalThis.chrome.storage as any;

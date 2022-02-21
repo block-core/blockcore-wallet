@@ -1,6 +1,5 @@
 import { Account, State, Wallet, Action, DIDPayload, Settings, Identity, Vault, NetworkStatus } from '../app/interfaces';
 import { MINUTE, NETWORK_IDENTITY } from '../app/shared/constants';
-import { AppState } from './application-state';
 import { CommunicationBackgroundService } from './communication';
 import { CryptoUtility } from './crypto-utility';
 import * as bip39 from 'bip39';
@@ -20,6 +19,7 @@ import { Injectable } from '@angular/core';
 import { WalletManager } from './wallet-manager';
 import { NetworkStatusManager } from './network-status';
 import { IndexerService } from './indexer';
+import { UIState } from 'src/app/services/ui-state.service';
 
 @Injectable({
     providedIn: 'root'
@@ -28,7 +28,7 @@ import { IndexerService } from './indexer';
 export class OrchestratorBackgroundService {
     constructor(
         private walletManager: WalletManager,
-        private state: AppState,
+        private state: UIState,
         private indexer: IndexerService,
         private status: NetworkStatusManager,
         private communication: CommunicationBackgroundService

@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { OrchestratorService } from '../services/orchestrator.service';
 import { CommunicationService } from '../services/communication.service';
 import { NetworkStatusService } from '../services/network-status.service';
+import { SecureStateService } from '../services/secure-state.service';
 
 @Component({
   selector: 'app-home',
@@ -28,6 +29,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     private router: Router,
     private communication: CommunicationService,
     private manager: OrchestratorService,
+    private secure: SecureStateService,
     private cd: ChangeDetectorRef) {
 
     // this.uiState.title = 'Unlock wallet';
@@ -70,7 +72,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     if (this.uiState.activeWallet) {
       this.uiState.title = `Unlock ${this.uiState.activeWallet.name}`;
 
-      if (this.uiState.unlocked.findIndex(id => id == this.uiState.activeWallet?.id) > -1) {
+      if (this.secure.unlocked(this.uiState.activeWallet?.id)) {
         this.router.navigateByUrl('/dashboard');
         // this.router.navigateByUrl('/account/view/' + this.uiState.activeWallet?.activeAccountIndex);
       }
