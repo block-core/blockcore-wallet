@@ -23,8 +23,7 @@ export class RecoveryComponent implements OnDestroy {
         public uiState: UIState,
         private walletManager: WalletManager,
         private snackBar: MatSnackBar,
-        public location: Location,
-        private communication: CommunicationService) {
+        public location: Location) {
         this.uiState.title = 'Recovery Phrase';
         this.uiState.showBackButton = true;
         this.uiState.goBackHome = false;
@@ -40,9 +39,6 @@ export class RecoveryComponent implements OnDestroy {
 
         if (recoveryPhrase) {
             this.mnemonic = recoveryPhrase;
-
-            // Make sure we inform all instances when a wallet is unlocked.
-            this.communication.sendToAll('wallet-exported-recovery-phrase', recoveryPhrase);
         } else {
             // TODO: MAKE ERROR HANDLING SERVICE!
             this.snackBar.open('Invalid password', 'Hide', {
