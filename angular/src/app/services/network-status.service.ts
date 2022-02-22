@@ -44,7 +44,7 @@ export class NetworkStatusService {
             if (existingState) {
                 this.networks.set(n.id, existingState);
             } else {
-                this.networks.set(n.id, <NetworkStatus>{ networkType: n.id });
+                this.networks.set(n.id, <NetworkStatus>{ networkType: n.id, availability: IndexerApiStatus.Unknown });
             }
         });
 

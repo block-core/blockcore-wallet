@@ -35,7 +35,7 @@ export class UIState {
     networks: Network[] = [];
 
     persisted: Persisted = {
-        
+
         wallets: [] as Wallet[],
         activeWalletId: null
     };
@@ -147,13 +147,15 @@ export class UIState {
 
     port!: chrome.runtime.Port | null;
 
-    active() {
+    async active() {
         console.log('active:');
-        this.resetTimer();
+        await this.resetTimer();
     }
 
-    resetTimer() {
-        this.communication.send('timer-reset');
+    async resetTimer() {
+        // this.communication.send('timer-reset');
+
+        await globalThis.chrome.storage.local.set({ 'active': new Date().toJSON() });
 
         // console.log('resetTimer:', this.persisted.autoTimeout * MINUTE);
         // if (this.timer) {

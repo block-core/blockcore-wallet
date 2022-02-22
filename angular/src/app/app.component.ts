@@ -12,6 +12,7 @@ import { EnvironmentService } from './services/environment.service';
 import { AppManager } from 'src/background/application-manager';
 import { SecureStateService } from './services/secure-state.service';
 import { WalletManager } from '../background/wallet-manager';
+import { SettingsService } from './services/settings.service';
 
 @Component({
   selector: 'app-root',
@@ -38,6 +39,7 @@ export class AppComponent implements OnInit {
     private route: ActivatedRoute,
     private walletManager: WalletManager,
     private secure: SecureStateService,
+    private settings: SettingsService,
     private env: EnvironmentService,
     public networkService: NetworksService,
     @Inject(DOCUMENT) private document: Document) {
@@ -86,6 +88,25 @@ export class AppComponent implements OnInit {
 
 
 
+    this.router.events.subscribe((val) => {
+      if (val instanceof NavigationEnd) {
+        // this.uiState.showBackButton = false;
+        // this.uiState.title = '';
+        this.uiState.active();
+      }
+    });
+
+    this.uiState.persisted$.subscribe(() => {
+      if (this.settings.values.theme === 'light') {
+        this.renderer.removeClass(document.body, 'dark-theme');
+      } else {
+        this.renderer.addClass(document.body, 'dark-theme');
+      }
+
+      if (this.settings.values.language) {
+        this.translate.use(this.settings.values.language);
+      }
+    });
 
 
 

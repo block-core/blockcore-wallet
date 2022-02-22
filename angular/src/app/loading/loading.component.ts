@@ -67,21 +67,22 @@ export class LoadingComponent implements OnInit, OnDestroy {
       this.problems = true;
     }, 5000);
 
-    await this.appManager.initialize();
-
-    await this.status.initialize();
-
-    // await this.manager.initialize();
-
-    console.log('INITILIZED DONE...');
-
-    this.translate.addLangs(['en', 'no', 'fr']);
-    this.translate.setDefaultLang('en');
-
-    const browserLang = this.translate.getBrowserLang();
-    this.translate.use(browserLang.match(/en|no/) ? browserLang : 'en');
-
     document.title = this.env.instanceName;
+
+    if (!this.uiState.initialized) {
+      await this.appManager.initialize();
+      await this.status.initialize();
+
+      this.translate.addLangs(['en', 'no', 'fr']);
+      this.translate.setDefaultLang('en');
+
+      const browserLang = this.translate.getBrowserLang();
+      this.translate.use(browserLang.match(/en|no/) ? browserLang : 'en');
+
+      // this.uiState.persisted$.next(this.uiState.persisted);
+      // this.uiState.activeWalletSubject.next(this.uiState.activeWallet);
+      // this.uiState.activeAccountSubject.next(this.uiState.activeAccount);
+    }
 
     const queryParam = globalThis.location.search;
     console.log('queryParam:', queryParam);
@@ -99,40 +100,9 @@ export class LoadingComponent implements OnInit, OnDestroy {
       }
     }
 
-    this.router.events.subscribe((val) => {
-      if (val instanceof NavigationEnd) {
-        // this.uiState.showBackButton = false;
-        // this.uiState.title = '';
-        this.uiState.active();
-      }
-    });
-
-    this.uiState.persisted$.subscribe(() => {
-      if (this.settings.values.theme === 'light') {
-        this.renderer.removeClass(document.body, 'dark-theme');
-      } else {
-        this.renderer.addClass(document.body, 'dark-theme');
-      }
-
-      if (this.settings.values.language) {
-        this.translate.use(this.settings.values.language);
-      }
-
-      // if (this.uiState.persisted?.settings.theme === 'light') {
-      //   this.renderer.setAttribute(document.body, 'color', 'warn');
-      // } else {
-      //   this.renderer.addClass(document.body, 'dark-theme');
-      // }
-
-    });
-
     // this.uiState.action = state.action;
     // this.uiState.persisted = state.persisted;
     // this.uiState.store = state.store;
-
-    this.uiState.persisted$.next(this.uiState.persisted);
-    this.uiState.activeWalletSubject.next(this.uiState.activeWallet);
-    this.uiState.activeAccountSubject.next(this.uiState.activeAccount);
 
     // If there is any params, it means there might be an action triggered by protocol handlers. Parse the params and set action.
     if (this.uiState.params) {

@@ -14,6 +14,8 @@ export class NetworkStatusComponent {
 
     get class(): string {
         if (this.status) {
+            debugger;
+            console.log(this.status.availability);
             const apiStatus = IndexerApiStatus[this.status.availability].toLowerCase();
             return `network-status-${apiStatus}`;
 
