@@ -6,6 +6,7 @@ import { UIState } from '../../services/ui-state.service';
 import { OrchestratorService } from '../../services/orchestrator.service';
 import { CommunicationService } from '../../services/communication.service';
 import { IconService } from '../../services/icon.service';
+import { WalletManager } from '../../../background/wallet-manager';
 
 @Component({
   selector: 'app-account-edit',
@@ -15,7 +16,6 @@ import { IconService } from '../../services/icon.service';
 export class AccountEditComponent implements OnInit, OnDestroy {
 
   accountName: string | undefined;
-  sub: any;
   sub2: any;
   icon: string | undefined;
 
@@ -26,6 +26,7 @@ export class AccountEditComponent implements OnInit, OnDestroy {
     public icons: IconService,
     private manager: OrchestratorService,
     private communication: CommunicationService,
+    private walletManager: WalletManager,
     private activatedRoute: ActivatedRoute,
   ) {
     this.uiState.title = 'Edit Account'
@@ -53,9 +54,7 @@ export class AccountEditComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.sub = this.communication.listen('account-updated', () => {
-      this.location.back();
-    });
+
   }
 
   changeIcon(icon: string) {
@@ -65,10 +64,6 @@ export class AccountEditComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this.sub) {
-      this.communication.unlisten(this.sub);
-    }
-
     if (this.sub2) {
       this.sub2.unsubscribe();
     }
@@ -82,7 +77,21 @@ export class AccountEditComponent implements OnInit, OnDestroy {
 
     // We won't allow empty names for accounts.
     if (this.accountName) {
-      this.manager.updateAccount(this.uiState.activeWallet.id, this.uiState.activeWallet.activeAccountId, { name: this.accountName, icon: this.icon });
+      const wallet = this.uiState.activeWallet;
+      const accountId = this.uiState.activeWallet.activeAccountId;
+
+      if (!wallet) {
+        return;
+      }
+
+      const accountIndex = wallet.accounts.findIndex(a => a.identifier == accountId);
+      const account = wallet.accounts[accountIndex];
+      account.name = this.accountName;
+      account.icon = this.icon;
+
+      await this.uiState.save();
+
+      this.location.back();
     }
   }
 

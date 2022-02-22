@@ -252,10 +252,6 @@ export class OrchestratorService {
         this.communication.send('identity-publish', identity);
     }
 
-    updateAccount(walletId: string, accountId: string, fields: { name: string, icon?: string }) {
-        this.communication.send('account-update', { walletId, accountId, fields });
-    }
-
     setWalletName(walletId: string, name: string) {
         this.communication.send('set-wallet-name', { walletId, name });
     }

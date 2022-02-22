@@ -82,7 +82,21 @@ export class VaultEditComponent implements OnInit, OnDestroy {
 
     // We won't allow empty names for accounts.
     if (this.accountName) {
-      this.manager.updateAccount(this.uiState.activeWallet.id, this.uiState.activeWallet.activeAccountId, { name: this.accountName, icon: this.icon });
+      const wallet = this.uiState.activeWallet;
+      const accountId = this.uiState.activeWallet.activeAccountId;
+
+      if (!wallet) {
+        return;
+      }
+
+      const accountIndex = wallet.accounts.findIndex(a => a.identifier == accountId);
+      const account = wallet.accounts[accountIndex];
+      account.name = this.accountName;
+      account.icon = this.icon;
+
+      await this.uiState.save();
+
+      this.location.back();
     }
   }
 
