@@ -1,25 +1,31 @@
 import { Injectable } from "@angular/core";
 import { __values } from "tslib";
+import { Settings } from "../interfaces";
+import { AUTO_TIMEOUT, INDEXER_URL, VAULT_URL } from "../shared/constants";
 
-export class SettingsData {
-    public theme: string;
-    public autoTimeout: number;
-}
+// export class SettingsData {
+//     public theme: string;
+//     public autoTimeout: number;
+// }
 
 @Injectable({
     providedIn: 'root'
 })
 /** Used to access and manage settings. This service will fall back to localStorage when running outside of extension ("chrome") context. */
 export class SettingsService {
-    private _values: SettingsData;
+    private _values: Settings;
 
     constructor(
     ) {
 
     }
 
-    get values(): SettingsData {
+    get values(): Settings {
         return this._values;
+    }
+
+    replace(settings: Settings) {
+        this._values = settings;
     }
 
     async load() {
@@ -31,13 +37,13 @@ export class SettingsService {
         }
 
         if (this._values == null) {
-            this._values = new SettingsData();
+            this._values = this.defaultSettings();
         }
     }
 
     async save(): Promise<void> {
         if (this._values == null) {
-            this._values = new SettingsData();
+            this._values = this.defaultSettings();
         }
 
         if (globalThis.chrome && globalThis.chrome.storage) {
@@ -45,5 +51,18 @@ export class SettingsService {
         } else {
             globalThis.localStorage.setItem('settings', JSON.stringify(this._values));
         }
+    }
+
+    private defaultSettings() {
+        return {
+            autoTimeout: AUTO_TIMEOUT,
+            indexer: INDEXER_URL,
+            dataVault: VAULT_URL,
+            theme: 'dark',
+            themeColor: 'primary',
+            language: 'en',
+            amountFormat: 'bitcoin',
+            developer: false
+        };
     }
 }

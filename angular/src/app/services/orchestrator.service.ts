@@ -244,10 +244,6 @@ export class OrchestratorService {
         this.communication.send('get-vault-configuration', { domain });
     }
 
-    setSettings(settings: Settings) {
-        this.communication.send('set-settings', settings);
-    }
-
     updateIdentity(identity: Identity) {
         this.communication.send('identity-update', identity);
     }

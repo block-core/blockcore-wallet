@@ -233,7 +233,7 @@ interface Persisted {
     wallets: Wallet[]
     activeWalletId: string | undefined | null
     // autoTimeout: number
-    settings: Settings
+    // settings: Settings
     // wallets: Wallet[],
     // activeWalletIndex: number;
     // activeAccountIndex: number

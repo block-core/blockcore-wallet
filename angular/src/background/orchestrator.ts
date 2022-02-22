@@ -458,12 +458,6 @@ export class OrchestratorBackgroundService {
             }
         });
 
-
-        this.communication.listen('set-settings', async (port: any, data: Settings) => {
-            // TODO: FIX!!!
-            // await this.manager.setSettings(data);
-        });
-
         // TODO: REFACTOR!
         // this.manager.communication.listen('get-vault-configuration', async (port: any, data: { domain: string }) => {
         //     // Generates the .well-known configuration for Blockcore Vault.

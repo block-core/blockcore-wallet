@@ -35,16 +35,7 @@ export class UIState {
     networks: Network[] = [];
 
     persisted: Persisted = {
-        settings: {
-            autoTimeout: AUTO_TIMEOUT,
-            indexer: INDEXER_URL,
-            dataVault: VAULT_URL,
-            theme: 'dark',
-            themeColor: 'primary',
-            language: 'en',
-            amountFormat: 'bitcoin',
-            developer: false
-        },
+        
         wallets: [] as Wallet[],
         activeWalletId: null
     };

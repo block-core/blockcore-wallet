@@ -8,6 +8,8 @@ import { INDEXER_URL } from '../shared/constants';
 import { TranslateService } from '@ngx-translate/core';
 import { FeatureService } from '../services/features.service';
 import { EnvironmentService } from '../services/environment.service';
+import { AppManager } from '../../background/application-manager';
+import { SettingsService } from '../services/settings.service';
 
 @Component({
   selector: 'app-settings',
@@ -26,6 +28,8 @@ export class SettingsComponent {
     public env: EnvironmentService,
     private renderer: Renderer2,
     private manager: OrchestratorService,
+    private appManager: AppManager,
+    private settingsService: SettingsService,
     private location: Location) {
 
     // Reset to default if missing.
@@ -34,14 +38,14 @@ export class SettingsComponent {
     }
 
     // Clone the settings on load:
-    this.settings = JSON.parse(JSON.stringify(this.uiState.persisted.settings));
+    this.settings = JSON.parse(JSON.stringify(settingsService.values));
     this.uiState.title = 'Settings';
     this.uiState.showBackButton = true;
   }
 
   async save() {
-    // this.manager.setLockTimer(this.autoTimeout);
-    this.manager.setSettings(this.settings);
+    this.settingsService.replace(this.settings);
+
     this.location.back();
   }
 

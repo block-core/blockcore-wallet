@@ -8,6 +8,7 @@ import { CommunicationService } from '../../../services/communication.service';
 import { Identity } from 'src/app/interfaces';
 import { copyToClipboard } from 'src/app/shared/utilities';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { SettingsService } from '../../../services/settings.service';
 
 @Component({
   selector: 'app-vault-identity',
@@ -40,7 +41,7 @@ export class VaultIdentityComponent implements OnInit, OnDestroy {
       return '';
     }
 
-    return this.uiState.persisted.settings.dataVault + '/identity/' + this.identity.id;
+    return this.settings.values.dataVault + '/identity/' + this.identity.id;
   }
 
   constructor(
@@ -49,6 +50,7 @@ export class VaultIdentityComponent implements OnInit, OnDestroy {
     private crypto: CryptoService,
     private router: Router,
     private manager: OrchestratorService,
+    private settings: SettingsService,
     private communication: CommunicationService,
     private activatedRoute: ActivatedRoute,
     private cd: ChangeDetectorRef) {

@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
-import { UIState } from 'src/app/services/ui-state.service';
+import { UIState } from '../app/services/ui-state.service';
 import { Account, IndexerApiStatus, NetworkStatus } from '../app/interfaces';
 import { EnvironmentService } from '../app/services/environment.service';
 import { AppManager } from './application-manager';
 import { NetworkLoader } from './network-loader';
 import { Network } from './networks';
 import { OrchestratorBackgroundService } from './orchestrator';
+import { SettingsService } from '../app/services/settings.service';
 const axios = require('axios').default;
 
 @Injectable({
@@ -19,7 +20,7 @@ export class NetworkStatusManager {
     constructor(
         private networkLoader: NetworkLoader,
         private env: EnvironmentService,
-        // private orchestrator: OrchestratorBackgroundService,
+        private settings: SettingsService,
         private state: UIState) {
 
         this.state.networks = this.networkLoader.getNetworks(env.networks);
@@ -68,7 +69,7 @@ export class NetworkStatusManager {
         for (let i = 0; i < uniqueAccounts.length; i++) {
             const account = accounts[i];
             const network = this.getNetwork(account.networkType);
-            const indexerUrl = this.state.persisted.settings.indexer.replace('{id}', network.id.toLowerCase());
+            const indexerUrl = this.settings.values.indexer.replace('{id}', network.id.toLowerCase());
             let networkStatus: NetworkStatus;
 
             try {

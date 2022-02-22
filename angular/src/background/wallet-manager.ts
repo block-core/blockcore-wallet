@@ -13,6 +13,7 @@ import { CryptoUtility } from "./crypto-utility";
 import axiosRetry from 'axios-retry';
 import { SecureStateService } from "../app/services/secure-state.service";
 import { UIState } from "../app/services/ui-state.service";
+import { SettingsService } from "../app/services/settings.service";
 
 const ECPair = ECPairFactory(ecc);
 var bitcoinMessage = require('bitcoinjs-message');
@@ -31,6 +32,7 @@ export class WalletManager {
         private state: UIState,
         private crypto: CryptoUtility,
         private secure: SecureStateService,
+        private settings: SettingsService,
         private logger: LoggerService) {
 
     }
@@ -78,7 +80,7 @@ export class WalletManager {
     // TODO: This method is duplicate of Indexer due to circular dependency after refactoring away from background process.
     async getTransactionHex(account: Account, txid: string) {
         const network = this.status.getNetwork(account.networkType);
-        const indexerUrl = this.state.persisted.settings.indexer.replace('{id}', network.id.toLowerCase());
+        const indexerUrl = this.settings.values.indexer.replace('{id}', network.id.toLowerCase());
 
         const responseTransactionHex = await axios.get(`${indexerUrl}/api/query/transaction/${txid}/hex`);
         return responseTransactionHex.data;
@@ -88,7 +90,7 @@ export class WalletManager {
     async broadcastTransaction(account: Account, txhex: string) {
         // These two entries has been sent from
         const network = this.status.getNetwork(account.networkType);
-        const indexerUrl = this.state.persisted.settings.indexer.replace('{id}', network.id.toLowerCase());
+        const indexerUrl = this.settings.values.indexer.replace('{id}', network.id.toLowerCase());
 
         const response = await axios.post(`${indexerUrl}/api/command/send`, txhex, {
             headers: {
@@ -337,9 +339,9 @@ export class WalletManager {
     }
 
     async resetTimer() {
-        this.logger.info('resetTimer:', this.state.persisted.settings.autoTimeout * MINUTE);
+        this.logger.info('resetTimer:', this.settings.values.autoTimeout * MINUTE);
 
-        await globalThis.chrome.storage.local.set({ 'timeout': this.state.persisted.settings.autoTimeout * MINUTE });
+        await globalThis.chrome.storage.local.set({ 'timeout': this.settings.values.autoTimeout * MINUTE });
 
         // Set the active date from startup.
         await globalThis.chrome.storage.local.set({ 'active': new Date().toJSON() });

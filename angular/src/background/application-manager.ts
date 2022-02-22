@@ -15,6 +15,7 @@ import { NetworkStatusManager } from "./network-status";
 import { Network } from "./networks";
 import { OrchestratorBackgroundService } from "./orchestrator";
 import { WalletManager } from "./wallet-manager";
+import { SettingsService } from "../app/services/settings.service";
 
 @Injectable({
     providedIn: 'root'
@@ -32,20 +33,20 @@ export class AppManager {
         public indexer: IndexerService,
         public networkLoader: NetworkLoader,
         public crypto: CryptoUtility,
-        public secure: SecureStateService
+        public secure: SecureStateService,
+        private settings: SettingsService
     ) {
 
     }
 
     async initialize() {
-        // CLEAR DATA FOR DEBUG PURPOSES:
-        // chrome.storage.local.set({ 'data': null }, () => {
-        // });
+        // First load the user settings.
+        await this.settings.load();
 
-        // First load the existing state.
+        // Then load the existing state.
         await this.state.load();
 
-        // Load the secure state.
+        // Then load the secure state.
         await this.secure.load();
 
         // Reset the timer
@@ -111,10 +112,4 @@ export class AppManager {
         // Raise this after state has been updated, so orchestrator in UI can redirect correctly.
         // this.communication.sendToAll('action-changed', this.state.action);
     }
-
-    // async setSettings(data: Settings) {
-    //     this.state.persisted.settings = data;
-    //     await this.state.save();
-    //     this.broadcastState();
-    // }
 }

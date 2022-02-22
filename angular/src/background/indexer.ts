@@ -7,6 +7,7 @@ import { NetworkStatusManager } from './network-status';
 import { LoggerService } from '../app/services/logger.service';
 import { WalletManager } from './wallet-manager';
 import { UIState } from 'src/app/services/ui-state.service';
+import { SettingsService } from '../app/services/settings.service';
 
 //const axios = require('axios');
 // In order to gain the TypeScript typings (for intellisense / autocomplete) while using CommonJS imports with require() use the following approach:
@@ -57,6 +58,7 @@ export class IndexerService {
         private status: NetworkStatusManager,
         private state: UIState,
         private logger: LoggerService,
+        private settings: SettingsService,
         private walletManager: WalletManager
     ) {
         // On interval loop through all watched addresses.
@@ -106,7 +108,7 @@ export class IndexerService {
 
     async getTransactionHex(account: Account, txid: string) {
         const network = this.status.getNetwork(account.networkType);
-        const indexerUrl = this.state.persisted.settings.indexer.replace('{id}', network.id.toLowerCase());
+        const indexerUrl = this.settings.values.indexer.replace('{id}', network.id.toLowerCase());
 
         const responseTransactionHex = await axios.get(`${indexerUrl}/api/query/transaction/${txid}/hex`);
         return responseTransactionHex.data;
@@ -134,7 +136,7 @@ export class IndexerService {
     async broadcastTransaction(account: Account, txhex: string) {
         // These two entries has been sent from
         const network = this.status.getNetwork(account.networkType);
-        const indexerUrl = this.state.persisted.settings.indexer.replace('{id}', network.id.toLowerCase());
+        const indexerUrl = this.settings.values.indexer.replace('{id}', network.id.toLowerCase());
 
         const response = await axios.post(`${indexerUrl}/api/command/send`, txhex, {
             headers: {
@@ -181,7 +183,7 @@ export class IndexerService {
                 continue;
             }
 
-            const indexerUrl = this.state.persisted.settings.indexer.replace('{id}', network.id.toLowerCase());
+            const indexerUrl = this.settings.values.indexer.replace('{id}', network.id.toLowerCase());
 
             // Loop through all receive addresses until no more data is found:
             for (let i = 0; i < account.state.receive.length; i++) {
@@ -366,7 +368,7 @@ export class IndexerService {
                 continue;
             }
 
-            const indexerUrl = this.state.persisted.settings.indexer.replace('{id}', network.id.toLowerCase());
+            const indexerUrl = this.settings.values.indexer.replace('{id}', network.id.toLowerCase());
 
             // Loop through all receive addresses until no more data is found:
             for (let i = 0; i < account.state.receive.length; i++) {
@@ -654,7 +656,7 @@ export class IndexerService {
             const account = value.account;
             const addressEntry = value.addressEntry;
             const network = this.status.getNetwork(account.networkType);
-            const indexerUrl = this.state.persisted.settings.indexer.replace('{id}', network.id.toLowerCase());
+            const indexerUrl = this.settings.values.indexer.replace('{id}', network.id.toLowerCase());
             const networkStatus = this.status.get(account.networkType);
 
             // If the current network status is anything other than online, skip indexing.
