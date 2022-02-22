@@ -9,6 +9,7 @@ import { NetworksService } from '../services/networks.service';
 import { NetworkStatusService } from '../services/network-status.service';
 import { Observable } from 'rxjs';
 import { NetworkStatus } from '../interfaces';
+import { DebugLogService } from '../services/debug-log.service';
 
 export interface Section {
   name: string;
@@ -39,6 +40,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     private router: Router,
     private logger: LoggerService,
     private network: NetworksService,
+    private debugLog: DebugLogService,
     private cd: ChangeDetectorRef) {
 
     this.uiState.showBackButton = false;
@@ -67,15 +69,13 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   copyDebugLogs() {
     // Access internal writer to get logs:
-    const logger = this.logger as any;
-    const entries = JSON.stringify(logger.writerService.logs);
+    const entries = JSON.stringify(this.debugLog.logs);
     copyToClipboard(entries);
   }
 
   copyErrorLogs() {
     // Access internal writer to get logs:
-    const logger = this.logger as any;
-    const entries = JSON.stringify(logger.writerService.errors);
+    const entries = JSON.stringify(this.debugLog.errors);
     copyToClipboard(entries);
   }
 }
