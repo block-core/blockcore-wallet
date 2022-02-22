@@ -131,7 +131,7 @@ export class AppComponent implements OnInit {
 
     this.drawer.close();
 
-    // this.router.navigateByUrl('/home');
+    this.router.navigateByUrl('/home');
   }
 
   onAccountChanged(accountId: string) {
