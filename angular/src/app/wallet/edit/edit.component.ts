@@ -2,9 +2,10 @@ import { Component, Inject, HostBinding } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common'
-import { UIState } from 'src/app/services/ui-state.service';
-import { CommunicationService } from 'src/app/services/communication.service';
-import { OrchestratorService } from 'src/app/services/orchestrator.service';
+import { UIState } from '../../services/ui-state.service';
+import { CommunicationService } from '../../services/communication.service';
+import { OrchestratorService } from '../../services/orchestrator.service';
+import { WalletManager } from '../../../background/wallet-manager';
 
 @Component({
   selector: 'app-wallet-edit',
@@ -18,20 +19,22 @@ export class WalletEditComponent {
   constructor(
     private router: Router,
     private location: Location,
-    private communication: CommunicationService,
     private manager: OrchestratorService,
+    private walletManager: WalletManager,
     public uiState: UIState
   ) {
     this.uiState.title = 'Edit Wallet'
-    this.walletName = this.uiState.activeWallet?.name;
+    this.walletName = this.walletManager.activeWallet?.name;
   }
 
   async save() {
-    if (!this.uiState.activeWallet || !this.walletName) {
+    if (!this.walletManager.activeWallet || !this.walletName) {
       return;
     }
 
-    this.manager.setWalletName(this.uiState.activeWallet?.id, this.walletName);
+    this.walletManager.activeWallet.name = this.walletName;
+
+    await this.uiState.save();
 
     // if (this.uiState.activeWallet) {
     //   this.uiState.activeWallet.name = this.walletName;

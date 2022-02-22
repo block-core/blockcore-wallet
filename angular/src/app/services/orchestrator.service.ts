@@ -224,9 +224,9 @@ export class OrchestratorService {
         });
     }
 
-    setActiveWalletId(id: string) {
-        this.communication.send('set-active-wallet-id', { id });
-    }
+    // setActiveWalletId(id: string) {
+    //     this.communication.send('set-active-wallet-id', { id });
+    // }
 
     setActiveAccountId(identifier: string) {
         // // Update local state as well.
@@ -252,9 +252,9 @@ export class OrchestratorService {
         this.communication.send('identity-publish', identity);
     }
 
-    setWalletName(walletId: string, name: string) {
-        this.communication.send('set-wallet-name', { walletId, name });
-    }
+    // setWalletName(walletId: string, name: string) {
+    //     this.communication.send('set-wallet-name', { walletId, name });
+    // }
 
     removeAccount(walletId: string, accountId: string) {
         this.communication.send('account-remove', { walletId, accountId });

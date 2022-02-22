@@ -474,19 +474,9 @@ export class OrchestratorBackgroundService {
         //     this.communication.send(port, 'network-statuses', this.status.getAll());
         // });
 
-        this.communication.listen('set-wallet-name', async (port: any, data: { walletId: string, name: string }) => {
-            const wallet = this.walletManager.getWallet(data.walletId);
+        // this.communication.listen('set-wallet-name', async (port: any, data: { walletId: string, name: string }) => {
 
-            if (!wallet) {
-                return;
-            }
-
-            wallet.name = data.name;
-
-            await this.state.save();
-
-            this.refreshState();
-        });
+        // });
 
         this.communication.listen('account-remove', async (port: any, data: { walletId: string, accountId: string }) => {
             const wallet = this.walletManager.getWallet(data.walletId);
@@ -849,12 +839,12 @@ export class OrchestratorBackgroundService {
         //     // Begin verification
         // });
 
-        this.communication.listen('set-active-wallet-id', async (port: any, data: any) => {
-            await this.walletManager.setActiveWallet(data.id);
+        // this.communication.listen('set-active-wallet-id', async (port: any, data: any) => {
+        //     await this.walletManager.setActiveWallet(data.id);
 
-            await this.state.save();
-            this.refreshState();
-        });
+        //     await this.state.save();
+        //     this.refreshState();
+        // });
 
         this.communication.listen('set-active-account', async (port: any, data: { walletId: string, accountId: string }) => {
             // Set the new active wallet, if different from before.

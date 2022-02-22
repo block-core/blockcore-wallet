@@ -27,6 +27,8 @@ axiosRetry(axios, { retries: 3 });
 export class WalletManager {
     private timer: any;
 
+    activeWalletId: string;
+
     constructor(
         public status: NetworkStatusService,
         private state: UIState,
@@ -281,7 +283,7 @@ export class WalletManager {
         unlockedMnemonic = await this.crypto.decryptData(wallet.mnemonic, password);
 
         if (unlockedMnemonic) {
-            this.state.persisted.activeWalletId = wallet.id;
+            // this.state.persisted.previousWalletId = wallet.id;
 
             // From the secret receovery phrase, the master seed is derived.
             // Learn more about the HD keys: https://raw.githubusercontent.com/bitcoin/bips/master/bip-0032/derivation.png
@@ -329,7 +331,7 @@ export class WalletManager {
             // Add this wallet to list of unlocked.
             this.walletSecrets.set(walletId, { password: newpassword, seed: masterSeed });
 
-            this.state.persisted.activeWalletId = wallet.id;
+            // this.state.persisted.previousWalletId = wallet.id;
 
             return true;
 
@@ -351,14 +353,36 @@ export class WalletManager {
         return this.state.persisted.wallets.length > 0;
     }
 
+
+
     get activeWallet() {
-        if (this.state.persisted.activeWalletId) {
-            return this.state.persisted.wallets.find(w => w.id == this.state.persisted.activeWalletId);
+        if (this.activeWalletId) {
+            return this.state.persisted.wallets.find(w => w.id == this.activeWalletId);
             // return this.persisted.wallets.get(this.persisted.activeWalletId);
             // return this.persisted.wallets[this.persisted.activeWalletIndex];
         } else {
             return undefined;
         }
+    }
+
+    get activeAccount() {
+        if (!this.activeWallet) {
+            return undefined;
+        }
+
+        const activeWallet = this.activeWallet;
+
+        if (!activeWallet.accounts) {
+            return undefined;
+        }
+
+        if (activeWallet.activeAccountId == null) {
+            return undefined;
+        }
+
+        const accountIndex = activeWallet.accounts.findIndex(a => a.identifier == activeWallet.activeAccountId);
+
+        return this.activeWallet.accounts[accountIndex];
     }
 
     hasAccounts(wallet: Wallet): boolean {
@@ -398,8 +422,9 @@ export class WalletManager {
     }
 
     async setActiveWallet(id: string) {
-        if (this.state.persisted.activeWalletId != id) {
-            this.state.persisted.activeWalletId = id;
+        if (this.activeWalletId != id) {
+            this.activeWalletId = id;
+            this.state.persisted.previousWalletId = id;
             return true;
         }
 

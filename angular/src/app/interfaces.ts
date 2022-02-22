@@ -230,8 +230,14 @@ interface Wallet {
 
 interface Persisted {
     // wallets: Map<string, Wallet>
-    wallets: Wallet[]
-    activeWalletId: string | undefined | null
+    wallets: Wallet[];
+
+    /** This is used to select the active wallet on extension startup. */
+    // activeWalletId: string | undefined | null;
+
+    /** This is used to select the active wallet on extension startup. */
+    previousWalletId: string | undefined | null;
+
     // autoTimeout: number
     // settings: Settings
     // wallets: Wallet[],

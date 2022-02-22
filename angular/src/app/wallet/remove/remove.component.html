@@ -1,11 +1,11 @@
-<div class="page centered" *ngIf="uiState.activeWallet">
+<div class="page centered" *ngIf="walletManager.activeWallet">
 
   <mat-icon class="large-icon">delete</mat-icon>
   <br>
   <h1>Delete your wallet</h1>
 
   <p>
-    This will remove the "{{uiState.activeWallet.name}}" wallet. Make sure you have a backup of your secret recovery phrase or
+    This will remove the "{{walletManager.activeWallet.name}}" wallet. Make sure you have a backup of your secret recovery phrase or
     you
     might loose your wallet forever. Nobody can restore it except you.
   </p>

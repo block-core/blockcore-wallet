@@ -170,7 +170,7 @@ export class AppComponent implements OnInit {
     if (!walletId) {
       this.router.navigateByUrl('/wallet/create');
     } else {
-      this.manager.setActiveWalletId(walletId);
+      await this.walletManager.setActiveWallet(walletId);
 
       // We also must update the local state immediately because we are not waiting for callback before redirect.
       this.uiState.persisted.activeWalletId = walletId;

@@ -37,7 +37,8 @@ export class UIState {
     persisted: Persisted = {
 
         wallets: [] as Wallet[],
-        activeWalletId: null
+        previousWalletId: null
+        // activeWalletId: null
     };
 
     store: Store = {
@@ -68,58 +69,58 @@ export class UIState {
 
     // activeWalletIndex: number = 0;
 
-    get hasWallets(): boolean {
-        return this.persisted?.wallets.length > 0;
-    }
+    // get hasWallets(): boolean {
+    //     return this.persisted?.wallets.length > 0;
+    // }
 
-    // activeWallet$: Subject<Wallet | undefined> = new ReplaySubject();
-    activeWalletSubject: BehaviorSubject<Wallet | undefined> = new BehaviorSubject<Wallet | undefined>(undefined);
+    // // activeWallet$: Subject<Wallet | undefined> = new ReplaySubject();
+    // activeWalletSubject: BehaviorSubject<Wallet | undefined> = new BehaviorSubject<Wallet | undefined>(undefined);
 
-    public get activeWallet$(): Observable<Wallet | undefined> {
-        return this.activeWalletSubject.asObservable();
-    }
+    // public get activeWallet$(): Observable<Wallet | undefined> {
+    //     return this.activeWalletSubject.asObservable();
+    // }
 
-    get activeWallet() {
-        if (this.persisted.activeWalletId) {
-            return this.persisted.wallets.find(w => w.id == this.persisted.activeWalletId);
-        } else {
-            return undefined;
-        }
-    }
+    // get activeWallet() {
+    //     if (this.persisted.activeWalletId) {
+    //         return this.persisted.wallets.find(w => w.id == this.persisted.activeWalletId);
+    //     } else {
+    //         return undefined;
+    //     }
+    // }
 
-    get hasAccounts(): boolean {
-        if (!this.activeWallet) {
-            return false;
-        }
+    // get hasAccounts(): boolean {
+    //     if (!this.activeWallet) {
+    //         return false;
+    //     }
 
-        return this.activeWallet.accounts?.length > 0;
-    }
+    //     return this.activeWallet.accounts?.length > 0;
+    // }
 
-    activeAccountSubject: BehaviorSubject<Account | undefined> = new BehaviorSubject<Account | undefined>(undefined);
+    // activeAccountSubject: BehaviorSubject<Account | undefined> = new BehaviorSubject<Account | undefined>(undefined);
 
-    public get activeAccount$(): Observable<Account | undefined> {
-        return this.activeAccountSubject.asObservable();
-    }
+    // public get activeAccount$(): Observable<Account | undefined> {
+    //     return this.activeAccountSubject.asObservable();
+    // }
 
-    get activeAccount() {
-        if (!this.activeWallet) {
-            return undefined;
-        }
+    // get activeAccount() {
+    //     if (!this.activeWallet) {
+    //         return undefined;
+    //     }
 
-        const activeWallet = this.activeWallet;
+    //     const activeWallet = this.activeWallet;
 
-        if (!activeWallet.accounts) {
-            return undefined;
-        }
+    //     if (!activeWallet.accounts) {
+    //         return undefined;
+    //     }
 
-        if (activeWallet.activeAccountId == null) {
-            return undefined;
-        }
+    //     if (activeWallet.activeAccountId == null) {
+    //         return undefined;
+    //     }
 
-        const accountIndex = activeWallet.accounts.findIndex(a => a.identifier == activeWallet.activeAccountId);
+    //     const accountIndex = activeWallet.accounts.findIndex(a => a.identifier == activeWallet.activeAccountId);
 
-        return this.activeWallet.accounts[accountIndex];
-    }
+    //     return this.activeWallet.accounts[accountIndex];
+    // }
 
     action?: Action;
 

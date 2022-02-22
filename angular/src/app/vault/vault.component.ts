@@ -30,6 +30,7 @@ export class VaultComponent implements OnInit, OnDestroy {
     private manager: OrchestratorService,
     private communication: CommunicationService,
     private activatedRoute: ActivatedRoute,
+    private walletManager: WalletManager,
     private cd: ChangeDetectorRef) {
 
     this.uiState.title = 'Account: ';
