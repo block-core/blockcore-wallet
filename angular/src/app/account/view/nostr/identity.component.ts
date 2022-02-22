@@ -9,6 +9,7 @@ import { Identity } from 'src/app/interfaces';
 import { copyToClipboard } from 'src/app/shared/utilities';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { HDKey } from 'micro-bip32';
+import { SettingsService } from '../../../services/settings.service';
 
 @Component({
   selector: 'app-nostr-identity',
@@ -42,7 +43,7 @@ export class NostrIdentityComponent implements OnInit, OnDestroy {
       return '';
     }
 
-    return this.uiState.persisted.settings.dataVault + '/identity/' + this.identity.id;
+    return this.settings.values.dataVault + '/identity/' + this.identity.id;
   }
 
   constructor(
@@ -53,6 +54,7 @@ export class NostrIdentityComponent implements OnInit, OnDestroy {
     private manager: OrchestratorService,
     private communication: CommunicationService,
     private activatedRoute: ActivatedRoute,
+    private settings: SettingsService,
     private cd: ChangeDetectorRef) {
 
     this.uiState.title = '';

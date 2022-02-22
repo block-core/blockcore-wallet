@@ -83,7 +83,7 @@
                         <span class="negative-color" [ngClass]="{unconfirmed: transaction.confirmations == 0}"
                             *ngIf="transaction.entryType == 'send'">-{{transaction.calculatedValue | amount}}</span>
 
-                        <!-- <span *ngIf="uiState.persisted.settings.developer"><br>Transacted total: {{transaction.value |
+                        <!-- <span *ngIf="settings.values.developer"><br>Transacted total: {{transaction.value |
                             amount}}</span> -->
                     </div>
                     <div mat-line class="other-color" *ngIf="transaction.description">
@@ -153,7 +153,7 @@
 
         </mat-tab>
 
-        <mat-tab *ngIf="uiState.persisted.settings.developer">
+        <mat-tab *ngIf="settings.values.developer">
             <ng-template mat-tab-label>
                 <mat-icon class="example-tab-icon">bug_report</mat-icon>
             </ng-template>
@@ -166,7 +166,7 @@
             </p>
         </mat-tab>
 
-        <mat-tab *ngIf="uiState.persisted.settings.developer">
+        <mat-tab *ngIf="settings.values.developer">
             <ng-template mat-tab-label>
                 <mat-icon class="example-tab-icon">bug_report</mat-icon>
             </ng-template>

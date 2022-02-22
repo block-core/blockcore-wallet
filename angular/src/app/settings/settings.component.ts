@@ -33,8 +33,8 @@ export class SettingsComponent {
     private location: Location) {
 
     // Reset to default if missing.
-    if (!this.uiState.persisted.settings.indexer) {
-      this.uiState.persisted.settings.indexer = INDEXER_URL;
+    if (!this.settingsService.values.indexer) {
+      this.settingsService.values.indexer = INDEXER_URL;
     }
 
     // Clone the settings on load:
@@ -44,7 +44,7 @@ export class SettingsComponent {
   }
 
   async save() {
-    this.settingsService.replace(this.settings);
+    await this.settingsService.replace(this.settings);
 
     this.location.back();
   }

@@ -1,20 +1,20 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import * as satcomma from 'satcomma';
-import { UIState } from '../services/ui-state.service';
+import { SettingsService } from '../services/settings.service';
 import { SATOSHI_FACTOR } from './constants';
 
 @Pipe({ name: 'amount', pure: false })
 export class AmountPipe implements PipeTransform {
 
-    constructor(public uiState: UIState) {
+    constructor(public settings: SettingsService) {
 
     }
 
     transform(value: number | BigInt): string {
-        if (this.uiState.persisted.settings.amountFormat == 'sat') {
+        if (this.settings.values.amountFormat == 'sat') {
             return value.toString();
         }
-        else if (this.uiState.persisted.settings.amountFormat == 'bitcoin') {
+        else if (this.settings.values.amountFormat == 'bitcoin') {
             if (typeof value === 'bigint') {
                 return (Number(value) / SATOSHI_FACTOR).toFixed(8);
             } else {

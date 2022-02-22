@@ -24,8 +24,10 @@ export class SettingsService {
         return this._values;
     }
 
-    replace(settings: Settings) {
+    async replace(settings: Settings) {
         this._values = settings;
+
+        await this.save();
     }
 
     async load() {

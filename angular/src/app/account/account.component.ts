@@ -1,15 +1,14 @@
-import { Component, ChangeDetectorRef, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { CryptoService } from '../services/crypto.service';
 import { UIState } from '../services/ui-state.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { OrchestratorService } from '../services/orchestrator.service';
 import { CommunicationService } from '../services/communication.service';
-import { NETWORK_IDENTITY, NETWORK_NOSTR } from '../shared/constants';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { NetworksService } from '../services/networks.service';
-import { IndexerApiStatus, NetworkStatus, Transaction, TransactionHistory } from '../interfaces';
+import { NetworkStatus, TransactionHistory } from '../interfaces';
 import { NetworkStatusService } from '../services/network-status.service';
+import { SettingsService } from '../services/settings.service';
 
 @Component({
   selector: 'app-account',
@@ -36,17 +35,16 @@ export class AccountComponent implements OnInit, OnDestroy {
   currentNetworkStatus: NetworkStatus;
 
   constructor(
-    private http: HttpClient,
     public uiState: UIState,
-    private crypto: CryptoService,
+    public settings: SettingsService,
+    private http: HttpClient,
     private router: Router,
     private network: NetworksService,
     private networkStatusService: NetworkStatusService,
     private manager: OrchestratorService,
     private communication: CommunicationService,
     private activatedRoute: ActivatedRoute,
-    private snackBar: MatSnackBar,
-    private cd: ChangeDetectorRef) {
+    private snackBar: MatSnackBar) {
 
     this.uiState.title = '';
     this.uiState.showBackButton = true;
@@ -100,7 +98,7 @@ export class AccountComponent implements OnInit, OnDestroy {
     if (!this.networkStatus) {
       try {
         const network = this.network.getNetwork(this.uiState.activeAccount.networkType);
-        const indexerUrl = this.uiState.persisted.settings.indexer.replace('{id}', network.id.toLowerCase());
+        const indexerUrl = this.settings.values.indexer.replace('{id}', network.id.toLowerCase());
         let result: any = await this.http.get(`${indexerUrl}/api/stats/info`).toPromise();
         this.networkStatus = result;
       }
@@ -223,7 +221,7 @@ export class AccountComponent implements OnInit, OnDestroy {
 
     const allTransactions = [...transactionsReceive, ...transactionsChange] as TransactionHistory[];
     const sortedAllTransactions = allTransactions.sort((a: any, b: any) => { if (a.blockIndex > b.blockIndex) return -1; return 0; });
-    
+
     this.transactions = sortedAllTransactions;
 
     console.log('this.transactions');

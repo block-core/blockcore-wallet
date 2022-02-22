@@ -13,6 +13,7 @@ import { OrchestratorService } from '../services/orchestrator.service';
 import { EnvironmentService } from '../services/environment.service';
 import { NetworksService } from '../services/networks.service';
 import { Location } from '@angular/common'
+import { SettingsService } from '../services/settings.service';
 
 @Component({
   selector: 'app-loading',
@@ -37,6 +38,7 @@ export class LoadingComponent implements OnInit, OnDestroy {
     private cd: ChangeDetectorRef,
     private route: ActivatedRoute,
     private env: EnvironmentService,
+    private settings: SettingsService,
     public networkService: NetworksService
   ) {
     this.uiState.title = 'Loading...';
@@ -102,14 +104,14 @@ export class LoadingComponent implements OnInit, OnDestroy {
     });
 
     this.uiState.persisted$.subscribe(() => {
-      if (this.uiState.persisted?.settings.theme === 'light') {
+      if (this.settings.values.theme === 'light') {
         this.renderer.removeClass(document.body, 'dark-theme');
       } else {
         this.renderer.addClass(document.body, 'dark-theme');
       }
 
-      if (this.uiState.persisted.settings.language) {
-        this.translate.use(this.uiState.persisted.settings.language);
+      if (this.settings.values.language) {
+        this.translate.use(this.settings.values.language);
       }
 
       // if (this.uiState.persisted?.settings.theme === 'light') {
