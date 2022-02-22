@@ -7,7 +7,7 @@ import { Psbt } from '@blockcore/blockcore-js';
 import * as ecc from 'tiny-secp256k1';
 import ECPairFactory from 'ecpair';
 import { Injectable } from "@angular/core";
-import { NetworkStatusManager } from "./network-status";
+import { NetworkStatusService } from "../app/services/network-status.service";
 import { LoggerService } from "../app/services/logger.service";
 import { CryptoUtility } from "./crypto-utility";
 import axiosRetry from 'axios-retry';
@@ -28,7 +28,7 @@ export class WalletManager {
     private timer: any;
 
     constructor(
-        public status: NetworkStatusManager,
+        public status: NetworkStatusService,
         private state: UIState,
         private crypto: CryptoUtility,
         private secure: SecureStateService,

@@ -33,14 +33,14 @@ export class SecureStateService {
 
     async set(key: string, value: string) {
         if (globalThis.chrome && globalThis.chrome.storage) {
-            const storage = globalThis.chrome.storage as any;
+            const storage = globalThis.chrome.storage;
 
             // Update the keys, then persist it.
             this.keys.set(key, value);
 
             // This will trigger an onChange event and reload the same keys. This will happens twice
             // in the instance that called set, but only once for other instances of the extension.
-            await storage.session.set({ 'keys': Object.fromEntries(this.keys.entries()) });
+            await (<any>storage).session.set({ 'keys': Object.fromEntries(this.keys.entries()) });
 
             // Every time a new key is set, we'll update the active value as well.
             await globalThis.chrome.storage.local.set({ 'active': new Date().toJSON() });
@@ -57,9 +57,9 @@ export class SecureStateService {
 
     async load() {
         if (globalThis.chrome && globalThis.chrome.storage) {
-            const storage = globalThis.chrome.storage as any;
+            const storage = globalThis.chrome.storage;
 
-            let { keys } = await storage.session.get(['keys']);
+            let { keys } = await (<any>storage).session.get(['keys']);
 
             if (keys != null && Object.keys(keys).length > 0) {
                 this.keys = new Map<string, string>(Object.entries(keys))

@@ -14,6 +14,7 @@ import { EnvironmentService } from '../services/environment.service';
 import { NetworksService } from '../services/networks.service';
 import { Location } from '@angular/common'
 import { SettingsService } from '../services/settings.service';
+import { NetworkStatusService } from '../services/network-status.service';
 
 @Component({
   selector: 'app-loading',
@@ -38,6 +39,7 @@ export class LoadingComponent implements OnInit, OnDestroy {
     private cd: ChangeDetectorRef,
     private route: ActivatedRoute,
     private env: EnvironmentService,
+    private status: NetworkStatusService,
     private settings: SettingsService,
     public networkService: NetworksService
   ) {
@@ -67,7 +69,9 @@ export class LoadingComponent implements OnInit, OnDestroy {
 
     await this.appManager.initialize();
 
-    await this.manager.initialize();
+    await this.status.initialize();
+
+    // await this.manager.initialize();
 
     console.log('INITILIZED DONE...');
 

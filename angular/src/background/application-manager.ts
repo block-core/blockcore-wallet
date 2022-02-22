@@ -11,7 +11,7 @@ import { DataSyncService } from "./data-sync";
 import { IndexerService } from "./indexer";
 import { BackgroundLoggerService } from "./logger";
 import { NetworkLoader } from "./network-loader";
-import { NetworkStatusManager } from "./network-status";
+import { NetworkStatusService } from "../app/services/network-status.service";
 import { Network } from "./networks";
 import { OrchestratorBackgroundService } from "./orchestrator";
 import { WalletManager } from "./wallet-manager";
@@ -26,7 +26,7 @@ export class AppManager {
         public sync: DataSyncService,
         public logger: BackgroundLoggerService,
         public state: UIState,
-        public status: NetworkStatusManager,
+        public status: NetworkStatusService,
         public walletManager: WalletManager,
         public communication: CommunicationBackgroundService,
         public orchestrator: OrchestratorBackgroundService,

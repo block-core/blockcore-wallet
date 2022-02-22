@@ -3,10 +3,10 @@ import { Account, Address, IndexerApiStatus, Logger, Transaction, UnspentTransac
 import { AppManager } from './application-manager';
 import axiosRetry from 'axios-retry';
 import { Injectable } from '@angular/core';
-import { NetworkStatusManager } from './network-status';
+import { NetworkStatusService } from '../app/services/network-status.service';
 import { LoggerService } from '../app/services/logger.service';
 import { WalletManager } from './wallet-manager';
-import { UIState } from 'src/app/services/ui-state.service';
+import { UIState } from '../app/services/ui-state.service';
 import { SettingsService } from '../app/services/settings.service';
 
 //const axios = require('axios');
@@ -55,7 +55,7 @@ export class IndexerService {
     private a = new Map<string, { change: boolean, account: Account, addressEntry: Address, count: number }>();
 
     constructor(
-        private status: NetworkStatusManager,
+        private status: NetworkStatusService,
         private state: UIState,
         private logger: LoggerService,
         private settings: SettingsService,

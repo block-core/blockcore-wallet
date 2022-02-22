@@ -170,15 +170,15 @@ export class OrchestratorService {
             }
         });
 
-        this.communication.listen('network-status', (networkStatus: NetworkStatus) => {
-            this.networkStatus.set(networkStatus);
-        });
+        // this.communication.listen('network-status', (networkStatus: NetworkStatus) => {
+        //     this.networkStatus.set(networkStatus);
+        // });
 
-        this.communication.listen('network-statuses', (networkStatuses: NetworkStatus[]) => {
-            networkStatuses.forEach((status) => {
-                this.networkStatus.set(status);
-            });
-        });
+        // this.communication.listen('network-statuses', (networkStatuses: NetworkStatus[]) => {
+        //     networkStatuses.forEach((status) => {
+        //         this.networkStatus.set(status);
+        //     });
+        // });
 
         // // When a wallet is removed, we must update UI.
         // this.communication.listen('wallet-removed', (value: any) => {

@@ -17,9 +17,9 @@ import { Transaction } from '@blockcore/blockcore-js';
 import axios from 'axios';
 import { Injectable } from '@angular/core';
 import { WalletManager } from './wallet-manager';
-import { NetworkStatusManager } from './network-status';
+import { NetworkStatusService } from '../app/services/network-status.service';
 import { IndexerService } from './indexer';
-import { UIState } from 'src/app/services/ui-state.service';
+import { UIState } from '../app/services/ui-state.service';
 
 @Injectable({
     providedIn: 'root'
@@ -30,7 +30,7 @@ export class OrchestratorBackgroundService {
         private walletManager: WalletManager,
         private state: UIState,
         private indexer: IndexerService,
-        private status: NetworkStatusManager,
+        private status: NetworkStatusService,
         private communication: CommunicationBackgroundService
     ) {
         this.eventHandlers();
@@ -466,13 +466,13 @@ export class OrchestratorBackgroundService {
         // });
 
         /** Called whenever a new UI instance has been activated. Use this method to retrieve the existing state of data that is outside of the normal persisted state ('state-load' event). */
-        this.communication.listen('ui-activated', async (port: any, data: any) => {
-            // TODO: Add more non-persisted state updates to be populated in the UI when new instance of extension is activated.
-            console.log('UI ACTIVATED!!!!');
+        // this.communication.listen('ui-activated', async (port: any, data: any) => {
+        //     // TODO: Add more non-persisted state updates to be populated in the UI when new instance of extension is activated.
+        //     console.log('UI ACTIVATED!!!!');
 
-            // Get the latest known network statuses:
-            this.communication.send(port, 'network-statuses', this.status.getAll());
-        });
+        //     // Get the latest known network statuses:
+        //     this.communication.send(port, 'network-statuses', this.status.getAll());
+        // });
 
         this.communication.listen('set-wallet-name', async (port: any, data: { walletId: string, name: string }) => {
             const wallet = this.walletManager.getWallet(data.walletId);
