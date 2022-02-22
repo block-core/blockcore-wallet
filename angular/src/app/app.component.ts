@@ -1,17 +1,16 @@
 import { DOCUMENT } from '@angular/common';
 import { ChangeDetectorRef, Component, Inject, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
-import { ActivatedRoute, ActivatedRouteSnapshot, NavigationEnd, Router } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { UIState } from './services/ui-state.service';
 import { CommunicationService } from './services/communication.service';
-import { OrchestratorService } from './services/orchestrator.service';
 import { Location } from '@angular/common'
 import { NetworksService } from './services/networks.service';
 import { TranslateService } from '@ngx-translate/core';
 import { EnvironmentService } from './services/environment.service';
-import { AppManager } from 'src/background/application-manager';
+import { AppManager } from './services/application-manager';
 import { SecureStateService } from './services/secure-state.service';
-import { WalletManager } from '../background/wallet-manager';
+import { WalletManager } from './services/wallet-manager';
 import { SettingsService } from './services/settings.service';
 
 @Component({
@@ -32,7 +31,6 @@ export class AppComponent implements OnInit {
     private renderer: Renderer2,
     public translate: TranslateService,
     private communication: CommunicationService,
-    private manager: OrchestratorService,
     private appManager: AppManager,
     private location: Location,
     private cd: ChangeDetectorRef,
@@ -107,14 +105,6 @@ export class AppComponent implements OnInit {
         this.translate.use(this.settings.values.language);
       }
     });
-
-
-
-
-
-
-
-
 
 
     // TODO: Find an alternative method to discover if app renders in tab or popup.

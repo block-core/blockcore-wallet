@@ -2,7 +2,6 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { UIState } from '../services/ui-state.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { OrchestratorService } from '../services/orchestrator.service';
 import { CommunicationService } from '../services/communication.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { NetworksService } from '../services/networks.service';
@@ -42,7 +41,6 @@ export class AccountComponent implements OnInit, OnDestroy {
     private router: Router,
     private network: NetworksService,
     private networkStatusService: NetworkStatusService,
-    private manager: OrchestratorService,
     private communication: CommunicationService,
     private activatedRoute: ActivatedRoute,
     private walletManager: WalletManager,

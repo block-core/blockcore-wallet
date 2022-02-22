@@ -3,8 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { CryptoService } from '../../services/crypto.service';
 import { UIState } from '../../services/ui-state.service';
 import { Router } from '@angular/router';
-import { OrchestratorService } from 'src/app/services/orchestrator.service';
 import { NetworksService } from '../../services/networks.service';
+import { AppManager } from '../../services/application-manager';
 
 @Component({
     selector: 'app-login',
@@ -21,7 +21,7 @@ export class ActionLoginComponent {
         private app: ApplicationRef,
         private ngZone: NgZone,
         public networkService: NetworksService,
-        private manager: OrchestratorService,
+        private manager: AppManager,
         private cd: ChangeDetectorRef) {
         this.uiState.title = 'Action: Login';
 
@@ -29,7 +29,7 @@ export class ActionLoginComponent {
     }
 
     sign() {
-        this.manager.sign(this.content, this.uiState.action?.tabId);
+        // this.manager.sign(this.content, this.uiState.action?.tabId);
         window.close();
     }
 

@@ -3,10 +3,9 @@ import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common'
 import { UIState } from '../../services/ui-state.service';
-import { OrchestratorService } from '../../services/orchestrator.service';
 import { CommunicationService } from '../../services/communication.service';
 import { IconService } from '../../services/icon.service';
-import { WalletManager } from '../../../background/wallet-manager';
+import { WalletManager } from '../../services/wallet-manager';
 
 @Component({
   selector: 'app-account-edit',
@@ -24,7 +23,6 @@ export class AccountEditComponent implements OnInit, OnDestroy {
     private location: Location,
     public uiState: UIState,
     public icons: IconService,
-    private manager: OrchestratorService,
     private communication: CommunicationService,
     private walletManager: WalletManager,
     private activatedRoute: ActivatedRoute,
@@ -40,7 +38,8 @@ export class AccountEditComponent implements OnInit, OnDestroy {
         return;
       }
 
-      this.manager.setActiveAccountId(index);
+      this.walletManager.setActiveAccount(index);
+      // this.manager.setActiveAccountId(index);
       this.accountName = this.walletManager.activeAccount?.name;
       this.icon = this.walletManager.activeAccount?.icon;
       console.log('ROUTE CHANGE 2');

@@ -3,10 +3,9 @@ import { HttpClient } from '@angular/common/http';
 import { CryptoService } from '../../../services/crypto.service';
 import { UIState } from '../../../services/ui-state.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { OrchestratorService } from '../../../services/orchestrator.service';
 import { CommunicationService } from '../../../services/communication.service';
-import { Identity } from 'src/app/interfaces';
-import { copyToClipboard } from 'src/app/shared/utilities';
+import { Identity } from '../../../interfaces';
+import { copyToClipboard } from '../../../shared/utilities';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { HDKey } from 'micro-bip32';
 import { SettingsService } from '../../../services/settings.service';
@@ -52,7 +51,6 @@ export class NostrIdentityComponent implements OnInit, OnDestroy {
     private snackBar: MatSnackBar,
     private crypto: CryptoService,
     private router: Router,
-    private manager: OrchestratorService,
     private communication: CommunicationService,
     private walletManager: WalletManager,
     private activatedRoute: ActivatedRoute,
@@ -180,12 +178,12 @@ export class NostrIdentityComponent implements OnInit, OnDestroy {
     }
 
     console.log(this.identity);
-    this.manager.updateIdentity(this.identity);
+    // this.manager.updateIdentity(this.identity);
   }
 
   publish() {
     if (this.identity) {
-      this.manager.publishIdentity(this.identity);
+      // this.manager.publishIdentity(this.identity);
     }
   }
 
@@ -199,7 +197,7 @@ export class NostrIdentityComponent implements OnInit, OnDestroy {
 
   copyVaultConfiguration() {
     var domain = this.verifiableDataRegistryUrl;
-    this.manager.generateVaultConfiguration(domain);
+    // this.manager.generateVaultConfiguration(domain);
   }
 
   ngOnInit(): void {

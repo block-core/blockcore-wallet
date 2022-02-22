@@ -5,12 +5,11 @@ import { UIState } from '../../services/ui-state.service';
 import { CryptoService } from '../../services/crypto.service';
 import { Account } from '../../interfaces';
 import { Router } from '@angular/router';
-import { OrchestratorService } from '../../services/orchestrator.service';
 import { CommunicationService } from '../../services/communication.service';
 import { IconService } from '../../services/icon.service';
 import { NetworksService } from '../../services/networks.service';
-import { Network } from '../../../background/networks';
-import { WalletManager } from '../../../background/wallet-manager';
+import { Network } from '../../services/networks';
+import { WalletManager } from '../../services/wallet-manager';
 const { v4: uuidv4 } = require('uuid');
 
 @Component({
@@ -47,7 +46,6 @@ export class AccountCreateComponent implements OnInit, OnDestroy {
         public icons: IconService,
         public networkService: NetworksService,
         private communication: CommunicationService,
-        private manager: OrchestratorService,
         private walletManager: WalletManager,
         private cd: ChangeDetectorRef
     ) {

@@ -14,6 +14,7 @@ import axiosRetry from 'axios-retry';
 import { SecureStateService } from "./secure-state.service";
 import { UIState } from "./ui-state.service";
 import { SettingsService } from "./settings.service";
+import { BehaviorSubject, Observable } from "rxjs";
 
 const ECPair = ECPairFactory(ecc);
 var bitcoinMessage = require('bitcoinjs-message');
@@ -26,8 +27,11 @@ axiosRetry(axios, { retries: 3 });
 /** Manager that keeps state and operations for a single wallet. This object does not keep the password, which must be supplied for signing operations. */
 export class WalletManager {
     private timer: any;
+    private _activeWalletId: string;
 
-    activeWalletId: string;
+    get activeWalletId() {
+        return this._activeWalletId;
+    }
 
     constructor(
         public status: NetworkStatusService,
@@ -105,7 +109,6 @@ export class WalletManager {
 
         return data;
     }
-
 
     async createTransaction(wallet: Wallet, account: Account, address: string, amount: number, fee: number): Promise<{ addresses: string[], transactionHex: string, fee: number, feeRate: number, virtualSize: number, weight: number }> {
         // TODO: Verify the address for this network!! ... Help the user avoid sending transactions on very wrong addresses.
@@ -353,7 +356,17 @@ export class WalletManager {
         return this.state.persisted.wallets.length > 0;
     }
 
+    activeAccountSubject: BehaviorSubject<Account | undefined> = new BehaviorSubject<Account | undefined>(undefined);
 
+    public get activeAccount$(): Observable<Account | undefined> {
+        return this.activeAccountSubject.asObservable();
+    }
+
+    activeWalletSubject: BehaviorSubject<Wallet | undefined> = new BehaviorSubject<Wallet | undefined>(undefined);
+
+    public get activeWallet$(): Observable<Wallet | undefined> {
+        return this.activeWalletSubject.asObservable();
+    }
 
     get activeWallet() {
         if (this.activeWalletId) {
@@ -421,10 +434,30 @@ export class WalletManager {
         }
     }
 
+    async removeAccount(walletId: string, accountId: string) {
+        const wallet = this.getWallet(walletId);
+
+        if (!wallet) {
+            return;
+        }
+
+        const accountIndex = wallet.accounts.findIndex(a => a.identifier == accountId);
+        wallet.accounts.splice(accountIndex, 1);
+
+        if (wallet.accounts.length > 0) {
+            wallet.activeAccountId = wallet.accounts[0].identifier;
+        } else {
+            wallet.activeAccountId = null;
+        }
+
+        await this.state.save();
+    }
+
     async setActiveWallet(id: string) {
         if (this.activeWalletId != id) {
-            this.activeWalletId = id;
+            this._activeWalletId = id;
             this.state.persisted.previousWalletId = id;
+            this.activeWalletSubject.next(this.activeWallet);
             return true;
         }
 
@@ -434,6 +467,7 @@ export class WalletManager {
     async setActiveAccount(id: string) {
         if (this.activeWallet.activeAccountId != id) {
             this.activeWallet.activeAccountId = id;
+            this.activeAccountSubject.next(this.activeAccount);
             return true;
         }
 

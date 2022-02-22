@@ -2,9 +2,9 @@ import { Component, ChangeDetectorRef, ApplicationRef, NgZone, OnInit } from '@a
 import { CryptoService } from '../../services/crypto.service';
 import { UIState } from '../../services/ui-state.service';
 import { Router } from '@angular/router';
-import { OrchestratorService } from '../../services/orchestrator.service';
 import { NetworksService } from '../../services/networks.service';
 import { CommunicationService } from '../../services/communication.service';
+import { AppManager } from '../../services/application-manager';
 
 @Component({
     selector: 'app-nostr',
@@ -29,7 +29,7 @@ export class ActionNostrIdentityComponent implements OnInit {
         private ngZone: NgZone,
         private communication: CommunicationService,
         public networkService: NetworksService,
-        private manager: OrchestratorService,
+        private manager: AppManager,
         private cd: ChangeDetectorRef) {
         this.uiState.title = 'Nostr Identity';
 

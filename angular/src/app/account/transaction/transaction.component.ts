@@ -3,7 +3,6 @@ import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common'
 import { UIState } from '../../services/ui-state.service';
-import { OrchestratorService } from '../../services/orchestrator.service';
 import { CommunicationService } from '../../services/communication.service';
 import { IconService } from '../../services/icon.service';
 import { copyToClipboard } from '../../shared/utilities';
@@ -11,7 +10,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import * as QRCode from 'qrcode';
 import { Address, NetworkStatus, Transaction, TransactionView } from '../../interfaces';
 import { NetworksService } from '../../services/networks.service';
-import { Network } from '../../../background/networks';
+import { Network } from '../../services/networks';
 import { NetworkStatusService } from '../../services/network-status.service';
 import { EnvironmentService } from '../../services/environment.service';
 import { WalletManager } from '../../services/wallet-manager';
@@ -35,7 +34,6 @@ export class AccountTransactionComponent implements OnInit, OnDestroy {
     constructor(public uiState: UIState,
         private renderer: Renderer2,
         private networks: NetworksService,
-        private manager: OrchestratorService,
         private activatedRoute: ActivatedRoute,
         private env: EnvironmentService,
         private networkStatusService: NetworkStatusService,

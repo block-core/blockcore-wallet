@@ -10,6 +10,7 @@ import { NetworkStatusService } from '../services/network-status.service';
 import { Observable } from 'rxjs';
 import { NetworkStatus } from '../interfaces';
 import { DebugLogService } from '../services/debug-log.service';
+import { WalletManager } from '../services/wallet-manager';
 
 export interface Section {
   name: string;
@@ -40,6 +41,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     private router: Router,
     private logger: LoggerService,
     private network: NetworksService,
+    private walletManager: WalletManager,
     private debugLog: DebugLogService,
     private cd: ChangeDetectorRef) {
 
@@ -47,16 +49,16 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     this.logger.info('Dashboard was opened');
 
-    if (this.uiState.activeWallet) {
-      this.uiState.title = this.uiState.activeWallet.name;
+    if (this.walletManager.activeWallet) {
+      this.uiState.title = this.walletManager.activeWallet.name;
     }
   }
 
   ngOnInit(): void {
     // TODO: activeWalletUnlocked IS FALSE ON FIRST UNLOCK!!!
-    this.sub = this.uiState.activeWallet$.subscribe(() => {
-      if (this.uiState.activeWallet) {
-        this.uiState.title = this.uiState.activeWallet.name;
+    this.sub = this.walletManager.activeWallet$.subscribe(() => {
+      if (this.walletManager.activeWallet) {
+        this.uiState.title = this.walletManager.activeWallet.name;
       }
     });
   }
