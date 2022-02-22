@@ -1,19 +1,19 @@
 import { HDKey } from "micro-bip32";
 import { mnemonicToSeedSync } from 'micro-bip39';
-import { Account, Address, Logger, UnspentTransactionOutput, Wallet } from "../app/interfaces";
-import { MINUTE } from "../app/shared/constants";
+import { Account, Address, Logger, UnspentTransactionOutput, Wallet } from "../interfaces";
+import { MINUTE } from "../shared/constants";
 import { AppManager } from "./application-manager";
 import { Psbt } from '@blockcore/blockcore-js';
 import * as ecc from 'tiny-secp256k1';
 import ECPairFactory from 'ecpair';
 import { Injectable } from "@angular/core";
-import { NetworkStatusService } from "../app/services/network-status.service";
-import { LoggerService } from "../app/services/logger.service";
+import { NetworkStatusService } from "./network-status.service";
+import { LoggerService } from "./logger.service";
 import { CryptoUtility } from "./crypto-utility";
 import axiosRetry from 'axios-retry';
-import { SecureStateService } from "../app/services/secure-state.service";
-import { UIState } from "../app/services/ui-state.service";
-import { SettingsService } from "../app/services/settings.service";
+import { SecureStateService } from "./secure-state.service";
+import { UIState } from "./ui-state.service";
+import { SettingsService } from "./settings.service";
 
 const ECPair = ECPairFactory(ecc);
 var bitcoinMessage = require('bitcoinjs-message');

@@ -2,11 +2,10 @@ import { Component, ChangeDetectorRef, OnInit, OnDestroy } from '@angular/core';
 import { CryptoService } from '../services/crypto.service';
 import { UIState } from '../services/ui-state.service';
 import { Router } from '@angular/router';
-import { OrchestratorService } from '../services/orchestrator.service';
 import { CommunicationService } from '../services/communication.service';
 import { NetworkStatusService } from '../services/network-status.service';
 import { SecureStateService } from '../services/secure-state.service';
-import { WalletManager } from '../../background/wallet-manager';
+import { WalletManager } from '../services/wallet-manager';
 
 @Component({
   selector: 'app-home',
@@ -29,7 +28,6 @@ export class HomeComponent implements OnInit, OnDestroy {
     private crypto: CryptoService,
     private router: Router,
     private communication: CommunicationService,
-    private manager: OrchestratorService,
     private secure: SecureStateService,
     private walletManager: WalletManager,
     private cd: ChangeDetectorRef) {
@@ -64,17 +62,17 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.uiState.activeWallet$.subscribe((wallet => {
-      if (this.uiState.activeWallet) {
-        this.uiState.title = `Unlock ${this.uiState.activeWallet.name}`;
-      }
-    }));
+    // this.walletManager.activeWallet$.subscribe((wallet => {
+    //   if (this.walletManager.activeWallet) {
+    //     this.uiState.title = `Unlock ${this.walletManager.activeWallet.name}`;
+    //   }
+    // }));
 
     // Verify if the wallet is already unlocked.
-    if (this.uiState.activeWallet) {
-      this.uiState.title = `Unlock ${this.uiState.activeWallet.name}`;
+    if (this.walletManager.activeWallet) {
+      this.uiState.title = `Unlock ${this.walletManager.activeWallet.name}`;
 
-      if (this.secure.unlocked(this.uiState.activeWallet?.id)) {
+      if (this.secure.unlocked(this.walletManager.activeWallet?.id)) {
         this.router.navigateByUrl('/dashboard');
         // this.router.navigateByUrl('/account/view/' + this.uiState.activeWallet?.activeAccountIndex);
       }
@@ -110,8 +108,8 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   async unlock() {
-    if (this.uiState.activeWallet) {
-      const unlocked = await this.walletManager.unlockWallet(this.uiState.activeWallet.id, this.unlockPassword);
+    if (this.walletManager.activeWallet) {
+      const unlocked = await this.walletManager.unlockWallet(this.walletManager.activeWallet.id, this.unlockPassword);
       // this.manager.unlock(this.uiState.activeWallet.id, this.unlockPassword);
 
       if (unlocked) {
@@ -119,7 +117,7 @@ export class HomeComponent implements OnInit, OnDestroy {
           this.router.navigate(['action', this.uiState.action.action]);
         } else {
           // If user has zero accounts, we'll show the account select screen that will auto-create accounts the user chooses.
-          if (this.uiState.hasAccounts) {
+          if (this.walletManager.hasAccounts) {
             this.router.navigateByUrl('/dashboard');
             //this.router.navigateByUrl('/account/view/' + this.uiState.activeWallet.activeAccountIndex);
           } else {

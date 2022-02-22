@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { CommunicationService } from '../../../services/communication.service';
 import { SendService } from '../../../services/send.service';
 import { UIState } from '../../../services/ui-state.service';
+import { WalletManager } from '../../../services/wallet-manager';
 
 @Component({
     selector: 'app-account-send-sending',
@@ -16,6 +17,7 @@ export class AccountSendSendingComponent implements OnInit, OnDestroy {
         private router: Router,
         public sendService: SendService,
         private communication: CommunicationService,
+        private walletManager: WalletManager,
         public uiState: UIState) {
         // When the transaction is done, we'll make sure the back button sends back to home.
         this.uiState.goBackHome = true;
@@ -37,6 +39,6 @@ export class AccountSendSendingComponent implements OnInit, OnDestroy {
             this.router.navigateByUrl('/account/send/success');
         });
 
-        this.communication.send('transaction-send', { walletId: this.uiState.activeWallet.id, accountId: this.sendService.account.identifier, addresses: this.sendService.addresses, transactionHex: this.sendService.transactionHex });
+        this.communication.send('transaction-send', { walletId: this.walletManager.activeWallet.id, accountId: this.sendService.account.identifier, addresses: this.sendService.addresses, transactionHex: this.sendService.transactionHex });
     }
 }

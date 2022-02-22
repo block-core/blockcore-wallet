@@ -1,4 +1,4 @@
-import { Account, Wallet } from "../app/interfaces";
+import { Account, Wallet } from "../interfaces";
 import * as bip32 from 'bip32';
 
 /** Manager that keeps state and operations for a single account. This object does not keep the password, which must be supplied for signing operations. */

@@ -1,21 +1,20 @@
 import { Injectable } from "@angular/core";
 import { timeStamp } from "console";
 import { networkInterfaces } from "os";
-import { SecureStateService } from "../app/services/secure-state.service";
-import { UIState } from "../app/services/ui-state.service";
-import { Action, NetworkStatus, Settings, State } from "../app/interfaces";
-import { INDEXER_URL, MINUTE } from "../app/shared/constants";
+import { SecureStateService } from "./secure-state.service";
+import { UIState } from "./ui-state.service";
+import { Action, NetworkStatus, Settings, State } from "../interfaces";
+import { INDEXER_URL, MINUTE } from "../shared/constants";
 import { CommunicationBackgroundService } from "./communication";
 import { CryptoUtility } from "./crypto-utility";
 import { DataSyncService } from "./data-sync";
 import { IndexerService } from "./indexer";
 import { BackgroundLoggerService } from "./logger";
 import { NetworkLoader } from "./network-loader";
-import { NetworkStatusService } from "../app/services/network-status.service";
+import { NetworkStatusService } from "./network-status.service";
 import { Network } from "./networks";
-import { OrchestratorBackgroundService } from "./orchestrator";
 import { WalletManager } from "./wallet-manager";
-import { SettingsService } from "../app/services/settings.service";
+import { SettingsService } from "./settings.service";
 
 @Injectable({
     providedIn: 'root'
@@ -29,7 +28,6 @@ export class AppManager {
         public status: NetworkStatusService,
         public walletManager: WalletManager,
         public communication: CommunicationBackgroundService,
-        public orchestrator: OrchestratorBackgroundService,
         public indexer: IndexerService,
         public networkLoader: NetworkLoader,
         public crypto: CryptoUtility,
@@ -86,6 +84,11 @@ export class AppManager {
     //     // Send new state to UI instances.
     //     this.communication.sendToAll(eventName, currentState);
     // }
+
+    async clearAction() {
+        this.state.action = undefined;
+        await this.state.saveAction();
+    }
 
     async setAction(data: Action, broadcast: boolean) {
         debugger;

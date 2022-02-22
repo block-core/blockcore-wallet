@@ -2,8 +2,8 @@ import { Component, Inject, HostBinding } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common'
-import { UIState } from 'src/app/services/ui-state.service';
-import { OrchestratorService } from 'src/app/services/orchestrator.service';
+import { UIState } from '../../services/ui-state.service';
+import { WalletManager } from '../../services/wallet-manager';
 
 @Component({
   selector: 'app-vault-remove',
@@ -14,8 +14,8 @@ export class VaultRemoveComponent {
   constructor(
     private router: Router,
     private location: Location,
-    private manager: OrchestratorService,
     public uiState: UIState,
+    private walletManager: WalletManager,
     private activatedRoute: ActivatedRoute,
   ) {
     this.uiState.title = 'Remove Account';
@@ -26,12 +26,12 @@ export class VaultRemoveComponent {
       const accountId: any = params.get('index');
       console.log('Account identifier:', accountId);
 
-      const accountCount = this.uiState.activeWallet?.accounts?.length;
+      const accountCount = this.walletManager.activeWallet?.accounts?.length;
 
-      if (this.uiState.activeWallet) {
+      if (this.walletManager.activeWallet) {
         // Check if the index is available before allowing to change.
         if (accountId && accountCount != null) {
-          this.uiState.activeWallet.activeAccountId = accountId;
+          this.walletManager.activeWallet.activeAccountId = accountId;
         }
         else {
           console.log('Attempting to show account that does not exists.');
@@ -46,13 +46,13 @@ export class VaultRemoveComponent {
   }
 
   async wipe() {
-    if (!this.uiState.activeWallet) {
+    if (!this.walletManager.activeWallet) {
       return;
     }
 
-    var activeWallet = this.uiState.activeWallet;
+    var activeWallet = this.walletManager.activeWallet;
 
-    this.manager.removeAccount(activeWallet.id, activeWallet.activeAccountId);
+    // this.manager.removeAccount(activeWallet.id, activeWallet.activeAccountId);
   }
 
   cancel() {

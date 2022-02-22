@@ -1,12 +1,9 @@
-import { HttpClient } from '@angular/common/http';
-import { EventEmitter, Injectable, NgZone } from '@angular/core';
-import { Account, Action, NetworkStatus, Persisted, Store, Wallet } from '../interfaces';
-import { AUTO_TIMEOUT, INDEXER_URL, MINUTE, VAULT_URL } from '../shared/constants';
+import { Injectable, NgZone } from '@angular/core';
+import { Action, Persisted, Store, Wallet } from '../interfaces';
 import { Router } from '@angular/router';
 import { CommunicationService } from './communication.service';
-import { BehaviorSubject, ReplaySubject, Subject } from 'rxjs';
-import { Observable } from "rxjs";
-import { Network } from 'src/background/networks';
+import { ReplaySubject, Subject } from 'rxjs';
+import { Network } from './networks';
 import { SecureStateService } from './secure-state.service';
 
 declare const VERSION: string;
@@ -132,13 +129,13 @@ export class UIState {
     /** Indicates that the extension is currently loading. This is not just for UIState, but for the whole app. */
     loading = true;
 
-    get activeWalletUnlocked(): boolean {
-        if (!this.activeWallet) {
-            return false;
-        }
+    // get activeWalletUnlocked(): boolean {
+    //     if (!this.activeWallet) {
+    //         return false;
+    //     }
 
-        return this.secure.unlocked(this.activeWallet.id);
-    }
+    //     return this.secure.unlocked(this.activeWallet.id);
+    // }
 
     get unlocked() {
         return this.secure.unlockedWalletsSubject.value;

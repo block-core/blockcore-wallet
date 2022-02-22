@@ -12,6 +12,7 @@ import * as QRCode from 'qrcode';
 import { Address } from '../../interfaces';
 import { NetworksService } from '../../services/networks.service';
 import { Network } from '../../../background/networks';
+import { WalletManager } from '../../services/wallet-manager';
 var QRCode2 = require('qrcode');
 
 @Component({
@@ -29,11 +30,12 @@ export class AccountReceiveComponent implements OnInit, OnDestroy {
     constructor(public uiState: UIState,
         private renderer: Renderer2,
         private networks: NetworksService,
+        private walletManager: WalletManager,
         private snackBar: MatSnackBar) {
         // this.uiState.title = 'Receive Address';
         this.uiState.goBackHome = false;
 
-        const account = this.uiState.activeAccount;
+        const account = this.walletManager.activeAccount;
         this.network = this.networks.getNetwork(account.networkType);
     }
 
@@ -53,7 +55,7 @@ export class AccountReceiveComponent implements OnInit, OnDestroy {
 
     async ngOnInit() {
         // TODO: When can we start using .lastItem and similar functions on arrays?
-        this.addressEntry = this.uiState.activeAccount.state.receive[this.uiState.activeAccount.state.receive.length - 1];
+        this.addressEntry = this.walletManager.activeAccount.state.receive[this.walletManager.activeAccount.state.receive.length - 1];
         this.address = this.addressEntry.address;
 
         try {

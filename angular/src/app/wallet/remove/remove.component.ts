@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { Location } from '@angular/common'
 import { UIState } from '../../services/ui-state.service';
 import { LoggerService } from '../../services/logger.service';
-import { WalletManager } from '../../../background/wallet-manager';
+import { WalletManager } from '../../services/wallet-manager';
 
 @Component({
   selector: 'app-wallet-remove',

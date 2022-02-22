@@ -79,8 +79,8 @@ export class AccountCreateComponent implements OnInit, OnDestroy {
         this.derivationPath = this.getDerivationPath();
 
         this.sub = this.communication.listen('account-created', () => {
-            if (this.uiState.activeWallet) {
-                const mostRecentAccount = this.uiState.activeWallet.accounts[this.uiState.activeWallet.accounts.length - 1];
+            if (this.walletManager.activeWallet) {
+                const mostRecentAccount = this.walletManager.activeWallet.accounts[this.walletManager.activeWallet.accounts.length - 1];
                 this.router.navigateByUrl('/account/view/' + mostRecentAccount.identifier);
             }
         });
@@ -182,7 +182,7 @@ export class AccountCreateComponent implements OnInit, OnDestroy {
 
         // Don't persist the selected value.
         delete account.selected;
-        await this.walletManager.addAccount(account, this.uiState.activeWallet);
+        await this.walletManager.addAccount(account, this.walletManager.activeWallet);
 
         // this.communication.sendToAll('account-created');
         // this.manager.createAccount(this.uiState.activeWallet.id, account);

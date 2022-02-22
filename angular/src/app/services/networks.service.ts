@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import * as bip39 from 'bip39';
 import { Base64 } from 'js-base64';
-import { NetworkLoader } from '../../background/network-loader';
-import { Network } from '../../background/networks';
+import { NetworkLoader } from '../services/network-loader';
+import { Network } from '../services/networks';
 import { Account, Wallet } from '../interfaces';
 import { Environments } from '../../environments/environments';
 import { BehaviorSubject } from 'rxjs';

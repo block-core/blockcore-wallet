@@ -3,9 +3,9 @@ import { HttpClient } from '@angular/common/http';
 import { CryptoService } from '../services/crypto.service';
 import { UIState } from '../services/ui-state.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { OrchestratorService } from '../services/orchestrator.service';
 import { CommunicationService } from '../services/communication.service';
 import { NETWORK_IDENTITY } from '../shared/constants';
+import { WalletManager } from '../services/wallet-manager';
 
 @Component({
   selector: 'app-vault',
@@ -27,7 +27,6 @@ export class VaultComponent implements OnInit, OnDestroy {
     public uiState: UIState,
     private crypto: CryptoService,
     private router: Router,
-    private manager: OrchestratorService,
     private communication: CommunicationService,
     private activatedRoute: ActivatedRoute,
     private walletManager: WalletManager,
@@ -36,7 +35,7 @@ export class VaultComponent implements OnInit, OnDestroy {
     this.uiState.title = 'Account: ';
     this.uiState.showBackButton = true;
 
-    if (!this.uiState.hasAccounts) {
+    if (!this.walletManager.hasAccounts) {
       this.router.navigateByUrl('/account/create');
     }
 
@@ -47,16 +46,16 @@ export class VaultComponent implements OnInit, OnDestroy {
 
       console.log('Index to view:', index);
 
-      if (!this.uiState.activeWallet) {
+      if (!this.walletManager.activeWallet) {
         return;
       }
 
-      this.manager.setActiveAccountId(index);
-      this.uiState.title = 'Account: ' + this.uiState.activeAccount?.name;
+      // this.manager.setActiveAccountId(index);
+      this.uiState.title = 'Account: ' + this.walletManager.activeAccount?.name;
 
       this.previousIndex = index;
 
-      if (this.uiState.activeAccount?.network == NETWORK_IDENTITY) {
+      if (this.walletManager.activeAccount?.network == NETWORK_IDENTITY) {
         this.router.navigate(['account', 'view', 'identity', index]);
       }
 

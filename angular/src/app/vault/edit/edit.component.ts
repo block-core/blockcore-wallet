@@ -3,9 +3,9 @@ import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common'
 import { UIState } from '../../services/ui-state.service';
-import { OrchestratorService } from '../../services/orchestrator.service';
 import { CommunicationService } from '../../services/communication.service';
 import { IconService } from '../../services/icon.service';
+import { WalletManager } from '../../services/wallet-manager';
 
 @Component({
   selector: 'app-vault-edit',
@@ -24,7 +24,7 @@ export class VaultEditComponent implements OnInit, OnDestroy {
     private location: Location,
     public uiState: UIState,
     public icons: IconService,
-    private manager: OrchestratorService,
+    private walletManager: WalletManager,
     private communication: CommunicationService,
     private activatedRoute: ActivatedRoute,
   ) {
@@ -34,22 +34,22 @@ export class VaultEditComponent implements OnInit, OnDestroy {
       console.log('ROUTE CHANGE 1');
       const index: any = params.get('index');
 
-      if (!this.uiState.activeWallet) {
+      if (!this.walletManager.activeWallet) {
         console.log('ROUTE CHANGE 3');
         return;
       }
 
-      this.manager.setActiveAccountId(index);
-      this.accountName = this.uiState.activeAccount?.name;
-      this.icon = this.uiState.activeAccount?.icon;
+      // this.manager.setActiveAccountId(index);
+      this.accountName = this.walletManager.activeAccount?.name;
+      this.icon = this.walletManager.activeAccount?.icon;
       console.log('ROUTE CHANGE 2');
     });
 
-    this.sub2 = this.uiState.activeAccount$.subscribe(() => {
-      this.accountName = this.uiState.activeAccount?.name;
-      this.icon = this.uiState.activeAccount?.icon;
-      console.log('ROUTE CHANGE 2');
-    });
+    // this.sub2 = this.walletManager.activeAccount$.subscribe(() => {
+    //   this.accountName = this.walletManager.activeAccount?.name;
+    //   this.icon = this.walletManager.activeAccount?.icon;
+    //   console.log('ROUTE CHANGE 2');
+    // });
   }
 
   ngOnInit() {
@@ -59,9 +59,9 @@ export class VaultEditComponent implements OnInit, OnDestroy {
   }
 
   changeIcon(icon: string) {
-    if (this.uiState.activeAccount) {
-      this.uiState.activeAccount.icon = icon;
-    }
+    // if (this.uiState.activeAccount) {
+    //   this.uiState.activeAccount.icon = icon;
+    // }
   }
 
   ngOnDestroy(): void {
@@ -75,15 +75,15 @@ export class VaultEditComponent implements OnInit, OnDestroy {
   }
 
   async save() {
-    if (!this.uiState.activeWallet) {
+    if (!this.walletManager.activeWallet) {
       this.location.back();
       return;
     }
 
     // We won't allow empty names for accounts.
     if (this.accountName) {
-      const wallet = this.uiState.activeWallet;
-      const accountId = this.uiState.activeWallet.activeAccountId;
+      const wallet = this.walletManager.activeWallet;
+      const accountId = this.walletManager.activeWallet.activeAccountId;
 
       if (!wallet) {
         return;

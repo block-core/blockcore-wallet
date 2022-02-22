@@ -3,13 +3,12 @@ import { UIState } from '../services/ui-state.service';
 import { CryptoService } from '../services/crypto.service';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { CommunicationService } from '../services/communication.service';
-import { AppManager } from '../../background/application-manager';
+import { AppManager } from '../services/application-manager';
 import { SecureStateService } from '../services/secure-state.service';
 import * as secp from "@noble/secp256k1";
-import { WalletManager } from '../../background/wallet-manager';
+import { WalletManager } from '../services/wallet-manager';
 import { Action } from '../interfaces';
 import { TranslateService } from '@ngx-translate/core';
-import { OrchestratorService } from '../services/orchestrator.service';
 import { EnvironmentService } from '../services/environment.service';
 import { NetworksService } from '../services/networks.service';
 import { Location } from '@angular/common'
@@ -34,7 +33,6 @@ export class LoadingComponent implements OnInit, OnDestroy {
     private communication: CommunicationService,
     private renderer: Renderer2,
     public translate: TranslateService,
-    private manager: OrchestratorService,
     private location: Location,
     private cd: ChangeDetectorRef,
     private route: ActivatedRoute,
@@ -134,19 +132,19 @@ export class LoadingComponent implements OnInit, OnDestroy {
     console.log('ACTION:', this.uiState.action);
 
     // If an action has been triggered, we'll always show action until user closes the action.
-    if (this.uiState.action?.action && this.uiState.activeWallet && this.secure.unlocked(this.uiState.activeWallet.id)) {
+    if (this.uiState.action?.action && this.walletManager.activeWallet && this.secure.unlocked(this.walletManager.activeWallet.id)) {
       // TODO: Add support for more actions.
       this.router.navigate(['action', this.uiState.action?.action]);
     } else {
       // If the state was changed and there is no wallets, send user to create wallet UI.
-      if (!this.uiState.hasWallets) {
+      if (!this.walletManager.hasWallets) {
         this.router.navigateByUrl('/wallet/create');
       } else {
         // If the active wallet is unlocked, we'll redirect accordingly.
-        if (this.uiState.activeWallet && this.secure.unlocked(this.uiState.activeWallet.id)) {
+        if (this.walletManager.activeWallet && this.secure.unlocked(this.walletManager.activeWallet.id)) {
 
           // If user has zero accounts, we'll show the account select screen that will auto-create accounts the user chooses.
-          if (this.uiState.hasAccounts) {
+          if (this.walletManager.hasAccounts) {
             this.router.navigateByUrl('/dashboard');
             //this.router.navigateByUrl('/account/view/' + this.uiState.activeWallet.activeAccountIndex);
           } else {

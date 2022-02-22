@@ -35,20 +35,20 @@ export class AccountEditComponent implements OnInit, OnDestroy {
       console.log('ROUTE CHANGE 1');
       const index: any = params.get('index');
 
-      if (!this.uiState.activeWallet) {
+      if (!this.walletManager.activeWallet) {
         console.log('ROUTE CHANGE 3');
         return;
       }
 
       this.manager.setActiveAccountId(index);
-      this.accountName = this.uiState.activeAccount?.name;
-      this.icon = this.uiState.activeAccount?.icon;
+      this.accountName = this.walletManager.activeAccount?.name;
+      this.icon = this.walletManager.activeAccount?.icon;
       console.log('ROUTE CHANGE 2');
     });
 
-    this.sub2 = this.uiState.activeAccount$.subscribe(() => {
-      this.accountName = this.uiState.activeAccount?.name;
-      this.icon = this.uiState.activeAccount?.icon;
+    this.sub2 = this.walletManager.activeAccount$.subscribe(() => {
+      this.accountName = this.walletManager.activeAccount?.name;
+      this.icon = this.walletManager.activeAccount?.icon;
       console.log('ROUTE CHANGE 2');
     });
   }
@@ -58,8 +58,8 @@ export class AccountEditComponent implements OnInit, OnDestroy {
   }
 
   changeIcon(icon: string) {
-    if (this.uiState.activeAccount) {
-      this.uiState.activeAccount.icon = icon;
+    if (this.walletManager.activeAccount) {
+      this.walletManager.activeAccount.icon = icon;
     }
   }
 
@@ -70,15 +70,15 @@ export class AccountEditComponent implements OnInit, OnDestroy {
   }
 
   async save() {
-    if (!this.uiState.activeWallet) {
+    if (!this.walletManager.activeWallet) {
       this.location.back();
       return;
     }
 
     // We won't allow empty names for accounts.
     if (this.accountName) {
-      const wallet = this.uiState.activeWallet;
-      const accountId = this.uiState.activeWallet.activeAccountId;
+      const wallet = this.walletManager.activeWallet;
+      const accountId = this.walletManager.activeWallet.activeAccountId;
 
       if (!wallet) {
         return;

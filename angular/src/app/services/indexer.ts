@@ -1,13 +1,11 @@
-import { address } from '@blockcore/blockcore-js';
-import { Account, Address, IndexerApiStatus, Logger, Transaction, UnspentTransactionOutput, Wallet } from '../app/interfaces';
-import { AppManager } from './application-manager';
+import { Account, Address, IndexerApiStatus, Transaction, UnspentTransactionOutput, Wallet } from '../interfaces';
 import axiosRetry from 'axios-retry';
 import { Injectable } from '@angular/core';
-import { NetworkStatusService } from '../app/services/network-status.service';
-import { LoggerService } from '../app/services/logger.service';
+import { NetworkStatusService } from './network-status.service';
+import { LoggerService } from './logger.service';
 import { WalletManager } from './wallet-manager';
-import { UIState } from '../app/services/ui-state.service';
-import { SettingsService } from '../app/services/settings.service';
+import { UIState } from './ui-state.service';
+import { SettingsService } from './settings.service';
 
 //const axios = require('axios');
 // In order to gain the TypeScript typings (for intellisense / autocomplete) while using CommonJS imports with require() use the following approach:
@@ -248,7 +246,7 @@ export class IndexerService {
 
                     // TODO: Implement error handling in background and how to send it to UI.
                     // We should probably have an error log in settings, so users can see background problems as well.
-                    
+
                     // TODO: FIX THIS!!
                     // this.communication.sendToAll('error', error);
                 }
@@ -450,7 +448,7 @@ export class IndexerService {
                         account.state.pendingReceived = this.walletManager.calculatePendingReceived(account);
                         account.state.pendingSent = this.walletManager.calculatePendingSent(account);
                         await this.state.save();
-                        
+
                         // TODO!!
                         // this.manager.broadcastState();
                     }
@@ -553,7 +551,7 @@ export class IndexerService {
                         account.state.pendingReceived = this.walletManager.calculatePendingReceived(account);
                         account.state.pendingSent = this.walletManager.calculatePendingSent(account);
                         await this.state.save();
-                        
+
                         // TODO: FIX!
                         // this.manager.broadcastState();
                     }

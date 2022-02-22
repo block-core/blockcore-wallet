@@ -9,6 +9,7 @@ import { NetworksService } from '../services/networks.service';
 import { NetworkStatus, TransactionHistory } from '../interfaces';
 import { NetworkStatusService } from '../services/network-status.service';
 import { SettingsService } from '../services/settings.service';
+import { WalletManager } from '../services/wallet-manager';
 
 @Component({
   selector: 'app-account',
@@ -44,12 +45,13 @@ export class AccountComponent implements OnInit, OnDestroy {
     private manager: OrchestratorService,
     private communication: CommunicationService,
     private activatedRoute: ActivatedRoute,
+    private walletManager: WalletManager,
     private snackBar: MatSnackBar) {
 
     this.uiState.title = '';
     this.uiState.showBackButton = true;
 
-    if (!this.uiState.hasAccounts) {
+    if (!this.walletManager.hasAccounts) {
       this.router.navigateByUrl('/account/create');
     }
 
@@ -57,7 +59,7 @@ export class AccountComponent implements OnInit, OnDestroy {
       console.log('PARAMS:', params);
       const accountIdentifier: any = params.get('index');
 
-      if (!this.uiState.activeWallet) {
+      if (!this.walletManager.activeWallet) {
         return;
       }
 
@@ -88,16 +90,16 @@ export class AccountComponent implements OnInit, OnDestroy {
 
   scan(force: boolean = false) {
     this.loading = true;
-    this.communication.send('account-scan', { force: force, accountId: this.uiState.activeAccount.identifier, walletId: this.uiState.activeWallet.id });
+    this.communication.send('account-scan', { force: force, accountId: this.walletManager.activeAccount.identifier, walletId: this.walletManager.activeWallet.id });
 
     // Update the network status on every scan.
-    this.currentNetworkStatus = this.networkStatusService.get(this.uiState.activeAccount.networkType);
+    this.currentNetworkStatus = this.networkStatusService.get(this.walletManager.activeAccount.networkType);
   }
 
   async toggleNetwork() {
     if (!this.networkStatus) {
       try {
-        const network = this.network.getNetwork(this.uiState.activeAccount.networkType);
+        const network = this.network.getNetwork(this.walletManager.activeAccount.networkType);
         const indexerUrl = this.settings.values.indexer.replace('{id}', network.id.toLowerCase());
         let result: any = await this.http.get(`${indexerUrl}/api/stats/info`).toPromise();
         this.networkStatus = result;
@@ -125,7 +127,7 @@ export class AccountComponent implements OnInit, OnDestroy {
   }
 
   private refreshTransactionHistory() {
-    const account = this.uiState.activeAccount;
+    const account = this.walletManager.activeAccount;
 
     // Get a full list of transactions. We run filter at the end to remove empty entries.
     const transactionsReceive = account.state.receive.flatMap(item => item.transactions).filter((el) => el != null);
@@ -243,7 +245,7 @@ export class AccountComponent implements OnInit, OnDestroy {
   }
 
   updateNetworkStatus() {
-    this.currentNetworkStatus = this.networkStatusService.get(this.uiState.activeAccount.networkType);
+    this.currentNetworkStatus = this.networkStatusService.get(this.walletManager.activeAccount.networkType);
   }
 
   async ngOnInit() {
@@ -264,7 +266,7 @@ export class AccountComponent implements OnInit, OnDestroy {
 
       // When the active account has changed, let's update the title:
       // We cannot set title yet, we must wait for callback for changing account...
-      this.uiState.title = this.uiState.activeAccount?.name || '';
+      this.uiState.title = this.walletManager.activeAccount?.name || '';
 
       // if (this.uiState.activeAccount?.network == NETWORK_IDENTITY) {
       //   this.router.navigate(['account', 'view', 'identity', accountIdentifier]);

@@ -1,10 +1,9 @@
 import { Location } from '@angular/common';
 import { Component, HostBinding, OnDestroy, ViewEncapsulation } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { CommunicationService } from 'src/app/services/communication.service';
-import { UIState } from 'src/app/services/ui-state.service';
-import { copyToClipboard } from 'src/app/shared/utilities';
-import { WalletManager } from '../../../background/wallet-manager';
+import { UIState } from '../../services/ui-state.service';
+import { copyToClipboard } from '../../shared/utilities';
+import { WalletManager } from '../../services/wallet-manager';
 
 @Component({
     selector: 'app-recovery',
@@ -35,7 +34,7 @@ export class RecoveryComponent implements OnDestroy {
     }
 
     async show() {
-        var recoveryPhrase = await this.walletManager.revealSecretRecoveryPhrase(this.uiState.activeWallet?.id, this.password);
+        var recoveryPhrase = await this.walletManager.revealSecretRecoveryPhrase(this.walletManager.activeWallet?.id, this.password);
 
         if (recoveryPhrase) {
             this.mnemonic = recoveryPhrase;

@@ -13,6 +13,7 @@ import { Address, UnspentTransactionOutput } from '../../interfaces';
 import { NetworksService } from '../../services/networks.service';
 import { Network } from '../../../background/networks';
 import { SendService } from '../../services/send.service';
+import { WalletManager } from '../../services/wallet-manager';
 var QRCode2 = require('qrcode');
 
 @Component({
@@ -37,13 +38,14 @@ export class AccountSendComponent implements OnInit, OnDestroy {
         private renderer: Renderer2,
         private networks: NetworksService,
         private communication: CommunicationService,
+        private walletManager: WalletManager,
         private snackBar: MatSnackBar) {
         // this.uiState.title = 'Receive Address';
         this.uiState.goBackHome = false;
 
         sendService.reset();
 
-        const account = this.uiState.activeAccount;
+        const account = this.walletManager.activeAccount;
         const network = this.networks.getNetwork(account.networkType);
 
         sendService.account = account;
@@ -79,8 +81,8 @@ export class AccountSendComponent implements OnInit, OnDestroy {
         // this.addressEntry = this.uiState.activeAccount.state.receive[this.uiState.activeAccount.state.receive.length - 1];
         // this.address = this.addressEntry.address;
 
-        const unspentReceive = this.uiState.activeAccount.state.receive.flatMap(i => i.unspent).filter(i => i !== undefined);
-        const unspentChange = this.uiState.activeAccount.state.change.flatMap(i => i.unspent).filter(i => i !== undefined);
+        const unspentReceive = this.walletManager.activeAccount.state.receive.flatMap(i => i.unspent).filter(i => i !== undefined);
+        const unspentChange = this.walletManager.activeAccount.state.change.flatMap(i => i.unspent).filter(i => i !== undefined);
 
         this.unspent = [...unspentReceive, ...unspentChange];
 

@@ -32,7 +32,7 @@ export class AccountSelectComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         // Get the default accounts for the current wallet:
-        const accounts = this.networkService.getDefaultAccounts(this.uiState.activeWallet);
+        const accounts = this.networkService.getDefaultAccounts(this.walletManager.activeWallet);
 
         this.coins = accounts.filter(item => item.type === 'coin' || item.type === 'token');
         this.other = accounts.filter(item => item.type === 'other');
@@ -54,7 +54,7 @@ export class AccountSelectComponent implements OnInit, OnDestroy {
 
         // this.orchestrator.createAccounts(this.uiState.activeWallet.id, accounts);
 
-        const wallet = this.walletManager.getWallet(this.uiState.activeWallet.id);
+        const wallet = this.walletManager.getWallet(this.walletManager.activeWallet.id);
 
         for (const account of accounts) {
             // Don't persist the selected value.

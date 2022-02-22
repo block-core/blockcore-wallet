@@ -14,6 +14,7 @@ import { NetworksService } from '../../services/networks.service';
 import { Network } from '../../../background/networks';
 import { NetworkStatusService } from '../../services/network-status.service';
 import { EnvironmentService } from '../../services/environment.service';
+import { WalletManager } from '../../services/wallet-manager';
 var QRCode2 = require('qrcode');
 
 @Component({
@@ -38,20 +39,21 @@ export class AccountTransactionComponent implements OnInit, OnDestroy {
         private activatedRoute: ActivatedRoute,
         private env: EnvironmentService,
         private networkStatusService: NetworkStatusService,
+        private walletManager: WalletManager,
         private snackBar: MatSnackBar) {
         // this.uiState.title = 'Receive Address';
         this.uiState.goBackHome = false;
 
-        const account = this.uiState.activeAccount;
+        const account = this.walletManager.activeAccount;
         this.network = this.networks.getNetwork(account.networkType);
 
         this.activatedRoute.paramMap.subscribe(async params => {
             this.txid = params.get('txid');
 
-            this.currentNetworkStatus = this.networkStatusService.get(this.uiState.activeAccount.networkType);
+            this.currentNetworkStatus = this.networkStatusService.get(this.walletManager.activeAccount.networkType);
 
             // TODO: Move this logic to an service.
-            const account = this.uiState.activeAccount;
+            const account = this.walletManager.activeAccount;
 
             const receiveTransactions = account.state.receive.filter(item => item.transactions?.find(i => i.transactionHash == this.txid));
             const filteredReceiveTransactions = receiveTransactions.flatMap(i => i.transactions?.find(i => i.transactionHash == this.txid));
@@ -112,7 +114,7 @@ export class AccountTransactionComponent implements OnInit, OnDestroy {
 
     async ngOnInit() {
         // TODO: When can we start using .lastItem and similar functions on arrays?
-        this.addressEntry = this.uiState.activeAccount.state.receive[this.uiState.activeAccount.state.receive.length - 1];
+        this.addressEntry = this.walletManager.activeAccount.state.receive[this.walletManager.activeAccount.state.receive.length - 1];
         this.address = this.addressEntry.address;
 
         try {

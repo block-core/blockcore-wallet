@@ -1,5 +1,3 @@
-import { Account, State, Wallet, Action, DIDPayload, Settings, Identity, Vault } from '../app/interfaces';
-import { MINUTE, NETWORK_IDENTITY } from '../app/shared/constants';
 import { CommunicationBackgroundService } from './communication';
 import { CryptoUtility } from './crypto-utility';
 import * as bip39 from 'bip39';

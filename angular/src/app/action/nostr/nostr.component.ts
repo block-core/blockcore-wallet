@@ -63,15 +63,15 @@ export class ActionNostrIdentityComponent implements OnInit {
     }
 
     sign() {
-        this.manager.signCallbackToUrl(this.content, this.uiState.action?.tabId, this.callback);
+        // this.manager.signCallbackToUrl(this.content, this.uiState.action?.tabId, this.callback);
     }
 
-    exit() {
-        this.manager.clearAction();
+    async exit() {
+        await this.manager.clearAction();
     }
-    
-    close() {
-        this.manager.clearAction();
+
+    async close() {
+        await this.manager.clearAction();
         window.close();
     }
 }

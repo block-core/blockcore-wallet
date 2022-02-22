@@ -1,14 +1,12 @@
 import { Component, Renderer2 } from '@angular/core';
 import { UIState } from '../services/ui-state.service';
 import { Location } from '@angular/common'
-import { OrchestratorService } from '../services/orchestrator.service';
 import { Settings } from '../interfaces';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { INDEXER_URL } from '../shared/constants';
 import { TranslateService } from '@ngx-translate/core';
 import { FeatureService } from '../services/features.service';
 import { EnvironmentService } from '../services/environment.service';
-import { AppManager } from '../../background/application-manager';
 import { SettingsService } from '../services/settings.service';
 
 @Component({
@@ -27,8 +25,6 @@ export class SettingsComponent {
     public feature: FeatureService,
     public env: EnvironmentService,
     private renderer: Renderer2,
-    private manager: OrchestratorService,
-    private appManager: AppManager,
     private settingsService: SettingsService,
     private location: Location) {
 

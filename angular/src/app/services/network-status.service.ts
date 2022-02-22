@@ -2,10 +2,11 @@ import { Injectable } from '@angular/core';
 import { UIState } from './ui-state.service';
 import { Account, IndexerApiStatus, NetworkStatus } from '../interfaces';
 import { EnvironmentService } from './environment.service';
-import { NetworkLoader } from '../../background/network-loader';
-import { Network } from '../../background/networks';
+import { NetworkLoader } from './network-loader';
+import { Network } from './networks';
 import { SettingsService } from './settings.service';
 import { StateService } from './state.service';
+import { WalletManager } from './wallet-manager';
 const axios = require('axios').default;
 
 @Injectable({
@@ -21,6 +22,7 @@ export class NetworkStatusService {
         private networkLoader: NetworkLoader,
         private env: EnvironmentService,
         private state: StateService,
+        private walletManager: WalletManager,
         private settings: SettingsService,
         private uiState: UIState) {
 
@@ -68,7 +70,7 @@ export class NetworkStatusService {
     /** Iterate over all active accounts and check the latest networks status. */
     async refreshNetworkStatus() {
         try {
-            await this.updateAll(this.uiState.activeWallet.accounts);
+            await this.updateAll(this.walletManager.activeWallet.accounts);
         }
         catch (err) {
 

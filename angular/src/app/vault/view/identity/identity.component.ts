@@ -3,13 +3,12 @@ import { HttpClient } from '@angular/common/http';
 import { CryptoService } from '../../../services/crypto.service';
 import { UIState } from '../../../services/ui-state.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { OrchestratorService } from '../../../services/orchestrator.service';
 import { CommunicationService } from '../../../services/communication.service';
 import { Identity } from '../../../interfaces';
 import { copyToClipboard } from '../../../shared/utilities';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SettingsService } from '../../../services/settings.service';
-import { WalletManager } from '../../../../background/wallet-manager';
+import { WalletManager } from '../../../services/wallet-manager';
 
 @Component({
   selector: 'app-vault-identity',
@@ -50,7 +49,6 @@ export class VaultIdentityComponent implements OnInit, OnDestroy {
     private snackBar: MatSnackBar,
     private crypto: CryptoService,
     private router: Router,
-    private manager: OrchestratorService,
     private settings: SettingsService,
     private communication: CommunicationService,
     private walletManager: WalletManager,
@@ -169,12 +167,12 @@ export class VaultIdentityComponent implements OnInit, OnDestroy {
     }
 
     console.log(this.identity);
-    this.manager.updateIdentity(this.identity);
+    // this.manager.updateIdentity(this.identity);
   }
 
   publish() {
     if (this.identity) {
-      this.manager.publishIdentity(this.identity);
+      // this.manager.publishIdentity(this.identity);
     }
   }
 
@@ -188,7 +186,7 @@ export class VaultIdentityComponent implements OnInit, OnDestroy {
 
   copyVaultConfiguration() {
     var domain = this.verifiableDataRegistryUrl;
-    this.manager.generateVaultConfiguration(domain);
+    // this.manager.generateVaultConfiguration(domain);
   }
 
   ngOnInit(): void {

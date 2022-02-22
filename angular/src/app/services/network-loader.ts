@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { NetworkStatus } from '../app/interfaces';
 import { Network, BTC44, BTC84, CITY, CRS, IDENTITY, NOSTR, STRAX, TSTRAX, TCRS } from './networks';
 
 @Injectable({
@@ -8,7 +7,7 @@ import { Network, BTC44, BTC84, CITY, CRS, IDENTITY, NOSTR, STRAX, TSTRAX, TCRS 
 /** Holds a list of networks that is available. */
 export class NetworkLoader {
     private networks: Network[] = [];
-    
+
     constructor() {
         this.createNetworks();
     }

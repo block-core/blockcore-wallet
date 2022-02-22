@@ -2,9 +2,10 @@ import { Component, ChangeDetectorRef, ApplicationRef, NgZone, OnInit } from '@a
 import { CryptoService } from '../../services/crypto.service';
 import { UIState } from '../../services/ui-state.service';
 import { Router } from '@angular/router';
-import { OrchestratorService } from '../../services/orchestrator.service';
 import { NetworksService } from '../../services/networks.service';
 import { CommunicationService } from '../../services/communication.service';
+import { WalletManager } from '../../services/wallet-manager';
+import axios from 'axios';
 
 @Component({
     selector: 'app-sid',
@@ -29,7 +30,7 @@ export class ActionStratisIdentityComponent implements OnInit {
         private ngZone: NgZone,
         private communication: CommunicationService,
         public networkService: NetworksService,
-        private manager: OrchestratorService,
+        private walletManager: WalletManager,
         private cd: ChangeDetectorRef) {
         this.uiState.title = 'Stratis Identity';
 
@@ -62,14 +63,52 @@ export class ActionStratisIdentityComponent implements OnInit {
         });
     }
 
-    sign() {
-        this.manager.signCallbackToUrl(this.content, this.uiState.action?.tabId, this.callback);
+    async sign() {
+        // this.manager.signCallbackToUrl(this.content, this.uiState.action?.tabId, this.callback);
+
+        // const wallet = this.walletManager.getWallet(data.walletId);
+        // const account = this.walletManager.getAccount(wallet, data.accountId);
+
+        // if (!wallet || !account) {
+        //     chrome.tabs.sendMessage(Number(data.tabId), { content: 'No wallet/account active.' });
+        //     return;
+        // }
+
+        if (!this.walletManager.isActiveWalletUnlocked()) {
+            throw Error('Active wallet is not unlocked.');
+        }
+
+        // TODO: Provide the address from the Action UI.
+        const address = this.walletManager.activeAccount.state.receive[0].address;
+
+        const signature = await this.walletManager.signData(this.walletManager.activeWallet, this.walletManager.activeAccount, address, this.content);
+
+        const payload = {
+            "signature": signature,
+            "publicKey": address
+        };
+
+        console.log(payload);
+
+        // Perform HTTP post call with payload!
+        const authRequest = await axios.post(this.callback, payload);
+        console.log(authRequest);
+
+        if (authRequest.status == 204) {
+            // TODO: Figure out if we should inform all or just source for this event.
+            this.communication.sendToAll('signed-content-and-callback-to-url', { success: true });
+            // this.manager.communication.send(port, 'signed-content-and-callback-to-url');
+        } else {
+            // TODO: Figure out if we should inform all or just source for this event.
+            this.communication.sendToAll('signed-content-and-callback-to-url', { success: false, data: authRequest.data });
+            // this.manager.communication.send(port, 'signed-content-and-callback-to-url');
+        }
     }
 
     exit() {
         this.manager.clearAction();
     }
-    
+
     close() {
         this.manager.clearAction();
         window.close();

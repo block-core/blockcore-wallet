@@ -141,11 +141,11 @@ export class AppComponent implements OnInit {
     // TODO: We also must remove the master key at this time, but we currently don't keep master key in-memory.
     // this.uiState.unlocked = false;
 
-    if (!this.uiState.activeWallet) {
+    if (!this.walletManager.activeWallet) {
       return;
     }
 
-    this.walletManager.lockWallet(this.uiState.activeWallet.id);
+    this.walletManager.lockWallet(this.walletManager.activeWallet.id);
 
     //this.uiState.port?.postMessage({ method: 'lock' });
     // this.uiState.password = null;
@@ -171,9 +171,6 @@ export class AppComponent implements OnInit {
       this.router.navigateByUrl('/wallet/create');
     } else {
       await this.walletManager.setActiveWallet(walletId);
-
-      // We also must update the local state immediately because we are not waiting for callback before redirect.
-      this.uiState.persisted.activeWalletId = walletId;
 
       if (this.secure.unlocked(walletId)) {
         this.router.navigateByUrl('/dashboard');

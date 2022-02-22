@@ -1,10 +1,9 @@
 import { Location } from '@angular/common';
 import { Component, HostBinding, OnDestroy, ViewEncapsulation } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { UIState } from 'src/app/services/ui-state.service';
+import { UIState } from '../../services/ui-state.service';
 import { CommunicationService } from '../../services/communication.service';
 import { FeatureService } from '../../services/features.service';
-import { OrchestratorService } from '../../services/orchestrator.service';
 
 @Component({
     selector: 'app-handler',
@@ -17,7 +16,6 @@ export class HandlerComponent implements OnDestroy {
         public uiState: UIState,
         public location: Location,
         private snackBar: MatSnackBar,
-        private manager: OrchestratorService,
         private communication: CommunicationService,
         public feature: FeatureService,
     ) {

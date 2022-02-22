@@ -3,12 +3,12 @@ import { HttpClient } from '@angular/common/http';
 import { CryptoService } from '../../../services/crypto.service';
 import { UIState } from '../../../services/ui-state.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { OrchestratorService } from '../../../services/orchestrator.service';
 import { CommunicationService } from '../../../services/communication.service';
-import { Identity } from 'src/app/interfaces';
-import { copyToClipboard } from 'src/app/shared/utilities';
+import { Identity } from '../../../interfaces';
+import { copyToClipboard } from '../../../shared/utilities';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SettingsService } from '../../../services/settings.service';
+import { WalletManager } from '../../../services/wallet-manager';
 
 @Component({
   selector: 'app-account-identity',
@@ -49,16 +49,16 @@ export class AccountIdentityComponent implements OnInit, OnDestroy {
     private snackBar: MatSnackBar,
     private crypto: CryptoService,
     private router: Router,
-    private manager: OrchestratorService,
     private communication: CommunicationService,
     private activatedRoute: ActivatedRoute,
     private settings: SettingsService,
+    private walletManager: WalletManager,
     private cd: ChangeDetectorRef) {
 
     this.uiState.title = 'Account: ';
     this.uiState.showBackButton = true;
 
-    if (!this.uiState.hasAccounts) {
+    if (!this.walletManager.hasAccounts) {
       this.router.navigateByUrl('/account/create');
     }
 
@@ -79,7 +79,7 @@ export class AccountIdentityComponent implements OnInit, OnDestroy {
       // }
 
       // this.manager.setActiveAccountId(index);
-      this.uiState.title = 'Account: ' + this.uiState.activeAccount?.name;
+      this.uiState.title = 'Account: ' + this.walletManager.activeAccount?.name;
 
       // this.uiState.persisted.activeAccountIndex = Number(index);
 
@@ -88,7 +88,7 @@ export class AccountIdentityComponent implements OnInit, OnDestroy {
 
       // this.previousIndex = index;
 
-      var did = this.uiState.activeAccount?.identifier;
+      var did = this.walletManager.activeAccount?.identifier;
       this.identity = this.uiState.store.identities.find(i => i.id == did);
 
       let service = this.identity?.services.find(s => s.type == 'VerifiableDataRegistry');
@@ -167,12 +167,12 @@ export class AccountIdentityComponent implements OnInit, OnDestroy {
     }
 
     console.log(this.identity);
-    this.manager.updateIdentity(this.identity);
+    // this.manager.updateIdentity(this.identity);
   }
 
   publish() {
     if (this.identity) {
-      this.manager.publishIdentity(this.identity);
+      // this.manager.publishIdentity(this.identity);
     }
   }
 
@@ -186,7 +186,7 @@ export class AccountIdentityComponent implements OnInit, OnDestroy {
 
   copyVaultConfiguration() {
     var domain = this.verifiableDataRegistryUrl;
-    this.manager.generateVaultConfiguration(domain);
+    // this.manager.generateVaultConfiguration(domain);
   }
 
   ngOnInit(): void {
@@ -225,12 +225,12 @@ export class AccountIdentityComponent implements OnInit, OnDestroy {
       // const index = data.index;
       // console.log('Index to view:', index);
 
-      if (!this.uiState.activeWallet) {
+      if (!this.walletManager.activeWallet) {
         return;
       }
 
       // this.manager.setActiveAccountId(index);
-      this.uiState.title = 'Account: ' + this.uiState.activeAccount?.name;
+      this.uiState.title = 'Account: ' + this.walletManager.activeAccount?.name;
 
       // this.uiState.persisted.activeAccountIndex = Number(index);
 
@@ -239,7 +239,7 @@ export class AccountIdentityComponent implements OnInit, OnDestroy {
 
       // this.previou1sIndex = index;
 
-      var did = this.uiState.activeAccount?.identifier;
+      var did = this.walletManager.activeAccount?.identifier;
       this.identity = this.uiState.store.identities.find(i => i.id == did);
 
       // if (this.identity) {

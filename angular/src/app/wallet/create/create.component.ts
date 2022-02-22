@@ -6,7 +6,7 @@ import { CommunicationService } from '../../services/communication.service';
 import { Wallet } from '../../interfaces';
 import { copyToClipboard } from '../../shared/utilities';
 import { FeatureService } from '../../services/features.service';
-import { WalletManager } from 'src/background/wallet-manager';
+import { WalletManager } from '../../services/wallet-manager';
 const { v4: uuidv4 } = require('uuid');
 
 @Component({

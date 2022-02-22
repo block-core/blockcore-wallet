@@ -10,6 +10,7 @@ import { copyToClipboard } from 'src/app/shared/utilities';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { HDKey } from 'micro-bip32';
 import { SettingsService } from '../../../services/settings.service';
+import { WalletManager } from '../../../services/wallet-manager';
 
 @Component({
   selector: 'app-nostr-identity',
@@ -53,6 +54,7 @@ export class NostrIdentityComponent implements OnInit, OnDestroy {
     private router: Router,
     private manager: OrchestratorService,
     private communication: CommunicationService,
+    private walletManager: WalletManager,
     private activatedRoute: ActivatedRoute,
     private settings: SettingsService,
     private cd: ChangeDetectorRef) {
@@ -60,7 +62,7 @@ export class NostrIdentityComponent implements OnInit, OnDestroy {
     this.uiState.title = '';
     this.uiState.showBackButton = true;
 
-    if (!this.uiState.hasAccounts) {
+    if (!this.walletManager.hasAccounts) {
       this.router.navigateByUrl('/account/create');
     }
 
@@ -81,7 +83,7 @@ export class NostrIdentityComponent implements OnInit, OnDestroy {
       // }
 
       // this.manager.setActiveAccountId(index);
-      this.uiState.title = '' + this.uiState.activeAccount?.name;
+      this.uiState.title = '' + this.walletManager.activeAccount?.name;
 
       // let root = HDKey.fromMasterSeed(Buffer.from(seed, 'hex'))
       // return Buffer.from(root.derive(`m/44'/1237'/0'/0/0`).privateKey).toString('hex');
@@ -95,7 +97,7 @@ export class NostrIdentityComponent implements OnInit, OnDestroy {
 
       // this.previousIndex = index;
 
-      var did = this.uiState.activeAccount?.identifier;
+      var did = this.walletManager.activeAccount?.identifier;
       this.identity = this.uiState.store.identities.find(i => i.id == did);
 
       let service = this.identity?.services.find(s => s.type == 'VerifiableDataRegistry');
@@ -244,12 +246,12 @@ export class NostrIdentityComponent implements OnInit, OnDestroy {
 
       // console.log('Index to view:', index);
 
-      if (!this.uiState.activeWallet) {
+      if (!this.walletManager.activeWallet) {
         return;
       }
 
       // this.manager.setActiveAccountId(index);
-      this.uiState.title = '' + this.uiState.activeAccount?.name;
+      this.uiState.title = '' + this.walletManager.activeAccount?.name;
 
       // this.uiState.persisted.activeAccountIndex = Number(index);
 
@@ -258,7 +260,7 @@ export class NostrIdentityComponent implements OnInit, OnDestroy {
 
       // this.previousIndex = index;
 
-      var did = this.uiState.activeAccount?.identifier;
+      var did = this.walletManager.activeAccount?.identifier;
       this.identity = this.uiState.store.identities.find(i => i.id == did);
 
       // if (this.identity) {

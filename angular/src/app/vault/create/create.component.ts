@@ -5,7 +5,7 @@ import { UIState } from '../../services/ui-state.service';
 import { CryptoService } from '../../services/crypto.service';
 import { Account, Vault } from '../../interfaces';
 import { Router } from '@angular/router';
-import { OrchestratorService } from '../../services/orchestrator.service';
+import { WalletManager } from '../../services/wallet-manager';
 import { CommunicationService } from '../../services/communication.service';
 import { IconService } from '../../services/icon.service';
 
@@ -50,7 +50,7 @@ export class VaultCreateComponent implements OnInit, OnDestroy {
         private router: Router,
         public icons: IconService,
         private communication: CommunicationService,
-        private manager: OrchestratorService,
+        private walletManager: WalletManager,
         private cd: ChangeDetectorRef
     ) {
         this.uiState.title = 'Create new vault';
@@ -76,8 +76,8 @@ export class VaultCreateComponent implements OnInit, OnDestroy {
         this.derivationPath = this.getDerivationPath();
 
         this.sub = this.communication.listen('account-created', () => {
-            if (this.uiState.activeWallet) {
-                const mostRecentAccount = this.uiState.activeWallet.accounts[this.uiState.activeWallet.accounts.length - 1];
+            if (this.walletManager.activeWallet) {
+                const mostRecentAccount = this.walletManager.activeWallet.accounts[this.walletManager.activeWallet.accounts.length - 1];
                 this.router.navigateByUrl('/account/view/' + mostRecentAccount.identifier);
             }
         });
@@ -92,7 +92,7 @@ export class VaultCreateComponent implements OnInit, OnDestroy {
         console.log(event.value);
         console.log('selectedAccountIndex:' + this.selectedAccountIndex);
 
-        this.vault.controller = this.uiState.activeWallet?.accounts[this.selectedAccountIndex].identifier;
+        this.vault.controller = this.walletManager.activeWallet?.accounts[this.selectedAccountIndex].identifier;
 
         this.generate();
     }
@@ -177,7 +177,7 @@ export class VaultCreateComponent implements OnInit, OnDestroy {
     }
 
     create() {
-        this.manager.createVault(this.vault);
+        // this.manager.createVault(this.vault);
 
         // const splittedPath = this.derivationPath.split('/');
         // const splittedPathReplaced = this.derivationPath.replaceAll(`'`, ``).split('/');

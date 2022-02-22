@@ -2,10 +2,8 @@ import { Location } from '@angular/common';
 import { Component, HostBinding, OnDestroy, ViewEncapsulation } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-import { UIState } from 'src/app/services/ui-state.service';
-import { WalletManager } from '../../../background/wallet-manager';
-import { CommunicationService } from '../../services/communication.service';
-import { OrchestratorService } from '../../services/orchestrator.service';
+import { UIState } from '../../services/ui-state.service';
+import { WalletManager } from '../../services/wallet-manager';
 
 @Component({
     selector: 'app-password',
@@ -25,9 +23,7 @@ export class PasswordComponent implements OnDestroy {
         public location: Location,
         private snackBar: MatSnackBar,
         private walletManager: WalletManager,
-        private router: Router,
-        private manager: OrchestratorService,
-        private communication: CommunicationService
+        private router: Router
     ) {
         this.uiState.title = 'Change password';
         this.uiState.showBackButton = true;
@@ -60,7 +56,7 @@ export class PasswordComponent implements OnDestroy {
 
         try {
             // First make sure that existing password is valid:
-            const validOldPassword = await this.walletManager.unlockWallet(this.uiState.activeWallet?.id, this.existingPassword);
+            const validOldPassword = await this.walletManager.unlockWallet(this.walletManager.activeWallet?.id, this.existingPassword);
 
             if (!validOldPassword) {
                 // TODO: ERROR MESSAGE!
@@ -73,11 +69,11 @@ export class PasswordComponent implements OnDestroy {
                 return;
             }
 
-            const walletWasChanged = await this.walletManager.changeWalletPassword(this.uiState.activeWallet?.id, this.existingPassword, this.confirmedPassword);
+            const walletWasChanged = await this.walletManager.changeWalletPassword(this.walletManager.activeWallet?.id, this.existingPassword, this.confirmedPassword);
 
             if (walletWasChanged) {
                 // If password was changed, lock the wallet.
-                this.walletManager.lockWallet(this.uiState.activeWallet.id);
+                this.walletManager.lockWallet(this.walletManager.activeWallet.id);
                 this.router.navigateByUrl('/home');
             } else {
                 // TODO: ERROR MESSAGE!

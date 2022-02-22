@@ -4,8 +4,7 @@ import { Router } from '@angular/router';
 import { Location } from '@angular/common'
 import { UIState } from '../../services/ui-state.service';
 import { CommunicationService } from '../../services/communication.service';
-import { OrchestratorService } from '../../services/orchestrator.service';
-import { WalletManager } from '../../../background/wallet-manager';
+import { WalletManager } from '../../services/wallet-manager';
 
 @Component({
   selector: 'app-wallet-edit',
@@ -19,7 +18,6 @@ export class WalletEditComponent {
   constructor(
     private router: Router,
     private location: Location,
-    private manager: OrchestratorService,
     private walletManager: WalletManager,
     public uiState: UIState
   ) {
