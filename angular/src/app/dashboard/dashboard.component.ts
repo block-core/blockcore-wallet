@@ -75,13 +75,16 @@ export class DashboardComponent implements OnInit, OnDestroy {
       const walletId: any = params.get('id');
       console.log('Wallet ID:', walletId);
 
-      // Set the active wallet if different from before.
-      if (this.walletManager.activeWalletId != walletId) {
-        await this.walletManager.setActiveWallet(walletId);
+      // If the wallet ID is provided in the URL, use it, if not, leave the existing active wallet.
+      if (walletId) {
+        // Set the active wallet if different from before.
+        if (this.walletManager.activeWalletId != walletId) {
+          await this.walletManager.setActiveWallet(walletId);
 
-        // Check if the new wallet is unlocked, if not, go to home and unlock.
-        if (!this.secure.unlocked(walletId)) {
-          this.router.navigateByUrl('/home');
+          // Check if the new wallet is unlocked, if not, go to home and unlock.
+          if (!this.secure.unlocked(walletId)) {
+            this.router.navigateByUrl('/home');
+          }
         }
       }
 

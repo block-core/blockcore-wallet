@@ -57,7 +57,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     }
   }
 
-  ngOnInit(): void {
+  async ngOnInit() {
     // this.walletManager.activeWallet$.subscribe((wallet => {
     //   if (this.walletManager.activeWallet) {
     //     this.uiState.title = `Unlock ${this.walletManager.activeWallet.name}`;
@@ -66,13 +66,16 @@ export class HomeComponent implements OnInit, OnDestroy {
 
     // Verify if the wallet is already unlocked.
     if (this.walletManager.activeWallet) {
-      this.uiState.title = `Unlock ${this.walletManager.activeWallet.name}`;
-
       if (this.secure.unlocked(this.walletManager.activeWallet?.id)) {
         this.router.navigateByUrl('/dashboard');
-        // this.router.navigateByUrl('/account/view/' + this.uiState.activeWallet?.activeAccountIndex);
       }
+    } else {
+      console.log('NO ACTIVE WALLET...');
+      // No active wallet... Set the previous active wallet.
+      await this.walletManager.setActiveWallet(this.uiState.persisted.previousWalletId);
     }
+
+    this.uiState.title = `Unlock ${this.walletManager.activeWallet.name}`;
   }
 
   removeError(): void {

@@ -145,6 +145,7 @@ export class LoadingComponent implements OnInit, OnDestroy {
         } else {
           // When the initial state is loaded and user has not unlocked any wallets, we'll show the unlock screen on home.
           console.log('LOADING REDIRECT TO HOME');
+
           this.router.navigateByUrl('/home');
         }
       }
