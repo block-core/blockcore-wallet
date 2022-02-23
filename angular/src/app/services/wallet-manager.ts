@@ -15,6 +15,8 @@ import { SecureStateService } from "./secure-state.service";
 import { UIState } from "./ui-state.service";
 import { SettingsService } from "./settings.service";
 import { BehaviorSubject, Observable } from "rxjs";
+import { NetworkLoader } from "./network-loader";
+import { Network } from "./networks";
 
 const ECPair = ECPairFactory(ecc);
 var bitcoinMessage = require('bitcoinjs-message');
@@ -28,19 +30,20 @@ axiosRetry(axios, { retries: 3 });
 export class WalletManager {
     private timer: any;
     private _activeWalletId: string;
+    private allNetworks: Network[];
 
     get activeWalletId() {
         return this._activeWalletId;
     }
 
     constructor(
-        public status: NetworkStatusService,
+        private networkLoader: NetworkLoader,
         private state: UIState,
         private crypto: CryptoUtility,
         private secure: SecureStateService,
         private settings: SettingsService,
         private logger: LoggerService) {
-
+        this.allNetworks = this.networkLoader.getAllNetworks();
     }
 
     get hasUnlockedWallets() {
@@ -51,9 +54,14 @@ export class WalletManager {
         return (this.secure.get(this.activeWalletId) != null);
     }
 
+    /** Get the network definition based upon the network identifier. */
+    getNetwork(networkType: string) {
+        return this.allNetworks.find(w => w.id == networkType);
+    }
+
     async signData(wallet: Wallet, account: Account, address: string, content: string): Promise<string> {
         // TODO: Verify the address for this network!! ... Help the user avoid sending transactions on very wrong addresses.
-        const network = this.status.getNetwork(account.networkType);
+        const network = this.getNetwork(account.networkType);
 
         // Get the address from receive or change.
         let addressItem = account.state.receive.find(a => a.address == address);
@@ -89,7 +97,7 @@ export class WalletManager {
 
     // TODO: This method is duplicate of Indexer due to circular dependency after refactoring away from background process.
     async getTransactionHex(account: Account, txid: string) {
-        const network = this.status.getNetwork(account.networkType);
+        const network = this.getNetwork(account.networkType);
         const indexerUrl = this.settings.values.indexer.replace('{id}', network.id.toLowerCase());
 
         const responseTransactionHex = await axios.get(`${indexerUrl}/api/query/transaction/${txid}/hex`);
@@ -99,7 +107,7 @@ export class WalletManager {
     // TODO: This method is duplicate of Indexer due to circular dependency after refactoring away from background process.
     async broadcastTransaction(account: Account, txhex: string) {
         // These two entries has been sent from
-        const network = this.status.getNetwork(account.networkType);
+        const network = this.getNetwork(account.networkType);
         const indexerUrl = this.settings.values.indexer.replace('{id}', network.id.toLowerCase());
 
         const response = await axios.post(`${indexerUrl}/api/command/send`, txhex, {
@@ -116,7 +124,7 @@ export class WalletManager {
 
     async createTransaction(wallet: Wallet, account: Account, address: string, amount: number, fee: number): Promise<{ addresses: string[], transactionHex: string, fee: number, feeRate: number, virtualSize: number, weight: number }> {
         // TODO: Verify the address for this network!! ... Help the user avoid sending transactions on very wrong addresses.
-        const network = this.status.getNetwork(account.networkType);
+        const network = this.getNetwork(account.networkType);
         const affectedAddresses = [];
 
         // We currently only support BTC-compatible transactions such as STRAX. We do not support other Blockcore chains that are not PoS v4.
@@ -506,7 +514,7 @@ export class WalletManager {
         // First derive the xpub and store that on the account.
         const secret = this.walletSecrets.get(wallet.id);
 
-        const network = this.status.getNetwork(account.networkType);
+        const network = this.getNetwork(account.networkType);
 
         const masterNode = HDKey.fromMasterSeed(Buffer.from(secret.seed), network.bip32);
 
@@ -580,7 +588,7 @@ export class WalletManager {
             // Generate a new address.
             const addressIndex = index + 1;
 
-            const network = this.status.getNetwork(account.networkType);
+            const network = this.getNetwork(account.networkType);
             const accountNode = HDKey.fromExtendedKey(account.xpub, network.bip32);
             const addressNode = accountNode.deriveChild(type).deriveChild(addressIndex);
             const address = this.crypto.getAddressByNetwork(Buffer.from(addressNode.publicKey), network, account.purposeAddress);
