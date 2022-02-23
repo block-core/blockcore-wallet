@@ -298,6 +298,7 @@ export class WalletManager {
         unlockedMnemonic = await this.crypto.decryptData(wallet.mnemonic, password);
 
         if (unlockedMnemonic) {
+            // this._activeWalletId = wallet.id;
             // this.state.persisted.previousWalletId = wallet.id;
 
             // From the secret receovery phrase, the master seed is derived.
@@ -309,6 +310,8 @@ export class WalletManager {
 
             // Store the decrypted master seed in session state.
             this.secure.set(walletId, Buffer.from(masterSeed).toString('base64'));
+
+            await this.setActiveWallet(wallet.id);
 
             // Make sure we inform all instances when a wallet is unlocked.
             return true;
@@ -410,8 +413,12 @@ export class WalletManager {
         return this.activeWallet.accounts[accountIndex];
     }
 
-    hasAccounts(wallet: Wallet): boolean {
-        return wallet.accounts?.length > 0;
+    // hasAccounts(wallet: Wallet): boolean {
+    //     return wallet.accounts?.length > 0;
+    // }
+
+    get hasAccounts(): boolean {
+        return this.activeWallet.accounts?.length > 0;
     }
 
     // get activeAccount() {
