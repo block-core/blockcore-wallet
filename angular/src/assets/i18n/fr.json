@@ -5,7 +5,7 @@
 	"App": {
 		"AddAccount": "Add Account",
 		"ChooseWallet": "Choose Wallet",
-		"CreateNewWallet": "Create new wallet",
+		"CreateWallet": "Create Wallet",
 		"UnlockWallet": "Unlock Wallet",
 		"LockWallet": "Lock Wallet",
 		"ViewWallet": "View Wallet",

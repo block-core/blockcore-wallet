@@ -5,7 +5,7 @@
 	"App": {
 		"AddAccount": "Ny konto",
 		"ChooseWallet": "Valg lommebok",
-		"CreateNewWallet": "Lag ny lommebok",
+		"CreateWallet": "Lag lommebok",
 		"UnlockWallet": "Lås opp lommebok",
 		"LockWallet": "Lås lommebok",
 		"ViewWallet": "Vis lommebok",

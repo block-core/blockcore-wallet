@@ -139,8 +139,8 @@ export class AppComponent implements OnInit {
     await this.walletManager.setActiveAccount(accountId);
   }
 
-  async onWalletChanged(event: any) {
-    const walletId = event.value;
+  async onWalletChanged(walletId: string) {
+    // const walletId = event.value;
 
     console.log('onWalletChanged!!!!!!!!!!!!', walletId);
 
