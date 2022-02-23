@@ -29,7 +29,7 @@ export class AccountReceiveComponent implements OnInit, OnDestroy {
     constructor(public uiState: UIState,
         private renderer: Renderer2,
         private networks: NetworksService,
-        private walletManager: WalletManager,
+        public walletManager: WalletManager,
         private snackBar: MatSnackBar) {
         // this.uiState.title = 'Receive Address';
         this.uiState.goBackHome = false;

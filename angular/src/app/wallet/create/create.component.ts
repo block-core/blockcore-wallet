@@ -32,7 +32,7 @@ export class WalletCreateComponent implements OnInit {
         public feature: FeatureService,
         public uiState: UIState,
         private crypto: CryptoService,
-        private walletManager: WalletManager,
+        public walletManager: WalletManager,
         private communication: CommunicationService,
         private cd: ChangeDetectorRef
     ) {

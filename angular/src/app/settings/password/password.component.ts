@@ -22,7 +22,7 @@ export class PasswordComponent implements OnDestroy {
         public uiState: UIState,
         public location: Location,
         private snackBar: MatSnackBar,
-        private walletManager: WalletManager,
+        public walletManager: WalletManager,
         private router: Router
     ) {
         this.uiState.title = 'Change password';

@@ -29,7 +29,7 @@ export class LoadingComponent implements OnInit, OnDestroy {
     private appManager: AppManager,
     public secure: SecureStateService,
     private router: Router,
-    private walletManager: WalletManager,
+    public walletManager: WalletManager,
     private communication: CommunicationService,
     private renderer: Renderer2,
     public translate: TranslateService,

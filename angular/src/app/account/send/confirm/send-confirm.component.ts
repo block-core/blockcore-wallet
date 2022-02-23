@@ -16,7 +16,7 @@ export class AccountSendConfirmComponent implements OnInit, OnDestroy {
     constructor(
         public sendService: SendService,
         private uiState: UIState,
-        private walletManager: WalletManager,
+        public walletManager: WalletManager,
         private communication: CommunicationService) {
 
     }

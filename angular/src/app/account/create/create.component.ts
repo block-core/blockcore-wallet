@@ -46,7 +46,7 @@ export class AccountCreateComponent implements OnInit, OnDestroy {
         public icons: IconService,
         public networkService: NetworksService,
         private communication: CommunicationService,
-        private walletManager: WalletManager,
+        public walletManager: WalletManager,
         private cd: ChangeDetectorRef
     ) {
         this.uiState.title = 'Create new account';

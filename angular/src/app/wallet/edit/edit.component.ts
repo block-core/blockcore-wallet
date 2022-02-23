@@ -18,7 +18,7 @@ export class WalletEditComponent {
   constructor(
     private router: Router,
     private location: Location,
-    private walletManager: WalletManager,
+    public walletManager: WalletManager,
     public uiState: UIState
   ) {
     this.uiState.title = 'Edit Wallet'

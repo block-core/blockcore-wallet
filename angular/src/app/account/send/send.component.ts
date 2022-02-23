@@ -37,7 +37,7 @@ export class AccountSendComponent implements OnInit, OnDestroy {
         private renderer: Renderer2,
         private networks: NetworksService,
         private communication: CommunicationService,
-        private walletManager: WalletManager,
+        public walletManager: WalletManager,
         private snackBar: MatSnackBar) {
         // this.uiState.title = 'Receive Address';
         this.uiState.goBackHome = false;

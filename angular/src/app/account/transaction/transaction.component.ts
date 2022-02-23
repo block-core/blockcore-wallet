@@ -37,7 +37,7 @@ export class AccountTransactionComponent implements OnInit, OnDestroy {
         private activatedRoute: ActivatedRoute,
         private env: EnvironmentService,
         private networkStatusService: NetworkStatusService,
-        private walletManager: WalletManager,
+        public walletManager: WalletManager,
         private snackBar: MatSnackBar) {
         // this.uiState.title = 'Receive Address';
         this.uiState.goBackHome = false;

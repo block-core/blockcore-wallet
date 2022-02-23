@@ -15,7 +15,7 @@ export class AccountRemoveComponent {
     private router: Router,
     private location: Location,
     public uiState: UIState,
-    private walletManager: WalletManager,
+    public walletManager: WalletManager,
     private activatedRoute: ActivatedRoute,
   ) {
     this.uiState.title = 'Remove Account';

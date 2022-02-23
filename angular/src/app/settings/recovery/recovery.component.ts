@@ -20,7 +20,7 @@ export class RecoveryComponent implements OnDestroy {
 
     constructor(
         public uiState: UIState,
-        private walletManager: WalletManager,
+        public walletManager: WalletManager,
         private snackBar: MatSnackBar,
         public location: Location) {
         this.uiState.title = 'Recovery Phrase';

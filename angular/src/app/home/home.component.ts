@@ -29,7 +29,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     private router: Router,
     private communication: CommunicationService,
     private secure: SecureStateService,
-    private walletManager: WalletManager,
+    public walletManager: WalletManager,
     private cd: ChangeDetectorRef) {
 
     // this.uiState.title = 'Unlock wallet';

@@ -17,7 +17,7 @@ export class AccountSendSendingComponent implements OnInit, OnDestroy {
         private router: Router,
         public sendService: SendService,
         private communication: CommunicationService,
-        private walletManager: WalletManager,
+        public walletManager: WalletManager,
         public uiState: UIState) {
         // When the transaction is done, we'll make sure the back button sends back to home.
         this.uiState.goBackHome = true;

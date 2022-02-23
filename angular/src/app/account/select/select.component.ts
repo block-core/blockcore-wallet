@@ -19,7 +19,7 @@ export class AccountSelectComponent implements OnInit, OnDestroy {
     constructor(
         private uiState: UIState,
         private networkService: NetworksService,
-        private walletManager: WalletManager,
+        public walletManager: WalletManager,
         private router: Router
     ) {
         uiState.title = 'Select accounts';
