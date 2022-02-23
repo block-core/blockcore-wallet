@@ -514,6 +514,9 @@ export class WalletManager {
         // Remove the password for this wallet, if it was unlocked.
         this.walletSecrets.delete(id);
 
+        // Remove the seed from the secrets.
+        this.secure.set(id, undefined);
+
         await this.state.save();
 
         // TODO: FIX!!

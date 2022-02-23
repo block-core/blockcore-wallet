@@ -37,14 +37,9 @@ export class WalletRemoveComponent implements OnInit, OnDestroy {
       // Just grab the last wallet after removing one.
       const walletId = this.uiState.persisted.wallets[this.uiState.persisted.wallets.length - 1].id;
 
-      // Update the previous wallet ID with the one we just picked.
-      this.uiState.persisted.previousWalletId = walletId;
+      this.walletManager.setActiveWallet(walletId);
 
-      // this.orchestrator.setActiveWalletId(walletId);
-      // Also make a change in current state since we are not waiting for callback event from background.
-      // this.uiState.persisted.activeWalletId = walletId;
-
-      this.router.navigateByUrl('/home');
+      this.router.navigateByUrl('/dashboard');
     } else {
       this.router.navigateByUrl('/wallet/create');
     }
