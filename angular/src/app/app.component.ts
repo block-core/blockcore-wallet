@@ -117,17 +117,11 @@ export class AppComponent implements OnInit {
   }
 
   lock() {
-    // TODO: We also must remove the master key at this time, but we currently don't keep master key in-memory.
-    // this.uiState.unlocked = false;
-
     if (!this.walletManager.activeWallet) {
       return;
     }
 
     this.walletManager.lockWallet(this.walletManager.activeWallet.id);
-
-    //this.uiState.port?.postMessage({ method: 'lock' });
-    // this.uiState.password = null;
 
     this.drawer.close();
 
@@ -138,26 +132,4 @@ export class AppComponent implements OnInit {
     // this.draweraccount.toggle();
     await this.walletManager.setActiveAccount(accountId);
   }
-
-  // async onWalletChanged(walletId: string) {
-  //   // const walletId = event.value;
-
-  //   console.log('onWalletChanged!!!!!!!!!!!!', walletId);
-
-  //   this.drawer.close();
-
-  //   if (!walletId) {
-  //     this.router.navigateByUrl('/wallet/create');
-  //   } else {
-  //     await this.walletManager.setActiveWallet(walletId);
-
-  //     if (this.secure.unlocked(walletId)) {
-  //       this.router.navigateByUrl('/dashboard');
-  //       //this.router.navigateByUrl('/account/view/' + this.uiState.activeWallet?.activeAccountIndex);
-  //     } else {
-  //       // Make sure we route to home to unlock the newly selected wallet.
-  //       this.router.navigateByUrl('/home');
-  //     }
-  //   }
-  // }
 }

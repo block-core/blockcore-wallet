@@ -177,6 +177,8 @@ export class AccountCreateComponent implements OnInit, OnDestroy {
         delete account.selected;
         await this.walletManager.addAccount(account, this.walletManager.activeWallet);
 
+        this.router.navigateByUrl('/dashboard');
+
         // this.communication.sendToAll('account-created');
         // this.manager.createAccount(this.uiState.activeWallet.id, account);
 

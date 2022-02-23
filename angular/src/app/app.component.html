@@ -135,7 +135,7 @@
         <mat-icon mat-list-icon class="account-icon">{{walletManager.activeAccount.icon}}</mat-icon>
         <div class="detail-network">
           {{walletManager.activeAccount | network}}<br>
-          {{networkService.getDerivationPathForAccount(walletManager.activeAccount)}}
+          Index: {{walletManager.activeAccount?.index}}
         </div>
       </div>
 
