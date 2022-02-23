@@ -50,7 +50,7 @@ export class SettingsComponent {
   }
 
   onLanguageChanged(event: any) {
-    this.translate.use(this.settings.language)
+    this.translate.use(this.settings.language);
 
     // if (this.settings.theme === 'light') {
     //   this.renderer.removeClass(document.body, 'dark-theme');

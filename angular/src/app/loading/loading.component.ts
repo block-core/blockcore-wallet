@@ -65,8 +65,15 @@ export class LoadingComponent implements OnInit, OnDestroy {
       this.translate.addLangs(['en', 'no', 'fr']);
       this.translate.setDefaultLang('en');
 
-      const browserLang = this.translate.getBrowserLang();
-      this.translate.use(browserLang.match(/en|no/) ? browserLang : 'en');
+      if (this.settings.values.language) {
+        this.translate.use(this.settings.values.language);
+      } else {
+        // This will never happen, because the default settings always goes to english.
+        // Left here because we should consider allowing user to pick language potentially
+        // the first time usage, or read from browser on first usage?
+        const browserLang = this.translate.getBrowserLang();
+        this.translate.use(browserLang.match(/en|no/) ? browserLang : 'en');
+      }
 
       // this.uiState.persisted$.next(this.uiState.persisted);
       // this.uiState.activeWalletSubject.next(this.uiState.activeWallet);
