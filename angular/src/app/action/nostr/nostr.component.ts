@@ -1,11 +1,6 @@
 import { Component, ChangeDetectorRef, ApplicationRef, NgZone, OnInit } from '@angular/core';
-import { CryptoService } from '../../services/crypto.service';
-import { UIState } from '../../services/ui-state.service';
+import { CryptoService, UIState, NetworksService, CommunicationService, AppManager, WalletManager } from '../../services';
 import { Router } from '@angular/router';
-import { NetworksService } from '../../services/networks.service';
-import { CommunicationService } from '../../services/communication.service';
-import { AppManager } from '../../services/application-manager';
-import { WalletManager } from '../../services/wallet-manager';
 
 @Component({
     selector: 'app-nostr',

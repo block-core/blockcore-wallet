@@ -1,11 +1,7 @@
 import { Component, ChangeDetectorRef, OnInit, OnDestroy } from '@angular/core';
-import { CryptoService } from '../services/crypto.service';
-import { UIState } from '../services/ui-state.service';
+import { CryptoService, UIState } from '../services';
 import { Router } from '@angular/router';
-import { CommunicationService } from '../services/communication.service';
-import { NetworkStatusService } from '../services/network-status.service';
-import { SecureStateService } from '../services/secure-state.service';
-import { WalletManager } from '../services/wallet-manager';
+import { CommunicationService, NetworkStatusService, SecureStateService, WalletManager } from '../services';
 
 @Component({
   selector: 'app-home',

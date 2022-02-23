@@ -2,8 +2,7 @@ import { Location } from '@angular/common';
 import { Component, HostBinding, OnDestroy, ViewEncapsulation } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-import { UIState } from '../../services/ui-state.service';
-import { WalletManager } from '../../services/wallet-manager';
+import { UIState, WalletManager } from '../../services';
 
 @Component({
     selector: 'app-password',

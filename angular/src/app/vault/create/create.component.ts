@@ -1,13 +1,9 @@
 import { Component, Inject, HostBinding, OnInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { UIState } from '../../services/ui-state.service';
-import { CryptoService } from '../../services/crypto.service';
+import { UIState, CryptoService, WalletManager, CommunicationService, IconService } from '../../services';
 import { Account, Vault } from '../../interfaces';
 import { Router } from '@angular/router';
-import { WalletManager } from '../../services/wallet-manager';
-import { CommunicationService } from '../../services/communication.service';
-import { IconService } from '../../services/icon.service';
 
 @Component({
     selector: 'app-vault-create',

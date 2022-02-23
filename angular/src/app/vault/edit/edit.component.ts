@@ -2,10 +2,7 @@ import { Component, Inject, HostBinding, OnDestroy, OnInit, ViewChild } from '@a
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common'
-import { UIState } from '../../services/ui-state.service';
-import { CommunicationService } from '../../services/communication.service';
-import { IconService } from '../../services/icon.service';
-import { WalletManager } from '../../services/wallet-manager';
+import { UIState, WalletManager, IconService, CommunicationService } from '../../services';
 
 @Component({
   selector: 'app-vault-edit',

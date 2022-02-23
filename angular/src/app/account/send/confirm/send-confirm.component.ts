@@ -1,8 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { CommunicationService } from '../../../services/communication.service';
-import { SendService } from '../../../services/send.service';
-import { UIState } from '../../../services/ui-state.service';
-import { WalletManager } from '../../../services/wallet-manager';
+import { CommunicationService, SendService, UIState, WalletManager } from '../../../services';
 
 @Component({
     selector: 'app-account-send-confirm',

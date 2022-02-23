@@ -1,6 +1,6 @@
 import { Component, Inject, HostBinding } from '@angular/core';
 import { Location } from '@angular/common'
-import { UIState } from 'src/app/services/ui-state.service';
+import { UIState } from '../services/ui-state.service';
 
 @Component({
     selector: 'app-wipe',

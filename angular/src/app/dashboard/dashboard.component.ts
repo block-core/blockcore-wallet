@@ -1,16 +1,9 @@
 import { Component, Inject, HostBinding, ChangeDetectorRef, OnInit, OnDestroy } from '@angular/core';
-import { CryptoService } from '../services/crypto.service';
-import { UIState } from '../services/ui-state.service';
+import { CryptoService, UIState, FeatureService, LoggerService, NetworksService, NetworkStatusService, DebugLogService, WalletManager } from '../services';
 import { Router } from '@angular/router';
-import { FeatureService } from '../services/features.service';
 import { copyToClipboard } from '../shared/utilities';
-import { LoggerService } from '../services/logger.service';
-import { NetworksService } from '../services/networks.service';
-import { NetworkStatusService } from '../services/network-status.service';
 import { Observable } from 'rxjs';
 import { NetworkStatus } from '../interfaces';
-import { DebugLogService } from '../services/debug-log.service';
-import { WalletManager } from '../services/wallet-manager';
 
 export interface Section {
   name: string;

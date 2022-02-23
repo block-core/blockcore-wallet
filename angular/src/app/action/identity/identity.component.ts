@@ -1,11 +1,7 @@
 import { Component, Inject, HostBinding, ChangeDetectorRef, ApplicationRef, NgZone } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { CryptoService } from '../../services/crypto.service';
-import { UIState } from '../../services/ui-state.service';
+import { CryptoService, NetworksService, AppManager, WalletManager, UIState } from '../../services';
 import { Router } from '@angular/router';
-import { NetworksService } from '../../services/networks.service';
-import { AppManager } from '../../services/application-manager';
-import { WalletManager } from '../../services/wallet-manager';
 
 @Component({
     selector: 'app-identity',

@@ -1,13 +1,9 @@
 import { Component, Renderer2 } from '@angular/core';
-import { UIState } from '../services/ui-state.service';
+import { UIState, FeatureService, EnvironmentService, SettingsService } from '../services';
 import { Location } from '@angular/common'
 import { Settings } from '../interfaces';
-import { OverlayContainer } from '@angular/cdk/overlay';
 import { INDEXER_URL } from '../shared/constants';
 import { TranslateService } from '@ngx-translate/core';
-import { FeatureService } from '../services/features.service';
-import { EnvironmentService } from '../services/environment.service';
-import { SettingsService } from '../services/settings.service';
 
 @Component({
   selector: 'app-settings',

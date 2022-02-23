@@ -1,10 +1,7 @@
 import { Component, ChangeDetectorRef, OnInit, OnDestroy } from '@angular/core';
-import { CryptoService } from '../services/crypto.service';
-import { UIState } from '../services/ui-state.service';
+import { CryptoService, WalletManager, UIState, CommunicationService } from '../services';
 import { ActivatedRoute, Router } from '@angular/router';
-import { CommunicationService } from '../services/communication.service';
 import { NETWORK_IDENTITY } from '../shared/constants';
-import { WalletManager } from '../services/wallet-manager';
 
 @Component({
   selector: 'app-vault',

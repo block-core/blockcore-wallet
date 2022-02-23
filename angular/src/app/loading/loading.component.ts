@@ -1,19 +1,10 @@
 import { Component, ChangeDetectorRef, OnInit, OnDestroy, Renderer2 } from '@angular/core';
-import { UIState } from '../services/ui-state.service';
-import { CryptoService } from '../services/crypto.service';
+import { UIState, CryptoService, CommunicationService, AppManager, SecureStateService, WalletManager, EnvironmentService, NetworksService, SettingsService, NetworkStatusService } from '../services';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import { CommunicationService } from '../services/communication.service';
-import { AppManager } from '../services/application-manager';
-import { SecureStateService } from '../services/secure-state.service';
 import * as secp from "@noble/secp256k1";
-import { WalletManager } from '../services/wallet-manager';
 import { Action } from '../interfaces';
 import { TranslateService } from '@ngx-translate/core';
-import { EnvironmentService } from '../services/environment.service';
-import { NetworksService } from '../services/networks.service';
 import { Location } from '@angular/common'
-import { SettingsService } from '../services/settings.service';
-import { NetworkStatusService } from '../services/network-status.service';
 
 @Component({
   selector: 'app-loading',

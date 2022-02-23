@@ -1,19 +1,8 @@
-import { Component, Inject, HostBinding, OnDestroy, OnInit, ViewChild, Renderer2 } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Location } from '@angular/common'
-import { UIState } from '../../services/ui-state.service';
-import { CommunicationService } from '../../services/communication.service';
-import { IconService } from '../../services/icon.service';
-import { copyToClipboard } from '../../shared/utilities';
+import { Component, OnDestroy, OnInit, Renderer2 } from '@angular/core';
+import { UIState, CommunicationService, NetworksService, SendService, WalletManager } from '../../services';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import * as QRCode from 'qrcode';
 import { Address, UnspentTransactionOutput } from '../../interfaces';
-import { NetworksService } from '../../services/networks.service';
 import { Network } from '../../services/networks';
-import { SendService } from '../../services/send.service';
-import { WalletManager } from '../../services/wallet-manager';
-var QRCode2 = require('qrcode');
 
 @Component({
     selector: 'app-account-send',

@@ -1,12 +1,7 @@
 import { Component, ChangeDetectorRef, ApplicationRef, NgZone, OnInit } from '@angular/core';
-import { CryptoService } from '../../services/crypto.service';
-import { UIState } from '../../services/ui-state.service';
+import { CryptoService, UIState, NetworksService, CommunicationService, WalletManager, AppManager } from '../../services';
 import { Router } from '@angular/router';
-import { NetworksService } from '../../services/networks.service';
-import { CommunicationService } from '../../services/communication.service';
-import { WalletManager } from '../../services/wallet-manager';
 import axios from 'axios';
-import { AppManager } from '../../services/application-manager';
 
 @Component({
     selector: 'app-sid',

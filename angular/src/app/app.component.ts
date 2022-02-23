@@ -2,16 +2,9 @@ import { DOCUMENT } from '@angular/common';
 import { ChangeDetectorRef, Component, Inject, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import { UIState } from './services/ui-state.service';
-import { CommunicationService } from './services/communication.service';
+import { UIState, CommunicationService, NetworksService, EnvironmentService, AppManager, SecureStateService, WalletManager, SettingsService } from './services';
 import { Location } from '@angular/common'
-import { NetworksService } from './services/networks.service';
 import { TranslateService } from '@ngx-translate/core';
-import { EnvironmentService } from './services/environment.service';
-import { AppManager } from './services/application-manager';
-import { SecureStateService } from './services/secure-state.service';
-import { WalletManager } from './services/wallet-manager';
-import { SettingsService } from './services/settings.service';
 
 @Component({
   selector: 'app-root',

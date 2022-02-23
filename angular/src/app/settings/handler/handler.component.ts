@@ -1,9 +1,7 @@
 import { Location } from '@angular/common';
 import { Component, HostBinding, OnDestroy, ViewEncapsulation } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { UIState } from '../../services/ui-state.service';
-import { CommunicationService } from '../../services/communication.service';
-import { FeatureService } from '../../services/features.service';
+import { UIState, CommunicationService, FeatureService } from '../../services';
 
 @Component({
     selector: 'app-handler',

@@ -1,11 +1,8 @@
-import { Component, Inject, HostBinding, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common'
-import { UIState } from '../../services/ui-state.service';
+import { UIState, IconService, WalletManager } from '../../services';
 import { CommunicationService } from '../../services/communication.service';
-import { IconService } from '../../services/icon.service';
-import { WalletManager } from '../../services/wallet-manager';
 
 @Component({
   selector: 'app-account-edit',

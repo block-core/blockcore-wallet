@@ -1,12 +1,8 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { UIState } from '../../services/ui-state.service';
-import { CryptoService } from '../../services/crypto.service';
-import { CommunicationService } from '../../services/communication.service';
+import { UIState, FeatureService, WalletManager, CommunicationService, CryptoService } from '../../services';
 import { Wallet } from '../../interfaces';
 import { copyToClipboard } from '../../shared/utilities';
-import { FeatureService } from '../../services/features.service';
-import { WalletManager } from '../../services/wallet-manager';
 const { v4: uuidv4 } = require('uuid');
 
 @Component({

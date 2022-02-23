@@ -2,16 +2,12 @@ import { Component, Inject, HostBinding, OnDestroy, OnInit, ViewChild, Renderer2
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common'
-import { UIState } from '../../services/ui-state.service';
-import { CommunicationService } from '../../services/communication.service';
-import { IconService } from '../../services/icon.service';
+import { UIState, CommunicationService, IconService, NetworksService, WalletManager } from '../../services';
 import { copyToClipboard } from '../../shared/utilities';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import * as QRCode from 'qrcode';
 import { Address } from '../../interfaces';
-import { NetworksService } from '../../services/networks.service';
 import { Network } from '../../services/networks';
-import { WalletManager } from '../../services/wallet-manager';
 var QRCode2 = require('qrcode');
 
 @Component({

@@ -1,15 +1,11 @@
 import { Component, Inject, HostBinding, ChangeDetectorRef, OnInit, OnDestroy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { CryptoService } from '../../../services/crypto.service';
-import { UIState } from '../../../services/ui-state.service';
+import { CryptoService, UIState, CommunicationService, SettingsService, WalletManager } from '../../../services';
 import { ActivatedRoute, Router } from '@angular/router';
-import { CommunicationService } from '../../../services/communication.service';
 import { Identity } from '../../../interfaces';
 import { copyToClipboard } from '../../../shared/utilities';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { HDKey } from 'micro-bip32';
-import { SettingsService } from '../../../services/settings.service';
-import { WalletManager } from '../../../services/wallet-manager';
 
 @Component({
   selector: 'app-nostr-identity',

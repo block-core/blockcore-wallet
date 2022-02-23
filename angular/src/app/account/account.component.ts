@@ -1,14 +1,9 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { UIState } from '../services/ui-state.service';
+import { UIState, CommunicationService, NetworksService, NetworkStatusService, SettingsService, WalletManager } from '../services';
 import { ActivatedRoute, Router } from '@angular/router';
-import { CommunicationService } from '../services/communication.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { NetworksService } from '../services/networks.service';
 import { NetworkStatus, TransactionHistory } from '../interfaces';
-import { NetworkStatusService } from '../services/network-status.service';
-import { SettingsService } from '../services/settings.service';
-import { WalletManager } from '../services/wallet-manager';
 
 @Component({
   selector: 'app-account',

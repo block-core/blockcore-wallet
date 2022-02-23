@@ -1,6 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { SendService } from '../../../services/send.service';
-import { UIState } from '../../../services/ui-state.service';
+import { SendService, UIState } from '../../../services';
 
 @Component({
     selector: 'app-account-send-success',

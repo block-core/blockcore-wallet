@@ -72,13 +72,12 @@ import { AccountSendConfirmComponent } from './account/send/confirm/send-confirm
 import { AccountSendSuccessComponent } from './account/send/success/send-success.component';
 import { AccountSendSendingComponent } from './account/send/sending/send-sending.component';
 import { LoggerModule, NgxLoggerLevel, TOKEN_LOGGER_WRITER_SERVICE } from "ngx-logger";
-import { LogWriterService } from './services/log-writer.service';
+import { LogWriterService, EnvironmentService } from './services';
 import { TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { HttpClient } from '@angular/common/http';
 import { NetworkStatusComponent } from './shared/network-status/network-status.component';
 import { IEnvironment } from './interfaces';
-import { EnvironmentService } from './services/environment.service';
 
 // required for AOT compilation
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {

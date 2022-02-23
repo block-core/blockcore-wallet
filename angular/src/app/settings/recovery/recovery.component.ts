@@ -1,9 +1,8 @@
 import { Location } from '@angular/common';
 import { Component, HostBinding, OnDestroy, ViewEncapsulation } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { UIState } from '../../services/ui-state.service';
+import { UIState, WalletManager } from '../../services';
 import { copyToClipboard } from '../../shared/utilities';
-import { WalletManager } from '../../services/wallet-manager';
 
 @Component({
     selector: 'app-recovery',

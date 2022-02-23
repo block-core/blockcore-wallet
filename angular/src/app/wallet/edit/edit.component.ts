@@ -2,9 +2,7 @@ import { Component, Inject, HostBinding } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common'
-import { UIState } from '../../services/ui-state.service';
-import { CommunicationService } from '../../services/communication.service';
-import { WalletManager } from '../../services/wallet-manager';
+import { UIState, CommunicationService, WalletManager } from '../../services';
 
 @Component({
   selector: 'app-wallet-edit',

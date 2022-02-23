@@ -1,15 +1,10 @@
 import { Component, Inject, HostBinding, OnInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { UIState } from '../../services/ui-state.service';
-import { CryptoService } from '../../services/crypto.service';
+import { UIState, CryptoService, CommunicationService, IconService, NetworksService, WalletManager } from '../../services';
 import { Account } from '../../interfaces';
 import { Router } from '@angular/router';
-import { CommunicationService } from '../../services/communication.service';
-import { IconService } from '../../services/icon.service';
-import { NetworksService } from '../../services/networks.service';
 import { Network } from '../../services/networks';
-import { WalletManager } from '../../services/wallet-manager';
 const { v4: uuidv4 } = require('uuid');
 
 @Component({
