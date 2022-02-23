@@ -57,8 +57,8 @@
         </mat-select>
       </mat-form-field> -->
 
-      <a mat-list-item *ngFor="let wallet of uiState.persisted.wallets;" (click)="onWalletChanged(wallet.id)"
-        routerLinkActive="active-link">
+      <a mat-list-item *ngFor="let wallet of uiState.persisted.wallets;" [routerLink]="['/dashboard', wallet.id]"
+        (click)="drawer.toggle()" routerLinkActive="active-link">
         <mat-icon mat-list-icon>account_balance_wallet</mat-icon>
         <div mat-line class="name-field">{{wallet.name | truncate}}</div>
       </a>

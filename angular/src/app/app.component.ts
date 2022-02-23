@@ -139,25 +139,25 @@ export class AppComponent implements OnInit {
     await this.walletManager.setActiveAccount(accountId);
   }
 
-  async onWalletChanged(walletId: string) {
-    // const walletId = event.value;
+  // async onWalletChanged(walletId: string) {
+  //   // const walletId = event.value;
 
-    console.log('onWalletChanged!!!!!!!!!!!!', walletId);
+  //   console.log('onWalletChanged!!!!!!!!!!!!', walletId);
 
-    this.drawer.close();
+  //   this.drawer.close();
 
-    if (!walletId) {
-      this.router.navigateByUrl('/wallet/create');
-    } else {
-      await this.walletManager.setActiveWallet(walletId);
+  //   if (!walletId) {
+  //     this.router.navigateByUrl('/wallet/create');
+  //   } else {
+  //     await this.walletManager.setActiveWallet(walletId);
 
-      if (this.secure.unlocked(walletId)) {
-        this.router.navigateByUrl('/dashboard');
-        //this.router.navigateByUrl('/account/view/' + this.uiState.activeWallet?.activeAccountIndex);
-      } else {
-        // Make sure we route to home to unlock the newly selected wallet.
-        this.router.navigateByUrl('/home');
-      }
-    }
-  }
+  //     if (this.secure.unlocked(walletId)) {
+  //       this.router.navigateByUrl('/dashboard');
+  //       //this.router.navigateByUrl('/account/view/' + this.uiState.activeWallet?.activeAccountIndex);
+  //     } else {
+  //       // Make sure we route to home to unlock the newly selected wallet.
+  //       this.router.navigateByUrl('/home');
+  //     }
+  //   }
+  // }
 }
