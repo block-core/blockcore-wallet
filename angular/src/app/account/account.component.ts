@@ -43,7 +43,7 @@ export class AccountComponent implements OnInit, OnDestroy {
     private networkStatusService: NetworkStatusService,
     private communication: CommunicationService,
     private activatedRoute: ActivatedRoute,
-    private walletManager: WalletManager,
+    public walletManager: WalletManager,
     private snackBar: MatSnackBar) {
 
     this.uiState.title = '';
@@ -62,7 +62,7 @@ export class AccountComponent implements OnInit, OnDestroy {
       }
 
       // this.manager.setActiveAccountId(index);
-      this.manager.setActiveAccountId(accountIdentifier);
+      await this.walletManager.setActiveAccount(accountIdentifier);
     });
   }
 

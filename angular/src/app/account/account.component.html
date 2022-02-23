@@ -1,13 +1,13 @@
-<div class="page" *ngIf="uiState.activeAccount && uiState.activeAccount.network == 401">
+<div class="page" *ngIf="walletManager.activeAccount && walletManager.activeAccount.network == 401">
 
     <app-network-status-card class="balance-card" [status]="currentNetworkStatus"></app-network-status-card>
 
-    <div *ngIf="uiState.activeAccount.network == 401">
+    <div *ngIf="walletManager.activeAccount.network == 401">
         Cirrus is currently not supported. Check back later!
     </div>
 </div>
 
-<div class="page" *ngIf="uiState.activeAccount && uiState.activeAccount.network != 401">
+<div class="page" *ngIf="walletManager.activeAccount && walletManager.activeAccount.network != 401">
 
     <app-network-status-card class="balance-card" [status]="currentNetworkStatus"></app-network-status-card>
 
@@ -25,11 +25,11 @@
     <mat-card>
         <!-- <mat-card-subtitle>{{uiState.activeAccount.name}}</mat-card-subtitle> -->
         <mat-card-subtitle>Balance <span
-                *ngIf="uiState.activeAccount.state?.pendingReceived || uiState.activeAccount.state?.pendingReceived">
-                ({{uiState.activeAccount.state?.pendingReceived
+                *ngIf="walletManager.activeAccount.state?.pendingReceived || walletManager.activeAccount.state?.pendingReceived">
+                ({{walletManager.activeAccount.state?.pendingReceived
                 || 0 | amount}} unconfirmed)
             </span></mat-card-subtitle>
-        <mat-card-title>{{uiState.activeAccount.state?.balance || 0 | amount}} {{uiState.activeAccount |
+        <mat-card-title>{{walletManager.activeAccount.state?.balance || 0 | amount}} {{walletManager.activeAccount |
             network}}
         </mat-card-title>
         <!-- <mat-card-content>
@@ -41,7 +41,7 @@
         <mat-divider inset></mat-divider>
         <mat-card-actions class="full-action-buttons">
             <button class="half-width" mat-raised-button
-                [routerLink]="['/', 'account', 'receive', uiState.activeAccount.index]" color="primary">Receive</button>
+                [routerLink]="['/', 'account', 'receive', walletManager.activeAccount.index]" color="primary">Receive</button>
             <button class="half-width" [routerLink]="['/', 'account', 'send']" mat-raised-button>Send</button>
         </mat-card-actions>
         <mat-card-footer>
@@ -105,7 +105,7 @@
 
             <mat-nav-list>
                 <div mat-subheader>Receive Addresses</div>
-                <a mat-list-item *ngFor="let address of this.uiState.activeAccount.state.receive"
+                <a mat-list-item *ngFor="let address of this.walletManager.activeAccount.state.receive"
                     routerLinkActive="active-link" [routerLink]="['/', 'account', 'address', address.index]">
                     <!-- <mat-icon mat-list-icon>{{activity.icon}}</mat-icon> -->
                     <div mat-line>{{address.address}}</div>
@@ -113,7 +113,7 @@
                 </a>
                 <mat-divider></mat-divider>
                 <div mat-subheader>Change Addresses</div>
-                <a mat-list-item *ngFor="let address of this.uiState.activeAccount.state.change"
+                <a mat-list-item *ngFor="let address of this.walletManager.activeAccount.state.change"
                     routerLinkActive="active-link" [routerLink]="['/', 'account', 'address', address.index]">
                     <!-- <mat-icon mat-list-icon>{{activity.icon}}</mat-icon> -->
                     <div mat-line>{{address.address}}</div>
@@ -176,9 +176,9 @@
 
             <p>Contains your encrypted secret recovery phrase. Do NOT share this with anyone!</p>
 
-            <p>
+            <!-- <p>
                 {{uiState.persisted.wallets | json}}
-            </p>
+            </p> -->
         </mat-tab>
 
     </mat-tab-group>
@@ -192,6 +192,6 @@
 
 </div>
 
-<div class="page centered" *ngIf="!uiState.activeAccount">
+<div class="page centered" *ngIf="!walletManager.activeAccount">
     <h3>No active account selected.</h3>
 </div>

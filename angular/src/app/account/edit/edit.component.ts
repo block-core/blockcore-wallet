@@ -24,7 +24,7 @@ export class AccountEditComponent implements OnInit, OnDestroy {
     public uiState: UIState,
     public icons: IconService,
     private communication: CommunicationService,
-    private walletManager: WalletManager,
+    public walletManager: WalletManager,
     private activatedRoute: ActivatedRoute,
   ) {
     this.uiState.title = 'Edit Account'
@@ -38,7 +38,7 @@ export class AccountEditComponent implements OnInit, OnDestroy {
         return;
       }
 
-      this.walletManager.setActiveAccount(index);
+      await this.walletManager.setActiveAccount(index);
       // this.manager.setActiveAccountId(index);
       this.accountName = this.walletManager.activeAccount?.name;
       this.icon = this.walletManager.activeAccount?.icon;

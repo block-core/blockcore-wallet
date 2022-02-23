@@ -8,12 +8,12 @@
     <mat-form-field appearance="outline" class="input-full-width">
         <mat-label>Choose controller</mat-label>
         <mat-select (selectionChange)="onWalletChanged($event)" [(value)]="selectedAccountIndex">
-            <mat-option *ngFor="let account of uiState.activeWallet?.accounts;" [value]="account.index">{{account.name}}
+            <mat-option *ngFor="let account of walletManager.activeWallet?.accounts;" [value]="account.index">{{account.name}}
             </mat-option>
         </mat-select>
     </mat-form-field>
     
-    <mat-form-field appearance="outline" class="input-full-width" *ngIf="uiState.hasWallets">
+    <mat-form-field appearance="outline" class="input-full-width" *ngIf="walletManager.hasWallets">
         <mat-label>Account Index</mat-label>
         <mat-select (selectionChange)="onAccountIndexChanged($event)" [(value)]="index">
             <mat-option *ngFor="let accountindex of indexes;" [value]="accountindex">{{accountindex}}</mat-option>
@@ -42,7 +42,7 @@
         </mat-select>
     </mat-form-field>
 
-    <!-- <mat-form-field appearance="fill" *ngIf="uiState.hasWallets">
+    <!-- <mat-form-field appearance="fill" *ngIf="walletManager.hasWallets">
         <mat-label>Network</mat-label>
         <mat-select (selectionChange)="onNetworkChanged($event)" [(value)]="network">
             <mat-option value="302'/616'">Identity (302'/616')</mat-option>

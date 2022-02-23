@@ -1,10 +1,8 @@
-import { Component, Inject, HostBinding, ChangeDetectorRef, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { WalletManager } from '../../../background/wallet-manager';
+import { WalletManager } from '../../services/wallet-manager';
 import { Account } from '../../interfaces';
-import { CommunicationService } from '../../services/communication.service';
 import { NetworksService } from '../../services/networks.service';
-import { OrchestratorService } from '../../services/orchestrator.service';
 import { UIState } from '../../services/ui-state.service';
 
 @Component({
@@ -21,9 +19,7 @@ export class AccountSelectComponent implements OnInit, OnDestroy {
     constructor(
         private uiState: UIState,
         private networkService: NetworksService,
-        private orchestrator: OrchestratorService,
         private walletManager: WalletManager,
-        private communication: CommunicationService,
         private router: Router
     ) {
         uiState.title = 'Select accounts';

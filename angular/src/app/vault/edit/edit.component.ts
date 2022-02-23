@@ -24,7 +24,7 @@ export class VaultEditComponent implements OnInit, OnDestroy {
     private location: Location,
     public uiState: UIState,
     public icons: IconService,
-    private walletManager: WalletManager,
+    public walletManager: WalletManager,
     private communication: CommunicationService,
     private activatedRoute: ActivatedRoute,
   ) {

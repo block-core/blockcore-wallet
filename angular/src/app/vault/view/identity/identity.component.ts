@@ -51,7 +51,7 @@ export class VaultIdentityComponent implements OnInit, OnDestroy {
     private router: Router,
     private settings: SettingsService,
     private communication: CommunicationService,
-    private walletManager: WalletManager,
+    public walletManager: WalletManager,
     private activatedRoute: ActivatedRoute,
     private cd: ChangeDetectorRef) {
 

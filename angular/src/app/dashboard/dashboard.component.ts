@@ -41,7 +41,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     private router: Router,
     private logger: LoggerService,
     private network: NetworksService,
-    private walletManager: WalletManager,
+    public walletManager: WalletManager,
     private debugLog: DebugLogService,
     private cd: ChangeDetectorRef) {
 

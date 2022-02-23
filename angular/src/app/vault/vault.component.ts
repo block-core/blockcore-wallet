@@ -1,5 +1,4 @@
-import { Component, Inject, HostBinding, ChangeDetectorRef, OnInit, OnDestroy } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { Component, ChangeDetectorRef, OnInit, OnDestroy } from '@angular/core';
 import { CryptoService } from '../services/crypto.service';
 import { UIState } from '../services/ui-state.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -29,7 +28,7 @@ export class VaultComponent implements OnInit, OnDestroy {
     private router: Router,
     private communication: CommunicationService,
     private activatedRoute: ActivatedRoute,
-    private walletManager: WalletManager,
+    public walletManager: WalletManager,
     private cd: ChangeDetectorRef) {
 
     this.uiState.title = 'Account: ';

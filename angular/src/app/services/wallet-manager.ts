@@ -47,6 +47,10 @@ export class WalletManager {
         return (this.secure.unlockedWalletsSubject.value.length > 0);
     }
 
+    get activeWalletUnlocked() {
+        return (this.secure.get(this.activeWalletId) != null);
+    }
+
     async signData(wallet: Wallet, account: Account, address: string, content: string): Promise<string> {
         // TODO: Verify the address for this network!! ... Help the user avoid sending transactions on very wrong addresses.
         const network = this.status.getNetwork(account.networkType);

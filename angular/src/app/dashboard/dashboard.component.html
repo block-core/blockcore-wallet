@@ -1,4 +1,4 @@
-<mat-tab-group class="tabs" mat-stretch-tabs *ngIf="uiState.activeWallet && uiState.activeWalletUnlocked">
+<mat-tab-group class="tabs" mat-stretch-tabs *ngIf="walletManager.activeWallet && walletManager.activeWalletUnlocked">
     <mat-tab>
         <ng-template mat-tab-label>
             <mat-icon class="example-tab-icon">manage_accounts</mat-icon>&nbsp;
@@ -9,7 +9,7 @@
             <mat-nav-list>
                 <div mat-subheader>{{ 'Dashboard.Accounts' | translate }}</div>
 
-                <a mat-list-item *ngFor="let account of uiState.activeWallet.accounts; let i = index"
+                <a mat-list-item *ngFor="let account of walletManager.activeWallet.accounts; let i = index"
                     routerLinkActive="active-link" [routerLink]="['/', 'account', 'view', account.identifier]">
                     <mat-icon mat-list-icon>{{account.icon}}</mat-icon>
                     <div mat-line>{{account.name}}<span class="account-balance">{{account.state.balance |
@@ -35,13 +35,13 @@
                 <mat-divider></mat-divider>
                 <div mat-subheader>{{ 'Dashboard.Actions' | translate }}</div>
 
-                <a mat-list-item *ngIf="uiState.activeWallet && uiState.unlocked" [routerLink]="['/account/create']"
+                <a mat-list-item *ngIf="walletManager.activeWallet && walletManager.unlocked" [routerLink]="['/account/create']"
                     routerLinkActive="active-link">
                     <mat-icon mat-list-icon>add_circle_outline</mat-icon>
                     <div mat-line>Add Account</div>
                 </a>
 
-                <a mat-list-item *ngIf="uiState.activeWallet && uiState.unlocked" [routerLink]="['/wallet/create']"
+                <a mat-list-item *ngIf="walletManager.activeWallet && walletManager.unlocked" [routerLink]="['/wallet/create']"
                     routerLinkActive="active-link">
                     <mat-icon mat-list-icon>account_balance_wallet</mat-icon>
                     <div mat-line>Add Wallet</div>
@@ -108,7 +108,7 @@
                 <mat-divider></mat-divider>
                 <div mat-subheader>Actions</div>
 
-                <a mat-list-item *ngIf="uiState.activeWallet && uiState.unlocked" [routerLink]="['/vault/create']"
+                <a mat-list-item *ngIf="walletManager.activeWallet && walletManager.unlocked" [routerLink]="['/vault/create']"
                     routerLinkActive="active-link">
                     <mat-icon mat-list-icon>add_circle_outline</mat-icon>
                     <div mat-line>Add Vault</div>

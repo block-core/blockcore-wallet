@@ -50,7 +50,7 @@ export class VaultCreateComponent implements OnInit, OnDestroy {
         private router: Router,
         public icons: IconService,
         private communication: CommunicationService,
-        private walletManager: WalletManager,
+        public walletManager: WalletManager,
         private cd: ChangeDetectorRef
     ) {
         this.uiState.title = 'Create new vault';

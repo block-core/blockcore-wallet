@@ -35,7 +35,7 @@ export class AppComponent implements OnInit {
     private location: Location,
     private cd: ChangeDetectorRef,
     private route: ActivatedRoute,
-    private walletManager: WalletManager,
+    public walletManager: WalletManager,
     private secure: SecureStateService,
     private settings: SettingsService,
     private env: EnvironmentService,
@@ -145,9 +145,9 @@ export class AppComponent implements OnInit {
     this.router.navigateByUrl('/home');
   }
 
-  onAccountChanged(accountId: string) {
+  async onAccountChanged(accountId: string) {
     this.draweraccount.toggle();
-    this.manager.setActiveAccountId(accountId);
+    await this.walletManager.setActiveAccount(accountId);
   }
 
   async onWalletChanged(event: any) {

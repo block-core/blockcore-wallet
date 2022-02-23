@@ -5,7 +5,7 @@
     <input matInput [(ngModel)]="accountName" required>
   </mat-form-field>
 
-  <mat-form-field appearance="fill" *ngIf="uiState.activeAccount">
+  <mat-form-field appearance="fill" *ngIf="walletManager.activeAccount">
     <mat-label>Icon</mat-label>
     <mat-select [(value)]="icon">
       <mat-option *ngFor="let icon of icons.icons" [value]="icon">
@@ -18,9 +18,9 @@
   </mat-form-field>
 
   <br>
-  Purpose: {{uiState.activeAccount?.purpose}}<br>
-  Network: {{uiState.activeAccount?.network}}<br>
-  Index: {{uiState.activeAccount?.index}}<br>
+  Purpose: {{walletManager.activeAccount?.purpose}}<br>
+  Network: {{walletManager.activeAccount?.network}}<br>
+  Index: {{walletManager.activeAccount?.index}}<br>
 
   <br>
   <button class="signup-button" mat-flat-button color="primary" (click)="save()">Save</button>
@@ -29,6 +29,6 @@
   <br>
   <br>
   <button class="signup-button" mat-flat-button color="warn"
-    [routerLink]="['/account', 'remove', uiState.activeWallet?.activeAccountId]">Remove</button>
+    [routerLink]="['/account', 'remove', walletManager.activeWallet?.activeAccountId]">Remove</button>
 
 </div>
