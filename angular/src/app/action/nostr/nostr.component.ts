@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { NetworksService } from '../../services/networks.service';
 import { CommunicationService } from '../../services/communication.service';
 import { AppManager } from '../../services/application-manager';
+import { WalletManager } from '../../services/wallet-manager';
 
 @Component({
     selector: 'app-nostr',
@@ -29,6 +30,7 @@ export class ActionNostrIdentityComponent implements OnInit {
         private ngZone: NgZone,
         private communication: CommunicationService,
         public networkService: NetworksService,
+        public walletManager: WalletManager,
         private manager: AppManager,
         private cd: ChangeDetectorRef) {
         this.uiState.title = 'Nostr Identity';

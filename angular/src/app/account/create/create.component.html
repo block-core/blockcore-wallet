@@ -13,7 +13,7 @@
 
     <br>
 
-    <mat-form-field appearance="fill" *ngIf="uiState.activeAccount">
+    <mat-form-field appearance="fill" *ngIf="walletManager.activeAccount">
         <mat-label>Icon</mat-label>
         <mat-select [(value)]="icon">
             <mat-option *ngFor="let icon of icons.icons" [value]="icon">
@@ -27,7 +27,7 @@
 
     <br>
 
-    <mat-form-field appearance="fill" *ngIf="uiState.hasWallets">
+    <mat-form-field appearance="fill" *ngIf="walletManager.hasWallets">
         <mat-label>Account Index</mat-label>
         <mat-select (selectionChange)="onAccountIndexChanged($event)" [(value)]="index">
             <mat-option *ngFor="let accountindex of indexes;" [value]="accountindex">{{accountindex}}</mat-option>

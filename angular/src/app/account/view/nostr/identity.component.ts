@@ -48,11 +48,11 @@ export class NostrIdentityComponent implements OnInit, OnDestroy {
 
   constructor(
     public uiState: UIState,
+    public walletManager: WalletManager,
     private snackBar: MatSnackBar,
     private crypto: CryptoService,
     private router: Router,
     private communication: CommunicationService,
-    private walletManager: WalletManager,
     private activatedRoute: ActivatedRoute,
     private settings: SettingsService,
     private cd: ChangeDetectorRef) {

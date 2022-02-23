@@ -46,13 +46,13 @@ export class AccountIdentityComponent implements OnInit, OnDestroy {
 
   constructor(
     public uiState: UIState,
+    public walletManager: WalletManager,
     private snackBar: MatSnackBar,
     private crypto: CryptoService,
     private router: Router,
     private communication: CommunicationService,
     private activatedRoute: ActivatedRoute,
     private settings: SettingsService,
-    private walletManager: WalletManager,
     private cd: ChangeDetectorRef) {
 
     this.uiState.title = 'Account: ';

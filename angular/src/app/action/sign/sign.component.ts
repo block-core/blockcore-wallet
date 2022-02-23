@@ -5,6 +5,7 @@ import { UIState } from '../../services/ui-state.service';
 import { Router } from '@angular/router';
 import { NetworksService } from '../../services/networks.service';
 import { AppManager } from '../../services/application-manager';
+import { WalletManager } from '../../services/wallet-manager';
 
 @Component({
     selector: 'app-sign',
@@ -21,6 +22,7 @@ export class ActionSignComponent {
         private app: ApplicationRef,
         private ngZone: NgZone,
         public networkService: NetworksService,
+        public walletManager: WalletManager,
         private manager: AppManager,
         private cd: ChangeDetectorRef) {
         this.uiState.title = 'Action: Signing';

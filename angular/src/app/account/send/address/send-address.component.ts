@@ -1,7 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { SendService } from '../../../services/send.service';
-import { UIState } from '../../../services/ui-state.service';
+import { WalletManager, UIState, SendService } from '../../../services';
 
 @Component({
     selector: 'app-account-send-address',
@@ -30,6 +29,7 @@ export class AccountSendAddressComponent implements OnInit, OnDestroy {
     constructor(
         public uiState: UIState,
         public sendService: SendService,
+        public walletManager: WalletManager,
         private fb: FormBuilder) {
 
         this.form = fb.group({

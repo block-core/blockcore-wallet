@@ -5,6 +5,7 @@ import { UIState } from '../../services/ui-state.service';
 import { Router } from '@angular/router';
 import { NetworksService } from '../../services/networks.service';
 import { AppManager } from '../../services/application-manager';
+import { WalletManager } from '../../services/wallet-manager';
 
 @Component({
     selector: 'app-identity',
@@ -22,6 +23,7 @@ export class ActionIdentityComponent {
         private ngZone: NgZone,
         public networkService: NetworksService,
         private manager: AppManager,
+        public walletManager: WalletManager,
         private cd: ChangeDetectorRef) {
         this.uiState.title = 'Action: Identity';
 

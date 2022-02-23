@@ -6,6 +6,7 @@ import { NetworksService } from '../../services/networks.service';
 import { CommunicationService } from '../../services/communication.service';
 import { WalletManager } from '../../services/wallet-manager';
 import axios from 'axios';
+import { AppManager } from '../../services/application-manager';
 
 @Component({
     selector: 'app-sid',
@@ -29,8 +30,9 @@ export class ActionStratisIdentityComponent implements OnInit {
         private app: ApplicationRef,
         private ngZone: NgZone,
         private communication: CommunicationService,
+        private manager: AppManager,
         public networkService: NetworksService,
-        private walletManager: WalletManager,
+        public walletManager: WalletManager,
         private cd: ChangeDetectorRef) {
         this.uiState.title = 'Stratis Identity';
 
@@ -96,11 +98,11 @@ export class ActionStratisIdentityComponent implements OnInit {
 
         if (authRequest.status == 204) {
             // TODO: Figure out if we should inform all or just source for this event.
-            this.communication.sendToAll('signed-content-and-callback-to-url', { success: true });
+            // this.communication.sendToAll('signed-content-and-callback-to-url', { success: true });
             // this.manager.communication.send(port, 'signed-content-and-callback-to-url');
         } else {
             // TODO: Figure out if we should inform all or just source for this event.
-            this.communication.sendToAll('signed-content-and-callback-to-url', { success: false, data: authRequest.data });
+            // this.communication.sendToAll('signed-content-and-callback-to-url', { success: false, data: authRequest.data });
             // this.manager.communication.send(port, 'signed-content-and-callback-to-url');
         }
     }

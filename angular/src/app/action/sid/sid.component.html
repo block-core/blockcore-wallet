@@ -1,9 +1,9 @@
 <div class="page" *ngIf="status == 0">
     <h2>Confirm Login Message</h2>
 
-    Wallet: {{uiState.activeWallet?.name}}<br>
-    Account: {{uiState.activeAccount?.name}}<br>
-    Derivation path: {{networkService.getDerivationPathForAccount(uiState.activeAccount)}}<br><br>
+    Wallet: {{walletManager.activeWallet?.name}}<br>
+    Account: {{walletManager.activeAccount?.name}}<br>
+    Derivation path: {{networkService.getDerivationPathForAccount(walletManager.activeAccount)}}<br><br>
 
     Expiry: {{expiryDate}}<br>
     Expiry: {{expiryDate.toISOString()}}<br><br>
