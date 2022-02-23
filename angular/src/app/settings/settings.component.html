@@ -1,6 +1,43 @@
 <div class="page">
 
   <mat-form-field class="input-full-width" appearance="outline">
+    <mat-label>Display Language</mat-label>
+    <mat-select (selectionChange)="onLanguageChanged($event)" [(value)]="settings.language">
+      <mat-option *ngFor="let lang of translate.getLangs()" [value]="lang">
+        {{ lang | translate }}</mat-option>
+    </mat-select>
+    <mat-hint>Change the display language for the extension.
+    </mat-hint>
+  </mat-form-field>
+
+  <br><br>
+
+  <mat-form-field class="input-full-width" appearance="outline">
+    <mat-label>Choose your mode</mat-label>
+    <mat-select (selectionChange)="onThemeChanged($event)" [(value)]="settings.theme">
+      <mat-option [value]="'dark'">Dark</mat-option>
+      <mat-option [value]="'light'">Light</mat-option>
+    </mat-select>
+    <mat-hint>You must save the settings for mode and accent color to be persisted.
+    </mat-hint>
+  </mat-form-field>
+
+  <br><br>
+
+  <mat-form-field class="input-full-width" appearance="outline">
+    <mat-label>Amount Format</mat-label>
+    <mat-select [(value)]="settings.amountFormat">
+      <mat-option [value]="'bitcoin'">Default (0.0)</mat-option>
+      <mat-option [value]="'satcommas'">Satcommas (000,000.000,000)</mat-option>
+      <mat-option [value]="'sat'">Satoshis</mat-option>
+    </mat-select>
+    <mat-hint>Change the display format for amounts.
+    </mat-hint>
+  </mat-form-field>
+
+  <br><br>
+
+  <mat-form-field class="input-full-width" appearance="outline">
     <mat-label>Auto-Lock Timer (minutes)</mat-label>
     <input matInput [(ngModel)]="settings.autoTimeout" required>
     <mat-hint>Set the idle time in minutes before the wallet becomes locked.</mat-hint>
@@ -24,42 +61,10 @@
     </mat-hint>
   </mat-form-field> -->
 
-  <br><br>
 
-  <mat-form-field class="input-full-width" appearance="outline">
-    <mat-label>Choose your mode</mat-label>
-    <mat-select (selectionChange)="onThemeChanged($event)" [(value)]="settings.theme">
-      <mat-option [value]="'dark'">Dark</mat-option>
-      <mat-option [value]="'light'">Light</mat-option>
-    </mat-select>
-    <mat-hint>You must save the settings for mode and accent color to be persisted.
-    </mat-hint>
-  </mat-form-field>
 
-  <br><br>
 
-  <mat-form-field class="input-full-width" appearance="outline">
-    <mat-label>Display Language</mat-label>
-    <mat-select (selectionChange)="onLanguageChanged($event)" [(value)]="settings.language">
-      <mat-option *ngFor="let lang of translate.getLangs()" [value]="lang">
-        {{ lang | translate }}</mat-option>
-    </mat-select>
-    <mat-hint>Change the display language for the extension.
-    </mat-hint>
-  </mat-form-field>
 
-  <br><br>
-
-  <mat-form-field class="input-full-width" appearance="outline">
-    <mat-label>Amount Format</mat-label>
-    <mat-select [(value)]="settings.amountFormat">
-      <mat-option [value]="'bitcoin'">Default (0.0)</mat-option>
-      <mat-option [value]="'satcommas'">Satcommas (000,000.000,000)</mat-option>
-      <mat-option [value]="'sat'">Satoshis</mat-option>
-    </mat-select>
-    <mat-hint>Change the display format for amounts.
-    </mat-hint>
-  </mat-form-field>
 
   <!-- <mat-form-field appearance="fill">
     <mat-label>Choose accent color</mat-label>

@@ -477,6 +477,9 @@ export class WalletManager {
             this._activeWalletId = id;
             this.state.persisted.previousWalletId = id;
             this.activeWalletSubject.next(this.activeWallet);
+
+            await this.state.save();
+
             return true;
         }
 
