@@ -39,7 +39,7 @@
 </mat-toolbar>
 
 <mat-sidenav-container class="sidenav-container" *ngIf="!uiState.loading">
-  <mat-sidenav #drawer class="sidenav print-hidden" fixedInViewport [attr.role]="'navigation'" [mode]="'over'">
+  <mat-sidenav #drawer class="sidenav-left print-hidden" fixedInViewport [attr.role]="'navigation'" [mode]="'over'">
 
     <mat-toolbar class="logo-icon">
       <img src="assets/icon-light-128x128.png">
@@ -115,7 +115,7 @@
     </mat-nav-list>
   </mat-sidenav>
 
-  <mat-sidenav #draweraccount class="sidenav print-hidden" fixedInViewport [attr.role]="'navigation'" [mode]="'over'"
+  <mat-sidenav #draweraccount class="sidenav-right print-hidden" fixedInViewport [attr.role]="'navigation'" [mode]="'over'"
     position="end">
 
     <!-- <mat-toolbar class="logo-icon">

@@ -135,7 +135,7 @@ export class AppComponent implements OnInit {
   }
 
   async onAccountChanged(accountId: string) {
-    this.draweraccount.toggle();
+    // this.draweraccount.toggle();
     await this.walletManager.setActiveAccount(accountId);
   }
 
