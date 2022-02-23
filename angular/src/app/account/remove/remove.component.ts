@@ -51,7 +51,9 @@ export class AccountRemoveComponent {
 
     var activeWallet = this.walletManager.activeWallet;
 
-    this.walletManager.removeAccount(activeWallet.id, activeWallet.activeAccountId);
+    await this.walletManager.removeAccount(activeWallet.id, activeWallet.activeAccountId);
+
+    this.router.navigateByUrl('/dashboard');
   }
 
   cancel() {
