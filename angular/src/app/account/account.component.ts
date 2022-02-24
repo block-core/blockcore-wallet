@@ -4,6 +4,7 @@ import { UIState, CommunicationService, NetworksService, NetworkStatusService, S
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { NetworkStatus, TransactionHistory } from '../interfaces';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-account',
@@ -21,6 +22,9 @@ export class AccountComponent implements OnInit, OnDestroy {
   sub: any;
   sub2: any;
   sub3: any;
+
+  subscriptions: Subscription[];
+
   loading = false;
   activities: any[] = [];
   public transactions: TransactionHistory[];
@@ -62,13 +66,19 @@ export class AccountComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.subscriptions.forEach(sub => {
+      sub.unsubscribe();
+    });
+
+    this.subscriptions = [];
+
+
     if (this.sub) {
       this.communication.unlisten(this.sub);
       this.sub = null;
     }
 
     if (this.sub2) {
-      console.log('UNSUBSCRIBE!!!');
       this.sub2.unsubscribe();
       this.sub2 = null;
     }
@@ -245,28 +255,19 @@ export class AccountComponent implements OnInit, OnDestroy {
     this.updateNetworkStatus();
 
     // This will be triggered when user navigates into the account, since active account state is changed.
-    this.sub2 = this.uiState.persisted$.subscribe(() => {
+    this.subscriptions.push(this.uiState.persisted$.subscribe(() => {
       console.log('NO!!!!!!!!');
       this.refreshTransactionHistory();
-    });
+    }));
 
     this.sub = this.communication.listen('account-scanned', async (data: { accountId: string }) => {
       this.loading = false;
     });
 
-    this.sub3 = this.communication.listen('active-account-changed', async (data: { walletId: string, accountId: string }) => {
+    this.subscriptions.push(this.walletManager.activeAccount$.subscribe((account) => {
       this.updateNetworkStatus();
-
-      // When the active account has changed, let's update the title:
-      // We cannot set title yet, we must wait for callback for changing account...
       this.uiState.title = this.walletManager.activeAccount?.name || '';
-
-      // if (this.uiState.activeAccount?.network == NETWORK_IDENTITY) {
-      //   this.router.navigate(['account', 'view', 'identity', accountIdentifier]);
-      // } else if (this.uiState.activeAccount?.network == NETWORK_NOSTR) {
-      //   this.router.navigate(['account', 'view', 'nostr', accountIdentifier]);
-      // }
-    });
+    }));
 
     this.scanTimer = setInterval(() => {
       this.scan();
