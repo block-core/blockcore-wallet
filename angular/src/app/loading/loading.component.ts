@@ -171,7 +171,6 @@ export class LoadingComponent implements OnInit, OnDestroy {
       } else {
         // If the active wallet is unlocked, we'll redirect accordingly.
         if (this.walletManager.activeWallet && this.secure.unlocked(this.walletManager.activeWallet.id)) {
-
           // If user has zero accounts, we'll show the account select screen that will auto-create accounts the user chooses.
           if (this.walletManager.hasAccounts) {
             this.router.navigateByUrl('/dashboard');
@@ -179,12 +178,18 @@ export class LoadingComponent implements OnInit, OnDestroy {
           } else {
             this.router.navigateByUrl('/account/select');
           }
-
         } else {
-          // When the initial state is loaded and user has not unlocked any wallets, we'll show the unlock screen on home.
-          console.log('LOADING REDIRECT TO HOME');
+          // No active wallet... Set the previous active wallet.
+          await this.walletManager.setActiveWallet(this.uiState.persisted.previousWalletId);
 
-          this.router.navigateByUrl('/home');
+          // If the previous wallet ID is actually unlocked already, which can happen when a new
+          // instance of the extension is opened, then send user directly to dashboard.
+          if (this.secure.unlocked(this.uiState.persisted.previousWalletId)) {
+            this.router.navigateByUrl('/dashboard');
+          } else {
+            // When the initial state is loaded and user has not unlocked any wallets, we'll show the unlock screen on home.
+            this.router.navigateByUrl('/home');
+          }
         }
       }
     }
