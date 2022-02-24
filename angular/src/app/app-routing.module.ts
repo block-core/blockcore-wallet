@@ -45,6 +45,9 @@ const routes: Routes = [
     path: '', component: LoadingComponent, pathMatch: 'full',
   },
   {
+    path: 'popup', component: LoadingComponent, data: { popup: true }
+  },
+  {
     path: 'home', component: HomeComponent
   },
   {
@@ -168,7 +171,7 @@ const routes: Routes = [
     path: 'action/nostr', component: ActionNostrIdentityComponent
   },
   {
-    path: 'popup',
+    path: 'popup2',
     loadChildren: () => import('./modules/popup/popup.module').then(m => m.PopupModule)
   },
   {

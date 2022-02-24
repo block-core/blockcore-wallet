@@ -1,10 +1,11 @@
-import { Component, ChangeDetectorRef, OnInit, OnDestroy, Renderer2 } from '@angular/core';
+import { Component, ChangeDetectorRef, OnInit, OnDestroy, Renderer2, Inject } from '@angular/core';
 import { UIState, CryptoService, CommunicationService, AppManager, SecureStateService, WalletManager, EnvironmentService, NetworksService, SettingsService, NetworkStatusService } from '../services';
-import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { ActivatedRoute, Data, NavigationEnd, Params, Router } from '@angular/router';
 import * as secp from "@noble/secp256k1";
 import { Action } from '../interfaces';
 import { TranslateService } from '@ngx-translate/core';
-import { Location } from '@angular/common'
+import { DOCUMENT, Location } from '@angular/common'
+import { combineLatest } from 'rxjs';
 
 @Component({
   selector: 'app-loading',
@@ -13,6 +14,7 @@ import { Location } from '@angular/common'
 })
 export class LoadingComponent implements OnInit, OnDestroy {
   problems: boolean;
+  sub: any;
 
   constructor(
     public uiState: UIState,
@@ -30,14 +32,17 @@ export class LoadingComponent implements OnInit, OnDestroy {
     private env: EnvironmentService,
     private status: NetworkStatusService,
     private settings: SettingsService,
-    public networkService: NetworksService
+    public networkService: NetworksService,
+    @Inject(DOCUMENT) private document: Document
   ) {
     this.uiState.title = 'Loading...';
     this.uiState.manifest = chrome.runtime.getManifest();
   }
 
   ngOnDestroy(): void {
-
+    if (this.sub) {
+      this.sub.unsubscribe();
+    }
   }
 
   reload() {
@@ -51,6 +56,30 @@ export class LoadingComponent implements OnInit, OnDestroy {
   instanceName: string;
 
   async ngOnInit() {
+
+    this.sub = combineLatest(
+      [this.route.params,
+      this.route.data,],
+      (params: Params, data: Data) => ({
+        params,
+        data,
+      })
+    ).subscribe((res: { params: Params; data: Data }) => {
+      const { params, data } = res;
+
+      // NOTE: This logic is executed every time / is navigated to.
+      if (this.document.body.classList.contains('popup-mode') || this.document.body.classList.contains('full-mode')) {
+        return;
+      }
+
+      // If it's verified that we're in a popup.
+      if (data['popup'] === true) {
+        this.document.body.classList.add('popup-mode');
+      } else {
+        this.document.body.classList.add('full-mode');
+      }
+    });
+
     // If the state has not loaded or triggered after a timeout, display reload button / reset options.
     setTimeout(() => {
       this.problems = true;
@@ -94,6 +123,8 @@ export class LoadingComponent implements OnInit, OnDestroy {
       } else {
         console.log('PARAMS IS NOT DIFFERENT!! CONTINUE AS BEFORE!');
       }
+
+      console.log('PARAM:', param);
     }
 
     // this.uiState.action = state.action;
