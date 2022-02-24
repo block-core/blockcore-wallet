@@ -18,8 +18,9 @@
   </mat-form-field>
 
   <br>
-  Purpose: {{walletManager.activeAccount?.purpose}}<br>
-  Network: {{walletManager.activeAccount?.network}}<br>
+  Network: {{walletManager.activeAccount | network}}<br>
+  <!-- Purpose: {{walletManager.activeAccount?.purpose}}<br>
+  Network: {{walletManager.activeAccount?.network}}<br> -->
   Index: {{walletManager.activeAccount?.index}}<br>
 
   <br>
