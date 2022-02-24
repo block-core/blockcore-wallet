@@ -23,7 +23,7 @@ export class AccountComponent implements OnInit, OnDestroy {
   sub2: any;
   sub3: any;
 
-  subscriptions: Subscription[];
+  subscriptions: Subscription[] = [];
 
   loading = false;
   activities: any[] = [];
