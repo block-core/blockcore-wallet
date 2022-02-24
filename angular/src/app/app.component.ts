@@ -60,20 +60,6 @@ export class AppComponent implements OnInit {
     this.uiState.backUrl = null;
   }
 
-  verifyPopup() {
-    const isInPopup = function () {
-      return (globalThis.chrome && globalThis.chrome.extension) ?
-        chrome.extension.getViews({ type: "popup" }).length > 0 : null;
-    }
-
-    if (!isInPopup()) {
-      // When the extension is rendered in full screen, we'll add an extra class to body.
-      this.document.body.classList.add('full-mode');
-    } else {
-      //If you are already in the tab, do something else 
-    }
-  }
-
   async ngOnInit() {
     this.router.events.subscribe((val) => {
       if (val instanceof NavigationEnd) {
@@ -94,26 +80,6 @@ export class AppComponent implements OnInit {
         this.translate.use(this.settings.values.language);
       }
     });
-
-
-    // TODO: Find an alternative method to discover if app renders in tab or popup.
-    // The issue here is a race-condition, where he popup does not close fast enough 
-    // for this logic to run. So the length is larger then 0, when run too early.
-
-    // THIS ALSO DOES NOT WORK IF USER HAS EXTENSION OPEN IN ANOTHER BROWSER WINDOW!
-    setTimeout(() => {
-      this.verifyPopup();
-    }, 50);
-
-    setTimeout(() => {
-      this.verifyPopup();
-    }, 500);
-
-    setTimeout(() => {
-      this.verifyPopup();
-    }, 2000);
-
-    this.verifyPopup();
   }
 
   lock() {
