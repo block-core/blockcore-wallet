@@ -15,6 +15,7 @@ import { SettingsService } from "./settings.service";
 import { BehaviorSubject, Observable } from "rxjs";
 import { NetworkLoader } from "./network-loader";
 import { Network } from "./networks";
+import { CommunicationService } from ".";
 
 const ECPair = ECPairFactory(ecc);
 var bitcoinMessage = require('bitcoinjs-message');
@@ -40,6 +41,7 @@ export class WalletManager {
         private crypto: CryptoUtility,
         private secure: SecureStateService,
         private settings: SettingsService,
+        private communication: CommunicationService,
         private logger: LoggerService) {
         this.allNetworks = this.networkLoader.getAllNetworks();
     }
@@ -578,6 +580,8 @@ export class WalletManager {
             // TODO: RAISE AN EVENT THAT INDEXER SHOULD TRIGGER ON?!
             // PERHAPS ORCHESTRATOR SOMEHOW?!
             // this.process(account, wallet, false);
+            const msg = this.communication.createMessage('index');
+            this.communication.send(msg);
         }
     }
 

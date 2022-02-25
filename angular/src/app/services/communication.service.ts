@@ -1,6 +1,6 @@
 import { Injectable, NgZone } from '@angular/core';
 import { EnvironmentService } from '.';
-import { Message } from '../interfaces';
+import { Message, MessageResponse } from '../interfaces';
 const { v4: uuidv4 } = require('uuid');
 
 @Injectable({
@@ -12,34 +12,49 @@ export class CommunicationService {
     }
 
     initialize() {
-        chrome.runtime.onMessage.addListener((message, sender) => {
-            this.handleInternalMessage(message, sender);
-            return "OK1";
+        chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+            const response = this.handleInternalMessage(message, sender);
+
+            if (response) {
+                // sendResponse(response);
+            }
         });
 
-        chrome.runtime.onMessageExternal.addListener((message, sender) => {
-            this.handleExternalMessage(message, sender);
-            return "OK2";
+        chrome.runtime.onMessageExternal.addListener((message, sender, sendResponse) => {
+            const response = this.handleExternalMessage(message, sender);
+
+            if (response) {
+                // sendResponse(response);
+            }
         });
     }
 
-    create(type: string, data?: any): Message {
+    createMessage(type: string, data?: any, target: string = 'background'): Message {
         let key = uuidv4();
 
         return {
             id: key,
             type: type,
             data: data,
-            ext: this.env.instance
+            ext: this.env.instance,
+            source: 'tabs',
+            target: target
         }
+    }
+
+    createResponse(message: Message, data?: any): MessageResponse {
+        const clonedMessage = { ...message };
+        clonedMessage.data = data;
+
+        return clonedMessage;
     }
 
     /** Send message to the background service. */
     send(message: Message) {
-        console.log('Sending message:', message);
+        console.log('CommunicationService::send:', message);
 
-        chrome.runtime.sendMessage(message, function (response) {
-            console.log('AppComponent:sendMessage:response:', response);
+        chrome.runtime.sendMessage(message, (response) => {
+            console.log('CommunicationService:send:response:', response);
         });
     }
 
@@ -48,35 +63,49 @@ export class CommunicationService {
         chrome.tabs.query({}, (tabs) => tabs.forEach(tab => chrome.tabs.sendMessage(tab.id, message)));
     }
 
-    handleInternalMessage(message: any, sender: chrome.runtime.MessageSender) {
-        this.ngZone.run(async () => {
-            console.log('CommunicationService:onMessage: ', message);
-            console.log('CommunicationService:onMessage:sender: ', sender);
+    handleInternalMessage(message: Message, sender: chrome.runtime.MessageSender): any {
+        console.log('CommunicationService:onMessage: ', message);
+        console.log('CommunicationService:onMessage:sender: ', sender);
 
-            // Whenever the background process sends us tmeout, we know that wallets has been locked.
-            if (message.event === 'timeout') {
-                // Timeout was reached in the background. There is already logic listening to the session storage
-                // that will reload state and redirect to home (unlock) if needed, so don't do that here. It will
-                // cause a race condition on loading new state if redirect is handled here.
-                console.log('Timeout was reached in the background service.');
-            } else {
-                console.warn(`Unhandled (internal) message type: ${message.event}`);
-            }
-        });
+        if (message.target !== 'tabs') {
+            console.log('This message is not handled by the tabs (extension) logic.');
+            return;
+        }
+
+        // Whenever the background process sends us tmeout, we know that wallets has been locked.
+        if (message.type === 'timeout') {
+            // Timeout was reached in the background. There is already logic listening to the session storage
+            // that will reload state and redirect to home (unlock) if needed, so don't do that here. It will
+            // cause a race condition on loading new state if redirect is handled here.
+            console.log('Timeout was reached in the background service.');
+        } else if (message.type === 'settings:saved') {
+            return this.createResponse(message, null);
+        } else {
+            console.warn(`Unhandled (internal) message type: ${message.type}`);
+        }
+
+        // this.ngZone.run(async () => {
+        // });
     }
 
-    handleExternalMessage(message: any, sender: chrome.runtime.MessageSender) {
-        this.ngZone.run(async () => {
-            console.log('CommunicationService:onMessageExternal: ', message);
-            console.log('CommunicationService:onMessageExternal:sender: ', sender);
+    handleExternalMessage(message: any, sender: chrome.runtime.MessageSender): any {
+        console.log('CommunicationService:onMessageExternal: ', message);
+        console.log('CommunicationService:onMessageExternal:sender: ', sender);
 
-            switch (message.event) {
-                case "unknown":
-                    break;
-                default:
-                    console.warn(`Unhandled (external) message type: ${message.event}`);
-            }
-        });
+        switch (message.event) {
+            case "index:done":
+                return this.createResponse(message);
+                break;
+        }
+
+        // this.ngZone.run(async () => {
+        //     switch (message.event) {
+        //         case "unknown":
+        //             break;
+        //         default:
+        //             console.warn(`Unhandled (external) message type: ${message.event}`);
+        //     }
+        // });
     }
 }
 

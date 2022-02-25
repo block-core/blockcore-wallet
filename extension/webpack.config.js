@@ -5,6 +5,7 @@ module.exports = {
   mode: 'development',
   devtool: 'inline-source-map',
   entry: {
+    provider: join(__dirname, 'src/provider.ts'),
     content: join(__dirname, 'src/content.ts'),
     background: join(__dirname, 'src/background.ts')
   },

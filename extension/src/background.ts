@@ -1,3 +1,5 @@
+import { Message } from '../../angular/src/app/interfaces';
+
 console.log('Extension: ServiceWorker script loaded');
 
 // Run when the browser has been fully exited and opened again.
@@ -95,9 +97,17 @@ chrome.alarms.onAlarm.addListener(async () => {
 //     };
 // });
 
-chrome.runtime.onMessage.addListener((message, callback) => {
-    console.log('Extension:onMessage: ', message);
-    console.log('Extension:onMessage:callback: ', callback);
+chrome.runtime.onMessage.addListener((message: Message, sender, sendResponse) => {
+    console.log('Background:onMessage: ', message);
+    console.log('Background:onMessage:callback: ', sender);
+
+    if (message.target !== 'background') {
+        console.log('This message is not handled by the background logic.');
+        return;
+    }
+
+    sendResponse({ processed: 'ok' });
+
     // if (message === 'hello') {
     //   sendResponse({greeting: 'welcome!'})
     // } else if (message === 'goodbye') {

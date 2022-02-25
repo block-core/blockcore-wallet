@@ -76,8 +76,8 @@ export class AppComponent implements OnInit {
       }
     });
 
-    const msg = this.communication.create('index');
-    const msg2 = this.communication.create('hello_world');
+    const msg = this.communication.createMessage('index');
+    const msg2 = this.communication.createMessage('hello_world');
 
     this.communication.send(msg);
     this.communication.sendToTabs(msg2);

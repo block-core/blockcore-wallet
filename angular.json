@@ -55,8 +55,6 @@
               ],
               "assets": [
                 "angular/src/net_request_rules.json",
-                "angular/src/provider.js",
-                "angular/src/content.js",
                 {
                   "input": "angular/src/assets/blockcore/",
                   "output": "/assets",
@@ -89,8 +87,6 @@
               "namedChunks": true,
               "assets": [
                 "angular/src/net_request_rules.json",
-                "angular/src/provider.js",
-                "angular/src/content.js",
                 {
                   "input": "angular/src/assets/blockcore/",
                   "output": "/assets",
@@ -137,8 +133,6 @@
               ],
               "assets": [
                 "angular/src/net_request_rules.json",
-                "angular/src/provider.js",
-                "angular/src/content.js",
                 {
                   "input": "angular/src/assets/coinvault/",
                   "output": "/assets",
@@ -179,8 +173,6 @@
               ],
               "assets": [
                 "angular/src/net_request_rules.json",
-                "angular/src/provider.js",
-                "angular/src/content.js",
                 {
                   "input": "angular/src/assets/smartcityplatform/",
                   "output": "/assets",

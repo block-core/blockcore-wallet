@@ -1,5 +1,5 @@
 import { Component, Renderer2 } from '@angular/core';
-import { UIState, FeatureService, EnvironmentService, SettingsService, WalletManager } from '../services';
+import { UIState, FeatureService, EnvironmentService, SettingsService, WalletManager, CommunicationService } from '../services';
 import { Location } from '@angular/common'
 import { Settings } from '../interfaces';
 import { INDEXER_URL } from '../shared/constants';
@@ -22,6 +22,7 @@ export class SettingsComponent {
     public env: EnvironmentService,
     private renderer: Renderer2,
     private walletManager: WalletManager,
+    private communication: CommunicationService,
     private settingsService: SettingsService,
     private location: Location) {
 
@@ -40,6 +41,8 @@ export class SettingsComponent {
     await this.settingsService.replace(this.settings);
 
     await this.walletManager.resetTimer();
+
+    this.communication.send(this.communication.createMessage('settings:saved', this.settingsService.values));
 
     this.location.back();
   }

@@ -356,6 +356,26 @@ interface Message {
 
     /** Any data that is sent with this message. */
     data?: any;
+
+    /** Use this to specify where the message should be processed. */
+    target: string;
+
+    /** Use this to tag where the message is from. */
+    source: string;
+}
+
+interface MessageResponse {
+    /** Same ID as the original message that this is a response to. */
+    id?: string;
+
+    /** Name of the extension. */
+    ext?: string;
+
+    /** The type of message is used to differentiate between action handlers. */
+    type: string;
+
+    /** Any data that is sent with this message. */
+    data?: any;
 }
 
 interface Logger {
@@ -399,5 +419,6 @@ export {
     IndexerApiStatus,
     LogLevel,
     IEnvironment,
-    Message
+    Message,
+    MessageResponse
 }
