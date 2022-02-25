@@ -71,6 +71,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
       }
     });
 
+    // If anything redirected to dashboard without wallet being unlocked, go to home and unlock.
+    if (!this.secure.unlocked(this.walletManager.activeWalletId)) {
+      this.router.navigateByUrl('/home');
+    }
+
     // TODO: activeWalletUnlocked IS FALSE ON FIRST UNLOCK!!!
     this.sub = this.walletManager.activeWallet$.subscribe(() => {
       if (this.walletManager.activeWallet) {
