@@ -1,5 +1,5 @@
 import { DOCUMENT } from '@angular/common';
-import { ChangeDetectorRef, Component, Inject, OnInit, Renderer2, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject, NgZone, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { UIState, CommunicationService, NetworksService, EnvironmentService, AppManager, SecureStateService, WalletManager, SettingsService } from './services';
@@ -31,6 +31,7 @@ export class AppComponent implements OnInit {
     public walletManager: WalletManager,
     private secure: SecureStateService,
     private settings: SettingsService,
+    private ngZone: NgZone,
     private env: EnvironmentService,
     public networkService: NetworksService,
     @Inject(DOCUMENT) private document: Document) {
@@ -73,6 +74,34 @@ export class AppComponent implements OnInit {
       if (this.settings.values.language) {
         this.translate.use(this.settings.values.language);
       }
+    });
+
+
+    chrome.runtime.sendMessage({ onLoad: 'finished' }, function (response) {
+      console.log('AppComponent:sendMessage:response:', response);
+    });
+
+    chrome.runtime.onMessage.addListener((message, callback) => {
+      this.ngZone.run(async () => {
+        console.log('AppComponent:onMessage: ', message);
+        console.log('AppComponent:onMessage:callback: ', callback);
+
+        // Whenever the background process sends us tmeout, we know that wallets has been locked.
+        if (message.event === 'timeout') {
+          // Timeout was reached in the background. There is already logic listening to the session storage
+          // that will reload state and redirect to home (unlock) if needed, so don't do that here. It will
+          // cause a race condition on loading new state if redirect is handled here.
+          console.log('Timeout was reached in the background service.');
+        }
+      });
+
+      return "OK";
+
+      // if (message === 'hello') {
+      //   sendResponse({greeting: 'welcome!'})
+      // } else if (message === 'goodbye') {
+      //   chrome.runtime.Port.disconnect();
+      // }
     });
 
     // Whenever the unlocked wallet changes, if there are zero unlocked wallets, redirect to /home for unlocking.

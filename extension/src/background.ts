@@ -1,8 +1,12 @@
-console.log('Blockcore Extension: ServiceWorker script loaded');
+console.log('Extension: ServiceWorker script loaded');
 
 // Run when the browser has been fully exited and opened again.
 chrome.runtime.onStartup.addListener(async () => {
-    console.log('BACKGROUND: onStartup');
+    console.log('Extension: onStartup');
+});
+
+chrome.runtime.onSuspend.addListener(() => {
+    console.log("Extension: onSuspend.");
 });
 
 chrome.runtime.onInstalled.addListener(async ({ reason }) => {
@@ -45,7 +49,6 @@ chrome.runtime.onInstalled.addListener(async ({ reason }) => {
     }
 });
 
-
 chrome.alarms.onAlarm.addListener(async () => {
     console.log('on ALARM!!');
 
@@ -80,9 +83,39 @@ chrome.alarms.onAlarm.addListener(async () => {
             await storage.session.remove(['keys']);
             // await storage.session.clear(); // Might be dramatic to clear to whole session storage?
             console.log('Timeout has been researched, session storage is cleared.');
-            
+
+            chrome.runtime.sendMessage({ event: 'timeout' }, function (response) {
+                console.log('Extension:sendMessage:response:', response);
+            });
+
         } else {
             console.log('TIMEOUT NOT REACHED YET!!');
         }
     }
+
+
+
+
+});
+
+// chrome.runtime.onMessage.addListener((message, callback) => {
+//     const tabId = getForegroundTabId();
+//     if (message.data === "setAlarm") {
+//         chrome.alarms.create({ delayInMinutes: 5 })
+//     } else if (message.data === "runLogic") {
+//         chrome.scripting.executeScript({ file: 'logic.js', tabId });
+//     } else if (message.data === "changeColor") {
+//         chrome.scripting.executeScript(
+//             { func: () => document.body.style.backgroundColor = "orange", tabId });
+//     };
+// });
+
+chrome.runtime.onMessage.addListener((message, callback) => {
+    console.log('Extension:onMessage: ', message);
+    console.log('Extension:onMessage:callback: ', callback);
+    // if (message === 'hello') {
+    //   sendResponse({greeting: 'welcome!'})
+    // } else if (message === 'goodbye') {
+    //   chrome.runtime.Port.disconnect();
+    // }
 });

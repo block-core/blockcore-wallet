@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { Injectable, NgZone } from "@angular/core";
 import { Router } from "@angular/router";
 import { BehaviorSubject, Observable } from "rxjs";
 
@@ -18,31 +18,32 @@ export class SecureStateService {
         return this.unlockedWalletsSubject.asObservable();
     }
 
-    constructor(private router: Router) {
+    constructor(private router: Router, private ngZone: NgZone) {
         const storage = globalThis.chrome.storage as any;
 
         // Each instance of extension need this listener when session is cleared.
         storage.session.onChanged.addListener(async (changes: any) => {
+            this.ngZone.run(async () => {
+                // TODO: Find a better solution than checking the sizes of keys to redirect
+                // to home when timeout is reached.
+                const previousCount = this.keys.size;
 
-            const previousCount = this.keys.size;
+                await this.load();
 
-            // console.log("storage.session.onChanged:");
-            // console.log(changes);
-            await this.load();
+                const newCount = this.keys.size;
 
-            const newCount = this.keys.size;
+                console.log('previousCount:', previousCount);
+                console.log('newCount:', newCount);
 
-            console.log('previousCount:', previousCount);
-            console.log('newCount:', newCount);
+                // Update the unlocked wallet subject with only the keys (wallet IDs).
+                this.unlockedWalletsSubject.next(<string[]>Array.from(this.keys.keys()));
 
-            // If there previously was more than 0 unlocked and there are no 0 unlocked,
-            // we must ensure that we send user to unlock screen.
-            if (previousCount > 0 && newCount == 0) {
-                this.router.navigateByUrl('/home');
-            }
-
-            // Update the unlocked wallet subject with only the keys (wallet IDs).
-            this.unlockedWalletsSubject.next(<string[]>Array.from(this.keys.keys()));
+                // If there previously was more than 0 unlocked and there are no 0 unlocked,
+                // we must ensure that we send user to unlock screen.
+                if (previousCount > 0 && newCount == 0) {
+                    this.router.navigateByUrl('/home');
+                }
+            });
         });
     }
 
