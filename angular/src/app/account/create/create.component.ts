@@ -176,10 +176,8 @@ export class AccountCreateComponent implements OnInit, OnDestroy {
         delete account.selected;
         await this.walletManager.addAccount(account, this.walletManager.activeWallet);
 
-        // TODO: FIGURE OUT WHERE WE SHOULD REDIRECT AFTER ACCOUNT CREATE?!
         const mostRecentAccount = this.walletManager.activeWallet.accounts[this.walletManager.activeWallet.accounts.length - 1];
         this.router.navigateByUrl('/account/view/' + mostRecentAccount.identifier);
-        // this.router.navigateByUrl('/dashboard');
 
         // this.communication.sendToAll('account-created');
         // this.manager.createAccount(this.uiState.activeWallet.id, account);
