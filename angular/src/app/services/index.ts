@@ -1,5 +1,3 @@
-export * from './account-manager';
-export * from './addresses';
 export * from './application-manager';
 export * from './communication';
 export * from './communication.service';
@@ -14,7 +12,6 @@ export * from './icon.service';
 export * from './indexer';
 export * from './log-writer.service';
 export * from './logger.service';
-export * from './logger';
 export * from './network-loader';
 export * from './network-status.service';
 export * from './networks.service';

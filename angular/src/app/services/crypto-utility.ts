@@ -4,13 +4,11 @@ import { Base64 } from 'js-base64';
 import { payments } from '@blockcore/blockcore-js';
 import { BlockcoreIdentity, Identity, BlockcoreIdentityTools } from '@blockcore/identity';
 import * as bs58 from 'bs58';
-import { keyUtils, Secp256k1KeyPair } from '@transmute/did-key-secp256k1';
+import { Secp256k1KeyPair } from '@transmute/did-key-secp256k1';
 import { Injectable } from '@angular/core';
 
 const enc = new TextEncoder();
 const dec = new TextDecoder();
-
-// TODO: Refactor the node/account management to a seperate type, e.g. "AccountManager" or something. Added here to finish faster.
 
 @Injectable({
     providedIn: 'root'

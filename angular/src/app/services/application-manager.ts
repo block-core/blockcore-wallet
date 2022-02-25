@@ -9,7 +9,6 @@ import { CommunicationBackgroundService } from "./communication";
 import { CryptoUtility } from "./crypto-utility";
 import { DataSyncService } from "./data-sync";
 import { IndexerService } from "./indexer";
-import { BackgroundLoggerService } from "./logger";
 import { NetworkLoader } from "./network-loader";
 import { NetworkStatusService } from "./network-status.service";
 import { Network } from "./networks";
@@ -23,7 +22,6 @@ import { SettingsService } from "./settings.service";
 export class AppManager {
     constructor(
         public sync: DataSyncService,
-        public logger: BackgroundLoggerService,
         public state: UIState,
         public status: NetworkStatusService,
         public walletManager: WalletManager,

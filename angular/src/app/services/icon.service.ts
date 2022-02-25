@@ -1,11 +1,4 @@
-import { HttpClient } from '@angular/common/http';
-import { EventEmitter, Injectable, NgZone } from '@angular/core';
-import { Account, Persisted, Wallet } from '../interfaces';
-import { MINUTE } from '../shared/constants';
-import { Router } from '@angular/router';
-import { CommunicationService } from './communication.service';
-import { BehaviorSubject, ReplaySubject, Subject } from 'rxjs';
-import { Observable } from "rxjs";
+import { Injectable } from '@angular/core';
 
 @Injectable({
     providedIn: 'root'
