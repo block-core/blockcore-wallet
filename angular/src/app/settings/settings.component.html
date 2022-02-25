@@ -154,6 +154,11 @@
   <mat-nav-list>
     <div mat-subheader>About CoinVault</div>
 
+    <a mat-list-item [routerLink]="['about']">
+      <mat-icon mat-list-icon>new_releases</mat-icon>
+      <div mat-line>About</div>
+    </a>
+
     <a mat-list-item [href]="env.releaseUrl" target="_blank">
       <mat-icon mat-list-icon>update</mat-icon>
       <div mat-line>Release {{env.version}}</div>

@@ -27,7 +27,6 @@ import { MatStepperModule } from '@angular/material/stepper';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatChipsModule } from '@angular/material/chips';
 import { HomeComponent } from './home/home.component';
-import { AboutComponent } from './about/about.component';
 import { LoadingComponent } from './loading/loading.component';
 import { AccountRemoveComponent } from './account/remove/remove.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
@@ -79,6 +78,7 @@ import { HandlerComponent } from './settings/handler/handler.component';
 import { ActivatedRoute, ActivatedRouteSnapshot } from '@angular/router';
 import { ActionStratisIdentityComponent } from './action/sid/sid.component';
 import { ActionNostrIdentityComponent } from './action/nostr/nostr.component';
+import { AboutComponent } from './settings/about/about.component';
 
 // required for AOT compilation
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {

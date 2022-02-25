@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { AboutComponent } from './about/about.component';
 import { HomeComponent } from './home/home.component';
 import { LoadingComponent } from './loading/loading.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
@@ -26,6 +25,7 @@ import { PrivacyComponent } from './settings/privacy/privacy.component';
 import { LicensesComponent } from './settings/licenses/licenses.component';
 import { ChangesComponent } from './settings/changes/changes.component';
 import { PasswordComponent } from './settings/password/password.component';
+import { AboutComponent } from './settings/about/about.component';
 import { RecoveryComponent } from './settings/recovery/recovery.component';
 import { NostrIdentityComponent } from './account/view/nostr/identity.component';
 import { AccountReceiveComponent } from './account/receive/receive.component';
@@ -51,9 +51,6 @@ const routes: Routes = [
     path: 'home', component: HomeComponent
   },
   {
-    path: 'about', component: AboutComponent
-  },
-  {
     path: 'wipe', component: WipeComponent
   },
   {
@@ -70,6 +67,9 @@ const routes: Routes = [
   },
   {
     path: 'settings/password', component: PasswordComponent
+  },
+  {
+    path: 'settings/about', component: AboutComponent
   },
   {
     path: 'settings/export-recovery-phrase', component: RecoveryComponent
