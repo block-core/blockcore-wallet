@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { UIState } from './ui-state.service';
 import { Account, IndexerApiStatus, NetworkStatus } from '../interfaces';
 import { EnvironmentService } from './environment.service';
 import { NetworkLoader } from './network-loader';
@@ -23,8 +22,7 @@ export class NetworkStatusService {
         private env: EnvironmentService,
         private state: StateService,
         private walletManager: WalletManager,
-        private settings: SettingsService,
-        private uiState: UIState) {
+        private settings: SettingsService) {
 
     }
 
