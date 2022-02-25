@@ -76,33 +76,38 @@ export class AppComponent implements OnInit {
       }
     });
 
+    const msg = this.communication.create('index');
+    const msg2 = this.communication.create('hello_world');
 
-    chrome.runtime.sendMessage({ onLoad: 'finished' }, function (response) {
-      console.log('AppComponent:sendMessage:response:', response);
-    });
+    this.communication.send(msg);
+    this.communication.sendToTabs(msg2);
 
-    chrome.runtime.onMessage.addListener((message, callback) => {
-      this.ngZone.run(async () => {
-        console.log('AppComponent:onMessage: ', message);
-        console.log('AppComponent:onMessage:callback: ', callback);
+    // chrome.runtime.sendMessage({ onLoad: 'finished' }, function (response) {
+    //   console.log('AppComponent:sendMessage:response:', response);
+    // });
 
-        // Whenever the background process sends us tmeout, we know that wallets has been locked.
-        if (message.event === 'timeout') {
-          // Timeout was reached in the background. There is already logic listening to the session storage
-          // that will reload state and redirect to home (unlock) if needed, so don't do that here. It will
-          // cause a race condition on loading new state if redirect is handled here.
-          console.log('Timeout was reached in the background service.');
-        }
-      });
+    // chrome.runtime.onMessage.addListener((message, callback) => {
+    //   this.ngZone.run(async () => {
+    //     console.log('AppComponent:onMessage: ', message);
+    //     console.log('AppComponent:onMessage:callback: ', callback);
 
-      return "OK";
+    //     // Whenever the background process sends us tmeout, we know that wallets has been locked.
+    //     if (message.event === 'timeout') {
+    //       // Timeout was reached in the background. There is already logic listening to the session storage
+    //       // that will reload state and redirect to home (unlock) if needed, so don't do that here. It will
+    //       // cause a race condition on loading new state if redirect is handled here.
+    //       console.log('Timeout was reached in the background service.');
+    //     }
+    //   });
 
-      // if (message === 'hello') {
-      //   sendResponse({greeting: 'welcome!'})
-      // } else if (message === 'goodbye') {
-      //   chrome.runtime.Port.disconnect();
-      // }
-    });
+    //   return "OK";
+
+    //   // if (message === 'hello') {
+    //   //   sendResponse({greeting: 'welcome!'})
+    //   // } else if (message === 'goodbye') {
+    //   //   chrome.runtime.Port.disconnect();
+    //   // }
+    // });
 
     // Whenever the unlocked wallet changes, if there are zero unlocked wallets, redirect to /home for unlocking.
     // this.secure.unlockedWallets$.subscribe(() => {

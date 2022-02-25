@@ -50,15 +50,10 @@ chrome.runtime.onInstalled.addListener(async ({ reason }) => {
 });
 
 chrome.alarms.onAlarm.addListener(async () => {
-    console.log('on ALARM!!');
-
     const storage = globalThis.chrome.storage as any;
 
     // Get both "active" (Date) and timeout (number of minutes) from local settings.
     const { active, timeout } = await chrome.storage.local.get(['active', 'timeout']);
-
-    console.log('active:', active);
-    console.log('timeout:', timeout);
 
     // Reset storage if there is no 'active' state data.
     if (!active) {
@@ -69,14 +64,11 @@ chrome.alarms.onAlarm.addListener(async () => {
         // Parse the active date.
         const timeoutDate = new Date(active);
 
-        // This value is read from user settings.
-        // const timeoutMs = (timeout * 60 * 1000);
-
         // The reset date is current date minus the timeout.
         var resetDate = new Date(new Date().valueOf() - timeout);
 
-        console.log('resetDate: ', resetDate.toJSON());
-        console.log('timeoutDate: ', timeoutDate.toJSON());
+        // console.log('resetDate: ', resetDate.toJSON());
+        // console.log('timeoutDate: ', timeoutDate.toJSON());
 
         // Check of the timeout has been reached and clear if it has.
         if (resetDate > timeoutDate) {
@@ -87,15 +79,8 @@ chrome.alarms.onAlarm.addListener(async () => {
             chrome.runtime.sendMessage({ event: 'timeout' }, function (response) {
                 console.log('Extension:sendMessage:response:', response);
             });
-
-        } else {
-            console.log('TIMEOUT NOT REACHED YET!!');
         }
     }
-
-
-
-
 });
 
 // chrome.runtime.onMessage.addListener((message, callback) => {

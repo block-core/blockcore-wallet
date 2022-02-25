@@ -1,11 +1,13 @@
 import { Injectable, NgZone } from '@angular/core';
+import { EnvironmentService } from '.';
+import { Message } from '../interfaces';
 const { v4: uuidv4 } = require('uuid');
 
 @Injectable({
     providedIn: 'root'
 })
 export class CommunicationService {
-    constructor(private ngZone: NgZone) {
+    constructor(private ngZone: NgZone, private env: EnvironmentService) {
 
     }
 
@@ -19,6 +21,31 @@ export class CommunicationService {
             this.handleExternalMessage(message, sender);
             return "OK2";
         });
+    }
+
+    create(type: string, data?: any): Message {
+        let key = uuidv4();
+
+        return {
+            id: key,
+            type: type,
+            data: data,
+            ext: this.env.instance
+        }
+    }
+
+    /** Send message to the background service. */
+    send(message: Message) {
+        console.log('Sending message:', message);
+
+        chrome.runtime.sendMessage(message, function (response) {
+            console.log('AppComponent:sendMessage:response:', response);
+        });
+    }
+
+    /** Send message to every single instance of the extension. */
+    sendToTabs(message: Message) {
+        chrome.tabs.query({}, (tabs) => tabs.forEach(tab => chrome.tabs.sendMessage(tab.id, message)));
     }
 
     handleInternalMessage(message: any, sender: chrome.runtime.MessageSender) {

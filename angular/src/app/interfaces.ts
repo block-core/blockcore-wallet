@@ -344,6 +344,20 @@ interface DIDResolutionResult {
     didResolutionMetadata: DIDResolutionMetadataEx;
 }
 
+interface Message {
+    /** Randomly generated unique identifier of the message. */
+    id?: string;
+
+    /** Name of the extension. */
+    ext?: string;
+
+    /** The type of message is used to differentiate between action handlers. */
+    type: string;
+
+    /** Any data that is sent with this message. */
+    data?: any;
+}
+
 interface Logger {
     trace(message?: any | (() => any), ...additional: any[]): void;
     debug(message?: any | (() => any), ...additional: any[]): void;
@@ -384,5 +398,6 @@ export {
     NetworkStatus,
     IndexerApiStatus,
     LogLevel,
-    IEnvironment
+    IEnvironment,
+    Message
 }
