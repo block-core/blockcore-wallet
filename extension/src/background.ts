@@ -64,22 +64,23 @@ chrome.alarms.onAlarm.addListener(async () => {
         console.log('There are no active value, session storage is cleared.');
     } else {
         // Parse the active date.
-        const currentResetDate = new Date(active);
+        const timeoutDate = new Date(active);
 
         // This value is read from user settings.
-        const timeoutMs = (timeout * 60 * 1000);
+        // const timeoutMs = (timeout * 60 * 1000);
 
         // The reset date is current date minus the timeout.
-        var resetDate = new Date(new Date().valueOf() - timeoutMs);
+        var resetDate = new Date(new Date().valueOf() - timeout);
 
         console.log('resetDate: ', resetDate.toJSON());
-        console.log('currentResetDate: ', currentResetDate.toJSON());
+        console.log('timeoutDate: ', timeoutDate.toJSON());
 
         // Check of the timeout has been reached and clear if it has.
-        if (resetDate > currentResetDate) {
+        if (resetDate > timeoutDate) {
             await storage.session.remove(['keys']);
             // await storage.session.clear(); // Might be dramatic to clear to whole session storage?
             console.log('Timeout has been researched, session storage is cleared.');
+            
         } else {
             console.log('TIMEOUT NOT REACHED YET!!');
         }

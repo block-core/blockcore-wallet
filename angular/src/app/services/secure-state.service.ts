@@ -1,4 +1,5 @@
 import { Injectable } from "@angular/core";
+import { Router } from "@angular/router";
 import { BehaviorSubject, Observable } from "rxjs";
 
 @Injectable({
@@ -17,14 +18,28 @@ export class SecureStateService {
         return this.unlockedWalletsSubject.asObservable();
     }
 
-    constructor() {
+    constructor(private router: Router) {
         const storage = globalThis.chrome.storage as any;
 
         // Each instance of extension need this listener when session is cleared.
         storage.session.onChanged.addListener(async (changes: any) => {
+
+            const previousCount = this.keys.size;
+
             // console.log("storage.session.onChanged:");
             // console.log(changes);
             await this.load();
+
+            const newCount = this.keys.size;
+
+            console.log('previousCount:', previousCount);
+            console.log('newCount:', newCount);
+
+            // If there previously was more than 0 unlocked and there are no 0 unlocked,
+            // we must ensure that we send user to unlock screen.
+            if (previousCount > 0 && newCount == 0) {
+                this.router.navigateByUrl('/home');
+            }
 
             // Update the unlocked wallet subject with only the keys (wallet IDs).
             this.unlockedWalletsSubject.next(<string[]>Array.from(this.keys.keys()));

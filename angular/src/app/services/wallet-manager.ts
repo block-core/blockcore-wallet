@@ -357,6 +357,10 @@ export class WalletManager {
     }
 
     async resetTimer() {
+        if (this.settings == null || this.settings.values == null) {
+            return;
+        }
+
         this.logger.info('resetTimer:', this.settings.values.autoTimeout * MINUTE);
 
         await globalThis.chrome.storage.local.set({ 'timeout': this.settings.values.autoTimeout * MINUTE });

@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { Injectable, NgZone } from "@angular/core";
 import { BehaviorSubject, Observable } from "rxjs";
 
 @Injectable({
@@ -14,17 +14,19 @@ export class StateService {
     //     return this.valuesSubject.asObservable();
     // }
 
-    constructor() {
+    constructor(private ngZone: NgZone) {
         const storage = globalThis.chrome.storage;
 
         // Each instance of extension need this listener when session is cleared.
         storage.onChanged.addListener(async (changes: any, namespace: any) => {
-            // TODO: We should consider looking into this changed
-            // event and inform across all instances of the extension, 
-            // if this state service key is marked as "shared" or not.
+            this.ngZone.run(async () => {
+                // TODO: We should consider looking into this changed
+                // event and inform across all instances of the extension, 
+                // if this state service key is marked as "shared" or not.
 
-            // Update the unlocked wallet subject with only the keys (wallet IDs).
-            // this.unlockedWalletsSubject.next(<string[]>Array.from(this.keys.keys()));
+                // Update the unlocked wallet subject with only the keys (wallet IDs).
+                // this.unlockedWalletsSubject.next(<string[]>Array.from(this.keys.keys()));
+            });
         });
     }
 

@@ -74,6 +74,12 @@ export class AppComponent implements OnInit {
         this.translate.use(this.settings.values.language);
       }
     });
+
+    // Whenever the unlocked wallet changes, if there are zero unlocked wallets, redirect to /home for unlocking.
+    // this.secure.unlockedWallets$.subscribe(() => {
+    //   console.log('UNLOCKED WALLETS SUBSCRIPTION:');
+    //   console.log('hasUnlockedWallets', this.walletManager.hasUnlockedWallets);
+    // });
   }
 
   lock() {
