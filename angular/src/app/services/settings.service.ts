@@ -1,12 +1,6 @@
 import { Injectable } from "@angular/core";
-import { __values } from "tslib";
 import { Settings } from "../interfaces";
 import { AUTO_TIMEOUT, INDEXER_URL, VAULT_URL } from "../shared/constants";
-
-// export class SettingsData {
-//     public theme: string;
-//     public autoTimeout: number;
-// }
 
 @Injectable({
     providedIn: 'root'
