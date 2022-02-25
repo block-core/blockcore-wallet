@@ -65,22 +65,12 @@ export class UIState {
 
     port!: chrome.runtime.Port | null;
 
-    async active() {
-        console.log('active:');
-        await this.resetTimer();
-    }
-
-    async resetTimer() {
-        await globalThis.chrome.storage.local.set({ 'active': new Date().toJSON() });
-    }
+    background: any;
 
     async wipe(): Promise<void> {
         await chrome.storage.local.clear();
         await (<any>chrome.storage).session.clear();
-
     }
-
-    background: any;
 
     async save(): Promise<void> {
         return chrome.storage.local.set({ 'data': this.persisted });

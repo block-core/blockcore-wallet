@@ -38,10 +38,6 @@ export class AppComponent implements OnInit {
     this.instanceName = this.env.instanceName;
   }
 
-  async wipe() {
-    this.uiState.wipe();
-  }
-
   maximize() {
     chrome.tabs.create({ active: true, selected: true, url: "index.html" });
   }
@@ -61,11 +57,9 @@ export class AppComponent implements OnInit {
   }
 
   async ngOnInit() {
-    this.router.events.subscribe((val) => {
+    this.router.events.subscribe(async (val) => {
       if (val instanceof NavigationEnd) {
-        // this.uiState.showBackButton = false;
-        // this.uiState.title = '';
-        this.uiState.active();
+        await this.walletManager.resetTimer();
       }
     });
 
