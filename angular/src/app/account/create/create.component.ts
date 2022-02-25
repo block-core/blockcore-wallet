@@ -71,16 +71,15 @@ export class AccountCreateComponent implements OnInit, OnDestroy {
 
         this.derivationPath = this.getDerivationPath();
 
-        this.sub = this.communication.listen('account-created', () => {
-            if (this.walletManager.activeWallet) {
-                const mostRecentAccount = this.walletManager.activeWallet.accounts[this.walletManager.activeWallet.accounts.length - 1];
-                this.router.navigateByUrl('/account/view/' + mostRecentAccount.identifier);
-            }
-        });
+        // this.sub = this.communication.listen('account-created', () => {
+        //     if (this.walletManager.activeWallet) {
+        //         const mostRecentAccount = this.walletManager.activeWallet.accounts[this.walletManager.activeWallet.accounts.length - 1];
+        //         this.router.navigateByUrl('/account/view/' + mostRecentAccount.identifier);
+        //     }
+        // });
     }
 
     ngOnDestroy(): void {
-        this.communication.unlisten(this.sub);
     }
 
     generate() {
@@ -177,7 +176,10 @@ export class AccountCreateComponent implements OnInit, OnDestroy {
         delete account.selected;
         await this.walletManager.addAccount(account, this.walletManager.activeWallet);
 
-        this.router.navigateByUrl('/dashboard');
+        // TODO: FIGURE OUT WHERE WE SHOULD REDIRECT AFTER ACCOUNT CREATE?!
+        const mostRecentAccount = this.walletManager.activeWallet.accounts[this.walletManager.activeWallet.accounts.length - 1];
+        this.router.navigateByUrl('/account/view/' + mostRecentAccount.identifier);
+        // this.router.navigateByUrl('/dashboard');
 
         // this.communication.sendToAll('account-created');
         // this.manager.createAccount(this.uiState.activeWallet.id, account);

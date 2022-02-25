@@ -50,7 +50,7 @@ export class LoadingComponent implements OnInit, OnDestroy {
   }
 
   setAction(action: Action, broadcast = true) {
-    this.communication.send('set-action', { action, broadcast });
+    // this.communication.send('set-action', { action, broadcast });
   }
 
   instanceName: string;

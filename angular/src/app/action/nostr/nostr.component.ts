@@ -12,7 +12,6 @@ export class ActionNostrIdentityComponent implements OnInit {
     parameters?: any;
     expiryDate: Date;
     callback: string;
-    sub: any;
     result: string;
     success?: boolean;
     status = 0;
@@ -33,9 +32,7 @@ export class ActionNostrIdentityComponent implements OnInit {
     }
 
     ngOnDestroy(): void {
-        if (this.sub) {
-            this.communication.unlisten(this.sub);
-        }
+
     }
 
     ngOnInit() {
@@ -47,16 +44,16 @@ export class ActionNostrIdentityComponent implements OnInit {
         this.callback = payload.replace('web+nostrid', 'https');
         this.content = payload.replace('web+nostrid://', '');
 
-        this.sub = this.communication.listen('signed-content-and-callback-to-url', (data: { success: boolean, data: any }) => {
-            if (data.success) {
-                this.status = 1;
-                this.success = true;
-            } else {
-                this.status = 2;
-                this.result = data.data;
-                console.log(data.data);
-            }
-        });
+        // this.sub = this.communication.listen('signed-content-and-callback-to-url', (data: { success: boolean, data: any }) => {
+        //     if (data.success) {
+        //         this.status = 1;
+        //         this.success = true;
+        //     } else {
+        //         this.status = 2;
+        //         this.result = data.data;
+        //         console.log(data.data);
+        //     }
+        // });
     }
 
     sign() {

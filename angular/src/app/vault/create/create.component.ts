@@ -71,16 +71,15 @@ export class VaultCreateComponent implements OnInit, OnDestroy {
 
         this.derivationPath = this.getDerivationPath();
 
-        this.sub = this.communication.listen('account-created', () => {
-            if (this.walletManager.activeWallet) {
-                const mostRecentAccount = this.walletManager.activeWallet.accounts[this.walletManager.activeWallet.accounts.length - 1];
-                this.router.navigateByUrl('/account/view/' + mostRecentAccount.identifier);
-            }
-        });
+        // this.sub = this.communication.listen('account-created', () => {
+        //     if (this.walletManager.activeWallet) {
+        //         const mostRecentAccount = this.walletManager.activeWallet.accounts[this.walletManager.activeWallet.accounts.length - 1];
+        //         this.router.navigateByUrl('/account/view/' + mostRecentAccount.identifier);
+        //     }
+        // });
     }
 
     ngOnDestroy(): void {
-        this.communication.unlisten(this.sub);
     }
 
     async onWalletChanged(event: any) {

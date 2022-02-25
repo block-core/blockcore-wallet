@@ -12,7 +12,6 @@ import { UIState, WalletManager, IconService, CommunicationService } from '../..
 export class VaultEditComponent implements OnInit, OnDestroy {
 
   accountName: string | undefined;
-  sub: any;
   sub2: any;
   icon: string | undefined;
 
@@ -50,9 +49,9 @@ export class VaultEditComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.sub = this.communication.listen('account-updated', () => {
-      this.location.back();
-    });
+    // this.sub = this.communication.listen('account-updated', () => {
+    //   this.location.back();
+    // });
   }
 
   changeIcon(icon: string) {
@@ -62,10 +61,6 @@ export class VaultEditComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this.sub) {
-      this.communication.unlisten(this.sub);
-    }
-
     if (this.sub2) {
       this.sub2.unsubscribe();
     }

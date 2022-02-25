@@ -72,28 +72,12 @@ export class AccountComponent implements OnInit, OnDestroy {
 
     this.subscriptions = [];
 
-
-    if (this.sub) {
-      this.communication.unlisten(this.sub);
-      this.sub = null;
-    }
-
-    if (this.sub2) {
-      this.sub2.unsubscribe();
-      this.sub2 = null;
-    }
-
     clearInterval(this.scanTimer);
-
-    if (this.sub3) {
-      this.communication.unlisten(this.sub3);
-      this.sub3 = null;
-    }
   }
 
   scan(force: boolean = false) {
     this.loading = true;
-    this.communication.send('account-scan', { force: force, accountId: this.walletManager.activeAccount.identifier, walletId: this.walletManager.activeWallet.id });
+    // this.communication.send('account-scan', { force: force, accountId: this.walletManager.activeAccount.identifier, walletId: this.walletManager.activeWallet.id });
 
     // Update the network status on every scan.
     this.currentNetworkStatus = this.networkStatusService.get(this.walletManager.activeAccount.networkType);
@@ -260,9 +244,9 @@ export class AccountComponent implements OnInit, OnDestroy {
       this.refreshTransactionHistory();
     }));
 
-    this.sub = this.communication.listen('account-scanned', async (data: { accountId: string }) => {
-      this.loading = false;
-    });
+    // this.sub = this.communication.listen('account-scanned', async (data: { accountId: string }) => {
+    //   this.loading = false;
+    // });
 
     this.subscriptions.push(this.walletManager.activeAccount$.subscribe((account) => {
       this.updateNetworkStatus();

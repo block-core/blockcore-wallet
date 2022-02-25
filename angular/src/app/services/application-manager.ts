@@ -1,19 +1,11 @@
 import { Injectable } from "@angular/core";
-import { timeStamp } from "console";
-import { networkInterfaces } from "os";
-import { SecureStateService } from "./secure-state.service";
-import { UIState } from "./ui-state.service";
-import { Action, NetworkStatus, Settings, State } from "../interfaces";
-import { INDEXER_URL, MINUTE } from "../shared/constants";
-import { CommunicationBackgroundService } from "./communication";
-import { CryptoUtility } from "./crypto-utility";
-import { DataSyncService } from "./data-sync";
-import { IndexerService } from "./indexer";
-import { NetworkLoader } from "./network-loader";
-import { NetworkStatusService } from "./network-status.service";
-import { Network } from "./networks";
-import { WalletManager } from "./wallet-manager";
-import { SettingsService } from "./settings.service";
+import { Action } from "../interfaces";
+import { MINUTE } from "../shared/constants";
+import {
+    UIState, SecureStateService,
+    CryptoUtility, DataSyncService, IndexerService, NetworkLoader,
+    CommunicationService, SettingsService, WalletManager, NetworkStatusService
+} from "./";
 
 @Injectable({
     providedIn: 'root'
@@ -25,7 +17,7 @@ export class AppManager {
         public state: UIState,
         public status: NetworkStatusService,
         public walletManager: WalletManager,
-        public communication: CommunicationBackgroundService,
+        public communication: CommunicationService,
         public indexer: IndexerService,
         public networkLoader: NetworkLoader,
         public crypto: CryptoUtility,
@@ -36,6 +28,8 @@ export class AppManager {
     }
 
     async initialize() {
+        await this.communication.initialize();
+
         // First load the user settings.
         await this.settings.load();
 

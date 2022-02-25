@@ -5,6 +5,59 @@ const { v4: uuidv4 } = require('uuid');
     providedIn: 'root'
 })
 export class CommunicationService {
+    constructor(private ngZone: NgZone) {
+
+    }
+
+    initialize() {
+        chrome.runtime.onMessage.addListener((message, sender) => {
+            this.handleInternalMessage(message, sender);
+            return "OK1";
+        });
+
+        chrome.runtime.onMessageExternal.addListener((message, sender) => {
+            this.handleExternalMessage(message, sender);
+            return "OK2";
+        });
+    }
+
+    handleInternalMessage(message: any, sender: chrome.runtime.MessageSender) {
+        this.ngZone.run(async () => {
+            console.log('CommunicationService:onMessage: ', message);
+            console.log('CommunicationService:onMessage:sender: ', sender);
+
+            // Whenever the background process sends us tmeout, we know that wallets has been locked.
+            if (message.event === 'timeout') {
+                // Timeout was reached in the background. There is already logic listening to the session storage
+                // that will reload state and redirect to home (unlock) if needed, so don't do that here. It will
+                // cause a race condition on loading new state if redirect is handled here.
+                console.log('Timeout was reached in the background service.');
+            } else {
+                console.warn(`Unhandled (internal) message type: ${message.event}`);
+            }
+        });
+    }
+
+    handleExternalMessage(message: any, sender: chrome.runtime.MessageSender) {
+        this.ngZone.run(async () => {
+            console.log('CommunicationService:onMessageExternal: ', message);
+            console.log('CommunicationService:onMessageExternal:sender: ', sender);
+
+            switch (message.event) {
+                case "unknown":
+                    break;
+                default:
+                    console.warn(`Unhandled (external) message type: ${message.event}`);
+            }
+        });
+    }
+}
+
+
+@Injectable({
+    providedIn: 'root'
+})
+export class CommunicationService2 {
     private port!: chrome.runtime.Port | null;
     // consumers: { [name: string]: any } = {};
     // consumers: Record<string, any> = {};

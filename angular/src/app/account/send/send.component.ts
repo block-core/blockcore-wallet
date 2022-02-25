@@ -49,9 +49,7 @@ export class AccountSendComponent implements OnInit, OnDestroy {
     // }
 
     ngOnDestroy(): void {
-        if (this.sub) {
-            this.communication.unlisten(this.sub);
-        }
+
     }
 
     // copy() {

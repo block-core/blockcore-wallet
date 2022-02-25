@@ -19,10 +19,6 @@ export class VaultIdentityComponent implements OnInit, OnDestroy {
   alarmName = 'refresh';
   wallet: any;
   account!: any;
-  sub: any;
-  sub2: any;
-  sub3: any;
-  sub4: any;
   previousIndex!: number;
   identity: Identity | undefined;
   verifiableDataRegistryUrl = '';
@@ -96,21 +92,7 @@ export class VaultIdentityComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this.sub) {
-      this.communication.unlisten(this.sub);
-    }
 
-    if (this.sub2) {
-      this.communication.unlisten(this.sub2);
-    }
-
-    if (this.sub3) {
-      this.communication.unlisten(this.sub3);
-    }
-
-    if (this.sub4) {
-      this.communication.unlisten(this.sub4);
-    }
   }
 
   save() {
@@ -186,71 +168,71 @@ export class VaultIdentityComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.sub4 = this.communication.listen('identity-published', (data: Identity) => {
+    // this.sub4 = this.communication.listen('identity-published', (data: Identity) => {
 
-      this.identity = data;
+    //   this.identity = data;
 
-      this.snackBar.open('Your identity has been published', 'Hide', {
-        duration: 8000,
-        horizontalPosition: 'center',
-        verticalPosition: 'bottom',
-      });
-    });
+    //   this.snackBar.open('Your identity has been published', 'Hide', {
+    //     duration: 8000,
+    //     horizontalPosition: 'center',
+    //     verticalPosition: 'bottom',
+    //   });
+    // });
 
-    this.sub3 = this.communication.listen('vault-configuration', (data: any) => {
-      const vaultConfiguration = {
-        didConfiguration: data,
-        didDocument: this.identity?.didDocument
-      };
+    // this.sub3 = this.communication.listen('vault-configuration', (data: any) => {
+    //   const vaultConfiguration = {
+    //     didConfiguration: data,
+    //     didDocument: this.identity?.didDocument
+    //   };
 
-      copyToClipboard(JSON.stringify(vaultConfiguration));
-    });
+    //   copyToClipboard(JSON.stringify(vaultConfiguration));
+    // });
 
-    this.sub2 = this.communication.listen('identity-updated', () => {
-      this.identity = this.uiState.store.identities.find(i => i.id == this.identity?.id);
-    });
+    // this.sub2 = this.communication.listen('identity-updated', () => {
+    //   this.identity = this.uiState.store.identities.find(i => i.id == this.identity?.id);
+    // });
 
-    this.sub = this.communication.listen('active-account-changed', (data: { walletId: string, accountId: string }) => {
-      // If we are currently viewing an account and the user changes, we'll refresh this view.
-      // if (this.previousIndex != data.index) {
-      //   this.router.navigate(['account', 'view', data.index]);
-      // }
+    // this.sub = this.communication.listen('active-account-changed', (data: { walletId: string, accountId: string }) => {
+    //   // If we are currently viewing an account and the user changes, we'll refresh this view.
+    //   // if (this.previousIndex != data.index) {
+    //   //   this.router.navigate(['account', 'view', data.index]);
+    //   // }
 
-      // console.log('PARAMS:', params);
-      // const index: any = params.get('index');
-      // const index = data.index;
+    //   // console.log('PARAMS:', params);
+    //   // const index: any = params.get('index');
+    //   // const index = data.index;
 
-      // console.log('Index to view:', index);
+    //   // console.log('Index to view:', index);
 
-      if (!this.walletManager.activeWallet) {
-        return;
-      }
+    //   if (!this.walletManager.activeWallet) {
+    //     return;
+    //   }
 
-      // this.manager.setActiveAccountId(index);
-      this.uiState.title = 'Account: ' + this.walletManager.activeAccount?.name;
+    //   // this.manager.setActiveAccountId(index);
+    //   this.uiState.title = 'Account: ' + this.walletManager.activeAccount?.name;
 
-      // this.uiState.persisted.activeAccountIndex = Number(index);
+    //   // this.uiState.persisted.activeAccountIndex = Number(index);
 
-      // Persist when changing accounts.
-      // this.uiState.save();
+    //   // Persist when changing accounts.
+    //   // this.uiState.save();
 
-      // this.previousIndex = index;
+    //   // this.previousIndex = index;
 
-      var did = this.walletManager.activeAccount?.identifier;
-      this.identity = this.uiState.store.identities.find(i => i.id == did);
+    //   var did = this.walletManager.activeAccount?.identifier;
+    //   this.identity = this.uiState.store.identities.find(i => i.id == did);
 
-      // if (this.identity) {
-      //   this.identity = { id }
-      // }
+    //   // if (this.identity) {
+    //   //   this.identity = { id }
+    //   // }
 
-      let service = this.identity?.services.find(s => s.type == 'VerifiableDataRegistry');
+    //   let service = this.identity?.services.find(s => s.type == 'VerifiableDataRegistry');
 
-      if (service) {
-        this.verifiableDataRegistryUrl = service.serviceEndpoint;
-      } else {
-        this.verifiableDataRegistryUrl = '';
-      }
+    //   if (service) {
+    //     this.verifiableDataRegistryUrl = service.serviceEndpoint;
+    //   } else {
+    //     this.verifiableDataRegistryUrl = '';
+    //   }
 
-    });
+    // });
   }
 }

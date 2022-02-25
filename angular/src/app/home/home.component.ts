@@ -16,7 +16,6 @@ export class HomeComponent implements OnInit, OnDestroy {
   alarmName = 'refresh';
   wallet: any;
   error = '';
-  sub: any;
   sub2: any;
 
   constructor(
@@ -48,10 +47,6 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this.sub) {
-      this.communication.unlisten(this.sub);
-    }
-
     if (this.sub2) {
       this.sub2.unsubscribe();
     }
