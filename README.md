@@ -42,7 +42,7 @@ All the standard practices for cryptocurrency wallets apply: Make sure you take 
 
 ## Requirements
 
-- Node.js 14.x: https://nodejs.org/en/
+- Node.js LTS (16.x): https://nodejs.org/en/
 - Angular CLI: `npm install -g @angular/cli`
 
 ## Run with Hot-Reload
@@ -59,18 +59,3 @@ This will run Angular in watch-mode and ensure it auto-reloads.
 To install the extension, follow the instructions here: https://docs.microsoft.com/en-us/microsoft-edge/extensions-chromium/getting-started/extension-sideloading
 
 Choose the `blockcore-extension\dist\blockcore-extension` folder when picking folder for extension to load from.
-
-## Manifest V2
-
-The extension is built using V2 of the manifest file format: https://developer.chrome.com/docs/extensions/mv2/
-
-We should migrate to V3 when possible: https://developer.chrome.com/docs/extensions/mv3/manifest/
-
-
-## Developer and Architect notes
-
-The background service is a long running background service that is "always" active.
-
-When the UI is triggered, it will send an event to the background with name 'state', which will return the current state 
-as an 'state-changed' event.
-
