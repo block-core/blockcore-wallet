@@ -14,39 +14,14 @@ export class CommunicationService {
     initialize() {
         chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
             const result = await this.handleInternalMessage(message, sender);
-            
-            const response = this.createResponse(message);
-            response.response = result;
-
-            console.log('sending response:', response);
-
-            return response;
-
-            sendResponse(response);
-
-            // TODO: Can we return response instead of calling sendResponse??
-            // return response;
-
-            // if (response) {
-            //     // sendResponse(response);
-            // }
+            console.log('sending response:', result);
+            sendResponse(result);
         });
 
         chrome.runtime.onMessageExternal.addListener(async (message, sender, sendResponse) => {
             const result = await this.handleExternalMessage(message, sender);
-
-            const response = this.createResponse(message);
-            response.response = result;
-
-            console.log('sending response (external):', response);
-
-            sendResponse(response);
-            // TODO: Can we return response instead of calling sendResponse??
-            // return response;
-
-            // if (response) {
-            //     sendResponse(response);
-            // }
+            console.log('sending response (external):', result);
+            sendResponse(result);
         });
     }
 

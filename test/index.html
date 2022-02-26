@@ -90,7 +90,12 @@
         async function connect() {
             console.log(window.blockcore);
             let pubKey = await window.blockcore.getPublicKey();
-            console.log(pubKey);
+
+            if (pubKey.error) {
+                console.error(pubKey.error);
+            } else {
+                console.log('pubKey:', pubKey);
+            }
 
             let result = await window.blockcore.login();
             console.log('Login result:', result);

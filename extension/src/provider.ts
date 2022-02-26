@@ -57,13 +57,13 @@ globalThis.blockcore = {
 // This will receive various messages that are posted to the window. Make sure we filter out anything that
 // is not related to the extension.
 globalThis.addEventListener('message', message => {
-
-    console.log('provider.ts:', message);
-
     // Make sure there is data, extension is setup and it belongs to the existing promises in this web app.
-    if (!message.data || !message.data.ext || !globalThis.blockcore._promises[message.data.id]) {
+    if (!message.data || !message.data.ext || !message.data.response || !globalThis.blockcore._promises[message.data.id]) {
         return;
     }
+
+    // It is possible that calls to the extension is returned without handled by an instance of the extension,
+    // if that happens, then response will be undefined.
 
     console.log('globalThis.addEventListener (PROVIDER), HANDLE THIS MESSAGE: ', message);
 
