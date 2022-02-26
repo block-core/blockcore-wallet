@@ -63,9 +63,7 @@ globalThis.addEventListener('message', async message => {
     });
   }
   catch (error) {
-    // TODO: Verify if this is ever raised at all. If the extension window is closed, the browser will log without coming here:
-    // "Unchecked runtime.lastError: The message port closed before a response was received.""
-    console.log('FAILED TO SEND MESSAGE', error);
-    window.postMessage({ id: message.data.id, type: message.data.type, ext: 'blockcore', target: 'provider', source: 'content', response: { error: { message: 'Failed to call extension.' } } }, message.origin);
+    console.error(error);
+    window.postMessage({ id: message.data.id, type: message.data.type, ext: 'blockcore', target: 'provider', source: 'content', response: { error: { message: error.message } } }, message.origin);
   }
 })
