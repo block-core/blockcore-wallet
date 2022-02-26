@@ -1,5 +1,3 @@
-
-
 // If the blockcore is not registered yet, load the provider now.
 if (!globalThis.blockcore) {
   const providerUrl = chrome.runtime.getURL("provider.js");
@@ -33,31 +31,42 @@ if (!globalThis.blockcore) {
 
 // listen for messages from the provider script
 globalThis.addEventListener('message', async message => {
+
   if (message.source !== window || !message.data || !message.data.ext) {
     return;
   }
 
-  console.log('globalThis.addEventListener (CONTENT):', message);
+  if (message.data.source !== 'provider') {
+    console.log('message is NOT from provider. Ignore it!');
+    return;
+  };
 
-  // var response;
+  console.log('globalThis.addEventListener (CONTENT) SEND THIS TO EXTENSION!:', message);
 
-  // try {
-  //   response = await chrome.runtime.sendMessage({
-  //     type: message.data.type,
-  //     data: message.data.data,
-  //     host: location.host
-  //   });
-  // } catch (error) {
-  //   response = { error }
-  // }
+  // pass on to extension
+  var response;
+  try {
+    response = await chrome.runtime.sendMessage({
+      id: message.data.id,
+      type: message.data.type,
+      data: message.data.data,
+      ext: 'blockcore', // Don't read what is provided by provider script.
+      source: 'content', // Don't read what is provided by provider script.
+      target: 'tabs', // Don't read what is provided by provider script.
+      host: location.host
+    });
 
-  // return response
-  // window.postMessage({ id: message.data.id, ext: 'blockcore', response }, message.origin);
+    console.log('SEND MESSAGE FINISHED....');
+  } catch (error) {
+    console.log('WHUYT!');
+    response = { error }
+  }
 
-  // if (message.source !== window) return
-  // if (!message.data) return
-  // if (!message.data.params) return
-  // if (message.data.ext) return
+  // TODO: FIGURE OUT WHY RESPONSE IS NULL!!!??!
+  console.log('RESPONSE FROM TABS RECEIVED BY CONTENT:', response);
+
+  // return response and complete the promise.
+  window.postMessage({ id: message.data.id, type: message.data.type, ext: 'blockcore', target: 'provider', source: 'content', response }, message.origin)
 })
 
 

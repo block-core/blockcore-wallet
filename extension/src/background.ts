@@ -98,15 +98,31 @@ chrome.alarms.onAlarm.addListener(async () => {
 // });
 
 chrome.runtime.onMessage.addListener((message: Message, sender, sendResponse) => {
-    console.log('Background:onMessage: ', message);
-    console.log('Background:onMessage:callback: ', sender);
-
     if (message.target !== 'background') {
         console.log('This message is not handled by the background logic.');
         return;
     }
 
-    sendResponse({ processed: 'ok' });
+    console.log('Background:onMessage: ', message);
+    console.log('Background:onMessage:callback: ', sender);
+
+    let response;
+
+    // Do we want to allow events to be triggered from the web app -> provider -> content and into background script?
+    try {
+        switch (message.type) {
+            case 'index': {
+                response = '545555';
+            }
+            default:
+                console.log(`The message type ${message.type} is not known.`);
+                response = null;
+        }
+    } catch (error: any) {
+        return { error: { message: error.message, stack: error.stack } }
+    }
+
+    sendResponse(response);
 
     // if (message === 'hello') {
     //   sendResponse({greeting: 'welcome!'})

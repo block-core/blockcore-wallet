@@ -1,51 +1,20 @@
-// console.log('BLOCKCORE PROVIDER!!!');
-
-// class BlockcoreProvider {
-//     initialize() {
-//         return true;
-//     };
-
-//     open() {
-//         console.log('OPEN UI!');
-//     }
-// }
-
-// window.blockcore.provider = new BlockcoreProvider();
-
-// chrome.runtime.onStartup.addListener(function () {
-//     console.log('onStartup:provider');
-//     // chrome.storage.local.set({ has_been_notified: false });
-//   });
-
 // Register global provider for Blockcore:
 globalThis.blockcore = {
+    _promises: {},
+
+    _call(type, data) {
+        return new Promise((resolve, reject) => {
+            const id = v4();
+            this._promises[id] = { resolve, reject };
+
+            globalThis.postMessage({ type, id, data, source: 'provider', target: 'tabs', ext: 'blockcore' }, '*');
+        });
+    },
+
     connect: (callback) => {
 
     },
     open: () => {
-        console.log('OPEN UI!');
-
-        console.log(chrome.runtime);
-
-        // var port = chrome.runtime.connect({ name: "knockknock" });
-
-        // port.postMessage({ joke: "Knock knock" });
-        // port.onMessage.addListener(function (msg) {
-        //     if (msg.question == "Who's there?")
-        //         port.postMessage({ answer: "Madame" });
-        //     else if (msg.question == "Madame who?")
-        //         port.postMessage({ answer: "Madame... Bovary" });
-        // });
-
-        // const extensionId = 'oebogngphcemipfobgcehenpohfhkhpc';
-
-        // var views = chrome.extension.getViews({ type: "popup" }); //https://stackoverflow.com/questions/8920953/how-determine-if-the-popup-page-is-open-or-not
-        // if (views.length > 0) {
-        //     console.log("Popup is visible");
-        //     return true;
-        // }
-        // return false;
-
         chrome.runtime.sendMessage({ greeting: "hello from provider" }, function (response) {
             // console.log(response.farewell);
         });
@@ -73,19 +42,10 @@ globalThis.blockcore = {
 
     },
     async getPublicKey() {
-        return '12345';
+        return this._call('getpublickey', null);
     },
     async login() {
-        // The provider script does not have access to chrome!
-        globalThis.postMessage({ type: 'login', id: v4(), data: { ok: false }, source: 'provider', target: 'tabs', ext: 'blockcore' }, '*');
-
-        return 'wait';
-
-        // console.log(chrome.runtime);
-
-        // chrome.runtime.sendMessage({ type: 'login', id: '123', data: { ok: false }, source: 'provider', target: 'tabs' }, function (response) {
-        //     console.log('RESPONSE IN PROVIDER', response);
-        // });
+        return this._call('login', { ok: false });
     },
     // loadScript: (url) => {
     //     var script = document.createElement("script");
@@ -97,11 +57,23 @@ globalThis.blockcore = {
 // This will receive various messages that are posted to the window. Make sure we filter out anything that
 // is not related to the extension.
 globalThis.addEventListener('message', message => {
-    if (!message.data || !message.data.ext) {
+
+    console.log('provider.ts:', message);
+
+    // Make sure there is data, extension is setup and it belongs to the existing promises in this web app.
+    if (!message.data || !message.data.ext || !globalThis.blockcore._promises[message.data.id]) {
         return;
     }
 
     console.log('globalThis.addEventListener (PROVIDER), HANDLE THIS MESSAGE: ', message);
+
+    if (message.data.response?.error) {
+        let error = new Error('blockcore: ' + message.data.response.error.message);
+        error.stack = message.data.response.error.stack;
+        globalThis.blockcore._promises[message.data.id].reject(error);
+    } else {
+        globalThis.blockcore._promises[message.data.id].resolve(message.data.response);
+    }
 });
 
 // TODO: Only override the nostr handler when user has decided that this should happen!

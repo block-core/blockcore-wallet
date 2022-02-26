@@ -12,20 +12,41 @@ export class CommunicationService {
     }
 
     initialize() {
-        chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-            const response = this.handleInternalMessage(message, sender);
+        chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
+            const result = await this.handleInternalMessage(message, sender);
+            
+            const response = this.createResponse(message);
+            response.response = result;
 
-            if (response) {
-                // sendResponse(response);
-            }
+            console.log('sending response:', response);
+
+            return response;
+
+            sendResponse(response);
+
+            // TODO: Can we return response instead of calling sendResponse??
+            // return response;
+
+            // if (response) {
+            //     // sendResponse(response);
+            // }
         });
 
-        chrome.runtime.onMessageExternal.addListener((message, sender, sendResponse) => {
-            const response = this.handleExternalMessage(message, sender);
+        chrome.runtime.onMessageExternal.addListener(async (message, sender, sendResponse) => {
+            const result = await this.handleExternalMessage(message, sender);
 
-            if (response) {
-                // sendResponse(response);
-            }
+            const response = this.createResponse(message);
+            response.response = result;
+
+            console.log('sending response (external):', response);
+
+            sendResponse(response);
+            // TODO: Can we return response instead of calling sendResponse??
+            // return response;
+
+            // if (response) {
+            //     sendResponse(response);
+            // }
         });
     }
 
@@ -63,38 +84,52 @@ export class CommunicationService {
         chrome.tabs.query({}, (tabs) => tabs.forEach(tab => chrome.tabs.sendMessage(tab.id, message)));
     }
 
-    handleInternalMessage(message: Message, sender: chrome.runtime.MessageSender): any {
+    async handleInternalMessage(message: Message, sender: chrome.runtime.MessageSender) {
         console.log('CommunicationService:onMessage: ', message);
         console.log('CommunicationService:onMessage:sender: ', sender);
 
         if (message.target !== 'tabs') {
             console.log('This message is not handled by the tabs (extension) logic.');
-            return;
+            return null;
         }
 
-        // Whenever the background process sends us tmeout, we know that wallets has been locked.
-        if (message.type === 'timeout') {
-            // Timeout was reached in the background. There is already logic listening to the session storage
-            // that will reload state and redirect to home (unlock) if needed, so don't do that here. It will
-            // cause a race condition on loading new state if redirect is handled here.
-            console.log('Timeout was reached in the background service.');
-        } else if (message.type === 'settings:saved') {
-            return this.createResponse(message, null);
-        } else {
-            console.warn(`Unhandled (internal) message type: ${message.type}`);
+        try {
+            switch (message.type) {
+                case 'getpublickey': {
+                    return '545555';
+                }
+                case 'login': {
+                    return 'success';
+                }
+                case 'timeout': {
+                    // Timeout was reached in the background. There is already logic listening to the session storage
+                    // that will reload state and redirect to home (unlock) if needed, so don't do that here. It will
+                    // cause a race condition on loading new state if redirect is handled here.
+                    console.log('Timeout was reached in the background service.');
+                    return null;
+                }
+                default:
+                    console.log(`The message type ${message.type} is not known.`);
+                    return null;
+            }
+        } catch (error: any) {
+            return { error: { message: error.message, stack: error.stack } }
         }
 
         // this.ngZone.run(async () => {
         // });
     }
 
-    handleExternalMessage(message: any, sender: chrome.runtime.MessageSender): any {
+    async handleExternalMessage(message: any, sender: chrome.runtime.MessageSender) {
         console.log('CommunicationService:onMessageExternal: ', message);
         console.log('CommunicationService:onMessageExternal:sender: ', sender);
 
         switch (message.event) {
             case "index:done":
                 return this.createResponse(message);
+                break;
+            default:
+                return null;
                 break;
         }
 

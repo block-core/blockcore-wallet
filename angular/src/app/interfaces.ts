@@ -376,6 +376,9 @@ interface MessageResponse {
 
     /** Any data that is sent with this message. */
     data?: any;
+
+    /** Response from the request. */
+    response?: any;
 }
 
 interface Logger {
