@@ -83,6 +83,10 @@ chrome.alarms.onAlarm.addListener(async () => {
             });
         }
     }
+
+    // Process Wallets
+    
+
 });
 
 // chrome.runtime.onMessage.addListener((message, callback) => {

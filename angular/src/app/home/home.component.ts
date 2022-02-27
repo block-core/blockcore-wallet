@@ -27,6 +27,8 @@ export class HomeComponent implements OnInit, OnDestroy {
     public walletManager: WalletManager,
     private cd: ChangeDetectorRef) {
 
+    this.uiState.showBackButton = false;
+
     // this.uiState.title = 'Unlock wallet';
     this.activateAlarm();
 
