@@ -163,6 +163,23 @@ interface TransactionView extends Transaction {
     details: TransactionInfoView;
 }
 
+interface AddressState {
+    /** The address */
+    address: string;
+
+    /** The current offset that has been queried. */
+    offset: number;
+
+    /** The history of transactions that exists on this address. 
+     * These are only the transaction IDs, to reduce storage usage, 
+     * as same transaction can be involved with multiple wallet addresses. */
+    transactions: string[];
+
+}
+
+
+
+
 interface TransactionInfo {
     symbol: string;
     blockHash: string;
@@ -423,5 +440,6 @@ export {
     LogLevel,
     IEnvironment,
     Message,
-    MessageResponse
+    MessageResponse,
+    AddressState
 }

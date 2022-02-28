@@ -3,7 +3,7 @@ import { mnemonicToSeedSync } from "bip39";
 import { HDKey } from "micro-bip32";
 import { IndexerBackgroundService } from "src/shared/indexer";
 import { AccountComponent } from "./account/account.component";
-import { Account } from "./interfaces";
+import { Account, AddressState, Transaction } from "./interfaces";
 import { CryptoUtility } from "./services";
 import { STRAX } from "./services/networks";
 
@@ -72,6 +72,30 @@ describe('GenericTests', () => {
 
     console.log('restoredState', restoredState);
 
+  });
+
+  it('Load xpub and query the indexer APIs', async () => {
+    const network = new STRAX();
+    const indexer = new IndexerBackgroundService();
+
+    const addressState: AddressState = {
+      address: 'XEgeAGBEdKXcdKD2HYovtyp5brE5WyAKwv', // Random address from rich list
+      offset: 0,
+      transactions: []
+    };
+
+    // 'XWaKvgJ1HpCA8nKnqQcGESmDdMXFjmUVbH' // Random address with 7 transactions.
+    // 'XEgeAGBEdKXcdKD2HYovtyp5brE5WyAKwv' // Random address with a good amount of transactions.
+
+    const indexerUrl = 'https://{id}.indexer.blockcore.net'.replace('{id}', network.id.toLowerCase());
+    const transactions = new Map<string, Transaction>();
+
+    await indexer.processAddress(indexerUrl, addressState, transactions);
+
+    expect(addressState.transactions.length).toBeGreaterThanOrEqual(69);
+
+    console.log('Transactions:', transactions);
+    console.log('addressState:', addressState);
   });
 
   it('Validate xpub load and address derivation', async () => {

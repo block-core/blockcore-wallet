@@ -1,6 +1,6 @@
 // import { Account, Address, IndexerApiStatus, Transaction, UnspentTransactionOutput, Wallet } from '../interfaces';
 import axiosRetry from 'axios-retry';
-import { Account, Address, IndexerApiStatus, Transaction, UnspentTransactionOutput, Wallet } from '../app/interfaces';
+import { Account, AccountState, Address, AddressState, IndexerApiStatus, Transaction, UnspentTransactionOutput, Wallet } from '../app/interfaces';
 // import { Injectable } from '@angular/core';
 // import { NetworkStatusService } from './network-status.service';
 // import { LoggerService } from './logger.service';
@@ -97,6 +97,98 @@ export class IndexerBackgroundService {
     hasWork() {
         return !this.q.isEmpty();
     }
+
+    parseLinkHeader(linkHeader: string) {
+        const sections = linkHeader.split(', ');
+        //const links: Record<string, string> = { };
+        const links = { first: null as string, last: null as string, previous: null as string, next: null as string } as any;
+
+        sections.forEach(section => {
+            const key = section.substring(section.indexOf('rel="') + 5).replace('"', '');
+            const value = section.substring(section.indexOf('<') + 1, section.indexOf('>'));
+            links[key] = value;
+        });
+
+        return links;
+    }
+
+    private limit = 10;
+
+    async processAddress(indexerUrl: string, state: AddressState, transactionStore: Map<string, Transaction>) {
+        if (transactionStore == null) {
+            transactionStore = new Map<string, Transaction>();
+        }
+
+        try {
+            let nextLink = `/api/query/address/${state.address}/transactions?offset=${state.offset}&limit=${this.limit}`;
+
+            const date = new Date().toISOString();
+
+            // Loop through all pages until finished.
+            while (nextLink != null) {
+                const responseTransactions = await axios.get(`${indexerUrl}${nextLink}`);
+                const transactions = responseTransactions.data;
+                const links = this.parseLinkHeader(responseTransactions.headers.link);
+
+                const limit = responseTransactions.headers['pagination-limit'];
+                const offset = Number(responseTransactions.headers['pagination-offset']);
+                const total = responseTransactions.headers['pagination-total'];
+
+                if (responseTransactions.status == 200) {
+                    // var updatedReceiveAddress: Address = { ...receiveAddress };
+                    // console.log(responseTransactions);
+
+                    // Since we are paging, and all items in pages should be sorted correctly, we can simply
+                    // replace the item at the right index for each page. This should update with new metadata,
+                    // if there is anything new.
+                    for (let j = 0; j < transactions.length; j++) {
+                        const transaction = transactions[j];
+                        const transactionId = transaction.transactionHash;
+                        const index = state.transactions.indexOf(transactionId);
+
+                        // If the transaction ID is not present already on the AddressState, add it.
+                        if (index == -1) {
+                            state.transactions.push(transactionId);
+                        }
+
+                        transactionStore.set(transactionId, transaction);
+
+                        // Since we've retrieved some transaction data here, we'll make sure to update our local state
+                        // of transactions.
+                        // receiveAddress.transactions[offset + j] = transaction;
+
+                        // await this.updateTransactionInfo(transaction, indexerUrl);
+                    }
+
+                    // Get all the transaction info for each of the transactions discovered on this address.
+                    // await this.updateWithTransactionInfo(transactions, indexerUrl);
+                    // receiveAddress.transactions = transactions;
+
+                    // TODO: Add support for paging.
+                    // Get the unspent outputs. We need to figure out how we should refresh this, as this might change depending on many factors.
+                    // const responseUnspentTransactions = await axios.get(`${indexerUrl}/api/query/address/${receiveAddress.address}/transactions/unspent?confirmations=0&offset=0&limit=20`);
+                    // const unspentTransactions: UnspentTransactionOutput[] = responseUnspentTransactions.data;
+                    // updatedReceiveAddress.unspent = unspentTransactions;
+                }
+
+                nextLink = links.next;
+            }
+
+            // Persist the date we got this data:
+            // receiveAddress.retrieved = date;
+            // changes = true;
+        } catch (error) {
+            // this.status.update({ networkType: account.networkType, status: 'Error', availability: IndexerApiStatus.Error });
+            // this.logger.error(error);
+
+            // TODO: Implement error handling in background and how to send it to UI.
+            // We should probably have an error log in settings, so users can see background problems as well.
+
+            // TODO: FIX THIS!!
+            // this.communication.sendToAll('error', error);
+        }
+    }
+
 
     // async getTransactionHex(account: Account, txid: string) {
     //     const network = this.status.getNetwork(account.networkType);
