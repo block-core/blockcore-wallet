@@ -333,7 +333,6 @@ export class WalletManager {
         unlockedMnemonic = await this.crypto.decryptData(wallet.mnemonic, oldpassword);
 
         if (unlockedMnemonic) {
-
             // Encrypt the recovery phrase with new password and persist.
             let encryptedRecoveryPhrase = await this.crypto.encryptData(unlockedMnemonic, newpassword);
             wallet.mnemonic = encryptedRecoveryPhrase;
@@ -352,7 +351,6 @@ export class WalletManager {
             // this.state.persisted.previousWalletId = wallet.id;
 
             return true;
-
         } else {
             return false;
         }

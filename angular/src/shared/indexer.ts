@@ -1,6 +1,6 @@
 // import { Account, Address, IndexerApiStatus, Transaction, UnspentTransactionOutput, Wallet } from '../interfaces';
 import axiosRetry from 'axios-retry';
-import { Account, Address, IndexerApiStatus, Transaction, UnspentTransactionOutput, Wallet } from '../../angular/src/app/interfaces';
+import { Account, Address, IndexerApiStatus, Transaction, UnspentTransactionOutput, Wallet } from '../app/interfaces';
 // import { Injectable } from '@angular/core';
 // import { NetworkStatusService } from './network-status.service';
 // import { LoggerService } from './logger.service';

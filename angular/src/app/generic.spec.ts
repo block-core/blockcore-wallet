@@ -1,4 +1,5 @@
 import * as secp from "@noble/secp256k1";
+import { IndexerBackgroundService } from "src/shared/indexer";
 
 describe('GenericTests', () => {
   beforeEach(() => { });
@@ -64,6 +65,20 @@ describe('GenericTests', () => {
     // });
 
     console.log('restoredState', restoredState);
+
+  });
+
+
+
+
+  it('Validate wallet indexing', () => {
+
+    // rescue interest concert clinic build half glow exchange oak holiday garlic scrub
+    // STRAX
+    const xpub = "xpub6DEJAVH2NnLS8a7TnvPLrtbigyZcV19qf4k17CADDmKnuCnyG1AvQD1uEWUzYzPTrDpiXtodYHTrhWH4ndU1nDGvYrwGp8oSNCyCsdxyjeT";
+
+    const indexer = new IndexerBackgroundService();
+
 
   });
 });

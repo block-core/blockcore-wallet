@@ -1,5 +1,5 @@
 import { Message } from '../../angular/src/app/interfaces';
-import { IndexerBackgroundService } from './indexer';
+import { IndexerBackgroundService } from '../../angular/src/shared/indexer';
 
 console.log('Extension: ServiceWorker script loaded');
 
@@ -100,6 +100,12 @@ chrome.alarms.onAlarm.addListener(async (alarm: chrome.alarms.Alarm) => {
         // globalThis.chrome.storage.local.get('')
         const indexer = new IndexerBackgroundService();
         // indexer.process();
+
+
+        
+
+
+
 
 
     }

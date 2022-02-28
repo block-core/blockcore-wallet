@@ -17,17 +17,19 @@ export class StateService {
     constructor(private ngZone: NgZone) {
         const storage = globalThis.chrome.storage;
 
-        // Each instance of extension need this listener when session is cleared.
-        storage.onChanged.addListener(async (changes: any, namespace: any) => {
-            this.ngZone.run(async () => {
-                // TODO: We should consider looking into this changed
-                // event and inform across all instances of the extension, 
-                // if this state service key is marked as "shared" or not.
+        if (globalThis.chrome && globalThis.chrome.storage) {
+            // Each instance of extension need this listener when session is cleared.
+            storage.onChanged.addListener(async (changes: any, namespace: any) => {
+                this.ngZone.run(async () => {
+                    // TODO: We should consider looking into this changed
+                    // event and inform across all instances of the extension, 
+                    // if this state service key is marked as "shared" or not.
 
-                // Update the unlocked wallet subject with only the keys (wallet IDs).
-                // this.unlockedWalletsSubject.next(<string[]>Array.from(this.keys.keys()));
+                    // Update the unlocked wallet subject with only the keys (wallet IDs).
+                    // this.unlockedWalletsSubject.next(<string[]>Array.from(this.keys.keys()));
+                });
             });
-        });
+        }
     }
 
     /** Persists the value and keeps an in-memory reference until replaced or unloaded. 

@@ -30,7 +30,6 @@ import { MatStepperModule } from '@angular/material/stepper';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatChipsModule } from '@angular/material/chips';
 import { HomeComponent } from './home/home.component';
-import { AboutComponent } from './about/about.component';
 import { LoadingComponent } from './loading/loading.component';
 import { AccountRemoveComponent } from './account/remove/remove.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
@@ -156,7 +155,6 @@ describe('AppComponent', () => {
         AppComponent,
         AppComponent,
         HomeComponent,
-        AboutComponent,
         PasswordComponent,
         AccountComponent,
         RecoveryComponent,

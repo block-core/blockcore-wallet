@@ -10,7 +10,7 @@ export class SecureStateService {
     // The background.ts is responsible for clearing the secure state when timeout is reached.
 
     /** Contains the master seed for unlocked wallets. This object should never be persisted and only exists in memory. */
-    private keys: Map<string, string>;
+    private keys: Map<string, string> = new Map<string, string>();
 
     unlockedWalletsSubject: BehaviorSubject<string[]> = new BehaviorSubject<string[]>([]);
 
@@ -21,30 +21,32 @@ export class SecureStateService {
     constructor(private router: Router, private ngZone: NgZone) {
         const storage = globalThis.chrome.storage as any;
 
-        // Each instance of extension need this listener when session is cleared.
-        storage.session.onChanged.addListener(async (changes: any) => {
-            this.ngZone.run(async () => {
-                // TODO: Find a better solution than checking the sizes of keys to redirect
-                // to home when timeout is reached.
-                const previousCount = this.keys.size;
+        if (globalThis.chrome && globalThis.chrome.storage && storage.session != null) {
+            // Each instance of extension need this listener when session is cleared.
+            storage.session.onChanged.addListener(async (changes: any) => {
+                this.ngZone.run(async () => {
+                    // TODO: Find a better solution than checking the sizes of keys to redirect
+                    // to home when timeout is reached.
+                    const previousCount = this.keys.size;
 
-                await this.load();
+                    await this.load();
 
-                const newCount = this.keys.size;
+                    const newCount = this.keys.size;
 
-                console.log('previousCount:', previousCount);
-                console.log('newCount:', newCount);
+                    console.log('previousCount:', previousCount);
+                    console.log('newCount:', newCount);
 
-                // Update the unlocked wallet subject with only the keys (wallet IDs).
-                this.unlockedWalletsSubject.next(<string[]>Array.from(this.keys.keys()));
+                    // Update the unlocked wallet subject with only the keys (wallet IDs).
+                    this.unlockedWalletsSubject.next(<string[]>Array.from(this.keys.keys()));
 
-                // If there previously was more than 0 unlocked and there are no 0 unlocked,
-                // we must ensure that we send user to unlock screen.
-                if (previousCount > 0 && newCount == 0) {
-                    this.router.navigateByUrl('/home');
-                }
+                    // If there previously was more than 0 unlocked and there are no 0 unlocked,
+                    // we must ensure that we send user to unlock screen.
+                    if (previousCount > 0 && newCount == 0) {
+                        this.router.navigateByUrl('/home');
+                    }
+                });
             });
-        });
+        }
     }
 
     async set(key: string, value: string) {
