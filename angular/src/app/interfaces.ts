@@ -157,6 +157,8 @@ interface Transaction {
     confirmations: BigInt | number;
     details: TransactionInfo;
     hex: string;
+    pending?: boolean;
+    finalized?: boolean;
 }
 
 interface TransactionView extends Transaction {

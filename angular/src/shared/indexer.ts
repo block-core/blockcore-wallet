@@ -112,7 +112,19 @@ export class IndexerBackgroundService {
         return links;
     }
 
+    async getTransactionInfo(transactionId: string, indexerUrl: string) {
+        const responseTransaction = await axios.get(`${indexerUrl}/api/query/transaction/${transactionId}`);
+        return responseTransaction.data;
+    }
+
+    async getTransactionHex(transactionId: string, indexerUrl: string) {
+        const responseTransactionHex = await axios.get(`${indexerUrl}/api/query/transaction/${transactionId}/hex`);
+        return responseTransactionHex.data;
+    }
+
     private limit = 10;
+    private finalized = 500;
+    private confirmed = 1;
 
     async processAddress(indexerUrl: string, state: AddressState, transactionStore: Map<string, Transaction>) {
         if (transactionStore == null) {
@@ -120,6 +132,7 @@ export class IndexerBackgroundService {
         }
 
         try {
+            // const responseAddress = await axios.get(`${indexerUrl}/api/query/address/${state.address}`);
             let nextLink = `/api/query/address/${state.address}/transactions?offset=${state.offset}&limit=${this.limit}`;
 
             const date = new Date().toISOString();
@@ -134,6 +147,9 @@ export class IndexerBackgroundService {
                 const offset = Number(responseTransactions.headers['pagination-offset']);
                 const total = responseTransactions.headers['pagination-total'];
 
+                // Store the latest offset on the state.
+                state.offset = offset;
+
                 if (responseTransactions.status == 200) {
                     // var updatedReceiveAddress: Address = { ...receiveAddress };
                     // console.log(responseTransactions);
@@ -142,7 +158,7 @@ export class IndexerBackgroundService {
                     // replace the item at the right index for each page. This should update with new metadata,
                     // if there is anything new.
                     for (let j = 0; j < transactions.length; j++) {
-                        const transaction = transactions[j];
+                        const transaction: Transaction = transactions[j];
                         const transactionId = transaction.transactionHash;
                         const index = state.transactions.indexOf(transactionId);
 
@@ -151,18 +167,23 @@ export class IndexerBackgroundService {
                             state.transactions.push(transactionId);
                         }
 
-                        transactionStore.set(transactionId, transaction);
+                        transaction.pending = (transaction.confirmations < this.confirmed);
+                        transaction.finalized = (transaction.confirmations < this.finalized);
 
-                        // Since we've retrieved some transaction data here, we'll make sure to update our local state
-                        // of transactions.
-                        // receiveAddress.transactions[offset + j] = transaction;
+                        const transactionInfo = transactionStore.get(transactionId);
 
-                        // await this.updateTransactionInfo(transaction, indexerUrl);
+                        // If the transaction is not stored yet, query additional data then save it to the store.
+                        if (!transactionInfo) {
+                            transaction.details = await this.getTransactionInfo(transactionId, indexerUrl);
+                            transaction.hex = await this.getTransactionHex(transactionId, indexerUrl);
+                            transactionStore.set(transactionId, transaction);
+                        } else if (transaction.finalized) { // If the transaction is finalized, we don't bother query new status.
+
+                        } else {
+                            // Transactions is not yet finalized, but we already have data for it. Query only for details and not hex.
+                            transactionInfo.details = await this.getTransactionInfo(transactionId, indexerUrl);
+                        }
                     }
-
-                    // Get all the transaction info for each of the transactions discovered on this address.
-                    // await this.updateWithTransactionInfo(transactions, indexerUrl);
-                    // receiveAddress.transactions = transactions;
 
                     // TODO: Add support for paging.
                     // Get the unspent outputs. We need to figure out how we should refresh this, as this might change depending on many factors.
