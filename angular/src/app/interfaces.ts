@@ -157,7 +157,7 @@ interface Transaction {
     confirmations: BigInt | number;
     details: TransactionInfo;
     hex: string;
-    pending?: boolean;
+    unconfirmed?: boolean;
     finalized?: boolean;
 }
 

@@ -135,6 +135,8 @@ export class IndexerBackgroundService {
             // const responseAddress = await axios.get(`${indexerUrl}/api/query/address/${state.address}`);
             let nextLink = `/api/query/address/${state.address}/transactions?offset=${state.offset}&limit=${this.limit}`;
 
+            console.log('FIRST NEXT LINK: ' + nextLink);
+
             const date = new Date().toISOString();
 
             // Loop through all pages until finished.
@@ -167,8 +169,8 @@ export class IndexerBackgroundService {
                             state.transactions.push(transactionId);
                         }
 
-                        transaction.pending = (transaction.confirmations < this.confirmed);
-                        transaction.finalized = (transaction.confirmations < this.finalized);
+                        transaction.unconfirmed = (transaction.confirmations < this.confirmed);
+                        transaction.finalized = (transaction.confirmations > this.finalized);
 
                         const transactionInfo = transactionStore.get(transactionId);
 

@@ -93,6 +93,10 @@ describe('GenericTests', () => {
     await indexer.processAddress(indexerUrl, addressState, transactions);
 
     expect(addressState.transactions.length).toBeGreaterThanOrEqual(69);
+    expect(addressState.offset).toBeGreaterThanOrEqual(60);
+
+    // Second run should only query latest page and only get info, not get hex again.
+    await indexer.processAddress(indexerUrl, addressState, transactions);
 
     console.log('Transactions:', transactions);
     console.log('addressState:', addressState);
