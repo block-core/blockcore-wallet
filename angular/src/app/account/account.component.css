@@ -62,3 +62,9 @@ textarea {
   /* TODO: Use variables from the theme */
   color: gray !important;
 }
+
+.network-status-image {
+  background-size: cover;
+  float: left;
+  margin-right: 1em;
+}

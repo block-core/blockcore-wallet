@@ -141,13 +141,16 @@
             </mat-nav-list>
 
             <mat-card *ngIf="networkStatus">
+                <img class="mat-card-avatar network-status-image" [src]="networkStatus.icon" />
                 <mat-card-title>{{networkStatus.name}} ({{networkStatus.symbol}})</mat-card-title>
-                <mat-card-subtitle>{{networkStatus.configuration.name}}</mat-card-subtitle>
+                <mat-card-subtitle>{{networkStatus.description}}</mat-card-subtitle>
                 <mat-card-content>
+                    <p>Network: {{networkStatus.configuration.name}}</p>
                     <p>Height: {{networkStatus.blockHeight}}</p>
                     <p>Relay Fee: {{networkStatus.node.network.relayFee}}</p>
                     <p>Memory Pool: {{networkStatus.node.transactionsInPool}} transactions</p>
                     <p>Connections (on the indexer): {{networkStatus.node.network.connections}}</p>
+                    <p><a [href]="networkStatus.url" target="_blank">{{networkStatus.url}}</a></p>
                 </mat-card-content>
             </mat-card>
 
