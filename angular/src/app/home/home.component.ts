@@ -100,6 +100,8 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   async unlock() {
+    this.error = null;
+
     if (this.walletManager.activeWallet) {
       const unlocked = await this.walletManager.unlockWallet(this.walletManager.activeWallet.id, this.unlockPassword);
       // this.manager.unlock(this.uiState.activeWallet.id, this.unlockPassword);
@@ -117,7 +119,8 @@ export class HomeComponent implements OnInit, OnDestroy {
           }
         }
       } else {
-        // TODO: Display error!!! .. invalid password, etc.
+        // TODO: Add text resource to i18n.
+        this.error = 'Invalid password';
       }
     }
   }
