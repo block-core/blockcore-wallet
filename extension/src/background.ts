@@ -1,4 +1,4 @@
-import { Message } from '../../angular/src/app/interfaces';
+import { Message } from '../../angular/src/shared/interfaces';
 import { IndexerBackgroundService } from '../../angular/src/shared/indexer';
 import { WalletState } from '../../angular/src/shared/wallet-state';
 import { LightWalletManager } from '../../angular/src/shared/light-wallet-manager';

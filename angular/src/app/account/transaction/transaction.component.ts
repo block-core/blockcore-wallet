@@ -6,7 +6,7 @@ import { UIState, CommunicationService, IconService, NetworksService, NetworkSta
 import { copyToClipboard } from '../../shared/utilities';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import * as QRCode from 'qrcode';
-import { Address, NetworkStatus, Transaction, TransactionView } from '../../interfaces';
+import { Address, NetworkStatus, Transaction, TransactionView } from '../../../shared/interfaces';
 import { Network } from '../../services/networks';
 var QRCode2 = require('qrcode');
 

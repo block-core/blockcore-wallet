@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { IndexerApiStatus, NetworkStatus } from '../../interfaces';
+import { IndexerApiStatus, NetworkStatus } from '../../../shared/interfaces';
 
 @Component({
     selector: 'app-network-status',

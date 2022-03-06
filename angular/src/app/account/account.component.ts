@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { UIState, CommunicationService, NetworksService, NetworkStatusService, SettingsService, WalletManager } from '../services';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { NetworkStatus, TransactionHistory } from '../interfaces';
+import { NetworkStatus, TransactionHistory } from '../../shared/interfaces';
 import { Subscription } from 'rxjs';
 
 @Component({

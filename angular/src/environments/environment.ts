@@ -10,7 +10,7 @@ import 'zone.js/dist/zone-error'; // Included with Angular CLI.
 // `ng build` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 
-import { IEnvironment } from "../app/interfaces";
+import { IEnvironment } from "../shared/interfaces";
 
 export const environment: IEnvironment = {
   production: false,

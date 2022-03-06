@@ -2,7 +2,7 @@ import { Component, Inject, HostBinding, ChangeDetectorRef, OnInit, OnDestroy } 
 import { HttpClient } from '@angular/common/http';
 import { CryptoService, UIState, CommunicationService, SettingsService, WalletManager } from '../../../services';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Identity } from '../../../interfaces';
+import { Identity } from '../../../../shared/interfaces';
 import { copyToClipboard } from '../../../shared/utilities';
 import { MatSnackBar } from '@angular/material/snack-bar';
 

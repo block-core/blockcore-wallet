@@ -6,7 +6,7 @@
  */
 import 'zone.js/dist/zone-error'; // Included with Angular CLI.
 
-import { IEnvironment } from "../app/interfaces";
+import { IEnvironment } from "../shared/interfaces";
 
 export const environment: IEnvironment = {
   production: true,

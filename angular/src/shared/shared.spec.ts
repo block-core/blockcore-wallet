@@ -1,7 +1,7 @@
 import * as secp from "@noble/secp256k1";
 import { mnemonicToSeedSync } from "bip39";
 import { HDKey } from "micro-bip32";
-import { AddressState, Transaction } from "src/app/interfaces";
+import { AddressState, Transaction } from "src/shared/interfaces";
 import { CryptoUtility } from "src/app/services";
 import { STRAX } from "src/app/services/networks";
 import { IndexerBackgroundService } from "src/shared/indexer";

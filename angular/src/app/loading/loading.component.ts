@@ -2,7 +2,7 @@ import { Component, ChangeDetectorRef, OnInit, OnDestroy, Renderer2, Inject } fr
 import { UIState, CryptoService, CommunicationService, AppManager, SecureStateService, WalletManager, EnvironmentService, NetworksService, SettingsService, NetworkStatusService } from '../services';
 import { ActivatedRoute, Data, NavigationEnd, Params, Router } from '@angular/router';
 import * as secp from "@noble/secp256k1";
-import { Action } from '../interfaces';
+import { Action } from '../../shared/interfaces';
 import { TranslateService } from '@ngx-translate/core';
 import { DOCUMENT, Location } from '@angular/common'
 import { combineLatest } from 'rxjs';

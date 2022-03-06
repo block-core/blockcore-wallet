@@ -2,7 +2,7 @@ import { Component, Inject, HostBinding, OnInit, ChangeDetectorRef, OnDestroy } 
 import { HttpClient } from '@angular/common/http';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UIState, CryptoService, WalletManager, CommunicationService, IconService } from '../../services';
-import { Account, Vault } from '../../interfaces';
+import { Account, Vault } from '../../../shared/interfaces';
 import { Router } from '@angular/router';
 
 @Component({

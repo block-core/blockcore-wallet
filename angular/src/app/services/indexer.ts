@@ -1,4 +1,4 @@
-import { Account, Address, IndexerApiStatus, Transaction, UnspentTransactionOutput, Wallet } from '../interfaces';
+import { Account, Address, IndexerApiStatus, Transaction, UnspentTransactionOutput, Wallet } from '../../shared/interfaces';
 import axiosRetry from 'axios-retry';
 import { Injectable } from '@angular/core';
 import { NetworkStatusService } from './network-status.service';

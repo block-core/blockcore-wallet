@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { UIState } from './ui-state.service';
 import { CommunicationService } from './communication.service';
-import { Account, Action, Identity, Settings, State, Vault } from '../interfaces';
+import { Account, Action, Identity, Settings, State, Vault } from '../../shared/interfaces';
 import {
     MatSnackBar,
     MatSnackBarHorizontalPosition,

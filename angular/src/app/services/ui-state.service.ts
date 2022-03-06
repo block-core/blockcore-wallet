@@ -1,5 +1,5 @@
 import { Injectable, NgZone } from '@angular/core';
-import { Action, Persisted, Store, Wallet } from '../interfaces';
+import { Action, Persisted, Store, Wallet } from '../../shared/interfaces';
 import { Router } from '@angular/router';
 import { CommunicationService } from './communication.service';
 import { ReplaySubject, Subject } from 'rxjs';

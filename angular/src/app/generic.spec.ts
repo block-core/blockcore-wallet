@@ -3,7 +3,7 @@ import { mnemonicToSeedSync } from "bip39";
 import { HDKey } from "micro-bip32";
 import { IndexerBackgroundService } from "src/shared/indexer";
 import { AccountComponent } from "./account/account.component";
-import { Account, AddressState, Transaction } from "./interfaces";
+import { Account, AddressState, Transaction } from "../shared/interfaces";
 import { CryptoUtility } from "./services";
 import { STRAX } from "./services/networks";
 

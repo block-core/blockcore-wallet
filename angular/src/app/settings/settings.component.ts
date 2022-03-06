@@ -1,7 +1,7 @@
 import { Component, Renderer2 } from '@angular/core';
 import { UIState, FeatureService, EnvironmentService, SettingsService, WalletManager, CommunicationService } from '../services';
 import { Location } from '@angular/common'
-import { Settings } from '../interfaces';
+import { Settings } from '../../shared/interfaces';
 import { INDEXER_URL } from '../shared/constants';
 import { TranslateService } from '@ngx-translate/core';
 

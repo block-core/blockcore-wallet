@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { Action } from "../interfaces";
+import { Action } from "../../shared/interfaces";
 import { MINUTE } from "../shared/constants";
 import {
     UIState, SecureStateService,

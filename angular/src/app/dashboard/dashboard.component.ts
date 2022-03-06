@@ -6,7 +6,7 @@ import {
 import { ActivatedRoute, Router } from '@angular/router';
 import { copyToClipboard } from '../shared/utilities';
 import { Observable } from 'rxjs';
-import { NetworkStatus } from '../interfaces';
+import { NetworkStatus } from '../../shared/interfaces';
 
 export interface Section {
   name: string;

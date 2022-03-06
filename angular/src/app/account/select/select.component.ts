@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { WalletManager, NetworksService, UIState } from '../../services';
-import { Account } from '../../interfaces';
+import { Account } from '../../../shared/interfaces';
 
 @Component({
     selector: 'app-account-select',

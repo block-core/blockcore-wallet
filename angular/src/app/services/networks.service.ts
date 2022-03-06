@@ -3,7 +3,7 @@ import * as bip39 from 'bip39';
 import { Base64 } from 'js-base64';
 import { NetworkLoader } from '../services/network-loader';
 import { Network } from '../services/networks';
-import { Account, Wallet } from '../interfaces';
+import { Account, Wallet } from '../../shared/interfaces';
 import { Environments } from '../../environments/environments';
 import { EnvironmentService } from './environment.service';
 const { v4: uuidv4 } = require('uuid');

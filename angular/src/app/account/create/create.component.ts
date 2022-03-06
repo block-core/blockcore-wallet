@@ -2,7 +2,7 @@ import { Component, Inject, HostBinding, OnInit, ChangeDetectorRef, OnDestroy } 
 import { HttpClient } from '@angular/common/http';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UIState, CryptoService, CommunicationService, IconService, NetworksService, WalletManager } from '../../services';
-import { Account } from '../../interfaces';
+import { Account } from '../../../shared/interfaces';
 import { Router } from '@angular/router';
 import { Network } from '../../services/networks';
 const { v4: uuidv4 } = require('uuid');

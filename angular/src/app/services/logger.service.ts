@@ -1,6 +1,6 @@
 import { NGXLogger } from "ngx-logger";
 import { Injectable } from '@angular/core';
-import { Logger } from '../interfaces';
+import { Logger } from '../../shared/interfaces';
 
 @Injectable({
     providedIn: 'root'

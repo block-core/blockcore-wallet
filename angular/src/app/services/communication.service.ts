@@ -1,6 +1,6 @@
 import { Injectable, NgZone } from '@angular/core';
 import { EnvironmentService } from '.';
-import { Message, MessageResponse } from '../interfaces';
+import { Message, MessageResponse } from '../../shared/interfaces';
 const { v4: uuidv4 } = require('uuid');
 
 @Injectable({

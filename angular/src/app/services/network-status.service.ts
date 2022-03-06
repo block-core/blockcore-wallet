@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Account, IndexerApiStatus, NetworkStatus } from '../interfaces';
+import { Account, IndexerApiStatus, NetworkStatus } from '../../shared/interfaces';
 import { EnvironmentService } from './environment.service';
 import { NetworkLoader } from './network-loader';
 import { Network } from './networks';

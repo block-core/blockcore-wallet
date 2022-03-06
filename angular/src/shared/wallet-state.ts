@@ -1,4 +1,4 @@
-import { Persisted } from "src/app/interfaces";
+import { Persisted } from "src/shared/interfaces";
 
 export class WalletState {
     async wipe(): Promise<void> {

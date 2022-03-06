@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit, Renderer2 } from '@angular/core';
 import { UIState, CommunicationService, NetworksService, SendService, WalletManager } from '../../services';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Address, UnspentTransactionOutput } from '../../interfaces';
+import { Address, UnspentTransactionOutput } from '../../../shared/interfaces';
 import { Network } from '../../services/networks';
 
 @Component({

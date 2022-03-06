@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UIState, FeatureService, WalletManager, CommunicationService, CryptoService } from '../../services';
-import { Wallet } from '../../interfaces';
+import { Wallet } from '../../../shared/interfaces';
 import { copyToClipboard } from '../../shared/utilities';
 const { v4: uuidv4 } = require('uuid');
 

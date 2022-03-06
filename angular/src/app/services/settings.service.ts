@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { Settings } from "../interfaces";
+import { Settings } from "../../shared/interfaces";
 import { AUTO_TIMEOUT, INDEXER_URL, VAULT_URL } from "../shared/constants";
 
 @Injectable({
