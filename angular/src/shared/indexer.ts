@@ -126,7 +126,20 @@ export class IndexerBackgroundService {
     private finalized = 500;
     private confirmed = 1;
 
+    /** [confirmations, updateInterval in minutes] */
+    private updateMatrix = [
+        [0, 0], // Initially we'll update as often as possible.
+        [3, 1], // After 3 confirms, we expect this to be confirmed. Rollback to update every minute
+        [10, 10], // After 10 confirms, it's unlikely to suffer reorg, update every 10 minute.
+        [50, 60], // Check every hour.
+        [500, -1] // After 500, we consider the entry finalized and won't be reorged to a different block.
+    ];
+
     async processAddress(indexerUrl: string, state: AddressState, transactionStore: Map<string, Transaction>) {
+
+        // TODO: Verify if table works on Chrome as it does not appear in Edge?
+        console.table(this.updateMatrix);
+
         if (transactionStore == null) {
             transactionStore = new Map<string, Transaction>();
         }
