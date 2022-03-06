@@ -102,6 +102,7 @@ chrome.alarms.onAlarm.addListener(async (alarm: chrome.alarms.Alarm) => {
         const state = await walletState.load();
 
         const lightWalletManager = new LightWalletManager(state);
+        lightWalletManager.getWallets();
 
         // Get what addresses to watch from local storage.
         // globalThis.chrome.storage.local.get('')

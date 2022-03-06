@@ -1,13 +1,67 @@
 import * as secp from "@noble/secp256k1";
 import { mnemonicToSeedSync } from "bip39";
 import { HDKey } from "micro-bip32";
-import { AddressState, Transaction } from "src/shared/interfaces";
 import { CryptoUtility } from "src/app/services";
 import { STRAX } from "src/app/services/networks";
-import { IndexerBackgroundService } from "src/shared/indexer";
+import {
+    AddressState, Transaction, IndexerBackgroundService,
+    WalletState, LightWalletManager, Persisted, TransactionStore, StateStore
+} from ".";
 
 describe('SharedTests', () => {
     beforeEach(() => { });
+
+    it('Validate the StateStore', async () => {
+        const stateStore = new StateStore();
+
+        const data1 = await stateStore.get('key1');
+        expect(data1).toBeUndefined();
+
+        const state: Persisted = {
+            previousWalletId: '',
+            wallets: JSON.parse(testWallet)
+        };
+
+        await stateStore.set('state', state);
+
+        const retrievedState = await stateStore.get<any>('state');
+
+        // Perform a deep scan between the instances:
+        expect(state).toEqual(retrievedState);
+
+        await stateStore.remove('state');
+
+        const data2 = await stateStore.get('state');
+        expect(data2).toBeUndefined();
+
+    });
+
+    it('Validate interval indexing', async () => {
+        // Process Wallets
+        const walletState = new WalletState();
+
+        // This only works in extension... so fake the state:
+        // const state = await walletState.load();
+        const state: Persisted = {
+            previousWalletId: '',
+            wallets: JSON.parse(testWallet)
+        };
+
+        const transactionStore = new TransactionStore();
+        await transactionStore.load();
+
+        const lightWalletManager = new LightWalletManager(state);
+        const wallets = lightWalletManager.getWallets();
+
+        console.log('WALLETS DURING INDEXING:');
+        console.log(wallets);
+
+        // Get what addresses to watch from local storage.
+        // globalThis.chrome.storage.local.get('')
+        const indexer = new IndexerBackgroundService();
+
+        // indexer.process();
+    });
 
     it('Validate reset timer logic', () => {
         // This is what is read from storage, last "active date" stored.

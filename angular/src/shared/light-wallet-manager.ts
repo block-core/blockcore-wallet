@@ -1,7 +1,12 @@
-import { Persisted } from "src/shared/interfaces";
+import { Persisted } from ".";
 
 export class LightWalletManager {
-    constructor(state: Persisted) {
 
+    constructor(private state: Persisted) {
+
+    }
+
+    getWallets() {
+        return this.state.wallets;
     }
 }

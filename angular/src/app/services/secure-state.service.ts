@@ -42,6 +42,7 @@ export class SecureStateService {
                     // If there previously was more than 0 unlocked and there are no 0 unlocked,
                     // we must ensure that we send user to unlock screen.
                     if (previousCount > 0 && newCount == 0) {
+                        // TODO: This should truly only be an event and not a physical redirect. Separation of concerns here...
                         this.router.navigateByUrl('/home');
                     }
                 });
