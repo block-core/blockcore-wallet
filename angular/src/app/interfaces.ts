@@ -169,18 +169,14 @@ interface AddressState {
     /** The address */
     address: string;
 
-    /** The current offset that has been queried. */
+    /** The current offset that has been queried. This will only proceed forward when the entry has 500 confirmations. */
     offset: number;
 
     /** The history of transactions that exists on this address. 
      * These are only the transaction IDs, to reduce storage usage, 
      * as same transaction can be involved with multiple wallet addresses. */
     transactions: string[];
-
 }
-
-
-
 
 interface TransactionInfo {
     symbol: string;

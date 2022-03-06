@@ -182,8 +182,13 @@ export class IndexerBackgroundService {
                             state.transactions.push(transactionId);
                         }
 
-                        transaction.unconfirmed = (transaction.confirmations < this.confirmed);
-                        transaction.finalized = (transaction.confirmations > this.finalized);
+                        transaction.unconfirmed = (transaction.confirmations <= this.confirmed);
+                        transaction.finalized = (transaction.confirmations >= this.finalized);
+
+                        // Whenever we reseach finalized transactions, move the offset state forward.
+                        if (transaction.finalized) {
+                            state.offset = offset + (j + 1);
+                        }
 
                         const transactionInfo = transactionStore.get(transactionId);
 

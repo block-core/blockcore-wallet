@@ -8,139 +8,141 @@ import { CryptoUtility } from "./services";
 import { STRAX } from "./services/networks";
 
 describe('GenericTests', () => {
-  beforeEach(() => { });
+    beforeEach(() => { });
 
-  it('Validate reset timer logic', () => {
-    // This is what is read from storage, last "active date" stored.
-    const currentDateJson = new Date(2022, 1, 20, 11, 30).toJSON();
-    let currentResetDate = new Date(currentDateJson);
+    it('Validate reset timer logic', () => {
+        // This is what is read from storage, last "active date" stored.
+        const currentDateJson = new Date(2022, 1, 20, 11, 30).toJSON();
+        let currentResetDate = new Date(currentDateJson);
 
-    // This is the current date.
-    const currentDate = new Date(2022, 1, 20, 11, 31);
-    // This value is read from user settings.
-    const timeout = 4; // minutes
-    const timeoutMs = (timeout * 60 * 1000);
+        // This is the current date.
+        const currentDate = new Date(2022, 1, 20, 11, 31);
+        // This value is read from user settings.
+        const timeout = 4; // minutes
+        const timeoutMs = (timeout * 60 * 1000);
 
-    // The reset date is current date minus the timeout.
-    var resetDate = new Date(currentDate.valueOf() - timeoutMs);
+        // The reset date is current date minus the timeout.
+        var resetDate = new Date(currentDate.valueOf() - timeoutMs);
 
-    // console.log('currentDate:', currentDate.toISOString());
-    console.log('resetDate:', resetDate.toISOString());
-    console.log('currentResetDate:', currentResetDate.toISOString());
+        // console.log('currentDate:', currentDate.toISOString());
+        console.log('resetDate:', resetDate.toISOString());
+        console.log('currentResetDate:', currentResetDate.toISOString());
 
-    // The reset date (calculated) should always be older than current reset date (based upon user action)
+        // The reset date (calculated) should always be older than current reset date (based upon user action)
 
-    expect(resetDate < currentResetDate).toBeTrue();
+        expect(resetDate < currentResetDate).toBeTrue();
 
-    // User has not been active for more than 6 minutes...
-    currentResetDate = new Date(2022, 1, 20, 11, 26);
-    expect(resetDate > currentResetDate).toBeTrue();
-    expect(resetDate < currentResetDate).toBeFalse();
-  });
+        // User has not been active for more than 6 minutes...
+        currentResetDate = new Date(2022, 1, 20, 11, 26);
+        expect(resetDate > currentResetDate).toBeTrue();
+        expect(resetDate < currentResetDate).toBeFalse();
+    });
 
-  it('Validate secure storage logic', () => {
+    it('Validate secure storage logic', () => {
 
-    // The in-memory state and how we want it to be represented after loading.
-    const state = new Map<string, string>();
+        // The in-memory state and how we want it to be represented after loading.
+        const state = new Map<string, string>();
 
-    const privateKey = secp.utils.randomPrivateKey();
-    state.set('12356-123', Buffer.from(privateKey).toString('base64'));
+        const privateKey = secp.utils.randomPrivateKey();
+        state.set('12356-123', Buffer.from(privateKey).toString('base64'));
 
-    console.log('state', state);
+        console.log('state', state);
 
-    // var b64: any = Buffer.from(privateKey).toString('base64');
-    // var u8: any = new Uint8Array(Buffer.from(b64, 'base64'));
+        // var b64: any = Buffer.from(privateKey).toString('base64');
+        // var u8: any = new Uint8Array(Buffer.from(b64, 'base64'));
 
-    // console.log('b64', b64);
-    // console.log('u8', u8);
+        // console.log('b64', b64);
+        // console.log('u8', u8);
 
-    // Simulate storing.
-    const serializedState = JSON.stringify(Array.from(state.entries()));
-    console.log('serializedState:', serializedState);
-    const loadedState = JSON.parse(serializedState);
+        // Simulate storing.
+        const serializedState = JSON.stringify(Array.from(state.entries()));
+        console.log('serializedState:', serializedState);
+        const loadedState = JSON.parse(serializedState);
 
-    // Now the seed has been turned into ArrayBuffer (which is the underlaying structure on which Uint8Array is an view into).
-    console.log('loadedstate', loadedState);
+        // Now the seed has been turned into ArrayBuffer (which is the underlaying structure on which Uint8Array is an view into).
+        console.log('loadedstate', loadedState);
 
-    const restoredState = new Map(loadedState);
+        const restoredState = new Map(loadedState);
 
-    console.log('restoredMap', restoredState);
+        console.log('restoredMap', restoredState);
 
-    // restoredState.forEach((value: any, key, map) => {
-    //   value.seed = new Uint8Array(Buffer.from(value.seed, 'base64'));
-    // });
+        // restoredState.forEach((value: any, key, map) => {
+        //   value.seed = new Uint8Array(Buffer.from(value.seed, 'base64'));
+        // });
 
-    console.log('restoredState', restoredState);
+        console.log('restoredState', restoredState);
 
-  });
+    });
 
-  it('Load xpub and query the indexer APIs', async () => {
-    const network = new STRAX();
-    const indexer = new IndexerBackgroundService();
+    it('Load xpub and query the indexer APIs', async () => {
+        const network = new STRAX();
+        const indexer = new IndexerBackgroundService();
 
-    const addressState: AddressState = {
-      address: 'XEgeAGBEdKXcdKD2HYovtyp5brE5WyAKwv', // Random address from rich list
-      offset: 0,
-      transactions: []
-    };
+        const addressState: AddressState = {
+            address: 'XEgeAGBEdKXcdKD2HYovtyp5brE5WyAKwv', // Random address from rich list
+            offset: 0,
+            transactions: []
+        };
 
-    // 'XWaKvgJ1HpCA8nKnqQcGESmDdMXFjmUVbH' // Random address with 7 transactions.
-    // 'XEgeAGBEdKXcdKD2HYovtyp5brE5WyAKwv' // Random address with a good amount of transactions.
+        // 'XWaKvgJ1HpCA8nKnqQcGESmDdMXFjmUVbH' // Random address with 7 transactions.
+        // 'XEgeAGBEdKXcdKD2HYovtyp5brE5WyAKwv' // Random address with a good amount of transactions.
 
-    const indexerUrl = 'https://{id}.indexer.blockcore.net'.replace('{id}', network.id.toLowerCase());
-    const transactions = new Map<string, Transaction>();
+        const indexerUrl = 'https://{id}.indexer.blockcore.net'.replace('{id}', network.id.toLowerCase());
+        const transactions = new Map<string, Transaction>();
 
-    await indexer.processAddress(indexerUrl, addressState, transactions);
+        await indexer.processAddress(indexerUrl, addressState, transactions);
 
-    expect(addressState.transactions.length).toBeGreaterThanOrEqual(69);
-    expect(addressState.offset).toBeGreaterThanOrEqual(60);
+        // transaction.finalized = (transaction.confirmations > this.finalized);
 
-    // Second run should only query latest page and only get info, not get hex again.
-    await indexer.processAddress(indexerUrl, addressState, transactions);
+        expect(addressState.transactions.length).toBeGreaterThanOrEqual(69);
+        expect(addressState.offset).toBeGreaterThanOrEqual(60);
 
-    console.log('Transactions:', transactions);
-    console.log('addressState:', addressState);
-  });
+        // Second run should only query from finalized offset and only get info, not get hex again.
+        await indexer.processAddress(indexerUrl, addressState, transactions);
 
-  it('Validate xpub load and address derivation', async () => {
-    // REMEMBER: This is a test wallet that you must never re-use yourself. This is for unit testing only.
-    // Recovery Phrase: rescue interest concert clinic build half glow exchange oak holiday garlic scrub
-    // STRAX
-    const xpub = "xpub6DEJAVH2NnLS8a7TnvPLrtbigyZcV19qf4k17CADDmKnuCnyG1AvQD1uEWUzYzPTrDpiXtodYHTrhWH4ndU1nDGvYrwGp8oSNCyCsdxyjeT";
-    const password = 'V1O4BIIvrmqU!23@@322687.';
+        console.log('Transactions:', transactions);
+        console.log('addressState:', addressState);
+    });
 
-    // const indexer = new IndexerBackgroundService();
+    it('Validate xpub load and address derivation', async () => {
+        // REMEMBER: This is a test wallet that you must never re-use yourself. This is for unit testing only.
+        // Recovery Phrase: rescue interest concert clinic build half glow exchange oak holiday garlic scrub
+        // STRAX
+        const xpub = "xpub6DEJAVH2NnLS8a7TnvPLrtbigyZcV19qf4k17CADDmKnuCnyG1AvQD1uEWUzYzPTrDpiXtodYHTrhWH4ndU1nDGvYrwGp8oSNCyCsdxyjeT";
+        const password = 'V1O4BIIvrmqU!23@@322687.';
 
-    const wallet = JSON.parse(testWallet)[0];
-    expect(wallet.restored).toBeTrue();
+        // const indexer = new IndexerBackgroundService();
 
-    const account = wallet.accounts[0];
-    const network = new STRAX();
-    expect(account.networkType).toBe(network.id);
+        const wallet = JSON.parse(testWallet)[0];
+        expect(wallet.restored).toBeTrue();
 
-    const crypto = new CryptoUtility();
+        const account = wallet.accounts[0];
+        const network = new STRAX();
+        expect(account.networkType).toBe(network.id);
 
-    let unlockedMnemonic = await crypto.decryptData(wallet.mnemonic, password);
+        const crypto = new CryptoUtility();
 
-    expect(unlockedMnemonic).toBeTruthy();
+        let unlockedMnemonic = await crypto.decryptData(wallet.mnemonic, password);
 
-    // From the secret receovery phrase, the master seed is derived.
-    // Learn more about the HD keys: https://raw.githubusercontent.com/bitcoin/bips/master/bip-0032/derivation.png
-    // const masterSeed = mnemonicToSeedSync(unlockedMnemonic);
+        expect(unlockedMnemonic).toBeTruthy();
 
-    const accountNode = HDKey.fromExtendedKey(account.xpub, network.bip32);
+        // From the secret receovery phrase, the master seed is derived.
+        // Learn more about the HD keys: https://raw.githubusercontent.com/bitcoin/bips/master/bip-0032/derivation.png
+        // const masterSeed = mnemonicToSeedSync(unlockedMnemonic);
 
-    const addressNodeReceive = accountNode.deriveChild(0).deriveChild(0);
-    const addressNodeChange = accountNode.deriveChild(1).deriveChild(0);
+        const accountNode = HDKey.fromExtendedKey(account.xpub, network.bip32);
 
-    const addressReceive = crypto.getAddressByNetwork(Buffer.from(addressNodeReceive.publicKey), network, account.purposeAddress);
-    const addressChange = crypto.getAddressByNetwork(Buffer.from(addressNodeChange.publicKey), network, account.purposeAddress);
+        const addressNodeReceive = accountNode.deriveChild(0).deriveChild(0);
+        const addressNodeChange = accountNode.deriveChild(1).deriveChild(0);
 
-    expect(addressReceive).toBe('XM6QX8CFxE4ZjK5BjUXisaceTWrwHhWoq8');
-    expect(addressChange).toBe('XSB5bTvf6zDjpWKRWsXt5r1mHuCWtnV65c');
-  });
+        const addressReceive = crypto.getAddressByNetwork(Buffer.from(addressNodeReceive.publicKey), network, account.purposeAddress);
+        const addressChange = crypto.getAddressByNetwork(Buffer.from(addressNodeChange.publicKey), network, account.purposeAddress);
 
-  const testWallet = `[
+        expect(addressReceive).toBe('XM6QX8CFxE4ZjK5BjUXisaceTWrwHhWoq8');
+        expect(addressChange).toBe('XSB5bTvf6zDjpWKRWsXt5r1mHuCWtnV65c');
+    });
+
+    const testWallet = `[
     {
         "restored": true,
         "id": "388fd31e-c57d-42f5-9e0b-43a1c97103de",
