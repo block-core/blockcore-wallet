@@ -6,6 +6,7 @@ import {
     CryptoUtility, DataSyncService, IndexerService, NetworkLoader,
     CommunicationService, SettingsService, WalletManager, NetworkStatusService
 } from "./";
+import { StateService } from "./state.service";
 
 @Injectable({
     providedIn: 'root'
@@ -14,15 +15,14 @@ import {
 export class AppManager {
     constructor(
         public sync: DataSyncService,
-        public state: UIState,
+        public state: StateService,
         public status: NetworkStatusService,
         public walletManager: WalletManager,
         public communication: CommunicationService,
         public indexer: IndexerService,
         public networkLoader: NetworkLoader,
         public crypto: CryptoUtility,
-        public secure: SecureStateService,
-        private settings: SettingsService
+        public secure: SecureStateService
     ) {
 
     }
@@ -30,10 +30,7 @@ export class AppManager {
     async initialize() {
         await this.communication.initialize();
 
-        // First load the user settings.
-        await this.settings.load();
-
-        // Then load the existing state.
+        // Load all the stores.
         await this.state.load();
 
         // Then load the secure state.
@@ -76,35 +73,4 @@ export class AppManager {
     //     // Send new state to UI instances.
     //     this.communication.sendToAll(eventName, currentState);
     // }
-
-    async clearAction() {
-        this.state.action = undefined;
-        await this.state.saveAction();
-    }
-
-    async setAction(data: Action, broadcast: boolean) {
-        debugger;
-        if (typeof data.action !== 'string') {
-            console.error('Only objects that are string are allowed as actions.');
-            return;
-        }
-
-        if (data.document != null && typeof data.document !== 'string') {
-            console.error('Only objects that are string are allowed as actions.');
-            return;
-        }
-
-        this.state.action = data;
-
-        console.log('SAVING ACTION....');
-
-        await this.state.saveAction();
-
-        // if (broadcast) {
-        //     this.broadcastState();
-        // }
-
-        // Raise this after state has been updated, so orchestrator in UI can redirect correctly.
-        // this.communication.sendToAll('action-changed', this.state.action);
-    }
 }

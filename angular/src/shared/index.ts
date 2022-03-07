@@ -3,9 +3,7 @@
  */
 
 export * from './interfaces';
-export * from './wallet-store';
 export * from './indexer';
 export * from './light-wallet-manager';
-export * from './transaction-store';
-export * from './state-store';
-export * from './wallet-store';
+export * from './persistance';
+export * from './store';

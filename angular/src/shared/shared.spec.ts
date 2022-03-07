@@ -8,6 +8,7 @@ import {
     WalletStore, LightWalletManager, Persisted, TransactionStore, StateStore
 } from ".";
 import { Wallet } from "./interfaces";
+import { AddressStore } from "./store/address-store";
 
 describe('SharedTests', () => {
     beforeEach(() => { });
@@ -60,6 +61,28 @@ describe('SharedTests', () => {
         // Get again from the wallet store, this should just be by-reference:
         const wallets3 = walletStore.getWallets();
         expect(wallets3[0].name).toBe('Wallet2');
+    });
+
+    it('Validate Indexer', async () => {
+        const walletsArray = JSON.parse(testWallet) as Wallet[];
+
+        // Process Wallets
+        const walletStore = new WalletStore();
+        walletStore.set(walletsArray[0].id, walletsArray[0]);
+
+        const wallets = walletStore.getWallets();
+
+        const transactionStore = new TransactionStore();
+        const addressStore = new AddressStore();
+
+        // const manager = new LightWalletManager(walletStore, addressStore, transactionStore);
+
+        const indexer = new IndexerBackgroundService(walletStore, addressStore, transactionStore);
+        await indexer.process();
+
+        
+
+
     });
 
     it('Validate reset timer logic', () => {
@@ -127,7 +150,7 @@ describe('SharedTests', () => {
 
     it('Load xpub and query the indexer APIs', async () => {
         const network = new STRAX();
-        const indexer = new IndexerBackgroundService();
+        const indexer = new IndexerBackgroundService(new WalletStore(), new AddressStore(), new TransactionStore());
 
         const addressState: AddressState = {
             address: 'XEgeAGBEdKXcdKD2HYovtyp5brE5WyAKwv', // Random address from rich list
@@ -141,7 +164,7 @@ describe('SharedTests', () => {
         const indexerUrl = 'https://{id}.indexer.blockcore.net'.replace('{id}', network.id.toLowerCase());
         const transactions = new Map<string, Transaction>();
 
-        await indexer.processAddress(indexerUrl, addressState, transactions);
+        await indexer.processAddress(indexerUrl, addressState);
 
         // transaction.finalized = (transaction.confirmations > this.finalized);
 
@@ -149,7 +172,7 @@ describe('SharedTests', () => {
         expect(addressState.offset).toBeGreaterThanOrEqual(60);
 
         // Second run should only query from finalized offset and only get info, not get hex again.
-        await indexer.processAddress(indexerUrl, addressState, transactions);
+        await indexer.processAddress(indexerUrl, addressState);
 
         console.log('Transactions:', transactions);
         console.log('addressState:', addressState);

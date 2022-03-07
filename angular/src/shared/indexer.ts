@@ -1,6 +1,7 @@
 // import { Account, Address, IndexerApiStatus, Transaction, UnspentTransactionOutput, Wallet } from '../interfaces';
 import axiosRetry from 'axios-retry';
 import { Account, AccountState, Address, AddressState, IndexerApiStatus, Transaction, UnspentTransactionOutput, Wallet } from '.';
+import { AddressStore, TransactionStore, WalletStore } from './store';
 // import { Injectable } from '@angular/core';
 // import { NetworkStatusService } from './network-status.service';
 // import { LoggerService } from './logger.service';
@@ -49,14 +50,64 @@ class Queue {
 export class IndexerBackgroundService {
     private q = new Queue();
     private a = new Map<string, { change: boolean, account: Account, addressEntry: Address, count: number }>();
+    private limit = 10;
+    private finalized = 500;
+    private confirmed = 1;
 
     constructor(
-
+        private walletStore: WalletStore,
+        private addressStore: AddressStore,
+        private transactionStore: TransactionStore
     ) {
         // On interval loop through all watched addresses.
         // setInterval(async () => {
         //     await this.watchIndexer();
         // }, 15000);
+    }
+
+    /** This is the main process that runs the indexing and persists the state. */
+    async process() {
+        const wallets = this.walletStore.getWallets();
+
+        for (let i = 0; i < wallets.length; i++) {
+            const wallet = wallets[i];
+
+            for (let j = 0; j < wallet.accounts.length; j++) {
+                const account = wallet.accounts[j];
+                const indexerUrl = '';
+
+                // Process first receive addresses until we've exhausted them.
+                for (let k = 0; k < account.state.receive.length; k++) {
+                    const address = account.state.receive[k];
+                    // Get the current state for this address:
+                    const addressState = this.addressStore.get(address.address);
+                    this.processAddress(indexerUrl, addressState);
+
+                    // After processing, make sure we save the address state.
+                    await this.addressStore.save();
+                }
+
+                for (let k = 0; k < account.state.change.length; k++) {
+                    const address = account.state.receive[k];
+                    // Get the current state for this address:
+                    const addressState = this.addressStore.get(address.address);
+                    this.processAddress(indexerUrl, addressState);
+
+                    // After processing, make sure we save the address state.
+                    await this.addressStore.save();
+                }
+
+                // When completely processes all the address, we'll save the transactions.
+                await this.transactionStore.save();
+            }
+
+            // When all accounts has been processes, saved the wallet.
+            await this.walletStore.save();
+        }
+
+        console.log(this.walletStore);
+        console.log(this.addressStore);
+        console.log(this.transactionStore);
     }
 
     watchAddress(address: string, account: Account) {
@@ -79,20 +130,20 @@ export class IndexerBackgroundService {
         this.a.set(address, { change, account, addressEntry, count: 0 });
     }
 
-    process(account: Account, wallet: Wallet, force: boolean) {
-        const empty = this.q.isEmpty();
+    // process(account: Account, wallet: Wallet, force: boolean) {
+    //     const empty = this.q.isEmpty();
 
-        // Registers in queue processing of the account in specific wallet.
-        this.q.enqueue({ account, wallet, force });
+    //     // Registers in queue processing of the account in specific wallet.
+    //     this.q.enqueue({ account, wallet, force });
 
-        // If the queue is empty, we'll schedule processing with a timeout.
-        // if (empty) {
-        //     // Queue up in one second
-        //     setTimeout(async () => {
-        //         await this.queryIndexer();
-        //     }, 1000);
-        // }
-    }
+    //     // If the queue is empty, we'll schedule processing with a timeout.
+    //     // if (empty) {
+    //     //     // Queue up in one second
+    //     //     setTimeout(async () => {
+    //     //         await this.queryIndexer();
+    //     //     }, 1000);
+    //     // }
+    // }
 
     hasWork() {
         return !this.q.isEmpty();
@@ -122,28 +173,7 @@ export class IndexerBackgroundService {
         return responseTransactionHex.data;
     }
 
-    private limit = 10;
-    private finalized = 500;
-    private confirmed = 1;
-
-    /** [confirmations, updateInterval in minutes] */
-    private updateMatrix = [
-        [0, 0], // Initially we'll update as often as possible.
-        [3, 1], // After 3 confirms, we expect this to be confirmed. Rollback to update every minute
-        [10, 10], // After 10 confirms, it's unlikely to suffer reorg, update every 10 minute.
-        [50, 60], // Check every hour.
-        [500, -1] // After 500, we consider the entry finalized and won't be reorged to a different block.
-    ];
-
-    async processAddress(indexerUrl: string, state: AddressState, transactionStore: Map<string, Transaction>) {
-
-        // TODO: Verify if table works on Chrome as it does not appear in Edge?
-        console.table(this.updateMatrix);
-
-        if (transactionStore == null) {
-            transactionStore = new Map<string, Transaction>();
-        }
-
+    async processAddress(indexerUrl: string, state: AddressState) {
         try {
             // const responseAddress = await axios.get(`${indexerUrl}/api/query/address/${state.address}`);
             let nextLink = `/api/query/address/${state.address}/transactions?offset=${state.offset}&limit=${this.limit}`;
@@ -190,13 +220,13 @@ export class IndexerBackgroundService {
                             state.offset = offset + (j + 1);
                         }
 
-                        const transactionInfo = transactionStore.get(transactionId);
+                        const transactionInfo = this.transactionStore.get(transactionId);
 
                         // If the transaction is not stored yet, query additional data then save it to the store.
                         if (!transactionInfo) {
                             transaction.details = await this.getTransactionInfo(transactionId, indexerUrl);
                             transaction.hex = await this.getTransactionHex(transactionId, indexerUrl);
-                            transactionStore.set(transactionId, transaction);
+                            this.transactionStore.set(transactionId, transaction);
                         } else if (transaction.finalized) { // If the transaction is finalized, we don't bother query new status.
 
                         } else {

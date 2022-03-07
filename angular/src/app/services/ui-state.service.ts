@@ -1,11 +1,11 @@
 import { Injectable, NgZone } from '@angular/core';
-import { Action, Persisted, Store, Wallet } from '../../shared/interfaces';
+import { Action, AppState, Persisted, Store, Wallet } from '../../shared/interfaces';
 import { Router } from '@angular/router';
 import { CommunicationService } from './communication.service';
 import { ReplaySubject, Subject } from 'rxjs';
 import { Network } from './networks';
 import { SecureStateService } from './secure-state.service';
-// import { WalletState } from 'src/shared/wallet-store';
+import { UIStore } from 'src/shared';
 
 declare const VERSION: string;
 
@@ -13,16 +13,14 @@ declare const VERSION: string;
     providedIn: 'root'
 })
 export class UIState {
-
-    // private walletState: WalletState;
-
     constructor(
         private communication: CommunicationService,
         private router: Router,
         private secure: SecureStateService,
+        private store: UIStore,
         private ngZone: NgZone) {
         console.log('Version: ' + VERSION);
-        // this.walletState = new WalletState();
+
     }
 
     manifest!: chrome.runtime.Manifest;
@@ -31,17 +29,21 @@ export class UIState {
 
     networks: Network[] = [];
 
-    persisted: Persisted = {
-        wallets: [] as Wallet[],
-        previousWalletId: null
-    };
+    get persisted(): AppState {
+        return this.store.get();
+    }
 
-    store: Store = {
-        identities: [],
-        cache: {
-            identities: []
-        }
-    };
+    // persisted: Persisted = {
+    //     wallets: [] as Wallet[],
+    //     previousWalletId: null
+    // };
+
+    // store: Store = {
+    //     identities: [],
+    //     cache: {
+    //         identities: []
+    //     }
+    // };
 
     showBackButton = false;
 
@@ -61,54 +63,9 @@ export class UIState {
     /** Indicates that the extension is currently loading. This is not just for UIState, but for the whole app. */
     loading = true;
 
-    // get unlocked() {
-    //     return this.secure.unlockedWalletsSubject.value;
-    // }
-
     timer: any;
 
     port!: chrome.runtime.Port | null;
 
     background: any;
-
-    async wipe(): Promise<void> {
-        // return this.walletState.wipe();
-    }
-
-    async save(): Promise<void> {
-        // return this.walletState.save(this.persisted);
-    }
-
-    /** Loads all the persisted state into the extension. This might become bloated on large wallets. */
-    async load() {
-        const { data, ui, action, store } = await chrome.storage.local.get(['data', 'ui', 'action', 'store']);
-
-        // Only set if data is available, will use default if not.
-        if (data) {
-            this.persisted = data;
-        }
-
-        console.log('DATA', data);
-        console.log('PERSISTED', this.persisted);
-
-        if (store) {
-            this.store = store;
-        }
-
-        // this.ui = ui ?? {};
-
-        if (action) {
-            this.action = action;
-        }
-
-        this.initialized = true;
-    }
-
-    async saveAction(): Promise<void> {
-        return chrome.storage.local.set({ 'action': this.action });
-    }
-
-    async saveStore(store: Store): Promise<void> {
-        return chrome.storage.local.set({ 'store': store });
-    }
 }

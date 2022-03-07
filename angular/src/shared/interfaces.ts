@@ -84,6 +84,7 @@ interface Account {
 
     /** Extended Public Key for this account. */
     xpub?: string;
+
     state?: AccountState;
 
     /** The type of Account, used to show the account in different sections of the UI. Should be 'coin', 'token' or 'other'. */
@@ -258,6 +259,11 @@ interface Persisted {
     // wallets: Wallet[],
     // activeWalletIndex: number;
     // activeAccountIndex: number
+}
+
+interface AppState {
+    /** This is used to select the active wallet on extension startup. */
+    previousWalletId: string | undefined | null;
 }
 
 interface Settings {
@@ -439,5 +445,6 @@ export {
     IEnvironment,
     Message,
     MessageResponse,
-    AddressState
+    AddressState,
+    AppState
 }

@@ -1,5 +1,5 @@
 /** Abstracts the storage API and relies on localStorage for unit tests/fallback. */
-export class StateStore {
+export class Persistance {
     /** The consumer of this API is responsible to ensure the value can be serialized to JSON. */
     async set(key: string, value: any) {
         if (globalThis.chrome && globalThis.chrome.storage) {

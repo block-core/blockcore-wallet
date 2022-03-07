@@ -1,6 +1,6 @@
 import { Message } from '../../angular/src/shared/interfaces';
 import { IndexerBackgroundService } from '../../angular/src/shared/indexer';
-import { WalletStore } from '../../angular/src/shared';
+import { AddressStore, TransactionStore, WalletStore } from '../../angular/src/shared';
 import { LightWalletManager } from '../../angular/src/shared/light-wallet-manager';
 
 console.log('Extension: ServiceWorker script loaded');
@@ -98,19 +98,24 @@ chrome.alarms.onAlarm.addListener(async (alarm: chrome.alarms.Alarm) => {
         }
     } else if ('index') {
         // Process Wallets
-        const walletState = new WalletStore();
-        const state = await walletState.load();
+        const walletStore = new WalletStore();
+        await walletStore.load();
 
-        const lightWalletManager = new LightWalletManager(walletState.getWallets());
-        lightWalletManager.getWallets();
+        const addressStore = new AddressStore();
+        await addressStore.load();
+
+        const transactionStore = new TransactionStore();
+        await transactionStore.load();
+
+        // const lightWalletManager = new LightWalletManager(walletState.getWallets());
+        // lightWalletManager.getWallets();
 
         // Get what addresses to watch from local storage.
         // globalThis.chrome.storage.local.get('')
-        const indexer = new IndexerBackgroundService();
-        // indexer.process();
+        const indexer = new IndexerBackgroundService(walletStore, addressStore, transactionStore);
+        await indexer.process();
 
-
-
+        console.log('INDEXER COMPLETED RUN!');
     }
 });
 

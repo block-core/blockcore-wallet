@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
+import { NetworkStatusStore } from 'src/shared';
 import { Account, IndexerApiStatus, NetworkStatus } from '../../shared/interfaces';
 import { EnvironmentService } from './environment.service';
 import { NetworkLoader } from './network-loader';
 import { Network } from './networks';
 import { SettingsService } from './settings.service';
-import { StateService } from './state.service';
 import { WalletManager } from './wallet-manager';
 const axios = require('axios').default;
 
@@ -12,15 +12,13 @@ const axios = require('axios').default;
     providedIn: 'root'
 })
 export class NetworkStatusService {
-    private networks = new Map<string, NetworkStatus>();
     allNetworks: Network[];
     availableNetworks: Network[];
-    // private networkStatus = new Map<string, NetworkStatus>();
 
     constructor(
         private networkLoader: NetworkLoader,
         private env: EnvironmentService,
-        private state: StateService,
+        private store: NetworkStatusStore,
         private walletManager: WalletManager,
         private settings: SettingsService) {
 
@@ -28,7 +26,7 @@ export class NetworkStatusService {
 
     async initialize() {
         // This is the network status instances
-        const existingNetworkState = await this.state.get<NetworkStatus[]>('networks') ?? [];
+        const existingNetworkState = this.store.all();
 
         // Keep a local state of all networks that exists. We'll use this to allow get operations
         // that always work, even when a certain network is disabled in the UI.
@@ -42,17 +40,13 @@ export class NetworkStatusService {
             const existingState = existingNetworkState.find(e => e.networkType == n.id);
 
             if (existingState) {
-                this.networks.set(n.id, existingState);
+                this.store.set(n.id, existingState);
             } else {
-                this.networks.set(n.id, <NetworkStatus>{ networkType: n.id, availability: IndexerApiStatus.Unknown });
+                this.store.set(n.id, <NetworkStatus>{ networkType: n.id, availability: IndexerApiStatus.Unknown });
             }
         });
 
-        console.log('allNetworks', this.allNetworks);
-        console.log('availableNetworks', this.availableNetworks);
-        console.log('networks', this.networks);
-
-        this.refreshNetworkStatus();
+        await this.refreshNetworkStatus();
     }
 
     /** Get the network definition based upon the network identifier. */
@@ -171,23 +165,22 @@ export class NetworkStatusService {
     }
 
     getAll() {
-        return Array.from(this.networks.values());
+        return this.store.all();
     }
 
     get(networkType: string) {
-        return this.networks.get(networkType);
+        return this.store.get(networkType);
     }
 
     /** Update the network status. This can be done internally or externally, depending on the scenario. */
     async update(networkStatus: NetworkStatus) {
         // If there are no block height provided, copy the latest:
         if (!networkStatus.blockSyncHeight) {
-            networkStatus.blockSyncHeight = this.networks.get(networkStatus.networkType).blockSyncHeight;
+            networkStatus.blockSyncHeight = this.store.get(networkStatus.networkType).blockSyncHeight;
         }
 
-        this.networks.set(networkStatus.networkType, networkStatus);
+        this.store.set(networkStatus.networkType, networkStatus);
 
-        // Persist the array of network status instances.
-        await this.state.set('networks', Array.from(this.networks.entries()));
+        await this.store.save();
     }
 }
