@@ -1,4 +1,4 @@
-import { AUTO_TIMEOUT, INDEXER_URL, VAULT_URL } from "src/app/shared/constants";
+import { AUTO_TIMEOUT, INDEXER_URL, VAULT_URL } from "../../app/shared/constants";
 import { Settings } from "../interfaces";
 import { StoreBase } from "./store-base";
 
