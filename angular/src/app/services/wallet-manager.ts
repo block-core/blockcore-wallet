@@ -16,6 +16,7 @@ import { BehaviorSubject, Observable } from "rxjs";
 import { NetworkLoader } from "./network-loader";
 import { Network } from "./networks";
 import { CommunicationService } from ".";
+import { WalletStore } from "src/shared";
 
 const ECPair = ECPairFactory(ecc);
 var bitcoinMessage = require('bitcoinjs-message');
@@ -40,6 +41,7 @@ export class WalletManager {
         private state: UIState,
         private crypto: CryptoUtility,
         private secure: SecureStateService,
+        private store: WalletStore,
         private settings: SettingsService,
         private communication: CommunicationService,
         private logger: LoggerService) {
@@ -230,7 +232,7 @@ export class WalletManager {
     }
 
     getWallets() {
-        return this.state.persisted.wallets;
+        return this.store.all();
     }
 
     lockWallet(id: string) {
@@ -338,7 +340,7 @@ export class WalletManager {
             wallet.mnemonic = encryptedRecoveryPhrase;
 
             // Make sure we persist the newly encrypted recovery phrase.
-            await this.state.save();
+            await this.store.save();
 
             // Make sure we delete the existing wallet secret for this wallet.
             this.walletSecrets.delete(walletId);
@@ -370,7 +372,7 @@ export class WalletManager {
     }
 
     get hasWallets(): boolean {
-        return this.state.persisted.wallets.length > 0;
+        return this.getWallets().length > 0;
     }
 
     activeAccountSubject: BehaviorSubject<Account | undefined> = new BehaviorSubject<Account | undefined>(undefined);
@@ -387,9 +389,7 @@ export class WalletManager {
 
     get activeWallet() {
         if (this.activeWalletId) {
-            return this.state.persisted.wallets.find(w => w.id == this.activeWalletId);
-            // return this.persisted.wallets.get(this.persisted.activeWalletId);
-            // return this.persisted.wallets[this.persisted.activeWalletIndex];
+            return this.store.get(this.activeWalletId);
         } else {
             return undefined;
         }
@@ -471,7 +471,7 @@ export class WalletManager {
             wallet.activeAccountId = null;
         }
 
-        await this.state.save();
+        await this.store.save();
     }
 
     async setActiveWallet(id: string) {
@@ -480,7 +480,7 @@ export class WalletManager {
             this.state.persisted.previousWalletId = id;
             this.activeWalletSubject.next(this.activeWallet);
 
-            await this.state.save();
+            await this.store.save();
 
             return true;
         }
@@ -503,15 +503,11 @@ export class WalletManager {
     }
 
     getWallet(id: string) {
-        const wallet = this.state.persisted.wallets.find(w => w.id == id);
-        return wallet;
+        return this.store.get(id);
     }
 
     async removeWallet(id: string) {
-        const walletIndex = this.state.persisted.wallets.findIndex(w => w.id == id);
-
-        // Remove the wallet.
-        this.state.persisted.wallets.splice(walletIndex, 1);
+        this.store.remove(id);
 
         // Remove the password for this wallet, if it was unlocked.
         this.walletSecrets.delete(id);
@@ -519,7 +515,7 @@ export class WalletManager {
         // Remove the seed from the secrets.
         this.secure.set(id, undefined);
 
-        await this.state.save();
+        await this.store.save();
 
         // TODO: FIX!!
         // this.manager.broadcastState();
@@ -565,7 +561,7 @@ export class WalletManager {
         // const id3Array = secp256k1.schnorr.getPublicKey(id3hex);
         // const id3 = Buffer.from(id3Array).toString('hex');
 
-        await this.state.save();
+        await this.store.save();
 
         if (wallet.restored) {
             // Schedule background processing of the account against the blockchain APIs.
@@ -615,7 +611,7 @@ export class WalletManager {
                 address: address
             });
 
-            await this.state.save();
+            await this.store.save();
         }
 
         return address;
@@ -640,11 +636,11 @@ export class WalletManager {
     }
 
     async addWallet(wallet: Wallet) {
-        this.state.persisted.wallets.push(wallet);
+        this.store.set(wallet.id, wallet);
 
         this.setActiveWallet(wallet.id);
 
         // Persist the newly created wallet.
-        await this.state.save();
+        await this.store.save();
     }
 }

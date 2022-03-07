@@ -23,6 +23,10 @@ export class StoreListBase<T> {
         return this.items.get(key);
     }
 
+    remove(key: string) {
+        this.items.delete(key);
+    }
+
     all(): T[] {
         return Array.from(this.items.values());
     }

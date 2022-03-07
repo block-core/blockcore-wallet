@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common'
 import { UIState, LoggerService, WalletManager } from '../../services';
+import { WalletStore } from 'src/shared';
 
 @Component({
   selector: 'app-wallet-remove',
@@ -13,6 +14,7 @@ export class WalletRemoveComponent implements OnInit, OnDestroy {
     private router: Router,
     private location: Location,
     public walletManager: WalletManager,
+    private store: WalletStore,
     private uiState: UIState,
     private logger: LoggerService
   ) {
@@ -35,7 +37,7 @@ export class WalletRemoveComponent implements OnInit, OnDestroy {
 
     if (this.walletManager.hasWallets) {
       // Just grab the last wallet after removing one.
-      const walletId = this.uiState.persisted.wallets[this.uiState.persisted.wallets.length - 1].id;
+      const walletId = this.walletManager.getWallets()[0].id;
 
       this.walletManager.setActiveWallet(walletId);
 
