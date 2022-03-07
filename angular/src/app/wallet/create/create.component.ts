@@ -83,7 +83,7 @@ export class WalletCreateComponent implements OnInit {
         }
         else {
             // Make the name 'Wallet' for first wallet, append count on other wallets.
-            let walletName = (this.uiState.persisted.wallets.length == 0) ? 'My Wallet' : 'Wallet ' + (this.uiState.persisted.wallets.length + 1);
+            let walletName = (this.walletManager.count() == 0) ? 'My Wallet' : 'Wallet ' + (this.walletManager.count() + 1);
 
             var wallet: Wallet = {
                 restored: this.recover,

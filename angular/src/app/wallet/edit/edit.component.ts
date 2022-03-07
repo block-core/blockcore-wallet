@@ -30,14 +30,8 @@ export class WalletEditComponent {
 
     this.walletManager.activeWallet.name = this.walletName;
 
-    await this.uiState.save();
+    await this.walletManager.save();
 
-    // if (this.uiState.activeWallet) {
-    //   this.uiState.activeWallet.name = this.walletName;
-    //   await this.uiState.save();
-    // }
-
-    // this.router.navigateByUrl('/home');
     this.location.back();
   }
 

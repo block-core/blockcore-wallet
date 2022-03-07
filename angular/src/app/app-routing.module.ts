@@ -14,20 +14,13 @@ import { SettingsComponent } from './settings/settings.component';
 import { ActionSignComponent } from './action/sign/sign.component';
 import { ActionIdentityComponent } from './action/identity/identity.component';
 import { ActionLoginComponent } from './action/login/login.component';
-import { AccountIdentityComponent } from './account/view/identity/identity.component';
 import { WipeComponent } from './wipe/wipe.component';
-import { VaultComponent } from './vault/vault.component';
-import { VaultIdentityComponent } from './vault/view/identity/identity.component';
-import { VaultCreateComponent } from './vault/create/create.component';
-import { VaultEditComponent } from './vault/edit/edit.component';
-import { VaultRemoveComponent } from './vault/remove/remove.component';
 import { PrivacyComponent } from './settings/privacy/privacy.component';
 import { LicensesComponent } from './settings/licenses/licenses.component';
 import { ChangesComponent } from './settings/changes/changes.component';
 import { PasswordComponent } from './settings/password/password.component';
 import { AboutComponent } from './settings/about/about.component';
 import { RecoveryComponent } from './settings/recovery/recovery.component';
-import { NostrIdentityComponent } from './account/view/nostr/identity.component';
 import { AccountReceiveComponent } from './account/receive/receive.component';
 import { AccountSelectComponent } from './account/select/select.component';
 import { AccountTransactionComponent } from './account/transaction/transaction.component';
@@ -110,12 +103,12 @@ const routes: Routes = [
   {
     path: 'account/transaction/:txid', component: AccountTransactionComponent
   },
-  {
-    path: 'account/view/identity/:index', component: AccountIdentityComponent
-  },
-  {
-    path: 'account/view/nostr/:index', component: NostrIdentityComponent
-  },
+  // {
+  //   path: 'account/view/identity/:index', component: AccountIdentityComponent
+  // },
+  // {
+  //   path: 'account/view/nostr/:index', component: NostrIdentityComponent
+  // },
   {
     path: 'account/create', component: AccountCreateComponent
   },
@@ -125,21 +118,21 @@ const routes: Routes = [
   {
     path: 'account/remove/:index', component: AccountRemoveComponent
   },
-  {
-    path: 'vault/view/:index', component: VaultComponent
-  },
-  {
-    path: 'vault/view/identity/:index', component: VaultIdentityComponent
-  },
-  {
-    path: 'vault/create', component: VaultCreateComponent
-  },
-  {
-    path: 'vault/edit/:index', component: VaultEditComponent
-  },
-  {
-    path: 'vault/remove/:index', component: VaultRemoveComponent
-  },
+  // {
+  //   path: 'vault/view/:index', component: VaultComponent
+  // },
+  // {
+  //   path: 'vault/view/identity/:index', component: VaultIdentityComponent
+  // },
+  // {
+  //   path: 'vault/create', component: VaultCreateComponent
+  // },
+  // {
+  //   path: 'vault/edit/:index', component: VaultEditComponent
+  // },
+  // {
+  //   path: 'vault/remove/:index', component: VaultRemoveComponent
+  // },
   {
     path: 'dashboard', component: DashboardComponent
   },

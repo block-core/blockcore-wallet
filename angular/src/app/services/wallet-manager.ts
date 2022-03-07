@@ -56,6 +56,10 @@ export class WalletManager {
         return (this.secure.get(this.activeWalletId) != null);
     }
 
+    async save() {
+        return this.store.save();
+    }
+
     /** Get the network definition based upon the network identifier. */
     getNetwork(networkType: string) {
         return this.allNetworks.find(w => w.id == networkType);
@@ -500,6 +504,10 @@ export class WalletManager {
 
     getAccount(wallet: Wallet, accountId: string) {
         return wallet.accounts.find(a => a.identifier == accountId);
+    }
+
+    count() {
+        return this.getWallets().length;
     }
 
     getWallet(id: string) {
