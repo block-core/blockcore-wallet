@@ -43,13 +43,7 @@ import { NetworkPipe } from './shared/network.pipe';
 import { TruncatePipe } from './shared/truncate.pipe';
 import { ActionIdentityComponent } from './action/identity/identity.component';
 import { ActionLoginComponent } from './action/login/login.component';
-import { AccountIdentityComponent } from './account/view/identity/identity.component';
 import { WipeComponent } from './wipe/wipe.component';
-import { VaultComponent } from './vault/vault.component';
-import { VaultIdentityComponent } from './vault/view/identity/identity.component';
-import { VaultCreateComponent } from './vault/create/create.component';
-import { VaultEditComponent } from './vault/edit/edit.component';
-import { VaultRemoveComponent } from './vault/remove/remove.component';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { PrivacyComponent } from './settings/privacy/privacy.component';
 import { LicensesComponent } from './settings/licenses/licenses.component';
@@ -57,7 +51,6 @@ import { ChangesComponent } from './settings/changes/changes.component';
 import { HttpClientModule } from '@angular/common/http';
 import { PasswordComponent } from './settings/password/password.component';
 import { RecoveryComponent } from './settings/recovery/recovery.component';
-import { NostrIdentityComponent } from './account/view/nostr/identity.component';
 import { AccountReceiveComponent } from './account/receive/receive.component';
 import { AccountSelectComponent } from './account/select/select.component';
 import { AmountPipe } from './shared/amount.pipe';
@@ -110,17 +103,10 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     TruncatePipe,
     ActionIdentityComponent,
     ActionLoginComponent,
-    AccountIdentityComponent,
     WipeComponent,
-    VaultComponent,
-    VaultIdentityComponent,
-    VaultCreateComponent,
-    VaultEditComponent,
-    VaultRemoveComponent,
     PrivacyComponent,
     LicensesComponent,
     ChangesComponent,
-    NostrIdentityComponent,
     AccountReceiveComponent,
     AccountSelectComponent,
     AmountPipe,
