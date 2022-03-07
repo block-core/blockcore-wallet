@@ -2,6 +2,7 @@ import { Component, ChangeDetectorRef, ApplicationRef, NgZone, OnInit } from '@a
 import { CryptoService, UIState, NetworksService, CommunicationService, WalletManager, AppManager } from '../../services';
 import { Router } from '@angular/router';
 import axios from 'axios';
+import { ActionService } from 'src/app/services/action.service';
 
 @Component({
     selector: 'app-sid',
@@ -23,6 +24,7 @@ export class ActionStratisIdentityComponent implements OnInit {
         private router: Router,
         private app: ApplicationRef,
         private ngZone: NgZone,
+        private action: ActionService,
         private communication: CommunicationService,
         private manager: AppManager,
         public networkService: NetworksService,
@@ -100,11 +102,11 @@ export class ActionStratisIdentityComponent implements OnInit {
     }
 
     exit() {
-        this.manager.clearAction();
+        this.action.clearAction();
     }
 
     close() {
-        this.manager.clearAction();
+        this.action.clearAction();
         window.close();
     }
 }

@@ -447,7 +447,7 @@ export class IndexerService {
                         account.state.balance = this.walletManager.calculateBalance(account);
                         account.state.pendingReceived = this.walletManager.calculatePendingReceived(account);
                         account.state.pendingSent = this.walletManager.calculatePendingSent(account);
-                        await this.state.save();
+                        // await this.state.save();
 
                         // TODO!!
                         // this.manager.broadcastState();
@@ -550,7 +550,7 @@ export class IndexerService {
                         account.state.balance = this.walletManager.calculateBalance(account);
                         account.state.pendingReceived = this.walletManager.calculatePendingReceived(account);
                         account.state.pendingSent = this.walletManager.calculatePendingSent(account);
-                        await this.state.save();
+                        // await this.state.save();
 
                         // TODO: FIX!
                         // this.manager.broadcastState();
@@ -581,7 +581,7 @@ export class IndexerService {
                 account.state.pendingReceived = this.walletManager.calculatePendingReceived(account);
                 account.state.pendingSent = this.walletManager.calculatePendingSent(account);
                 // Save and broadcast for every full account query
-                await this.state.save();
+                // await this.state.save();
 
                 // TODO: FIX!!
                 // this.manager.broadcastState();
@@ -641,7 +641,7 @@ export class IndexerService {
         account.state.pendingReceived = this.walletManager.calculatePendingReceived(account);
         account.state.pendingSent = this.walletManager.calculatePendingSent(account);
 
-        await this.state.save();
+        // await this.state.save();
 
         // TODO: FIX!!
         // this.manager.broadcastState();

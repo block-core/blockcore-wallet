@@ -2,6 +2,7 @@ import { Component, Inject, HostBinding, ChangeDetectorRef, ApplicationRef, NgZo
 import { HttpClient } from '@angular/common/http';
 import { CryptoService, NetworksService, AppManager, WalletManager, UIState } from '../../services';
 import { Router } from '@angular/router';
+import { ActionService } from 'src/app/services/action.service';
 
 @Component({
     selector: 'app-identity',
@@ -17,6 +18,7 @@ export class ActionIdentityComponent {
         private router: Router,
         private app: ApplicationRef,
         private ngZone: NgZone,
+        private action: ActionService,
         public networkService: NetworksService,
         private manager: AppManager,
         public walletManager: WalletManager,
@@ -32,6 +34,6 @@ export class ActionIdentityComponent {
     }
 
     exit() {
-        this.manager.clearAction();
+        this.action.clearAction();
     }
 }

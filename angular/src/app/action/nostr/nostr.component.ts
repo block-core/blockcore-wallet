@@ -1,6 +1,7 @@
 import { Component, ChangeDetectorRef, ApplicationRef, NgZone, OnInit } from '@angular/core';
 import { CryptoService, UIState, NetworksService, CommunicationService, AppManager, WalletManager } from '../../services';
 import { Router } from '@angular/router';
+import { ActionService } from 'src/app/services/action.service';
 
 @Component({
     selector: 'app-nostr',
@@ -21,6 +22,7 @@ export class ActionNostrIdentityComponent implements OnInit {
         private crypto: CryptoService,
         private router: Router,
         private app: ApplicationRef,
+        private action: ActionService,
         private ngZone: NgZone,
         private communication: CommunicationService,
         public networkService: NetworksService,
@@ -61,11 +63,11 @@ export class ActionNostrIdentityComponent implements OnInit {
     }
 
     async exit() {
-        await this.manager.clearAction();
+        await this.action.clearAction();
     }
 
     async close() {
-        await this.manager.clearAction();
+        await this.action.clearAction();
         window.close();
     }
 }

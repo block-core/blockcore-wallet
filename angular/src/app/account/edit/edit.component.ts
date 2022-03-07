@@ -85,7 +85,7 @@ export class AccountEditComponent implements OnInit, OnDestroy {
       account.name = this.accountName;
       account.icon = this.icon;
 
-      await this.uiState.save();
+      await this.walletManager.save();
 
       this.location.back();
     }

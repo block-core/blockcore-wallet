@@ -2,6 +2,7 @@ import { Component, Inject, HostBinding, ChangeDetectorRef, ApplicationRef, NgZo
 import { HttpClient } from '@angular/common/http';
 import { CryptoService, UIState, NetworksService, AppManager, WalletManager } from '../../services';
 import { Router } from '@angular/router';
+import { ActionService } from 'src/app/services/action.service';
 
 @Component({
     selector: 'app-sign',
@@ -17,6 +18,7 @@ export class ActionSignComponent {
         private router: Router,
         private app: ApplicationRef,
         private ngZone: NgZone,
+        private action: ActionService,
         public networkService: NetworksService,
         public walletManager: WalletManager,
         private manager: AppManager,
@@ -32,6 +34,6 @@ export class ActionSignComponent {
     }
 
     exit() {
-        this.manager.clearAction();
+        this.action.clearAction();
     }
 }
