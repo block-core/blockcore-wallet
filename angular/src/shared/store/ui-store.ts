@@ -5,4 +5,8 @@ export class UIStore extends StoreBase<AppState> {
     constructor() {
         super('app');
     }
+
+    override defaultItem() {
+        return {};
+    }
 }
