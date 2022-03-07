@@ -5,7 +5,7 @@ import { CommunicationService } from './communication.service';
 import { ReplaySubject, Subject } from 'rxjs';
 import { Network } from './networks';
 import { SecureStateService } from './secure-state.service';
-import { WalletState } from 'src/shared/wallet-state';
+// import { WalletState } from 'src/shared/wallet-store';
 
 declare const VERSION: string;
 
@@ -14,7 +14,7 @@ declare const VERSION: string;
 })
 export class UIState {
 
-    private walletState: WalletState;
+    // private walletState: WalletState;
 
     constructor(
         private communication: CommunicationService,
@@ -22,7 +22,7 @@ export class UIState {
         private secure: SecureStateService,
         private ngZone: NgZone) {
         console.log('Version: ' + VERSION);
-        this.walletState = new WalletState();
+        // this.walletState = new WalletState();
     }
 
     manifest!: chrome.runtime.Manifest;
@@ -72,11 +72,11 @@ export class UIState {
     background: any;
 
     async wipe(): Promise<void> {
-        return this.walletState.wipe();
+        // return this.walletState.wipe();
     }
 
     async save(): Promise<void> {
-        return this.walletState.save(this.persisted);
+        // return this.walletState.save(this.persisted);
     }
 
     /** Loads all the persisted state into the extension. This might become bloated on large wallets. */

@@ -5,8 +5,9 @@ import { CryptoUtility } from "src/app/services";
 import { STRAX } from "src/app/services/networks";
 import {
     AddressState, Transaction, IndexerBackgroundService,
-    WalletState, LightWalletManager, Persisted, TransactionStore, StateStore
+    WalletStore, LightWalletManager, Persisted, TransactionStore, StateStore
 } from ".";
+import { Wallet } from "./interfaces";
 
 describe('SharedTests', () => {
     beforeEach(() => { });
@@ -33,34 +34,32 @@ describe('SharedTests', () => {
 
         const data2 = await stateStore.get('state');
         expect(data2).toBeUndefined();
-
     });
 
-    it('Validate interval indexing', async () => {
+    it('Validate WalletStore', async () => {
+        const walletsArray = JSON.parse(testWallet) as Wallet[];
+
         // Process Wallets
-        const walletState = new WalletState();
+        const walletStore = new WalletStore();
+        walletStore.set(walletsArray[0].id, walletsArray[0]);
 
-        // This only works in extension... so fake the state:
-        // const state = await walletState.load();
-        const state: Persisted = {
-            previousWalletId: '',
-            wallets: JSON.parse(testWallet)
-        };
+        const wallets1 = walletStore.getWallets();
 
-        const transactionStore = new TransactionStore();
-        await transactionStore.load();
+        await walletStore.save();
+        await walletStore.load();
 
-        const lightWalletManager = new LightWalletManager(state);
-        const wallets = lightWalletManager.getWallets();
+        const wallets2 = walletStore.getWallets();
 
-        console.log('WALLETS DURING INDEXING:');
-        console.log(wallets);
+        wallets1[0].name = 'Wallet1';
+        wallets2[0].name = 'Wallet2';
 
-        // Get what addresses to watch from local storage.
-        // globalThis.chrome.storage.local.get('')
-        const indexer = new IndexerBackgroundService();
+        // Since we have persisted and loaded the initial objects, they are no longer by-reference but different objects:
+        expect(wallets1[0].name).toBe('Wallet1');
+        expect(wallets2[0].name).toBe('Wallet2');
 
-        // indexer.process();
+        // Get again from the wallet store, this should just be by-reference:
+        const wallets3 = walletStore.getWallets();
+        expect(wallets3[0].name).toBe('Wallet2');
     });
 
     it('Validate reset timer logic', () => {

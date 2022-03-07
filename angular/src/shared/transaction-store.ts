@@ -1,5 +1,4 @@
-import { Persisted } from "src/shared/interfaces";
-import { State, Transaction, StateStore } from ".";
+import { Transaction, StateStore } from ".";
 
 export class TransactionStore {
     items: Map<string, Transaction>;
@@ -15,15 +14,13 @@ export class TransactionStore {
 
     async save(): Promise<void> {
         return this.state.set(this.stateKey, Object.fromEntries(this.items.entries()));
-        // return chrome.storage.local.set({ 'transactions': Object.fromEntries(this.items.entries()) });
     }
 
     async load() {
-        const transactions = await this.state.get(this.stateKey);
-        // const { transactions } = await chrome.storage.local.get(['transactions']);
+        const values = await this.state.get(this.stateKey);
 
-        if (transactions != null && Object.keys(transactions).length > 0) {
-            this.items = new Map<string, Transaction>(Object.entries(transactions))
+        if (values != null && Object.keys(values).length > 0) {
+            this.items = new Map<string, Transaction>(Object.entries(values))
         } else {
             this.items = new Map<string, Transaction>();
         }

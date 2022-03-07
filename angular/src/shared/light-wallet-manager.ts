@@ -1,12 +1,12 @@
-import { Persisted } from ".";
+import { Wallet } from ".";
 
 export class LightWalletManager {
 
-    constructor(private state: Persisted) {
+    constructor(private wallets: Wallet[]) {
 
     }
 
     getWallets() {
-        return this.state.wallets;
+        return this.wallets;
     }
 }
