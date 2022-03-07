@@ -5,5 +5,5 @@
 export * from './interfaces';
 export * from './indexer';
 export * from './light-wallet-manager';
-export * from './persistance';
+export * from './persistence';
 export * from './store';

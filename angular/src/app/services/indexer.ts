@@ -60,9 +60,9 @@ export class IndexerService {
         private walletManager: WalletManager
     ) {
         // On interval loop through all watched addresses.
-        setInterval(async () => {
-            await this.watchIndexer();
-        }, 15000);
+        // setInterval(async () => {
+        //     await this.watchIndexer();
+        // }, 15000);
     }
 
     watchAddress(address: string, account: Account) {

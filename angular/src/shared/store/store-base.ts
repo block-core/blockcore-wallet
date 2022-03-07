@@ -1,8 +1,8 @@
-import { Persistance } from "../persistance";
+import { Persistence } from "../persistence";
 
 export class StoreListBase<T> {
     protected items: Map<string, T> = new Map<string, T>();
-    protected state = new Persistance();
+    protected state = new Persistence();
 
     constructor(private stateKey: string) {
     }
@@ -45,7 +45,7 @@ export class StoreListBase<T> {
 /** Stores a single entity with support for providing a default item with override. */
 export class StoreBase<T> {
     protected item: T;
-    protected state = new Persistance();
+    protected state = new Persistence();
 
     constructor(private stateKey: string) {
     }

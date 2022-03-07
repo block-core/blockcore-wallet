@@ -1,5 +1,5 @@
 /** Abstracts the storage API and relies on localStorage for unit tests/fallback. */
-export class Persistance {
+export class Persistence {
     /** The consumer of this API is responsible to ensure the value can be serialized to JSON. */
     async set(key: string, value: any) {
         if (globalThis.chrome && globalThis.chrome.storage) {
@@ -11,8 +11,8 @@ export class Persistance {
 
     async get<T>(key: string): Promise<T> {
         if (globalThis.chrome && globalThis.chrome.storage) {
-            let { value } = await globalThis.chrome.storage.local.get([key]);
-            return value;
+            const value = await globalThis.chrome.storage.local.get(key);
+            return value[key];
         } else {
             let value = globalThis.localStorage.getItem(key);
 

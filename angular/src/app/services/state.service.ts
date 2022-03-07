@@ -38,5 +38,17 @@ export class StateService {
             const store = this.stores[i];
             await store.load();
         }
+
+        console.log('Stores:', this.stores);
     }
+
+    // async load() {
+    //     debugger;
+    //     for (let i = 0; i < this.stores.length; i++) {
+    //         const store = this.stores[i];
+    //         await store.load();
+    //     }
+
+    //     console.log('Stores:', this.stores);
+    // }
 }

@@ -107,6 +107,7 @@ export class LoadingComponent implements OnInit, OnDestroy {
       // this.uiState.persisted$.next(this.uiState.persisted);
       // this.uiState.activeWalletSubject.next(this.uiState.activeWallet);
       // this.uiState.activeAccountSubject.next(this.uiState.activeAccount);
+      this.uiState.initialized = true;
     }
 
     const queryParam = globalThis.location.search;

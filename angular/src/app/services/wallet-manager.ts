@@ -482,9 +482,10 @@ export class WalletManager {
         if (this.activeWalletId != id) {
             this._activeWalletId = id;
             this.state.persisted.previousWalletId = id;
-            this.activeWalletSubject.next(this.activeWallet);
 
             await this.store.save();
+
+            this.activeWalletSubject.next(this.activeWallet);
 
             return true;
         }
@@ -646,9 +647,10 @@ export class WalletManager {
     async addWallet(wallet: Wallet) {
         this.store.set(wallet.id, wallet);
 
-        this.setActiveWallet(wallet.id);
+        // This will save it.
+        await this.setActiveWallet(wallet.id);
 
         // Persist the newly created wallet.
-        await this.store.save();
+        // await this.store.save();
     }
 }
