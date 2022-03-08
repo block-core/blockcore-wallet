@@ -8,7 +8,7 @@ import {
     MatSnackBarHorizontalPosition,
     MatSnackBarVerticalPosition,
 } from '@angular/material/snack-bar';
-import { Network } from '../services/networks';
+import { Network } from '../../shared/networks';
 import { SATOSHI_FACTOR } from '../shared/constants';
 
 @Injectable({

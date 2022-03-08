@@ -13,8 +13,8 @@ import { SecureStateService } from "./secure-state.service";
 import { UIState } from "./ui-state.service";
 import { SettingsService } from "./settings.service";
 import { BehaviorSubject, Observable } from "rxjs";
-import { NetworkLoader } from "./network-loader";
-import { Network } from "./networks";
+import { NetworkLoader } from "../../shared/network-loader";
+import { Network } from "../../shared/networks";
 import { CommunicationService } from ".";
 import { WalletStore } from "src/shared";
 

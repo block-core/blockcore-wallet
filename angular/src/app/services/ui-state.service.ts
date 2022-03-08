@@ -3,7 +3,7 @@ import { Action, AppState, Persisted, Store, Wallet } from '../../shared/interfa
 import { Router } from '@angular/router';
 import { CommunicationService } from './communication.service';
 import { ReplaySubject, Subject } from 'rxjs';
-import { Network } from './networks';
+import { Network } from '../../shared/networks';
 import { SecureStateService } from './secure-state.service';
 import { UIStore } from 'src/shared';
 

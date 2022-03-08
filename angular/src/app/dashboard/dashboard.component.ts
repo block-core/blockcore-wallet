@@ -7,6 +7,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { copyToClipboard } from '../shared/utilities';
 import { Observable } from 'rxjs';
 import { NetworkStatus } from '../../shared/interfaces';
+import { BackgroundManager } from 'src/shared/background-manager';
 
 export interface Section {
   name: string;
@@ -100,5 +101,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
     // Access internal writer to get logs:
     const entries = JSON.stringify(this.debugLog.errors);
     copyToClipboard(entries);
+  }
+
+  async runIndexer() {
+    debugger;
+    const manager = new BackgroundManager();
+    await manager.runIndexer();
   }
 }

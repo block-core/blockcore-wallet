@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UIState, CryptoService, CommunicationService, IconService, NetworksService, WalletManager } from '../../services';
 import { Account } from '../../../shared/interfaces';
 import { Router } from '@angular/router';
-import { Network } from '../../services/networks';
+import { Network } from '../../../shared/networks';
 const { v4: uuidv4 } = require('uuid');
 
 @Component({

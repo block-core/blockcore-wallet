@@ -7,7 +7,7 @@ import { copyToClipboard } from '../../shared/utilities';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import * as QRCode from 'qrcode';
 import { Address, NetworkStatus, Transaction, TransactionView } from '../../../shared/interfaces';
-import { Network } from '../../services/networks';
+import { Network } from '../../../shared/networks';
 var QRCode2 = require('qrcode');
 
 @Component({

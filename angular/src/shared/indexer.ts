@@ -1,7 +1,8 @@
 // import { Account, Address, IndexerApiStatus, Transaction, UnspentTransactionOutput, Wallet } from '../interfaces';
 import axiosRetry from 'axios-retry';
 import { Account, AccountState, Address, AddressState, IndexerApiStatus, Transaction, UnspentTransactionOutput, Wallet } from '.';
-import { AddressStore, TransactionStore, WalletStore } from './store';
+import { AddressManager } from './address-manager';
+import { AddressStore, SettingStore, TransactionStore, WalletStore } from './store';
 // import { Injectable } from '@angular/core';
 // import { NetworkStatusService } from './network-status.service';
 // import { LoggerService } from './logger.service';
@@ -55,9 +56,11 @@ export class IndexerBackgroundService {
     private confirmed = 1;
 
     constructor(
+        private settingStore: SettingStore,
         private walletStore: WalletStore,
         private addressStore: AddressStore,
-        private transactionStore: TransactionStore
+        private transactionStore: TransactionStore,
+        private addressManager: AddressManager,
     ) {
         // On interval loop through all watched addresses.
         // setInterval(async () => {
@@ -67,6 +70,7 @@ export class IndexerBackgroundService {
 
     /** This is the main process that runs the indexing and persists the state. */
     async process() {
+        const settings = this.settingStore.get();
         const wallets = this.walletStore.getWallets();
 
         for (let i = 0; i < wallets.length; i++) {
@@ -74,27 +78,61 @@ export class IndexerBackgroundService {
 
             for (let j = 0; j < wallet.accounts.length; j++) {
                 const account = wallet.accounts[j];
-                const indexerUrl = '';
+
+                const network = this.addressManager.getNetwork(account.networkType);
+                const indexerUrl = settings.indexer.replace('{id}', network.id.toLowerCase());
 
                 // Process first receive addresses until we've exhausted them.
                 for (let k = 0; k < account.state.receive.length; k++) {
                     const address = account.state.receive[k];
                     // Get the current state for this address:
-                    const addressState = this.addressStore.get(address.address);
-                    this.processAddress(indexerUrl, addressState);
+                    let addressState = this.addressStore.get(address.address);
+
+                    // If there are no addressState for this, create one now.
+                    if (!addressState) {
+                        addressState = { address: address.address, offset: 0, transactions: [] };
+                        this.addressStore.set(address.address, addressState);
+                    }
+
+                    await this.processAddress(indexerUrl, addressState);
 
                     // After processing, make sure we save the address state.
                     await this.addressStore.save();
+
+                    // If we are on the last address, check if we should add new one.
+                    if ((k + 1) >= account.state.receive.length) {
+                        // If there are addresses on the last checked address, add the next address.
+                        if (addressState.transactions.length > 0) {
+                            const nextAddress = this.addressManager.getAddress(account, 0, address.index + 1);
+                            account.state.receive.push(nextAddress);
+                        }
+                    }
                 }
 
                 for (let k = 0; k < account.state.change.length; k++) {
-                    const address = account.state.receive[k];
+                    const address = account.state.change[k];
                     // Get the current state for this address:
-                    const addressState = this.addressStore.get(address.address);
-                    this.processAddress(indexerUrl, addressState);
+                    let addressState = this.addressStore.get(address.address);
+
+                    // If there are no addressState for this, create one now.
+                    if (!addressState) {
+                        addressState = { address: address.address, offset: 0, transactions: [] };
+                        this.addressStore.set(address.address, addressState);
+                    }
+
+                    await this.processAddress(indexerUrl, addressState);
 
                     // After processing, make sure we save the address state.
                     await this.addressStore.save();
+
+                    // If we are on the last address, check if we should add new one.
+                    if ((k + 1) >= account.state.change.length) {
+                        // If there are addresses on the last checked address, add the next address.
+                        if (addressState.transactions.length > 0) {
+                            const nextAddress = this.addressManager.getAddress(account, 1, address.index + 1);
+                            account.state.change.push(nextAddress);
+                        }
+                    }
                 }
 
                 // When completely processes all the address, we'll save the transactions.
@@ -104,10 +142,6 @@ export class IndexerBackgroundService {
             // When all accounts has been processes, saved the wallet.
             await this.walletStore.save();
         }
-
-        console.log(this.walletStore);
-        console.log(this.addressStore);
-        console.log(this.transactionStore);
     }
 
     watchAddress(address: string, account: Account) {
@@ -175,11 +209,7 @@ export class IndexerBackgroundService {
 
     async processAddress(indexerUrl: string, state: AddressState) {
         try {
-            // const responseAddress = await axios.get(`${indexerUrl}/api/query/address/${state.address}`);
             let nextLink = `/api/query/address/${state.address}/transactions?offset=${state.offset}&limit=${this.limit}`;
-
-            console.log('FIRST NEXT LINK: ' + nextLink);
-
             const date = new Date().toISOString();
 
             // Loop through all pages until finished.

@@ -1,7 +1,5 @@
 import { Message } from '../../angular/src/shared/interfaces';
-import { IndexerBackgroundService } from '../../angular/src/shared/indexer';
-import { AddressStore, TransactionStore, WalletStore } from '../../angular/src/shared';
-import { LightWalletManager } from '../../angular/src/shared/light-wallet-manager';
+import { BackgroundManager } from '../../angular/src/shared/background-manager';
 
 console.log('Extension: ServiceWorker script loaded');
 
@@ -27,7 +25,7 @@ chrome.runtime.onInstalled.addListener(async ({ reason }) => {
     // that might have received transactions after used the first time.
     // This will be called at a slow interval, time to be decided later.
     chrome.alarms.get('index', a => {
-        if (!a) chrome.alarms.create('index', { periodInMinutes: 2 });
+        if (!a) chrome.alarms.create('index', { periodInMinutes: 1 });
     });
 
     if (reason === 'install') {
@@ -96,26 +94,9 @@ chrome.alarms.onAlarm.addListener(async (alarm: chrome.alarms.Alarm) => {
                 });
             }
         }
-    } else if ('index') {
-        // Process Wallets
-        const walletStore = new WalletStore();
-        await walletStore.load();
-
-        const addressStore = new AddressStore();
-        await addressStore.load();
-
-        const transactionStore = new TransactionStore();
-        await transactionStore.load();
-
-        // const lightWalletManager = new LightWalletManager(walletState.getWallets());
-        // lightWalletManager.getWallets();
-
-        // Get what addresses to watch from local storage.
-        // globalThis.chrome.storage.local.get('')
-        const indexer = new IndexerBackgroundService(walletStore, addressStore, transactionStore);
-        await indexer.process();
-
-        console.log('INDEXER COMPLETED RUN!');
+    } else if (alarm.name === 'index') {
+        const manager = new BackgroundManager();
+        await manager.runIndexer();
     }
 });
 

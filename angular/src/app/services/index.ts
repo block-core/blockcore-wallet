@@ -12,7 +12,7 @@ export * from './icon.service';
 export * from './indexer';
 export * from './log-writer.service';
 export * from './logger.service';
-export * from './network-loader';
+export * from '../../shared/network-loader';
 export * from './network-status.service';
 export * from './networks.service';
 export * from './secure-state.service';
