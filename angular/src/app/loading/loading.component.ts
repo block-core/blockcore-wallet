@@ -104,6 +104,12 @@ export class LoadingComponent implements OnInit, OnDestroy {
         this.translate.use(browserLang.match(/en|no/) ? browserLang : 'en');
       }
 
+      if (this.settings.values.theme === 'light') {
+        this.renderer.removeClass(document.body, 'dark-theme');
+      } else {
+        this.renderer.addClass(document.body, 'dark-theme');
+      }
+
       // this.uiState.persisted$.next(this.uiState.persisted);
       // this.uiState.activeWalletSubject.next(this.uiState.activeWallet);
       // this.uiState.activeAccountSubject.next(this.uiState.activeAccount);
