@@ -23,6 +23,10 @@ export class UIState {
 
     }
 
+    async save() {
+        return this.store.save();
+    }
+
     manifest!: chrome.runtime.Manifest;
 
     persisted$: Subject<Persisted> = new ReplaySubject();
