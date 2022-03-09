@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { UIState } from './ui-state.service';
 import { CommunicationService } from './communication.service';
-import { Account, Action, Identity, Settings, State, Vault } from '../../shared/interfaces';
+import { Account, AccountHistory, Action, Identity, Settings, State, Vault } from '../../shared/interfaces';
 import {
     MatSnackBar,
     MatSnackBarHorizontalPosition,
@@ -10,6 +10,7 @@ import {
 } from '@angular/material/snack-bar';
 import { Network } from '../../shared/networks';
 import { SATOSHI_FACTOR } from '../shared/constants';
+import { AccountHistoryStore } from 'src/shared';
 
 @Injectable({
     providedIn: 'root'
@@ -25,6 +26,7 @@ export class SendService {
     transactionId: string;
     SATOSHI_FACTOR: any = SATOSHI_FACTOR;
     routingIndex: number;
+    public accountHistory: AccountHistory;
 
     /** The affected addresses for the current transaction. */
     addresses: string[];
@@ -47,6 +49,7 @@ export class SendService {
         private communication: CommunicationService,
         private uiState: UIState,
         private router: Router,
+        private accountHistoryStore: AccountHistoryStore,
         private snackBar: MatSnackBar
     ) {
         // this.communication.listen('transaction-sent', async (data: { transactionId: string, transactionHex: string }) => {
@@ -54,6 +57,9 @@ export class SendService {
         //     this.transactionId = data.transactionId;
         //     this.transactionHex = data.transactionHex;
         // });
+
+        
+
     }
 
     /** Used to specify maximum amount and fee will be subtracted from the supplied amount. */
@@ -81,5 +87,6 @@ export class SendService {
         this.transactionHex = '';
         this.transactionId = '';
         this.addresses = [];
+        this.accountHistory = null;
     }
 }

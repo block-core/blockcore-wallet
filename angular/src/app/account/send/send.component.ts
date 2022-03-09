@@ -1,8 +1,9 @@
 import { Component, OnDestroy, OnInit, Renderer2 } from '@angular/core';
 import { UIState, CommunicationService, NetworksService, SendService, WalletManager } from '../../services';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Address, UnspentTransactionOutput } from '../../../shared/interfaces';
+import { AccountHistory, Address, UnspentTransactionOutput } from '../../../shared/interfaces';
 import { Network } from '../../../shared/networks';
+import { AccountHistoryStore } from 'src/shared';
 
 @Component({
     selector: 'app-account-send',
@@ -27,6 +28,7 @@ export class AccountSendComponent implements OnInit, OnDestroy {
         private networks: NetworksService,
         private communication: CommunicationService,
         public walletManager: WalletManager,
+        private accountHistoryStore: AccountHistoryStore,
         private snackBar: MatSnackBar) {
         // this.uiState.title = 'Receive Address';
         this.uiState.goBackHome = false;
@@ -39,6 +41,7 @@ export class AccountSendComponent implements OnInit, OnDestroy {
         sendService.account = account;
         sendService.network = network;
         sendService.resetFee(); // Reset fee after we have network available.
+        sendService.accountHistory = accountHistoryStore.get(account.identifier);
 
         this.network = network;
     }
@@ -73,6 +76,8 @@ export class AccountSendComponent implements OnInit, OnDestroy {
         this.unspent = [...unspentReceive, ...unspentChange];
 
         console.log(this.unspent);
+
+        // this.accountHistory = this.accountHistoryStore.get(this.walletManager.activeAccount.identifier);
 
         // this.sub = this.communication.listen('transaction-sent', async (data: { transactionId: string, transactionHex: string }) => {
         //     this.loading = false;
