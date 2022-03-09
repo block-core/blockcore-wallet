@@ -178,10 +178,10 @@ export class WalletManager {
         debugger;
 
         // Add the output the user requested.
-        tx.addOutput({ address, value: amount });
+        tx.addOutput({ address, value: Number(amount) });
 
         // Take the total sum of the aggregated inputs, remove the sendAmount and fee.
-        const changeAmount = aggregatedAmount - amount - fee;
+        const changeAmount = Number(aggregatedAmount) - Number(amount) - Number(fee);
 
         // If there is any change amount left, make sure we send it to the user's change address.
         if (changeAmount > 0) {
@@ -192,10 +192,13 @@ export class WalletManager {
         }
 
         // Get the secret seed.
-        const secret = this.walletSecrets.get(wallet.id);
+        const masterSeedBase64 = this.secure.get(wallet.id);
+        const masterSeed = Buffer.from(masterSeedBase64, 'base64');
+
+        // const secret = this.walletSecrets.get(wallet.id);
 
         // Create the master node.
-        const masterNode = HDKey.fromMasterSeed(Buffer.from(secret.seed), network.bip32);
+        const masterNode = HDKey.fromMasterSeed(masterSeed, network.bip32);
 
         for (let i = 0; i < inputs.length; i++) {
             const input = inputs[i];
