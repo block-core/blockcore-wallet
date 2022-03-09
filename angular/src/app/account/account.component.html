@@ -1,4 +1,5 @@
-<div class="page" *ngIf="walletManager.activeAccount && (walletManager.activeAccount.network == 400 || walletManager.activeAccount.network == 401)">
+<div class="page"
+    *ngIf="walletManager.activeAccount && (walletManager.activeAccount.network == 400 || walletManager.activeAccount.network == 401)">
 
     <app-network-status-card class="balance-card" [status]="currentNetworkStatus"></app-network-status-card>
 
@@ -7,7 +8,8 @@
     </div>
 </div>
 
-<div class="page" *ngIf="walletManager.activeAccount && (walletManager.activeAccount.network != 400 && walletManager.activeAccount.network != 401)">
+<div class="page"
+    *ngIf="walletManager.activeAccount && (walletManager.activeAccount.network != 400 && walletManager.activeAccount.network != 401)">
 
     <app-network-status-card class="balance-card" [status]="currentNetworkStatus"></app-network-status-card>
 
@@ -24,12 +26,10 @@
 
     <mat-card>
         <!-- <mat-card-subtitle>{{uiState.activeAccount.name}}</mat-card-subtitle> -->
-        <mat-card-subtitle>Balance <span
-                *ngIf="walletManager.activeAccount.state?.pendingReceived || walletManager.activeAccount.state?.pendingReceived">
-                ({{walletManager.activeAccount.state?.pendingReceived
-                || 0 | amount}} unconfirmed)
+        <mat-card-subtitle>Balance <span *ngIf="accountHistory.unconfirmed">
+                ({{accountHistory.unconfirmed || 0 | amount}} unconfirmed)
             </span></mat-card-subtitle>
-        <mat-card-title>{{walletManager.activeAccount.state?.balance || 0 | amount}} {{walletManager.activeAccount |
+        <mat-card-title>{{accountHistory.balance || 0 | amount}} {{walletManager.activeAccount |
             network}}
         </mat-card-title>
         <!-- <mat-card-content>
@@ -41,7 +41,8 @@
         <mat-divider inset></mat-divider>
         <mat-card-actions class="full-action-buttons">
             <button class="half-width" mat-raised-button
-                [routerLink]="['/', 'account', 'receive', walletManager.activeAccount.index]" color="primary">Receive</button>
+                [routerLink]="['/', 'account', 'receive', walletManager.activeAccount.index]"
+                color="primary">Receive</button>
             <button class="half-width" [routerLink]="['/', 'account', 'send']" mat-raised-button>Send</button>
         </mat-card-actions>
         <mat-card-footer>
@@ -64,37 +65,43 @@
                     <div mat-line> {{activity.address}} </div>
                 </a> -->
                 <div mat-subheader>Transactions</div>
-                <a mat-list-item *ngFor="let transaction of transactions"
+                <a mat-list-item *ngFor="let transaction of accountHistory.history"
                     [routerLink]="['/', 'account', 'transaction', transaction.transactionHash]">
-                    <!-- <mat-icon class="positive-color" mat-list-icon *ngIf="transaction.entryType == 'receive'">add
-                    </mat-icon>
-                    <mat-icon class="negative-color" mat-list-icon *ngIf="transaction.entryType == 'send'">remove
-                    </mat-icon> -->
-
-                    <div mat-line *ngIf="!transaction.description">
-
-                        <!-- <mat-icon class="positive-color" *ngIf="transaction.entryType == 'receive'">add
-                        </mat-icon>
-                        <mat-icon class="negative-color" *ngIf="transaction.entryType == 'send'">remove
-                        </mat-icon> -->
-
+                    <div mat-line>
                         <span class="positive-color" [ngClass]="{unconfirmed: transaction.confirmations == 0}"
                             *ngIf="transaction.entryType == 'receive'">+{{transaction.calculatedValue | amount}}</span>
                         <span class="negative-color" [ngClass]="{unconfirmed: transaction.confirmations == 0}"
                             *ngIf="transaction.entryType == 'send'">-{{transaction.calculatedValue | amount}}</span>
-
+                        <span class="other-color" [ngClass]="{unconfirmed: transaction.confirmations == 0}"
+                            *ngIf="transaction.entryType == 'consolidated'">{{transaction.entryType}}</span>
                         <!-- <span *ngIf="settings.values.developer"><br>Transacted total: {{transaction.value |
                             amount}}</span> -->
+                    </div>
+                    <div mat-line class="address" [innerHTML]="transaction.calculatedAddress.split(';').join('<br>')">
+                    </div>
+                    <!-- <div *ngIf="currentNetworkStatus" mat-line class="address">Confirmations:
+                        {{currentNetworkStatus.blockSyncHeight - transaction.blockIndex}}
+                    </div> -->
+                    <!-- <div mat-line> {{transaction.confirmations}} confirmations</div> -->
+                </a>
+                <!-- <div mat-subheader>Transactions (old)</div>
+                <a mat-list-item *ngFor="let transaction of transactions"
+                    [routerLink]="['/', 'account', 'transaction', transaction.transactionHash]">
+                    <div mat-line *ngIf="!transaction.description">
+                        <span class="positive-color" [ngClass]="{unconfirmed: transaction.confirmations == 0}"
+                            *ngIf="transaction.entryType == 'receive'">+{{transaction.calculatedValue | amount}}</span>
+                        <span class="negative-color" [ngClass]="{unconfirmed: transaction.confirmations == 0}"
+                            *ngIf="transaction.entryType == 'send'">-{{transaction.calculatedValue | amount}}</span>
                     </div>
                     <div mat-line class="other-color" *ngIf="transaction.description">
                         {{transaction.description}}
                     </div>
                     <div mat-line class="address" [innerHTML]="transaction.calculatedAddress">
                     </div>
-                    <div *ngIf="currentNetworkStatus" mat-line class="address">Confirmations: {{currentNetworkStatus.blockSyncHeight - transaction.blockIndex}}
+                    <div *ngIf="currentNetworkStatus" mat-line class="address">Confirmations:
+                        {{currentNetworkStatus.blockSyncHeight - transaction.blockIndex}}
                     </div>
-                    <!-- <div mat-line> {{transaction.confirmations}} confirmations</div> -->
-                </a>
+                </a> -->
             </mat-nav-list>
         </mat-tab>
 
@@ -107,7 +114,6 @@
                 <div mat-subheader>Receive Addresses</div>
                 <a mat-list-item *ngFor="let address of this.walletManager.activeAccount.state.receive"
                     routerLinkActive="active-link" [routerLink]="['/', 'account', 'address', address.index]">
-                    <!-- <mat-icon mat-list-icon>{{activity.icon}}</mat-icon> -->
                     <div mat-line>{{address.address}}</div>
                     <div mat-line>R:{{address.totalReceived | amount}} / S:{{address.totalSent | amount}} </div>
                 </a>
@@ -115,7 +121,6 @@
                 <div mat-subheader>Change Addresses</div>
                 <a mat-list-item *ngFor="let address of this.walletManager.activeAccount.state.change"
                     routerLinkActive="active-link" [routerLink]="['/', 'account', 'address', address.index]">
-                    <!-- <mat-icon mat-list-icon>{{activity.icon}}</mat-icon> -->
                     <div mat-line>{{address.address}}</div>
                     <div mat-line>R:{{address.totalReceived | amount}} / S:{{address.totalSent | amount}} </div>
                 </a>

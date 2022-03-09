@@ -1,8 +1,8 @@
 import { AddressManager } from "./address-manager";
 import { IndexerBackgroundService } from "./indexer";
-import { TransactionHistory } from "./interfaces";
+import { AccountUnspentTransactionOutput, TransactionHistory } from "./interfaces";
 import { NetworkLoader } from "./network-loader";
-import { AddressStore, SettingStore, TransactionStore, WalletStore } from "./store";
+import { AddressStore, SettingStore, TransactionStore, WalletStore, AccountHistoryStore } from "./store";
 
 export class BackgroundManager {
     constructor() {
@@ -22,6 +22,9 @@ export class BackgroundManager {
 
         const transactionStore = new TransactionStore();
         await transactionStore.load();
+
+        const accountHistoryStore = new AccountHistoryStore();
+        await accountHistoryStore.load();
 
         const networkLoader = new NetworkLoader();
         const addressManager = new AddressManager(networkLoader);
@@ -99,18 +102,18 @@ export class BackgroundManager {
 
                     // Check if there is any external outputs or inputs. If not, user is sending to themselves:
                     if (externalOutputs.length == 0 && externalInputs.length == 0) {
-                        tx.entryType = 'Consolidated';
+                        tx.entryType = 'consolidated';
                         tx.calculatedAddress = internalOutputs.map(o => o.address).join(';');
                     } else {
 
                         // If there are no internal inputs, it means we received.
                         if (internalInputs.length == 0) {
-                            tx.entryType = 'Receive';
+                            tx.entryType = 'receive';
                             const receivedAmount = internalOutputs.map(x => x.balance).reduce((x: any, y: any) => x + y);
                             tx.calculatedValue = receivedAmount;
                             tx.calculatedAddress = internalOutputs.map(o => o.address).join(';');
                         } else {
-                            tx.entryType = 'Send';
+                            tx.entryType = 'send';
                             const amount = externalOutputs.map(x => x.balance).reduce((x: any, y: any) => x + y);
                             tx.calculatedValue = amount;
                             tx.calculatedAddress = externalOutputs.map(o => o.address).join(';');
@@ -134,20 +137,18 @@ export class BackgroundManager {
 
                 console.log('accountHistory:', accountHistory);
 
-                let utxos = [];
+                let utxos: AccountUnspentTransactionOutput[] = [];
 
                 // Loop through the transactions by looking at the oldest first.
                 for (let i = transactionsInThisAccount.length - 1; i >= 0; i--) {
                     const t = transactionsInThisAccount[i];
 
-                    const externalOutputs = t.details.outputs.filter(o => addresses.indexOf(o.address) === -1);
                     const internalOutputs = t.details.outputs.filter(o => addresses.indexOf(o.address) > -1);
-                    const externalInputs = t.details.inputs.filter(o => addresses.indexOf(o.inputAddress) === -1);
-                    const internalInputs = t.details.inputs.filter(o => addresses.indexOf(o.inputAddress) > -1);
 
                     for (let j = 0; j < internalOutputs.length; j++) {
                         const utxo = internalOutputs[j];
 
+                        // Check if the outputs (UTXO at this point in time) is spent in any future transactions:
                         let spentOutputs = transactionsInThisAccount.filter(product => product.details.inputs.some(i => i.inputAddress == utxo.address && i.inputIndex == utxo.index && i.inputTransactionId == t.transactionHash));
 
                         if (spentOutputs.length === 0) {
@@ -163,15 +164,25 @@ export class BackgroundManager {
                             });
                         }
                     }
-
-                    // Check if the outputs (UTXO at this point in time) is spent in any future transactions:
-                    // transactionsInThisAccount.filter(tx => tx.details.inputs.filter(i => i.inputAddress == ));
-                    // internalOutputs[0].address
                 }
 
                 console.log('UTXOs:', utxos);
-                console.log('Balance:', utxos.reduce((a, b) => a + b.balance, 0));
+                const balanceConfirmed = utxos.filter(t => !t.unconfirmed).reduce((a, b) => a + b.balance, 0);
+                const balanceUnconfirmed = utxos.filter(t => t.unconfirmed).reduce((a, b) => a + b.balance, 0);
+                console.log('balanceConfirmed:', balanceConfirmed);
+                console.log('balanceUnconfirmed:', balanceUnconfirmed);
+
+                accountHistoryStore.set(account.identifier, {
+                    history: accountHistory,
+                    unspent: utxos,
+                    balance: balanceConfirmed,
+                    unconfirmed: balanceUnconfirmed
+                });
+
+                await accountHistoryStore.save();
             }
+
+            console.log(accountHistoryStore);
         }
     }
 }

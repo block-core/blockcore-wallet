@@ -3,8 +3,9 @@ import { HttpClient } from '@angular/common/http';
 import { UIState, CommunicationService, NetworksService, NetworkStatusService, SettingsService, WalletManager } from '../services';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { NetworkStatus, TransactionHistory } from '../../shared/interfaces';
+import { AccountHistory, NetworkStatus, TransactionHistory } from '../../shared/interfaces';
 import { Subscription } from 'rxjs';
+import { AccountHistoryStore } from 'src/shared';
 
 @Component({
   selector: 'app-account',
@@ -32,6 +33,7 @@ export class AccountComponent implements OnInit, OnDestroy {
   private scanTimer: any;
   addresses: string[];
   currentNetworkStatus: NetworkStatus;
+  public accountHistory: AccountHistory;
 
   constructor(
     public uiState: UIState,
@@ -42,6 +44,7 @@ export class AccountComponent implements OnInit, OnDestroy {
     private networkStatusService: NetworkStatusService,
     private communication: CommunicationService,
     private activatedRoute: ActivatedRoute,
+    private accountHistoryStore: AccountHistoryStore,
     public walletManager: WalletManager,
     private snackBar: MatSnackBar) {
 
@@ -235,8 +238,20 @@ export class AccountComponent implements OnInit, OnDestroy {
     this.currentNetworkStatus = this.networkStatusService.get(this.walletManager.activeAccount.networkType);
   }
 
+  updateAccountHistory() {
+    console.log('updateAccountHistory!!!');
+    this.accountHistory = this.accountHistoryStore.get(this.walletManager.activeAccount.identifier);
+
+    console.log('1:', this.accountHistoryStore);
+    console.log('2:', this.accountHistoryStore.get(this.walletManager.activeAccount.identifier))
+
+    console.log(this.accountHistory);
+    console.log(this.walletManager.activeAccount.identifier);
+  }
+
   async ngOnInit() {
     this.updateNetworkStatus();
+    // this.updateAccountHistory();
 
     // This will be triggered when user navigates into the account, since active account state is changed.
     this.subscriptions.push(this.uiState.persisted$.subscribe(() => {
@@ -251,6 +266,9 @@ export class AccountComponent implements OnInit, OnDestroy {
     this.subscriptions.push(this.walletManager.activeAccount$.subscribe((account) => {
       this.updateNetworkStatus();
       this.uiState.title = this.walletManager.activeAccount?.name || '';
+
+      console.log('ACTIVE ACCOUNT CHANGED!');
+      this.updateAccountHistory();
     }));
 
     this.scanTimer = setInterval(() => {

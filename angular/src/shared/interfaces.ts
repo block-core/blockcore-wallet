@@ -202,6 +202,22 @@ interface TransactionHistory extends Transaction {
     calculatedAddress: string;
 }
 
+interface AccountUnspentTransactionOutput {
+    address: string;
+    balance: number;
+    index: number | BigInt;
+    transactionHash: string;
+    unconfirmed: boolean;
+    hex: string;
+}
+
+interface AccountHistory {
+    balance: number,
+    unconfirmed: number,
+    history: TransactionHistory[],
+    unspent: AccountUnspentTransactionOutput[];
+}
+
 interface TransactionInfoView extends TransactionInfo {
     inputsAmount: BigInt | number;
     outputsAmount: BigInt | number;
@@ -447,5 +463,7 @@ export {
     Message,
     MessageResponse,
     AddressState,
-    AppState
+    AppState,
+    AccountHistory,
+    AccountUnspentTransactionOutput
 }

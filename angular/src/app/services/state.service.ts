@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { ActionStore, AddressStore, NetworkStatusStore, SettingStore, TransactionStore, UIStore, WalletStore } from "src/shared";
+import { ActionStore, AddressStore, NetworkStatusStore, SettingStore, TransactionStore, UIStore, WalletStore, AccountHistoryStore } from "src/shared";
 
 @Injectable({
     providedIn: 'root'
@@ -15,7 +15,8 @@ export class StateService {
         private settingStore: SettingStore,
         private transactionStore: TransactionStore,
         private uiStore: UIStore,
-        private walletStore: WalletStore
+        private walletStore: WalletStore,
+        private accountHistoryStore: AccountHistoryStore
     ) {
         this.stores.push(addressStore);
         this.stores.push(actionStore);
@@ -24,6 +25,7 @@ export class StateService {
         this.stores.push(transactionStore);
         this.stores.push(uiStore);
         this.stores.push(walletStore);
+        this.stores.push(accountHistoryStore);
     }
 
     async wipe() {

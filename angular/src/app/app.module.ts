@@ -72,7 +72,7 @@ import { ActivatedRoute, ActivatedRouteSnapshot } from '@angular/router';
 import { ActionStratisIdentityComponent } from './action/sid/sid.component';
 import { ActionNostrIdentityComponent } from './action/nostr/nostr.component';
 import { AboutComponent } from './settings/about/about.component';
-import { AddressStore, NetworkStatusStore, TransactionStore, UIStore, WalletStore } from 'src/shared';
+import { AccountHistoryStore, AddressStore, NetworkStatusStore, TransactionStore, UIStore, WalletStore } from 'src/shared';
 import { ActionStore } from 'src/shared/store/action-store';
 import { SettingStore } from 'src/shared/store/setting-store';
 import { NetworkLoader } from './services';
@@ -180,6 +180,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     TransactionStore,
     UIStore,
     WalletStore,
+    AccountHistoryStore,
     NetworkLoader
   ],
   bootstrap: [AppComponent]
