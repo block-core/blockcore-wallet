@@ -1,6 +1,6 @@
 import { HDKey } from "micro-bip32";
 import { mnemonicToSeedSync } from 'micro-bip39';
-import { Account, Address, Logger, UnspentTransactionOutput, Wallet } from "../../shared/interfaces";
+import { Account, AccountUnspentTransactionOutput, Address, Logger, UnspentTransactionOutput, Wallet } from "../../shared/interfaces";
 import { MINUTE } from "../shared/constants";
 import { Psbt } from '@blockcore/blockcore-js';
 import * as ecc from 'tiny-secp256k1';
@@ -128,28 +128,30 @@ export class WalletManager {
         return data;
     }
 
-    async createTransaction(wallet: Wallet, account: Account, address: string, amount: number, fee: number): Promise<{ addresses: string[], transactionHex: string, fee: number, feeRate: number, virtualSize: number, weight: number }> {
+    async createTransaction(wallet: Wallet, account: Account, address: string, amount: number, fee: number, unspent: AccountUnspentTransactionOutput[]): Promise<{ addresses: string[], transactionHex: string, fee: number, feeRate: number, virtualSize: number, weight: number }> {
         // TODO: Verify the address for this network!! ... Help the user avoid sending transactions on very wrong addresses.
         const network = this.getNetwork(account.networkType);
         const affectedAddresses = [];
+
+        debugger;
 
         // We currently only support BTC-compatible transactions such as STRAX. We do not support other Blockcore chains that are not PoS v4.
         const tx = new Psbt({ network: network, maximumFeeRate: 5000 });  // satoshi per byte, 5000 is default.
         tx.setVersion(1); // Lock-time is not used so set to 1 (defaults to 2).
         tx.setLocktime(0); // These are defaults. This line is not needed.
 
-        const unspentReceive = account.state.receive.flatMap(i => i.unspent).filter(i => i !== undefined);
-        const unspentChange = account.state.change.flatMap(i => i.unspent).filter(i => i !== undefined);
-        const unspent = [...unspentReceive, ...unspentChange];
+        // const unspentReceive = account.state.receive.flatMap(i => i.unspent).filter(i => i !== undefined);
+        // const unspentChange = account.state.change.flatMap(i => i.unspent).filter(i => i !== undefined);
+        // const unspent = [...unspentReceive, ...unspentChange];
 
         // Collect unspent until we have enough amount.
         const requiredAmount = BigInt(amount) + BigInt(fee);
         let aggregatedAmount: number = 0;
-        const inputs: UnspentTransactionOutput[] = [];
+        const inputs: AccountUnspentTransactionOutput[] = [];
 
         for (let i = 0; i < unspent.length; i++) {
             const tx = unspent[i];
-            aggregatedAmount += <number>tx.value;
+            aggregatedAmount += <number>tx.balance;
 
             inputs.push(tx);
 
@@ -160,16 +162,20 @@ export class WalletManager {
 
         for (let i = 0; i < inputs.length; i++) {
             const input = inputs[i];
-            const hex = await this.getTransactionHex(account, input.outpoint.transactionId);
+
+            // const hex = await this.getTransactionHex(account, input.transactionHash);
+            const hex = input.hex;
 
             affectedAddresses.push(input.address);
 
             tx.addInput({
-                hash: input.outpoint.transactionId,
-                index: input.outpoint.outputIndex,
+                hash: input.transactionHash,
+                index: input.index,
                 nonWitnessUtxo: Buffer.from(hex, 'hex')
             });
         }
+
+        debugger;
 
         // Add the output the user requested.
         tx.addOutput({ address, value: amount });

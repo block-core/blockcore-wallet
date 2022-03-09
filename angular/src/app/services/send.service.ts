@@ -40,7 +40,7 @@ export class SendService {
         return BigInt(amountAsDecimal);
     }
 
-    get feeAsSatoshi(): BigInt {
+    get feeAsSatoshi(): BigInt | any {
         const feeAsDecimal = Number(this.fee) * SATOSHI_FACTOR;
         return BigInt(feeAsDecimal);
     }

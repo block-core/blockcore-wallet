@@ -205,7 +205,7 @@ interface TransactionHistory extends Transaction {
 interface AccountUnspentTransactionOutput {
     address: string;
     balance: number;
-    index: number | BigInt;
+    index: number | BigInt | any;
     transactionHash: string;
     unconfirmed: boolean;
     hex: string;

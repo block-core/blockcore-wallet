@@ -23,6 +23,16 @@ export class AccountSendConfirmComponent implements OnInit, OnDestroy {
     }
 
     async ngOnInit() {
+
+        this.transaction = await this.walletManager.createTransaction(
+            this.walletManager.activeWallet, 
+            this.walletManager.activeAccount, 
+            this.sendService.address, 
+            this.sendService.amountAsSatoshi, 
+            this.sendService.feeAsSatoshi, 
+            this.sendService.accountHistory.unspent);
+        console.log(this.transaction);
+
         // this.sub = this.communication.listen('transaction-created', async (data: { addresses: string[], transactionHex: string, fee: number, feeRate: number }) => {
         //     this.transaction = data;
         //     this.sendService.transactionHex = data.transactionHex;
