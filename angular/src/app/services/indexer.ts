@@ -92,12 +92,12 @@ export class IndexerService {
         this.q.enqueue({ account, wallet, force });
 
         // If the queue is empty, we'll schedule processing with a timeout.
-        if (empty) {
-            // Queue up in one second
-            setTimeout(async () => {
-                await this.queryIndexer();
-            }, 1000);
-        }
+        // if (empty) {
+        //     // Queue up in one second
+        //     setTimeout(async () => {
+        //         await this.queryIndexer();
+        //     }, 1000);
+        // }
     }
 
     hasWork() {
@@ -162,7 +162,7 @@ export class IndexerService {
         return links;
     }
 
-    async queryIndexer() {
+    async queryIndexer2() {
         this.logger.debug('queryIndexer executing.');
 
         let changes = false;

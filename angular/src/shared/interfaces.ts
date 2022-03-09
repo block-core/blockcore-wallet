@@ -180,10 +180,11 @@ interface AddressState {
 }
 
 interface TransactionInfo {
+    fee: number;
     symbol: string;
     blockHash: string;
     blockIndex: number;
-    timestamp: BigInt;
+    timestamp: number;
     transactionId: string;
     confirmations: BigInt | number;
     isCoinbase: boolean;

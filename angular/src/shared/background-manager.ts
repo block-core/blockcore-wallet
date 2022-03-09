@@ -1,5 +1,6 @@
 import { AddressManager } from "./address-manager";
 import { IndexerBackgroundService } from "./indexer";
+import { TransactionHistory } from "./interfaces";
 import { NetworkLoader } from "./network-loader";
 import { AddressStore, SettingStore, TransactionStore, WalletStore } from "./store";
 
@@ -9,6 +10,7 @@ export class BackgroundManager {
     }
 
     async runIndexer() {
+        // First update all the data.
         const settingStore = new SettingStore();
         await settingStore.load();
 
@@ -37,5 +39,139 @@ export class BackgroundManager {
         console.log(walletStore);
         console.log(addressStore);
         console.log(transactionStore);
+
+        // Then calculate the balance.
+        const wallets = walletStore.all();
+        const addressStates = addressStore.all();
+        const transactions = transactionStore.all();
+
+        for (let i = 0; i < wallets.length; i++) {
+            const wallet = wallets[i];
+
+            // Then calculate the balance.
+            const accounts = wallet.accounts;
+
+            for (let j = 0; j < accounts.length; j++) {
+                const account = accounts[j];
+
+                const receive = account.state.receive; // .flatMap(i => i.unspent).filter(i => i !== undefined);
+                const change = account.state.change; // .flatMap(i => i.unspent).filter(i => i !== undefined);
+                const addressesList = [...receive, ...change];
+                const addresses = addressesList.flatMap(a => a.address);
+
+                console.log('addresses (flat):', addresses);
+                console.log('addressStates:', addressStates);
+
+                const addressStatesInThisAccount = addressStates.filter(a => addresses.indexOf(a.address) > -1);
+                console.log('addressStatesInThisAccount:', addressStatesInThisAccount);
+
+                const transactionHashesInAccount = addressStatesInThisAccount.flatMap(a => a.transactions);
+                var uniqueTransactionHashes = [...new Set(transactionHashesInAccount)];
+
+                console.log('transactionHashesInAccount:', transactionHashesInAccount);
+                console.log('uniqueTransactionHashes:', uniqueTransactionHashes);
+
+                const transactionsInThisAccount = transactions.filter(a => a.transactionHash);
+                console.log('transactionsInThisAccount:', transactionsInThisAccount);
+
+                // Sort the transaction, the array is by-ref so it will sort the original values.
+                transactionsInThisAccount.sort((a: any, b: any) => { if (a.blockIndex > b.blockIndex) return -1; return 0; });
+
+                console.log('sortedTransactions:', transactionsInThisAccount);
+
+                const accountHistory = transactionsInThisAccount.map(t => {
+                    // const tx = t as TransactionHistory;
+                    const tx = {} as TransactionHistory | any;
+
+                    tx.blockIndex = t.blockIndex;
+                    tx.unconfirmed = t.unconfirmed;
+                    tx.finalized = t.finalized;
+                    tx.transactionHash = t.transactionHash;
+                    tx.timestamp = t.details.timestamp;
+                    tx.isCoinstake = t.details.isCoinstake;
+                    tx.isCoinbase = t.details.isCoinbase;
+                    tx.fee = t.details.fee;
+
+                    const externalOutputs = t.details.outputs.filter(o => addresses.indexOf(o.address) === -1);
+                    const internalOutputs = t.details.outputs.filter(o => addresses.indexOf(o.address) > -1);
+                    const externalInputs = t.details.inputs.filter(o => addresses.indexOf(o.inputAddress) === -1);
+                    const internalInputs = t.details.inputs.filter(o => addresses.indexOf(o.inputAddress) > -1);
+
+                    // Check if there is any external outputs or inputs. If not, user is sending to themselves:
+                    if (externalOutputs.length == 0 && externalInputs.length == 0) {
+                        tx.entryType = 'Consolidated';
+                        tx.calculatedAddress = internalOutputs.map(o => o.address).join(';');
+                    } else {
+
+                        // If there are no internal inputs, it means we received.
+                        if (internalInputs.length == 0) {
+                            tx.entryType = 'Receive';
+                            const receivedAmount = internalOutputs.map(x => x.balance).reduce((x: any, y: any) => x + y);
+                            tx.calculatedValue = receivedAmount;
+                            tx.calculatedAddress = internalOutputs.map(o => o.address).join(';');
+                        } else {
+                            tx.entryType = 'Send';
+                            const amount = externalOutputs.map(x => x.balance).reduce((x: any, y: any) => x + y);
+                            tx.calculatedValue = amount;
+                            tx.calculatedAddress = externalOutputs.map(o => o.address).join(';');
+                        }
+
+                        // if (t.entryType == 'send') {
+                        //     const amount = externalOutputs.map(x => x.balance).reduce((x: any, y: any) => x + y);
+                        //     tx.calculatedValue = amount;
+                        //     tx.calculatedAddress = externalOutputs.map(o => o.address).join('<br>');
+                        // }
+
+                        // if (t.entryType == 'receive') {
+                        //     const receivedAmount = internalOutputs.map(x => x.balance).reduce((x: any, y: any) => x + y);
+                        //     tx.calculatedAddress = internalOutputs.map(o => o.address).join('<br>');
+                        //     tx.calculatedValue = receivedAmount;
+                        // }
+                    }
+
+                    return tx;
+                });
+
+                console.log('accountHistory:', accountHistory);
+
+                let utxos = [];
+
+                // Loop through the transactions by looking at the oldest first.
+                for (let i = transactionsInThisAccount.length - 1; i >= 0; i--) {
+                    const t = transactionsInThisAccount[i];
+
+                    const externalOutputs = t.details.outputs.filter(o => addresses.indexOf(o.address) === -1);
+                    const internalOutputs = t.details.outputs.filter(o => addresses.indexOf(o.address) > -1);
+                    const externalInputs = t.details.inputs.filter(o => addresses.indexOf(o.inputAddress) === -1);
+                    const internalInputs = t.details.inputs.filter(o => addresses.indexOf(o.inputAddress) > -1);
+
+                    for (let j = 0; j < internalOutputs.length; j++) {
+                        const utxo = internalOutputs[j];
+
+                        let spentOutputs = transactionsInThisAccount.filter(product => product.details.inputs.some(i => i.inputAddress == utxo.address && i.inputIndex == utxo.index && i.inputTransactionId == t.transactionHash));
+
+                        if (spentOutputs.length === 0) {
+                            const transaction = transactionStore.get(t.transactionHash);
+
+                            utxos.push({
+                                address: utxo.address,
+                                balance: utxo.balance,
+                                index: utxo.index,
+                                transactionHash: t.transactionHash,
+                                unconfirmed: t.unconfirmed,
+                                hex: transaction.hex
+                            });
+                        }
+                    }
+
+                    // Check if the outputs (UTXO at this point in time) is spent in any future transactions:
+                    // transactionsInThisAccount.filter(tx => tx.details.inputs.filter(i => i.inputAddress == ));
+                    // internalOutputs[0].address
+                }
+
+                console.log('UTXOs:', utxos);
+                console.log('Balance:', utxos.reduce((a, b) => a + b.balance, 0));
+            }
+        }
     }
 }

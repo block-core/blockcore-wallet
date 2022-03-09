@@ -104,7 +104,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   async runIndexer() {
-    debugger;
     const manager = new BackgroundManager();
     await manager.runIndexer();
   }
