@@ -545,11 +545,17 @@ export class WalletManager {
 
     async addAccount(account: Account, wallet: Wallet) {
         // First derive the xpub and store that on the account.
-        const secret = this.walletSecrets.get(wallet.id);
+        // const secret = this.walletSecrets.get(wallet.id);
+        // Get the secret seed.
+
+        debugger;
+
+        const masterSeedBase64 = this.secure.get(wallet.id);
+        const masterSeed = Buffer.from(masterSeedBase64, 'base64');
 
         const network = this.getNetwork(account.networkType);
 
-        const masterNode = HDKey.fromMasterSeed(Buffer.from(secret.seed), network.bip32);
+        const masterNode = HDKey.fromMasterSeed(masterSeed, network.bip32);
 
         const accountNode = masterNode.derive(`m/${account.purpose}'/${account.network}'/${account.index}'`);
 

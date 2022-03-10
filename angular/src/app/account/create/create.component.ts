@@ -146,6 +146,7 @@ export class AccountCreateComponent implements OnInit, OnDestroy {
     }
 
     async create() {
+        debugger;
         const splittedPath = this.derivationPath.split('/');
         const splittedPathReplaced = this.derivationPath.replaceAll(`'`, ``).split('/');
 
@@ -176,8 +177,8 @@ export class AccountCreateComponent implements OnInit, OnDestroy {
         delete account.selected;
         await this.walletManager.addAccount(account, this.walletManager.activeWallet);
 
-        const mostRecentAccount = this.walletManager.activeWallet.accounts[this.walletManager.activeWallet.accounts.length - 1];
-        this.router.navigateByUrl('/account/view/' + mostRecentAccount.identifier);
+        // When adding an account, the active account ID will be updated so we can read it here.
+        this.router.navigateByUrl('/account/view/' + this.walletManager.activeWallet.activeAccountId);
 
         // this.communication.sendToAll('account-created');
         // this.manager.createAccount(this.uiState.activeWallet.id, account);
