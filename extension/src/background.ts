@@ -1,7 +1,7 @@
 import { Message } from '../../angular/src/shared/interfaces';
 import { BackgroundManager } from '../../angular/src/shared/background-manager';
 
-var Buffer = require('buffer/').Buffer  // note: the trailing slash is important!
+// var Buffer = require('buffer/').Buffer  // note: the trailing slash is important!
 // import { Buffer } from 'buffer';
 // console.log(Buffer.from('anything', 'base64'));
 console.log('Extension: ServiceWorker script loaded');
@@ -103,6 +103,16 @@ chrome.alarms.onAlarm.addListener(async (alarm: chrome.alarms.Alarm) => {
     } else if (alarm.name === 'index') {
         const manager = new BackgroundManager();
         await manager.runIndexer();
+
+        chrome.runtime.sendMessage({
+            type: 'indexed',
+            ext: 'blockcore',
+            source: 'background',
+            target: 'tabs',
+            host: location.host
+        }, function (response) {
+            console.log('Extension:sendMessage:response:indexed:', response);
+        });
     }
 });
 
@@ -118,7 +128,7 @@ chrome.alarms.onAlarm.addListener(async (alarm: chrome.alarms.Alarm) => {
 //     };
 // });
 
-chrome.runtime.onMessage.addListener((message: Message, sender, sendResponse) => {
+chrome.runtime.onMessage.addListener(async (message: Message, sender, sendResponse) => {
     if (message.target !== 'background') {
         console.log('This message is not handled by the background logic.');
         return;
@@ -134,10 +144,26 @@ chrome.runtime.onMessage.addListener((message: Message, sender, sendResponse) =>
         switch (message.type) {
             case 'index': {
                 response = '545555';
+
+                const manager = new BackgroundManager();
+                await manager.runIndexer();
+
+                chrome.runtime.sendMessage({
+                    type: 'indexed',
+                    ext: 'blockcore',
+                    source: 'background',
+                    target: 'tabs',
+                    host: location.host
+                }, function (response) {
+                    console.log('Extension:sendMessage:response:indexed:', response);
+                });
+
+                break;
             }
             default:
                 console.log(`The message type ${message.type} is not known.`);
                 response = null;
+                break;
         }
     } catch (error: any) {
         return { error: { message: error.message, stack: error.stack } }

@@ -116,8 +116,6 @@ export class WalletManager {
         const network = this.getNetwork(account.networkType);
         const indexerUrl = this.settings.values.indexer.replace('{id}', network.id.toLowerCase());
 
-        debugger;
-
         const response = await axios.post(`${indexerUrl}/api/command/send`, txhex, {
             headers: {
                 'Content-Type': 'application/json-patch+json',
@@ -135,8 +133,6 @@ export class WalletManager {
         // TODO: Verify the address for this network!! ... Help the user avoid sending transactions on very wrong addresses.
         const network = this.getNetwork(account.networkType);
         const affectedAddresses = [];
-
-        debugger;
 
         // We currently only support BTC-compatible transactions such as STRAX. We do not support other Blockcore chains that are not PoS v4.
         const tx = new Psbt({ network: network, maximumFeeRate: 5000 });  // satoshi per byte, 5000 is default.
@@ -177,8 +173,6 @@ export class WalletManager {
                 nonWitnessUtxo: Buffer.from(hex, 'hex')
             });
         }
-
-        debugger;
 
         // Add the output the user requested.
         tx.addOutput({ address, value: Number(amount) });
@@ -547,9 +541,6 @@ export class WalletManager {
         // First derive the xpub and store that on the account.
         // const secret = this.walletSecrets.get(wallet.id);
         // Get the secret seed.
-
-        debugger;
-
         const masterSeedBase64 = this.secure.get(wallet.id);
         const masterSeed = Buffer.from(masterSeedBase64, 'base64');
 

@@ -44,6 +44,13 @@ export class StateService {
         console.log('Stores:', this.stores);
     }
 
+    async refresh() {
+        await this.addressStore.load();
+        await this.transactionStore.load();
+        await this.walletStore.load();
+        await this.accountHistoryStore.load();
+    }
+
     // async load() {
     //     debugger;
     //     for (let i = 0; i < this.stores.length; i++) {

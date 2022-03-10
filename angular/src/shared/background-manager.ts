@@ -57,25 +57,29 @@ export class BackgroundManager {
             for (let j = 0; j < accounts.length; j++) {
                 const account = accounts[j];
 
+                console.log('account:', account);
+
                 const receive = account.state.receive; // .flatMap(i => i.unspent).filter(i => i !== undefined);
                 const change = account.state.change; // .flatMap(i => i.unspent).filter(i => i !== undefined);
                 const addressesList = [...receive, ...change];
                 const addresses = addressesList.flatMap(a => a.address);
 
-                console.log('addresses (flat):', addresses);
-                console.log('addressStates:', addressStates);
+                console.log('addresses:', addresses);
 
                 const addressStatesInThisAccount = addressStates.filter(a => addresses.indexOf(a.address) > -1);
+
                 console.log('addressStatesInThisAccount:', addressStatesInThisAccount);
 
                 const transactionHashesInAccount = addressStatesInThisAccount.flatMap(a => a.transactions);
-                // var uniqueTransactionHashes = [...new Set(transactionHashesInAccount)];
-                var uniqueTransactionHashes = Array.from(new Set(transactionHashesInAccount));
 
                 console.log('transactionHashesInAccount:', transactionHashesInAccount);
+
+                var uniqueTransactionHashes = Array.from(new Set(transactionHashesInAccount));
+
                 console.log('uniqueTransactionHashes:', uniqueTransactionHashes);
 
-                const transactionsInThisAccount = transactions.filter(a => a.transactionHash);
+                const transactionsInThisAccount = transactions.filter(a => uniqueTransactionHashes.indexOf(a.transactionHash) > -1);
+
                 console.log('transactionsInThisAccount:', transactionsInThisAccount);
 
                 // Sort the transaction, the array is by-ref so it will sort the original values. Sort the unconfirmed on top.
@@ -218,5 +222,8 @@ export class BackgroundManager {
 
             console.log(accountHistoryStore);
         }
+
+
+        
     }
 }

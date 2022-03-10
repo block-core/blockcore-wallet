@@ -91,10 +91,13 @@ export class IndexerBackgroundService {
                     // If there are no addressState for this, create one now.
                     if (!addressState) {
                         addressState = { address: address.address, offset: 0, transactions: [] };
-                        this.addressStore.set(address.address, addressState);
+                        // this.addressStore.set(address.address, addressState);
                     }
 
                     await this.processAddress(indexerUrl, addressState);
+
+                    // Set the address state again after we've updated it.
+                    this.addressStore.set(address.address, addressState);
 
                     // After processing, make sure we save the address state.
                     await this.addressStore.save();
@@ -117,10 +120,13 @@ export class IndexerBackgroundService {
                     // If there are no addressState for this, create one now.
                     if (!addressState) {
                         addressState = { address: address.address, offset: 0, transactions: [] };
-                        this.addressStore.set(address.address, addressState);
+                        // this.addressStore.set(address.address, addressState);
                     }
 
                     await this.processAddress(indexerUrl, addressState);
+
+                    // Set the address state again after we've updated it.
+                    this.addressStore.set(address.address, addressState);
 
                     // After processing, make sure we save the address state.
                     await this.addressStore.save();
@@ -198,13 +204,30 @@ export class IndexerBackgroundService {
     }
 
     async getTransactionInfo(transactionId: string, indexerUrl: string) {
-        const responseTransaction = await axios.get(`${indexerUrl}/api/query/transaction/${transactionId}`);
-        return responseTransaction.data;
+        const url = `${indexerUrl}/api/query/transaction/${transactionId}`;
+        const response = await this.fetchUrl(url);
+        return response.json();
+    }
+
+    async fetchUrl(url: string) {
+        // Default options are marked with *
+        return await fetch(url, {
+            method: 'GET', // *GET, POST, PUT, DELETE, etc.
+            mode: 'cors', // no-cors, *cors, same-origin
+            cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+            credentials: 'same-origin', // include, *same-origin, omit
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            redirect: 'follow', // manual, *follow, error
+            referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+        });
     }
 
     async getTransactionHex(transactionId: string, indexerUrl: string) {
-        const responseTransactionHex = await axios.get(`${indexerUrl}/api/query/transaction/${transactionId}/hex`);
-        return responseTransactionHex.data;
+        const url = `${indexerUrl}/api/query/transaction/${transactionId}/hex`;
+        const response = await this.fetchUrl(url);
+        return response.text();
     }
 
     async processAddress(indexerUrl: string, state: AddressState) {
@@ -214,18 +237,35 @@ export class IndexerBackgroundService {
 
             // Loop through all pages until finished.
             while (nextLink != null) {
-                const responseTransactions = await axios.get(`${indexerUrl}${nextLink}`);
-                const transactions = responseTransactions.data;
-                const links = this.parseLinkHeader(responseTransactions.headers.link);
 
-                const limit = responseTransactions.headers['pagination-limit'];
-                const offset = Number(responseTransactions.headers['pagination-offset']);
-                const total = responseTransactions.headers['pagination-total'];
+                const url = `${indexerUrl}${nextLink}`;
+
+                // Default options are marked with *
+                const response = await fetch(url, {
+                    method: 'GET', // *GET, POST, PUT, DELETE, etc.
+                    mode: 'cors', // no-cors, *cors, same-origin
+                    cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+                    credentials: 'same-origin', // include, *same-origin, omit
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    redirect: 'follow', // manual, *follow, error
+                    referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+                });
+
+                const transactions = await response.json();
+                // const responseTransactions = await axios.get(`${indexerUrl}${nextLink}`);
+                // const transactions = responseTransactions.data;
+                const links = this.parseLinkHeader(response.headers.get('link'));
+
+                const limit = response.headers.get('pagination-limit');
+                const offset = Number(response.headers.get('pagination-offset'));
+                const total = response.headers.get('pagination-total');
 
                 // Store the latest offset on the state.
                 state.offset = offset;
 
-                if (responseTransactions.status == 200) {
+                if (response.ok) {
                     // var updatedReceiveAddress: Address = { ...receiveAddress };
                     // console.log(responseTransactions);
 
@@ -254,15 +294,27 @@ export class IndexerBackgroundService {
 
                         // If the transaction is not stored yet, query additional data then save it to the store.
                         if (!transactionInfo) {
-                            transaction.details = await this.getTransactionInfo(transactionId, indexerUrl);
                             transaction.hex = await this.getTransactionHex(transactionId, indexerUrl);
-                            this.transactionStore.set(transactionId, transaction);
-                        } else if (transaction.finalized) { // If the transaction is finalized, we don't bother query new status.
-
-                        } else {
-                            // Transactions is not yet finalized, but we already have data for it. Query only for details and not hex.
-                            transactionInfo.details = await this.getTransactionInfo(transactionId, indexerUrl);
                         }
+
+                        // Keep updating with transaction info details until finalized (and it will no longer be returned in the paged query):
+                        transaction.details = await this.getTransactionInfo(transactionId, indexerUrl);
+
+                        // // If the transaction is not stored yet, query additional data then save it to the store.
+                        // if (!transactionInfo) {
+                        //     transaction.details = await this.getTransactionInfo(transactionId, indexerUrl);
+                        //     transaction.hex = await this.getTransactionHex(transactionId, indexerUrl);
+
+                        //     this.transactionStore.set(transactionId, transaction);
+                        // } else if (transaction.finalized) { // If the transaction is finalized, we don't bother query new status.
+                        //     transaction.details = await this.getTransactionInfo(transactionId, indexerUrl);
+                        // } else {
+                        //     // Transactions is not yet finalized, but we already have data for it. Query only for details and not hex.
+                        //     transaction.details = await this.getTransactionInfo(transactionId, indexerUrl);
+                        // }
+
+                        // Update the store with latest info on the transaction.
+                        this.transactionStore.set(transactionId, transaction);
                     }
 
                     // TODO: Add support for paging.
@@ -279,6 +331,8 @@ export class IndexerBackgroundService {
             // receiveAddress.retrieved = date;
             // changes = true;
         } catch (error) {
+            console.log('Failed to query indexer!!');
+            console.error(error);
             // this.status.update({ networkType: account.networkType, status: 'Error', availability: IndexerApiStatus.Error });
             // this.logger.error(error);
 

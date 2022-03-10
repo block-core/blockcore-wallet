@@ -146,8 +146,7 @@ export class AccountCreateComponent implements OnInit, OnDestroy {
     }
 
     async create() {
-        debugger;
-        const splittedPath = this.derivationPath.split('/');
+        // const splittedPath = this.derivationPath.split('/');
         const splittedPathReplaced = this.derivationPath.replaceAll(`'`, ``).split('/');
 
         const parsedPurpose = Number(splittedPathReplaced[1]);

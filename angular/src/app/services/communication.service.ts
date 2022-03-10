@@ -1,13 +1,17 @@
 import { Injectable, NgZone } from '@angular/core';
 import { EnvironmentService } from '.';
 import { Message, MessageResponse } from '../../shared/interfaces';
+import { StateService } from './state.service';
 const { v4: uuidv4 } = require('uuid');
 
 @Injectable({
     providedIn: 'root'
 })
 export class CommunicationService {
-    constructor(private ngZone: NgZone, private env: EnvironmentService) {
+    constructor(
+        private ngZone: NgZone,
+        private state: StateService,
+        private env: EnvironmentService) {
 
     }
 
@@ -75,6 +79,11 @@ export class CommunicationService {
                 }
                 case 'login': {
                     return 'success';
+                }
+                case 'indexed': {
+                    console.log('SERVICE WORKER HAS FINISHED INDEXING!!! WE MUST RELOAD STORES!');
+                    this.state.refresh();
+                    return 'ok';
                 }
                 case 'timeout': {
                     // Timeout was reached in the background. There is already logic listening to the session storage
