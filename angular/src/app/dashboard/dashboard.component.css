@@ -3,6 +3,11 @@
   color: gray;
 }
 
+.dark-mode .account-balance {
+  float: right;
+  color: silver;
+}
+
 .network-status-widget {
   position: absolute;
   left: 3em;
