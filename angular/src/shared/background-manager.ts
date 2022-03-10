@@ -69,7 +69,8 @@ export class BackgroundManager {
                 console.log('addressStatesInThisAccount:', addressStatesInThisAccount);
 
                 const transactionHashesInAccount = addressStatesInThisAccount.flatMap(a => a.transactions);
-                var uniqueTransactionHashes = [...new Set(transactionHashesInAccount)];
+                // var uniqueTransactionHashes = [...new Set(transactionHashesInAccount)];
+                var uniqueTransactionHashes = Array.from(new Set(transactionHashesInAccount));
 
                 console.log('transactionHashesInAccount:', transactionHashesInAccount);
                 console.log('uniqueTransactionHashes:', uniqueTransactionHashes);
@@ -115,12 +116,27 @@ export class BackgroundManager {
                         // If there are no internal inputs, it means we received.
                         if (internalInputs.length == 0) {
                             tx.entryType = 'receive';
-                            const receivedAmount = internalOutputs.map(x => x.balance).reduce((x: any, y: any) => x + y);
+
+                            let receivedAmount = 0;
+                            const outputs = internalOutputs.map(x => x.balance);
+
+                            // Reduce on empty array crashes.
+                            if (outputs.length > 0) {
+                                receivedAmount = outputs.reduce((x: any, y: any) => x + y);
+                            }
+
                             tx.calculatedValue = receivedAmount;
                             tx.calculatedAddress = internalOutputs.map(o => o.address).join(';');
                         } else {
                             tx.entryType = 'send';
-                            const amount = externalOutputs.map(x => x.balance).reduce((x: any, y: any) => x + y);
+
+                            let amount = 0;
+                            const outputs = externalOutputs.map(x => x.balance);
+
+                            if (outputs.length > 0) {
+                                amount = outputs.reduce((x: any, y: any) => x + y);
+                            }
+
                             tx.calculatedValue = amount;
                             tx.calculatedAddress = externalOutputs.map(o => o.address).join(';');
                         }
@@ -173,8 +189,20 @@ export class BackgroundManager {
                 }
 
                 console.log('UTXOs:', utxos);
-                const balanceConfirmed = utxos.filter(t => !t.unconfirmed).reduce((a, b) => a + b.balance, 0);
-                const balanceUnconfirmed = utxos.filter(t => t.unconfirmed).reduce((a, b) => a + b.balance, 0);
+
+                // .reduce on empty array will throw error in the service worker.
+                let balanceConfirmed = 0;
+                const filteredConfirmed = utxos.filter(t => !t.unconfirmed);
+                if (filteredConfirmed.length > 0) {
+                    balanceConfirmed = filteredConfirmed.reduce((a, b) => a + b.balance, 0);
+                }
+
+                let balanceUnconfirmed = 0;
+                const filteredUnconfirmed = utxos.filter(t => t.unconfirmed);
+                if (filteredUnconfirmed.length > 0) {
+                    balanceUnconfirmed = filteredUnconfirmed.reduce((a, b) => a + b.balance, 0);
+                }
+
                 console.log('balanceConfirmed:', balanceConfirmed);
                 console.log('balanceUnconfirmed:', balanceUnconfirmed);
 

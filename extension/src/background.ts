@@ -1,6 +1,9 @@
 import { Message } from '../../angular/src/shared/interfaces';
 import { BackgroundManager } from '../../angular/src/shared/background-manager';
 
+var Buffer = require('buffer/').Buffer  // note: the trailing slash is important!
+// import { Buffer } from 'buffer';
+// console.log(Buffer.from('anything', 'base64'));
 console.log('Extension: ServiceWorker script loaded');
 
 // Run when the browser has been fully exited and opened again.
@@ -62,6 +65,9 @@ chrome.runtime.onInstalled.addListener(async ({ reason }) => {
 });
 
 chrome.alarms.onAlarm.addListener(async (alarm: chrome.alarms.Alarm) => {
+
+    console.log('onAlarm', alarm);
+
     if (alarm.name === 'periodic') {
         const storage = globalThis.chrome.storage as any;
 

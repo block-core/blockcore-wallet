@@ -1,5 +1,6 @@
 const { CheckerPlugin } = require('awesome-typescript-loader');
 const { join } = require('path');
+const { ProvidePlugin } = require('webpack');
 
 module.exports = {
   mode: 'development',
@@ -22,7 +23,9 @@ module.exports = {
     path: join(__dirname, '../dist/extension'),
     filename: '[name].js'
   },
-  plugins: [new CheckerPlugin()],
+  plugins: [new CheckerPlugin(), new ProvidePlugin({
+    Buffer: ['buffer', 'Buffer'],
+  })],
   resolve: {
     extensions: ['.ts', '.js'],
     fallback: {
@@ -34,7 +37,7 @@ module.exports = {
       "zlib": false,
       "http": false,
       "https": false,
-      // "buffer": require.resolve('buffer'),
+      buffer: require.resolve('buffer/'),
       "stream": require.resolve('stream-browserify'),
       "crypto": require.resolve('crypto-browserify'),
       // "crypto-browserify": require.resolve('crypto-browserify'), //if you want to use this module also don't forget npm i crypto-browserify 
