@@ -94,7 +94,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   balance(accountId: string) {
-    return this.accountHistoryStore.get(accountId).balance;
+    return this.accountHistoryStore.get(accountId)?.balance;
   }
 
   copyDebugLogs() {

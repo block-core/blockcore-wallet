@@ -78,12 +78,25 @@ export class AccountComponent implements OnInit, OnDestroy {
     // clearInterval(this.scanTimer);
   }
 
-  scan(force: boolean = false) {
-    this.loading = true;
+  async scan(force: boolean = false) {
+    // this.loading = true;
     // this.communication.send('account-scan', { force: force, accountId: this.walletManager.activeAccount.identifier, walletId: this.walletManager.activeWallet.id });
 
     // Update the network status on every scan.
-    this.currentNetworkStatus = this.networkStatusService.get(this.walletManager.activeAccount.networkType);
+    // this.currentNetworkStatus = this.networkStatusService.get(this.walletManager.activeAccount.networkType);
+
+    // Remove the history store for this account.
+    // this.accountHistoryStore.remove(this.walletManager.activeAccount.identifier);
+
+    const accountHistory: AccountHistory = { balance: 0, unconfirmed: 0, history: [], unspent: [] };
+    this.accountHistory = accountHistory;
+
+    this.accountHistoryStore.set(this.walletManager.activeAccount.identifier, accountHistory);
+    await this.accountHistoryStore.save();
+
+    // Send a message to run indexing on all wallets.
+    const msg = this.communication.createMessage('index');
+    this.communication.send(msg);
   }
 
   async toggleNetwork() {
