@@ -8,6 +8,7 @@ import { copyToClipboard } from '../shared/utilities';
 import { Observable } from 'rxjs';
 import { NetworkStatus } from '../../shared/interfaces';
 import { BackgroundManager } from 'src/shared/background-manager';
+import { AccountHistoryStore } from 'src/shared';
 
 export interface Section {
   name: string;
@@ -41,6 +42,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     public walletManager: WalletManager,
     private secure: SecureStateService,
     private activatedRoute: ActivatedRoute,
+    private accountHistoryStore: AccountHistoryStore,
     private debugLog: DebugLogService,
     private cd: ChangeDetectorRef) {
 
@@ -89,6 +91,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
     if (this.sub) {
       this.sub.unsubscribe();
     }
+  }
+
+  balance(accountId: string) {
+    return this.accountHistoryStore.get(accountId).balance;
   }
 
   copyDebugLogs() {
