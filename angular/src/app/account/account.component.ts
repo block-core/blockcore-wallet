@@ -117,11 +117,11 @@ export class AccountComponent implements OnInit, OnDestroy {
   }
 
   private refreshTransactionHistory() {
-    const account = this.walletManager.activeAccount;
+    // const account = this.walletManager.activeAccount;
 
     // Get a full list of transactions. We run filter at the end to remove empty entries.
-    const transactionsReceive = account.state.receive.flatMap(item => item.transactions).filter((el) => el != null);
-    const transactionsChange = account.state.change.flatMap(item => item.transactions).filter((el) => el != null);
+    // const transactionsReceive = account.state.receive.flatMap(item => item.transactions).filter((el) => el != null);
+    // const transactionsChange = account.state.change.flatMap(item => item.transactions).filter((el) => el != null);
 
     // console.log('VERIFY TRANSACTIONS1:');
     // console.log(transactionsReceive);
@@ -140,70 +140,70 @@ export class AccountComponent implements OnInit, OnDestroy {
     // console.log(sortedChangeTransactions);
 
     // Create an array with all addresses that exists.
-    this.addresses = [...account.state.receive.map(r => r.address), ...account.state.change.map(c => c.address)];
+    // this.addresses = [...account.state.receive.map(r => r.address), ...account.state.change.map(c => c.address)];
 
     // console.log('VERIFY TRANSACTIONS5:');
     // console.log(this.addresses);
 
-    transactionsReceive.map(t => {
-      const tx = t as TransactionHistory;
+    // transactionsReceive.map(t => {
+    //   const tx = t as TransactionHistory;
 
-      const externalOutputs = t.details.outputs.filter(o => this.addresses.indexOf(o.address) === -1);
-      const internalOutputs = t.details.outputs.filter(o => this.addresses.indexOf(o.address) > -1);
-      const externalInputs = t.details.inputs.filter(o => this.addresses.indexOf(o.inputAddress) === -1);
-      const internalInputs = t.details.inputs.filter(o => this.addresses.indexOf(o.inputAddress) > -1);
+    //   const externalOutputs = t.details.outputs.filter(o => this.addresses.indexOf(o.address) === -1);
+    //   const internalOutputs = t.details.outputs.filter(o => this.addresses.indexOf(o.address) > -1);
+    //   const externalInputs = t.details.inputs.filter(o => this.addresses.indexOf(o.inputAddress) === -1);
+    //   const internalInputs = t.details.inputs.filter(o => this.addresses.indexOf(o.inputAddress) > -1);
 
-      // Check if there is any external outputs or inputs. If not, user is sending to themselves:
-      if (externalOutputs.length == 0 && externalInputs.length == 0) {
-        tx.description = 'Consolidated';
-        tx.calculatedAddress = internalOutputs.map(o => o.address).join('<br>');
-      } else {
+    //   // Check if there is any external outputs or inputs. If not, user is sending to themselves:
+    //   if (externalOutputs.length == 0 && externalInputs.length == 0) {
+    //     tx.description = 'Consolidated';
+    //     tx.calculatedAddress = internalOutputs.map(o => o.address).join('<br>');
+    //   } else {
 
-        if (t.entryType == 'send') {
-          const amount = externalOutputs.map(x => x.balance).reduce((x: any, y: any) => x + y);
-          tx.calculatedValue = amount;
-          tx.calculatedAddress = externalOutputs.map(o => o.address).join('<br>');
-        }
+    //     if (t.entryType == 'send') {
+    //       const amount = externalOutputs.map(x => x.balance).reduce((x: any, y: any) => x + y);
+    //       tx.calculatedValue = amount;
+    //       tx.calculatedAddress = externalOutputs.map(o => o.address).join('<br>');
+    //     }
 
-        if (t.entryType == 'receive') {
-          const receivedAmount = internalOutputs.map(x => x.balance).reduce((x: any, y: any) => x + y);
-          tx.calculatedAddress = internalOutputs.map(o => o.address).join('<br>');
-          tx.calculatedValue = receivedAmount;
-        }
-      }
+    //     if (t.entryType == 'receive') {
+    //       const receivedAmount = internalOutputs.map(x => x.balance).reduce((x: any, y: any) => x + y);
+    //       tx.calculatedAddress = internalOutputs.map(o => o.address).join('<br>');
+    //       tx.calculatedValue = receivedAmount;
+    //     }
+    //   }
 
-      return tx;
-    });
+    //   return tx;
+    // });
 
-    transactionsChange.map(t => {
-      const tx = t as TransactionHistory;
+    // transactionsChange.map(t => {
+    //   const tx = t as TransactionHistory;
 
-      const externalOutputs = t.details.outputs.filter(o => this.addresses.indexOf(o.address) === -1);
-      const internalOutputs = t.details.outputs.filter(o => this.addresses.indexOf(o.address) > -1);
-      const externalInputs = t.details.inputs.filter(o => this.addresses.indexOf(o.inputAddress) === -1);
-      const internalInputs = t.details.inputs.filter(o => this.addresses.indexOf(o.inputAddress) > -1);
+    //   const externalOutputs = t.details.outputs.filter(o => this.addresses.indexOf(o.address) === -1);
+    //   const internalOutputs = t.details.outputs.filter(o => this.addresses.indexOf(o.address) > -1);
+    //   const externalInputs = t.details.inputs.filter(o => this.addresses.indexOf(o.inputAddress) === -1);
+    //   const internalInputs = t.details.inputs.filter(o => this.addresses.indexOf(o.inputAddress) > -1);
 
-      // Check if there is any external outputs or inputs. If not, user is sending to themselves:
-      if (externalOutputs.length == 0 && externalInputs.length == 0) {
-        tx.description = 'Consolidated';
-        tx.calculatedAddress = internalOutputs.map(o => o.address).join('<br>');
-      } else {
+    //   // Check if there is any external outputs or inputs. If not, user is sending to themselves:
+    //   if (externalOutputs.length == 0 && externalInputs.length == 0) {
+    //     tx.description = 'Consolidated';
+    //     tx.calculatedAddress = internalOutputs.map(o => o.address).join('<br>');
+    //   } else {
 
-        if (t.entryType == 'send') {
-          const amount = externalOutputs.map(x => x.balance).reduce((x: any, y: any) => x + y);
-          tx.calculatedValue = amount;
-          tx.calculatedAddress = externalOutputs.map(o => o.address).join('<br>');
-        }
+    //     if (t.entryType == 'send') {
+    //       const amount = externalOutputs.map(x => x.balance).reduce((x: any, y: any) => x + y);
+    //       tx.calculatedValue = amount;
+    //       tx.calculatedAddress = externalOutputs.map(o => o.address).join('<br>');
+    //     }
 
-        if (t.entryType == 'receive') {
-          const receivedAmount = internalOutputs.map(x => x.balance).reduce((x: any, y: any) => x + y);
-          tx.calculatedAddress = internalOutputs.map(o => o.address).join('<br>');
-          tx.calculatedValue = receivedAmount;
-        }
-      }
+    //     if (t.entryType == 'receive') {
+    //       const receivedAmount = internalOutputs.map(x => x.balance).reduce((x: any, y: any) => x + y);
+    //       tx.calculatedAddress = internalOutputs.map(o => o.address).join('<br>');
+    //       tx.calculatedValue = receivedAmount;
+    //     }
+    //   }
 
-      return tx;
-    });
+    //   return tx;
+    // });
 
     // console.log('VERIFY TRANSACTIONS6:');
     // console.log(sortedReceiveTransactions);
@@ -211,13 +211,13 @@ export class AccountComponent implements OnInit, OnDestroy {
     // console.log('VERIFY TRANSACTIONS7:');
     // console.log(sortedChangeTransactions);
 
-    const allTransactions = [...transactionsReceive, ...transactionsChange] as TransactionHistory[];
-    const sortedAllTransactions = allTransactions.sort((a: any, b: any) => { if (a.blockIndex > b.blockIndex) return -1; return 0; });
+    // const allTransactions = [...transactionsReceive, ...transactionsChange] as TransactionHistory[];
+    // const sortedAllTransactions = allTransactions.sort((a: any, b: any) => { if (a.blockIndex > b.blockIndex) return -1; return 0; });
 
-    this.transactions = sortedAllTransactions;
+    // this.transactions = sortedAllTransactions;
 
-    console.log('this.transactions');
-    console.log(this.transactions);
+    // console.log('this.transactions');
+    // console.log(this.transactions);
 
     // Sort the transactions by blockIndex, having the highest number first.
     // const sortedReceiveTransactions = transactionsReceive.sort((a: any, b: any) => { if (a.blockIndex > b.blockIndex) return -1; return 0; });

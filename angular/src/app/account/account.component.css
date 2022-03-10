@@ -68,3 +68,8 @@ textarea {
   float: left;
   margin-right: 1em;
 }
+
+.transaction-timpestamp {
+  float: right;
+  font-size: 0.8em;
+}

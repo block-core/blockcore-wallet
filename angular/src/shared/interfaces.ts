@@ -196,10 +196,18 @@ interface TransactionInfo {
     outputs: TransactionOutput[];
 }
 
-interface TransactionHistory extends Transaction {
+interface TransactionHistory {
     calculatedValue: number;
-    description: string;
     calculatedAddress: string;
+    entryType: string;
+    fee: number;
+    unconfirmed?: boolean;
+    finalized?: boolean;
+    transactionHash: string;
+    isCoinbase: boolean;
+    isCoinstake: boolean;
+    timestamp: number;
+    blockIndex: number;
 }
 
 interface AccountUnspentTransactionOutput {
