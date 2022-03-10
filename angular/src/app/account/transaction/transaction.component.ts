@@ -94,7 +94,11 @@ export class AccountTransactionComponent implements OnInit, OnDestroy {
     }
 
     openExplorerBlock(blockhash: string) {
-        chrome.tabs.create({ url: `${this.env.instanceExplorerUrl}/${this.network.id}/explorer/block/${blockhash}`, active: false });
+        if (blockhash) {
+            chrome.tabs.create({ url: `${this.env.instanceExplorerUrl}/${this.network.id}/explorer/block/${blockhash}`, active: false });
+        } else {
+            chrome.tabs.create({ url: `${this.env.instanceExplorerUrl}/${this.network.id}/explorer/mempool`, active: false });
+        }
     }
 
     ngOnDestroy(): void {

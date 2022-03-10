@@ -8,7 +8,9 @@
                 <mat-icon>content_copy</mat-icon>
             </button> -->
             </p>
-            <p><span class="label">Confirmations:</span> {{currentNetworkStatus.blockSyncHeight - transaction.details.blockIndex}}</p>
+            <p *ngIf="!transaction.unconfirmed"><span class="label">Confirmations:</span> {{currentNetworkStatus.blockSyncHeight - transaction.details.blockIndex}}</p>
+            <p *ngIf="transaction.unconfirmed"><span class="label">Confirmations:</span> Unconfirmed (mempool)</p>
+
             <p><span class="label">Fee:</span> {{transaction.details.fee | amount}}</p>
             <p *ngIf="transaction.details.data.length > 0">
                 <span class="label">Data:</span><br>
@@ -26,8 +28,8 @@
     <mat-card class="example-card">
         <mat-card-title>Block</mat-card-title>
         <mat-card-content>
-            <p class="wrap"><span class="label">Block Hash:</span> {{transaction.details.blockHash}}</p>
-            <p><span class="label">Block Height:</span> {{transaction.details.blockIndex}}</p>
+            <p class="wrap" *ngIf="!transaction.unconfirmed"><span class="label">Block Hash:</span> {{transaction.details.blockHash}}</p>
+            <p *ngIf="!transaction.unconfirmed"><span class="label">Block Height:</span> {{transaction.details.blockIndex}}</p>
             <p><span class="label">Inputs</span> ({{transaction.details.inputs.length}}): {{transaction.details.inputsAmount | amount}}</p>
             <p><span class="label">Outputs</span> ({{transaction.details.outputs.length}}): {{transaction.details.outputsAmount | amount}}</p>
         </mat-card-content>
