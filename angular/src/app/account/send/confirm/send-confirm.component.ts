@@ -1,4 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { throwToolbarMixedModesError } from '@angular/material/toolbar';
 import { CommunicationService, SendService, UIState, WalletManager } from '../../../services';
 
 @Component({
@@ -24,14 +25,21 @@ export class AccountSendConfirmComponent implements OnInit, OnDestroy {
 
     async ngOnInit() {
 
-        this.transaction = await this.walletManager.createTransaction(
-            this.walletManager.activeWallet, 
-            this.walletManager.activeAccount, 
-            this.sendService.address, 
-            this.sendService.amountAsSatoshi, 
-            this.sendService.feeAsSatoshi, 
+        // const { addresses, transactionHex, fee, feeRate, virtualSize, weight } = 
+
+        const tx = await this.walletManager.createTransaction(
+            this.walletManager.activeWallet,
+            this.walletManager.activeAccount,
+            this.sendService.address,
+            this.sendService.amountAsSatoshi,
+            this.sendService.feeAsSatoshi,
             this.sendService.accountHistory.unspent);
+
+        this.transaction = tx;
         console.log(this.transaction);
+
+        this.sendService.transactionHex = tx.transactionHex;
+        this.sendService.addresses = tx.addresses;
 
         // this.sub = this.communication.listen('transaction-created', async (data: { addresses: string[], transactionHex: string, fee: number, feeRate: number }) => {
         //     this.transaction = data;

@@ -26,6 +26,24 @@ export class AccountSendSendingComponent implements OnInit, OnDestroy {
     async ngOnInit() {
         this.sendService.loading = true;
 
+        // const wallet = this.walletManager.getWallet(data.walletId);
+        // const account = this.walletManager.getAccount(wallet, data.accountId);
+
+        // addresses: this.sendService.addresses
+
+        // // Watch the address that belongs to the selected inputs used in the transaction.
+        // for (let i = 0; i < data.addresses.length; i++) {
+        //     this.indexer.watchAddress(data.addresses[i], account);
+        // }
+
+        const transactionDetails = await this.walletManager.sendTransaction(this.sendService.account, this.sendService.transactionHex);
+
+        this.sendService.loading = false;
+        this.sendService.transactionId = transactionDetails.transactionId;
+        this.sendService.transactionHex = transactionDetails.transactionHex;
+
+        this.router.navigateByUrl('/account/send/success');
+
         // this.sub = this.communication.listen('transaction-sent', async (data: { transactionId: string, transactionHex: string }) => {
         //     this.sendService.loading = false;
         //     this.sendService.transactionId = data.transactionId;

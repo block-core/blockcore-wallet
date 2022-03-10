@@ -116,11 +116,14 @@ export class WalletManager {
         const network = this.getNetwork(account.networkType);
         const indexerUrl = this.settings.values.indexer.replace('{id}', network.id.toLowerCase());
 
+        debugger;
+
         const response = await axios.post(`${indexerUrl}/api/command/send`, txhex, {
             headers: {
                 'Content-Type': 'application/json-patch+json',
             }
         });
+
         const data = response.data;
 
         this.logger.debug('Should contain transaction ID if broadcast was OK:', data);
@@ -238,7 +241,7 @@ export class WalletManager {
     }
 
     async sendTransaction(account: Account, transactionHex: string): Promise<{ transactionId: string, transactionHex: string }> {
-        this.logger.debug('TransactionHex', transactionHex);
+        this.logger.debug('sendTransaction:TransactionHex', transactionHex);
         const transactionId = await this.broadcastTransaction(account, transactionHex);
         this.logger.debug('TransactionId', transactionId);
         return { transactionId, transactionHex };
