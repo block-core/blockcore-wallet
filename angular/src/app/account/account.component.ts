@@ -30,7 +30,7 @@ export class AccountComponent implements OnInit, OnDestroy {
   activities: any[] = [];
   public transactions: TransactionHistory[];
   public networkStatus: any;
-  private scanTimer: any;
+  // private scanTimer: any;
   addresses: string[];
   currentNetworkStatus: NetworkStatus;
   public accountHistory: AccountHistory;
@@ -75,7 +75,7 @@ export class AccountComponent implements OnInit, OnDestroy {
 
     this.subscriptions = [];
 
-    clearInterval(this.scanTimer);
+    // clearInterval(this.scanTimer);
   }
 
   scan(force: boolean = false) {
@@ -281,8 +281,8 @@ export class AccountComponent implements OnInit, OnDestroy {
       this.updateAccountHistory();
     }));
 
-    this.scanTimer = setInterval(() => {
-      this.scan();
-    }, 30000);
+    // this.scanTimer = setInterval(() => {
+    //   this.scan();
+    // }, 30000);
   }
 }
