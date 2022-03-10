@@ -77,8 +77,14 @@ export class BackgroundManager {
                 const transactionsInThisAccount = transactions.filter(a => a.transactionHash);
                 console.log('transactionsInThisAccount:', transactionsInThisAccount);
 
-                // Sort the transaction, the array is by-ref so it will sort the original values.
-                transactionsInThisAccount.sort((a: any, b: any) => { if (a.blockIndex > b.blockIndex) return -1; return 0; });
+                // Sort the transaction, the array is by-ref so it will sort the original values. Sort the unconfirmed on top.
+                transactionsInThisAccount.sort((a: any, b: any) => {
+                    if (a.unconfirmed === true) {
+                        return -1;
+                    } else {
+                        if (a.blockIndex > b.blockIndex) return -1; return 0;
+                    }
+                });
 
                 console.log('sortedTransactions:', transactionsInThisAccount);
 

@@ -68,11 +68,11 @@
                 <a mat-list-item *ngFor="let transaction of accountHistory.history"
                     [routerLink]="['/', 'account', 'transaction', transaction.transactionHash]">
                     <div mat-line>
-                        <span class="positive-color" [ngClass]="{unconfirmed: transaction.confirmations == 0}"
+                        <span class="positive-color" [ngClass]="{unconfirmed: transaction.unconfirmed}"
                             *ngIf="transaction.entryType == 'receive'">+{{transaction.calculatedValue | amount}}</span>
-                        <span class="negative-color" [ngClass]="{unconfirmed: transaction.confirmations == 0}"
+                        <span class="negative-color" [ngClass]="{unconfirmed: transaction.unconfirmed}"
                             *ngIf="transaction.entryType == 'send'">-{{transaction.calculatedValue | amount}}</span>
-                        <span class="other-color" [ngClass]="{unconfirmed: transaction.confirmations == 0}"
+                        <span class="other-color" [ngClass]="{unconfirmed: transaction.unconfirmed}"
                             *ngIf="transaction.entryType == 'consolidated'">{{transaction.entryType}}</span>
                         <!-- <span *ngIf="settings.values.developer"><br>Transacted total: {{transaction.value |
                             amount}}</span> -->
