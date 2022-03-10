@@ -8,6 +8,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import * as QRCode from 'qrcode';
 import { Address, NetworkStatus, Transaction, TransactionView } from '../../../shared/interfaces';
 import { Network } from '../../../shared/networks';
+import { TransactionStore } from 'src/shared';
 var QRCode2 = require('qrcode');
 
 @Component({
@@ -32,6 +33,7 @@ export class AccountTransactionComponent implements OnInit, OnDestroy {
         private env: EnvironmentService,
         private networkStatusService: NetworkStatusService,
         public walletManager: WalletManager,
+        private transactionStore: TransactionStore,
         private snackBar: MatSnackBar) {
         // this.uiState.title = 'Receive Address';
         this.uiState.goBackHome = false;
@@ -44,25 +46,27 @@ export class AccountTransactionComponent implements OnInit, OnDestroy {
 
             this.currentNetworkStatus = this.networkStatusService.get(this.walletManager.activeAccount.networkType);
 
+            this.transaction = this.transactionStore.get(this.txid) as TransactionView;
+
             // TODO: Move this logic to an service.
-            const account = this.walletManager.activeAccount;
+            // const account = this.walletManager.activeAccount;
 
-            const receiveTransactions = account.state.receive.filter(item => item.transactions?.find(i => i.transactionHash == this.txid));
-            const filteredReceiveTransactions = receiveTransactions.flatMap(i => i.transactions?.find(i => i.transactionHash == this.txid));
-            const changeTransactions = account.state.change.filter(item => item.transactions?.find(i => i.transactionHash == this.txid));
-            const filteredChangeTransactions = changeTransactions.flatMap(i => i.transactions?.find(i => i.transactionHash == this.txid));
+            // const receiveTransactions = account.state.receive.filter(item => item.transactions?.find(i => i.transactionHash == this.txid));
+            // const filteredReceiveTransactions = receiveTransactions.flatMap(i => i.transactions?.find(i => i.transactionHash == this.txid));
+            // const changeTransactions = account.state.change.filter(item => item.transactions?.find(i => i.transactionHash == this.txid));
+            // const filteredChangeTransactions = changeTransactions.flatMap(i => i.transactions?.find(i => i.transactionHash == this.txid));
 
-            console.log('receiveTransactions', receiveTransactions);
-            console.log('changeTransactions', changeTransactions);
+            // console.log('receiveTransactions', receiveTransactions);
+            // console.log('changeTransactions', changeTransactions);
 
-            console.log('filteredReceiveTransactions', filteredReceiveTransactions);
-            console.log('filteredChangeTransactions', filteredChangeTransactions);
+            // console.log('filteredReceiveTransactions', filteredReceiveTransactions);
+            // console.log('filteredChangeTransactions', filteredChangeTransactions);
 
-            if (filteredReceiveTransactions.length > 0) {
-                this.transaction = filteredReceiveTransactions[0] as TransactionView;
-            } else if (filteredChangeTransactions.length > 0) {
-                this.transaction = filteredChangeTransactions[0] as TransactionView;
-            }
+            // if (filteredReceiveTransactions.length > 0) {
+            //     this.transaction = filteredReceiveTransactions[0] as TransactionView;
+            // } else if (filteredChangeTransactions.length > 0) {
+            //     this.transaction = filteredChangeTransactions[0] as TransactionView;
+            // }
 
             // Calculate values on the transaction object.
             this.transaction.details.inputsAmount = this.transaction.details.inputs.reduce((sum, item) => {
@@ -75,8 +79,7 @@ export class AccountTransactionComponent implements OnInit, OnDestroy {
                 return sum;
             }, 0);;
 
-            this.transaction.details.fees = this.transaction.details.inputsAmount - this.transaction.details.outputsAmount;
-
+            // this.transaction.details.fees = this.transaction.details.inputsAmount - this.transaction.details.outputsAmount;
             this.transaction.details.data = this.transaction.details.outputs.filter(i => i.outputType == 'TX_NULL_DATA').map(i => i.scriptPubKeyAsm);
 
             // this.manager.setActiveAccountId(index);
@@ -88,6 +91,10 @@ export class AccountTransactionComponent implements OnInit, OnDestroy {
 
     openExplorer(txid: string) {
         chrome.tabs.create({ url: `${this.env.instanceExplorerUrl}/${this.network.id}/explorer/transaction/${txid}`, active: false });
+    }
+
+    openExplorerBlock(blockhash: string) {
+        chrome.tabs.create({ url: `${this.env.instanceExplorerUrl}/${this.network.id}/explorer/block/${blockhash}`, active: false });
     }
 
     ngOnDestroy(): void {

@@ -18,6 +18,13 @@
 
 /* You can add global styles to this file, and also import other style files */
 
+.mat-buttonSuccess {
+  background-color: #ffff00;
+  color: #000;
+}
+
+// <button mat-raised-button color="buttonSuccess">Success</button>
+
 html,
 body {
   padding: 0;
@@ -54,7 +61,6 @@ mat-tab-group {
 }
 
 .sidenav-left {
-  
 }
 
 .sidenav-right {
@@ -211,6 +217,10 @@ select {
 }
 
 .positive-color {
+  color: #24c276;
+}
+
+.dark-theme .positive-color {
   color: #69f0ae;
 }
 
@@ -220,6 +230,15 @@ select {
 
 .other-color {
   color: #da9d1a;
+}
+
+.label {
+  // color: mat-color($text-primary, 1);
+  color: gray;
+}
+
+.dark-theme .label {
+  color: silver;
 }
 
 .grid-row-label-value {

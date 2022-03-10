@@ -1,36 +1,40 @@
 <div class="page">
-    <h2>Transaction Details</h2>
 
-    <button class="half-width" mat-raised-button (click)="openExplorer(transaction.transactionHash)"
-        color="primary">Open in Block Explorer</button>
+    <mat-card class="example-card">
+        <mat-card-title>Transaction</mat-card-title>
+        <mat-card-content>
+            <p class="wrap"><span class="label">ID:</span> {{transaction.transactionHash}}
+                <!-- <button class="copy-button" mat-icon-button (click)="copy()">
+                <mat-icon>content_copy</mat-icon>
+            </button> -->
+            </p>
+            <p><span class="label">Confirmations:</span> {{currentNetworkStatus.blockSyncHeight - transaction.details.blockIndex}}</p>
+            <p><span class="label">Fee:</span> {{transaction.details.fee | amount}}</p>
+            <p *ngIf="transaction.details.data.length > 0">
+                <span class="label">Data:</span><br>
+                <span class="wrap" *ngFor="let data of transaction.details.data;">{{data}}</span>
+            </p>
+        </mat-card-content>
+        <mat-card-actions>
+            <button mat-raised-button color="primary" (click)="openExplorer(transaction.transactionHash)">Open in Block
+                Explorer</button>
+        </mat-card-actions>
+    </mat-card>
 
-    <br><br>
+    <br>
 
-    <p class="wrap">Transaction ID: {{transaction.transactionHash}}
-        <!-- <button class="copy-button" mat-icon-button (click)="copy()">
-        <mat-icon>content_copy</mat-icon>
-    </button> -->
-    </p>
+    <mat-card class="example-card">
+        <mat-card-title>Block</mat-card-title>
+        <mat-card-content>
+            <p class="wrap"><span class="label">Block Hash:</span> {{transaction.details.blockHash}}</p>
+            <p><span class="label">Block Height:</span> {{transaction.details.blockIndex}}</p>
+            <p><span class="label">Inputs</span> ({{transaction.details.inputs.length}}): {{transaction.details.inputsAmount | amount}}</p>
+            <p><span class="label">Outputs</span> ({{transaction.details.outputs.length}}): {{transaction.details.outputsAmount | amount}}</p>
+        </mat-card-content>
+        <mat-card-actions>
+            <button mat-raised-button color="primary" (click)="openExplorerBlock(transaction.details.blockHash)">Open in
+                Block Explorer</button>
+        </mat-card-actions>
+    </mat-card>
 
-    <p>Confirmations: {{currentNetworkStatus.blockSyncHeight - transaction.details.blockIndex}}</p>
-
-    <!-- This confirmation is provided by the API and is not updated after original retreival. -->
-    <!-- <p>Confirmations: {{transaction.confirmations}}</p> -->
-
-    <p>Block Height: {{transaction.details.blockIndex}}</p>
-
-    <p class="wrap">Block Hash: {{transaction.details.blockHash}}</p>
-
-    <p>Inputs ({{transaction.details.inputs.length}}): {{transaction.details.inputsAmount | amount}}</p>
-
-    <p>Outputs ({{transaction.details.outputs.length}}): {{transaction.details.outputsAmount | amount}}</p>
-
-    <p>Fees: {{transaction.details.fees | amount}}</p>
-
-    Data:<br>
-    <p class="wrap" *ngFor="let data of transaction.details.data;">{{data}}</p>
-
-    <!-- <p class="mat-caption network-info">
-        This address can only be used to receive {{network.symbol}} on the {{network.name}} network.
-    </p> -->
 </div>
