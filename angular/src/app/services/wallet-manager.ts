@@ -501,8 +501,15 @@ export class WalletManager {
     }
 
     async setActiveAccount(id: string) {
+        console.log('!!! setActiveAccount: ', id);
+
         if (this.activeWallet.activeAccountId != id) {
             this.activeWallet.activeAccountId = id;
+
+            // Make sure we persist the active account index or the UI will update (revert) to
+            // previous when indexing has completed.
+            await this.store.save();
+
             this.activeAccountSubject.next(this.activeAccount);
             return true;
         }
