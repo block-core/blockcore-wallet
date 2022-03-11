@@ -102,17 +102,22 @@ chrome.alarms.onAlarm.addListener(async (alarm: chrome.alarms.Alarm) => {
         }
     } else if (alarm.name === 'index') {
         const manager = new BackgroundManager();
-        await manager.runIndexer();
+        const changes = await manager.runIndexer();
 
-        chrome.runtime.sendMessage({
-            type: 'indexed',
-            ext: 'blockcore',
-            source: 'background',
-            target: 'tabs',
-            host: location.host
-        }, function (response) {
-            console.log('Extension:sendMessage:response:indexed:', response);
-        });
+        if (changes) {
+            chrome.runtime.sendMessage({
+                type: 'indexed',
+                ext: 'blockcore',
+                source: 'background',
+                target: 'tabs',
+                host: location.host
+            }, function (response) {
+                console.log('Extension:sendMessage:response:indexed:', response);
+            });
+        } else {
+            console.log('Indexer found zero changes.');
+        }
+
     }
 });
 
@@ -146,17 +151,21 @@ chrome.runtime.onMessage.addListener(async (message: Message, sender, sendRespon
                 response = '545555';
 
                 const manager = new BackgroundManager();
-                await manager.runIndexer();
+                const changes = await manager.runIndexer();
 
-                chrome.runtime.sendMessage({
-                    type: 'indexed',
-                    ext: 'blockcore',
-                    source: 'background',
-                    target: 'tabs',
-                    host: location.host
-                }, function (response) {
-                    console.log('Extension:sendMessage:response:indexed:', response);
-                });
+                if (changes) {
+                    chrome.runtime.sendMessage({
+                        type: 'indexed',
+                        ext: 'blockcore',
+                        source: 'background',
+                        target: 'tabs',
+                        host: location.host
+                    }, function (response) {
+                        console.log('Extension:sendMessage:response:indexed:', response);
+                    });
+                } else {
+                    console.log('Indexer found zero changes.');
+                }
 
                 break;
             }

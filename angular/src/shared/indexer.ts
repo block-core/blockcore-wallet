@@ -70,6 +70,7 @@ export class IndexerBackgroundService {
 
     /** This is the main process that runs the indexing and persists the state. */
     async process() {
+        let changes = false;
         const settings = this.settingStore.get();
         const wallets = this.walletStore.getWallets();
 
@@ -91,16 +92,21 @@ export class IndexerBackgroundService {
                     // If there are no addressState for this, create one now.
                     if (!addressState) {
                         addressState = { address: address.address, offset: 0, transactions: [] };
+                        changes = true;
                         // this.addressStore.set(address.address, addressState);
                     }
 
-                    await this.processAddress(indexerUrl, addressState);
+                    const hadChanges = await this.processAddress(indexerUrl, addressState);
 
-                    // Set the address state again after we've updated it.
-                    this.addressStore.set(address.address, addressState);
+                    if (hadChanges) {
+                        changes = true;
 
-                    // After processing, make sure we save the address state.
-                    await this.addressStore.save();
+                        // Set the address state again after we've updated it.
+                        this.addressStore.set(address.address, addressState);
+
+                        // After processing, make sure we save the address state.
+                        await this.addressStore.save();
+                    }
 
                     // If we are on the last address, check if we should add new one.
                     if ((k + 1) >= account.state.receive.length) {
@@ -108,6 +114,7 @@ export class IndexerBackgroundService {
                         if (addressState.transactions.length > 0) {
                             const nextAddress = this.addressManager.getAddress(account, 0, address.index + 1);
                             account.state.receive.push(nextAddress);
+                            changes = true;
                         }
                     }
                 }
@@ -120,16 +127,21 @@ export class IndexerBackgroundService {
                     // If there are no addressState for this, create one now.
                     if (!addressState) {
                         addressState = { address: address.address, offset: 0, transactions: [] };
+                        changes = true;
                         // this.addressStore.set(address.address, addressState);
                     }
 
-                    await this.processAddress(indexerUrl, addressState);
+                    const hadChanges = await this.processAddress(indexerUrl, addressState);
 
-                    // Set the address state again after we've updated it.
-                    this.addressStore.set(address.address, addressState);
+                    if (hadChanges) {
+                        changes = true;
 
-                    // After processing, make sure we save the address state.
-                    await this.addressStore.save();
+                        // Set the address state again after we've updated it.
+                        this.addressStore.set(address.address, addressState);
+
+                        // After processing, make sure we save the address state.
+                        await this.addressStore.save();
+                    }
 
                     // If we are on the last address, check if we should add new one.
                     if ((k + 1) >= account.state.change.length) {
@@ -137,6 +149,7 @@ export class IndexerBackgroundService {
                         if (addressState.transactions.length > 0) {
                             const nextAddress = this.addressManager.getAddress(account, 1, address.index + 1);
                             account.state.change.push(nextAddress);
+                            changes = true;
                         }
                     }
                 }
@@ -148,6 +161,8 @@ export class IndexerBackgroundService {
             // When all accounts has been processes, saved the wallet.
             await this.walletStore.save();
         }
+
+        return changes;
     }
 
     watchAddress(address: string, account: Account) {
@@ -231,6 +246,8 @@ export class IndexerBackgroundService {
     }
 
     async processAddress(indexerUrl: string, state: AddressState) {
+        let changes = false;
+
         try {
             let nextLink = `/api/query/address/${state.address}/transactions?offset=${state.offset}&limit=${this.limit}`;
             const date = new Date().toISOString();
@@ -273,6 +290,8 @@ export class IndexerBackgroundService {
                     // replace the item at the right index for each page. This should update with new metadata,
                     // if there is anything new.
                     for (let j = 0; j < transactions.length; j++) {
+                        changes = true;
+
                         const transaction: Transaction = transactions[j];
                         const transactionId = transaction.transactionHash;
                         const index = state.transactions.indexOf(transactionId);
@@ -342,6 +361,8 @@ export class IndexerBackgroundService {
             // TODO: FIX THIS!!
             // this.communication.sendToAll('error', error);
         }
+
+        return changes;
     }
 
 

@@ -35,7 +35,12 @@ export class BackgroundManager {
         // Get what addresses to watch from local storage.
         // globalThis.chrome.storage.local.get('')
         const indexer = new IndexerBackgroundService(settingStore, walletStore, addressStore, transactionStore, addressManager);
-        await indexer.process();
+        const changes = await indexer.process();
+
+        // If there are no changes, don't re-calculate the balance.
+        if (!changes) {
+            return false;
+        }
 
         console.log('INDEXER COMPLETED RUN!');
 
@@ -223,7 +228,6 @@ export class BackgroundManager {
             console.log(accountHistoryStore);
         }
 
-
-        
+        return true;
     }
 }
