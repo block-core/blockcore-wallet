@@ -19,11 +19,6 @@ globalThis.blockcore = {
             // console.log(response.farewell);
         });
 
-        // chrome.runtime.sendMessage(extensionId, { message: 'buttonClicked' },
-        //     function () {
-        //         console.log('callback!! in provider!');
-        //     });
-
         chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
             console.log('onMessage (PROVIDER): ' + JSON.stringify(request));
             sendResponse({ fromcontent: "This message is from provider.js" });
@@ -32,11 +27,6 @@ globalThis.blockcore = {
     },
     getAccounts: () => {
         console.log('Getting accounts!');
-
-        // chrome.runtime.sendMessage({ greeting: "hello" }, function (response) {
-        //     console.log(response.farewell);
-        // });
-
     },
     on: (event, callback) => {
 

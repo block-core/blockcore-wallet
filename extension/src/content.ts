@@ -15,20 +15,6 @@ if (!globalThis.blockcore) {
   document.head.appendChild(script);
 }
 
-// chrome.runtime.onMessage.addListener((message, sender, respond) => {
-//   const handler = new Promise((resolve, reject) => {
-//     if (message) {
-//       resolve(`Hi from contentPage! You are currently on: ${window.location.href}`);
-//     } else {
-//       reject('request is empty.');
-//     }
-//   });
-
-//   handler.then(m => respond(m)).catch(error => respond(error));
-
-//   return true;
-// });
-
 // listen for messages from the provider script
 globalThis.addEventListener('message', async message => {
 

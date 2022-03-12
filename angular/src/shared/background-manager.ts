@@ -29,9 +29,6 @@ export class BackgroundManager {
         const networkLoader = new NetworkLoader();
         const addressManager = new AddressManager(networkLoader);
 
-        // const lightWalletManager = new LightWalletManager(walletState.getWallets());
-        // lightWalletManager.getWallets();
-
         // Get what addresses to watch from local storage.
         // globalThis.chrome.storage.local.get('')
         const indexer = new IndexerBackgroundService(settingStore, walletStore, addressStore, transactionStore, addressManager);
@@ -149,18 +146,6 @@ export class BackgroundManager {
                             tx.calculatedValue = amount;
                             tx.calculatedAddress = externalOutputs.map(o => o.address).join(';');
                         }
-
-                        // if (t.entryType == 'send') {
-                        //     const amount = externalOutputs.map(x => x.balance).reduce((x: any, y: any) => x + y);
-                        //     tx.calculatedValue = amount;
-                        //     tx.calculatedAddress = externalOutputs.map(o => o.address).join('<br>');
-                        // }
-
-                        // if (t.entryType == 'receive') {
-                        //     const receivedAmount = internalOutputs.map(x => x.balance).reduce((x: any, y: any) => x + y);
-                        //     tx.calculatedAddress = internalOutputs.map(o => o.address).join('<br>');
-                        //     tx.calculatedValue = receivedAmount;
-                        // }
                     }
 
                     return tx;
