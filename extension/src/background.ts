@@ -1,11 +1,6 @@
 import { Message } from '../../angular/src/shared/interfaces';
 import { BackgroundManager } from '../../angular/src/shared/background-manager';
 
-// var Buffer = require('buffer/').Buffer  // note: the trailing slash is important!
-// import { Buffer } from 'buffer';
-// console.log(Buffer.from('anything', 'base64'));
-console.log('Extension: ServiceWorker script loaded');
-
 // Run when the browser has been fully exited and opened again.
 chrome.runtime.onStartup.addListener(async () => {
     console.log('Extension: onStartup');
@@ -121,18 +116,6 @@ chrome.alarms.onAlarm.addListener(async (alarm: chrome.alarms.Alarm) => {
     }
 });
 
-// chrome.runtime.onMessage.addListener((message, callback) => {
-//     const tabId = getForegroundTabId();
-//     if (message.data === "setAlarm") {
-//         chrome.alarms.create({ delayInMinutes: 5 })
-//     } else if (message.data === "runLogic") {
-//         chrome.scripting.executeScript({ file: 'logic.js', tabId });
-//     } else if (message.data === "changeColor") {
-//         chrome.scripting.executeScript(
-//             { func: () => document.body.style.backgroundColor = "orange", tabId });
-//     };
-// });
-
 chrome.runtime.onMessage.addListener(async (message: Message, sender, sendResponse) => {
     if (message.target !== 'background') {
         console.log('This message is not handled by the background logic.');
@@ -179,10 +162,4 @@ chrome.runtime.onMessage.addListener(async (message: Message, sender, sendRespon
     }
 
     sendResponse(response);
-
-    // if (message === 'hello') {
-    //   sendResponse({greeting: 'welcome!'})
-    // } else if (message === 'goodbye') {
-    //   chrome.runtime.Port.disconnect();
-    // }
 });
