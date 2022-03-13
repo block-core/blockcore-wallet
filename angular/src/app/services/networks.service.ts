@@ -1,6 +1,4 @@
 import { Injectable } from '@angular/core';
-import * as bip39 from 'bip39';
-import { Base64 } from 'js-base64';
 import { NetworkLoader } from '../../shared/network-loader';
 import { Network } from '../../shared/networks';
 import { Account, Wallet } from '../../shared/interfaces';

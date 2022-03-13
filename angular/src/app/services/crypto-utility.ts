@@ -2,7 +2,7 @@
 import * as bip39 from 'bip39';
 import { Base64 } from 'js-base64';
 import { payments } from '@blockcore/blockcore-js';
-import { BlockcoreIdentity, Identity, BlockcoreIdentityTools } from '@blockcore/identity';
+import { BlockcoreIdentity, BlockcoreIdentityTools } from '@blockcore/identity';
 import * as bs58 from 'bs58';
 import { Secp256k1KeyPair } from '@transmute/did-key-secp256k1';
 import { Injectable } from '@angular/core';

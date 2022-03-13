@@ -1,16 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
-import { UIState } from './ui-state.service';
-import { CommunicationService } from './communication.service';
-import { Account, AccountHistory, Action, Identity, Settings, State, Vault } from '../../shared/interfaces';
-import {
-    MatSnackBar,
-    MatSnackBarHorizontalPosition,
-    MatSnackBarVerticalPosition,
-} from '@angular/material/snack-bar';
+import { Account, AccountHistory } from '../../shared/interfaces';
 import { Network } from '../../shared/networks';
 import { SATOSHI_FACTOR } from '../shared/constants';
-import { AccountHistoryStore } from 'src/shared';
 
 @Injectable({
     providedIn: 'root'
@@ -46,19 +37,7 @@ export class SendService {
     }
 
     constructor(
-        private communication: CommunicationService,
-        private uiState: UIState,
-        private router: Router,
-        private accountHistoryStore: AccountHistoryStore,
-        private snackBar: MatSnackBar
     ) {
-        // this.communication.listen('transaction-sent', async (data: { transactionId: string, transactionHex: string }) => {
-        //     this.loading = false;
-        //     this.transactionId = data.transactionId;
-        //     this.transactionHex = data.transactionHex;
-        // });
-
-        
 
     }
 
@@ -66,12 +45,6 @@ export class SendService {
     setMax(amount: BigInt | number) {
         const maxAmountWithoutFee = Number(amount) - Number(this.feeAsSatoshi);
         this.amount = (maxAmountWithoutFee / SATOSHI_FACTOR).toPrecision(8);
-    }
-
-    send() {
-        this.loading = true;
-        // this.communication.send('account-send', { address: this.address, amount: this.amount, fee: this.fee });
-        this.router.navigate(['success']);
     }
 
     resetFee() {

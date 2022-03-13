@@ -38,6 +38,3 @@ export class ActionService {
         // this.communication.sendToAll('action-changed', this.state.action);
     }
 }
-
-
-

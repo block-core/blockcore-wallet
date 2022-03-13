@@ -1,10 +1,9 @@
 import { Injectable } from "@angular/core";
-import { Action } from "../../shared/interfaces";
 import { MINUTE } from "../shared/constants";
 import {
-    UIState, SecureStateService,
+    SecureStateService,
     CryptoUtility, DataSyncService, IndexerService, NetworkLoader,
-    CommunicationService, SettingsService, WalletManager, NetworkStatusService
+    CommunicationService, WalletManager, NetworkStatusService
 } from "./";
 import { StateService } from "./state.service";
 
@@ -59,18 +58,4 @@ export class AppManager {
             }
         }, MINUTE);
     }
-
-    // broadcastState(initial: boolean = false) {
-    //     const currentState: State = {
-    //         action: this.state.action,
-    //         persisted: this.state.persisted,
-    //         unlocked: this.walletManager.unlocked,
-    //         store: this.state.store
-    //     }
-
-    //     const eventName = initial ? 'state-loaded' : 'state-changed';
-
-    //     // Send new state to UI instances.
-    //     this.communication.sendToAll(eventName, currentState);
-    // }
 }
