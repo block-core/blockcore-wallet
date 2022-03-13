@@ -1,6 +1,6 @@
 import { HDKey } from "micro-bip32";
 import { mnemonicToSeedSync } from 'micro-bip39';
-import { Account, AccountUnspentTransactionOutput, Address, Logger, UnspentTransactionOutput, Wallet } from "../../shared/interfaces";
+import { Account, AccountUnspentTransactionOutput, Address, Logger, Wallet } from "../../shared/interfaces";
 import { MINUTE } from "../shared/constants";
 import { Psbt } from '@blockcore/blockcore-js';
 import * as ecc from 'tiny-secp256k1';

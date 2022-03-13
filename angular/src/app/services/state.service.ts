@@ -50,14 +50,4 @@ export class StateService {
         await this.walletStore.load();
         await this.accountHistoryStore.load();
     }
-
-    // async load() {
-    //     debugger;
-    //     for (let i = 0; i < this.stores.length; i++) {
-    //         const store = this.stores[i];
-    //         await store.load();
-    //     }
-
-    //     console.log('Stores:', this.stores);
-    // }
 }

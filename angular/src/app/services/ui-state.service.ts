@@ -1,10 +1,7 @@
-import { Injectable, NgZone } from '@angular/core';
-import { Action, AppState, Persisted, Store, Wallet } from '../../shared/interfaces';
-import { Router } from '@angular/router';
-import { CommunicationService } from './communication.service';
+import { Injectable } from '@angular/core';
+import { Action, AppState, Persisted } from '../../shared/interfaces';
 import { ReplaySubject, Subject } from 'rxjs';
 import { Network } from '../../shared/networks';
-import { SecureStateService } from './secure-state.service';
 import { UIStore } from 'src/shared';
 
 declare const VERSION: string;
@@ -14,13 +11,8 @@ declare const VERSION: string;
 })
 export class UIState {
     constructor(
-        private communication: CommunicationService,
-        private router: Router,
-        private secure: SecureStateService,
-        private store: UIStore,
-        private ngZone: NgZone) {
+        private store: UIStore) {
         console.log('Version: ' + VERSION);
-
     }
 
     async save() {
@@ -36,18 +28,6 @@ export class UIState {
     get persisted(): AppState {
         return this.store.get();
     }
-
-    // persisted: Persisted = {
-    //     wallets: [] as Wallet[],
-    //     previousWalletId: null
-    // };
-
-    // store: Store = {
-    //     identities: [],
-    //     cache: {
-    //         identities: []
-    //     }
-    // };
 
     showBackButton = false;
 
