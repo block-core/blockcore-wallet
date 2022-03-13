@@ -1,7 +1,10 @@
 import { Component, ChangeDetectorRef, OnInit, OnDestroy, Renderer2, Inject } from '@angular/core';
-import { UIState, CryptoService, CommunicationService, AppManager, SecureStateService, WalletManager, EnvironmentService, NetworksService, SettingsService, NetworkStatusService } from '../services';
-import { ActivatedRoute, Data, NavigationEnd, Params, Router } from '@angular/router';
-import * as secp from "@noble/secp256k1";
+import {
+  UIState, CommunicationService, AppManager, SecureStateService,
+  WalletManager, EnvironmentService, NetworksService,
+  SettingsService, NetworkStatusService
+} from '../services';
+import { ActivatedRoute, Data, Params, Router } from '@angular/router';
 import { Action } from '../../shared/interfaces';
 import { TranslateService } from '@ngx-translate/core';
 import { DOCUMENT, Location } from '@angular/common'

@@ -1,7 +1,7 @@
 import { Component, ChangeDetectorRef, OnInit, OnDestroy } from '@angular/core';
 import { CryptoService, UIState } from '../services';
 import { Router } from '@angular/router';
-import { CommunicationService, NetworkStatusService, SecureStateService, WalletManager } from '../services';
+import { CommunicationService, SecureStateService, WalletManager } from '../services';
 
 @Component({
   selector: 'app-home',

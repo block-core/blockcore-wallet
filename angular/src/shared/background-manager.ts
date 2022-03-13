@@ -39,11 +39,9 @@ export class BackgroundManager {
             return false;
         }
 
-        console.log('INDEXER COMPLETED RUN!');
-
-        console.log(walletStore);
-        console.log(addressStore);
-        console.log(transactionStore);
+        // console.log(walletStore);
+        // console.log(addressStore);
+        // console.log(transactionStore);
 
         // Then calculate the balance.
         const wallets = walletStore.all();
@@ -59,30 +57,15 @@ export class BackgroundManager {
             for (let j = 0; j < accounts.length; j++) {
                 const account = accounts[j];
 
-                console.log('account:', account);
-
                 const receive = account.state.receive; // .flatMap(i => i.unspent).filter(i => i !== undefined);
                 const change = account.state.change; // .flatMap(i => i.unspent).filter(i => i !== undefined);
                 const addressesList = [...receive, ...change];
                 const addresses = addressesList.flatMap(a => a.address);
 
-                console.log('addresses:', addresses);
-
                 const addressStatesInThisAccount = addressStates.filter(a => addresses.indexOf(a.address) > -1);
-
-                console.log('addressStatesInThisAccount:', addressStatesInThisAccount);
-
                 const transactionHashesInAccount = addressStatesInThisAccount.flatMap(a => a.transactions);
-
-                console.log('transactionHashesInAccount:', transactionHashesInAccount);
-
                 var uniqueTransactionHashes = Array.from(new Set(transactionHashesInAccount));
-
-                console.log('uniqueTransactionHashes:', uniqueTransactionHashes);
-
                 const transactionsInThisAccount = transactions.filter(a => uniqueTransactionHashes.indexOf(a.transactionHash) > -1);
-
-                console.log('transactionsInThisAccount:', transactionsInThisAccount);
 
                 // Sort the transaction, the array is by-ref so it will sort the original values. Sort the unconfirmed on top.
                 transactionsInThisAccount.sort((a: any, b: any) => {
@@ -93,10 +76,7 @@ export class BackgroundManager {
                     }
                 });
 
-                console.log('sortedTransactions:', transactionsInThisAccount);
-
                 const accountHistory = transactionsInThisAccount.map(t => {
-                    // const tx = t as TransactionHistory;
                     const tx = {} as TransactionHistory | any;
 
                     tx.blockIndex = t.blockIndex;
@@ -151,8 +131,6 @@ export class BackgroundManager {
                     return tx;
                 });
 
-                console.log('accountHistory:', accountHistory);
-
                 let utxos: AccountUnspentTransactionOutput[] = [];
 
                 // Loop through the transactions by looking at the oldest first.
@@ -182,8 +160,6 @@ export class BackgroundManager {
                     }
                 }
 
-                console.log('UTXOs:', utxos);
-
                 // .reduce on empty array will throw error in the service worker.
                 let balanceConfirmed = 0;
                 const filteredConfirmed = utxos.filter(t => !t.unconfirmed);
@@ -197,9 +173,6 @@ export class BackgroundManager {
                     balanceUnconfirmed = filteredUnconfirmed.reduce((a, b) => a + b.balance, 0);
                 }
 
-                console.log('balanceConfirmed:', balanceConfirmed);
-                console.log('balanceUnconfirmed:', balanceUnconfirmed);
-
                 accountHistoryStore.set(account.identifier, {
                     history: accountHistory,
                     unspent: utxos,
@@ -209,8 +182,6 @@ export class BackgroundManager {
 
                 await accountHistoryStore.save();
             }
-
-            console.log(accountHistoryStore);
         }
 
         return true;
