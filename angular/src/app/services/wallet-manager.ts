@@ -139,9 +139,7 @@ export class WalletManager {
         tx.setVersion(1); // Lock-time is not used so set to 1 (defaults to 2).
         tx.setLocktime(0); // These are defaults. This line is not needed.
 
-        // const unspentReceive = account.state.receive.flatMap(i => i.unspent).filter(i => i !== undefined);
-        // const unspentChange = account.state.change.flatMap(i => i.unspent).filter(i => i !== undefined);
-        // const unspent = [...unspentReceive, ...unspentChange];
+        console.log('unspent', unspent);
 
         // Collect unspent until we have enough amount.
         const requiredAmount = BigInt(amount) + BigInt(fee);
@@ -161,8 +159,6 @@ export class WalletManager {
 
         for (let i = 0; i < inputs.length; i++) {
             const input = inputs[i];
-
-            // const hex = await this.getTransactionHex(account, input.transactionHash);
             const hex = input.hex;
 
             affectedAddresses.push(input.address);
@@ -617,7 +613,7 @@ export class WalletManager {
         return (address.totalReceivedCount > 0n || address.totalSent > 0n || address.totalStakeCount > 0n || address.totalMineCount > 0n);
     }
 
-    async getAddress(account: Account, type: number, addresses: Address[]) {
+    private async getAddress(account: Account, type: number, addresses: Address[]) {
         const index = addresses.length - 1;
 
         // Get the last index without know transactions:

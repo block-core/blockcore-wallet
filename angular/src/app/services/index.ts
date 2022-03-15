@@ -9,7 +9,6 @@ export * from './environment.service';
 export * from './event-bus';
 export * from './features.service';
 export * from './icon.service';
-export * from './indexer';
 export * from './log-writer.service';
 export * from './logger.service';
 export * from '../../shared/network-loader';

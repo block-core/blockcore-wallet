@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { MINUTE } from "../shared/constants";
 import {
     SecureStateService,
-    CryptoUtility, DataSyncService, IndexerService, NetworkLoader,
+    CryptoUtility, DataSyncService, NetworkLoader,
     CommunicationService, WalletManager, NetworkStatusService
 } from "./";
 import { StateService } from "./state.service";
@@ -18,7 +18,6 @@ export class AppManager {
         public status: NetworkStatusService,
         public walletManager: WalletManager,
         public communication: CommunicationService,
-        public indexer: IndexerService,
         public networkLoader: NetworkLoader,
         public crypto: CryptoUtility,
         public secure: SecureStateService

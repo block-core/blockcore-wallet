@@ -289,6 +289,12 @@ interface Persisted {
 interface AddressWatchState
 {
     address: string;
+
+    accountId: string;
+
+    // index: number;
+
+    count: number;
 }
 
 interface AppState {

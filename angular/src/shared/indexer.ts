@@ -3,6 +3,7 @@ import { AddressState, Transaction } from '.';
 import { AddressManager } from './address-manager';
 import { AccountUnspentTransactionOutput, TransactionHistory } from './interfaces';
 import { AccountHistoryStore, AddressStore, SettingStore, TransactionStore, WalletStore } from './store';
+import { AddressWatchStore } from './store/address-watch-store';
 
 //const axios = require('axios');
 // In order to gain the TypeScript typings (for intellisense / autocomplete) while using CommonJS imports with require() use the following approach:
@@ -14,6 +15,12 @@ export class IndexerBackgroundService {
     private limit = 10;
     private finalized = 500;
     private confirmed = 1;
+
+    /** The height at which we will stop watching. */
+    private watch = 3;
+
+    /** The maximum number of times we'll attempt to watch an address before it's wiped from the watch list. */
+    private maxWatch = 500;
 
     constructor(
         private settingStore: SettingStore,
@@ -174,7 +181,7 @@ export class IndexerBackgroundService {
     }
 
     /** This is the main process that runs the indexing and persists the state. */
-    async process() {
+    async process(addressWatchStore: AddressWatchStore) {
         let changes = false;
         const settings = this.settingStore.get();
         const wallets = this.walletStore.getWallets();
@@ -188,9 +195,64 @@ export class IndexerBackgroundService {
                 const network = this.addressManager.getNetwork(account.networkType);
                 const indexerUrl = settings.indexer.replace('{id}', network.id.toLowerCase());
 
-                // Process first receive addresses until we've exhausted them.
-                for (let k = 0; k < account.state.receive.length; k++) {
-                    const address = account.state.receive[k];
+                if (addressWatchStore) {
+                    const addresses = addressWatchStore.all();
+
+                    console.log('Running Watcher', addresses);
+
+                    // Process first receive addresses until we've exhausted them.
+                    for (let k = 0; k < addresses.length; k++) {
+                        const address = addresses[k];
+                        address.count = address.count + 1;
+
+                        // Update the watch store with the count attempts.
+                        addressWatchStore.set(address.address, address);
+
+                        // Get the current state for this address:
+                        let addressState = this.addressStore.get(address.address);
+
+                        // If there are no addressState for this, create one now.
+                        if (!addressState) {
+                            addressState = { address: address.address, offset: 0, transactions: [] };
+                            changes = true;
+                        }
+
+                        const hadChanges = await this.processAddress(indexerUrl, addressState);
+
+                        if (hadChanges) {
+                            changes = true;
+
+                            // Set the address state again after we've updated it.
+                            this.addressStore.set(address.address, addressState);
+
+                            // After processing, make sure we save the address state.
+                            await this.addressStore.save();
+                        }
+
+                        // Get the latest transaction on the address and check if we should continue to watch it.
+                        if (addressState.transactions.length > 0) {
+                            const latestTransaction = addressState.transactions[addressState.transactions.length - 1];
+                            const transaction = this.transactionStore.get(latestTransaction);
+                            const continueWatching = (transaction.confirmations >= this.watch);
+
+                            // If we have observed the latest transaction to have more confirmations than the watch
+                            // height, we will remove it from the watch list.
+                            if (!continueWatching) {
+                                addressWatchStore.remove(address.address);
+                            }
+                        }
+
+                        // If we have watched this address for max amount, remove it.
+                        if (address.count >= this.maxWatch) {
+                            addressWatchStore.remove(address.address);
+                        }
+                    }
+
+                    // Get the last receive addresses.
+                    const address = account.state.receive[account.state.receive.length - 1];
+
+                    console.log('Running Watch on receive address', address);
+
                     // Get the current state for this address:
                     let addressState = this.addressStore.get(address.address);
 
@@ -198,7 +260,6 @@ export class IndexerBackgroundService {
                     if (!addressState) {
                         addressState = { address: address.address, offset: 0, transactions: [] };
                         changes = true;
-                        // this.addressStore.set(address.address, addressState);
                     }
 
                     const hadChanges = await this.processAddress(indexerUrl, addressState);
@@ -211,50 +272,138 @@ export class IndexerBackgroundService {
 
                         // After processing, make sure we save the address state.
                         await this.addressStore.save();
-                    }
 
-                    // If we are on the last address, check if we should add new one.
-                    if ((k + 1) >= account.state.receive.length) {
-                        // If there are addresses on the last checked address, add the next address.
+                        // When there is changes on the latest receive address, we'll make sure to add this address to our 
+                        // watch list. We will also add a new address to the account, which will be picked up on
+                        // next watch interval.
+                        addressWatchStore.set(address.address, {
+                            address: address.address,
+                            accountId: account.identifier,
+                            count: 0
+                        });
+
+                        // If there are transactions on the last checked address, add the next address.
                         if (addressState.transactions.length > 0) {
                             const nextAddress = this.addressManager.getAddress(account, 0, address.index + 1);
                             account.state.receive.push(nextAddress);
                             changes = true;
                         }
                     }
-                }
 
-                for (let k = 0; k < account.state.change.length; k++) {
-                    const address = account.state.change[k];
+
+
+                    // Get the last change addresses.
+                    const addressChange = account.state.change[account.state.change.length - 1];
+
+                    console.log('Running Watch on change address', addressChange);
+
                     // Get the current state for this address:
-                    let addressState = this.addressStore.get(address.address);
+                    let addressStateChange = this.addressStore.get(addressChange.address);
 
                     // If there are no addressState for this, create one now.
-                    if (!addressState) {
-                        addressState = { address: address.address, offset: 0, transactions: [] };
+                    if (!addressStateChange) {
+                        addressStateChange = { address: addressChange.address, offset: 0, transactions: [] };
                         changes = true;
-                        // this.addressStore.set(address.address, addressState);
                     }
 
-                    const hadChanges = await this.processAddress(indexerUrl, addressState);
+                    const hadChangesChange = await this.processAddress(indexerUrl, addressStateChange);
 
-                    if (hadChanges) {
+                    if (hadChangesChange) {
                         changes = true;
 
                         // Set the address state again after we've updated it.
-                        this.addressStore.set(address.address, addressState);
+                        this.addressStore.set(addressChange.address, addressStateChange);
 
                         // After processing, make sure we save the address state.
                         await this.addressStore.save();
-                    }
 
-                    // If we are on the last address, check if we should add new one.
-                    if ((k + 1) >= account.state.change.length) {
-                        // If there are addresses on the last checked address, add the next address.
-                        if (addressState.transactions.length > 0) {
-                            const nextAddress = this.addressManager.getAddress(account, 1, address.index + 1);
+                        // When there is changes on the latest receive address, we'll make sure to add this address to our 
+                        // watch list. We will also add a new address to the account, which will be picked up on
+                        // next watch interval.
+                        addressWatchStore.set(addressChange.address, {
+                            address: addressChange.address,
+                            accountId: account.identifier,
+                            count: 0
+                        });
+
+                        // If there are transactions on the last checked address, add the next address.
+                        if (addressStateChange.transactions.length > 0) {
+                            const nextAddress = this.addressManager.getAddress(account, 1, addressChange.index + 1);
                             account.state.change.push(nextAddress);
                             changes = true;
+                        }
+                    }
+
+                    // Persist the watch store.
+                    await addressWatchStore.save();
+                }
+                else {
+                    // Process first receive addresses until we've exhausted them.
+                    for (let k = 0; k < account.state.receive.length; k++) {
+                        const address = account.state.receive[k];
+                        // Get the current state for this address:
+                        let addressState = this.addressStore.get(address.address);
+
+                        // If there are no addressState for this, create one now.
+                        if (!addressState) {
+                            addressState = { address: address.address, offset: 0, transactions: [] };
+                            changes = true;
+                        }
+
+                        const hadChanges = await this.processAddress(indexerUrl, addressState);
+
+                        if (hadChanges) {
+                            changes = true;
+
+                            // Set the address state again after we've updated it.
+                            this.addressStore.set(address.address, addressState);
+
+                            // After processing, make sure we save the address state.
+                            await this.addressStore.save();
+                        }
+
+                        // If we are on the last address, check if we should add new one.
+                        if ((k + 1) >= account.state.receive.length) {
+                            // If there are transactions on the last checked address, add the next address.
+                            if (addressState.transactions.length > 0) {
+                                const nextAddress = this.addressManager.getAddress(account, 0, address.index + 1);
+                                account.state.receive.push(nextAddress);
+                                changes = true;
+                            }
+                        }
+                    }
+
+                    for (let k = 0; k < account.state.change.length; k++) {
+                        const address = account.state.change[k];
+                        // Get the current state for this address:
+                        let addressState = this.addressStore.get(address.address);
+
+                        // If there are no addressState for this, create one now.
+                        if (!addressState) {
+                            addressState = { address: address.address, offset: 0, transactions: [] };
+                            changes = true;
+                        }
+
+                        const hadChanges = await this.processAddress(indexerUrl, addressState);
+
+                        if (hadChanges) {
+                            changes = true;
+
+                            // Set the address state again after we've updated it.
+                            this.addressStore.set(address.address, addressState);
+
+                            // After processing, make sure we save the address state.
+                            await this.addressStore.save();
+                        }
+
+                        // If we are on the last address, check if we should add new one.
+                        if ((k + 1) >= account.state.change.length) {
+                            // If there are transactions on the last checked address, add the next address.
+                            if (addressState.transactions.length > 0) {
+                                const nextAddress = this.addressManager.getAddress(account, 1, address.index + 1);
+                                account.state.change.push(nextAddress);
+                                changes = true;
+                            }
                         }
                     }
                 }
@@ -375,10 +524,9 @@ export class IndexerBackgroundService {
                             state.offset = offset + (j + 1);
                         }
 
-                        const transactionInfo = this.transactionStore.get(transactionId);
+                        // const transactionInfo = this.transactionStore.get(transactionId);
 
-                        // If the transaction is not stored yet, query additional data then save it to the store.
-                        if (!transactionInfo) {
+                        if (!transaction.hex) {
                             transaction.hex = await this.getTransactionHex(transactionId, indexerUrl);
                         }
 
