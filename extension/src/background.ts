@@ -202,8 +202,23 @@ function watch() {
     // Do not run the watcher when the indexer is running.
     if (!indexing) {
         const manager = new BackgroundManager();
-        manager.runWatcher().then(data => {
+        manager.runWatcher().then(changes => {
             console.log('Watcher finished...');
+
+            if (changes) {
+                chrome.runtime.sendMessage({
+                    type: 'indexed',
+                    ext: 'blockcore',
+                    source: 'background',
+                    target: 'tabs',
+                    host: location.host
+                }, function (response) {
+                    console.log('Extension:sendMessage:response:indexed:', response);
+                });
+            }
+            else {
+                console.log('Watcher found zero changes.');
+            }
         });
     }
 }
