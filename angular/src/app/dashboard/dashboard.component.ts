@@ -1,7 +1,7 @@
 import { Component, ChangeDetectorRef, OnInit, OnDestroy } from '@angular/core';
 import {
   CryptoService, UIState, FeatureService, LoggerService, NetworksService,
-  NetworkStatusService, DebugLogService, WalletManager, SecureStateService
+  NetworkStatusService, DebugLogService, WalletManager, SecureStateService, CommunicationService
 } from '../services';
 import { ActivatedRoute, Router } from '@angular/router';
 import { copyToClipboard } from '../shared/utilities';
@@ -39,6 +39,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     private router: Router,
     private logger: LoggerService,
     private network: NetworksService,
+    private communication: CommunicationService,
     public walletManager: WalletManager,
     private secure: SecureStateService,
     private activatedRoute: ActivatedRoute,
@@ -110,7 +111,14 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   async runIndexer() {
-    const manager = new BackgroundManager();
-    await manager.runIndexer();
+    // const manager = new BackgroundManager();
+    // await manager.runIndexer();
+    const msg = this.communication.createMessage('index', {}, 'background');
+    this.communication.send(msg);
+  }
+
+  async runWatcher() {
+    const msg = this.communication.createMessage('watch', {}, 'background');
+    this.communication.send(msg);
   }
 }

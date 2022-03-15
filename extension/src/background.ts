@@ -1,6 +1,9 @@
 import { Message } from '../../angular/src/shared/interfaces';
 import { BackgroundManager } from '../../angular/src/shared/background-manager';
 
+let indexing = false;
+let watching = false;
+
 // Run when the browser has been fully exited and opened again.
 chrome.runtime.onStartup.addListener(async () => {
     console.log('Extension: onStartup');
@@ -23,7 +26,7 @@ chrome.runtime.onInstalled.addListener(async ({ reason }) => {
     // that might have received transactions after used the first time.
     // This will be called at a slow interval, time to be decided later.
     chrome.alarms.get('index', a => {
-        if (!a) chrome.alarms.create('index', { periodInMinutes: 1 });
+        if (!a) chrome.alarms.create('index', { periodInMinutes: 10 });
     });
 
     if (reason === 'install') {
@@ -60,7 +63,6 @@ chrome.runtime.onInstalled.addListener(async ({ reason }) => {
 });
 
 chrome.alarms.onAlarm.addListener(async (alarm: chrome.alarms.Alarm) => {
-
     console.log('onAlarm', alarm);
 
     if (alarm.name === 'periodic') {
@@ -96,23 +98,30 @@ chrome.alarms.onAlarm.addListener(async (alarm: chrome.alarms.Alarm) => {
             }
         }
     } else if (alarm.name === 'index') {
-        const manager = new BackgroundManager();
-        const changes = await manager.runIndexer();
+        if (!indexing) {
+            indexing = true;
 
-        if (changes) {
-            chrome.runtime.sendMessage({
-                type: 'indexed',
-                ext: 'blockcore',
-                source: 'background',
-                target: 'tabs',
-                host: location.host
-            }, function (response) {
-                console.log('Extension:sendMessage:response:indexed:', response);
-            });
+            const manager = new BackgroundManager();
+            const changes = await manager.runIndexer();
+
+            indexing = false;
+
+            if (changes) {
+                chrome.runtime.sendMessage({
+                    type: 'indexed',
+                    ext: 'blockcore',
+                    source: 'background',
+                    target: 'tabs',
+                    host: location.host
+                }, function (response) {
+                    console.log('Extension:sendMessage:response:indexed:', response);
+                });
+            } else {
+                console.log('Indexer found zero changes.');
+            }
         } else {
-            console.log('Indexer found zero changes.');
+            console.log('Indexing is already running. Skipping for now.');
         }
-
     }
 });
 
@@ -130,24 +139,47 @@ chrome.runtime.onMessage.addListener(async (message: Message, sender, sendRespon
     // Do we want to allow events to be triggered from the web app -> provider -> content and into background script?
     try {
         switch (message.type) {
-            case 'index': {
-                response = '545555';
-
-                const manager = new BackgroundManager();
-                const changes = await manager.runIndexer();
-
-                if (changes) {
-                    chrome.runtime.sendMessage({
-                        type: 'indexed',
-                        ext: 'blockcore',
-                        source: 'background',
-                        target: 'tabs',
-                        host: location.host
-                    }, function (response) {
-                        console.log('Extension:sendMessage:response:indexed:', response);
-                    });
+            case 'watch': {
+                if (!watching) {
+                    watching = true;
+                    // Run watch every 15 second until the service worker is killed.
+                    watch();
+                    setInterval(watch, 15000);
+                    response = 'ok';
                 } else {
-                    console.log('Indexer found zero changes.');
+                    console.log('Watcher is already running.');
+                    response = 'busy';
+                }
+
+                break;
+            }
+            case 'index': {
+                console.log('received index message....', indexing);
+                if (!indexing) {
+                    indexing = true;
+                    response = 'ok';
+
+                    const manager = new BackgroundManager();
+                    const changes = await manager.runIndexer();
+
+                    indexing = false;
+
+                    if (changes) {
+                        chrome.runtime.sendMessage({
+                            type: 'indexed',
+                            ext: 'blockcore',
+                            source: 'background',
+                            target: 'tabs',
+                            host: location.host
+                        }, function (response) {
+                            console.log('Extension:sendMessage:response:indexed:', response);
+                        });
+                    } else {
+                        console.log('Indexer found zero changes.');
+                    }
+                } else {
+                    console.log('Indexing is already running. Skipping for now.');
+                    response = 'busy';
                 }
 
                 break;
@@ -163,3 +195,7 @@ chrome.runtime.onMessage.addListener(async (message: Message, sender, sendRespon
 
     sendResponse(response);
 });
+
+function watch() {
+    console.log('Watch...');
+}

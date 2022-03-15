@@ -286,6 +286,11 @@ interface Persisted {
     // activeAccountIndex: number
 }
 
+interface AddressWatchState
+{
+    address: string;
+}
+
 interface AppState {
     /** This is used to select the active wallet on extension startup. */
     previousWalletId: string | undefined | null;
@@ -473,5 +478,6 @@ export {
     AddressState,
     AppState,
     AccountHistory,
-    AccountUnspentTransactionOutput
+    AccountUnspentTransactionOutput,
+    AddressWatchState
 }

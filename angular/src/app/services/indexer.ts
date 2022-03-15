@@ -100,10 +100,6 @@ export class IndexerService {
         // }
     }
 
-    hasWork() {
-        return !this.q.isEmpty();
-    }
-
     async getTransactionHex(account: Account, txid: string) {
         const network = this.status.getNetwork(account.networkType);
         const indexerUrl = this.settings.values.indexer.replace('{id}', network.id.toLowerCase());

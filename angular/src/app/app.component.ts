@@ -76,11 +76,11 @@ export class AppComponent implements OnInit {
       }
     });
 
-    const msg = this.communication.createMessage('index');
-    const msg2 = this.communication.createMessage('hello_world');
+    // const msg = this.communication.createMessage('index');
+    // const msg2 = this.communication.createMessage('hello_world');
 
-    this.communication.send(msg);
-    this.communication.sendToTabs(msg2);
+    // this.communication.send(msg);
+    // this.communication.sendToTabs(msg2);
 
     // chrome.runtime.sendMessage({ onLoad: 'finished' }, function (response) {
     //   console.log('AppComponent:sendMessage:response:', response);

@@ -35,27 +35,22 @@ export class AppManager {
         // Then load the secure state.
         await this.secure.load();
 
-        // Reset the timer
+        // Reset the reset timer
         this.walletManager.resetTimer();
 
-        this.scheduledIndexer();
+        this.scheduledWatcher();
     };
 
-    scheduledIndexer() {
+    /** The watcher will query the latest receive/change address more frequently than full wallet scan. This method will
+     * send a message to the service worker (background) once every 5 minutes if the UI is still active, to ensure that the watch
+     * timer is active in the service worker. The service worker can be killed at any moment, so this ensures that it comes
+     * back to live. */
+    scheduledWatcher() {
         setInterval(() => {
-            // We will only iterate all wallets and schedule indexing if the indexer is currently finished with all previous tasks.
-            if (!this.indexer.hasWork()) {
-                const wallets = this.walletManager.getWallets();
+            this.communication.send(this.communication.createMessage('watch', {}, 'background'));
+        }, MINUTE * 5);
 
-                for (let i = 0; i < wallets.length; i++) {
-                    const wallet = wallets[i];
-
-                    for (let j = 0; j < wallet.accounts.length; j++) {
-                        const account = wallet.accounts[j];
-                        this.indexer.process(account, wallet, false);
-                    }
-                }
-            }
-        }, MINUTE);
+        // Activate the watch right away.
+        this.communication.send(this.communication.createMessage('watch', {}, 'background'));
     }
 }

@@ -76,6 +76,7 @@ import { AccountHistoryStore, AddressStore, NetworkStatusStore, TransactionStore
 import { ActionStore } from 'src/shared/store/action-store';
 import { SettingStore } from 'src/shared/store/setting-store';
 import { NetworkLoader } from './services';
+import { AddressWatchStore } from 'src/shared/store/address-watch-store';
 
 // required for AOT compilation
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
@@ -181,6 +182,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     UIStore,
     WalletStore,
     AccountHistoryStore,
+    AddressWatchStore,
     NetworkLoader
   ],
   bootstrap: [AppComponent]
