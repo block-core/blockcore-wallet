@@ -9,6 +9,10 @@ export class BackgroundManager {
 
     }
 
+    async runWatcher() {
+        
+    }
+
     async runIndexer() {
         // First update all the data.
         const settingStore = new SettingStore();

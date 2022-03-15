@@ -24,7 +24,9 @@ chrome.runtime.onInstalled.addListener(async ({ reason }) => {
     // The index alarm is used to perform background scanning of the 
     // whole address space of all wallets. This will check used addresses
     // that might have received transactions after used the first time.
-    // This will be called at a slow interval, time to be decided later.
+    // TODO: Log the last UI activation date and increase the period by the time since
+    // UI was last activated. If it's 1 hour since last time, set the periodInMinutes to 60.
+    // And if user has not used the extension UI in 24 hours, then set interval to 24 hours.
     chrome.alarms.get('index', a => {
         if (!a) chrome.alarms.create('index', { periodInMinutes: 10 });
     });
@@ -197,5 +199,11 @@ chrome.runtime.onMessage.addListener(async (message: Message, sender, sendRespon
 });
 
 function watch() {
-    console.log('Watch...');
+    // Do not run the watcher when the indexer is running.
+    if (!indexing) {
+        const manager = new BackgroundManager();
+        manager.runWatcher().then(data => {
+            console.log('Watcher finished...');
+        });
+    }
 }

@@ -1,56 +1,47 @@
-// import { Account, Address, IndexerApiStatus, Transaction, UnspentTransactionOutput, Wallet } from '../interfaces';
 import axiosRetry from 'axios-retry';
-import { Account, AccountState, Address, AddressState, IndexerApiStatus, Transaction, UnspentTransactionOutput, Wallet } from '.';
+import { Account, AddressState, Transaction } from '.';
 import { AddressManager } from './address-manager';
 import { AddressStore, SettingStore, TransactionStore, WalletStore } from './store';
-// import { Injectable } from '@angular/core';
-// import { NetworkStatusService } from './network-status.service';
-// import { LoggerService } from './logger.service';
-// import { WalletManager } from './wallet-manager';
-// import { UIState } from './ui-state.service';
-// import { SettingsService } from './settings.service';
 
 //const axios = require('axios');
 // In order to gain the TypeScript typings (for intellisense / autocomplete) while using CommonJS imports with require() use the following approach:
 const axios = require('axios').default;
 axiosRetry(axios, { retries: 3 });
 
-class Queue {
-    items: any[];
+// class Queue {
+//     items: any[];
 
-    constructor(...params: any[]) {
-        this.items = [...params];
-    }
+//     constructor(...params: any[]) {
+//         this.items = [...params];
+//     }
 
-    enqueue(item: any) {
-        this.items.push(item);
-    }
+//     enqueue(item: any) {
+//         this.items.push(item);
+//     }
 
-    dequeue() {
-        return this.items.shift();
-    }
+//     dequeue() {
+//         return this.items.shift();
+//     }
 
-    getItems() {
-        return this.items
-    }
+//     getItems() {
+//         return this.items
+//     }
 
-    isEmpty() {
-        return this.items.length == 0;
-    }
+//     isEmpty() {
+//         return this.items.length == 0;
+//     }
 
-    peek() {
-        return !this.isEmpty() ? this.items[0] : undefined;
-    }
+//     peek() {
+//         return !this.isEmpty() ? this.items[0] : undefined;
+//     }
 
-    length() {
-        return this.items.length;
-    }
-}
+//     length() {
+//         return this.items.length;
+//     }
+// }
 
 /** Service that handles queries against the blockchain indexer to retrieve data for accounts. Runs in the background. */
 export class IndexerBackgroundService {
-    private q = new Queue();
-    private a = new Map<string, { change: boolean, account: Account, addressEntry: Address, count: number }>();
     private limit = 10;
     private finalized = 500;
     private confirmed = 1;
@@ -62,10 +53,7 @@ export class IndexerBackgroundService {
         private transactionStore: TransactionStore,
         private addressManager: AddressManager,
     ) {
-        // On interval loop through all watched addresses.
-        // setInterval(async () => {
-        //     await this.watchIndexer();
-        // }, 15000);
+
     }
 
     /** This is the main process that runs the indexing and persists the state. */
@@ -165,45 +153,6 @@ export class IndexerBackgroundService {
         return changes;
     }
 
-    watchAddress(address: string, account: Account) {
-        // Check if the address is already watched.
-        const item = this.a.get(address);
-
-        if (item) {
-            return;
-        }
-
-        let addressEntry = account.state.receive.find(a => a.address == address)
-        let change = false;
-
-        if (!addressEntry) {
-            addressEntry = account.state.change.find(a => a.address == address);
-            change = true;
-        }
-
-        // Queue up a watcher that has the address, account it belongs to and balance at the time.
-        this.a.set(address, { change, account, addressEntry, count: 0 });
-    }
-
-    // process(account: Account, wallet: Wallet, force: boolean) {
-    //     const empty = this.q.isEmpty();
-
-    //     // Registers in queue processing of the account in specific wallet.
-    //     this.q.enqueue({ account, wallet, force });
-
-    //     // If the queue is empty, we'll schedule processing with a timeout.
-    //     // if (empty) {
-    //     //     // Queue up in one second
-    //     //     setTimeout(async () => {
-    //     //         await this.queryIndexer();
-    //     //     }, 1000);
-    //     // }
-    // }
-
-    hasWork() {
-        return !this.q.isEmpty();
-    }
-
     parseLinkHeader(linkHeader: string) {
         const sections = linkHeader.split(', ');
         //const links: Record<string, string> = { };
@@ -275,9 +224,9 @@ export class IndexerBackgroundService {
                 // const transactions = responseTransactions.data;
                 const links = this.parseLinkHeader(response.headers.get('link'));
 
-                const limit = response.headers.get('pagination-limit');
+                // const limit = response.headers.get('pagination-limit');
+                // const total = response.headers.get('pagination-total');
                 const offset = Number(response.headers.get('pagination-offset'));
-                const total = response.headers.get('pagination-total');
 
                 // Store the latest offset on the state.
                 state.offset = offset;
@@ -319,36 +268,14 @@ export class IndexerBackgroundService {
                         // Keep updating with transaction info details until finalized (and it will no longer be returned in the paged query):
                         transaction.details = await this.getTransactionInfo(transactionId, indexerUrl);
 
-                        // // If the transaction is not stored yet, query additional data then save it to the store.
-                        // if (!transactionInfo) {
-                        //     transaction.details = await this.getTransactionInfo(transactionId, indexerUrl);
-                        //     transaction.hex = await this.getTransactionHex(transactionId, indexerUrl);
-
-                        //     this.transactionStore.set(transactionId, transaction);
-                        // } else if (transaction.finalized) { // If the transaction is finalized, we don't bother query new status.
-                        //     transaction.details = await this.getTransactionInfo(transactionId, indexerUrl);
-                        // } else {
-                        //     // Transactions is not yet finalized, but we already have data for it. Query only for details and not hex.
-                        //     transaction.details = await this.getTransactionInfo(transactionId, indexerUrl);
-                        // }
-
                         // Update the store with latest info on the transaction.
                         this.transactionStore.set(transactionId, transaction);
                     }
-
-                    // TODO: Add support for paging.
-                    // Get the unspent outputs. We need to figure out how we should refresh this, as this might change depending on many factors.
-                    // const responseUnspentTransactions = await axios.get(`${indexerUrl}/api/query/address/${receiveAddress.address}/transactions/unspent?confirmations=0&offset=0&limit=20`);
-                    // const unspentTransactions: UnspentTransactionOutput[] = responseUnspentTransactions.data;
-                    // updatedReceiveAddress.unspent = unspentTransactions;
                 }
 
                 nextLink = links.next;
             }
 
-            // Persist the date we got this data:
-            // receiveAddress.retrieved = date;
-            // changes = true;
         } catch (error) {
             console.log('Failed to query indexer!!');
             console.error(error);
@@ -364,65 +291,6 @@ export class IndexerBackgroundService {
 
         return changes;
     }
-
-
-    // async getTransactionHex(account: Account, txid: string) {
-    //     const network = this.status.getNetwork(account.networkType);
-    //     const indexerUrl = this.settings.values.indexer.replace('{id}', network.id.toLowerCase());
-
-    //     const responseTransactionHex = await axios.get(`${indexerUrl}/api/query/transaction/${txid}/hex`);
-    //     return responseTransactionHex.data;
-    // }
-
-    // async updateWithTransactionInfo(transactions: Transaction[], indexerUrl: string) {
-    //     for (let i = 0; i < transactions.length; i++) {
-    //         const transaction = transactions[i];
-    //         const responseTransaction = await axios.get(`${indexerUrl}/api/query/transaction/${transaction.transactionHash}`);
-    //         transaction.details = responseTransaction.data;
-
-    //         const responseTransactionHex = await axios.get(`${indexerUrl}/api/query/transaction/${transaction.transactionHash}/hex`);
-    //         transaction.hex = responseTransactionHex.data;
-    //     }
-    // }
-
-    // async updateTransactionInfo(transaction: Transaction, indexerUrl: string) {
-    //     const responseTransaction = await axios.get(`${indexerUrl}/api/query/transaction/${transaction.transactionHash}`);
-    //     transaction.details = responseTransaction.data;
-
-    //     const responseTransactionHex = await axios.get(`${indexerUrl}/api/query/transaction/${transaction.transactionHash}/hex`);
-    //     transaction.hex = responseTransactionHex.data;
-    // }
-
-    // async broadcastTransaction(account: Account, txhex: string) {
-    //     // These two entries has been sent from
-    //     const network = this.status.getNetwork(account.networkType);
-    //     const indexerUrl = this.settings.values.indexer.replace('{id}', network.id.toLowerCase());
-
-    //     const response = await axios.post(`${indexerUrl}/api/command/send`, txhex, {
-    //         headers: {
-    //             'Content-Type': 'application/json-patch+json',
-    //         }
-    //     });
-    //     const data = response.data;
-
-    //     this.logger.debug('Should contain transaction ID if broadcast was OK:', data);
-
-    //     return data;
-    // }
-
-    // parseLinkHeader(linkHeader: string) {
-    //     const sections = linkHeader.split(', ');
-    //     //const links: Record<string, string> = { };
-    //     const links = { first: null as string, last: null as string, previous: null as string, next: null as string } as any;
-
-    //     sections.forEach(section => {
-    //         const key = section.substring(section.indexOf('rel="') + 5).replace('"', '');
-    //         const value = section.substring(section.indexOf('<') + 1, section.indexOf('>'));
-    //         links[key] = value;
-    //     });
-
-    //     return links;
-    // }
 
     // async queryIndexer() {
     //     this.logger.debug('queryIndexer executing.');

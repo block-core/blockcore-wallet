@@ -9,6 +9,7 @@ import { Observable } from 'rxjs';
 import { NetworkStatus } from '../../shared/interfaces';
 import { BackgroundManager } from 'src/shared/background-manager';
 import { AccountHistoryStore } from 'src/shared';
+import { AddressWatchStore } from 'src/shared/store/address-watch-store';
 
 export interface Section {
   name: string;
@@ -44,6 +45,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     private secure: SecureStateService,
     private activatedRoute: ActivatedRoute,
     private accountHistoryStore: AccountHistoryStore,
+    private addressWatchStore: AddressWatchStore,
     private debugLog: DebugLogService,
     private cd: ChangeDetectorRef) {
 
@@ -110,15 +112,19 @@ export class DashboardComponent implements OnInit, OnDestroy {
     copyToClipboard(entries);
   }
 
-  async runIndexer() {
+  runIndexer() {
     // const manager = new BackgroundManager();
     // await manager.runIndexer();
     const msg = this.communication.createMessage('index', {}, 'background');
     this.communication.send(msg);
   }
 
-  async runWatcher() {
+  runWatcher() {
     const msg = this.communication.createMessage('watch', {}, 'background');
     this.communication.send(msg);
+  }
+
+  async logWatcher() {
+    console.log(this.addressWatchStore);
   }
 }
