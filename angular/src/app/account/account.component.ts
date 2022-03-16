@@ -50,6 +50,7 @@ export class AccountComponent implements OnInit, OnDestroy {
 
     this.uiState.title = '';
     this.uiState.showBackButton = true;
+    this.uiState.backUrl = '/dashboard';
 
     if (!this.walletManager.hasAccounts) {
       this.router.navigateByUrl('/account/create');

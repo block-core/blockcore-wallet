@@ -233,17 +233,20 @@ export class IndexerBackgroundService {
                         if (addressState.transactions.length > 0) {
                             const latestTransaction = addressState.transactions[addressState.transactions.length - 1];
                             const transaction = this.transactionStore.get(latestTransaction);
-                            const continueWatching = (transaction.confirmations >= this.watch);
+                            const continueWatching = (transaction.confirmations <= this.watch);
 
                             // If we have observed the latest transaction to have more confirmations than the watch
                             // height, we will remove it from the watch list.
                             if (!continueWatching) {
+                                // Do not watch any longer ...
+                                console.log('Stopping to watch:', address);
                                 addressWatchStore.remove(address.address);
                             }
                         }
 
                         // If we have watched this address for max amount, remove it.
                         if (address.count >= this.maxWatch) {
+                            console.log('Stopping to watch (max watch reached):', address);
                             addressWatchStore.remove(address.address);
                         }
                     }
