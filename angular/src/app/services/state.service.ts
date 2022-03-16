@@ -1,4 +1,5 @@
 import { Injectable } from "@angular/core";
+import { BehaviorSubject, Observable } from "rxjs";
 import { ActionStore, AddressStore, NetworkStatusStore, SettingStore, TransactionStore, UIStore, WalletStore, AccountHistoryStore } from "src/shared";
 import { AddressWatchStore } from "src/shared/store/address-watch-store";
 
@@ -8,6 +9,12 @@ import { AddressWatchStore } from "src/shared/store/address-watch-store";
 export class StateService {
 
     private stores: any = [];
+
+    changedSubject: BehaviorSubject<StateService>;
+
+    public get changed$(): Observable<StateService> {
+        return this.changedSubject.asObservable();
+    }
 
     constructor(
         private addressStore: AddressStore,
@@ -20,6 +27,8 @@ export class StateService {
         private accountHistoryStore: AccountHistoryStore,
         private addressWatchStore: AddressWatchStore
     ) {
+        this.changedSubject = new BehaviorSubject<StateService>(this);
+
         this.stores.push(addressStore);
         this.stores.push(actionStore);
         this.stores.push(networkStatusStore);
@@ -53,5 +62,7 @@ export class StateService {
         await this.walletStore.load();
         await this.accountHistoryStore.load();
         await this.addressWatchStore.load();
+
+        this.changedSubject.next(this);
     }
 }
