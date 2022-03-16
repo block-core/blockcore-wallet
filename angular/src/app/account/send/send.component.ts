@@ -32,6 +32,7 @@ export class AccountSendComponent implements OnInit, OnDestroy {
         private snackBar: MatSnackBar) {
         // this.uiState.title = 'Receive Address';
         this.uiState.goBackHome = false;
+        this.uiState.backUrl = null;
 
         sendService.reset();
 
