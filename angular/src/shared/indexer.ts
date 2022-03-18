@@ -64,14 +64,12 @@ export class IndexerBackgroundService {
 
                 // Sort the transaction, the array is by-ref so it will sort the original values. Sort the unconfirmed on top.
                 transactionsInThisAccount.sort((a: any, b: any) => {
-                    if (a.unconfirmed === true) {
-                        return -1;
-                    } else {
-                        if (a.blockIndex > b.blockIndex) return -1; return 0;
-                    }
+                    // Return -1 to place the unconfirmed on top.
+                    if (a.blockIndex == 0) return -1;
+                    return a.blockIndex - b.blockIndex;
                 });
 
-                const accountHistory = transactionsInThisAccount.map(t => {
+                let accountHistory = transactionsInThisAccount.map(t => {
                     const tx = {} as TransactionHistory | any;
 
                     tx.blockIndex = t.blockIndex;
@@ -169,6 +167,17 @@ export class IndexerBackgroundService {
                 }
 
                 console.log('accountHistory:');
+                console.log(JSON.stringify(accountHistory));
+
+                // The UI during "unconfirmed" period will not sort properly, attempt to fix the issue by doing an 
+                // extra sort here before persisting. Also attempt to re-assign it.
+                accountHistory = accountHistory.sort((a: any, b: any) => {
+                    // Return -1 to place the unconfirmed on top.
+                    if (a.blockIndex == 0) return -1;
+                    return a.blockIndex - b.blockIndex;
+                });
+
+                console.log('accountHistory2:');
                 console.log(JSON.stringify(accountHistory));
 
                 this.accountHistoryStore.set(account.identifier, {

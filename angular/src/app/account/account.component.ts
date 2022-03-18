@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { UIState, CommunicationService, NetworksService, NetworkStatusService, SettingsService, WalletManager, StateService } from '../services';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -44,6 +44,7 @@ export class AccountComponent implements OnInit, OnDestroy {
     private networkStatusService: NetworkStatusService,
     private communication: CommunicationService,
     private activatedRoute: ActivatedRoute,
+    private readonly cd: ChangeDetectorRef,
     private state: StateService,
     private accountHistoryStore: AccountHistoryStore,
     public walletManager: WalletManager,
@@ -67,11 +68,6 @@ export class AccountComponent implements OnInit, OnDestroy {
 
       // this.manager.setActiveAccountId(index);
       await this.walletManager.setActiveAccount(accountIdentifier);
-    });
-
-    this.state.changed$.subscribe((state) => {
-      console.log('state changed, update account history!');
-      this.updateAccountHistory();
     });
   }
 
@@ -149,9 +145,16 @@ export class AccountComponent implements OnInit, OnDestroy {
 
     console.log(this.accountHistory);
     console.log(this.walletManager.activeAccount.identifier);
+
+    this.cd.detectChanges();
   }
 
   async ngOnInit() {
+    this.state.changed$.subscribe((state) => {
+      console.log('state changed, update account history!');
+      this.updateAccountHistory();
+    });
+
     this.updateNetworkStatus();
 
     this.subscriptions.push(this.walletManager.activeAccount$.subscribe((account) => {

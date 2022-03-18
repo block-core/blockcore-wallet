@@ -43,14 +43,14 @@ describe('SendService', () => {
         expect(service.total.toString()).toBe('9223372036800000001');
 
         service.fee = '0.1';
-        expect(service.fee.toString()).toBe('10000000');
+        expect(service.fee.toString()).toBe('0.1');
         service.setMax(Big(20010000000));
 
-        expect(service.amount.toString()).toBe('20000000000'); // Amount without fee.
+        expect(service.amount.toString()).toBe('200'); // Amount without fee.
         expect(service.total.toString()).toBe('20010000000'); // Amount with fee.
 
         service.resetFee();
-        expect(service.fee.toString()).toBe('10000');
+        expect(service.fee.toString()).toBe('0.0001');
 
         // Validate that we cannot use more than 8 decimals.
         try {
