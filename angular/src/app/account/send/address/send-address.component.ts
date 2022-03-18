@@ -57,8 +57,8 @@ export class AccountSendAddressComponent implements OnInit, OnDestroy {
     async ngOnInit() {
     }
 
-    fillMax(amount?: BigInt | number) {
-        this.sendService.setMax(<BigInt>amount);
+    fillMax(amount?: number) {
+        this.sendService.setMax(amount);
     }
 
     getErrorMessage() {

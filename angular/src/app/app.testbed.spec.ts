@@ -69,6 +69,8 @@ import { TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { HttpClient } from '@angular/common/http';
 import { NetworkStatusComponent } from './shared/network-status/network-status.component';
+import { AccountHistoryStore, ActionStore, AddressStore, AddressWatchStore, NetworkStatusStore, SettingStore, TransactionStore, UIStore, WalletStore } from 'src/shared';
+import { NetworkLoader } from './services';
 
 // required for AOT compilation
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
@@ -163,7 +165,18 @@ describe('AppComponent', () => {
         AccountSendSendingComponent,
         NetworkStatusComponent
       ],
-      providers: [],
+      providers: [
+        AddressStore,
+        ActionStore,
+        NetworkStatusStore,
+        SettingStore,
+        TransactionStore,
+        UIStore,
+        WalletStore,
+        AccountHistoryStore,
+        AddressWatchStore,
+        NetworkLoader
+      ],
     }).compileComponents();
   });
 

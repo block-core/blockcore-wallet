@@ -64,12 +64,13 @@ import { AccountSendConfirmComponent } from './account/send/confirm/send-confirm
 import { AccountSendSuccessComponent } from './account/send/success/send-success.component';
 import { AccountSendSendingComponent } from './account/send/sending/send-sending.component';
 import { LoggerModule, NgxLoggerLevel, TOKEN_LOGGER_WRITER_SERVICE } from "ngx-logger";
-import { LogWriterService, EnvironmentService } from './services';
+import { LogWriterService, EnvironmentService, NetworkLoader } from './services';
 import { TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { HttpClient } from '@angular/common/http';
 import { NetworkStatusComponent } from './shared/network-status/network-status.component';
 import { IEnvironment } from '../shared/interfaces';
+import { AccountHistoryStore, ActionStore, AddressStore, AddressWatchStore, NetworkStatusStore, SettingStore, TransactionStore, UIStore, WalletStore } from 'src/shared';
 
 // required for AOT compilation
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
@@ -180,7 +181,20 @@ describe('AppComponent', () => {
         AccountSendSendingComponent,
         NetworkStatusComponent
       ],
-      providers: [{ provide: EnvironmentService, useValue: mockEnvironment }],
+      providers: [{ provide: EnvironmentService, useValue: mockEnvironment },
+      
+        AddressStore,
+        ActionStore,
+        NetworkStatusStore,
+        SettingStore,
+        TransactionStore,
+        UIStore,
+        WalletStore,
+        AccountHistoryStore,
+        AddressWatchStore,
+        NetworkLoader
+      
+      ],
     }).compileComponents();
   });
 

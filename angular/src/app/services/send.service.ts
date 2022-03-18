@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Account, AccountHistory } from '../../shared/interfaces';
 import { Network } from '../../shared/networks';
 import { SATOSHI_FACTOR } from '../shared/constants';
+import Big from 'big.js';
 
 @Injectable({
     providedIn: 'root'
@@ -18,6 +19,10 @@ export class SendService {
     SATOSHI_FACTOR: any = SATOSHI_FACTOR;
     routingIndex: number;
     public accountHistory: AccountHistory;
+    factor = Math.pow(10, 8);
+
+    constructor() {
+    }
 
     /** The affected addresses for the current transaction. */
     addresses: string[];
@@ -26,25 +31,20 @@ export class SendService {
         return this.amountAsSatoshi + this.feeAsSatoshi;
     }
 
-    get amountAsSatoshi(): BigInt | any {
-        const amountAsDecimal = Number(this.amount) * SATOSHI_FACTOR;
-        return BigInt(amountAsDecimal);
+    get amountAsSatoshi(): number {
+        return new Big(this.amount).times(this.factor).toNumber();
     }
 
-    get feeAsSatoshi(): BigInt | any {
-        const feeAsDecimal = Number(this.fee) * SATOSHI_FACTOR;
-        return BigInt(feeAsDecimal);
-    }
-
-    constructor(
-    ) {
-
+    get feeAsSatoshi(): number {
+        return new Big(this.fee).times(this.factor).toNumber();
     }
 
     /** Used to specify maximum amount and fee will be subtracted from the supplied amount. */
-    setMax(amount: BigInt | number) {
-        const maxAmountWithoutFee = Number(amount) - Number(this.feeAsSatoshi);
-        this.amount = (maxAmountWithoutFee / SATOSHI_FACTOR).toPrecision(8);
+    setMax(amount: number) {
+        const maxAmountWithoutFee = amount - this.feeAsSatoshi;
+        const amountWithoutFee = new Big(this.fee).div(this.factor);
+        this.amount = amountWithoutFee.toPrecision(8);
+        // this.amount = (maxAmountWithoutFee / SATOSHI_FACTOR).toPrecision(8);
     }
 
     resetFee() {

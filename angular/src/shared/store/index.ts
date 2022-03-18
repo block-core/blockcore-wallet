@@ -6,3 +6,4 @@ export * from './transaction-store';
 export * from './ui-store';
 export * from './wallet-store';
 export * from './account-history-store';
+export * from './address-watch-store';
