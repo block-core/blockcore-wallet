@@ -168,6 +168,9 @@ export class IndexerBackgroundService {
                     balanceUnconfirmed = filteredUnconfirmed.reduce((a, b) => a + b.balance, 0);
                 }
 
+                console.log('accountHistory:');
+                console.log(JSON.stringify(accountHistory));
+
                 this.accountHistoryStore.set(account.identifier, {
                     history: accountHistory,
                     unspent: utxos,
@@ -529,6 +532,8 @@ export class IndexerBackgroundService {
 
                         // Keep updating with transaction info details until finalized (and it will no longer be returned in the paged query):
                         transaction.details = await this.getTransactionInfo(transactionId, indexerUrl);
+
+                        console.log('Transaction to be put in store:', transaction);
 
                         // Update the store with latest info on the transaction.
                         this.transactionStore.set(transactionId, transaction);

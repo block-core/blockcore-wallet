@@ -203,7 +203,7 @@ function watch() {
     if (!indexing) {
         const manager = new BackgroundManager();
         manager.runWatcher().then(changes => {
-            console.log('Watcher finished...');
+            console.log('Watcher finished...', changes);
 
             if (changes) {
                 chrome.runtime.sendMessage({

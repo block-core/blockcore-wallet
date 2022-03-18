@@ -37,6 +37,10 @@ export class BackgroundManager {
         const indexer = new IndexerBackgroundService(settingStore, walletStore, addressStore, transactionStore, addressManager, accountHistoryStore);
         const changes = await indexer.process(addressWatchStore);
 
+        if (changes) {
+            console.log('There was changes...');
+        }
+
         // If there are no changes, don't re-calculate the balance.
         if (!changes) {
             return false;

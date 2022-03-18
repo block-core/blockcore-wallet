@@ -5,37 +5,39 @@ import { CryptoUtility } from "src/app/services";
 import { STRAX } from "src/shared/networks";
 import {
     AddressState, Transaction, IndexerBackgroundService,
-    WalletStore, LightWalletManager, Persisted, TransactionStore, StateStore
+    WalletStore, Persisted, TransactionStore
 } from ".";
+import { AddressManager } from "./address-manager";
 import { Wallet } from "./interfaces";
+import { AccountHistoryStore, SettingStore } from "./store";
 import { AddressStore } from "./store/address-store";
 
 describe('SharedTests', () => {
     beforeEach(() => { });
 
-    it('Validate the StateStore', async () => {
-        const stateStore = new StateStore();
+    // it('Validate the StateStore', async () => {
+    //     const stateStore = new StateStore();
 
-        const data1 = await stateStore.get('key1');
-        expect(data1).toBeUndefined();
+    //     const data1 = await stateStore.get('key1');
+    //     expect(data1).toBeUndefined();
 
-        const state: Persisted = {
-            previousWalletId: '',
-            wallets: JSON.parse(testWallet)
-        };
+    //     const state: Persisted = {
+    //         previousWalletId: '',
+    //         wallets: JSON.parse(testWallet)
+    //     };
 
-        await stateStore.set('state', state);
+    //     await stateStore.set('state', state);
 
-        const retrievedState = await stateStore.get<any>('state');
+    //     const retrievedState = await stateStore.get<any>('state');
 
-        // Perform a deep scan between the instances:
-        expect(state).toEqual(retrievedState);
+    //     // Perform a deep scan between the instances:
+    //     expect(state).toEqual(retrievedState);
 
-        await stateStore.remove('state');
+    //     await stateStore.remove('state');
 
-        const data2 = await stateStore.get('state');
-        expect(data2).toBeUndefined();
-    });
+    //     const data2 = await stateStore.get('state');
+    //     expect(data2).toBeUndefined();
+    // });
 
     it('Validate WalletStore', async () => {
         const walletsArray = JSON.parse(testWallet) as Wallet[];
@@ -77,12 +79,13 @@ describe('SharedTests', () => {
 
         // const manager = new LightWalletManager(walletStore, addressStore, transactionStore);
 
-        const indexer = new IndexerBackgroundService(walletStore, addressStore, transactionStore);
-        await indexer.process();
+        const settingStore = new SettingStore();
+        const addressManager = new AddressManager(null);
 
-        
+        const accountHistoryStore = new AccountHistoryStore();
 
-
+        const indexer = new IndexerBackgroundService(settingStore, walletStore, addressStore, transactionStore, addressManager, accountHistoryStore);
+        await indexer.process(null);
     });
 
     it('Validate reset timer logic', () => {
@@ -150,7 +153,7 @@ describe('SharedTests', () => {
 
     it('Load xpub and query the indexer APIs', async () => {
         const network = new STRAX();
-        const indexer = new IndexerBackgroundService(new WalletStore(), new AddressStore(), new TransactionStore());
+        const indexer = new IndexerBackgroundService(new SettingStore(), new WalletStore(), new AddressStore(), new TransactionStore(), new AddressManager(null), new AccountHistoryStore());
 
         const addressState: AddressState = {
             address: 'XEgeAGBEdKXcdKD2HYovtyp5brE5WyAKwv', // Random address from rich list
