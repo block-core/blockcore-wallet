@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef, NgZone } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { UIState, CommunicationService, NetworksService, NetworkStatusService, SettingsService, WalletManager, StateService } from '../services';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -40,6 +40,7 @@ export class AccountComponent implements OnInit, OnDestroy {
     public settings: SettingsService,
     private http: HttpClient,
     private router: Router,
+    private ngZone: NgZone,
     private network: NetworksService,
     private networkStatusService: NetworkStatusService,
     private communication: CommunicationService,
@@ -140,19 +141,20 @@ export class AccountComponent implements OnInit, OnDestroy {
       };
     }
 
-    console.log('1:', this.accountHistoryStore);
-    console.log('2:', this.accountHistoryStore.get(this.walletManager.activeAccount.identifier))
-
-    console.log(this.accountHistory);
-    console.log(this.walletManager.activeAccount.identifier);
+    // console.log('1:', this.accountHistoryStore);
+    // console.log('2:', this.accountHistoryStore.get(this.walletManager.activeAccount.identifier))
+    // console.log(this.accountHistory);
+    // console.log(this.walletManager.activeAccount.identifier);
 
     this.cd.detectChanges();
   }
 
   async ngOnInit() {
     this.state.changed$.subscribe((state) => {
-      console.log('state changed, update account history!');
-      this.updateAccountHistory();
+      this.ngZone.run(() => {
+        console.log('state changed, update account history!');
+        this.updateAccountHistory();
+      });
     });
 
     this.updateNetworkStatus();
