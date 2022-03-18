@@ -9,6 +9,7 @@ import { SendService, WalletManager } from '../../../services';
 export class AccountSendConfirmComponent implements OnInit, OnDestroy {
     sub: any;
     transaction: any;
+    error: string;
 
     constructor(
         public sendService: SendService,
@@ -21,16 +22,20 @@ export class AccountSendConfirmComponent implements OnInit, OnDestroy {
     }
 
     async ngOnInit() {
-        const tx = await this.walletManager.createTransaction(
-            this.walletManager.activeWallet,
-            this.walletManager.activeAccount,
-            this.sendService.address,
-            this.sendService.amountAsSatoshi,
-            this.sendService.feeAsSatoshi,
-            this.sendService.accountHistory.unspent);
+        try {
+            const tx = await this.walletManager.createTransaction(
+                this.walletManager.activeWallet,
+                this.walletManager.activeAccount,
+                this.sendService.address,
+                this.sendService.amountAsSatoshi,
+                this.sendService.feeAsSatoshi,
+                this.sendService.accountHistory.unspent);
 
-        this.transaction = tx;
-        this.sendService.transactionHex = tx.transactionHex;
-        this.sendService.addresses = tx.addresses;
+            this.transaction = tx;
+            this.sendService.transactionHex = tx.transactionHex;
+            this.sendService.addresses = tx.addresses;
+        } catch (err: any) {
+            this.error = err.message;
+        }
     }
 }

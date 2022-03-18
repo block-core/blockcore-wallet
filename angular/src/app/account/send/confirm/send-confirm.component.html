@@ -13,6 +13,8 @@
     <div *ngIf="transaction"><span>weight</span><span>{{transaction.weight}}</span></div> -->
 
     <div><span>Total</span><span class="total">{{sendService.total | amount}} {{sendService.network.symbol}}</span></div>
+
+    <div *ngIf="error" class="icon-warn"><h2>ERROR</h2><span>{{error}}</span></div>
 </div>
 
 <!-- <p>Sending to:</p>
