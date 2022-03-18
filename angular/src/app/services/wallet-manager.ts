@@ -17,6 +17,7 @@ import { NetworkLoader } from "../../shared/network-loader";
 import { Network } from "../../shared/networks";
 import { CommunicationService } from ".";
 import { WalletStore } from "src/shared";
+import Big from "big.js";
 
 const ECPair = ECPairFactory(ecc);
 var bitcoinMessage = require('bitcoinjs-message');
@@ -129,7 +130,7 @@ export class WalletManager {
         return data;
     }
 
-    async createTransaction(wallet: Wallet, account: Account, address: string, amount: number, fee: number, unspent: AccountUnspentTransactionOutput[]): Promise<{ addresses: string[], transactionHex: string, fee: number, feeRate: number, virtualSize: number, weight: number }> {
+    async createTransaction(wallet: Wallet, account: Account, address: string, amount: Big, fee: Big, unspent: AccountUnspentTransactionOutput[]): Promise<{ addresses: string[], transactionHex: string, fee: number, feeRate: number, virtualSize: number, weight: number }> {
         // TODO: Verify the address for this network!! ... Help the user avoid sending transactions on very wrong addresses.
         const network = this.getNetwork(account.networkType);
         const affectedAddresses = [];
@@ -142,13 +143,13 @@ export class WalletManager {
         console.log('unspent', unspent);
 
         // Collect unspent until we have enough amount.
-        const requiredAmount = BigInt(amount) + BigInt(fee);
-        let aggregatedAmount: number = 0;
+        const requiredAmount = amount.add(fee);
+        let aggregatedAmount = Big(0);
         const inputs: AccountUnspentTransactionOutput[] = [];
 
         for (let i = 0; i < unspent.length; i++) {
             const tx = unspent[i];
-            aggregatedAmount += <number>tx.balance;
+            aggregatedAmount.add(tx.balance);
 
             inputs.push(tx);
 

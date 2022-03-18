@@ -1,5 +1,6 @@
 import { SendService } from "./send.service";
 import Big from 'big.js';
+import { CITY } from "src/shared/networks";
 
 describe('SendService', () => {
     let service: SendService;
@@ -17,18 +18,18 @@ describe('SendService', () => {
         const satsAsString = new Big(sats).toFixed(0);
         expect(satsAsString).toBe('110000000');
 
+        expect(Big(100.1).minus(Big(0.01)).toString()).toBe('100.09');
+        expect(Big(10010000000).minus(Big(1000000)).toString()).toBe('10009000000');
+
         var bigSatoshi = new Big(111000000);
         const bitcoin = Number(bigSatoshi.div(SATOSHI_FACTOR));
-
-        console.log('WHAT', bitcoin.toPrecision());
-
-        // expect(new Big('1.1').div(8)).toBe('1.1');
-
+        expect(bitcoin.toPrecision()).toBe('1.11');
     });
 
     it('Validate SendService usage', async () => {
         const DECIMAL_POINTS = 8;
 
+        service.network = new CITY();
         service.amount = '1.1';
         service.fee = '0.0001';
         expect(service.total.toString()).toBe('110010000');
@@ -41,15 +42,15 @@ describe('SendService', () => {
         service.amount = '92233720368'; // Int.Max which is often used as maximum on Blockcore based chains.
         expect(service.total.toString()).toBe('9223372036800000001');
 
-        const big1 = Big(100.1);
-        const big2 = Big(0.01);
-        const big3 = big1.minus(big2);
-
-        console.log('BIG 3', big3.toString());
-
         service.fee = '0.1';
-        service.setMax(Big(1000000000));
-        expect(service.total.toString()).toBe('10000100');
+        expect(service.fee.toString()).toBe('10000000');
+        service.setMax(Big(20010000000));
+
+        expect(service.amount.toString()).toBe('20000000000'); // Amount without fee.
+        expect(service.total.toString()).toBe('20010000000'); // Amount with fee.
+
+        service.resetFee();
+        expect(service.fee.toString()).toBe('10000');
 
         // Validate that we cannot use more than 8 decimals.
         try {
