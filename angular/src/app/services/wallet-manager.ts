@@ -144,12 +144,17 @@ export class WalletManager {
 
         // Collect unspent until we have enough amount.
         const requiredAmount = amount.add(fee);
+
+        console.log('requiredAmount:', requiredAmount.toString());
+
         let aggregatedAmount = Big(0);
         const inputs: AccountUnspentTransactionOutput[] = [];
 
         for (let i = 0; i < unspent.length; i++) {
             const tx = unspent[i];
-            aggregatedAmount.add(tx.balance);
+            console.log('tx', tx);
+            aggregatedAmount = aggregatedAmount.plus(new Big(tx.balance));
+            console.log('aggregatedAmount:', aggregatedAmount.toString());
 
             inputs.push(tx);
 
@@ -157,6 +162,8 @@ export class WalletManager {
                 break;
             }
         }
+
+        console.log('aggregatedAmount (final):', aggregatedAmount.toString());
 
         for (let i = 0; i < inputs.length; i++) {
             const input = inputs[i];
@@ -172,17 +179,17 @@ export class WalletManager {
         }
 
         // Add the output the user requested.
-        tx.addOutput({ address, value: Number(amount) });
+        tx.addOutput({ address, value: amount.toNumber() });
 
         // Take the total sum of the aggregated inputs, remove the sendAmount and fee.
-        const changeAmount = Number(aggregatedAmount) - Number(amount) - Number(fee);
+        const changeAmount = aggregatedAmount.minus(amount).minus(fee); //  Number(aggregatedAmount) - Number(amount) - Number(fee);
 
         // If there is any change amount left, make sure we send it to the user's change address.
-        if (changeAmount > 0) {
+        if (changeAmount > Big(0)) {
             const changeAddress = await this.getChangeAddress(account);
 
             // // Send the rest to change address.
-            tx.addOutput({ address: changeAddress.address, value: changeAmount });
+            tx.addOutput({ address: changeAddress.address, value: changeAmount.toNumber() });
         }
 
         // Get the secret seed.
