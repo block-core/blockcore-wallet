@@ -60,13 +60,19 @@ export class IndexerBackgroundService {
                 const addressStatesInThisAccount = addressStates.filter(a => addresses.indexOf(a.address) > -1);
                 const transactionHashesInAccount = addressStatesInThisAccount.flatMap(a => a.transactions);
                 var uniqueTransactionHashes = Array.from(new Set(transactionHashesInAccount));
-                const transactionsInThisAccount = transactions.filter(a => uniqueTransactionHashes.indexOf(a.transactionHash) > -1);
+                let transactionsInThisAccount = transactions.filter(a => uniqueTransactionHashes.indexOf(a.transactionHash) > -1);
 
                 // Sort the transaction, the array is by-ref so it will sort the original values. Sort the unconfirmed on top.
-                transactionsInThisAccount.sort((a: any, b: any) => {
-                    // Return -1 to place the unconfirmed on top.
-                    if (a.blockIndex == 0) return -1;
-                    return a.blockIndex - b.blockIndex;
+                transactionsInThisAccount = transactionsInThisAccount.sort((a: any, b: any) => {
+                    let index1 = a.blockIndex;
+                    let index2 = b.blockIndex;
+
+                    if (index1 == 0) index1 = 9007199254740991;
+                    if (index2 == 0) index2 = 9007199254740991;
+
+                    if (index1 < index2) return 1;
+                    if (index1 > index2) return -1;
+                    return 0;
                 });
 
                 let accountHistory = transactionsInThisAccount.map(t => {
@@ -172,9 +178,15 @@ export class IndexerBackgroundService {
                 // The UI during "unconfirmed" period will not sort properly, attempt to fix the issue by doing an 
                 // extra sort here before persisting. Also attempt to re-assign it.
                 accountHistory = accountHistory.sort((a: any, b: any) => {
-                    // Return -1 to place the unconfirmed on top.
-                    if (a.blockIndex == 0) return -1;
-                    return a.blockIndex - b.blockIndex;
+                    let index1 = a.blockIndex;
+                    let index2 = b.blockIndex;
+
+                    if (index1 == 0) index1 = 9007199254740991;
+                    if (index2 == 0) index2 = 9007199254740991;
+
+                    if (index1 < index2) return 1;
+                    if (index1 > index2) return -1;
+                    return 0;
                 });
 
                 console.log('accountHistory2:');
