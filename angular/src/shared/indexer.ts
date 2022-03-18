@@ -182,6 +182,7 @@ export class IndexerBackgroundService {
 
     /** This is the main process that runs the indexing and persists the state. */
     async process(addressWatchStore: AddressWatchStore) {
+        // TODO: There is a lot of duplicate code in this method, refactor when possible.
         let changes = false;
         const settings = this.settingStore.get();
         const wallets = this.walletStore.getWallets();
@@ -214,7 +215,6 @@ export class IndexerBackgroundService {
                         // If there are no addressState for this, create one now.
                         if (!addressState) {
                             addressState = { address: address.address, offset: 0, transactions: [] };
-                            changes = true;
                         }
 
                         const hadChanges = await this.processAddress(indexerUrl, addressState);
@@ -262,7 +262,6 @@ export class IndexerBackgroundService {
                     // If there are no addressState for this, create one now.
                     if (!addressState) {
                         addressState = { address: address.address, offset: 0, transactions: [] };
-                        changes = true;
                     }
 
                     const hadChanges = await this.processAddress(indexerUrl, addressState);
@@ -293,8 +292,6 @@ export class IndexerBackgroundService {
                         }
                     }
 
-
-
                     // Get the last change addresses.
                     const addressChange = account.state.change[account.state.change.length - 1];
 
@@ -306,7 +303,6 @@ export class IndexerBackgroundService {
                     // If there are no addressState for this, create one now.
                     if (!addressStateChange) {
                         addressStateChange = { address: addressChange.address, offset: 0, transactions: [] };
-                        changes = true;
                     }
 
                     const hadChangesChange = await this.processAddress(indexerUrl, addressStateChange);
@@ -350,7 +346,6 @@ export class IndexerBackgroundService {
                         // If there are no addressState for this, create one now.
                         if (!addressState) {
                             addressState = { address: address.address, offset: 0, transactions: [] };
-                            changes = true;
                         }
 
                         const hadChanges = await this.processAddress(indexerUrl, addressState);
@@ -384,7 +379,6 @@ export class IndexerBackgroundService {
                         // If there are no addressState for this, create one now.
                         if (!addressState) {
                             addressState = { address: address.address, offset: 0, transactions: [] };
-                            changes = true;
                         }
 
                         const hadChanges = await this.processAddress(indexerUrl, addressState);
