@@ -145,25 +145,19 @@ export class WalletManager {
         // Collect unspent until we have enough amount.
         const requiredAmount = amount.add(fee);
 
-        console.log('requiredAmount:', requiredAmount.toString());
-
         let aggregatedAmount = Big(0);
         const inputs: AccountUnspentTransactionOutput[] = [];
 
         for (let i = 0; i < unspent.length; i++) {
             const tx = unspent[i];
-            console.log('tx', tx);
             aggregatedAmount = aggregatedAmount.plus(new Big(tx.balance));
-            console.log('aggregatedAmount:', aggregatedAmount.toString());
 
             inputs.push(tx);
 
-            if (aggregatedAmount >= requiredAmount) {
+            if (aggregatedAmount.gte(requiredAmount)) {
                 break;
             }
         }
-
-        console.log('aggregatedAmount (final):', aggregatedAmount.toString());
 
         for (let i = 0; i < inputs.length; i++) {
             const input = inputs[i];
