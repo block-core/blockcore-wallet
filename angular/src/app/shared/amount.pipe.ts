@@ -11,7 +11,7 @@ export class AmountPipe implements PipeTransform {
 
     }
 
-    transform(value: number | BigInt | Big): string {
+    transform(value: number | Big): string {
         if (this.settings.values.amountFormat == 'sat') {
             return value.toString();
         }

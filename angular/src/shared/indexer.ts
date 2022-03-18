@@ -259,9 +259,12 @@ export class IndexerBackgroundService {
                             const transaction = this.transactionStore.get(latestTransaction);
                             const continueWatching = (transaction.confirmations <= this.watch);
 
+                            console.log('transaction.confirmations in watching:', transaction.confirmations);
+
                             // If we have observed the latest transaction to have more confirmations than the watch
                             // height, we will remove it from the watch list.
                             if (!continueWatching) {
+                                debugger;
                                 // Do not watch any longer ...
                                 console.log('Stopping to watch:', address);
                                 addressWatchStore.remove(address.address);

@@ -96,7 +96,7 @@ interface Account {
 
 interface AccountState {
     /** The latest known balance of this account */
-    balance: number | BigInt;
+    balance: number;
 
     /** The time when this account data was updated */
     retrieved: string;
@@ -119,15 +119,15 @@ interface Address {
     // change: boolean;
 
     address: string;
-    balance?: BigInt;
-    totalReceived?: BigInt;
-    totalStake?: BigInt;
-    totalMine?: BigInt;
-    totalSent?: BigInt;
-    totalReceivedCount?: BigInt;
-    totalSentCount?: BigInt;
-    totalStakeCount?: BigInt;
-    totalMineCount?: BigInt;
+    balance?: number;
+    totalReceived?: number;
+    totalStake?: number;
+    totalMine?: number;
+    totalSent?: number;
+    totalReceivedCount?: number;
+    totalSentCount?: number;
+    totalStakeCount?: number;
+    totalMineCount?: number;
     pendingSent?: number;
     pendingReceived?: number;
 
@@ -144,7 +144,7 @@ interface UnspentTransactionOutput {
     }
     address: string;
     scriptHex: string;
-    value: BigInt | number;
+    value: number;
     blockIndex: number;
     coinBase: boolean;
     coinStake: boolean;
@@ -153,9 +153,9 @@ interface UnspentTransactionOutput {
 interface Transaction {
     entryType: string;
     transactionHash: string;
-    value: BigInt;
+    value: number;
     blockIndex: number;
-    confirmations: BigInt | number;
+    confirmations: number;
     details: TransactionInfo;
     hex: string;
     unconfirmed?: boolean;
@@ -186,12 +186,12 @@ interface TransactionInfo {
     blockIndex: number;
     timestamp: number;
     transactionId: string;
-    confirmations: BigInt | number;
+    confirmations: number;
     isCoinbase: boolean;
     isCoinstake: boolean;
     lockTime: string;
     rbf: boolean;
-    version: BigInt;
+    version: number;
     inputs: TransactionInput[];
     outputs: TransactionOutput[];
 }
@@ -213,7 +213,7 @@ interface TransactionHistory {
 interface AccountUnspentTransactionOutput {
     address: string;
     balance: number;
-    index: number | BigInt | any;
+    index: number;
     transactionHash: string;
     unconfirmed: boolean;
     hex: string;
@@ -227,8 +227,8 @@ interface AccountHistory {
 }
 
 interface TransactionInfoView extends TransactionInfo {
-    inputsAmount: BigInt | number;
-    outputsAmount: BigInt | number;
+    inputsAmount: number;
+    outputsAmount: number;
     fees: number;
 
     /** OP_RETURN data available in the outputs */
@@ -236,7 +236,7 @@ interface TransactionInfoView extends TransactionInfo {
 }
 
 interface TransactionInput {
-    inputIndex: BigInt;
+    inputIndex: number;
     inputAddress: string;
     inputAmount: number;
     inputTransactionId: string;
@@ -249,7 +249,7 @@ interface TransactionInput {
 interface TransactionOutput {
     address: string;
     balance: number;
-    index: BigInt;
+    index: number;
     outputType: string;
     scriptPubKeyAsm: string;
     scriptPubKey: string;

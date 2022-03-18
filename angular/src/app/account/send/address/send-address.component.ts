@@ -59,7 +59,6 @@ export class AccountSendAddressComponent implements OnInit, OnDestroy {
     }
 
     fillMax(amount?: number) {
-        // TODO: Refactor the interfaces to use Big and not BigInt/number.
         this.sendService.setMax(new Big(amount));
     }
 
