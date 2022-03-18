@@ -1,4 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
+import Big from 'big.js';
 import * as satcomma from 'satcomma';
 import { SettingsService } from '../services/settings.service';
 import { SATOSHI_FACTOR } from './constants';
@@ -10,7 +11,7 @@ export class AmountPipe implements PipeTransform {
 
     }
 
-    transform(value: number | BigInt): string {
+    transform(value: number | BigInt | Big): string {
         if (this.settings.values.amountFormat == 'sat') {
             return value.toString();
         }

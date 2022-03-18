@@ -21,7 +21,7 @@ export class SendService {
     private factor: number;
 
     get fee(): string {
-        return this.feeValue.toPrecision();
+        return this.feeValue.div(this.factor).toString();
     }
 
     /** Sets the fee, the value is expected to be of format "0.0001" */
@@ -36,14 +36,12 @@ export class SendService {
     }
 
     get amount(): string {
-        return this.amountValue.toPrecision();
+        return this.amountValue.div(this.factor).toString();
     }
 
     /** Sets the fee, the value is expected to be of format "2.5" */
     set amount(value: string) {
         const number = new Big(value);
-
-        console.log(number);
 
         if (number.e < -8) {
             throw new TypeError('The value of amount cannot have more than 8 decimals.');
@@ -111,7 +109,7 @@ export class SendService {
         this.network = null;
         this.loading = false;
         this.address = '';
-        this.amount = '';
+        this.amount = '0';
         this.transactionHex = '';
         this.transactionId = '';
         this.addresses = [];

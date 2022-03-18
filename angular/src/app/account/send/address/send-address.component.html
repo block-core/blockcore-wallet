@@ -1,4 +1,6 @@
-<div class="available-balance" matTooltip="Click to fill out maximum (minus fee)" (click)="fillMax(sendService.accountHistory.balance)">Available: {{sendService.accountHistory.balance || 0 | amount}}</div>
+<div class="available-balance" matTooltip="Click to fill out maximum (minus fee)"
+    (click)="fillMax(sendService.accountHistory.balance)">Available: {{sendService.accountHistory.balance || 0 |
+    amount}}</div>
 <h2>Send {{sendService.network.symbol}}</h2>
 
 <form [formGroup]="form">
@@ -15,7 +17,8 @@
     <mat-form-field class="input-full-width" appearance="outline">
         <mat-label>Amount</mat-label>
         <input matInput formControlName="amountInput" [(ngModel)]="sendService.amount" required>
-        <mat-error *ngIf="form.controls['amountInput'].invalid">Amount is required and must be correctly entered.</mat-error>
+        <mat-error *ngIf="form.controls['amountInput'].invalid">Amount is required and must be correctly entered.
+        </mat-error>
     </mat-form-field>
 
     <mat-form-field class="input-full-width" appearance="outline">
@@ -23,6 +26,10 @@
         <input matInput formControlName="feeInput" [(ngModel)]="sendService.fee" required>
         <mat-error *ngIf="form.controls['feeInput'].invalid">Fee is required and must be correctly entered.</mat-error>
     </mat-form-field>
+
+    <h3>
+        Total: {{sendService.total | amount}} {{sendService.network.symbol}}
+    </h3>
 
 </form>
 
