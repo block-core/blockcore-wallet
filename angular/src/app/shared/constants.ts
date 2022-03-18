@@ -14,3 +14,4 @@ export const INDEXER_URL = 'https://{id}.indexer.blockcore.net';
 export const AUTO_TIMEOUT = 15; // 15 minutes
 
 export const SATOSHI_FACTOR = 100000000;
+export const DECIMAL_POINTS = 8;

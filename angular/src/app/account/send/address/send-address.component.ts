@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import Big from 'big.js';
 import { WalletManager, UIState, SendService } from '../../../services';
 
 @Component({
@@ -57,7 +58,7 @@ export class AccountSendAddressComponent implements OnInit, OnDestroy {
     async ngOnInit() {
     }
 
-    fillMax(amount?: number) {
+    fillMax(amount?: Big) {
         this.sendService.setMax(amount);
     }
 
