@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { AccountHistoryStore, AddressState, AddressStore, TransactionStore } from 'src/shared';
 import { AddressWatchStore } from 'src/shared/store/address-watch-store';
 import { CommunicationService, SendService, UIState, WalletManager } from '../../../services';
 
@@ -16,6 +17,9 @@ export class AccountSendSendingComponent implements OnInit, OnDestroy {
         private communication: CommunicationService,
         public walletManager: WalletManager,
         private addressWatchStore: AddressWatchStore,
+        private accountHistoryStore: AccountHistoryStore,
+        private addressStore: AddressStore,
+        private transactionStore: TransactionStore,
         public uiState: UIState) {
         // When the transaction is done, we'll make sure the back button sends back to home.
         this.uiState.goBackHome = true;
@@ -58,6 +62,43 @@ export class AccountSendSendingComponent implements OnInit, OnDestroy {
 
         // Save the watch store so the background watcher will see the new entries.
         await this.addressWatchStore.save();
+
+        // TODO: Parse the transaction locally and update the local UI state to match the future state of the indexer, ensuring 
+        // a good user experience where the transaction is displayed in the history immediately. This requires updating multiple
+        // stores.
+        // this.transactionStore.set(this.sendService.transactionId, {
+        //     blockIndex: 0,
+        //     confirmations: 0,
+        //     entryType: 'send',
+        //     value: this.sendService.total.toNumber(),
+        //     transactionHash: this.sendService.transactionId,
+        //     hex: this.sendService.transactionHex,
+        //     details: {
+        //         transactionId: this.sendService.transactionId,
+        //         blockHash: '',
+        //         blockIndex: 0,
+        //         confirmations: 0,
+        //         fee: this.sendService.feeAsSatoshi.toNumber(),
+        //         symbol: '',
+        //         timestamp: 0,
+        //         isCoinbase: false,
+        //         isCoinstake: false,
+        //         rbf: false,
+        //         lockTime: 'Height : 0',
+        //         version: 1,
+        //         inputs: [],
+        //         outputs: []
+        //     }
+        // });
+
+        // await this.transactionStore.save();
+        // this.accountHistoryStore.set();
+        // this.addressStore.set();
+        // Wait a little while before forcing watch to ensure the indexer has been able to update.
+        // setTimeout(() => {
+        //     // Trigger an watch process right now so the UI is updated as soon as possible.
+        //     this.communication.send(this.communication.createMessage('watch', { force: true }, 'background'));
+        // }, 2000);
 
         this.router.navigateByUrl('/account/send/success');
     }

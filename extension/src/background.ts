@@ -142,7 +142,12 @@ chrome.runtime.onMessage.addListener(async (message: Message, sender, sendRespon
     try {
         switch (message.type) {
             case 'watch': {
-                if (!watching) {
+                if (message.data.force) {
+                    console.log('Force Watch was called!');
+                    watch();
+                    response = 'ok';
+                }
+                else if (!watching) {
                     watching = true;
                     // Run watch every 15 second until the service worker is killed.
                     watch();
@@ -220,5 +225,7 @@ function watch() {
                 console.log('Watcher found zero changes.');
             }
         });
+    } else {
+        console.log('Is already indexing, skipping watch processing.');
     }
 }
