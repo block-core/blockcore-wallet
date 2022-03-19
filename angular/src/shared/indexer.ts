@@ -22,6 +22,9 @@ export class IndexerBackgroundService {
     /** The maximum number of times we'll attempt to watch an address before it's wiped from the watch list. */
     private maxWatch = 500;
 
+    /** We will attempt to query the address at minimum 10 times before we check the latest transactions if we should quit. */
+    private minWatchCount = 10;
+
     constructor(
         private settingStore: SettingStore,
         private walletStore: WalletStore,
@@ -172,25 +175,25 @@ export class IndexerBackgroundService {
                     balanceUnconfirmed = filteredUnconfirmed.reduce((a, b) => a + b.balance, 0);
                 }
 
-                console.log('accountHistory:');
-                console.log(JSON.stringify(accountHistory));
+                // console.log('accountHistory:');
+                // console.log(JSON.stringify(accountHistory));
 
                 // The UI during "unconfirmed" period will not sort properly, attempt to fix the issue by doing an 
                 // extra sort here before persisting. Also attempt to re-assign it.
-                accountHistory = accountHistory.sort((a: any, b: any) => {
-                    let index1 = a.blockIndex;
-                    let index2 = b.blockIndex;
+                // accountHistory = accountHistory.sort((a: any, b: any) => {
+                //     let index1 = a.blockIndex;
+                //     let index2 = b.blockIndex;
 
-                    if (index1 == 0) index1 = 9007199254740991;
-                    if (index2 == 0) index2 = 9007199254740991;
+                //     if (index1 == 0) index1 = 9007199254740991;
+                //     if (index2 == 0) index2 = 9007199254740991;
 
-                    if (index1 < index2) return 1;
-                    if (index1 > index2) return -1;
-                    return 0;
-                });
+                //     if (index1 < index2) return 1;
+                //     if (index1 > index2) return -1;
+                //     return 0;
+                // });
 
-                console.log('accountHistory2:');
-                console.log(JSON.stringify(accountHistory));
+                // console.log('accountHistory2:');
+                // console.log(JSON.stringify(accountHistory));
 
                 this.accountHistoryStore.set(account.identifier, {
                     history: accountHistory,
@@ -225,7 +228,7 @@ export class IndexerBackgroundService {
 
                     console.log('Running Watcher', addresses);
 
-                    // Process first receive addresses until we've exhausted them.
+                    // Process registered addresses until we've exhausted them.
                     for (let k = 0; k < addresses.length; k++) {
                         const address = addresses[k];
                         address.count = address.count + 1;
@@ -253,28 +256,28 @@ export class IndexerBackgroundService {
                             await this.addressStore.save();
                         }
 
-                        // Get the latest transaction on the address and check if we should continue to watch it.
-                        if (addressState.transactions.length > 0) {
-                            const latestTransaction = addressState.transactions[addressState.transactions.length - 1];
-                            const transaction = this.transactionStore.get(latestTransaction);
-                            const continueWatching = (transaction.confirmations <= this.watch);
-
-                            console.log('transaction.confirmations in watching:', transaction.confirmations);
-
-                            // If we have observed the latest transaction to have more confirmations than the watch
-                            // height, we will remove it from the watch list.
-                            if (!continueWatching) {
-                                debugger;
-                                // Do not watch any longer ...
-                                console.log('Stopping to watch:', address);
-                                addressWatchStore.remove(address.address);
-                            }
-                        }
-
                         // If we have watched this address for max amount, remove it.
                         if (address.count >= this.maxWatch) {
                             console.log('Stopping to watch (max watch reached):', address);
                             addressWatchStore.remove(address.address);
+                        } else if (address.count >= this.minWatchCount) {
+                            console.log('minWatchCount reached, validate against latest tx now:', this.minWatchCount);
+
+                            // Get the latest transaction on the address and check if we should continue to watch it.
+                            if (addressState.transactions.length > 0) {
+                                const latestTransaction = addressState.transactions[addressState.transactions.length - 1];
+                                const transaction = this.transactionStore.get(latestTransaction);
+                                const continueWatching = (transaction.confirmations <= this.watch);
+                                console.log('transaction.confirmations in watching:', transaction.confirmations);
+
+                                // If we have observed the latest transaction to have more confirmations than the watch
+                                // height, we will remove it from the watch list.
+                                if (!continueWatching) {
+                                    // Do not watch any longer ...
+                                    console.log('Stopping to watch:', address);
+                                    addressWatchStore.remove(address.address);
+                                }
+                            }
                         }
                     }
 
@@ -561,6 +564,9 @@ export class IndexerBackgroundService {
 
                         // Update the store with latest info on the transaction.
                         this.transactionStore.set(transactionId, transaction);
+
+                        // Persist immediately because the watcher need to have
+                        await this.transactionStore.save();
                     }
                 }
 

@@ -195,8 +195,6 @@ describe('SharedTests', () => {
 
         await indexer.processAddress(indexerUrl, addressState);
 
-        // transaction.finalized = (transaction.confirmations > this.finalized);
-
         expect(addressState.transactions.length).toBeGreaterThanOrEqual(69);
         expect(addressState.offset).toBeGreaterThanOrEqual(60);
 

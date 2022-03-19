@@ -33,9 +33,6 @@ export class SecureStateService {
 
                     const newCount = this.keys.size;
 
-                    console.log('previousCount:', previousCount);
-                    console.log('newCount:', newCount);
-
                     // Update the unlocked wallet subject with only the keys (wallet IDs).
                     this.unlockedWalletsSubject.next(<string[]>Array.from(this.keys.keys()));
 
