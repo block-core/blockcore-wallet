@@ -1,8 +1,11 @@
-const { ProvidePlugin } = require('webpack');
+const { ProvidePlugin, DefinePlugin } = require('webpack');
 
 module.exports = {
   plugins: [new ProvidePlugin({
     Buffer: ['buffer', 'Buffer'],
+  }),
+  new DefinePlugin({
+    "VERSION": JSON.stringify("0.0.1")
   })],
   resolve: {
     fallback: {
