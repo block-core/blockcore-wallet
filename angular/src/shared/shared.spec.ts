@@ -11,6 +11,7 @@ import { AddressManager } from "./address-manager";
 import { Wallet } from "./interfaces";
 import { AccountHistoryStore, SettingStore } from "./store";
 import { AddressStore } from "./store/address-store";
+import { NetworkLoader } from "./network-loader";
 
 describe('SharedTests', () => {
     beforeEach(() => { });
@@ -91,28 +92,29 @@ describe('SharedTests', () => {
         expect(wallets3[0].name).toBe('Wallet2');
     });
 
-    it('Validate Indexer', async () => {
-        const walletsArray = JSON.parse(testWallet) as Wallet[];
+    // it('Validate Indexer', async () => {
+    //     const walletsArray = JSON.parse(testWallet) as Wallet[];
 
-        // Process Wallets
-        const walletStore = new WalletStore();
-        walletStore.set(walletsArray[0].id, walletsArray[0]);
+    //     // Process Wallets
+    //     const walletStore = new WalletStore();
+    //     walletStore.set(walletsArray[0].id, walletsArray[0]);
 
-        const wallets = walletStore.getWallets();
+    //     const wallets = walletStore.getWallets();
 
-        const transactionStore = new TransactionStore();
-        const addressStore = new AddressStore();
+    //     const transactionStore = new TransactionStore();
+    //     const addressStore = new AddressStore();
 
-        // const manager = new LightWalletManager(walletStore, addressStore, transactionStore);
+    //     // const manager = new LightWalletManager(walletStore, addressStore, transactionStore);
 
-        const settingStore = new SettingStore();
-        const addressManager = new AddressManager(null);
+    //     const settingStore = new SettingStore();
+    //     const networkLoader = new NetworkLoader();
+    //     const addressManager = new AddressManager(networkLoader);
 
-        const accountHistoryStore = new AccountHistoryStore();
+    //     const accountHistoryStore = new AccountHistoryStore();
 
-        const indexer = new IndexerBackgroundService(settingStore, walletStore, addressStore, transactionStore, addressManager, accountHistoryStore);
-        await indexer.process(null);
-    });
+    //     const indexer = new IndexerBackgroundService(settingStore, walletStore, addressStore, transactionStore, addressManager, accountHistoryStore);
+    //     await indexer.process(null);
+    // });
 
     it('Validate reset timer logic', () => {
         // This is what is read from storage, last "active date" stored.
@@ -178,8 +180,9 @@ describe('SharedTests', () => {
     });
 
     it('Load xpub and query the indexer APIs', async () => {
+        const networkLoader = new NetworkLoader();
         const network = new STRAX();
-        const indexer = new IndexerBackgroundService(new SettingStore(), new WalletStore(), new AddressStore(), new TransactionStore(), new AddressManager(null), new AccountHistoryStore());
+        const indexer = new IndexerBackgroundService(new SettingStore(), new WalletStore(), new AddressStore(), new TransactionStore(), new AddressManager(networkLoader), new AccountHistoryStore());
 
         const addressState: AddressState = {
             address: 'XEgeAGBEdKXcdKD2HYovtyp5brE5WyAKwv', // Random address from rich list
