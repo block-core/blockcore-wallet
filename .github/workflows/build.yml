@@ -45,26 +45,32 @@ jobs:
         run: npm test -- --no-watch --no-progress --browsers=ChromeHeadless
         continue-on-error: true
 
-      - name: Build
-        run: npm run all
+      # - name: Build
+      #   run: npm run all
 
       - name: Package Blockcore
         run: |
-          cd dist/${{ env.BLOCKCORE }}
+          npm run build:production
+          cd dist/extension
           zip -r ../../${{env.RELEASE_NAME_BLOCKCORE}} "./"
           cd ../../
+          rm -rf  dist/extension
 
       - name: Package CoinVault
         run: |
-          cd dist/${{ env.COINVAULT }}
+          npm run build:coinvault
+          cd dist/extension
           zip -r ../../${{env.RELEASE_NAME_COINVAULT}} "./"
           cd ../../
+          rm -rf dist/extension
 
       - name: Package SmartCityPlatform
         run: |
-          cd dist/${{ env.SMARTCITYPLATFORM }}
+          npm run build:smartcityplatform
+          cd dist/extension
           zip -r ../../${{env.RELEASE_NAME_SMARTCITYPLATFORM}} "./"
           cd ../../
+          rm -rf  dist/extension
 
       - name: Upload Blockcore
         uses: actions/upload-artifact@v1
