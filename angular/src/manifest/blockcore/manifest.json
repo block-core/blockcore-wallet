@@ -39,10 +39,6 @@
         "default_popup": "index.html?#/popup",
         "default_title": "Blockcore"
     },
-    "options_page": "index.html?#/options",
-    "chrome_url_overrides": {
-        "newtab": "index.html"
-    },
     "content_scripts": [
         {
             "js": [

@@ -4,6 +4,7 @@ import { Location } from '@angular/common'
 import { Settings } from '../../shared/interfaces';
 import { INDEXER_URL } from '../shared/constants';
 import { TranslateService } from '@ngx-translate/core';
+import { SettingStore } from 'src/shared';
 
 @Component({
   selector: 'app-settings',
@@ -24,15 +25,22 @@ export class SettingsComponent {
     private walletManager: WalletManager,
     private communication: CommunicationService,
     private settingsService: SettingsService,
+    private settingStore: SettingStore,
     private location: Location) {
 
-    // Reset to default if missing.
-    if (!this.settingsService.values.indexer) {
-      this.settingsService.values.indexer = INDEXER_URL;
+    // The Settings UI can be opened from the "Extension options" link and then settings won't be loaded yet.
+    if (!settingsService.values) {
+      this.settings = JSON.parse(JSON.stringify(this.settingStore.defaultItem()));
+    } else {
+      // Clone the settings on load:
+      this.settings = JSON.parse(JSON.stringify(settingsService.values));
     }
 
-    // Clone the settings on load:
-    this.settings = JSON.parse(JSON.stringify(settingsService.values));
+    // Reset to default if missing.
+    if (!this.settings.indexer) {
+      this.settings.indexer = INDEXER_URL;
+    }
+
     this.uiState.title = 'Settings';
     this.uiState.showBackButton = true;
   }
