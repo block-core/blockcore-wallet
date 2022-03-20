@@ -35,7 +35,14 @@
           "configurations": {
             "production": {
               "buildOptimizer": false,
-              "optimization": {},
+              "optimization": {
+                "scripts": true,
+                "styles": {
+                  "minify": true,
+                  "inlineCritical": false
+                },
+                "fonts": true
+              },
               "vendorChunk": false,
               "extractLicenses": true,
               "sourceMap": false,
@@ -106,7 +113,14 @@
             },
             "coinvault": {
               "buildOptimizer": false,
-              "optimization": {},
+              "optimization": {
+                "scripts": true,
+                "styles": {
+                  "minify": true,
+                  "inlineCritical": false
+                },
+                "fonts": true
+              },
               "vendorChunk": false,
               "extractLicenses": true,
               "sourceMap": false,
@@ -152,7 +166,14 @@
             },
             "smartcityplatform": {
               "buildOptimizer": false,
-              "optimization": {},
+              "optimization": {
+                "scripts": true,
+                "styles": {
+                  "minify": true,
+                  "inlineCritical": false
+                },
+                "fonts": true
+              },
               "vendorChunk": false,
               "extractLicenses": true,
               "sourceMap": false,
