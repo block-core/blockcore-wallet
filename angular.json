@@ -52,7 +52,7 @@
                 {
                   "type": "initial",
                   "maximumWarning": "6mb",
-                  "maximumError": "10mb"
+                  "maximumError": "16mb"
                 },
                 {
                   "type": "anyComponentStyle",
@@ -130,8 +130,8 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "3mb",
-                  "maximumError": "5mb"
+                  "maximumWarning": "6mb",
+                  "maximumError": "16mb"
                 },
                 {
                   "type": "anyComponentStyle",
@@ -183,8 +183,8 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "3mb",
-                  "maximumError": "5mb"
+                  "maximumWarning": "6mb",
+                  "maximumError": "16mb"
                 },
                 {
                   "type": "anyComponentStyle",
@@ -218,7 +218,7 @@
               ]
             }
           },
-          "defaultConfiguration": "production"
+          "defaultConfiguration": "coinvault"
         },
         "serve": {
           "options": {

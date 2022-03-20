@@ -216,7 +216,7 @@ export class NetworksService {
                     selected: false,
                     name: 'CirrusTest',
                     type: 'coin',
-                    network: 401,
+                    network: 400,
                     purpose: 44,
                     purposeAddress: 44,
                     icon: 'account_circle',

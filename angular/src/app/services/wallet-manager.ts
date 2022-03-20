@@ -571,36 +571,7 @@ export class WalletManager {
         // Generate the first change address.
         await this.getChangeAddress(account);
 
-        // const address = this.crypto.getAddressByNetworkp2pkh(identifierKeyPair, network);
-        // const address2 = this.crypto.getAddressByNetworkp2pkhFromBuffer(Buffer.from(Array.from(identifierKeyPair2.publicKey!)), network);
-
-        // const idArray = secp256k1.schnorr.getPublicKey(identifierKeyPair.privateKey!.toString('hex'));
-        // const id = Buffer.from(idArray).toString('hex');
-
-        // // Uncaught (in promise) TypeError: The first argument must be one of type string, Buffer, ArrayBuffer, Array, or Array-like Object. Received type object
-        // const id2Array = secp256k1.schnorr.getPublicKey(Buffer.from(identifierKeyPair2.privateKey!).toString('hex'));
-        // const id2 = Buffer.from(id2Array).toString('hex');
-
-        // const id3hex = Buffer.from(identifierKeyPair3.privateKey!).toString('hex');
-        // const id3Array = secp256k1.schnorr.getPublicKey(id3hex);
-        // const id3 = Buffer.from(id3Array).toString('hex');
-
         await this.store.save();
-
-        if (wallet.restored) {
-            // Schedule background processing of the account against the blockchain APIs.
-            // This should only register a flag and return from this method to allow UI to continue processing.
-
-            // TODO: Perform blockchain / vault data query and recovery.
-            // If there are transactions, DID Documents, NFTs or anythign else, we should launch the
-            // query probe here.
-
-            // TODO: RAISE AN EVENT THAT INDEXER SHOULD TRIGGER ON?!
-            // PERHAPS ORCHESTRATOR SOMEHOW?!
-            // this.process(account, wallet, false);
-            const msg = this.communication.createMessage('index');
-            this.communication.send(msg);
-        }
     }
 
     async getChangeAddress(account: Account) {

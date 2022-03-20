@@ -20,5 +20,5 @@ export const environment: IEnvironment = {
   instanceName: 'CoinVault',
   instanceUrl: 'https://www.coinvault.io',
   instanceExplorerUrl: 'https://explorer.coinvault.io',
-  networks: ['STRAX', 'CRS', 'TSTRAX']
+  networks: ['STRAX', 'CRS', 'TSTRAX', 'TCRS']
 };
