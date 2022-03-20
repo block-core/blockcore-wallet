@@ -4,7 +4,7 @@ import { Location } from '@angular/common'
 import { Settings } from '../../shared/interfaces';
 import { INDEXER_URL } from '../shared/constants';
 import { TranslateService } from '@ngx-translate/core';
-import { SettingStore } from 'src/shared';
+import { SettingStore } from '../../shared';
 
 @Component({
   selector: 'app-settings',
