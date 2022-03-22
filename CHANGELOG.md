@@ -1,3 +1,11 @@
+## <small>0.0.15 (2022-03-22)</small>
+
+* Display loading indicator on newly created accounts ([832334b](https://github.com/block-core/blockcore-extension/commit/832334b))
+* Remove the shortcut commands ([05f60db](https://github.com/block-core/blockcore-extension/commit/05f60db))
+* Update version and changelog ([90ce1cc](https://github.com/block-core/blockcore-extension/commit/90ce1cc))
+
+
+
 ## <small>0.0.14 (2022-03-20)</small>
 
 * "sid" is not an approved prefix ([d425dff](https://github.com/block-core/blockcore-extension/commit/d425dff))
