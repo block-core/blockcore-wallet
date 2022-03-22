@@ -38,8 +38,7 @@ export class WalletRemoveComponent implements OnInit, OnDestroy {
     if (this.walletManager.hasWallets) {
       // Just grab the last wallet after removing one.
       const walletId = this.walletManager.getWallets()[0].id;
-
-      this.walletManager.setActiveWallet(walletId);
+      await this.walletManager.setActiveWallet(walletId);
 
       this.router.navigateByUrl('/dashboard');
     } else {

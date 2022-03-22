@@ -66,9 +66,9 @@ export class HomeComponent implements OnInit, OnDestroy {
       if (this.secure.unlocked(this.walletManager.activeWallet?.id)) {
         this.router.navigateByUrl('/dashboard');
       }
-    }
 
-    this.uiState.title = `Unlock ${this.walletManager.activeWallet.name}`;
+      this.uiState.title = `Unlock ${this.walletManager.activeWallet.name}`;
+    }
   }
 
   removeError(): void {
