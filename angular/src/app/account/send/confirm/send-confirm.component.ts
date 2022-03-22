@@ -27,6 +27,7 @@ export class AccountSendConfirmComponent implements OnInit, OnDestroy {
                 this.walletManager.activeWallet,
                 this.walletManager.activeAccount,
                 this.sendService.address,
+                this.sendService.changeAddress,
                 this.sendService.amountAsSatoshi,
                 this.sendService.feeAsSatoshi,
                 this.sendService.accountHistory.unspent);

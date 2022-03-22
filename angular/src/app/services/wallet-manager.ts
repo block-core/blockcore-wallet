@@ -130,7 +130,7 @@ export class WalletManager {
         return data;
     }
 
-    async createTransaction(wallet: Wallet, account: Account, address: string, amount: Big, fee: Big, unspent: AccountUnspentTransactionOutput[]): Promise<{ addresses: string[], transactionHex: string, fee: number, feeRate: number, virtualSize: number, weight: number }> {
+    async createTransaction(wallet: Wallet, account: Account, address: string, changeAddress: string, amount: Big, fee: Big, unspent: AccountUnspentTransactionOutput[]): Promise<{ addresses: string[], transactionHex: string, fee: number, feeRate: number, virtualSize: number, weight: number }> {
         // TODO: Verify the address for this network!! ... Help the user avoid sending transactions on very wrong addresses.
         const network = this.getNetwork(account.networkType);
         const affectedAddresses = [];
@@ -180,10 +180,14 @@ export class WalletManager {
 
         // If there is any change amount left, make sure we send it to the user's change address.
         if (changeAmount > Big(0)) {
-            const changeAddress = await this.getChangeAddress(account);
+            // If the user has not supplied override on change address, get the change address automatically.
+            if (changeAddress == null || changeAddress == '') {
+                const changeAddressItem = await this.getChangeAddress(account);
+                changeAddress = changeAddressItem.address;
+            }
 
             // // Send the rest to change address.
-            tx.addOutput({ address: changeAddress.address, value: changeAmount.toNumber() });
+            tx.addOutput({ address: changeAddress, value: changeAmount.toNumber() });
         }
 
         // Get the secret seed.

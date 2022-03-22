@@ -3,6 +3,7 @@
 <div class="grid-row-label-value">
     <div><span>To</span><span>{{sendService.address}}</span></div>
     <div><span>From</span><span>{{sendService.account.name}}</span></div>
+    <div *ngIf="sendService.changeAddress"><span>Change (override)</span><span>{{sendService.changeAddress}}</span></div>
     <div><span>Amount</span><span>{{sendService.amountAsSatoshi | amount}} {{sendService.network.symbol}}</span></div>
     
     <!-- <div><span>Fee</span><span>{{sendService.fee}} ({{sendService.feeAsSatoshi}}) {{sendService.network.symbol}}</span></div> -->

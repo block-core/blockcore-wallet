@@ -36,6 +36,7 @@ export class AccountSendAddressComponent implements OnInit, OnDestroy {
 
         this.form = fb.group({
             addressInput: new FormControl('', [Validators.required, Validators.minLength(6)]),
+            changeAddressInput: new FormControl('', []),
             // min(0) will ensure negative values is not allowed.
             amountInput: new FormControl('', [Validators.required, Validators.min(0), Validators.pattern(/^-?(0|[0-9]+[.]?[0-9]*)?$/)]),
             feeInput: new FormControl('0.00010000', [Validators.required, Validators.min(0), Validators.pattern(/^-?(0|[0-9]+[.]?[0-9]*)?$/)])

@@ -11,6 +11,7 @@ export class SendService {
     network: Network;
     loading = false;
     address: string;
+    changeAddress: string;
     transactionHex: string;
     transactionId: string;
     routingIndex: number;
@@ -109,6 +110,7 @@ export class SendService {
         this.network = null;
         this.loading = false;
         this.address = '';
+        this.changeAddress = null;
         this.amount = '0';
         this.transactionHex = '';
         this.transactionId = '';
