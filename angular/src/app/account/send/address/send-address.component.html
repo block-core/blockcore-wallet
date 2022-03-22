@@ -1,4 +1,3 @@
-
 <h2>Send {{sendService.network.symbol}}</h2>
 
 <form [formGroup]="form">
@@ -13,8 +12,8 @@
     </mat-form-field>
 
     <div class="available-balance" matTooltip="Click to fill out maximum (minus fee)"
-    (click)="fillMax(sendService.accountHistory.balance)">Available: {{sendService.accountHistory.balance || 0 |
-    amount}}</div>
+        (click)="fillMax(sendService.accountHistory.balance)">Available: {{sendService.accountHistory.balance || 0 |
+        amount}}</div>
 
     <mat-form-field class="input-full-width" appearance="outline">
         <mat-label>Amount</mat-label>
@@ -29,6 +28,12 @@
         <mat-error *ngIf="form.controls['feeInput'].invalid">Fee is required and must be correctly entered.</mat-error>
     </mat-form-field>
 
+    <div *ngIf="optionsOpen">
+        Options
+    </div>
+
+    <button class="full-width" (click)="toggleOptions()" mat-raised-button color="primary">Options...</button>
+    <br><br>
     <h3>
         Total: {{sendService.total | amount}} {{sendService.network.symbol}}
     </h3>

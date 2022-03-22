@@ -23,6 +23,7 @@ export class AccountSendAddressComponent implements OnInit, OnDestroy {
     // parts: FormGroup;
 
     form: FormGroup;
+    optionsOpen = false;
 
     // hideRequiredControl = new FormControl(false);
     // floatLabelControl = new FormControl('auto');
@@ -60,6 +61,10 @@ export class AccountSendAddressComponent implements OnInit, OnDestroy {
 
     fillMax(amount?: number) {
         this.sendService.setMax(new Big(amount));
+    }
+
+    toggleOptions() {
+        this.optionsOpen = !this.optionsOpen;
     }
 
     getErrorMessage() {
