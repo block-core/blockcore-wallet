@@ -16,5 +16,6 @@ export class CRS implements Network {
     scriptHash = 88;
     wif = 0x08; // TODO: Verify if this is still used for CRS.
     feeRate = '0.00010000';
+    minFeeRate = '0.00010000';
     testnet = false;
 }
