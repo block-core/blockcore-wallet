@@ -12,7 +12,6 @@ export const environment: IEnvironment = {
   production: true,
   enableDebugTools: false,
   logLevel: 'info',
-  version: "0.0.17",
   features: ['wallet', 'identity', 'collectible', 'vault', 'inbox', 'handler:vault', 'handler:did'],
   releaseUrl: 'https://github.com/CityChainFoundation/smart-city-platform/releases',
   sourceUrl: 'https://github.com/CityChainFoundation/smart-city-platform',

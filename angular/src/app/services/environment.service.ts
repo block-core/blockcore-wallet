@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { IEnvironment } from '../../shared/interfaces';
 
+declare const VERSION: string;
+
 @Injectable({
     providedIn: 'root'
 })
@@ -19,7 +21,7 @@ export class EnvironmentService implements IEnvironment {
     }
 
     get version() {
-        return environment.version;
+        return VERSION;
     }
 
     get features() {

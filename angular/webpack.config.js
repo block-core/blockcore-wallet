@@ -5,7 +5,7 @@ module.exports = {
     Buffer: ['buffer', 'Buffer'],
   }),
   new DefinePlugin({
-    "VERSION": JSON.stringify("0.0.1")
+    VERSION: JSON.stringify(require("../package.json").version)
   })],
   resolve: {
     fallback: {

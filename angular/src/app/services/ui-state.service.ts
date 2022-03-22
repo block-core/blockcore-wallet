@@ -4,15 +4,13 @@ import { ReplaySubject, Subject } from 'rxjs';
 import { Network } from '../../shared/networks';
 import { UIStore } from 'src/shared';
 
-declare const VERSION: string;
-
 @Injectable({
     providedIn: 'root'
 })
 export class UIState {
     constructor(
         private store: UIStore) {
-        console.log('Version: ' + VERSION);
+        
     }
 
     async save() {

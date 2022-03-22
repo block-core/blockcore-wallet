@@ -16,7 +16,6 @@ export const environment: IEnvironment = {
   production: false,
   enableDebugTools: true,
   logLevel: 'debug',
-  version: "0.0.17",
   features: ['wallet', 'identity', 'collectible', 'vault', 'handler:bitcoin', 'handler:vault', 'handler:sid', 'handler:did', 'handler:nostr'],
   releaseUrl: 'https://github.com/block-core/blockcore-extension/releases',
   sourceUrl: 'https://github.com/block-core/blockcore-extension',
