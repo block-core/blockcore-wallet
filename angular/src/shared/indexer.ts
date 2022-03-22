@@ -218,7 +218,10 @@ export class IndexerBackgroundService {
             const wallet = wallets[i];
 
             for (let j = 0; j < wallet.accounts.length; j++) {
+
+                const date = new Date().toISOString();
                 const account = wallet.accounts[j];
+                account.lastScan = date;
 
                 const network = this.addressManager.getNetwork(account.networkType);
                 const indexerUrl = settings.indexer.replace('{id}', network.id.toLowerCase());

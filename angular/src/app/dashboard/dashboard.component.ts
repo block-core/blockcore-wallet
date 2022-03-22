@@ -1,7 +1,7 @@
-import { Component, ChangeDetectorRef, OnInit, OnDestroy } from '@angular/core';
+import { Component, ChangeDetectorRef, OnInit, OnDestroy, NgZone } from '@angular/core';
 import {
   CryptoService, UIState, FeatureService, LoggerService, NetworksService,
-  NetworkStatusService, DebugLogService, WalletManager, SecureStateService, CommunicationService
+  NetworkStatusService, DebugLogService, WalletManager, SecureStateService, CommunicationService, StateService
 } from '../services';
 import { ActivatedRoute, Router } from '@angular/router';
 import { copyToClipboard } from '../shared/utilities';
@@ -46,6 +46,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
     private activatedRoute: ActivatedRoute,
     private accountHistoryStore: AccountHistoryStore,
     private addressWatchStore: AddressWatchStore,
+    private state: StateService,
+    private ngZone: NgZone,
     private debugLog: DebugLogService,
     private cd: ChangeDetectorRef) {
 
@@ -57,6 +59,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.state.changed$.subscribe((state) => {
+      this.ngZone.run(() => {
+        this.cd.detectChanges();
+      });
+    });
+
     this.activatedRoute.paramMap.subscribe(async params => {
 
       console.log('PARAMS:', params);
@@ -96,8 +104,23 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }
   }
 
+  hasAccountHistory(accountId: string) {
+    const account = this.walletManager.getAccount(this.walletManager.activeWallet, accountId);
+    return account.lastScan != null;
+  }
+
   balance(accountId: string) {
-    return this.accountHistoryStore.get(accountId)?.balance;
+    const accountHistory = this.accountHistoryStore.get(accountId);
+
+    if (accountHistory == null) {
+      // If we don't have account history yet, simply return 0.
+      return 0;
+    } else if (accountHistory.balance == null) {
+      // This means we have account history, but the wallet is probably empty (new) and has no not calculated balance ("no difference").
+      return 0;
+    } else {
+      return accountHistory.balance;
+    }
   }
 
   copyDebugLogs() {

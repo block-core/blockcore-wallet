@@ -60,6 +60,9 @@ interface NetworkStatus {
 interface Account {
     name: string | undefined;
 
+    /** The last date in ISO format the account was scanned for changes. */
+    lastScan?: string;
+
     /** The unique identifier for this network. */
     networkType: string;
 
@@ -67,6 +70,7 @@ interface Account {
     networkStatus?: string;
 
     network: number;
+
     index: number;
 
     /** This is the actual purpose that should be used to derive keys */
@@ -286,8 +290,7 @@ interface Persisted {
     // activeAccountIndex: number
 }
 
-interface AddressWatchState
-{
+interface AddressWatchState {
     address: string;
 
     accountId: string;

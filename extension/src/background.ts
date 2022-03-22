@@ -118,7 +118,18 @@ chrome.alarms.onAlarm.addListener(async (alarm: chrome.alarms.Alarm) => {
                     console.log('Extension:sendMessage:response:indexed:', response);
                 });
             } else {
-                console.log('Indexer found zero changes.');
+                console.log('Indexer found zero changes. We will still inform the UI to refresh wallet to get latest scan state.');
+
+                chrome.runtime.sendMessage({
+                    type: 'updated',
+                    ext: 'blockcore',
+                    source: 'background',
+                    target: 'tabs',
+                    host: location.host
+                }, function (response) {
+                    console.log('Extension:sendMessage:response:updated:', response);
+                });
+
             }
         } else {
             console.log('Indexing is already running. Skipping for now.');
@@ -181,7 +192,17 @@ chrome.runtime.onMessage.addListener(async (message: Message, sender, sendRespon
                             console.log('Extension:sendMessage:response:indexed:', response);
                         });
                     } else {
-                        console.log('Indexer found zero changes.');
+                        console.log('Indexer found zero changes. We will still inform the UI to refresh wallet to get latest scan state.');
+
+                        chrome.runtime.sendMessage({
+                            type: 'updated',
+                            ext: 'blockcore',
+                            source: 'background',
+                            target: 'tabs',
+                            host: location.host
+                        }, function (response) {
+                            console.log('Extension:sendMessage:response:updated:', response);
+                        });
                     }
                 } else {
                     console.log('Indexing is already running. Skipping for now.');
@@ -221,7 +242,17 @@ function watch() {
                 });
             }
             else {
-                console.log('Watcher found zero changes.');
+                console.log('Watcher found zero changes. We will still inform the UI to refresh wallet to get latest scan state.');
+
+                chrome.runtime.sendMessage({
+                    type: 'updated',
+                    ext: 'blockcore',
+                    source: 'background',
+                    target: 'tabs',
+                    host: location.host
+                }, function (response) {
+                    console.log('Extension:sendMessage:response:updated:', response);
+                });
             }
         });
     } else {

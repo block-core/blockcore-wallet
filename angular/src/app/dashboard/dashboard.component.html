@@ -12,8 +12,8 @@
                 <a mat-list-item *ngFor="let account of walletManager.activeWallet.accounts; let i = index"
                     routerLinkActive="active-link" [routerLink]="['/', 'account', 'view', account.identifier]">
                     <mat-icon mat-list-icon>{{account.icon}}</mat-icon>
-                    <div mat-line>{{account.name}}<span class="account-balance">{{balance(account.identifier) |
-                            amount}}</span></div>
+                    <div mat-line>{{account.name}}<span *ngIf="hasAccountHistory(account.identifier)" class="account-balance">{{balance(account.identifier) |
+                            amount}}</span><span *ngIf="!hasAccountHistory(account.identifier)" class="account-balance"><mat-spinner [diameter]="16"></mat-spinner></span></div>
                     <div mat-line>{{account | network}}</div>
                     <div class="network-status-widget">
                         <app-network-status [status]="networkStatus.get(account.networkType)"></app-network-status>

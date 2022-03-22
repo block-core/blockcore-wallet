@@ -65,4 +65,9 @@ export class StateService {
 
         this.changedSubject.next(this);
     }
+
+    async update() {
+        await this.walletStore.load();
+        this.changedSubject.next(this);
+    }
 }
