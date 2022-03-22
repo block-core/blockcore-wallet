@@ -1,6 +1,6 @@
 {
     "name": "CoinVault",
-    "version": "0.0.16",
+    "version": "0.0.17",
     "manifest_version": 3,
     "description": "Non-Custodial wallet for Coins, Tokens, Identities, NFTs and more.",
     "author": "Softchains Ltd",

@@ -1,3 +1,14 @@
+## <small>0.0.16 (2022-03-22)</small>
+
+* Add options on transaction send ([8ffb4c9](https://github.com/block-core/blockcore-extension/commit/8ffb4c9))
+* Add support for custom change address ([32d4d63](https://github.com/block-core/blockcore-extension/commit/32d4d63)), closes [#95](https://github.com/block-core/blockcore-extension/issues/95)
+* Disable "Send" button when there are no UTXOs ([77a67c6](https://github.com/block-core/blockcore-extension/commit/77a67c6))
+* Fix the issue when delete of last wallet ([16e230d](https://github.com/block-core/blockcore-extension/commit/16e230d)), closes [#94](https://github.com/block-core/blockcore-extension/issues/94)
+* Move the available amount label and button to right above amount input field ([3955bc9](https://github.com/block-core/blockcore-extension/commit/3955bc9)), closes [#58](https://github.com/block-core/blockcore-extension/issues/58)
+* Update version and changelog ([369c23a](https://github.com/block-core/blockcore-extension/commit/369c23a))
+
+
+
 ## <small>0.0.15 (2022-03-22)</small>
 
 * Display loading indicator on newly created accounts ([832334b](https://github.com/block-core/blockcore-extension/commit/832334b))
