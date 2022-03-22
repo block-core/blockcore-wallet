@@ -27,7 +27,11 @@ export interface Network {
 
     wif: number
 
-    feeRate: string;
+    /** The default fee on transactions. */
+    feeRate?: number;
+
+    /** The minimum fee rate that is allowed. */
+    minFeeRate?: number;
 
     testnet: boolean;
 

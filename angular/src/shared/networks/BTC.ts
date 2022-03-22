@@ -15,8 +15,8 @@ export class BTC44 implements Network {
     pubKeyHash = 0;
     scriptHash = 5;
     wif = 0x08;
-    feeRate = '0.00010000';
-    minFeeRate = '0.00010000';
+    feeRate = 10000;
+    minFeeRate = 10000;
     testnet = false;
 }
 
@@ -54,6 +54,7 @@ export class BTC84 implements Network {
     pubKeyHash = 0;
     scriptHash = 5;
     wif = 0x08;
-    feeRate = '0.00010000';
+    feeRate = 10000;
+    minFeeRate = 10000;
     testnet = false;
 }

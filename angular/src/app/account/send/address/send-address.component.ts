@@ -39,7 +39,9 @@ export class AccountSendAddressComponent implements OnInit, OnDestroy {
             changeAddressInput: new FormControl('', []),
             // min(0) will ensure negative values is not allowed.
             amountInput: new FormControl('', [Validators.required, Validators.min(0), Validators.pattern(/^-?(0|[0-9]+[.]?[0-9]*)?$/)]),
-            feeInput: new FormControl('0.00010000', [Validators.required, Validators.min(0), Validators.pattern(/^-?(0|[0-9]+[.]?[0-9]*)?$/)])
+
+            // TODO: Make an custom validator that sets form error when fee input is too low.
+            feeInput: new FormControl(this.sendService.getNetworkFee(), [Validators.required, Validators.min(0), Validators.pattern(/^-?(0|[0-9]+[.]?[0-9]*)?$/)])
         });
 
         // this.parts = fb.group({

@@ -21,6 +21,8 @@ export class SendService {
     private amountValue: Big;
     private factor: number;
 
+    feeError: string;
+
     get fee(): string {
         return this.feeValue.div(this.factor).toString();
     }
@@ -33,7 +35,17 @@ export class SendService {
             throw new TypeError('The value of fee cannot have more than 8 decimals.');
         }
 
-        this.feeValue = number.times(this.factor);
+        const fee = number.times(this.factor);
+        const minFee = new Big(this.network.minFeeRate);
+
+        if (fee.lt(minFee)) {
+            this.feeError = `The fee cannot be lower than minimum free rate: ${minFee.div(this.factor).toString()}`;
+            // throw new Error(`The fee cannot be lower than minimum free rate: ${this.network.minFeeRate}`);
+        } else {
+            this.feeError = null;
+        }
+
+        this.feeValue = fee;
     }
 
     get amount(): string {
@@ -101,8 +113,12 @@ export class SendService {
         this.amountValue = maxAmountWithoutFeeAsSats;
     }
 
+    getNetworkFee() {
+        return new Big(this.network.feeRate).div(this.factor).toString();
+    }
+
     resetFee() {
-        this.fee = this.network.feeRate;
+        this.feeValue = new Big(this.network.feeRate);
     }
 
     reset() {

@@ -26,6 +26,7 @@
         <mat-label>Fee</mat-label>
         <input matInput formControlName="feeInput" [(ngModel)]="sendService.fee" required>
         <mat-error *ngIf="form.controls['feeInput'].invalid">Fee is required and must be correctly entered.</mat-error>
+        <mat-hint *ngIf="sendService.feeError" align="start"><strong>{{sendService.feeError}}</strong> </mat-hint>
     </mat-form-field>
 
     <div *ngIf="optionsOpen">

@@ -15,7 +15,7 @@ export class CITY implements Network {
     pubKeyHash = 0x1c;
     scriptHash = 0x58;
     wif = 0x08;
-    feeRate = '0.00010000';
-    minFeeRate = '0.00010000';
+    feeRate = 10000;
+    minFeeRate = 10000;
     testnet = false;
 }
