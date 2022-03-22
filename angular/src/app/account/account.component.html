@@ -43,7 +43,7 @@
             <button class="half-width" mat-raised-button
                 [routerLink]="['/', 'account', 'receive', walletManager.activeAccount.index]"
                 color="primary">Receive</button>
-            <button class="half-width" [routerLink]="['/', 'account', 'send']" mat-raised-button>Send</button>
+            <button [disabled]="accountHistory.balance == 0" class="half-width" [routerLink]="['/', 'account', 'send']" mat-raised-button>Send</button>
         </mat-card-actions>
         <mat-card-footer>
             <mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
