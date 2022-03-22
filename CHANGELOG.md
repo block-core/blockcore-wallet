@@ -1,3 +1,13 @@
+## <small>0.0.17 (2022-03-22)</small>
+
+* Make the fee rates number type ([154f5e9](https://github.com/block-core/blockcore-extension/commit/154f5e9))
+* Read version from process.env instead of loading the package.json ([289adce](https://github.com/block-core/blockcore-extension/commit/289adce))
+* Set the minimum fee rate to be used for input validation ([4c58c01](https://github.com/block-core/blockcore-extension/commit/4c58c01))
+* Update version and changelog ([1103375](https://github.com/block-core/blockcore-extension/commit/1103375))
+* Use webpack to get version from package.json ([f9d3acc](https://github.com/block-core/blockcore-extension/commit/f9d3acc))
+
+
+
 ## <small>0.0.16 (2022-03-22)</small>
 
 * Add options on transaction send ([8ffb4c9](https://github.com/block-core/blockcore-extension/commit/8ffb4c9))
