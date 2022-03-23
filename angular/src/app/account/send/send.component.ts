@@ -44,6 +44,12 @@ export class AccountSendComponent implements OnInit, OnDestroy {
         sendService.resetFee(); // Reset fee after we have network available.
         sendService.accountHistory = accountHistoryStore.get(account.identifier);
 
+        // When using CRS/TCRS, the change address should always be the primary address.
+        if (network.id === 'CRS' || network.id === 'TCRS') {
+            const primaryReceiveAddress = account.state.receive[0];
+            sendService.changeAddress = primaryReceiveAddress.address;
+        }
+
         this.network = network;
     }
 

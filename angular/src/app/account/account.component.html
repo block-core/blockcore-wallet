@@ -1,4 +1,4 @@
-<div class="page"
+<!-- <div class="page"
     *ngIf="walletManager.activeAccount && (walletManager.activeAccount.network == 400 || walletManager.activeAccount.network == 401)">
 
     <app-network-status-card class="balance-card" [status]="currentNetworkStatus"></app-network-status-card>
@@ -6,10 +6,10 @@
     <div *ngIf="walletManager.activeAccount.network == 400 || walletManager.activeAccount.network == 401">
         Cirrus is currently not supported. Check back later!
     </div>
-</div>
+</div> -->
 
 <div class="page"
-    *ngIf="walletManager.activeAccount && (walletManager.activeAccount.network != 400 && walletManager.activeAccount.network != 401)">
+    *ngIf="walletManager.activeAccount">
 
     <app-network-status-card class="balance-card" [status]="currentNetworkStatus"></app-network-status-card>
 
