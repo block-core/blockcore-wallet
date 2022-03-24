@@ -35,6 +35,8 @@ export interface Network {
 
     testnet: boolean;
 
+    singleAddress?: boolean;
+
     /** A logo that can be displayed in UI for the specific network. */
     // logo: ''; 
 }

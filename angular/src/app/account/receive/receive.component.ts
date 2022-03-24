@@ -50,8 +50,14 @@ export class AccountReceiveComponent implements OnInit, OnDestroy {
     }
 
     async ngOnInit() {
-        // TODO: When can we start using .lastItem and similar functions on arrays?
-        this.addressEntry = this.walletManager.activeAccount.state.receive[this.walletManager.activeAccount.state.receive.length - 1];
+        // When using CRS/TCRS, the change address should always be the primary address.
+        if (this.network.singleAddress === true) {
+            this.addressEntry = this.walletManager.activeAccount.state.receive[0];
+        } else {
+            // TODO: When can we start using .lastItem and similar functions on arrays?
+            this.addressEntry = this.walletManager.activeAccount.state.receive[this.walletManager.activeAccount.state.receive.length - 1];
+        }
+
         this.address = this.addressEntry.address;
 
         try {

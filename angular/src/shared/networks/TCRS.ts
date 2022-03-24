@@ -18,4 +18,5 @@ export class TCRS implements Network {
     feeRate = 10000;
     minFeeRate = 10000;
     testnet = true;
+    singleAddress = true;
 }
