@@ -2,10 +2,11 @@ import { Account, Address } from "./interfaces";
 import { HDKey } from "micro-bip32";
 import { payments } from '@blockcore/blockcore-js';
 import { NetworkLoader } from "./network-loader";
+import { Network } from "./networks";
 
 export class AddressManager {
 
-    private allNetworks: any[];
+    private allNetworks: Network[];
 
     constructor(private networkLoader: NetworkLoader) {
         this.allNetworks = this.networkLoader.getAllNetworks();

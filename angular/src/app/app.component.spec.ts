@@ -88,7 +88,6 @@ describe('AppComponent', () => {
     networks: [],
     releaseUrl: '',
     sourceUrl: '',
-    version : '10.10.10',
     enableDebugTools: false,
     logLevel: 'debug',
     production: false

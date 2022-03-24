@@ -1,4 +1,5 @@
 import axiosRetry from 'axios-retry';
+import { networkInterfaces } from 'os';
 import { AddressState, Transaction } from '.';
 import { AddressManager } from './address-manager';
 import { AccountUnspentTransactionOutput, TransactionHistory } from './interfaces';
@@ -95,6 +96,11 @@ export class IndexerBackgroundService {
                     const externalInputs = t.details.inputs.filter(o => addresses.indexOf(o.inputAddress) === -1);
                     const internalInputs = t.details.inputs.filter(o => addresses.indexOf(o.inputAddress) > -1);
 
+                    // console.log('externalOutputs', externalOutputs);
+                    // console.log('internalOutputs', internalOutputs);
+                    // console.log('externalInputs', externalInputs);
+                    // console.log('internalInputs', internalInputs);
+
                     // Check if there is any external outputs or inputs. If not, user is sending to themselves:
                     if (externalOutputs.length == 0 && externalInputs.length == 0) {
                         tx.entryType = 'consolidated';
@@ -122,6 +128,7 @@ export class IndexerBackgroundService {
                             const outputs = externalOutputs.map(x => x.balance);
 
                             if (outputs.length > 0) {
+                                // console.log('OUTPUTS', outputs);
                                 amount = outputs.reduce((x: any, y: any) => x + y);
                             }
 
@@ -218,17 +225,30 @@ export class IndexerBackgroundService {
             const wallet = wallets[i];
 
             for (let j = 0; j < wallet.accounts.length; j++) {
-
                 const date = new Date().toISOString();
                 const account = wallet.accounts[j];
                 account.lastScan = date;
 
                 const network = this.addressManager.getNetwork(account.networkType);
                 const indexerUrl = settings.indexer.replace('{id}', network.id.toLowerCase());
+                const primaryReceiveAddress = account.state.receive[0];
 
                 if (addressWatchStore) {
-                    const addresses = addressWatchStore.all();
+                    // If the network is single address and the primary is not part of watch addresses,
+                    // make sure we (re)add it.
+                    // if (network.singleAddress === true) {
+                    //     const primaryWatch = addressWatchStore.get(primaryReceiveAddress.address);
 
+                    //     if (!primaryWatch) {
+                    //         addressWatchStore.set(primaryReceiveAddress.address, {
+                    //             address: primaryReceiveAddress.address,
+                    //             accountId: account.identifier,
+                    //             count: 0
+                    //         });
+                    //     }
+                    // }
+
+                    const addresses = addressWatchStore.all();
                     console.log('Running Watcher', addresses);
 
                     // Process registered addresses until we've exhausted them.
@@ -262,7 +282,14 @@ export class IndexerBackgroundService {
                         // If we have watched this address for max amount, remove it.
                         if (address.count >= this.maxWatch) {
                             console.log('Stopping to watch (max watch reached):', address);
+
+                            // if (network.singleAddress === true && address.address === primaryReceiveAddress.address) {
+                            //     console.log(`Single address enabled and continue to watch primary address: ${primaryReceiveAddress.address}`);
+                            // }
+                            // else {
                             addressWatchStore.remove(address.address);
+                            // }
+
                         } else if (address.count >= this.minWatchCount) {
                             console.log('minWatchCount reached, validate against latest tx now:', this.minWatchCount);
 
@@ -278,14 +305,50 @@ export class IndexerBackgroundService {
                                 if (!continueWatching) {
                                     // Do not watch any longer ...
                                     console.log('Stopping to watch:', address);
+
+                                    // if (network.singleAddress === true && address.address === primaryReceiveAddress.address) {
+                                    //     console.log(`Single address enabled and continue to watch primary address: ${primaryReceiveAddress.address}`);
+                                    // }
+                                    // else {
                                     addressWatchStore.remove(address.address);
+                                    // }
                                 }
                             }
                         }
                     }
 
+                    if (network.singleAddress === true) {
+                        // Get the first receive addresses.
+                        const address = account.state.receive[0];
+                        console.log('Running Watch on primary receive address', address);
+
+                        // Get the current state for this address:
+                        let addressState = this.addressStore.get(address.address);
+
+                        // If there are no addressState for this, create one now.
+                        if (!addressState) {
+                            addressState = { address: address.address, offset: 0, transactions: [] };
+                        }
+
+                        const hadChanges = await this.processAddress(indexerUrl, addressState);
+
+                        if (hadChanges) {
+                            changes = true;
+
+                            // Set the address state again after we've updated it.
+                            this.addressStore.set(address.address, addressState);
+
+                            // After processing, make sure we save the address state.
+                            await this.addressStore.save();
+                        }
+                    }
+
                     // Get the last receive addresses.
                     const address = account.state.receive[account.state.receive.length - 1];
+                    // const alreadyWatched = (addressWatchStore.get(address.address) != null);
+
+                    // if (alreadyWatched) {
+                    // }
 
                     console.log('Running Watch on receive address', address);
 
