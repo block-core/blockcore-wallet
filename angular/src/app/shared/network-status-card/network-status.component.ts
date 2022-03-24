@@ -1,4 +1,5 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { NetworkStatusService } from 'src/app/services';
 import { IndexerApiStatus, NetworkStatus } from '../../../shared/interfaces';
 
 @Component({
@@ -6,10 +7,18 @@ import { IndexerApiStatus, NetworkStatus } from '../../../shared/interfaces';
     templateUrl: './network-status-card.component.html',
     styleUrls: ['./network-status-card.component.css']
 })
-export class NetworkStatusCardComponent {
+export class NetworkStatusCardComponent implements OnInit {
     @Input() status: NetworkStatus;
+    @Input() type: string;
 
-    constructor() {
+    constructor(private networkStatusService: NetworkStatusService) {
+
+    }
+
+    ngOnInit(): void {
+        if (this.type) {
+            this.status = this.networkStatusService.get(this.type);
+        }
     }
 
     get class(): string {
@@ -23,6 +32,7 @@ export class NetworkStatusCardComponent {
     }
 
     getNetworkStatusLabel(status: IndexerApiStatus) {
+        console.log('STATUS:', this.status);
         return IndexerApiStatus[status];
     }
 }

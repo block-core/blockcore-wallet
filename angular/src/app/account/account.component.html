@@ -11,7 +11,7 @@
 <div class="page"
     *ngIf="walletManager.activeAccount">
 
-    <app-network-status-card class="balance-card" [status]="currentNetworkStatus"></app-network-status-card>
+    <app-network-status-card class="balance-card" [type]="networkType"></app-network-status-card>
 
     <!-- <mat-card class="network-status-card" *ngIf="currentNetworkStatus && currentNetworkStatus.availability > 1">
         <mat-card-subtitle>There are issues with the network</mat-card-subtitle>

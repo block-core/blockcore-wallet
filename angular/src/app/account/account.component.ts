@@ -101,6 +101,7 @@ export class AccountComponent implements OnInit, OnDestroy {
         const indexerUrl = this.settings.values.indexer.replace('{id}', network.id.toLowerCase());
         let result: any = await this.http.get(`${indexerUrl}/api/stats/info`).toPromise();
         this.networkStatus = result;
+        console.log('NETWORK STATUS', this.networkStatus);
       }
       catch (error: any) {
         console.log('oops', error);
@@ -126,6 +127,10 @@ export class AccountComponent implements OnInit, OnDestroy {
 
   updateNetworkStatus() {
     this.currentNetworkStatus = this.networkStatusService.get(this.walletManager.activeAccount.networkType);
+  }
+
+  get networkType() {
+    return this.walletManager.activeAccount.networkType;
   }
 
   updateAccountHistory() {
