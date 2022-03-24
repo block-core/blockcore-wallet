@@ -152,7 +152,7 @@
                 <mat-card-title>{{networkStatus.name}} ({{networkStatus.symbol}})</mat-card-title>
                 <mat-card-subtitle>{{networkStatus.description}}</mat-card-subtitle>
                 <mat-card-content>
-                    <p>Network: {{networkStatus.configuration.name}}</p>
+                    <p>Network: {{networkStatus.node.blockchain.chain}}</p>
                     <p>Height: {{networkStatus.blockHeight}}</p>
                     <p>Relay Fee: {{networkStatus.node.network.relayFee}}</p>
                     <p>Memory Pool: {{networkStatus.node.transactionsInPool}} transactions</p>
