@@ -103,10 +103,6 @@ export class NetworkStatusService {
                 } else {
                     const blocksBehind = (data.blockchain.blocks - data.syncBlockIndex);
 
-                    console.log('data.syncBlockIndex:', data.syncBlockIndex);
-                    console.log('data.blockchain.blocks:', data.blockchain.blocks);
-                    console.log('data:', data);
-
                     if (blocksBehind > 10) {
                         networkStatus = {
                             blockSyncHeight: data.syncBlockIndex,
@@ -178,9 +174,6 @@ export class NetworkStatusService {
 
     /** Update the network status. This can be done internally or externally, depending on the scenario. */
     async update(networkStatus: NetworkStatus) {
-
-        console.log('UPDATE', networkStatus);
-
         // If there are no block height provided, copy the latest:
         if (!networkStatus.blockSyncHeight) {
             networkStatus.blockSyncHeight = this.store.get(networkStatus.networkType).blockSyncHeight;

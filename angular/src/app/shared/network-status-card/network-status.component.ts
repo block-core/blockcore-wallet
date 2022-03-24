@@ -32,7 +32,6 @@ export class NetworkStatusCardComponent implements OnInit {
     }
 
     getNetworkStatusLabel(status: IndexerApiStatus) {
-        console.log('STATUS:', this.status);
         return IndexerApiStatus[status];
     }
 }
