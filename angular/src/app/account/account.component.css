@@ -73,3 +73,7 @@ textarea {
   float: right;
   font-size: 0.8em;
 }
+
+.transaction-history-icon {
+  margin-right: 6px;
+}

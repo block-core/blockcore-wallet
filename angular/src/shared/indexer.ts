@@ -134,7 +134,40 @@ export class IndexerBackgroundService {
 
                             tx.calculatedValue = amount;
                             tx.calculatedAddress = externalOutputs.map(o => o.address).join(';');
+
+                            console.log('t.details.outputs', t.details.outputs);
+                            console.log('externalOutputs', externalOutputs);
                         }
+
+                        if (tx.isCoinbase) {
+                            tx.entryType = 'mine';
+                        } else if (tx.isCoinstake) {
+                            tx.entryType = 'stake';
+                        }
+
+                        if (t.details.outputs.length == 2) {
+                            if (t.details.outputs[0].outputType == "OP_CALLCONTRACT")
+                                tx.hasContract = true;
+
+                            if (t.details.outputs[0].outputType == "OP_CREATECONTRACT")
+                                tx.hasContract = true;
+
+                            if (t.details.outputs[0].outputType == "OP_INTERNALCONTRACTTRANSFER")
+                                tx.hasContract = true;
+
+                            if (t.details.outputs[1].outputType == "OP_CALLCONTRACT")
+                                tx.hasContract = true;
+
+                            if (t.details.outputs[1].outputType == "OP_CREATECONTRACT")
+                                tx.hasContract = true;
+
+                            if (t.details.outputs[1].outputType == "OP_INTERNALCONTRACTTRANSFER")
+                                tx.hasContract = true;
+                        }
+
+                        console.log(tx);
+                        console.log(t);
+                        console.log('tx.hasContract', tx.hasContract);
                     }
 
                     return tx;

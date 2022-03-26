@@ -83,6 +83,8 @@ export class AccountTransactionComponent implements OnInit, OnDestroy {
             // this.transaction.details.fees = this.transaction.details.inputsAmount - this.transaction.details.outputsAmount;
             this.transaction.details.data = this.transaction.details.outputs.filter(i => i.outputType == 'TX_NULL_DATA').map(i => i.scriptPubKeyAsm);
 
+            console.log('this.transaction', this.transaction);
+
             // this.manager.setActiveAccountId(index);
             // this.accountName = this.uiState.activeAccount?.name;
             // this.icon = this.uiState.activeAccount?.icon;

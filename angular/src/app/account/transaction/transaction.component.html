@@ -12,13 +12,19 @@
             <p *ngIf="!transaction.unconfirmed">
                 <span class="label">Date</span><br>
                 {{transaction.details.timestamp * 1000
-                | date:'long'}}</p>
+                | date:'long'}}
+            </p>
 
             <p *ngIf="!transaction.unconfirmed"><span class="label">Confirmations</span><br>
                 {{currentNetworkStatus.blockSyncHeight - transaction.details.blockIndex}}</p>
             <p *ngIf="transaction.unconfirmed"><span class="label">Confirmations</span><br>Unconfirmed (mempool)</p>
 
             <p><span class="label">Fee</span><br>{{transaction.details.fee | amount}}</p>
+
+            <!-- <span *ngIf="transaction.hasContract"><a
+                    [href]="'https://explorer.coinvault.net/CRS/explorer/transaction/' + transaction.transactionHash">View
+                    Smart Contract invocation</a></span> -->
+
             <p *ngIf="transaction.details.data.length > 0">
                 <span class="label">Data</span><br>
                 <span class="wrap" *ngFor="let data of transaction.details.data;">{{data}}</span>
@@ -27,6 +33,9 @@
         <mat-card-actions>
             <button mat-raised-button color="primary" (click)="openExplorer(transaction.transactionHash)">Open in Block
                 Explorer</button>
+
+            <!-- <button *ngIf="transaction.hasContract" mat-raised-button color="primary" (click)="openExplorer(transaction.transactionHash)">Open in Block
+                Explorer</button> -->
         </mat-card-actions>
     </mat-card>
 

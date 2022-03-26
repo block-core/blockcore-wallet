@@ -151,10 +151,14 @@ export class AccountComponent implements OnInit, OnDestroy {
     // console.log(this.accountHistory);
     // console.log(this.walletManager.activeAccount.identifier);
 
+    console.log('accountHistory.history', this.accountHistory);
+
     this.cd.detectChanges();
   }
 
   async ngOnInit() {
+
+
     this.state.changed$.subscribe((state) => {
       this.ngZone.run(() => {
         console.log('state changed, update account history!');

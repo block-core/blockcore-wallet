@@ -211,6 +211,7 @@ interface TransactionHistory {
     isCoinstake: boolean;
     timestamp: number;
     blockIndex: number;
+    hasContract?: boolean;
 }
 
 interface AccountUnspentTransactionOutput {
