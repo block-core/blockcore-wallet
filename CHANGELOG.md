@@ -1,3 +1,22 @@
+## <small>0.0.18 (2022-03-28)</small>
+
+* Add ability to support singleAddress networks ([28b5faf](https://github.com/block-core/blockcore-extension/commit/28b5faf))
+* Add logic to handle smart contract interactions to display different icons ([1cf17ad](https://github.com/block-core/blockcore-extension/commit/1cf17ad))
+* Add support for single address indexing ([bc0bf74](https://github.com/block-core/blockcore-extension/commit/bc0bf74))
+* Change the color on "Options..." button on send action ([1459fa4](https://github.com/block-core/blockcore-extension/commit/1459fa4))
+* Display "Interaction with contract" in transaction history ([31cb165](https://github.com/block-core/blockcore-extension/commit/31cb165))
+* Enable CRS/TCRS accounts ([5d9f512](https://github.com/block-core/blockcore-extension/commit/5d9f512))
+* Fix issue with .configuration not being available on CRS status ([45baeef](https://github.com/block-core/blockcore-extension/commit/45baeef))
+* Hide "MINING:" label ([b7778d9](https://github.com/block-core/blockcore-extension/commit/b7778d9))
+* Hide network status when green ([2870754](https://github.com/block-core/blockcore-extension/commit/2870754))
+* Improve the network status widget ([c4f1692](https://github.com/block-core/blockcore-extension/commit/c4f1692))
+* Remove some debug logging ([5a67b2f](https://github.com/block-core/blockcore-extension/commit/5a67b2f))
+* Set the node types to v16 ([437ca7e](https://github.com/block-core/blockcore-extension/commit/437ca7e))
+* update all packages to last version (#97) ([28c4caf](https://github.com/block-core/blockcore-extension/commit/28c4caf)), closes [#97](https://github.com/block-core/blockcore-extension/issues/97)
+* Update version and changelog ([1123a89](https://github.com/block-core/blockcore-extension/commit/1123a89))
+
+
+
 ## <small>0.0.17 (2022-03-22)</small>
 
 * Make the fee rates number type ([154f5e9](https://github.com/block-core/blockcore-extension/commit/154f5e9))
