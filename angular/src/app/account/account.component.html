@@ -87,6 +87,7 @@
                         <!-- <span *ngIf="settings.values.developer"><br>Transacted total: {{transaction.value |
                             amount}}</span> -->
                     </div>
+                    <div mat-line class="address" *ngIf="transaction.hasContract">Interaction with contract</div>
                     <div mat-line class="address" [innerHTML]="transaction.calculatedAddress.split(';').join('<br>')">
                     </div>
                     <!-- <div *ngIf="currentNetworkStatus" mat-line class="address">Confirmations:
