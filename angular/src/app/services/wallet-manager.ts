@@ -16,7 +16,7 @@ import { BehaviorSubject, Observable } from "rxjs";
 import { NetworkLoader } from "../../shared/network-loader";
 import { Network } from "../../shared/networks";
 import { CommunicationService } from ".";
-import { WalletStore } from "src/shared";
+import { AccountHistoryStore, AddressStore, AddressWatchStore, WalletStore } from "src/shared";
 import Big from "big.js";
 
 const ECPair = ECPairFactory(ecc);
@@ -43,6 +43,9 @@ export class WalletManager {
         private crypto: CryptoUtility,
         private secure: SecureStateService,
         private store: WalletStore,
+        private addressStore: AddressStore,
+        private addressWatchStore: AddressWatchStore,
+        private accountHistoryStore: AccountHistoryStore,
         private settings: SettingsService,
         private communication: CommunicationService,
         private logger: LoggerService) {
@@ -532,6 +535,35 @@ export class WalletManager {
     }
 
     async removeWallet(id: string) {
+        // Which stores holds wallet information?
+        // WalletStore
+        // AddressStore
+        // AccountHistoryStore
+        // AddressWatchStore
+        // TransactionStore (we won't remove txs, as we will need to ensure they are not used in other account/wallets.)
+
+        // private addressStore: AddressStore,
+        // private addressWatchStore: AddressWatchStore,
+        // private accountHistoryStore: AccountHistoryStore,
+
+        const wallet = this.store.get(id);
+
+        try {
+            for (let i = 0; i < wallet.accounts.length; i++) {
+                const account = wallet.accounts[i];
+                const addresses = [...account.state.receive, ...account.state.change];
+
+                for (let j = 0; j < addresses.length; j++) {
+                    const address = addresses[j];
+                    this.addressWatchStore.remove(address.address);
+                }
+            }
+        }
+        catch
+        {
+
+        }
+
         this.store.remove(id);
 
         // Remove the password for this wallet, if it was unlocked.
