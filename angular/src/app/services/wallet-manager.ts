@@ -542,10 +542,6 @@ export class WalletManager {
         // AddressWatchStore
         // TransactionStore (we won't remove txs, as we will need to ensure they are not used in other account/wallets.)
 
-        // private addressStore: AddressStore,
-        // private addressWatchStore: AddressWatchStore,
-        // private accountHistoryStore: AccountHistoryStore,
-
         const wallet = this.store.get(id);
 
         try {
@@ -556,7 +552,10 @@ export class WalletManager {
                 for (let j = 0; j < addresses.length; j++) {
                     const address = addresses[j];
                     this.addressWatchStore.remove(address.address);
+                    this.addressStore.remove(address.address);
                 }
+
+                this.accountHistoryStore.get(account.identifier);
             }
         }
         catch
