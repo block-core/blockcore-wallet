@@ -453,25 +453,6 @@ export class WalletManager {
         return this.secure.unlocked(this.activeWallet.id);
     }
 
-    async removeAccount(walletId: string, accountId: string) {
-        const wallet = this.getWallet(walletId);
-
-        if (!wallet) {
-            return;
-        }
-
-        const accountIndex = wallet.accounts.findIndex(a => a.identifier == accountId);
-        wallet.accounts.splice(accountIndex, 1);
-
-        if (wallet.accounts.length > 0) {
-            wallet.activeAccountId = wallet.accounts[0].identifier;
-        } else {
-            wallet.activeAccountId = null;
-        }
-
-        await this.store.save();
-    }
-
     async setActiveWallet(id: string) {
         if (this.activeWalletId != id) {
             this._activeWalletId = id;
@@ -517,6 +498,57 @@ export class WalletManager {
         return this.store.get(id);
     }
 
+    private removeAccountHistory(account: Account) {
+        const addresses = [...account.state.receive, ...account.state.change].map(a => a.address);
+
+        for (let j = 0; j < addresses.length; j++) {
+            const address = addresses[j];
+            this.addressWatchStore.remove(address);
+            this.addressStore.remove(address);
+        }
+
+        this.accountHistoryStore.get(account.identifier);
+    }
+
+    private async saveAndUpdate() {
+        await this.store.save();
+        await this.addressWatchStore.save();
+        await this.addressStore.save();
+        await this.accountHistoryStore.save();
+
+        this.updateAllInstances();
+    }
+
+    async removeAccount(walletId: string, accountId: string) {
+        const wallet = this.getWallet(walletId);
+
+        if (!wallet) {
+            return;
+        }
+
+        const accountIndex = wallet.accounts.findIndex(a => a.identifier == accountId);
+
+        try {
+            const account = wallet.accounts[accountIndex];
+            this.removeAccountHistory(account);
+        }
+        catch
+        {
+
+        }
+
+        // Remove from accounts list.
+        wallet.accounts.splice(accountIndex, 1);
+
+        if (wallet.accounts.length > 0) {
+            wallet.activeAccountId = wallet.accounts[0].identifier;
+        } else {
+            wallet.activeAccountId = null;
+        }
+
+        await this.saveAndUpdate();
+    }
+
     async removeWallet(id: string) {
         // Which stores holds wallet information?
         // WalletStore
@@ -525,20 +557,16 @@ export class WalletManager {
         // AddressWatchStore
         // TransactionStore (we won't remove txs, as we will need to ensure they are not used in other account/wallets.)
 
-        const wallet = this.store.get(id);
+        const wallet = this.getWallet(id);
+
+        if (!wallet) {
+            return;
+        }
 
         try {
             for (let i = 0; i < wallet.accounts.length; i++) {
                 const account = wallet.accounts[i];
-                const addresses = [...account.state.receive, ...account.state.change];
-
-                for (let j = 0; j < addresses.length; j++) {
-                    const address = addresses[j];
-                    this.addressWatchStore.remove(address.address);
-                    this.addressStore.remove(address.address);
-                }
-
-                this.accountHistoryStore.get(account.identifier);
+                this.removeAccountHistory(account);
             }
         }
         catch
@@ -551,12 +579,7 @@ export class WalletManager {
         // Remove the seed from the secrets.
         this.secure.set(id, undefined);
 
-        await this.store.save();
-        await this.addressWatchStore.save();
-        await this.addressStore.save();
-        await this.accountHistoryStore.save();
-
-        this.updateAllInstances();
+        this.saveAndUpdate();
     }
 
     updateAllInstances() {
