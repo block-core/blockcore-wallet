@@ -90,6 +90,11 @@ export class CommunicationService {
                     this.state.refresh();
                     return 'ok';
                 }
+                case 'reload': {
+                    console.log('Wallet / Account might be deleted, so we must reload state.');
+                    this.state.reload();
+                    return 'ok';
+                }
                 case 'timeout': {
                     // Timeout was reached in the background. There is already logic listening to the session storage
                     // that will reload state and redirect to home (unlock) if needed, so don't do that here. It will

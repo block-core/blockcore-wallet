@@ -55,6 +55,16 @@ export class StateService {
 
         console.log('Stores:', this.stores);
     }
+    
+    async reload() {
+        await this.addressStore.load();
+        await this.transactionStore.load();
+        await this.walletStore.load();
+        await this.accountHistoryStore.load();
+        await this.addressWatchStore.load();
+
+        this.changedSubject.next(this);
+    }
 
     async refresh() {
         await this.addressStore.load();

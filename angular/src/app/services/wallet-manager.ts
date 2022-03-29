@@ -83,10 +83,11 @@ export class WalletManager {
         }
 
         // Get the secret seed.
-        const secret = this.walletSecrets.get(wallet.id);
+        const masterSeedBase64 = this.secure.get(wallet.id);
+        const masterSeed = Buffer.from(masterSeedBase64, 'base64');
 
         // Create the master node.
-        const masterNode = HDKey.fromMasterSeed(Buffer.from(secret.seed), network.bip32);
+        const masterNode = HDKey.fromMasterSeed(masterSeed, network.bip32);
 
         let addressNode: HDKey;
         addressNode = masterNode.derive(`m/${account.purpose}'/${account.network}'/${account.index}'/${addressType}/${addressItem.index}`);
@@ -251,7 +252,6 @@ export class WalletManager {
     }
 
     lockWallet(id: string) {
-        this.walletSecrets.delete(id);
         this.secure.set(id, undefined);
         // TODO: FIX!!!
         // this.manager.broadcastState();
@@ -296,9 +296,6 @@ export class WalletManager {
         return unlockedMnemonic;
     }
 
-    /** Contains the password and seed (unlocked) of wallets. This object should never be persisted and only exists in memory. */
-    walletSecrets = new Map<string, { password: string, seed: Uint8Array }>();
-
     /** Returns list of wallet IDs that is currently unlocked. */
     get unlocked(): string[] {
         return this.secure.unlockedWalletsSubject.value;
@@ -321,9 +318,6 @@ export class WalletManager {
             // From the secret receovery phrase, the master seed is derived.
             // Learn more about the HD keys: https://raw.githubusercontent.com/bitcoin/bips/master/bip-0032/derivation.png
             const masterSeed = mnemonicToSeedSync(unlockedMnemonic);
-
-            // Add this wallet to list of unlocked.
-            this.walletSecrets.set(walletId, { password, seed: masterSeed });
 
             // Store the decrypted master seed in session state.
             this.secure.set(walletId, Buffer.from(masterSeed).toString('base64'));
@@ -357,15 +351,10 @@ export class WalletManager {
             // Make sure we persist the newly encrypted recovery phrase.
             await this.store.save();
 
-            // Make sure we delete the existing wallet secret for this wallet.
-            this.walletSecrets.delete(walletId);
-
             const masterSeed = mnemonicToSeedSync(unlockedMnemonic);
 
-            // Add this wallet to list of unlocked.
-            this.walletSecrets.set(walletId, { password: newpassword, seed: masterSeed });
-
-            // this.state.persisted.previousWalletId = wallet.id;
+            // Store the decrypted master seed in session state.
+            this.secure.set(walletId, Buffer.from(masterSeed).toString('base64'));
 
             return true;
         } else {
@@ -461,13 +450,7 @@ export class WalletManager {
     // }
 
     isActiveWalletUnlocked(): boolean {
-        let secret = this.walletSecrets.get(this.activeWallet.id);
-
-        if (secret === null || secret.password === null || secret.password === undefined || secret.password === '') {
-            return false;
-        } else {
-            return true;
-        }
+        return this.secure.unlocked(this.activeWallet.id);
     }
 
     async removeAccount(walletId: string, accountId: string) {
@@ -565,16 +548,27 @@ export class WalletManager {
 
         this.store.remove(id);
 
-        // Remove the password for this wallet, if it was unlocked.
-        this.walletSecrets.delete(id);
-
         // Remove the seed from the secrets.
         this.secure.set(id, undefined);
 
         await this.store.save();
+        await this.addressWatchStore.save();
+        await this.addressStore.save();
+        await this.accountHistoryStore.save();
 
-        // TODO: FIX!!
-        // this.manager.broadcastState();
+        this.updateAllInstances();
+    }
+
+    updateAllInstances() {
+        chrome.runtime.sendMessage({
+            type: 'reload',
+            ext: 'blockcore',
+            source: 'tab',
+            target: 'tabs',
+            host: location.host
+        }, function (response) {
+            console.log('Extension:sendMessage:response:updated:', response);
+        });
     }
 
     async addAccount(account: Account, wallet: Wallet) {
