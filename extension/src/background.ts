@@ -13,6 +13,58 @@ chrome.runtime.onSuspend.addListener(() => {
     console.log("Extension: onSuspend.");
 });
 
+async function getTabId() {
+    var tabs = await chrome.tabs.query({ active: true, currentWindow: true });
+    return tabs[0].id;
+}
+
+chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+    console.log('tabs.onUpdated!');
+    if (changeInfo.status === 'complete' && /^http/.test(tab.url)) {
+    }
+});
+
+// chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+//     if (changeInfo.status === 'complete' && /^http/.test(tab.url)) {
+//         chrome.scripting.executeScript({
+//             target: { tabId: tabId },
+//             files: ["./foreground.js"]
+//         })
+//             .then(() => {
+//                 console.log("INJECTED THE FOREGROUND SCRIPT.");
+//             })
+//             .catch(err => console.log(err));
+//     }
+// });
+
+chrome.action.onClicked.addListener((tab) => {
+    console.log('ACTION!!', tab);
+
+    // var popups = chrome.extension.getViews({ type: "popup" });
+        // if (popups.length != 0) {
+        //     console.log('FOUND A POPUP!!');
+        //     var popup = popups[0];
+        //     console.log(popup);
+        //     // popup.doSomething();
+        // }
+        // else {
+        //     console.log('No POPUP!?!!');
+        // }
+
+        // const [tab] = await chrome.tabs.query({active: true, currentWindow: true});
+        // const results = await chrome.scripting.executeScript({
+        //   target: {tabId: tab.id},
+
+
+});
+
+chrome.action.onClicked.addListener((tab) => {
+    console.log('The tab: ', tab);
+    console.log('YES!!!');
+});
+
+
+
 chrome.runtime.onInstalled.addListener(async ({ reason }) => {
     console.log('onInstalled', reason);
 

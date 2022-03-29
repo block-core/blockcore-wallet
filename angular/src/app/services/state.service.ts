@@ -2,14 +2,13 @@ import { Injectable } from "@angular/core";
 import { BehaviorSubject, Observable } from "rxjs";
 import { ActionStore, AddressStore, NetworkStatusStore, SettingStore, TransactionStore, UIStore, WalletStore, AccountHistoryStore } from "src/shared";
 import { AddressWatchStore } from "src/shared/store/address-watch-store";
+import { StoreBase, StoreListBase } from "src/shared/store/store-base";
 
 @Injectable({
     providedIn: 'root'
 })
 export class StateService {
-
     private stores: any = [];
-
     changedSubject: BehaviorSubject<StateService>;
 
     public get changed$(): Observable<StateService> {
@@ -55,7 +54,19 @@ export class StateService {
 
         console.log('Stores:', this.stores);
     }
-    
+
+    /** Find an individual store and reload that. */
+    async reloadStore(name: string) {
+        const store = this.stores.find((s: { stateKey: string; }) => s.stateKey == name);
+
+        if (store == null) {
+            return;
+        }
+
+        await store.load();
+        this.changedSubject.next(this);
+    }
+
     async reload() {
         await this.addressStore.load();
         await this.transactionStore.load();

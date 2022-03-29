@@ -45,32 +45,37 @@ export class SettingsComponent {
     this.uiState.showBackButton = true;
   }
 
+  updateAllInstances() {
+    chrome.runtime.sendMessage({
+      type: 'store-reload',
+      data: 'setting',
+      ext: 'blockcore',
+      source: 'tab',
+      target: 'tabs',
+      host: location.host
+    }, function (response) {
+      console.log('Extension:sendMessage:response:updated:', response);
+    });
+  }
+
   async save() {
     await this.settingsService.replace(this.settings);
 
     await this.walletManager.resetTimer();
 
-    this.communication.send(this.communication.createMessage('settings:saved', this.settingsService.values));
+    // this.communication.send(this.communication.createMessage('settings:saved', this.settingsService.values));
+
+    this.updateAllInstances();
 
     this.location.back();
   }
 
   onThemeChanged(event: any) {
-    if (this.settings.theme === 'light') {
-      this.renderer.removeClass(document.body, 'dark-theme');
-    } else {
-      this.renderer.addClass(document.body, 'dark-theme');
-    }
+    this.settingsService.setTheme(this.settings.theme);
   }
 
   onLanguageChanged(event: any) {
-    this.translate.use(this.settings.language);
-
-    // if (this.settings.theme === 'light') {
-    //   this.renderer.removeClass(document.body, 'dark-theme');
-    // } else {
-    //   this.renderer.addClass(document.body, 'dark-theme');
-    // }
+    this.settingsService.setLanguage(this.settings.language);
   }
 
   onAccentChanged(event: any) {

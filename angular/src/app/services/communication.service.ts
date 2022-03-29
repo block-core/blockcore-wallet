@@ -1,5 +1,5 @@
 import { Injectable, NgZone } from '@angular/core';
-import { EnvironmentService } from '.';
+import { EnvironmentService, SettingsService } from '.';
 import { Message, MessageResponse } from '../../shared/interfaces';
 import { StateService } from './state.service';
 const { v4: uuidv4 } = require('uuid');
@@ -11,6 +11,7 @@ export class CommunicationService {
     constructor(
         private ngZone: NgZone,
         private state: StateService,
+        private settings: SettingsService,
         private env: EnvironmentService) {
 
     }
@@ -93,6 +94,16 @@ export class CommunicationService {
                 case 'reload': {
                     console.log('Wallet / Account might be deleted, so we must reload state.');
                     this.state.reload();
+                    return 'ok';
+                }
+                case 'store-reload': {
+                    console.log(`Specific store was requested to be updated: ${message.data}`);
+                    this.state.reloadStore(message.data);
+
+                    if (message.data === 'setting') {
+                        this.settings.update();
+                    }
+
                     return 'ok';
                 }
                 case 'timeout': {

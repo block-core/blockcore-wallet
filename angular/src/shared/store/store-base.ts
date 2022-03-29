@@ -4,7 +4,7 @@ export class StoreListBase<T> {
     protected items: Map<string, T> = new Map<string, T>();
     protected state = new Persistence();
 
-    constructor(private stateKey: string) {
+    constructor(public stateKey: string) {
     }
 
     async wipe(): Promise<void> {
@@ -47,7 +47,7 @@ export class StoreBase<T> {
     protected item: T;
     protected state = new Persistence();
 
-    constructor(private stateKey: string) {
+    constructor(public stateKey: string) {
     }
 
     get() {
