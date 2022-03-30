@@ -10,7 +10,6 @@ export class SettingsService {
     private renderer: Renderer2;
 
     constructor(private settingStore: SettingStore,
-        // private renderer: Renderer2,
         public translate: TranslateService,
         private rendererFactory: RendererFactory2
     ) {
@@ -29,8 +28,6 @@ export class SettingsService {
     async update() {
         // Make sure we first load latest from storage
         await this.settingStore.load();
-
-        console.log(this.values.theme);
 
         if (this.values.theme === 'light') {
             this.renderer.removeClass(document.body, 'dark-theme');

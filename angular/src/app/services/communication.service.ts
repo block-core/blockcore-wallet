@@ -98,12 +98,7 @@ export class CommunicationService {
                 }
                 case 'store-reload': {
                     console.log(`Specific store was requested to be updated: ${message.data}`);
-
-                    console.log('Theme before reload:', this.settings.values.theme);
-
                     this.state.reloadStore(message.data);
-
-                    console.log('Theme after reload:', this.settings.values.theme);
 
                     if (message.data === 'setting') {
                         await this.settings.update();
