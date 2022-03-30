@@ -311,3 +311,10 @@ function watch() {
         console.log('Is already indexing, skipping watch processing.');
     }
 }
+
+// // For future usage when Point-of-Sale window is added, opening the window should just focus that tab.
+// await chrome.tabs.update(tabs[0].id, { active: true });
+
+// // Setting the badge
+// await chrome.action.setBadgeText({ text: '44' });
+// await chrome.action.setBadgeBackgroundColor({ color: 'red' });
