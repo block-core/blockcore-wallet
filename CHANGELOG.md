@@ -1,3 +1,25 @@
+## <small>0.0.19 (2022-03-30)</small>
+
+* Add remove of address watch store entries when wallet is removed ([988ba40](https://github.com/block-core/blockcore-extension/commit/988ba40))
+* Add remove of addresse info and account history on wallet delete ([d105c07](https://github.com/block-core/blockcore-extension/commit/d105c07))
+* Add some code instructions for future usage ([bae1d3c](https://github.com/block-core/blockcore-extension/commit/bae1d3c))
+* Communicate settings saved across instances ([5577454](https://github.com/block-core/blockcore-extension/commit/5577454))
+* Fix a resource leak on account page ([621d174](https://github.com/block-core/blockcore-extension/commit/621d174))
+* Fix an issue on newly created accounts where change address is not generated yet ([b596067](https://github.com/block-core/blockcore-extension/commit/b596067))
+* Fix an issue that occurs after remove and adding accounts/wallets ([6775759](https://github.com/block-core/blockcore-extension/commit/6775759))
+* Fix an issue with persistence of wallet being wiped by indexer ([bef040c](https://github.com/block-core/blockcore-extension/commit/bef040c))
+* Fix bug with missing await on calculate balance ([0a13334](https://github.com/block-core/blockcore-extension/commit/0a13334))
+* Fix the remove account similar to remove wallet ([12eca75](https://github.com/block-core/blockcore-extension/commit/12eca75))
+* Force an index run upon account create from restored wallet ([7437d13](https://github.com/block-core/blockcore-extension/commit/7437d13))
+* Migrate towards having selected account ID on the WalletManager ([b121da6](https://github.com/block-core/blockcore-extension/commit/b121da6))
+* Open new tab on install ([37506ea](https://github.com/block-core/blockcore-extension/commit/37506ea))
+* Remove some debug logging ([c01ba74](https://github.com/block-core/blockcore-extension/commit/c01ba74))
+* Remove unused functions ([b8de3cc](https://github.com/block-core/blockcore-extension/commit/b8de3cc))
+* Save state and broadcast to all instances ([fea2879](https://github.com/block-core/blockcore-extension/commit/fea2879))
+* Update version and changelog ([e8e7218](https://github.com/block-core/blockcore-extension/commit/e8e7218))
+
+
+
 ## <small>0.0.18 (2022-03-28)</small>
 
 * Add ability to support singleAddress networks ([28b5faf](https://github.com/block-core/blockcore-extension/commit/28b5faf))
