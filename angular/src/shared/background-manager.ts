@@ -102,15 +102,29 @@ export class BackgroundManager {
         // Get what addresses to watch from local storage.
         // globalThis.chrome.storage.local.get('')
         const indexer = new IndexerBackgroundService(settingStore, walletStore, addressStore, transactionStore, addressManager, accountHistoryStore);
-        const changes = await indexer.process(null);
+
+        let changes = false;
+
+        try {
+            changes = await indexer.process(null);
+        }
+        catch (err) {
+            console.error('Failure during indexer processing.', err);
+        }
+
 
         // If there are no changes, don't re-calculate the balance.
         if (!changes) {
             return false;
         }
 
-        // Calculate the balance of the wallets.
-        indexer.calculateBalance();
+        try {
+            // Calculate the balance of the wallets.
+            await indexer.calculateBalance();
+        }
+        catch (err) {
+            console.error('Failure during calculate balance.', err);
+        }
 
         this.indexing = false;
 
