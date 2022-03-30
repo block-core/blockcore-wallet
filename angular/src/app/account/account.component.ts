@@ -59,7 +59,7 @@ export class AccountComponent implements OnInit, OnDestroy {
       this.router.navigateByUrl('/account/create');
     }
 
-    this.activatedRoute.paramMap.subscribe(async params => {
+    this.subscriptions.push(this.activatedRoute.paramMap.subscribe(async params => {
       console.log('PARAMS:', params);
       const accountIdentifier: any = params.get('index');
 
@@ -69,7 +69,7 @@ export class AccountComponent implements OnInit, OnDestroy {
 
       // this.manager.setActiveAccountId(index);
       await this.walletManager.setActiveAccount(accountIdentifier);
-    });
+    }));
   }
 
   ngOnDestroy(): void {
@@ -161,14 +161,12 @@ export class AccountComponent implements OnInit, OnDestroy {
   }
 
   async ngOnInit() {
-
-
-    this.state.changed$.subscribe((state) => {
+    this.subscriptions.push(this.state.changed$.subscribe((state) => {
       this.ngZone.run(() => {
         console.log('state changed, update account history!');
         this.updateAccountHistory();
       });
-    });
+    }));
 
     this.updateNetworkStatus();
 
