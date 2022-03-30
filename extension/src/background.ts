@@ -97,7 +97,7 @@ chrome.runtime.onInstalled.addListener(async ({ reason }) => {
         // }
 
         // Open a new tab for initial setup.
-        // chrome.tabs.create({ url: "index.html" });
+        chrome.tabs.create({ url: "index.html" });
     } else if (reason === 'update') {
         // var popups = chrome.extension.getViews({ type: "popup" });
         // if (popups.length != 0) {
