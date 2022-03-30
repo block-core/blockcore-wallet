@@ -82,12 +82,12 @@ export class CommunicationService {
                     return 'success';
                 }
                 case 'updated': {
-                    console.log('SERVICE WORKER HAS FINISHED INDEXING, but no changes to the data, but we get updated wallet info.');
+                    console.log('SERVICE WORKER HAS FINISHED INDEXING, but no changes to the data, but we get updated wallet info.', message.data);
                     this.state.update();
                     return 'ok';
                 }
                 case 'indexed': {
-                    console.log('SERVICE WORKER HAS FINISHED INDEXING!!! WE MUST RELOAD STORES!');
+                    console.log('SERVICE WORKER HAS FINISHED INDEXING!!! WE MUST RELOAD STORES!', message.data);
                     this.state.refresh();
                     return 'ok';
                 }

@@ -78,11 +78,22 @@ export class StateService {
     }
 
     async refresh() {
+
+        console.log('BEFORE:')
+        console.log(JSON.stringify(this.walletStore.all()));
+        console.log(JSON.stringify(this.addressStore.all()));
+        console.log(JSON.stringify(this.accountHistoryStore.all()));
+
         await this.addressStore.load();
         await this.transactionStore.load();
         await this.walletStore.load();
         await this.accountHistoryStore.load();
         await this.addressWatchStore.load();
+
+        console.log('AFTER:')
+        console.log(JSON.stringify(this.walletStore.all()));
+        console.log(JSON.stringify(this.addressStore.all()));
+        console.log(JSON.stringify(this.accountHistoryStore.all()));
 
         this.changedSubject.next(this);
     }

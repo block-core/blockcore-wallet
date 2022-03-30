@@ -3,7 +3,7 @@ import { MINUTE } from "../shared/constants";
 import {
     SecureStateService,
     CryptoUtility, DataSyncService, NetworkLoader,
-    CommunicationService, WalletManager, NetworkStatusService
+    CommunicationService, WalletManager
 } from "./";
 import { StateService } from "./state.service";
 
@@ -15,7 +15,6 @@ export class AppManager {
     constructor(
         public sync: DataSyncService,
         public state: StateService,
-        public status: NetworkStatusService,
         public walletManager: WalletManager,
         public communication: CommunicationService,
         public networkLoader: NetworkLoader,

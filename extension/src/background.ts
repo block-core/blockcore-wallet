@@ -162,6 +162,7 @@ chrome.alarms.onAlarm.addListener(async (alarm: chrome.alarms.Alarm) => {
             if (changes) {
                 chrome.runtime.sendMessage({
                     type: 'indexed',
+                    data: { source: 'indexer-on-alarm' },
                     ext: 'blockcore',
                     source: 'background',
                     target: 'tabs',
@@ -174,6 +175,7 @@ chrome.alarms.onAlarm.addListener(async (alarm: chrome.alarms.Alarm) => {
 
                 chrome.runtime.sendMessage({
                     type: 'updated',
+                    data: { source: 'indexer-on-alarm' },
                     ext: 'blockcore',
                     source: 'background',
                     target: 'tabs',
@@ -236,6 +238,7 @@ chrome.runtime.onMessage.addListener(async (message: Message, sender, sendRespon
                     if (changes) {
                         chrome.runtime.sendMessage({
                             type: 'indexed',
+                            data: { source: 'indexer-on-demand' },
                             ext: 'blockcore',
                             source: 'background',
                             target: 'tabs',
@@ -248,6 +251,7 @@ chrome.runtime.onMessage.addListener(async (message: Message, sender, sendRespon
 
                         chrome.runtime.sendMessage({
                             type: 'updated',
+                            data: { source: 'indexer-on-demand' },
                             ext: 'blockcore',
                             source: 'background',
                             target: 'tabs',
@@ -285,6 +289,7 @@ function watch() {
             if (changes) {
                 chrome.runtime.sendMessage({
                     type: 'indexed',
+                    data: { source: 'watcher' },
                     ext: 'blockcore',
                     source: 'background',
                     target: 'tabs',
@@ -298,6 +303,7 @@ function watch() {
 
                 chrome.runtime.sendMessage({
                     type: 'updated',
+                    data: { source: 'watcher' },
                     ext: 'blockcore',
                     source: 'background',
                     target: 'tabs',

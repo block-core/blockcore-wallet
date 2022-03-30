@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { WalletManager, NetworksService, UIState } from '../../services';
+import { WalletManager, NetworksService, UIState, CommunicationService } from '../../services';
 import { Account } from '../../../shared/interfaces';
 
 @Component({
@@ -18,6 +18,7 @@ export class AccountSelectComponent implements OnInit, OnDestroy {
         private uiState: UIState,
         private networkService: NetworksService,
         public walletManager: WalletManager,
+        private communication: CommunicationService,
         private router: Router
     ) {
         uiState.title = 'Select accounts';
@@ -52,6 +53,11 @@ export class AccountSelectComponent implements OnInit, OnDestroy {
             // Don't persist the selected value.
             delete account.selected;
             await this.walletManager.addAccount(account, wallet);
+        }
+
+        if (wallet.restored) {
+            const msg = this.communication.createMessage('index', { force: true }, 'background');
+            this.communication.send(msg);
         }
 
         // this.refreshState();
