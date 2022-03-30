@@ -134,6 +134,10 @@ export class AccountComponent implements OnInit, OnDestroy {
   }
 
   updateAccountHistory() {
+    if (this.walletManager.activeAccount == null) {
+      return;
+    }
+
     this.accountHistory = this.accountHistoryStore.get(this.walletManager.activeAccount.identifier);
 
     // If there are no account history yet (indexer has not been run for this wallet), set an empty history for UI to bind with:
