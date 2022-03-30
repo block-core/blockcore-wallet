@@ -59,9 +59,13 @@ export class SettingsComponent {
   }
 
   async save() {
+    console.log('SAVING', this.settings);
+
     await this.settingsService.replace(this.settings);
 
     await this.walletManager.resetTimer();
+
+    console.log('Theme is now after save in replace: ', this.settingsService.values.theme);
 
     // this.communication.send(this.communication.createMessage('settings:saved', this.settingsService.values));
 

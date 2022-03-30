@@ -30,7 +30,7 @@ export class AccountRemoveComponent {
       if (this.walletManager.activeWallet) {
         // Check if the index is available before allowing to change.
         if (accountId && accountCount != null) {
-          this.walletManager.activeWallet.activeAccountId = accountId;
+          // this.walletManager.activeWallet.activeAccountId = accountId;
         }
         else {
           console.log('Attempting to show account that does not exists.');
@@ -51,7 +51,7 @@ export class AccountRemoveComponent {
 
     var activeWallet = this.walletManager.activeWallet;
 
-    await this.walletManager.removeAccount(activeWallet.id, activeWallet.activeAccountId);
+    await this.walletManager.removeAccount(activeWallet.id, this.walletManager.activeAccountId);
 
     this.router.navigateByUrl('/dashboard');
   }

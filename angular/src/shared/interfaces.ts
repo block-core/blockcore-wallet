@@ -270,7 +270,7 @@ interface Wallet {
     accounts: Account[];
     mnemonic: string;
     // activeAccountIndex: number;
-    activeAccountId: string;
+    // activeAccountId: string;
 }
 
 interface Persisted {
@@ -303,6 +303,7 @@ interface AddressWatchState {
 interface AppState {
     /** This is used to select the active wallet on extension startup. */
     previousWalletId: string | undefined | null;
+    previousAccountId: string | undefined | null;
 }
 
 interface Settings {

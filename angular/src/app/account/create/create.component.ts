@@ -177,7 +177,7 @@ export class AccountCreateComponent implements OnInit, OnDestroy {
         await this.walletManager.addAccount(account, this.walletManager.activeWallet);
 
         // When adding an account, the active account ID will be updated so we can read it here.
-        this.router.navigateByUrl('/account/view/' + this.walletManager.activeWallet.activeAccountId);
+        this.router.navigateByUrl('/account/view/' + this.walletManager.activeAccountId);
 
         // this.communication.sendToAll('account-created');
         // this.manager.createAccount(this.uiState.activeWallet.id, account);

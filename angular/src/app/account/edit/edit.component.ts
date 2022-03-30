@@ -74,7 +74,7 @@ export class AccountEditComponent implements OnInit, OnDestroy {
     // We won't allow empty names for accounts.
     if (this.accountName) {
       const wallet = this.walletManager.activeWallet;
-      const accountId = this.walletManager.activeWallet.activeAccountId;
+      const accountId = this.walletManager.activeAccountId;
 
       if (!wallet) {
         return;

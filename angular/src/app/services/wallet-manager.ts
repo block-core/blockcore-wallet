@@ -31,10 +31,15 @@ axiosRetry(axios, { retries: 3 });
 export class WalletManager {
     private timer: any;
     private _activeWalletId: string;
+    private _activeAccountId: string;
     private allNetworks: Network[];
 
     get activeWalletId() {
         return this._activeWalletId;
+    }
+
+    get activeAccountId() {
+        return this._activeAccountId;
     }
 
     constructor(
@@ -410,11 +415,17 @@ export class WalletManager {
             return undefined;
         }
 
-        if (activeWallet.activeAccountId == null) {
+        if (this.activeAccountId == null) {
             return undefined;
         }
 
-        const accountIndex = activeWallet.accounts.findIndex(a => a.identifier == activeWallet.activeAccountId);
+        const accountIndex = activeWallet.accounts.findIndex(a => a.identifier == this.activeAccountId);
+
+        // This can happen if the wallet has changed but not the account identifier. When this happens, we'll reset the active account ID.
+        if (accountIndex === -1) {
+            this._activeAccountId = null;
+            return undefined;
+        }
 
         return this.activeWallet.accounts[accountIndex];
     }
@@ -458,7 +469,7 @@ export class WalletManager {
             this._activeWalletId = id;
             this.state.persisted.previousWalletId = id;
 
-            await this.store.save();
+            // await this.store.save();
             await this.state.save();
 
             this.activeWalletSubject.next(this.activeWallet);
@@ -472,14 +483,14 @@ export class WalletManager {
     async setActiveAccount(id: string) {
         console.log('!!! setActiveAccount: ', id);
 
-        if (this.activeWallet.activeAccountId != id) {
-            this.activeWallet.activeAccountId = id;
+        if (this.activeAccountId != id) {
+            this._activeAccountId = id;
+            this.state.persisted.previousAccountId = id;
 
-            // Make sure we persist the active account index or the UI will update (revert) to
-            // previous when indexing has completed.
-            await this.store.save();
+            await this.state.save();
 
             this.activeAccountSubject.next(this.activeAccount);
+
             return true;
         }
 
@@ -540,11 +551,13 @@ export class WalletManager {
         // Remove from accounts list.
         wallet.accounts.splice(accountIndex, 1);
 
-        if (wallet.accounts.length > 0) {
-            wallet.activeAccountId = wallet.accounts[0].identifier;
-        } else {
-            wallet.activeAccountId = null;
-        }
+        this._activeAccountId = null;
+        // wallet.activeAccountId = null;
+        // if (wallet.accounts.length > 0) {
+        //     // wallet.activeAccountId = wallet.accounts[0].identifier;
+        // } else {
+        //     wallet.activeAccountId = null;
+        // }
 
         await this.saveAndUpdate();
     }
@@ -613,7 +626,8 @@ export class WalletManager {
         wallet.accounts.push(account);
 
         // Update the active account index to new account.
-        wallet.activeAccountId = account.identifier;
+        this.state.persisted.previousAccountId = account.identifier;
+        this._activeAccountId = account.identifier;
 
         // After new account has been added and set as active, we'll generate some addresses:
 
@@ -624,6 +638,7 @@ export class WalletManager {
         await this.getChangeAddress(account);
 
         await this.store.save();
+        await this.state.save();
     }
 
     async getChangeAddress(account: Account) {

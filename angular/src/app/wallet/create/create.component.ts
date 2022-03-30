@@ -90,7 +90,6 @@ export class WalletCreateComponent implements OnInit {
                 id: id,
                 name: walletName,
                 mnemonic: recoveryPhrase,
-                activeAccountId: null,
                 accounts: []
             };
 
