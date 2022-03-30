@@ -421,6 +421,13 @@ export class IndexerBackgroundService {
                         }
                     }
 
+                    // On newly created accounts, there might not be any change address.
+                    if (account.state.change.length === 0) {
+                        const nextAddress = this.addressManager.getAddress(account, 1, 0);
+                        account.state.change.push(nextAddress);
+                        changes = true;
+                    }
+
                     // Get the last change addresses.
                     const addressChange = account.state.change[account.state.change.length - 1];
 

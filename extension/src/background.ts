@@ -18,11 +18,11 @@ async function getTabId() {
     return tabs[0].id;
 }
 
-chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-    console.log('tabs.onUpdated!');
-    if (changeInfo.status === 'complete' && /^http/.test(tab.url)) {
-    }
-});
+// chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+//     console.log('tabs.onUpdated!');
+//     if (changeInfo.status === 'complete' && /^http/.test(tab.url)) {
+//     }
+// });
 
 // chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 //     if (changeInfo.status === 'complete' && /^http/.test(tab.url)) {

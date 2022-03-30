@@ -46,9 +46,7 @@ export class AccountSelectComponent implements OnInit, OnDestroy {
         const accounts = this.coins.filter(item => item.selected)
         accounts.push(...this.other.filter(item => item.selected));
 
-        // this.orchestrator.createAccounts(this.uiState.activeWallet.id, accounts);
-
-        const wallet = this.walletManager.getWallet(this.walletManager.activeWallet.id);
+        const wallet = this.walletManager.activeWallet;
 
         for (const account of accounts) {
             // Don't persist the selected value.
@@ -59,6 +57,7 @@ export class AccountSelectComponent implements OnInit, OnDestroy {
         // this.refreshState();
         this.router.navigateByUrl('/dashboard');
 
+        // TODO: Refresh all instances when new accounts is created.
         // this.communication.sendToAll('account-created');
     }
 }
