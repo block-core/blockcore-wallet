@@ -6,11 +6,22 @@ import { AddressStore, SettingStore, TransactionStore, WalletStore, AccountHisto
 import { AddressWatchStore } from "./store/address-watch-store";
 
 export class BackgroundManager {
+
+    indexing = false;
+    watching = false;
+
     constructor() {
 
     }
 
     async runWatcher() {
+        // Skip watcher while indexing.
+        if (this.indexing == true) {
+            return false;
+        }
+
+        this.watching = true;
+
         const settingStore = new SettingStore();
         await settingStore.load();
 
@@ -49,10 +60,26 @@ export class BackgroundManager {
         // Calculate the balance of the wallets.
         indexer.calculateBalance();
 
+        this.watching = false;
+
         return true;
     }
 
     async runIndexer() {
+        // Skip if we are already indexing.
+        if (this.indexing == true) {
+            return false;
+        }
+
+        if (this.watching == true) {
+            // Delay and try again...
+            setTimeout(async () => {
+                await this.runIndexer();
+            }, 2000);
+        }
+
+        this.indexing = true;
+
         // First update all the data.
         const settingStore = new SettingStore();
         await settingStore.load();
@@ -84,6 +111,8 @@ export class BackgroundManager {
 
         // Calculate the balance of the wallets.
         indexer.calculateBalance();
+
+        this.indexing = false;
 
         return true;
     }

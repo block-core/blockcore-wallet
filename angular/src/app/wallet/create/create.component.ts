@@ -94,6 +94,9 @@ export class WalletCreateComponent implements OnInit {
             };
 
             await this.walletManager.addWallet(wallet);
+
+            // Save the newly added wallet.
+            await this.walletManager.save();
         }
     }
 }

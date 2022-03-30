@@ -397,11 +397,7 @@ export class WalletManager {
     }
 
     get activeWallet() {
-        if (this.activeWalletId) {
-            return this.store.get(this.activeWalletId);
-        } else {
-            return undefined;
-        }
+        return this.store.get(this._activeWalletId);
     }
 
     get activeAccount() {
@@ -465,6 +461,8 @@ export class WalletManager {
     }
 
     async setActiveWallet(id: string) {
+        console.log('WalletManager:setActiveWallet:' + id);
+
         if (this.activeWalletId != id) {
             this._activeWalletId = id;
             this.state.persisted.previousWalletId = id;
@@ -481,7 +479,7 @@ export class WalletManager {
     }
 
     async setActiveAccount(id: string) {
-        console.log('!!! setActiveAccount: ', id);
+        console.log('WalletManager:setActiveAccount:' + id);
 
         if (this.activeAccountId != id) {
             this._activeAccountId = id;

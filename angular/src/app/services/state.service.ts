@@ -100,6 +100,7 @@ export class StateService {
 
     async update() {
         await this.walletStore.load();
+        console.log('GET WALLETS:', this.walletStore.getWallets())
         this.changedSubject.next(this);
     }
 }
