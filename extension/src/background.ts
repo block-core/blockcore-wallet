@@ -21,25 +21,6 @@ async function getTabId() {
     return tabs[0].id;
 }
 
-// chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-//     console.log('tabs.onUpdated!');
-//     if (changeInfo.status === 'complete' && /^http/.test(tab.url)) {
-//     }
-// });
-
-// chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-//     if (changeInfo.status === 'complete' && /^http/.test(tab.url)) {
-//         chrome.scripting.executeScript({
-//             target: { tabId: tabId },
-//             files: ["./foreground.js"]
-//         })
-//             .then(() => {
-//                 console.log("INJECTED THE FOREGROUND SCRIPT.");
-//             })
-//             .catch(err => console.log(err));
-//     }
-// });
-
 chrome.runtime.onInstalled.addListener(async ({ reason }) => {
     console.log('onInstalled', reason);
 
@@ -59,34 +40,10 @@ chrome.runtime.onInstalled.addListener(async ({ reason }) => {
     });
 
     if (reason === 'install') {
-        // Exception: chrome.extension.getViews is not a function
-        // var popups = chrome.extension.getViews({ type: "popup" });
-        // if (popups.length != 0) {
-        //     console.log('FOUND A POPUP!!');
-        //     var popup = popups[0];
-        //     console.log(popup);
-        //     // popup.doSomething();
-        // }
-        // else {
-        //     console.log('No POPUP!?!!');
-        // }
-
         // Open a new tab for initial setup.
         chrome.tabs.create({ url: "index.html" });
     } else if (reason === 'update') {
-        // var popups = chrome.extension.getViews({ type: "popup" });
-        // if (popups.length != 0) {
-        //     console.log('FOUND A POPUP!!');
-        //     var popup = popups[0];
-        //     console.log(popup);
-        //     // popup.doSomething();
-        // }
-        // else {
-        //     console.log('No POPUP!?!!');
-        // }
 
-        // Open a new tab for initial setup.
-        // chrome.tabs.create({ url: "index.html" });
     }
 });
 
@@ -111,9 +68,6 @@ chrome.alarms.onAlarm.addListener(async (alarm: chrome.alarms.Alarm) => {
             // The reset date is current date minus the timeout.
             var resetDate = new Date(new Date().valueOf() - timeout);
 
-            // console.log('resetDate: ', resetDate.toJSON());
-            // console.log('timeoutDate: ', timeoutDate.toJSON());
-
             // Check of the timeout has been reached and clear if it has.
             if (resetDate > timeoutDate) {
                 await storage.session.remove(['keys']);
@@ -126,43 +80,13 @@ chrome.alarms.onAlarm.addListener(async (alarm: chrome.alarms.Alarm) => {
             }
         }
     } else if (alarm.name === 'index') {
-        // if (!indexing) {
-        //     indexing = true;
-
-        //     const manager = new BackgroundManager();
-        //     const changes = await manager.runIndexer();
-
-        //     indexing = false;
-
-        //     if (changes) {
-        //         chrome.runtime.sendMessage({
-        //             type: 'indexed',
-        //             data: { source: 'indexer-on-alarm' },
-        //             ext: 'blockcore',
-        //             source: 'background',
-        //             target: 'tabs',
-        //             host: location.host
-        //         }, function (response) {
-        //             console.log('Extension:sendMessage:response:indexed:', response);
-        //         });
-        //     } else {
-        //         console.log('Indexer found zero changes. We will still inform the UI to refresh wallet to get latest scan state.');
-
-        //         chrome.runtime.sendMessage({
-        //             type: 'updated',
-        //             data: { source: 'indexer-on-alarm' },
-        //             ext: 'blockcore',
-        //             source: 'background',
-        //             target: 'tabs',
-        //             host: location.host
-        //         }, function (response) {
-        //             console.log('Extension:sendMessage:response:updated:', response);
-        //         });
-
-        //     }
-        // } else {
-        //     console.log('Indexing is already running. Skipping for now.');
-        // }
+        if (!indexing) {
+            indexing = true;
+            await runIndexer();
+            indexing = false;
+        } else {
+            console.log('Indexing is already running. Skipping for now.');
+        }
     }
 });
 
@@ -205,6 +129,7 @@ chrome.runtime.onMessage.addListener(async (message: Message, sender, sendRespon
                     indexing = true;
                     response = 'ok';
                     await runIndexer();
+                    indexing = false;
                 } else {
                     console.log('Indexing is already running. Skipping for now.');
                     response = 'busy';
