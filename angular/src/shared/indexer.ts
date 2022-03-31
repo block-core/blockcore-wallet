@@ -13,7 +13,7 @@ axiosRetry(axios, { retries: 3 });
 
 /** Service that handles queries against the blockchain indexer to retrieve data for accounts. Runs in the background. */
 export class IndexerBackgroundService {
-    private limit = 50;
+    private limit = 20;
     private finalized = 500;
     private confirmed = 1;
 
@@ -30,7 +30,7 @@ export class IndexerBackgroundService {
      * large wallets that have a single transaction pr. address and many addresses, but it will make large staker/miner wallets
      * work much better.
      */
-    private batchSize = 200;
+    private batchSize = 50;
 
     constructor(
         private settingStore: SettingStore,
@@ -272,6 +272,8 @@ export class IndexerBackgroundService {
                 const indexerUrl = settings.indexer.replace('{id}', network.id.toLowerCase());
                 const primaryReceiveAddress = account.state.receive[0];
 
+                let anyAddressNotComplete = false;
+
                 if (addressWatchStore) {
                     // If the network is single address and the primary is not part of watch addresses,
                     // make sure we (re)add it.
@@ -306,9 +308,13 @@ export class IndexerBackgroundService {
                             addressState = { address: address.address, offset: 0, transactions: [] };
                         }
 
-                        const hadChanges = await this.processAddress(indexerUrl, addressState);
+                        const processState = await this.processAddress(indexerUrl, addressState);
 
-                        if (hadChanges) {
+                        if (!processState.completed) {
+                            anyAddressNotComplete = true;
+                        }
+
+                        if (processState.changes) {
                             changes = true;
 
                             // Set the address state again after we've updated it.
@@ -369,9 +375,13 @@ export class IndexerBackgroundService {
                             addressState = { address: address.address, offset: 0, transactions: [] };
                         }
 
-                        const hadChanges = await this.processAddress(indexerUrl, addressState);
+                        const processState = await this.processAddress(indexerUrl, addressState);
 
-                        if (hadChanges) {
+                        if (!processState.completed) {
+                            anyAddressNotComplete = true;
+                        }
+
+                        if (processState.changes) {
                             changes = true;
 
                             // Set the address state again after we've updated it.
@@ -399,9 +409,13 @@ export class IndexerBackgroundService {
                         addressState = { address: address.address, offset: 0, transactions: [] };
                     }
 
-                    const hadChanges = await this.processAddress(indexerUrl, addressState);
+                    const processState = await this.processAddress(indexerUrl, addressState);
 
-                    if (hadChanges) {
+                    if (!processState.completed) {
+                        anyAddressNotComplete = true;
+                    }
+
+                    if (processState.changes) {
                         changes = true;
 
                         // Set the address state again after we've updated it.
@@ -447,9 +461,13 @@ export class IndexerBackgroundService {
                         addressStateChange = { address: addressChange.address, offset: 0, transactions: [] };
                     }
 
-                    const hadChangesChange = await this.processAddress(indexerUrl, addressStateChange);
+                    const processAddressState = await this.processAddress(indexerUrl, addressStateChange);
 
-                    if (hadChangesChange) {
+                    if (!processAddressState.completed) {
+                        anyAddressNotComplete = true;
+                    }
+
+                    if (processAddressState.changes) {
                         changes = true;
 
                         // Set the address state again after we've updated it.
@@ -490,9 +508,13 @@ export class IndexerBackgroundService {
                             addressState = { address: address.address, offset: 0, transactions: [] };
                         }
 
-                        const hadChanges = await this.processAddress(indexerUrl, addressState);
+                        const processState = await this.processAddress(indexerUrl, addressState);
 
-                        if (hadChanges) {
+                        if (!processState.completed) {
+                            anyAddressNotComplete = true;
+                        }
+
+                        if (processState.changes) {
                             changes = true;
 
                             // Set the address state again after we've updated it.
@@ -523,9 +545,13 @@ export class IndexerBackgroundService {
                             addressState = { address: address.address, offset: 0, transactions: [] };
                         }
 
-                        const hadChanges = await this.processAddress(indexerUrl, addressState);
+                        const processState = await this.processAddress(indexerUrl, addressState);
 
-                        if (hadChanges) {
+                        if (!processState.completed) {
+                            anyAddressNotComplete = true;
+                        }
+
+                        if (processState.changes) {
                             changes = true;
 
                             // Set the address state again after we've updated it.
@@ -549,6 +575,9 @@ export class IndexerBackgroundService {
 
                 // When completely processes all the address, we'll save the transactions.
                 await this.transactionStore.save();
+
+                // If any addresses on this account is not fully indexed, make sure we mark it.
+                account.completedScan = !anyAddressNotComplete;
             }
 
             // When all accounts has been processes, saved the wallet.
@@ -601,6 +630,7 @@ export class IndexerBackgroundService {
 
     async processAddress(indexerUrl: string, state: AddressState) {
         let changes = false;
+        let completed = false;
 
         let countProcessedItems = 0;
 
@@ -639,7 +669,9 @@ export class IndexerBackgroundService {
                 state.offset = offset;
 
                 // Increase the count process items, used to buffer large addresses.
-                countProcessedItems += state.offset;
+                countProcessedItems += this.limit;
+
+                console.log('countProcessedItems:' + countProcessedItems);
 
                 if (response.ok) {
                     // var updatedReceiveAddress: Address = { ...receiveAddress };
@@ -678,7 +710,7 @@ export class IndexerBackgroundService {
                         // Keep updating with transaction info details until finalized (and it will no longer be returned in the paged query):
                         transaction.details = await this.getTransactionInfo(transactionId, indexerUrl);
 
-                        console.log('Transaction to be put in store:', transaction);
+                        // console.log('Transaction to be put in store:', transaction);
 
                         // Update the store with latest info on the transaction.
                         this.transactionStore.set(transactionId, transaction);
@@ -690,12 +722,12 @@ export class IndexerBackgroundService {
 
                 // When we have processed more items than batch size, and there is actually a next page, we'll stop processing and continue later.
                 if (links.next != null && countProcessedItems > this.batchSize) {
-                    state.completed = false;
+                    completed = false;
                     nextLink = null;
                 }
                 else {
                     // Just set the completed to true every time here, to override false done when batch size is hit.
-                    state.completed = true;
+                    completed = true;
                     nextLink = links.next;
                 }
             }
@@ -713,7 +745,7 @@ export class IndexerBackgroundService {
             // this.communication.sendToAll('error', error);
         }
 
-        return changes;
+        return { changes, completed };
     }
 
     // async watchIndexer() {

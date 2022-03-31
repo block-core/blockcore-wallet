@@ -13,7 +13,10 @@
                     routerLinkActive="active-link" [routerLink]="['/', 'account', 'view', account.identifier]">
                     <mat-icon mat-list-icon>{{account.icon}}</mat-icon>
                     <div mat-line>{{account.name}}<span *ngIf="hasAccountHistory(account.identifier)" class="account-balance">{{balance(account.identifier) |
-                            amount}}</span><span *ngIf="!hasAccountHistory(account.identifier)" class="account-balance"><mat-spinner [diameter]="16"></mat-spinner></span></div>
+                            amount}}</span>
+                            <span *ngIf="!hasAccountHistory(account.identifier)" class="account-balance"><mat-spinner [diameter]="16"></mat-spinner></span>
+                            <span *ngIf="hasAccountHistory(account.identifier) && !account.completedScan" class="account-balance account-scanning"><mat-spinner [color]="'accent'" [diameter]="16"></mat-spinner></span>
+                        </div>
                     <div mat-line>{{account | network}}</div>
                     <div class="network-status-widget">
                         <app-network-status [status]="networkStatus.get(account.networkType)"></app-network-status>

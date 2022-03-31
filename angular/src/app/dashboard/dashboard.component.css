@@ -8,6 +8,10 @@
   color: silver;
 }
 
+.account-scanning {
+  margin-right: 0.2em;
+}
+
 .network-status-widget {
   position: absolute;
   left: 3em;

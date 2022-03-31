@@ -62,6 +62,9 @@ interface Account {
     /** The last date in ISO format the account was scanned for changes. */
     lastScan?: string;
 
+    /** Indicates if the scan has been completed. */
+    completedScan?: boolean;
+
     /** The unique identifier for this network. */
     networkType: string;
 
@@ -175,8 +178,6 @@ interface AddressState {
 
     /** The current offset that has been queried. This will only proceed forward when the entry has 500 confirmations. */
     offset: number;
-
-    completed?: boolean;
 
     /** The history of transactions that exists on this address. 
      * These are only the transaction IDs, to reduce storage usage, 
