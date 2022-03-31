@@ -589,7 +589,7 @@ export class IndexerBackgroundService {
                 // If any addresses on this account is not fully indexed, make sure we mark it.
                 account.completedScan = !anyAddressNotComplete;
 
-                if (anyAddressNotComplete == true) {
+                if (!anyAddressNotComplete) {
                     anyAddressNotCompleteInAnyWallet = true;
                 }
             }

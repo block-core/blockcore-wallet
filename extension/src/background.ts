@@ -211,14 +211,14 @@ chrome.runtime.onMessage.addListener(async (message: Message, sender, sendRespon
             case 'watch': {
                 if (message.data.force) {
                     console.log('Force Watch was called!');
-                    watch();
+                    runWatcher();
                     response = 'ok';
                 }
                 else if (!watching) {
                     watching = true;
                     // Run watch every 15 second until the service worker is killed.
-                    watch();
-                    setInterval(watch, 15000);
+                    await runWatcher();
+                    setInterval(runWatcher, 15000);
                     response = 'ok';
                 } else {
                     console.log('Watcher is already running.');
@@ -232,38 +232,7 @@ chrome.runtime.onMessage.addListener(async (message: Message, sender, sendRespon
                 if (!indexing) {
                     indexing = true;
                     response = 'ok';
-
-                    const changes = await manager.runIndexer();
-
-                    console.log('RUN INDEXER COMPELTED!!', changes);
-
-                    indexing = false;
-
-                    if (changes) {
-                        chrome.runtime.sendMessage({
-                            type: 'indexed',
-                            data: { source: 'indexer-on-demand' },
-                            ext: 'blockcore',
-                            source: 'background',
-                            target: 'tabs',
-                            host: location.host
-                        }, function (response) {
-                            console.log('Extension:sendMessage:response:indexed:', response);
-                        });
-                    } else {
-                        console.log('Indexer found zero changes. We will still inform the UI to refresh wallet to get latest scan state.');
-
-                        chrome.runtime.sendMessage({
-                            type: 'updated',
-                            data: { source: 'indexer-on-demand' },
-                            ext: 'blockcore',
-                            source: 'background',
-                            target: 'tabs',
-                            host: location.host
-                        }, function (response) {
-                            console.log('Extension:sendMessage:response:updated:', response);
-                        });
-                    }
+                    await runIndexer();
                 } else {
                     console.log('Indexing is already running. Skipping for now.');
                     response = 'busy';
@@ -283,44 +252,81 @@ chrome.runtime.onMessage.addListener(async (message: Message, sender, sendRespon
     sendResponse(response);
 });
 
-function watch() {
+const runIndexer = async () => {
+    const indexerRun = await manager.runIndexer();
+
+    console.log('RUN INDEXER COMPLETED!!', indexerRun);
+
+    if (indexerRun.changes) {
+        chrome.runtime.sendMessage({
+            type: 'indexed',
+            data: { source: 'indexer-on-demand' },
+            ext: 'blockcore',
+            source: 'background',
+            target: 'tabs',
+            host: location.host
+        }, function (response) {
+            console.log('Extension:sendMessage:response:indexed:', response);
+        });
+    } else {
+        console.log('Indexer found zero changes. We will still inform the UI to refresh wallet to get latest scan state.');
+
+        chrome.runtime.sendMessage({
+            type: 'updated',
+            data: { source: 'indexer-on-demand' },
+            ext: 'blockcore',
+            source: 'background',
+            target: 'tabs',
+            host: location.host
+        }, function (response) {
+            console.log('Extension:sendMessage:response:updated:', response);
+        });
+    }
+
+    // If the indexer run is not completed (fully processed all accounts), we will run it again until it completes.
+    if (!indexerRun.completed) {
+        await runIndexer();
+    } else {
+        indexing = false;
+    }
+}
+
+const runWatcher = async () => {
     // Do not run the watcher when the indexer is running.
     if (!indexing) {
-        console.log('NOOOOOOOOOO!!');
-        manager.runWatcher().then(changes => {
-            console.log('Watcher finished...', changes);
+        const changes = await manager.runWatcher();
+        console.log('Watcher finished...', changes);
 
-            if (changes) {
-                chrome.runtime.sendMessage({
-                    type: 'indexed',
-                    data: { source: 'watcher' },
-                    ext: 'blockcore',
-                    source: 'background',
-                    target: 'tabs',
-                    host: location.host
-                }, function (response) {
-                    console.log('Extension:sendMessage:response:indexed:', response);
-                });
-            }
-            else {
-                console.log('Watcher found zero changes. We will still inform the UI to refresh wallet to get latest scan state.');
+        if (changes) {
+            chrome.runtime.sendMessage({
+                type: 'indexed',
+                data: { source: 'watcher' },
+                ext: 'blockcore',
+                source: 'background',
+                target: 'tabs',
+                host: location.host
+            }, function (response) {
+                console.log('Extension:sendMessage:response:indexed:', response);
+            });
+        }
+        else {
+            console.log('Watcher found zero changes. We will still inform the UI to refresh wallet to get latest scan state.');
 
-                chrome.runtime.sendMessage({
-                    type: 'updated',
-                    data: { source: 'watcher' },
-                    ext: 'blockcore',
-                    source: 'background',
-                    target: 'tabs',
-                    host: location.host
-                }, function (response) {
-                    console.log('Extension:sendMessage:response:updated:', response);
-                });
-            }
-        });
+            chrome.runtime.sendMessage({
+                type: 'updated',
+                data: { source: 'watcher' },
+                ext: 'blockcore',
+                source: 'background',
+                target: 'tabs',
+                host: location.host
+            }, function (response) {
+                console.log('Extension:sendMessage:response:updated:', response);
+            });
+        }
     } else {
         console.log('Is already indexing, skipping watch processing.');
     }
-}
+};
 
 // // For future usage when Point-of-Sale window is added, opening the window should just focus that tab.
 // await chrome.tabs.update(tabs[0].id, { active: true });

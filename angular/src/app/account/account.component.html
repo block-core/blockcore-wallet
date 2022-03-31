@@ -46,7 +46,7 @@
                 mat-raised-button>Send</button>
         </mat-card-actions>
         <mat-card-footer>
-            <mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
+            <mat-progress-bar *ngIf="!walletManager.activeAccount.completedScan" mode="indeterminate"></mat-progress-bar>
         </mat-card-footer>
     </mat-card>
 
