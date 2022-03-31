@@ -261,6 +261,7 @@ export class IndexerBackgroundService {
         let changes = false;
         const settings = this.settingStore.get();
         const wallets = this.walletStore.getWallets();
+        let anyAddressNotCompleteInAnyWallet = false;
 
         for (let i = 0; i < wallets.length; i++) {
             const wallet = wallets[i];
@@ -587,6 +588,10 @@ export class IndexerBackgroundService {
 
                 // If any addresses on this account is not fully indexed, make sure we mark it.
                 account.completedScan = !anyAddressNotComplete;
+
+                if (anyAddressNotComplete == true) {
+                    anyAddressNotCompleteInAnyWallet = true;
+                }
             }
 
             // When all accounts has been processes, saved the wallet.
@@ -595,7 +600,7 @@ export class IndexerBackgroundService {
 
         console.log('RETURNING FROM INDEXER: ', changes);
 
-        return changes;
+        return { changes, completed: anyAddressNotCompleteInAnyWallet };
     }
 
     parseLinkHeader(linkHeader: string) {

@@ -65,10 +65,10 @@ export class BackgroundManager {
         return true;
     }
 
-    async runIndexer() {
+    async runIndexer(): Promise<{ changes: boolean, completed: boolean }> {
         // Skip if we are already indexing.
         if (this.indexing == true) {
-            return false;
+            return { changes: false, completed: true };
         }
 
         // if (this.watching == true) {
@@ -103,19 +103,19 @@ export class BackgroundManager {
         // globalThis.chrome.storage.local.get('')
         const indexer = new IndexerBackgroundService(settingStore, walletStore, addressStore, transactionStore, addressManager, accountHistoryStore);
 
-        let changes = false;
+        let processResult = null;
 
         try {
-            changes = await indexer.process(null);
+            processResult = await indexer.process(null);
         }
         catch (err) {
             console.error('Failure during indexer processing.', err);
         }
 
-
         // If there are no changes, don't re-calculate the balance.
-        if (!changes) {
-            return false;
+        if (!processResult.changes) {
+            this.indexing = false;
+            return processResult;
         }
 
         try {
@@ -127,7 +127,6 @@ export class BackgroundManager {
         }
 
         this.indexing = false;
-
-        return true;
+        return processResult;
     }
 }
