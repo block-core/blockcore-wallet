@@ -13,7 +13,7 @@ axiosRetry(axios, { retries: 3 });
 
 /** Service that handles queries against the blockchain indexer to retrieve data for accounts. Runs in the background. */
 export class IndexerBackgroundService {
-    private limit = 10;
+    private limit = 50;
     private finalized = 500;
     private confirmed = 1;
 
@@ -25,6 +25,12 @@ export class IndexerBackgroundService {
 
     /** We will attempt to query the address at minimum 10 times before we check the latest transactions if we should quit. */
     private minWatchCount = 10;
+
+    /** The number of entries pr. address to process before updating the UI with partially indexed data. This won't affect
+     * large wallets that have a single transaction pr. address and many addresses, but it will make large staker/miner wallets
+     * work much better.
+     */
+    private batchSize = 200;
 
     constructor(
         private settingStore: SettingStore,
@@ -596,6 +602,8 @@ export class IndexerBackgroundService {
     async processAddress(indexerUrl: string, state: AddressState) {
         let changes = false;
 
+        let countProcessedItems = 0;
+
         try {
             let nextLink = `/api/query/address/${state.address}/transactions?offset=${state.offset}&limit=${this.limit}`;
             const date = new Date().toISOString();
@@ -630,6 +638,9 @@ export class IndexerBackgroundService {
                 // Store the latest offset on the state.
                 state.offset = offset;
 
+                // Increase the count process items, used to buffer large addresses.
+                countProcessedItems += state.offset;
+
                 if (response.ok) {
                     // var updatedReceiveAddress: Address = { ...receiveAddress };
                     // console.log(responseTransactions);
@@ -659,9 +670,10 @@ export class IndexerBackgroundService {
 
                         // const transactionInfo = this.transactionStore.get(transactionId);
 
-                        if (!transaction.hex) {
-                            transaction.hex = await this.getTransactionHex(transactionId, indexerUrl);
-                        }
+                        // TODO: Temporarily drop this while testing a large wallet.
+                        // if (!transaction.hex) {
+                        //     transaction.hex = await this.getTransactionHex(transactionId, indexerUrl);
+                        // }
 
                         // Keep updating with transaction info details until finalized (and it will no longer be returned in the paged query):
                         transaction.details = await this.getTransactionInfo(transactionId, indexerUrl);
@@ -676,7 +688,16 @@ export class IndexerBackgroundService {
                     }
                 }
 
-                nextLink = links.next;
+                // When we have processed more items than batch size, and there is actually a next page, we'll stop processing and continue later.
+                if (links.next != null && countProcessedItems > this.batchSize) {
+                    state.completed = false;
+                    nextLink = null;
+                }
+                else {
+                    // Just set the completed to true every time here, to override false done when batch size is hit.
+                    state.completed = true;
+                    nextLink = links.next;
+                }
             }
 
         } catch (error) {
