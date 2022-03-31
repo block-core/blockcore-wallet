@@ -499,12 +499,13 @@ export class WalletManager {
     }
 
     private async saveAndUpdate() {
-        await this.store.save();
-        await this.addressWatchStore.save();
-        await this.addressStore.save();
-        await this.accountHistoryStore.save();
+        // TODO: RE ADD THIS!!!
+        // await this.store.save();
+        // await this.addressWatchStore.save();
+        // await this.addressStore.save();
+        // await this.accountHistoryStore.save();
 
-        this.updateAllInstances();
+        // this.updateAllInstances();
     }
 
     async removeAccount(walletId: string, accountId: string) {

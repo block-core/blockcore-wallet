@@ -71,12 +71,12 @@ export class BackgroundManager {
             return false;
         }
 
-        if (this.watching == true) {
-            // Delay and try again...
-            setTimeout(async () => {
-                await this.runIndexer();
-            }, 2000);
-        }
+        // if (this.watching == true) {
+        //     // Delay and try again...
+        //     setTimeout(async () => {
+        //         await this.runIndexer();
+        //     }, 2000);
+        // }
 
         this.indexing = true;
 

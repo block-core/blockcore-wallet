@@ -4,6 +4,9 @@ import { BackgroundManager } from '../../angular/src/shared/background-manager';
 let indexing = false;
 let watching = false;
 
+// Create a shared manager that keeps state of indexing or watching.
+let manager = new BackgroundManager();
+
 // Run when the browser has been fully exited and opened again.
 chrome.runtime.onStartup.addListener(async () => {
     console.log('Extension: onStartup');
@@ -151,43 +154,43 @@ chrome.alarms.onAlarm.addListener(async (alarm: chrome.alarms.Alarm) => {
             }
         }
     } else if (alarm.name === 'index') {
-        if (!indexing) {
-            indexing = true;
+        // if (!indexing) {
+        //     indexing = true;
 
-            const manager = new BackgroundManager();
-            const changes = await manager.runIndexer();
+        //     const manager = new BackgroundManager();
+        //     const changes = await manager.runIndexer();
 
-            indexing = false;
+        //     indexing = false;
 
-            if (changes) {
-                chrome.runtime.sendMessage({
-                    type: 'indexed',
-                    data: { source: 'indexer-on-alarm' },
-                    ext: 'blockcore',
-                    source: 'background',
-                    target: 'tabs',
-                    host: location.host
-                }, function (response) {
-                    console.log('Extension:sendMessage:response:indexed:', response);
-                });
-            } else {
-                console.log('Indexer found zero changes. We will still inform the UI to refresh wallet to get latest scan state.');
+        //     if (changes) {
+        //         chrome.runtime.sendMessage({
+        //             type: 'indexed',
+        //             data: { source: 'indexer-on-alarm' },
+        //             ext: 'blockcore',
+        //             source: 'background',
+        //             target: 'tabs',
+        //             host: location.host
+        //         }, function (response) {
+        //             console.log('Extension:sendMessage:response:indexed:', response);
+        //         });
+        //     } else {
+        //         console.log('Indexer found zero changes. We will still inform the UI to refresh wallet to get latest scan state.');
 
-                chrome.runtime.sendMessage({
-                    type: 'updated',
-                    data: { source: 'indexer-on-alarm' },
-                    ext: 'blockcore',
-                    source: 'background',
-                    target: 'tabs',
-                    host: location.host
-                }, function (response) {
-                    console.log('Extension:sendMessage:response:updated:', response);
-                });
+        //         chrome.runtime.sendMessage({
+        //             type: 'updated',
+        //             data: { source: 'indexer-on-alarm' },
+        //             ext: 'blockcore',
+        //             source: 'background',
+        //             target: 'tabs',
+        //             host: location.host
+        //         }, function (response) {
+        //             console.log('Extension:sendMessage:response:updated:', response);
+        //         });
 
-            }
-        } else {
-            console.log('Indexing is already running. Skipping for now.');
-        }
+        //     }
+        // } else {
+        //     console.log('Indexing is already running. Skipping for now.');
+        // }
     }
 });
 
@@ -230,8 +233,9 @@ chrome.runtime.onMessage.addListener(async (message: Message, sender, sendRespon
                     indexing = true;
                     response = 'ok';
 
-                    const manager = new BackgroundManager();
                     const changes = await manager.runIndexer();
+
+                    console.log('RUN INDEXER COMPELTED!!', changes);
 
                     indexing = false;
 
@@ -282,7 +286,7 @@ chrome.runtime.onMessage.addListener(async (message: Message, sender, sendRespon
 function watch() {
     // Do not run the watcher when the indexer is running.
     if (!indexing) {
-        const manager = new BackgroundManager();
+        console.log('NOOOOOOOOOO!!');
         manager.runWatcher().then(changes => {
             console.log('Watcher finished...', changes);
 

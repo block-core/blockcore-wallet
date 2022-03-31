@@ -64,7 +64,7 @@
                     <div mat-line>{{activity.title}}</div>
                     <div mat-line> {{activity.address}} </div>
                 </a> -->
-                <div mat-subheader>Transactions</div>
+                <div mat-subheader>Transactions ({{accountHistory.history.length}})</div>
                 <a mat-list-item *ngFor="let transaction of accountHistory.history"
                     [routerLink]="['/', 'account', 'transaction', transaction.transactionHash]">
                     <div mat-line>
@@ -72,7 +72,8 @@
                             1000 | date:'mediumDate'}}</span>
 
                         <mat-icon class="transaction-history-icon" *ngIf="transaction.hasContract">gavel</mat-icon>
-                        <mat-icon class="transaction-history-icon" *ngIf="transaction.entryType == 'mine'">shuffle</mat-icon>
+                        <mat-icon class="transaction-history-icon" *ngIf="transaction.entryType == 'mine'">shuffle
+                        </mat-icon>
 
                         <span class="positive-color" [ngClass]="{unconfirmed: transaction.unconfirmed}"
                             *ngIf="transaction.entryType == 'mine'">+{{transaction.calculatedValue |

@@ -171,9 +171,9 @@ export class IndexerBackgroundService {
                                 tx.hasContract = true;
                         }
 
-                        console.log(tx);
-                        console.log(t);
-                        console.log('tx.hasContract', tx.hasContract);
+                        // console.log(tx);
+                        // console.log(t);
+                        // console.log('tx.hasContract', tx.hasContract);
                     }
 
                     return tx;
@@ -255,6 +255,8 @@ export class IndexerBackgroundService {
 
     /** This is the main process that runs the indexing and persists the state. */
     async process(addressWatchStore: AddressWatchStore) {
+        console.log('INDEXER:PROCESS ENTRY WAS TRIGGERED...');
+
         // TODO: There is a lot of duplicate code in this method, refactor when possible.
         let changes = false;
         const settings = this.settingStore.get();
@@ -274,20 +276,14 @@ export class IndexerBackgroundService {
 
                 let anyAddressNotComplete = false;
 
-                if (addressWatchStore) {
-                    // If the network is single address and the primary is not part of watch addresses,
-                    // make sure we (re)add it.
-                    // if (network.singleAddress === true) {
-                    //     const primaryWatch = addressWatchStore.get(primaryReceiveAddress.address);
+                console.log('Indexer:Process...', account);
 
-                    //     if (!primaryWatch) {
-                    //         addressWatchStore.set(primaryReceiveAddress.address, {
-                    //             address: primaryReceiveAddress.address,
-                    //             accountId: account.identifier,
-                    //             count: 0
-                    //         });
-                    //     }
-                    // }
+                if (addressWatchStore) {
+                    // If the account is not fully synced, we should not perform watch over the account yet.
+                    if (!account.completedScan) {
+                        changes = false;
+                        continue;
+                    }
 
                     const addresses = addressWatchStore.all();
                     console.log('Running Watcher', addresses);
@@ -497,9 +493,12 @@ export class IndexerBackgroundService {
                     await addressWatchStore.save();
                 }
                 else {
-                    // Process first receive addresses until we've exhausted them.
+                    // Process receive addresses until we've exhausted them.
                     for (let k = 0; k < account.state.receive.length; k++) {
                         const address = account.state.receive[k];
+
+                        console.log('RECEIVE ADDRESS LOOP' + k, address);
+
                         // Get the current state for this address:
                         let addressState = this.addressStore.get(address.address);
 
@@ -509,6 +508,8 @@ export class IndexerBackgroundService {
                         }
 
                         const processState = await this.processAddress(indexerUrl, addressState);
+
+                        console.log('Completed processing:', processState);
 
                         if (!processState.completed) {
                             anyAddressNotComplete = true;
@@ -522,55 +523,63 @@ export class IndexerBackgroundService {
 
                             // After processing, make sure we save the address state.
                             await this.addressStore.save();
+
+                            const address1 = await this.addressStore.get(address.address);
+                            await this.addressStore.load();
+                            const address2 = await this.addressStore.get(address.address);
+
+                            console.log('Address State saved', addressState);
+                            console.log('Address State saved 1', address1);
+                            console.log('Address State saved 2', address2);
                         }
 
                         // If we are on the last address, check if we should add new one.
-                        if ((k + 1) >= account.state.receive.length) {
-                            // If there are transactions on the last checked address, add the next address.
-                            if (addressState.transactions.length > 0) {
-                                const nextAddress = this.addressManager.getAddress(account, 0, address.index + 1);
-                                account.state.receive.push(nextAddress);
-                                changes = true;
-                            }
-                        }
+                        // if ((k + 1) >= account.state.receive.length) {
+                        //     // If there are transactions on the last checked address, add the next address.
+                        //     if (addressState.transactions.length > 0) {
+                        //         const nextAddress = this.addressManager.getAddress(account, 0, address.index + 1);
+                        //         account.state.receive.push(nextAddress);
+                        //         changes = true;
+                        //     }
+                        // }
                     }
 
-                    for (let k = 0; k < account.state.change.length; k++) {
-                        const address = account.state.change[k];
-                        // Get the current state for this address:
-                        let addressState = this.addressStore.get(address.address);
+                    // for (let k = 0; k < account.state.change.length; k++) {
+                    //     const address = account.state.change[k];
+                    //     // Get the current state for this address:
+                    //     let addressState = this.addressStore.get(address.address);
 
-                        // If there are no addressState for this, create one now.
-                        if (!addressState) {
-                            addressState = { address: address.address, offset: 0, transactions: [] };
-                        }
+                    //     // If there are no addressState for this, create one now.
+                    //     if (!addressState) {
+                    //         addressState = { address: address.address, offset: 0, transactions: [] };
+                    //     }
 
-                        const processState = await this.processAddress(indexerUrl, addressState);
+                    //     const processState = await this.processAddress(indexerUrl, addressState);
 
-                        if (!processState.completed) {
-                            anyAddressNotComplete = true;
-                        }
+                    //     if (!processState.completed) {
+                    //         anyAddressNotComplete = true;
+                    //     }
 
-                        if (processState.changes) {
-                            changes = true;
+                    //     if (processState.changes) {
+                    //         changes = true;
 
-                            // Set the address state again after we've updated it.
-                            this.addressStore.set(address.address, addressState);
+                    //         // Set the address state again after we've updated it.
+                    //         this.addressStore.set(address.address, addressState);
 
-                            // After processing, make sure we save the address state.
-                            await this.addressStore.save();
-                        }
+                    //         // After processing, make sure we save the address state.
+                    //         await this.addressStore.save();
+                    //     }
 
-                        // If we are on the last address, check if we should add new one.
-                        if ((k + 1) >= account.state.change.length) {
-                            // If there are transactions on the last checked address, add the next address.
-                            if (addressState.transactions.length > 0) {
-                                const nextAddress = this.addressManager.getAddress(account, 1, address.index + 1);
-                                account.state.change.push(nextAddress);
-                                changes = true;
-                            }
-                        }
-                    }
+                    //     // If we are on the last address, check if we should add new one.
+                    //     if ((k + 1) >= account.state.change.length) {
+                    //         // If there are transactions on the last checked address, add the next address.
+                    //         if (addressState.transactions.length > 0) {
+                    //             const nextAddress = this.addressManager.getAddress(account, 1, address.index + 1);
+                    //             account.state.change.push(nextAddress);
+                    //             changes = true;
+                    //         }
+                    //     }
+                    // }
                 }
 
                 // When completely processes all the address, we'll save the transactions.
@@ -583,6 +592,8 @@ export class IndexerBackgroundService {
             // When all accounts has been processes, saved the wallet.
             await this.walletStore.save();
         }
+
+        console.log('RETURNING FROM INDEXER: ', changes);
 
         return changes;
     }
@@ -638,6 +649,8 @@ export class IndexerBackgroundService {
             let nextLink = `/api/query/address/${state.address}/transactions?offset=${state.offset}&limit=${this.limit}`;
             const date = new Date().toISOString();
 
+            console.log('FETCHING (initial)', nextLink);
+
             // Loop through all pages until finished.
             while (nextLink != null) {
 
@@ -656,10 +669,14 @@ export class IndexerBackgroundService {
                     referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
                 });
 
+                console.log('FETCHING: ', url);
+
                 const transactions = await response.json();
                 // const responseTransactions = await axios.get(`${indexerUrl}${nextLink}`);
                 // const transactions = responseTransactions.data;
                 const links = this.parseLinkHeader(response.headers.get('link'));
+
+                console.log('LINKS', links);
 
                 // const limit = response.headers.get('pagination-limit');
                 // const total = response.headers.get('pagination-total');
@@ -729,6 +746,8 @@ export class IndexerBackgroundService {
                     // Just set the completed to true every time here, to override false done when batch size is hit.
                     completed = true;
                     nextLink = links.next;
+
+                    console.log('LINKS.NEXT', links.next);
                 }
             }
 
