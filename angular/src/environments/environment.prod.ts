@@ -16,7 +16,7 @@ export const environment: IEnvironment = {
   releaseUrl: 'https://github.com/block-core/blockcore-extension/releases',
   sourceUrl: 'https://github.com/block-core/blockcore-extension',
   instance: 'blockcore',
-  instanceName: 'Blockcore',
+  instanceName: 'Blockcore Wallet',
   instanceUrl: 'https://blockcore.net/',
   instanceExplorerUrl: 'https://explorer.blockcore.net',
   networks: [] as string[] // Returns all

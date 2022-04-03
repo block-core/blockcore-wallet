@@ -1,4 +1,4 @@
-# Blockcore Extension
+# Blockcore Wallet
 
 ###  Web Browser Extension for crypto wallet in your browser for coins, tokens, identities, NFTs and more.
 
