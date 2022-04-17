@@ -36,6 +36,7 @@ export class AccountSendConfirmComponent implements OnInit, OnDestroy {
             this.sendService.transactionHex = tx.transactionHex;
             this.sendService.addresses = tx.addresses;
         } catch (err: any) {
+            console.error(err);
             this.error = err.message;
         }
     }

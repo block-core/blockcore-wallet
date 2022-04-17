@@ -140,6 +140,7 @@ export class WalletManager {
     }
 
     async createTransaction(wallet: Wallet, account: Account, address: string, changeAddress: string, amount: Big, fee: Big, unspent: AccountUnspentTransactionOutput[]): Promise<{ addresses: string[], transactionHex: string, fee: number, feeRate: number, virtualSize: number, weight: number }> {
+        debugger;
         // TODO: Verify the address for this network!! ... Help the user avoid sending transactions on very wrong addresses.
         const network = this.getNetwork(account.networkType);
         const affectedAddresses = [];
@@ -170,7 +171,13 @@ export class WalletManager {
 
         for (let i = 0; i < inputs.length; i++) {
             const input = inputs[i];
-            const hex = input.hex;
+            let hex = input.hex;
+
+            // If we don't have the hex, retrieve it to be used in the transaction.
+            // This was needed when hex retrieval was removed to optimize extremely large wallets.
+            if (!hex) {
+                hex = await this.getTransactionHex(account, input.transactionHash);
+            }
 
             affectedAddresses.push(input.address);
 
