@@ -506,19 +506,19 @@ export class WalletManager {
     }
 
     private async saveAndUpdate() {
-        // TODO: RE ADD THIS!!!
-        // await this.store.save();
-        // await this.addressWatchStore.save();
-        // await this.addressStore.save();
-        // await this.accountHistoryStore.save();
+        await this.store.save();
+        await this.addressWatchStore.save();
+        await this.addressStore.save();
+        await this.accountHistoryStore.save();
 
-        // this.updateAllInstances();
+        this.updateAllInstances();
     }
 
     async removeAccount(walletId: string, accountId: string) {
         const wallet = this.getWallet(walletId);
 
         if (!wallet) {
+            console.warn('Attempting to remove account from a non-existing wallet.');
             return;
         }
 
@@ -528,9 +528,9 @@ export class WalletManager {
             const account = wallet.accounts[accountIndex];
             this.removeAccountHistory(account);
         }
-        catch
-        {
-
+        catch (err) {
+            console.log('Failed to remove account history.');
+            console.error(err);
         }
 
         // Remove from accounts list.
