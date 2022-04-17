@@ -747,8 +747,6 @@ export class IndexerBackgroundService {
                     // Just set the completed to true every time here, to override false done when batch size is hit.
                     completed = true;
                     nextLink = links.next;
-
-                    console.log('LINKS.NEXT', links.next);
                 }
             }
 
