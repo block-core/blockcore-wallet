@@ -501,7 +501,7 @@ export class WalletManager {
             this.addressStore.remove(address);
         }
 
-        this.accountHistoryStore.get(account.identifier);
+        this.accountHistoryStore.remove(account.identifier);
     }
 
     private async saveAndUpdate() {
