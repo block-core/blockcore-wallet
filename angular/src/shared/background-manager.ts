@@ -114,6 +114,7 @@ export class BackgroundManager {
 
         // If there are no changes, don't re-calculate the balance.
         if (!processResult.changes) {
+            console.log('If there are no changes, don\'t re-calculate the balance.');
             this.indexing = false;
             return processResult;
         }

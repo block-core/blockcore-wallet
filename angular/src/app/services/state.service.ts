@@ -74,6 +74,9 @@ export class StateService {
         await this.accountHistoryStore.load();
         await this.addressWatchStore.load();
 
+        console.log('RELOAD CALLED:');
+        console.log(this.accountHistoryStore.all());
+
         this.changedSubject.next(this);
     }
 

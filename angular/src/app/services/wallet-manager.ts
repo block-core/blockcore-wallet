@@ -140,7 +140,6 @@ export class WalletManager {
     }
 
     async createTransaction(wallet: Wallet, account: Account, address: string, changeAddress: string, amount: Big, fee: Big, unspent: AccountUnspentTransactionOutput[]): Promise<{ addresses: string[], transactionHex: string, fee: number, feeRate: number, virtualSize: number, weight: number }> {
-        debugger;
         // TODO: Verify the address for this network!! ... Help the user avoid sending transactions on very wrong addresses.
         const network = this.getNetwork(account.networkType);
         const affectedAddresses = [];

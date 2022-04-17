@@ -140,9 +140,6 @@ export class IndexerBackgroundService {
 
                             tx.calculatedValue = amount;
                             tx.calculatedAddress = externalOutputs.map(o => o.address).join(';');
-
-                            console.log('t.details.outputs', t.details.outputs);
-                            console.log('externalOutputs', externalOutputs);
                         }
 
                         if (tx.isCoinbase) {
@@ -249,6 +246,9 @@ export class IndexerBackgroundService {
                 });
 
                 await this.accountHistoryStore.save();
+
+                console.log('accountHistoryStore.save!!!!!!!');
+                console.log(this.accountHistoryStore.all());
             }
         }
     }
@@ -535,52 +535,52 @@ export class IndexerBackgroundService {
                         }
 
                         // If we are on the last address, check if we should add new one.
-                        // if ((k + 1) >= account.state.receive.length) {
-                        //     // If there are transactions on the last checked address, add the next address.
-                        //     if (addressState.transactions.length > 0) {
-                        //         const nextAddress = this.addressManager.getAddress(account, 0, address.index + 1);
-                        //         account.state.receive.push(nextAddress);
-                        //         changes = true;
-                        //     }
-                        // }
+                        if ((k + 1) >= account.state.receive.length) {
+                            // If there are transactions on the last checked address, add the next address.
+                            if (addressState.transactions.length > 0) {
+                                const nextAddress = this.addressManager.getAddress(account, 0, address.index + 1);
+                                account.state.receive.push(nextAddress);
+                                changes = true;
+                            }
+                        }
                     }
 
-                    // for (let k = 0; k < account.state.change.length; k++) {
-                    //     const address = account.state.change[k];
-                    //     // Get the current state for this address:
-                    //     let addressState = this.addressStore.get(address.address);
+                    for (let k = 0; k < account.state.change.length; k++) {
+                        const address = account.state.change[k];
+                        // Get the current state for this address:
+                        let addressState = this.addressStore.get(address.address);
 
-                    //     // If there are no addressState for this, create one now.
-                    //     if (!addressState) {
-                    //         addressState = { address: address.address, offset: 0, transactions: [] };
-                    //     }
+                        // If there are no addressState for this, create one now.
+                        if (!addressState) {
+                            addressState = { address: address.address, offset: 0, transactions: [] };
+                        }
 
-                    //     const processState = await this.processAddress(indexerUrl, addressState);
+                        const processState = await this.processAddress(indexerUrl, addressState);
 
-                    //     if (!processState.completed) {
-                    //         anyAddressNotComplete = true;
-                    //     }
+                        if (!processState.completed) {
+                            anyAddressNotComplete = true;
+                        }
 
-                    //     if (processState.changes) {
-                    //         changes = true;
+                        if (processState.changes) {
+                            changes = true;
 
-                    //         // Set the address state again after we've updated it.
-                    //         this.addressStore.set(address.address, addressState);
+                            // Set the address state again after we've updated it.
+                            this.addressStore.set(address.address, addressState);
 
-                    //         // After processing, make sure we save the address state.
-                    //         await this.addressStore.save();
-                    //     }
+                            // After processing, make sure we save the address state.
+                            await this.addressStore.save();
+                        }
 
-                    //     // If we are on the last address, check if we should add new one.
-                    //     if ((k + 1) >= account.state.change.length) {
-                    //         // If there are transactions on the last checked address, add the next address.
-                    //         if (addressState.transactions.length > 0) {
-                    //             const nextAddress = this.addressManager.getAddress(account, 1, address.index + 1);
-                    //             account.state.change.push(nextAddress);
-                    //             changes = true;
-                    //         }
-                    //     }
-                    // }
+                        // If we are on the last address, check if we should add new one.
+                        if ((k + 1) >= account.state.change.length) {
+                            // If there are transactions on the last checked address, add the next address.
+                            if (addressState.transactions.length > 0) {
+                                const nextAddress = this.addressManager.getAddress(account, 1, address.index + 1);
+                                account.state.change.push(nextAddress);
+                                changes = true;
+                            }
+                        }
+                    }
                 }
 
                 // When completely processes all the address, we'll save the transactions.
@@ -705,13 +705,27 @@ export class IndexerBackgroundService {
                         const transactionId = transaction.transactionHash;
                         const index = state.transactions.indexOf(transactionId);
 
+                        // Keep updating with transaction info details until finalized (and it will no longer be returned in the paged query):
+                        transaction.details = await this.getTransactionInfo(transactionId, indexerUrl);
+
+                        console.log('Retreived transaction details', transaction);
+
+                        // Copy some of the details state to the container object.
+                        transaction.confirmations = transaction.details.confirmations;
+                        // transaction.blockIndex = transaction.details.blockIndex;
+                        // transaction.unconfirmed = (transaction.details.confirmations == 0);
+
                         // If the transaction ID is not present already on the AddressState, add it.
                         if (index == -1) {
                             state.transactions.push(transactionId);
                         }
 
+                        const unconfirmed = transaction.unconfirmed;
+
                         transaction.unconfirmed = (transaction.confirmations <= this.confirmed);
                         transaction.finalized = (transaction.confirmations >= this.finalized);
+
+                        console.log(`UNCONFIRMED: BEFORE: ${unconfirmed} - AFTER: ${transaction.unconfirmed}.`);
 
                         // Whenever we reseach finalized transactions, move the offset state forward.
                         if (transaction.finalized) {
@@ -724,9 +738,6 @@ export class IndexerBackgroundService {
                         // if (!transaction.hex) {
                         //     transaction.hex = await this.getTransactionHex(transactionId, indexerUrl);
                         // }
-
-                        // Keep updating with transaction info details until finalized (and it will no longer be returned in the paged query):
-                        transaction.details = await this.getTransactionInfo(transactionId, indexerUrl);
 
                         // console.log('Transaction to be put in store:', transaction);
 
