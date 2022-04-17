@@ -708,7 +708,7 @@ export class IndexerBackgroundService {
                         // Keep updating with transaction info details until finalized (and it will no longer be returned in the paged query):
                         transaction.details = await this.getTransactionInfo(transactionId, indexerUrl);
 
-                        console.log('Retreived transaction details', transaction);
+                        console.log('!!!!!! Retreived transaction details', transaction);
 
                         // Copy some of the details state to the container object.
                         transaction.confirmations = transaction.details.confirmations;
@@ -720,12 +720,10 @@ export class IndexerBackgroundService {
                             state.transactions.push(transactionId);
                         }
 
-                        const unconfirmed = transaction.unconfirmed;
-
-                        transaction.unconfirmed = (transaction.confirmations <= this.confirmed);
+                        transaction.unconfirmed = (transaction.confirmations < this.confirmed);
                         transaction.finalized = (transaction.confirmations >= this.finalized);
 
-                        console.log(`UNCONFIRMED: BEFORE: ${unconfirmed} - AFTER: ${transaction.unconfirmed}.`);
+                        console.log(`UNCONFIRMED: ${transaction.unconfirmed}.`);
 
                         // Whenever we reseach finalized transactions, move the offset state forward.
                         if (transaction.finalized) {
