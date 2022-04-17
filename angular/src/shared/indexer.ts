@@ -654,8 +654,6 @@ export class IndexerBackgroundService {
             let nextLink = `/api/query/address/${state.address}/transactions?offset=${state.offset}&limit=${this.limit}`;
             const date = new Date().toISOString();
 
-            console.log('FETCHING (initial)', nextLink);
-
             // Loop through all pages until finished.
             while (nextLink != null) {
 
@@ -692,8 +690,6 @@ export class IndexerBackgroundService {
 
                 // Increase the count process items, used to buffer large addresses.
                 countProcessedItems += this.limit;
-
-                console.log('countProcessedItems:' + countProcessedItems);
 
                 if (response.ok) {
                     // var updatedReceiveAddress: Address = { ...receiveAddress };
