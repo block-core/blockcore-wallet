@@ -37,6 +37,9 @@ export interface Network {
 
     singleAddress?: boolean;
 
+    /** Indiciates if this is a Proof-of-Stake v3 network. This must be set for transaction building to work properly. */
+    isProofOfStake?: boolean;
+
     /** A logo that can be displayed in UI for the specific network. */
     // logo: ''; 
 }

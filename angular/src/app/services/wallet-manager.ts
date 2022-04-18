@@ -142,6 +142,8 @@ export class WalletManager {
     async createTransaction(wallet: Wallet, account: Account, address: string, changeAddress: string, amount: Big, fee: Big, unspent: AccountUnspentTransactionOutput[]): Promise<{ addresses: string[], transactionHex: string, fee: number, feeRate: number, virtualSize: number, weight: number }> {
         // TODO: Verify the address for this network!! ... Help the user avoid sending transactions on very wrong addresses.
         const network = this.getNetwork(account.networkType);
+        console.log('NETWORK:', network);
+
         const affectedAddresses = [];
 
         // We currently only support BTC-compatible transactions such as STRAX. We do not support other Blockcore chains that are not PoS v4.
@@ -168,6 +170,8 @@ export class WalletManager {
             }
         }
 
+        console.log('SELECTED INPUTS FOR TRANSACTION: ', inputs);
+
         for (let i = 0; i < inputs.length; i++) {
             const input = inputs[i];
             let hex = input.hex;
@@ -186,6 +190,8 @@ export class WalletManager {
                 nonWitnessUtxo: Buffer.from(hex, 'hex')
             });
         }
+
+        console.log('affectedAddresses: ', affectedAddresses);
 
         // Add the output the user requested.
         tx.addOutput({ address, value: amount.toNumber() });

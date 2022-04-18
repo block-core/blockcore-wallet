@@ -41,7 +41,7 @@
     "@angular/platform-browser": "13.3.3",
     "@angular/platform-browser-dynamic": "13.3.3",
     "@angular/router": "13.3.3",
-    "@blockcore/blockcore-js": "^7.0.0",
+    "@blockcore/blockcore-js": "^7.0.2",
     "@blockcore/identity": "0.0.1",
     "@ngx-translate/core": "^14.0.0",
     "@ngx-translate/http-loader": "^7.0.0",
