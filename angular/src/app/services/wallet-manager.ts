@@ -623,6 +623,12 @@ export class WalletManager {
 
         await this.store.save();
         await this.state.save();
+
+        // If the wallet type is restored, force an index process to restore the state.
+        if (wallet.restored) {
+            const msg = this.communication.createMessage('index', { force: true }, 'background');
+            this.communication.send(msg);
+        }
     }
 
     async getChangeAddress(account: Account) {
