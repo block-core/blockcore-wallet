@@ -138,8 +138,6 @@ export class AccountComponent implements OnInit, OnDestroy {
       return;
     }
 
-    console.log('updateAccountHistory!!!!!');
-
     // Make sure we first reload the store to ensure we get latest items.
     // await this.accountHistoryStore.load();
 

@@ -246,9 +246,6 @@ export class IndexerBackgroundService {
                 });
 
                 await this.accountHistoryStore.save();
-
-                console.log('accountHistoryStore.save!!!!!!!');
-                console.log(this.accountHistoryStore.all());
             }
         }
     }
@@ -708,12 +705,8 @@ export class IndexerBackgroundService {
                         // Keep updating with transaction info details until finalized (and it will no longer be returned in the paged query):
                         transaction.details = await this.getTransactionInfo(transactionId, indexerUrl);
 
-                        console.log('!!!!!! Retreived transaction details', transaction);
-
                         // Copy some of the details state to the container object.
                         transaction.confirmations = transaction.details.confirmations;
-                        // transaction.blockIndex = transaction.details.blockIndex;
-                        // transaction.unconfirmed = (transaction.details.confirmations == 0);
 
                         // If the transaction ID is not present already on the AddressState, add it.
                         if (index == -1) {
@@ -723,21 +716,17 @@ export class IndexerBackgroundService {
                         transaction.unconfirmed = (transaction.confirmations < this.confirmed);
                         transaction.finalized = (transaction.confirmations >= this.finalized);
 
-                        console.log(`UNCONFIRMED: ${transaction.unconfirmed}.`);
-
                         // Whenever we reseach finalized transactions, move the offset state forward.
                         if (transaction.finalized) {
                             state.offset = offset + (j + 1);
                         }
 
-                        // const transactionInfo = this.transactionStore.get(transactionId);
-
                         // TODO: Temporarily drop this while testing a large wallet.
+                        // TODO: We have now implemented on-demand retreival of hex when sending, investigate if that is better and more proper as
+                        // there is no value in getting spent data.
                         // if (!transaction.hex) {
                         //     transaction.hex = await this.getTransactionHex(transactionId, indexerUrl);
                         // }
-
-                        // console.log('Transaction to be put in store:', transaction);
 
                         // Update the store with latest info on the transaction.
                         this.transactionStore.set(transactionId, transaction);
