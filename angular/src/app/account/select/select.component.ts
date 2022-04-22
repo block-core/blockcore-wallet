@@ -52,7 +52,7 @@ export class AccountSelectComponent implements OnInit, OnDestroy {
         for (const account of accounts) {
             // Don't persist the selected value.
             delete account.selected;
-            await this.walletManager.addAccount(account, wallet);
+            await this.walletManager.addAccount(account, wallet, false); // Hold off indexing while we save all accounts.
         }
 
         if (wallet.restored) {

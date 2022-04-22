@@ -597,7 +597,7 @@ export class WalletManager {
         });
     }
 
-    async addAccount(account: Account, wallet: Wallet) {
+    async addAccount(account: Account, wallet: Wallet, runIndexIfRestored = true) {
         // First derive the xpub and store that on the account.
         // const secret = this.walletSecrets.get(wallet.id);
         // Get the secret seed.
@@ -631,7 +631,7 @@ export class WalletManager {
         await this.state.save();
 
         // If the wallet type is restored, force an index process to restore the state.
-        if (wallet.restored) {
+        if (wallet.restored && runIndexIfRestored == true) {
             const msg = this.communication.createMessage('index', { force: true }, 'background');
             this.communication.send(msg);
         }
