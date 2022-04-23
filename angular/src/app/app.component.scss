@@ -21,6 +21,11 @@
   margin-left: 0.8em;
 }
 
+.selectedWallet {
+  color: rgb(207, 207, 207) !important;
+  background-color: gray;
+}
+
 .menu-mode-backdrop {
   background-color: rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(2px);

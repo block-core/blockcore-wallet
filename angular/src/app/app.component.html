@@ -58,7 +58,7 @@
       </mat-form-field> -->
 
       <a mat-list-item *ngFor="let wallet of walletManager.getWallets();" [routerLink]="['/dashboard', wallet.id]"
-        (click)="drawer.toggle()" routerLinkActive="active-link">
+        (click)="drawer.toggle()" [ngClass]="{selectedWallet: wallet.id == walletManager.activeWalletId}">
         <mat-icon mat-list-icon *ngIf="walletManager.isUnlocked(wallet.id)">account_balance_wallet</mat-icon>
         <mat-icon mat-list-icon *ngIf="!walletManager.isUnlocked(wallet.id)">lock</mat-icon>
         <div mat-line class="name-field">{{wallet.name | truncate}}</div>
