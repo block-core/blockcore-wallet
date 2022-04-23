@@ -59,3 +59,22 @@ This will run Angular in watch-mode and ensure it auto-reloads.
 To install the extension, follow the instructions here: https://docs.microsoft.com/en-us/microsoft-edge/extensions-chromium/getting-started/extension-sideloading
 
 Choose the `blockcore-extension\dist\blockcore-extension` folder when picking folder for extension to load from.
+
+## Mobile Debugging
+
+1. Install the Android Studio
+2. Set the JAVA_HOME path to `C:\Program Files\Android\Android Studio\jre`
+
+Supports Android and iOS. Running Android (Windows):
+
+```
+npx cap run android
+```
+
+You can also open the Android code in Android Studio:
+
+```
+npx cap open android
+```
+
+You can debug the active running app, using Chrome on the hosting device by opening this url: `chrome://inspect/#devices`
