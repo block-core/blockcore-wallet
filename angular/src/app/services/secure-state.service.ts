@@ -83,6 +83,8 @@ export class SecureStateService {
             } else {
                 this.keys = new Map<string, string>();
             }
+
+            this.unlockedWalletsSubject.next(<string[]>Array.from(this.keys.keys()));
         }
     }
 }

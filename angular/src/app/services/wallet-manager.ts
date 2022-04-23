@@ -297,6 +297,11 @@ export class WalletManager {
         return this.secure.unlockedWalletsSubject.value;
     };
 
+    /** Returns list of wallet IDs that is currently unlocked. */
+    isUnlocked(walletId: string): boolean {
+        return this.secure.unlockedWalletsSubject.value.indexOf(walletId) > -1;
+    };
+
     async unlockWallet(walletId: string, password: string) {
         var wallet = this.getWallet(walletId);
         let unlockedMnemonic = null;
