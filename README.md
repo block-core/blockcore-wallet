@@ -62,6 +62,9 @@ Choose the `blockcore-extension\dist\blockcore-extension` folder when picking fo
 
 ## Mobile Debugging
 
+1. Install the Android Studio
+2. Set the JAVA_HOME path to `C:\Program Files\Android\Android Studio\jre`
+
 Supports Android and iOS. Running Android (Windows):
 
 ```
