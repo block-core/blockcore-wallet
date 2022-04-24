@@ -9,6 +9,7 @@ import { Action } from '../../shared/interfaces';
 import { TranslateService } from '@ngx-translate/core';
 import { DOCUMENT, Location } from '@angular/common'
 import { combineLatest } from 'rxjs';
+import { RuntimeService } from '../services/runtime.service';
 
 @Component({
   selector: 'app-loading',
@@ -36,10 +37,11 @@ export class LoadingComponent implements OnInit, OnDestroy {
     private status: NetworkStatusService,
     private settings: SettingsService,
     public networkService: NetworksService,
+    private runtime: RuntimeService,
     @Inject(DOCUMENT) private document: Document
   ) {
     this.uiState.title = 'Loading...';
-    this.uiState.manifest = chrome.runtime.getManifest();
+    this.uiState.manifest = runtime.getManifest();
   }
 
   ngOnDestroy(): void {

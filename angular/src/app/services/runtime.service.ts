@@ -13,4 +13,17 @@ export class RuntimeService {
     get isExtension() {
         return this._isExtension;
     }
+
+    getManifest(): chrome.runtime.Manifest {
+        if (this._isExtension) {
+            return chrome.runtime.getManifest();
+        }
+        else {
+            return {
+                name: 'Extension',
+                version: '1.0.0',
+                manifest_version: 3
+            }
+        }
+    }
 }
