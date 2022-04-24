@@ -46,6 +46,15 @@ export class HomeComponent implements OnInit, OnDestroy {
     //     }
     //   }
     // });
+
+    // Verify if the wallet is already unlocked.
+    if (this.walletManager.activeWallet) {
+      this.uiState.title = `Unlock ${this.walletManager.activeWallet.name}`;
+
+      if (this.secure.unlocked(this.walletManager.activeWallet?.id)) {
+        this.router.navigateByUrl('/dashboard');
+      }
+    }
   }
 
   ngOnDestroy(): void {
@@ -60,15 +69,6 @@ export class HomeComponent implements OnInit, OnDestroy {
     //     this.uiState.title = `Unlock ${this.walletManager.activeWallet.name}`;
     //   }
     // }));
-
-    // Verify if the wallet is already unlocked.
-    if (this.walletManager.activeWallet) {
-      if (this.secure.unlocked(this.walletManager.activeWallet?.id)) {
-        this.router.navigateByUrl('/dashboard');
-      }
-
-      this.uiState.title = `Unlock ${this.walletManager.activeWallet.name}`;
-    }
   }
 
   removeError(): void {
