@@ -5,10 +5,6 @@ import { AppModule } from './app/app.module';
 import { TAB_ID } from './app/providers/tab-id.provider';
 import { environment } from './environments/environment';
 
-console.log(globalThis.chrome);
-console.log(globalThis.chrome.runtime);
-console.log(globalThis.chrome.tabs);
-
 if (globalThis.chrome && globalThis.chrome.runtime && globalThis.chrome.tabs) {
   chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
     if (environment.production) {

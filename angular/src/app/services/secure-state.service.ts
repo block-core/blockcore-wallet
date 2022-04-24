@@ -1,6 +1,7 @@
 import { Injectable, NgZone } from "@angular/core";
 import { Router } from "@angular/router";
 import { BehaviorSubject, Observable } from "rxjs";
+import { RuntimeService } from "./runtime.service";
 
 @Injectable({
     providedIn: 'root'
@@ -18,33 +19,36 @@ export class SecureStateService {
         return this.unlockedWalletsSubject.asObservable();
     }
 
-    constructor(private router: Router, private ngZone: NgZone) {
-        const storage = globalThis.chrome.storage as any;
+    constructor(private router: Router, private ngZone: NgZone, private runtime: RuntimeService) {
+        // TODO: Add support for fallback on storage.
+        if (runtime.isExtension) {
+            const storage = globalThis.chrome.storage as any;
 
-        if (globalThis.chrome && globalThis.chrome.storage && storage.session != null) {
-            // Each instance of extension need this listener when session is cleared.
-            storage.session.onChanged.addListener(async (changes: any) => {
-                this.ngZone.run(async () => {
-                    // TODO: Find a better solution than checking the sizes of keys to redirect
-                    // to home when timeout is reached.
-                    const previousCount = this.keys.size;
+            if (globalThis.chrome && globalThis.chrome.storage && storage.session != null) {
+                // Each instance of extension need this listener when session is cleared.
+                storage.session.onChanged.addListener(async (changes: any) => {
+                    this.ngZone.run(async () => {
+                        // TODO: Find a better solution than checking the sizes of keys to redirect
+                        // to home when timeout is reached.
+                        const previousCount = this.keys.size;
 
-                    await this.load();
+                        await this.load();
 
-                    const newCount = this.keys.size;
+                        const newCount = this.keys.size;
 
-                    // Update the unlocked wallet subject with only the keys (wallet IDs).
-                    this.unlockedWalletsSubject.next(<string[]>Array.from(this.keys.keys()));
+                        // Update the unlocked wallet subject with only the keys (wallet IDs).
+                        this.unlockedWalletsSubject.next(<string[]>Array.from(this.keys.keys()));
 
-                    // If there previously was more than 0 unlocked and there are no 0 unlocked,
-                    // we must ensure that we send user to unlock screen.
-                    // if (previousCount > 0 && newCount == 0) {
-                    //     // TODO: This should truly only be an event and not a physical redirect. Separation of concerns here...
-                    //     debugger;
-                    //     this.router.navigateByUrl('/home');
-                    // }
+                        // If there previously was more than 0 unlocked and there are no 0 unlocked,
+                        // we must ensure that we send user to unlock screen.
+                        // if (previousCount > 0 && newCount == 0) {
+                        //     // TODO: This should truly only be an event and not a physical redirect. Separation of concerns here...
+                        //     debugger;
+                        //     this.router.navigateByUrl('/home');
+                        // }
+                    });
                 });
-            });
+            }
         }
     }
 
@@ -73,7 +77,8 @@ export class SecureStateService {
     }
 
     async load() {
-        if (globalThis.chrome && globalThis.chrome.storage) {
+        // TODO: Add fallback for storage.
+        if (this.runtime.isExtension) {
             const storage = globalThis.chrome.storage;
 
             let { keys } = await (<any>storage).session.get(['keys']);
