@@ -8,6 +8,8 @@
     "all": "npm run build:production && npm run build:coinvault && npm run build:smartcityplatform",
     "ng": "ng",
     "start": "npm run watch",
+    "serve": "npm run clean && npm-run-all --parallel angular:*",
+    "angular:serve": "ng serve --configuration development --plugin ~angular/sourcemaps-plugin.js --extra-webpack-config ./angular/webpack.config.js",
     "build:angular": "ng build --configuration development --extra-webpack-config ./angular/webpack.config.js",
     "build:angular-production": "ng build --configuration production --extra-webpack-config ./angular/webpack.config.js",
     "build:angular-coinvault": "ng build --configuration coinvault --extra-webpack-config ./angular/webpack.config.js",
