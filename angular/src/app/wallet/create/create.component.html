@@ -43,7 +43,7 @@
                     <div>
                         <br>
                         <button *ngIf="!recover" class="signup-button" mat-flat-button color="primary" matStepperNext>OK, I have saved it</button>
-                        <button *ngIf="recover" class="signup-button" mat-flat-button color="primary" matStepperNext>Import secret recovery phrase</button>
+                        <button *ngIf="recover" class="signup-button" mat-flat-button color="primary" [disabled]="!firstFormGroup.valid" matStepperNext>Import secret recovery phrase</button>
                     </div>
                 </form>
             </mat-step>

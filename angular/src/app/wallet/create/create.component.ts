@@ -1,8 +1,9 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, AsyncValidatorFn, FormBuilder, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { UIState, FeatureService, WalletManager, CommunicationService, CryptoService } from '../../services';
 import { Wallet } from '../../../shared/interfaces';
 import { copyToClipboard } from '../../shared/utilities';
+import { map, Observable } from 'rxjs';
 const { v4: uuidv4 } = require('uuid');
 
 @Component({
@@ -67,10 +68,24 @@ export class WalletCreateComponent implements OnInit {
     restore() {
         this.step = 1;
         this.recover = true;
-
         this.firstFormGroup = this._formBuilder.group({
-            firstCtrl: ['', Validators.required]
+            firstCtrl: [
+              null,
+              [Validators.required],
+              [WalletCreateComponent.validateMnemonic(this.walletManager)]
+            ],
         });
+    }
+    static validateMnemonic(walletManager: WalletManager): AsyncValidatorFn {
+      return (control: AbstractControl): Observable<ValidationErrors> => {
+        return walletManager
+          .validateMnemonic(control.value)
+          .pipe(
+            map((result: boolean) =>
+              result ? null : { invalidmnemonic: true }
+            )
+          );
+      };
     }
 
     async save() {

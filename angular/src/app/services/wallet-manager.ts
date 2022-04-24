@@ -12,14 +12,14 @@ import axiosRetry from 'axios-retry';
 import { SecureStateService } from "./secure-state.service";
 import { UIState } from "./ui-state.service";
 import { SettingsService } from "./settings.service";
-import { BehaviorSubject, Observable } from "rxjs";
+import { BehaviorSubject, delay, Observable, of } from "rxjs";
 import { NetworkLoader } from "../../shared/network-loader";
 import { Network } from "../../shared/networks";
 import { CommunicationService } from ".";
 import { AccountHistoryStore, AddressStore, AddressWatchStore, WalletStore } from "src/shared";
 import Big from "big.js";
 import { StorageService } from "./storage.service";
-
+import * as bip39 from "bip39";
 const ECPair = ECPairFactory(ecc);
 var bitcoinMessage = require('bitcoinjs-message');
 const axios = require('axios').default;
@@ -67,6 +67,9 @@ export class WalletManager {
         return (this.secure.get(this.activeWalletId) != null);
     }
 
+    validateMnemonic( mnemonic: string) {
+      return of(bip39.validateMnemonic(mnemonic)).pipe();
+    }
     async save() {
         return this.store.save();
     }
