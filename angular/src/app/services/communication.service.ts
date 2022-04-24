@@ -1,6 +1,7 @@
 import { Injectable, NgZone } from '@angular/core';
 import { EnvironmentService, SettingsService } from '.';
 import { Message, MessageResponse } from '../../shared/interfaces';
+import { RuntimeService } from './runtime.service';
 import { StateService } from './state.service';
 const { v4: uuidv4 } = require('uuid');
 
@@ -12,22 +13,26 @@ export class CommunicationService {
         private ngZone: NgZone,
         private state: StateService,
         private settings: SettingsService,
+        private runtime: RuntimeService,
         private env: EnvironmentService) {
 
     }
 
     initialize() {
-        chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
-            const result = await this.handleInternalMessage(message, sender);
-            console.log('sending response:', result);
-            sendResponse(result);
-        });
+        // TODO: Handle these messages internally when running outside of extension context.
+        if (this.runtime.isExtension) {
+            chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
+                const result = await this.handleInternalMessage(message, sender);
+                console.log('sending response:', result);
+                sendResponse(result);
+            });
 
-        chrome.runtime.onMessageExternal.addListener(async (message, sender, sendResponse) => {
-            const result = await this.handleExternalMessage(message, sender);
-            console.log('sending response (external):', result);
-            sendResponse(result);
-        });
+            chrome.runtime.onMessageExternal.addListener(async (message, sender, sendResponse) => {
+                const result = await this.handleExternalMessage(message, sender);
+                console.log('sending response (external):', result);
+                sendResponse(result);
+            });
+        }
     }
 
     createMessage(type: string, data?: any, target: string = 'background'): Message {
