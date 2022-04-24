@@ -59,9 +59,13 @@ export class CommunicationService {
     send(message: Message) {
         console.log('CommunicationService::send:', message);
 
-        chrome.runtime.sendMessage(message, (response) => {
+        this.runtime.sendMessage(message, (response) => {
             console.log('CommunicationService:send:response:', response);
         });
+
+        // chrome.runtime.sendMessage(message, (response) => {
+        //     console.log('CommunicationService:send:response:', response);
+        // });
     }
 
     /** Send message to every single instance of the extension. */

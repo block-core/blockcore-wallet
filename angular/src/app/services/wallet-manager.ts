@@ -18,6 +18,7 @@ import { Network } from "../../shared/networks";
 import { CommunicationService } from ".";
 import { AccountHistoryStore, AddressStore, AddressWatchStore, WalletStore } from "src/shared";
 import Big from "big.js";
+import { StorageService } from "./storage.service";
 
 const ECPair = ECPairFactory(ecc);
 var bitcoinMessage = require('bitcoinjs-message');
@@ -53,6 +54,7 @@ export class WalletManager {
         private accountHistoryStore: AccountHistoryStore,
         private settings: SettingsService,
         private communication: CommunicationService,
+        private storage: StorageService,
         private logger: LoggerService) {
         this.allNetworks = this.networkLoader.getAllNetworks();
     }
@@ -369,11 +371,12 @@ export class WalletManager {
         }
 
         this.logger.info('resetTimer:', this.settings.values.autoTimeout * MINUTE);
-
-        await globalThis.chrome.storage.local.set({ 'timeout': this.settings.values.autoTimeout * MINUTE });
+        await this.storage.set('timeout', this.settings.values.autoTimeout * MINUTE);
+        // await globalThis.chrome.storage.local.set({ 'timeout': this.settings.values.autoTimeout * MINUTE });
 
         // Set the active date from startup.
-        await globalThis.chrome.storage.local.set({ 'active': new Date().toJSON() });
+        // await globalThis.chrome.storage.local.set({ 'active': new Date().toJSON() });
+        await this.storage.set('active', new Date().toJSON());
     }
 
     get hasWallets(): boolean {

@@ -2,6 +2,7 @@ import { Injectable, NgZone } from "@angular/core";
 import { Router } from "@angular/router";
 import { BehaviorSubject, Observable } from "rxjs";
 import { RuntimeService } from "./runtime.service";
+import { StorageService } from "./storage.service";
 
 @Injectable({
     providedIn: 'root'
@@ -19,12 +20,12 @@ export class SecureStateService {
         return this.unlockedWalletsSubject.asObservable();
     }
 
-    constructor(private router: Router, private ngZone: NgZone, private runtime: RuntimeService) {
+    constructor(private router: Router, private ngZone: NgZone, private runtime: RuntimeService, private storage: StorageService) {
         // TODO: Add support for fallback on storage.
         if (runtime.isExtension) {
             const storage = globalThis.chrome.storage as any;
 
-            if (globalThis.chrome && globalThis.chrome.storage && storage.session != null) {
+            if (storage.session != null) {
                 // Each instance of extension need this listener when session is cleared.
                 storage.session.onChanged.addListener(async (changes: any) => {
                     this.ngZone.run(async () => {
@@ -54,17 +55,20 @@ export class SecureStateService {
 
     async set(key: string, value: string) {
         if (globalThis.chrome && globalThis.chrome.storage) {
-            const storage = globalThis.chrome.storage;
-
             // Update the keys, then persist it.
             this.keys.set(key, value);
 
-            // This will trigger an onChange event and reload the same keys. This will happens twice
-            // in the instance that called set, but only once for other instances of the extension.
-            await (<any>storage).session.set({ 'keys': Object.fromEntries(this.keys.entries()) });
+            // Only on extensions will we listen to the event and reload cross instances. That is not possible on mobile / browser.
+            if (this.runtime.isExtension) {
+                const storage = globalThis.chrome.storage;
+                // This will trigger an onChange event and reload the same keys. This will happens twice
+                // in the instance that called set, but only once for other instances of the extension.
+                await (<any>storage).session.set({ 'keys': Object.fromEntries(this.keys.entries()) });
+            }
 
+            await this.storage.set('active', new Date().toJSON());
             // Every time a new key is set, we'll update the active value as well.
-            await globalThis.chrome.storage.local.set({ 'active': new Date().toJSON() });
+            // await globalThis.chrome.storage.local.set({ 'active': new Date().toJSON() });
         }
     }
 
@@ -77,10 +81,8 @@ export class SecureStateService {
     }
 
     async load() {
-        // TODO: Add fallback for storage.
         if (this.runtime.isExtension) {
             const storage = globalThis.chrome.storage;
-
             let { keys } = await (<any>storage).session.get(['keys']);
 
             if (keys != null && Object.keys(keys).length > 0) {
@@ -88,8 +90,17 @@ export class SecureStateService {
             } else {
                 this.keys = new Map<string, string>();
             }
+        } else {
+            // TODO: Verify fallback for storage.
+            let keys = await this.storage.get('keys');
 
-            this.unlockedWalletsSubject.next(<string[]>Array.from(this.keys.keys()));
+            if (keys != null && Object.keys(keys).length > 0) {
+                this.keys = new Map<string, string>(Object.entries(keys))
+            } else {
+                this.keys = new Map<string, string>();
+            }
         }
+
+        this.unlockedWalletsSubject.next(<string[]>Array.from(this.keys.keys()));
     }
 }
