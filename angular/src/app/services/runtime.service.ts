@@ -20,9 +20,11 @@ export class RuntimeService {
         }
         else {
             return {
-                name: 'Extension',
-                version: '1.0.0',
-                manifest_version: 3
+                name: 'Blockcore Browser Wallet',
+                author: 'Blockcore',
+                version: '0.0.1',
+                manifest_version: 3,
+                description: 'Non-Custodial web browser wallet for Coins, Tokens, Identities, NFTs and more.'
             }
         }
     }
