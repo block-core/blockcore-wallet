@@ -68,9 +68,7 @@ export class WalletManager {
     }
 
     validateMnemonic( mnemonic: string) {
-      return of(bip39.validateMnemonic(mnemonic)).pipe(
-        delay(1000)
-      );
+      return of(bip39.validateMnemonic(mnemonic)).pipe();
     }
     async save() {
         return this.store.save();
