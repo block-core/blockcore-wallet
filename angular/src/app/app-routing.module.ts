@@ -32,76 +32,115 @@ import { AccountSendSendingComponent } from './account/send/sending/send-sending
 import { HandlerComponent } from './settings/handler/handler.component';
 import { ActionStratisIdentityComponent } from './action/sid/sid.component';
 import { ActionNostrIdentityComponent } from './action/nostr/nostr.component';
+import { LoadingResolverService } from './services/loading-resolver.service';
 
 const routes: Routes = [
   {
-    path: '', component: LoadingComponent, pathMatch: 'full',
+    path: '', component: LoadingComponent, pathMatch: 'full'
   },
   {
     path: 'popup', component: LoadingComponent, data: { popup: true }
   },
   {
-    path: 'home', component: HomeComponent
+    path: 'home', component: HomeComponent, resolve: {
+      data: LoadingResolverService
+    }
   },
   {
-    path: 'wipe', component: WipeComponent
+    path: 'wipe', component: WipeComponent, resolve: {
+      data: LoadingResolverService
+    }
   },
   {
-    path: 'settings', component: SettingsComponent
+    path: 'settings', component: SettingsComponent, resolve: {
+      data: LoadingResolverService
+    }
   },
   {
-    path: 'settings/privacy', component: PrivacyComponent
+    path: 'settings/privacy', component: PrivacyComponent, resolve: {
+      data: LoadingResolverService
+    }
   },
   {
-    path: 'settings/licenses', component: LicensesComponent
+    path: 'settings/licenses', component: LicensesComponent, resolve: {
+      data: LoadingResolverService
+    }
   },
   {
-    path: 'settings/changes', component: ChangesComponent
+    path: 'settings/changes', component: ChangesComponent, resolve: {
+      data: LoadingResolverService
+    }
   },
   {
-    path: 'settings/password', component: PasswordComponent
+    path: 'settings/password', component: PasswordComponent, resolve: {
+      data: LoadingResolverService
+    }
   },
   {
-    path: 'settings/about', component: AboutComponent
+    path: 'settings/about', component: AboutComponent, resolve: {
+      data: LoadingResolverService
+    }
   },
   {
-    path: 'settings/export-recovery-phrase', component: RecoveryComponent
+    path: 'settings/export-recovery-phrase', component: RecoveryComponent, resolve: {
+      data: LoadingResolverService
+    }
   },
   {
-    path: 'settings/handler', component: HandlerComponent
+    path: 'settings/handler', component: HandlerComponent, resolve: {
+      data: LoadingResolverService
+    }
   },
   {
-    path: 'account/select', component: AccountSelectComponent
+    path: 'account/select', component: AccountSelectComponent, resolve: {
+      data: LoadingResolverService
+    }
   },
   {
-    path: 'account/view/:index', component: AccountComponent
+    path: 'account/view/:index', component: AccountComponent, resolve: {
+      data: LoadingResolverService
+    }
   },
   {
     path: 'account/send', component: AccountSendComponent, children: [
       { path: '', redirectTo: 'address', pathMatch: 'full' },
       {
         path: 'address',
-        component: AccountSendAddressComponent
+        component: AccountSendAddressComponent, resolve: {
+          data: LoadingResolverService
+        }
       },
       {
         path: 'confirm',
-        component: AccountSendConfirmComponent
+        component: AccountSendConfirmComponent, resolve: {
+          data: LoadingResolverService
+        }
       },
       {
         path: 'sending',
-        component: AccountSendSendingComponent
+        component: AccountSendSendingComponent, resolve: {
+          data: LoadingResolverService
+        }
       },
       {
         path: 'success',
-        component: AccountSendSuccessComponent
+        component: AccountSendSuccessComponent, resolve: {
+          data: LoadingResolverService
+        }
       }
-    ]
+    ], resolve: {
+      data: LoadingResolverService
+    }
   },
   {
-    path: 'account/receive/:index', component: AccountReceiveComponent
+    path: 'account/receive/:index', component: AccountReceiveComponent, resolve: {
+      data: LoadingResolverService
+    }
   },
   {
-    path: 'account/transaction/:txid', component: AccountTransactionComponent
+    path: 'account/transaction/:txid', component: AccountTransactionComponent, resolve: {
+      data: LoadingResolverService
+    }
   },
   // {
   //   path: 'account/view/identity/:index', component: AccountIdentityComponent
@@ -110,13 +149,19 @@ const routes: Routes = [
   //   path: 'account/view/nostr/:index', component: NostrIdentityComponent
   // },
   {
-    path: 'account/create', component: AccountCreateComponent
+    path: 'account/create', component: AccountCreateComponent, resolve: {
+      data: LoadingResolverService
+    }
   },
   {
-    path: 'account/edit/:index', component: AccountEditComponent
+    path: 'account/edit/:index', component: AccountEditComponent, resolve: {
+      data: LoadingResolverService
+    }
   },
   {
-    path: 'account/remove/:index', component: AccountRemoveComponent
+    path: 'account/remove/:index', component: AccountRemoveComponent, resolve: {
+      data: LoadingResolverService
+    }
   },
   // {
   //   path: 'vault/view/:index', component: VaultComponent
@@ -134,34 +179,54 @@ const routes: Routes = [
   //   path: 'vault/remove/:index', component: VaultRemoveComponent
   // },
   {
-    path: 'dashboard', component: DashboardComponent
+    path: 'dashboard', component: DashboardComponent, resolve: {
+      data: LoadingResolverService
+    }
   },
   {
-    path: 'dashboard/:id', component: DashboardComponent
+    path: 'dashboard/:id', component: DashboardComponent, resolve: {
+      data: LoadingResolverService
+    }
   },
   {
-    path: 'wallet/create', component: WalletCreateComponent
+    path: 'wallet/create', component: WalletCreateComponent, resolve: {
+      data: LoadingResolverService
+    }
   },
   {
-    path: 'wallet/edit', component: WalletEditComponent
+    path: 'wallet/edit', component: WalletEditComponent, resolve: {
+      data: LoadingResolverService
+    }
   },
   {
-    path: 'wallet/remove', component: WalletRemoveComponent
+    path: 'wallet/remove', component: WalletRemoveComponent, resolve: {
+      data: LoadingResolverService
+    }
   },
   {
-    path: 'action/sign', component: ActionSignComponent
+    path: 'action/sign', component: ActionSignComponent, resolve: {
+      data: LoadingResolverService
+    }
   },
   {
-    path: 'action/identity', component: ActionIdentityComponent
+    path: 'action/identity', component: ActionIdentityComponent, resolve: {
+      data: LoadingResolverService
+    }
   },
   {
-    path: 'action/login', component: ActionLoginComponent
+    path: 'action/login', component: ActionLoginComponent, resolve: {
+      data: LoadingResolverService
+    }
   },
   {
-    path: 'action/sid', component: ActionStratisIdentityComponent
+    path: 'action/sid', component: ActionStratisIdentityComponent, resolve: {
+      data: LoadingResolverService
+    }
   },
   {
-    path: 'action/nostr', component: ActionNostrIdentityComponent
+    path: 'action/nostr', component: ActionNostrIdentityComponent, resolve: {
+      data: LoadingResolverService
+    }
   },
   {
     path: 'popup2',
