@@ -50,14 +50,16 @@ export class SecureStateService {
                     });
                 });
             }
+        } else {
+            console.log('SecureStateService constructor in browser mode.');
         }
     }
 
     async set(key: string, value: string) {
-        if (globalThis.chrome && globalThis.chrome.storage) {
-            // Update the keys, then persist it.
-            this.keys.set(key, value);
+        // Update the keys, then persist it.
+        this.keys.set(key, value);
 
+        if (globalThis.chrome && globalThis.chrome.storage) {
             // Only on extensions will we listen to the event and reload cross instances. That is not possible on mobile / browser.
             if (this.runtime.isExtension) {
                 const storage = globalThis.chrome.storage;
@@ -69,6 +71,8 @@ export class SecureStateService {
             await this.storage.set('active', new Date().toJSON());
             // Every time a new key is set, we'll update the active value as well.
             // await globalThis.chrome.storage.local.set({ 'active': new Date().toJSON() });
+        } else {
+            await this.storage.set('active', new Date().toJSON());
         }
     }
 
