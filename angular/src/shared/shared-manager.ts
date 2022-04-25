@@ -1,12 +1,8 @@
 export class SharedManager {
-    _isExtension;
+    isExtension;
 
     constructor() {
-        this._isExtension = (globalThis.chrome && globalThis.chrome.runtime && globalThis.chrome.tabs);
-    }
-
-    get isExtension() {
-        return this._isExtension;
+        this.isExtension = (globalThis.chrome && globalThis.chrome.runtime && globalThis.chrome.tabs);
     }
 
     async checkLockTimeout() {
