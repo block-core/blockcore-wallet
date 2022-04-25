@@ -5,6 +5,7 @@ import { Settings } from '../../shared/interfaces';
 import { INDEXER_URL } from '../shared/constants';
 import { TranslateService } from '@ngx-translate/core';
 import { SettingStore } from '../../shared';
+import { RuntimeService } from '../services/runtime.service';
 
 @Component({
   selector: 'app-settings',
@@ -26,6 +27,7 @@ export class SettingsComponent {
     private communication: CommunicationService,
     private settingsService: SettingsService,
     private settingStore: SettingStore,
+    private runtime: RuntimeService,
     private location: Location) {
 
     // The Settings UI can be opened from the "Extension options" link and then settings won't be loaded yet.
@@ -46,16 +48,18 @@ export class SettingsComponent {
   }
 
   updateAllInstances() {
-    chrome.runtime.sendMessage({
-      type: 'store-reload',
-      data: 'setting',
-      ext: 'blockcore',
-      source: 'tab',
-      target: 'tabs',
-      host: location.host
-    }, function (response) {
-      console.log('Extension:sendMessage:response:updated:', response);
-    });
+    if (this.runtime.isExtension) {
+      chrome.runtime.sendMessage({
+        type: 'store-reload',
+        data: 'setting',
+        ext: 'blockcore',
+        source: 'tab',
+        target: 'tabs',
+        host: location.host
+      }, function (response) {
+        console.log('Extension:sendMessage:response:updated:', response);
+      });
+    }
   }
 
   async save() {

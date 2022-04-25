@@ -57,6 +57,7 @@ chrome.alarms.onAlarm.addListener(async (alarm: chrome.alarms.Alarm) => {
 
     if (alarm.name === 'periodic') {
         await shared.checkLockTimeout();
+
         // const storage = globalThis.chrome.storage as any;
 
         // // Get both "active" (Date) and timeout (number of minutes) from local settings.

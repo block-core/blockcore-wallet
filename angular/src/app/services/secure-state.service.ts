@@ -66,11 +66,11 @@ export class SecureStateService {
                 await (<any>storage).session.set({ 'keys': Object.fromEntries(this.keys.entries()) });
             }
 
-            await this.storage.set('active', new Date().toJSON());
+            await this.storage.set('active', new Date().toJSON(), false);
             // Every time a new key is set, we'll update the active value as well.
             // await globalThis.chrome.storage.local.set({ 'active': new Date().toJSON() });
         } else {
-            await this.storage.set('active', new Date().toJSON());
+            await this.storage.set('active', new Date().toJSON(), false);
         }
     }
 
@@ -83,24 +83,33 @@ export class SecureStateService {
     }
 
     async load() {
-        if (this.runtime.isExtension) {
-            const storage = globalThis.chrome.storage;
-            let { keys } = await (<any>storage).session.get(['keys']);
+        // if (this.runtime.isExtension) {
+        //     const storage = globalThis.chrome.storage;
+        //     // let { keys } = await (<any>storage).session.get(['keys']);
+        //     const keys = await this.storage.get('keys', false);
 
-            if (keys != null && Object.keys(keys).length > 0) {
-                this.keys = new Map<string, string>(Object.entries(keys))
-            } else {
-                this.keys = new Map<string, string>();
-            }
+        //     if (keys != null && Object.keys(keys).length > 0) {
+        //         this.keys = new Map<string, string>(Object.entries(keys))
+        //     } else {
+        //         this.keys = new Map<string, string>();
+        //     }
+        // } else {
+        //     // TODO: Verify fallback for storage.
+        //     let keys = await this.storage.get('keys', false);
+
+        //     if (keys != null && Object.keys(keys).length > 0) {
+        //         this.keys = new Map<string, string>(Object.entries(keys))
+        //     } else {
+        //         this.keys = new Map<string, string>();
+        //     }
+        // }
+
+        let keys = await this.storage.get('keys', false);
+
+        if (keys != null && Object.keys(keys).length > 0) {
+            this.keys = new Map<string, string>(Object.entries(keys))
         } else {
-            // TODO: Verify fallback for storage.
-            let keys = await this.storage.get('keys');
-
-            if (keys != null && Object.keys(keys).length > 0) {
-                this.keys = new Map<string, string>(Object.entries(keys))
-            } else {
-                this.keys = new Map<string, string>();
-            }
+            this.keys = new Map<string, string>();
         }
 
         this.unlockedWalletsSubject.next(<string[]>Array.from(this.keys.keys()));

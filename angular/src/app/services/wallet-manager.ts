@@ -20,6 +20,7 @@ import { AccountHistoryStore, AddressStore, AddressWatchStore, WalletStore } fro
 import Big from "big.js";
 import { StorageService } from "./storage.service";
 import * as bip39 from "bip39";
+import { RuntimeService } from "./runtime.service";
 const ECPair = ECPairFactory(ecc);
 var bitcoinMessage = require('bitcoinjs-message');
 const axios = require('axios').default;
@@ -55,6 +56,7 @@ export class WalletManager {
         private settings: SettingsService,
         private communication: CommunicationService,
         private storage: StorageService,
+        private runtime: RuntimeService,
         private logger: LoggerService) {
         this.allNetworks = this.networkLoader.getAllNetworks();
     }
@@ -67,8 +69,8 @@ export class WalletManager {
         return (this.secure.get(this.activeWalletId) != null);
     }
 
-    validateMnemonic( mnemonic: string) {
-      return of(bip39.validateMnemonic(mnemonic)).pipe();
+    validateMnemonic(mnemonic: string) {
+        return of(bip39.validateMnemonic(mnemonic)).pipe();
     }
     async save() {
         return this.store.save();
@@ -374,12 +376,12 @@ export class WalletManager {
         }
 
         this.logger.debug('User was active, reset lock timer:', this.settings.values.autoTimeout * MINUTE);
-        await this.storage.set('timeout', this.settings.values.autoTimeout * MINUTE);
+        await this.storage.set('timeout', this.settings.values.autoTimeout * MINUTE, true);
         // await globalThis.chrome.storage.local.set({ 'timeout': this.settings.values.autoTimeout * MINUTE });
 
         // Set the active date from startup.
         // await globalThis.chrome.storage.local.set({ 'active': new Date().toJSON() });
-        await this.storage.set('active', new Date().toJSON());
+        await this.storage.set('active', new Date().toJSON(), true);
     }
 
     get hasWallets(): boolean {
@@ -597,15 +599,17 @@ export class WalletManager {
     }
 
     updateAllInstances() {
-        chrome.runtime.sendMessage({
-            type: 'reload',
-            ext: 'blockcore',
-            source: 'tab',
-            target: 'tabs',
-            host: location.host
-        }, function (response) {
-            console.log('Extension:sendMessage:response:updated:', response);
-        });
+        if (this.runtime.isExtension) {
+            chrome.runtime.sendMessage({
+                type: 'reload',
+                ext: 'blockcore',
+                source: 'tab',
+                target: 'tabs',
+                host: location.host
+            }, function (response) {
+                console.log('Extension:sendMessage:response:updated:', response);
+            });
+        }
     }
 
     async addAccount(account: Account, wallet: Wallet, runIndexIfRestored = true) {

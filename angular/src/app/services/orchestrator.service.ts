@@ -3,6 +3,7 @@
 
 import { Injectable } from '@angular/core';
 import { Message } from 'src/shared';
+import { SharedManager } from 'src/shared/shared-manager';
 import { EventBus } from './event-bus';
 import { LoggerService } from './logger.service';
 
@@ -11,6 +12,7 @@ import { LoggerService } from './logger.service';
 })
 export class OrchestratorService {
     private _initialized = false;
+    private shared;
 
     constructor(
         private logger: LoggerService,
@@ -22,7 +24,7 @@ export class OrchestratorService {
         // private snackBar: MatSnackBar,
         // private secure: SecureStateService
     ) {
-
+        this.shared = new SharedManager();
     }
 
     /** Initializes the Orchestrator Service responsible for events and processing in browser/mobile mode. Should only be called when running outside of extension context. */
@@ -41,8 +43,9 @@ export class OrchestratorService {
             await this.handleMessage(message.data);
         });
 
-        setInterval(() => {
+        setInterval(async () => {
             this.logger.debug('periodic interval called.');
+            await this.shared.checkLockTimeout();
         }, 60000); // 'periodic', 1 minute
 
         setInterval(() => {
