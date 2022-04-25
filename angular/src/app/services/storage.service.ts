@@ -12,14 +12,20 @@ export class StorageService {
     async set(key: string, value: any, persisted: boolean) {
         if (this.runtime.isExtension) {
             if (persisted) {
-                await globalThis.chrome.storage.local.set({ key: value });
+                await globalThis.chrome.storage.local.set({ [key]: value });
             } else {
                 const storage = globalThis.chrome.storage;
-                await (<any>storage).session.set({ key: value });
+                await (<any>storage).session.set({ [key]: value });
             }
         } else {
-            // "sessionStorage is similar to localStorage ; the difference is that while data in localStorage doesn't expire, data in sessionStorage is cleared when the page session ends.""
-            globalThis.sessionStorage.setItem(key, JSON.stringify(value));
+            debugger;
+            if (persisted) {
+                globalThis.localStorage.setItem(key, JSON.stringify({ [key]: value }));
+            } else {
+                // "sessionStorage is similar to localStorage ; the difference is that while data in localStorage doesn't expire, 
+                // data in sessionStorage is cleared when the page session ends."
+                globalThis.sessionStorage.setItem(key, JSON.stringify({ [key]: value }));
+            }
         }
     }
 
@@ -34,14 +40,29 @@ export class StorageService {
                 return keys;
             }
         } else {
+            debugger;
             if (persisted) {
-                // "sessionStorage is similar to localStorage ; the difference is that while data in localStorage doesn't expire, data in sessionStorage is cleared when the page session ends.""
+                // "sessionStorage is similar to localStorage ; the difference is that while data in localStorage doesn't expire, 
+                // data in sessionStorage is cleared when the page session ends."
                 const item = globalThis.localStorage.getItem(key);
-                return JSON.parse(item);
+
+                if (item == null) {
+                    return null;
+                } else {
+                    debugger;
+                    return JSON.parse(item)[key];
+                }
             } else {
-                // "sessionStorage is similar to localStorage ; the difference is that while data in localStorage doesn't expire, data in sessionStorage is cleared when the page session ends.""
+                // "sessionStorage is similar to localStorage ; the difference is that while data in localStorage doesn't expire, 
+                // data in sessionStorage is cleared when the page session ends."
                 const item = globalThis.sessionStorage.getItem(key);
-                return JSON.parse(item);
+
+                if (item == null) {
+                    return null;
+                } else {
+                    debugger;
+                    return JSON.parse(item)[key];
+                }
             }
         }
     }

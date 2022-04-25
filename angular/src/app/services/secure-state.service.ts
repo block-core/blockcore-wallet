@@ -66,11 +66,11 @@ export class SecureStateService {
                 await (<any>storage).session.set({ 'keys': Object.fromEntries(this.keys.entries()) });
             }
 
-            await this.storage.set('active', new Date().toJSON(), false);
+            await this.storage.set('active', new Date().toJSON(), true);
             // Every time a new key is set, we'll update the active value as well.
             // await globalThis.chrome.storage.local.set({ 'active': new Date().toJSON() });
         } else {
-            await this.storage.set('active', new Date().toJSON(), false);
+            await this.storage.set('active', new Date().toJSON(), true);
         }
     }
 
