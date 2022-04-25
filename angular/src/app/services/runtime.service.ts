@@ -1,21 +1,22 @@
 import { Injectable } from "@angular/core";
+import { SharedManager } from "src/shared/shared-manager";
 
 @Injectable({
     providedIn: 'root'
 })
 export class RuntimeService {
-    private _isExtension;
+    private shared;
 
     constructor() {
-        this._isExtension = (globalThis.chrome && globalThis.chrome.runtime && globalThis.chrome.tabs);
+        this.shared = new SharedManager();
     }
 
     get isExtension() {
-        return this._isExtension;
+        return this.shared.isExtension;
     }
 
     getManifest(): chrome.runtime.Manifest {
-        if (this._isExtension) {
+        if (this.isExtension) {
             return chrome.runtime.getManifest();
         }
         else {
