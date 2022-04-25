@@ -10,6 +10,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { DOCUMENT, Location } from '@angular/common'
 import { combineLatest } from 'rxjs';
 import { RuntimeService } from '../services/runtime.service';
+import { OrchestratorService } from '../services/orchestrator.service';
 
 @Component({
   selector: 'app-loading',
@@ -37,6 +38,7 @@ export class LoadingComponent implements OnInit, OnDestroy {
     private status: NetworkStatusService,
     private settings: SettingsService,
     public networkService: NetworksService,
+    private orchestrator: OrchestratorService,
     private runtime: RuntimeService,
     @Inject(DOCUMENT) private document: Document
   ) {
@@ -95,6 +97,11 @@ export class LoadingComponent implements OnInit, OnDestroy {
     if (!this.uiState.initialized) {
       await this.appManager.initialize();
       await this.status.initialize();
+
+      // When not running in extension context, we will initialize the frontend orchestrator.
+      if (!this.runtime.isExtension) {
+        this.orchestrator.initialize();
+      }
 
       this.translate.addLangs(['en', 'no', 'fr']);
       this.translate.setDefaultLang('en');

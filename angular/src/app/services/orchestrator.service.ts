@@ -1,3 +1,40 @@
+// OrchestratorService
+// Responsible for orchestrating events and processing when running in browser/mobile mode.
+
+import { Injectable } from '@angular/core';
+import { LoggerService } from './logger.service';
+
+@Injectable({
+    providedIn: 'root'
+})
+export class OrchestratorService {
+    constructor(
+        private logger: LoggerService
+        // private communication: CommunicationService,
+        // private uiState: UIState,
+        // private router: Router,
+        // private networkStatus: NetworkStatusService,
+        // private snackBar: MatSnackBar,
+        // private secure: SecureStateService
+    ) {
+
+    }
+
+    /** Initializes the Orchestrator Service responsible for events and processing in browser/mobile mode. Should only be called when running outside of extension context. */
+    initialize() {
+        this.logger.debug('OrchestratorService wiring up listeners.');
+
+        setInterval(() => {
+            this.logger.debug('periodic interval called.');
+        }, 60000); // 'periodic', 1 minute
+
+        setInterval(() => {
+            this.logger.debug('index interval called.');
+        }, 60000 * 10); // 'index', 10 minute
+    }
+}
+
+
 // import { Injectable } from '@angular/core';
 // import { Router } from '@angular/router';
 // import { UIState } from './ui-state.service';

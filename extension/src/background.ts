@@ -1,3 +1,6 @@
+// OrchestratorBackgroundService
+// Responsible for orchestrating events and processing when running in extension mode.
+
 import { Message } from '../../angular/src/shared/interfaces';
 import { BackgroundManager } from '../../angular/src/shared/background-manager';
 
