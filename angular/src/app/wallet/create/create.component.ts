@@ -4,6 +4,8 @@ import { UIState, FeatureService, WalletManager, CommunicationService, CryptoSer
 import { Wallet } from '../../../shared/interfaces';
 import { copyToClipboard } from '../../shared/utilities';
 import { map, Observable } from 'rxjs';
+import { Router } from '@angular/router';
+import { Location } from '@angular/common'
 const { v4: uuidv4 } = require('uuid');
 
 @Component({
@@ -30,6 +32,8 @@ export class WalletCreateComponent implements OnInit {
         public uiState: UIState,
         private crypto: CryptoService,
         public walletManager: WalletManager,
+        private router: Router,
+        private location: Location,
         private communication: CommunicationService,
         private cd: ChangeDetectorRef
     ) {
@@ -70,22 +74,27 @@ export class WalletCreateComponent implements OnInit {
         this.recover = true;
         this.firstFormGroup = this._formBuilder.group({
             firstCtrl: [
-              null,
-              [Validators.required],
-              [WalletCreateComponent.validateMnemonic(this.walletManager)]
+                null,
+                [Validators.required],
+                [WalletCreateComponent.validateMnemonic(this.walletManager)]
             ],
         });
     }
+
+    cancel() {
+        this.location.back();
+    }
+
     static validateMnemonic(walletManager: WalletManager): AsyncValidatorFn {
-      return (control: AbstractControl): Observable<ValidationErrors> => {
-        return walletManager
-          .validateMnemonic(control.value)
-          .pipe(
-            map((result: boolean) =>
-              result ? null : { invalidmnemonic: true }
-            )
-          );
-      };
+        return (control: AbstractControl): Observable<ValidationErrors> => {
+            return walletManager
+                .validateMnemonic(control.value)
+                .pipe(
+                    map((result: boolean) =>
+                        result ? null : { invalidmnemonic: true }
+                    )
+                );
+        };
     }
 
     async save() {
