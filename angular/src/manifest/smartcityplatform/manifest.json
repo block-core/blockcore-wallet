@@ -11,16 +11,12 @@
         "128": "assets/icon-128x128.png"
     },
     "permissions": [
-        "activeTab",
-        "declarativeNetRequest",
         "tabs",
         "storage",
         "unlimitedStorage",
         "webRequest",
-        "webNavigation",
         "alarms",
-        "clipboardWrite",
-        "notifications"
+        "clipboardWrite"
     ],
     "background": {
         "service_worker": "background.js"
@@ -58,14 +54,5 @@
                 "<all_urls>"
             ]
         }
-    ],
-    "declarative_net_request": {
-        "rule_resources": [
-            {
-                "id": "request_rules",
-                "enabled": true,
-                "path": "net_request_rules.json"
-            }
-        ]
-    }
+    ]
 }

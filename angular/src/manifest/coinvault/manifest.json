@@ -11,16 +11,12 @@
         "128": "assets/icon-128x128.png"
     },
     "permissions": [
-        "activeTab",
-        "declarativeNetRequest",
         "tabs",
         "storage",
         "unlimitedStorage",
         "webRequest",
-        "webNavigation",
         "alarms",
-        "clipboardWrite",
-        "notifications"
+        "clipboardWrite"
     ],
     "background": {
         "service_worker": "background.js"
