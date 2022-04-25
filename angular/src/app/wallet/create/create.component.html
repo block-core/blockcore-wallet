@@ -66,8 +66,8 @@
                     </mat-form-field>
 
                     <div>
-                        <button class="signup-button" (click)="save()" [disabled]="!passwordValidated" mat-button mat-flat-button color="primary"
-                            matStepperNext>Save</button>
+                        <button class="signup-button" (click)="save()" [disabled]="!passwordValidated" mat-button mat-flat-button color="primary" matStepperNext>Save</button>
+                        <button class="signup-button" mat-stroked-button (click)="cancel()">Cancel</button>
                     </div>
                 </form>
             </mat-step>
