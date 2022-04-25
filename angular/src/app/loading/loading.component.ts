@@ -95,13 +95,16 @@ export class LoadingComponent implements OnInit, OnDestroy {
     document.title = this.env.instanceName;
 
     if (!this.uiState.initialized) {
-      await this.appManager.initialize();
-      await this.status.initialize();
 
       // When not running in extension context, we will initialize the frontend orchestrator.
       if (!this.runtime.isExtension) {
+        // Run this before app manager initialize, because it will add listeners for communication messages
+        // triggered by the app manager initialize.
         this.orchestrator.initialize();
       }
+
+      await this.appManager.initialize();
+      await this.status.initialize();
 
       this.translate.addLangs(['en', 'no', 'fr']);
       this.translate.setDefaultLang('en');

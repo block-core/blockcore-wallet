@@ -29,13 +29,13 @@ export class RuntimeService {
         }
     }
 
-    sendMessage<M = any, R = any>(message: M, responseCallback?: (response: R) => void) {
-        if (this._isExtension) {
-            chrome.runtime.sendMessage(message, (response) => {
-                console.log('CommunicationService:send:response:', response);
-            });
-        } else {
-            console.log('CommunicationService (BROWSER):send:', message);
-        }
-    }
+    // sendMessage<M = any, R = any>(message: M, responseCallback?: (response: R) => void) {
+    //     if (this._isExtension) {
+    //         chrome.runtime.sendMessage(message, (response) => {
+    //             console.log('CommunicationService:send:response:', response);
+    //         });
+    //     } else {
+    //         console.log('CommunicationService (BROWSER):send:', message);
+    //     }
+    // }
 }

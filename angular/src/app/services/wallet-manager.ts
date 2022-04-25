@@ -373,7 +373,7 @@ export class WalletManager {
             return;
         }
 
-        this.logger.info('resetTimer:', this.settings.values.autoTimeout * MINUTE);
+        this.logger.debug('User was active, reset lock timer:', this.settings.values.autoTimeout * MINUTE);
         await this.storage.set('timeout', this.settings.values.autoTimeout * MINUTE);
         // await globalThis.chrome.storage.local.set({ 'timeout': this.settings.values.autoTimeout * MINUTE });
 
@@ -463,7 +463,7 @@ export class WalletManager {
     }
 
     async setActiveWallet(id: string) {
-        console.log('WalletManager:setActiveWallet:' + id);
+        this.logger.debug(`Changing the active wallet to ${id}.`);
 
         if (this.activeWalletId != id) {
             this._activeWalletId = id;

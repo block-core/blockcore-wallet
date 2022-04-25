@@ -66,10 +66,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
     });
 
     this.activatedRoute.paramMap.subscribe(async params => {
-
-      console.log('PARAMS:', params);
+      // console.log('PARAMS:', params);
       const walletId: any = params.get('id');
-      console.log('Wallet ID:', walletId);
 
       // If the wallet ID is provided in the URL, use it, if not, leave the existing active wallet.
       if (walletId) {
@@ -139,11 +137,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
     // const manager = new BackgroundManager();
     // await manager.runIndexer();
     const msg = this.communication.createMessage('index', {}, 'background');
-    this.communication.send(msg);
-  }
-
-  runWatcher() {
-    const msg = this.communication.createMessage('watch', {}, 'background');
     this.communication.send(msg);
   }
 

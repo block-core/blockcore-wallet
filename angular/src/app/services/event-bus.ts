@@ -69,6 +69,12 @@ export class EventBus {
         );
     }
 
+    public subscribeAll<T>(): Observable<EventBusMetaData> {
+        return this.eventBus.asObservable().pipe(
+            map((event: IEventBusMessage) => event.metadata)
+        );
+    }
+
     private keyMatch(key: string, wildcard: string): boolean {
         const w = '*';
         const ww = '**';

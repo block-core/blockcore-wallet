@@ -50,8 +50,6 @@ export class SecureStateService {
                     });
                 });
             }
-        } else {
-            console.log('SecureStateService constructor in browser mode.');
         }
     }
 

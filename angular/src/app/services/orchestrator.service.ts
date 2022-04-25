@@ -2,14 +2,19 @@
 // Responsible for orchestrating events and processing when running in browser/mobile mode.
 
 import { Injectable } from '@angular/core';
+import { Message } from 'src/shared';
+import { EventBus } from './event-bus';
 import { LoggerService } from './logger.service';
 
 @Injectable({
     providedIn: 'root'
 })
 export class OrchestratorService {
+    private _initialized = false;
+
     constructor(
-        private logger: LoggerService
+        private logger: LoggerService,
+        private events: EventBus,
         // private communication: CommunicationService,
         // private uiState: UIState,
         // private router: Router,
@@ -22,7 +27,19 @@ export class OrchestratorService {
 
     /** Initializes the Orchestrator Service responsible for events and processing in browser/mobile mode. Should only be called when running outside of extension context. */
     initialize() {
+        if (this._initialized) {
+            return;
+        }
+
+        this._initialized = true;
+
         this.logger.debug('OrchestratorService wiring up listeners.');
+
+        this.events.subscribeAll().subscribe(async (message) => {
+            // Compared to the extension based messaging, we don't have response messages.
+            this.logger.debug(`Process message:`, message);
+            await this.handleMessage(message.data);
+        });
 
         setInterval(() => {
             this.logger.debug('periodic interval called.');
@@ -31,6 +48,66 @@ export class OrchestratorService {
         setInterval(() => {
             this.logger.debug('index interval called.');
         }, 60000 * 10); // 'index', 10 minute
+    }
+
+    async handleMessage(message: Message) {
+        console.log('CommunicationService:onMessage: ', message);
+
+        if (message.target !== 'background') {
+            console.log('This message is not handled by the orchestrator logic.');
+            return null;
+        }
+
+        try {
+            switch (message.type) {
+                case 'getpublickey': {
+                    return '545555';
+                }
+                case 'watch': {
+                    return 'success';
+                }
+                // case 'updated': {
+                //     console.log('SERVICE WORKER HAS FINISHED INDEXING, but no changes to the data, but we get updated wallet info.', message.data);
+                //     this.state.update();
+                //     return 'ok';
+                // }
+                // case 'indexed': {
+                //     console.log('SERVICE WORKER HAS FINISHED INDEXING!!! WE MUST RELOAD STORES!', message.data);
+                //     this.state.refresh();
+                //     return 'ok';
+                // }
+                // case 'reload': {
+                //     console.log('Wallet / Account might be deleted, so we must reload state.');
+                //     this.state.reload();
+                //     return 'ok';
+                // }
+                // case 'store-reload': {
+                //     console.log(`Specific store was requested to be updated: ${message.data}`);
+                //     this.state.reloadStore(message.data);
+
+                //     if (message.data === 'setting') {
+                //         await this.settings.update();
+                //     }
+
+                //     return 'ok';
+                // }
+                case 'timeout': {
+                    // Timeout was reached in the background. There is already logic listening to the session storage
+                    // that will reload state and redirect to home (unlock) if needed, so don't do that here. It will
+                    // cause a race condition on loading new state if redirect is handled here.
+                    console.log('Timeout was reached in the background service.');
+                    return null;
+                }
+                default:
+                    console.log(`The message type ${message.type} is not known.`);
+                    return null;
+            }
+        } catch (error: any) {
+            return { error: { message: error.message, stack: error.stack } }
+        }
+
+        // this.ngZone.run(async () => {
+        // });
     }
 }
 
