@@ -1,3 +1,18 @@
+## <small>0.0.20 (2022-04-03)</small>
+
+* Add support for large wallets that takes long time to scan ([601a5f7](https://github.com/block-core/blockcore-extension/commit/601a5f7))
+* Change to use term "Blockcore Wallet" as oppose to just "Blockcore" ([6b9dff7](https://github.com/block-core/blockcore-extension/commit/6b9dff7))
+* Cleanup and improvements to background script ([894ce17](https://github.com/block-core/blockcore-extension/commit/894ce17))
+* Display loading indicator on large wallets on account details ([c3a013e](https://github.com/block-core/blockcore-extension/commit/c3a013e))
+* Fix a bug where indexing was not set to false if there was no changes ([3905383](https://github.com/block-core/blockcore-extension/commit/3905383))
+* Fix bug with watcher potentially stopping to update balance ([93590a3](https://github.com/block-core/blockcore-extension/commit/93590a3))
+* Improve the processing of large wallets ([44842b5](https://github.com/block-core/blockcore-extension/commit/44842b5))
+* Remove unused event handlers ([86c6681](https://github.com/block-core/blockcore-extension/commit/86c6681))
+* Start adding support for extremely large wallets ([9ae1b38](https://github.com/block-core/blockcore-extension/commit/9ae1b38))
+* Update version and changelog ([e253338](https://github.com/block-core/blockcore-extension/commit/e253338))
+
+
+
 ## <small>0.0.19 (2022-03-30)</small>
 
 * Add remove of address watch store entries when wallet is removed ([988ba40](https://github.com/block-core/blockcore-extension/commit/988ba40))
