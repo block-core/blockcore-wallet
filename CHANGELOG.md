@@ -1,3 +1,43 @@
+## <small>0.0.21 (2022-04-25)</small>
+
+* Abstract more API calls ([9a5c879](https://github.com/block-core/blockcore-extension/commit/9a5c879))
+* Add a loading guard to ensure loading has been called ([25858e4](https://github.com/block-core/blockcore-extension/commit/25858e4))
+* Add a TODO for handling messages internally ([c859915](https://github.com/block-core/blockcore-extension/commit/c859915))
+* Add ability to serve the Angular extension ([f44f551](https://github.com/block-core/blockcore-extension/commit/f44f551))
+* Add manifest to runtime service ([e23fc99](https://github.com/block-core/blockcore-extension/commit/e23fc99))
+* Add marketing (store) screenshots ([7678b78](https://github.com/block-core/blockcore-extension/commit/7678b78))
+* Add service to check if extension ([b80cf0f](https://github.com/block-core/blockcore-extension/commit/b80cf0f))
+* Display lock icon on wallet when not unlocked ([d0155bd](https://github.com/block-core/blockcore-extension/commit/d0155bd))
+* Enable saving for wallet again ([b586818](https://github.com/block-core/blockcore-extension/commit/b586818))
+* Ensure keys set is done in all modes ([c3d9e1a](https://github.com/block-core/blockcore-extension/commit/c3d9e1a))
+* Feature/capacitor (#113) ([6f2834c](https://github.com/block-core/blockcore-extension/commit/6f2834c)), closes [#113](https://github.com/block-core/blockcore-extension/issues/113)
+* Fix a bug where Account History Store was not removed ([8d1d5a4](https://github.com/block-core/blockcore-extension/commit/8d1d5a4))
+* Fix build issue with shared type ([b0fe67c](https://github.com/block-core/blockcore-extension/commit/b0fe67c))
+* Fix issue with race condition on add accounts ([20824ee](https://github.com/block-core/blockcore-extension/commit/20824ee)), closes [#111](https://github.com/block-core/blockcore-extension/issues/111)
+* Handle data wipe for browsers ([3ad7cc2](https://github.com/block-core/blockcore-extension/commit/3ad7cc2))
+* Highlight the selected wallet ([41b43de](https://github.com/block-core/blockcore-extension/commit/41b43de))
+* Initialize creation of OrchestratorService used when outside of extension context ([64c9385](https://github.com/block-core/blockcore-extension/commit/64c9385))
+* Make sure accounts are restored when re-created on restored wallets ([d5b3434](https://github.com/block-core/blockcore-extension/commit/d5b3434))
+* Make sure secure state does not crash outside of extension runtime ([f152900](https://github.com/block-core/blockcore-extension/commit/f152900))
+* Minor improvement to avoid binding warning ([b813d75](https://github.com/block-core/blockcore-extension/commit/b813d75))
+* Move lock timeout logic to shared type ([9df256b](https://github.com/block-core/blockcore-extension/commit/9df256b))
+* Re-enable full index scan when restoring account ([9a8b6a6](https://github.com/block-core/blockcore-extension/commit/9a8b6a6))
+* Remove debug logging ([3efe5e1](https://github.com/block-core/blockcore-extension/commit/3efe5e1))
+* Remove some debug logging ([045a05d](https://github.com/block-core/blockcore-extension/commit/045a05d))
+* Remove some temporary debug logging ([580e7a2](https://github.com/block-core/blockcore-extension/commit/580e7a2))
+* Remove the permissions required ([47922c7](https://github.com/block-core/blockcore-extension/commit/47922c7))
+* Retrieve hex value on-the-fly when sending transaction ([e23be58](https://github.com/block-core/blockcore-extension/commit/e23be58))
+* Set the threshold for confirmation to 1, not 2. ([078fac5](https://github.com/block-core/blockcore-extension/commit/078fac5))
+* Update blockcore-js package for PoS v3 support ([92f0a85](https://github.com/block-core/blockcore-extension/commit/92f0a85))
+* Update changelog and version ([0581260](https://github.com/block-core/blockcore-extension/commit/0581260))
+* Update dependency packages ([0fe271c](https://github.com/block-core/blockcore-extension/commit/0fe271c))
+* Update packages ([5677371](https://github.com/block-core/blockcore-extension/commit/5677371))
+* Update the manifest for browser wallet mode ([9c9d158](https://github.com/block-core/blockcore-extension/commit/9c9d158))
+* Use EventBus for handling messages in browser mode ([24a4ea7](https://github.com/block-core/blockcore-extension/commit/24a4ea7))
+* Validate the secret recovery phrase during recovery (#114) ([d98ab7e](https://github.com/block-core/blockcore-extension/commit/d98ab7e)), closes [#114](https://github.com/block-core/blockcore-extension/issues/114)
+
+
+
 ## <small>0.0.20 (2022-04-03)</small>
 
 * Add support for large wallets that takes long time to scan ([601a5f7](https://github.com/block-core/blockcore-extension/commit/601a5f7))
