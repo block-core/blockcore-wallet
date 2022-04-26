@@ -78,3 +78,12 @@ npx cap open android
 ```
 
 You can debug the active running app, using Chrome on the hosting device by opening this url: `chrome://inspect/#devices`
+
+## Desktop(electron) Debugging
+
+Run the following commands to start your app in electron
+
+```sh
+npm start
+npx cap open @capacitor-community/electron
+```

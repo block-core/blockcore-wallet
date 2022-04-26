@@ -46,6 +46,7 @@
     "@angular/router": "13.3.4",
     "@blockcore/blockcore-js": "^7.0.2",
     "@blockcore/identity": "0.0.1",
+    "@capacitor-community/electron": "^4.1.0",
     "@capacitor/android": "^3.5.0",
     "@capacitor/angular": "^2.0.3",
     "@capacitor/core": "latest",
