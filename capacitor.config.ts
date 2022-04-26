@@ -2,7 +2,7 @@ import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
   appId: 'net.blockcore.coinvault',
-  appName: 'blockcore-extension',
+  appName: 'Blockcore Wallet',
   webDir: 'dist/extension',
   bundledWebRuntime: false
 };

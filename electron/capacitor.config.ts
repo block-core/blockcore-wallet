@@ -1,10 +1,18 @@
-import { CapacitorConfig } from '@capacitor/cli';
+import { ElectronCapacitorConfig } from '@capacitor-community/electron';
 
-const config: CapacitorConfig = {
+const config: ElectronCapacitorConfig  = {
   appId: 'net.blockcore.coinvault',
-  appName: 'blockcore-extension',
+  appName: 'Blockcore Wallet',
   webDir: 'dist/extension',
-  bundledWebRuntime: false
+  bundledWebRuntime: false,
+  electron: {
+    trayIconAndMenuEnabled: true,
+    splashScreenEnabled: true,
+    splashScreenImageName: 'splash.gif',
+    hideMainWindowOnLaunch: false,
+    deepLinkingEnabled: false,
+    deepLinkingCustomProtocol: 'mycapacitorapp',
+  },
 };
 
 export default config;
