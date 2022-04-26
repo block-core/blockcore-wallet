@@ -1,5 +1,6 @@
 import { Injectable } from "@angular/core";
 import { filter, Observable, Subject, map } from "rxjs";
+import { Message } from "src/shared";
 const { v4: uuidv4 } = require('uuid');
 
 /** This code is largely based upon the ng-event-bus repository by Cristiam Mercado
@@ -51,6 +52,18 @@ export class EventBus {
 
     constructor() {
         this.eventBus = new Subject<IEventBusMessage>();
+    }
+
+    createMessage(type: string, data?: any, target: string = 'tabs'): Message {
+        let key = uuidv4();
+
+        return {
+            id: key,
+            type: type,
+            data: data,
+            source: 'browser',
+            target: target
+        }
     }
 
     public publish(key: string, data?: any): void {

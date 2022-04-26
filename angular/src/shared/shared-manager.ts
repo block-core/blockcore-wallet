@@ -35,10 +35,14 @@ export class SharedManager {
                     chrome.runtime.sendMessage({ event: 'timeout' }, function (response) {
                         console.log('Extension:sendMessage:response:', response);
                     });
+
+                    return true;
                 }
             }
+
+            return false;
+
         } else {
-            debugger;
             const { active } = JSON.parse(globalThis.localStorage.getItem('active'));
             const { timeout } = JSON.parse(globalThis.localStorage.getItem('timeout'));
 
@@ -60,10 +64,11 @@ export class SharedManager {
 
                 // Check of the timeout has been reached and clear if it has.
                 if (resetDate > timeoutDate) {
-                    debugger;
                     globalThis.sessionStorage.removeItem('keys');
                     // await storage.session.clear(); // Might be dramatic to clear to whole session storage?
-                    console.log('Timeout has been researched, session storage is cleared.');
+                    console.log('Timeout has been reached, session storage is cleared.');
+
+                    return true;
 
                     // TODO: Send Timeout message in browser.
 
@@ -72,6 +77,8 @@ export class SharedManager {
                     // });
                 }
             }
+
+            return false;
         }
     }
 }

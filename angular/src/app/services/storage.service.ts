@@ -18,7 +18,6 @@ export class StorageService {
                 await (<any>storage).session.set({ [key]: value });
             }
         } else {
-            debugger;
             if (persisted) {
                 globalThis.localStorage.setItem(key, JSON.stringify({ [key]: value }));
             } else {
@@ -40,7 +39,6 @@ export class StorageService {
                 return keys;
             }
         } else {
-            debugger;
             if (persisted) {
                 // "sessionStorage is similar to localStorage ; the difference is that while data in localStorage doesn't expire, 
                 // data in sessionStorage is cleared when the page session ends."
@@ -49,7 +47,6 @@ export class StorageService {
                 if (item == null) {
                     return null;
                 } else {
-                    debugger;
                     return JSON.parse(item)[key];
                 }
             } else {
@@ -60,7 +57,6 @@ export class StorageService {
                 if (item == null) {
                     return null;
                 } else {
-                    debugger;
                     return JSON.parse(item)[key];
                 }
             }

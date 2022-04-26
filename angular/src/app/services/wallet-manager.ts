@@ -276,10 +276,7 @@ export class WalletManager {
     }
 
     lockWallet(id: string) {
-        debugger;
         this.secure.set(id, undefined);
-        // TODO: FIX!!!
-        // this.manager.broadcastState();
     }
 
     async revealSecretRecoveryPhrase(walletId: string, password: string) {

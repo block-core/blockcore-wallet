@@ -2,10 +2,12 @@
 // Responsible for orchestrating events and processing when running in browser/mobile mode.
 
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { Message } from 'src/shared';
 import { SharedManager } from 'src/shared/shared-manager';
 import { EventBus } from './event-bus';
 import { LoggerService } from './logger.service';
+import { WalletManager } from './wallet-manager';
 
 @Injectable({
     providedIn: 'root'
@@ -17,6 +19,8 @@ export class OrchestratorService {
     constructor(
         private logger: LoggerService,
         private events: EventBus,
+        private walletManager: WalletManager,
+        private router: Router,
         // private communication: CommunicationService,
         // private uiState: UIState,
         // private router: Router,
@@ -45,7 +49,13 @@ export class OrchestratorService {
 
         setInterval(async () => {
             this.logger.debug('periodic interval called.');
-            await this.shared.checkLockTimeout();
+            const becameUnlocked = await this.shared.checkLockTimeout();
+
+            if (becameUnlocked) {
+                const msg = this.events.createMessage('timeout');
+                this.events.publish(msg.type, msg);
+            }
+
         }, 60000); // 'periodic', 1 minute
 
         setInterval(() => {
@@ -56,10 +66,10 @@ export class OrchestratorService {
     async handleMessage(message: Message) {
         console.log('CommunicationService:onMessage: ', message);
 
-        if (message.target !== 'background') {
-            console.log('This message is not handled by the orchestrator logic.');
-            return null;
-        }
+        // if (message.target !== 'background') {
+        //     console.log('This message is not handled by the orchestrator logic.');
+        //     return null;
+        // }
 
         try {
             switch (message.type) {
@@ -99,6 +109,12 @@ export class OrchestratorService {
                     // that will reload state and redirect to home (unlock) if needed, so don't do that here. It will
                     // cause a race condition on loading new state if redirect is handled here.
                     console.log('Timeout was reached in the background service.');
+
+                    if (this.walletManager.activeWallet) {
+                        this.walletManager.lockWallet(this.walletManager.activeWallet.id);
+                        this.router.navigateByUrl('/home');
+                    }
+
                     return null;
                 }
                 default:
