@@ -6,12 +6,13 @@ const config: ElectronCapacitorConfig  = {
   webDir: 'dist/extension',
   bundledWebRuntime: false,
   electron: {
+    customUrlScheme: 'blockcore',
     trayIconAndMenuEnabled: true,
     splashScreenEnabled: true,
-    splashScreenImageName: 'splash.gif',
+    splashScreenImageName: 'splash.png',
     hideMainWindowOnLaunch: false,
-    deepLinkingEnabled: false,
-    deepLinkingCustomProtocol: 'mycapacitorapp',
+    deepLinkingEnabled: true,
+    deepLinkingCustomProtocol: 'blockcore'
   },
 };
 

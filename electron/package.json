@@ -1,14 +1,15 @@
 {
-  "name": "blockcore-extension",
+  "name": "blockcore-wallet",
   "version": "1.0.0",
-  "description": "An Amazing Capacitor App",
+  "description": "Non-Custodial wallet for Coins, Tokens, Identities, NFTs and more.",
   "author": {
-    "name": "",
-    "email": ""
+    "name": "Blockcore",
+    "email": "post@blockcore.net",
+    "url": "https://www.blockcore.net"
   },
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "git+https://github.com/block-core/blockcore-extension.git"
   },
   "license": "MIT",
   "main": "build/src/index.js",
