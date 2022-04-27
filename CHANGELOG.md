@@ -1,3 +1,18 @@
+## <small>0.0.22 (2022-04-27)</small>
+
+* Add "Cancel" button on the wallet create to allow cancellation ([ca6b8fd](https://github.com/block-core/blockcore-extension/commit/ca6b8fd))
+* Add cancel on the same process in wallet creation ([dbbe0f2](https://github.com/block-core/blockcore-extension/commit/dbbe0f2))
+* Add Electron for Run on Desktop (#115) ([0838449](https://github.com/block-core/blockcore-extension/commit/0838449)), closes [#115](https://github.com/block-core/blockcore-extension/issues/115)
+* Add more abstraction of logic to be cross runtime compatible ([26b2713](https://github.com/block-core/blockcore-extension/commit/26b2713))
+* Fix automatic wallet timeout in browser mode ([91cde9b](https://github.com/block-core/blockcore-extension/commit/91cde9b))
+* Improve state management in browser mode ([75ce555](https://github.com/block-core/blockcore-extension/commit/75ce555))
+* Increase the wrap lengths ([dfcc5fc](https://github.com/block-core/blockcore-extension/commit/dfcc5fc))
+* Remove manifest permissions not yet used ([cd83f9a](https://github.com/block-core/blockcore-extension/commit/cd83f9a))
+* Update changelog and version ([b0668e5](https://github.com/block-core/blockcore-extension/commit/b0668e5))
+* Update packages ([0838de3](https://github.com/block-core/blockcore-extension/commit/0838de3))
+
+
+
 ## <small>0.0.21 (2022-04-25)</small>
 
 * Abstract more API calls ([9a5c879](https://github.com/block-core/blockcore-extension/commit/9a5c879))
