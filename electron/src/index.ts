@@ -13,7 +13,10 @@ unhandled();
 
 // Define our menu templates (these are optional)
 const trayMenuTemplate: (MenuItemConstructorOptions | MenuItem)[] = [new MenuItem({ label: 'Quit App', role: 'quit' })];
-const appMenuBarMenuTemplate: (MenuItemConstructorOptions | MenuItem)[] = [];
+const appMenuBarMenuTemplate: (MenuItemConstructorOptions | MenuItem)[] = [
+  { role: process.platform === 'darwin' ? 'appMenu' : 'fileMenu' },
+  { role: 'viewMenu' },
+];
 
 // Get Config options from capacitor.config
 const capacitorFileConfig: CapacitorElectronConfig = getCapacitorElectronConfig();

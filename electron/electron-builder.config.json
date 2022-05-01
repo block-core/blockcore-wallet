@@ -1,5 +1,5 @@
 {
-  "appId": "net.blockcore.coinvault",
+  "appId": "net.blockcore.wallet",
   "directories": {
     "buildResources": "resources"
   },
@@ -22,7 +22,7 @@
     "icon": "assets/appIcon.ico"
   },
   "mac": {
-    "category": "net.blockcore.coinvault",
+    "category": "public.app-category.productivity",
     "target": "dmg"
   }
 }
