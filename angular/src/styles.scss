@@ -15,7 +15,7 @@
   @include custom-components-theme($dark-theme);
 }
 
-@import '~material-design-icons/iconfont/material-icons.css';
+@import 'material-icons/iconfont/material-icons.css';
 
 // Override typography for all Angular Material, including mat-base-typography and all components.
 // @include angular-material-typography($typography);
