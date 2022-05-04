@@ -34,7 +34,8 @@
     "desktop": "npm run desktop:install && npm run desktop:build && npm run desktop:open",
     "desktop:install": "cd electron && npm install && cd..",
     "desktop:build": "npm run build:angular-production",
-    "desktop:open": "npx cap open @capacitor-community/electron"
+    "desktop:open": "npx cap open @capacitor-community/electron",
+    "cpdir": "npx copyfiles dist electron/app"
   },
   "private": true,
   "dependencies": {
@@ -98,6 +99,7 @@
     "@types/qrcode": "^1.4.2",
     "awesome-typescript-loader": "^5.2.1",
     "bestzip": "^2.2.1",
+    "copyfiles": "^2.4.1",
     "jasmine-core": "^4.1.0",
     "karma": "^6.3.19",
     "karma-chrome-launcher": "~3.1.1",
