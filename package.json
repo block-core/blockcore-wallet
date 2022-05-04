@@ -34,8 +34,7 @@
     "desktop": "npm run desktop:install && npm run desktop:build && npm run desktop:open",
     "desktop:install": "cd electron && npm install && cd..",
     "desktop:build": "npm run build:angular-production",
-    "desktop:open": "npx cap open @capacitor-community/electron",
-    "cpdir": "npx copyfiles dist electron/app"
+    "desktop:open": "npx cap open @capacitor-community/electron"
   },
   "private": true,
   "dependencies": {

@@ -81,9 +81,16 @@ You can debug the active running app, using Chrome on the hosting device by open
 
 ## Desktop(electron) Debugging
 
-Run the following commands to start your app in electron
+First build the extension from root:
 
-```sh
+```
+npm run build:angular-production
+```
+
+Then navigate into the `electron` folder and run:
+
+```
+npm install
 npm start
-npx cap open @capacitor-community/electron
+# npm run release
 ```
