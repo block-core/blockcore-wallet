@@ -5,7 +5,7 @@
     "version": "0.0.0",
     "private": true,
     "homepage": "https://www.blockcore.net/",
-    "main": "app/main.js",
+    "main": "app/electron-main.js",
     "build": {
         "appId": "net.blockcore.wallet",
         "mac": {

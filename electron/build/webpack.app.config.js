@@ -5,8 +5,8 @@ const base = require("./webpack.base.config");
 module.exports = env => {
   return merge(base(env), {
     entry: {
-      main: "./src/main.js",
-      app: "./src/app.js"
+      "electron-main": "./src/electron-main.js",
+      "electron-app": "./src/electron-app.js"
     },
     output: {
       filename: "[name].js",
