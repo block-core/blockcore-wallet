@@ -8,10 +8,14 @@
 @include angular-material-theme($theming-material-components-theme);
 @include custom-components-theme($theming-material-components-theme);
 
+@import "@fontsource/roboto";
+
 .dark-theme {
   @include angular-material-color($dark-theme);
   @include custom-components-theme($dark-theme);
 }
+
+@import '~material-design-icons/iconfont/material-icons.css';
 
 // Override typography for all Angular Material, including mat-base-typography and all components.
 // @include angular-material-typography($typography);
