@@ -9,7 +9,7 @@ import { UIState } from '../../services/ui-state.service';
     encapsulation: ViewEncapsulation.None
 })
 export class AboutComponent implements OnDestroy {
-    @HostBinding('class.changes') hostClass = true;
+    // @HostBinding('class.changes') hostClass = true;
 
     constructor(public uiState: UIState,
         public env: EnvironmentService) {

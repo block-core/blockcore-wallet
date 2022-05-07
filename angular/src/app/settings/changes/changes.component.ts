@@ -8,7 +8,7 @@ import { UIState } from 'src/app/services/ui-state.service';
     encapsulation: ViewEncapsulation.None
 })
 export class ChangesComponent implements OnDestroy {
-    @HostBinding('class.changes') hostClass = true;
+    // @HostBinding('class.changes') hostClass = true;
 
     constructor(public uiState: UIState) {
         this.uiState.title = 'Changes';
