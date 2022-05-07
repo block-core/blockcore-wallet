@@ -39,12 +39,13 @@ app.on("ready", () => {
   const mainWindow = createWindow("main", {
     width: 800,
     height: 600,
+    icon: "resources/icon.ico",
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true
     }
   });
-
+  mainWindow.setMenuBarVisibility(false);
   mainWindow.loadURL(
     url.format({
       pathname: path.join(__dirname, "index.html"),
