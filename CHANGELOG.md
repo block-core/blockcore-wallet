@@ -1,3 +1,38 @@
+## <small>0.0.23 (2022-05-07)</small>
+
+* Add Electron setup for Blockcore Wallet ([1ff4b63](https://github.com/block-core/blockcore-extension/commit/1ff4b63))
+* Add npm task for desktop ([4b78f31](https://github.com/block-core/blockcore-extension/commit/4b78f31))
+* Don't use different CSP for dev or not ([ca419a4](https://github.com/block-core/blockcore-extension/commit/ca419a4))
+* Embed the Google Fonts and Set Icon for Electron App ([ff1bf1b](https://github.com/block-core/blockcore-extension/commit/ff1bf1b))
+* f ([5acf7b4](https://github.com/block-core/blockcore-extension/commit/5acf7b4))
+* Fix blockcore logo display ([9a2e80b](https://github.com/block-core/blockcore-extension/commit/9a2e80b))
+* Fix full load of wallet in Electron ([382a35d](https://github.com/block-core/blockcore-extension/commit/382a35d))
+* Fix style issue when viewing "changes" view ([4716740](https://github.com/block-core/blockcore-extension/commit/4716740))
+* Hide developer mode from settings ([edbdfe8](https://github.com/block-core/blockcore-extension/commit/edbdfe8))
+* Hide the resync on account ([f344e8b](https://github.com/block-core/blockcore-extension/commit/f344e8b))
+* Improve labels on open buttons ([27c563c](https://github.com/block-core/blockcore-extension/commit/27c563c))
+* Improve loading of roboto font weights ([62bcee3](https://github.com/block-core/blockcore-extension/commit/62bcee3))
+* Improve the npm task for desktop ([3fbb545](https://github.com/block-core/blockcore-extension/commit/3fbb545))
+* Make sure we check network status on all newly created accounts on new wallets ([e4e29be](https://github.com/block-core/blockcore-extension/commit/e4e29be))
+* Make the dropdown fill available width ([92784ff](https://github.com/block-core/blockcore-extension/commit/92784ff))
+* Make the dropdown into outline style ([a90723f](https://github.com/block-core/blockcore-extension/commit/a90723f))
+* Make the icon dropdown on account edit take full available width ([098d49b](https://github.com/block-core/blockcore-extension/commit/098d49b))
+* Make the status interval a const and update slower ([a847ebd](https://github.com/block-core/blockcore-extension/commit/a847ebd))
+* Re-add the electron configuration ([b8ee9e8](https://github.com/block-core/blockcore-extension/commit/b8ee9e8))
+* Remove some hide logic from account create ([987a46c](https://github.com/block-core/blockcore-extension/commit/987a46c))
+* Remove the generated electron folder ([7666b04](https://github.com/block-core/blockcore-extension/commit/7666b04))
+* Remove unused packages ([c06974f](https://github.com/block-core/blockcore-extension/commit/c06974f))
+* Send indexing message on new wallets ([40e7ff3](https://github.com/block-core/blockcore-extension/commit/40e7ff3))
+* Update instructions for desktop ([012ff55](https://github.com/block-core/blockcore-extension/commit/012ff55))
+* Update packages ([69b4fff](https://github.com/block-core/blockcore-extension/commit/69b4fff))
+* Update packages ([fafa17a](https://github.com/block-core/blockcore-extension/commit/fafa17a))
+* Update the base href ([0649e16](https://github.com/block-core/blockcore-extension/commit/0649e16))
+* using material-icons package ([10510e1](https://github.com/block-core/blockcore-extension/commit/10510e1))
+* Update changelog and version ([7281264](https://github.com/block-core/blockcore-extension/commit/7281264))
+* Update packages ([0838de3](https://github.com/block-core/blockcore-extension/commit/0838de3))
+
+
+
 ## <small>0.0.22 (2022-04-27)</small>
 
 * Add "Cancel" button on the wallet create to allow cancellation ([ca6b8fd](https://github.com/block-core/blockcore-extension/commit/ca6b8fd))
@@ -9,7 +44,6 @@
 * Increase the wrap lengths ([dfcc5fc](https://github.com/block-core/blockcore-extension/commit/dfcc5fc))
 * Remove manifest permissions not yet used ([cd83f9a](https://github.com/block-core/blockcore-extension/commit/cd83f9a))
 * Update changelog and version ([b0668e5](https://github.com/block-core/blockcore-extension/commit/b0668e5))
-* Update packages ([0838de3](https://github.com/block-core/blockcore-extension/commit/0838de3))
 
 
 
