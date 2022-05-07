@@ -42,15 +42,5 @@
             "https://www.city-chain.org/*",
             "http://localhost/*"
         ]
-    },
-    "web_accessible_resources": [
-        {
-            "resources": [
-                "provider.js"
-            ],
-            "matches": [
-                "<all_urls>"
-            ]
-        }
-    ]
+    }
 }
