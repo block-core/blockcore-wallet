@@ -1,4 +1,4 @@
-## <small>0.0.23 (2022-05-07)</small>
+## <small>0.0.24 (2022-05-07)</small>
 
 * Add Electron setup for Blockcore Wallet ([1ff4b63](https://github.com/block-core/blockcore-extension/commit/1ff4b63))
 * Add npm task for desktop ([4b78f31](https://github.com/block-core/blockcore-extension/commit/4b78f31))
@@ -8,6 +8,7 @@
 * Fix blockcore logo display ([9a2e80b](https://github.com/block-core/blockcore-extension/commit/9a2e80b))
 * Fix full load of wallet in Electron ([382a35d](https://github.com/block-core/blockcore-extension/commit/382a35d))
 * Fix style issue when viewing "changes" view ([4716740](https://github.com/block-core/blockcore-extension/commit/4716740))
+* Fix the manifest for CoinVault and Smart City Platform ([846e5e1](https://github.com/block-core/blockcore-extension/commit/846e5e1))
 * Hide developer mode from settings ([edbdfe8](https://github.com/block-core/blockcore-extension/commit/edbdfe8))
 * Hide the resync on account ([f344e8b](https://github.com/block-core/blockcore-extension/commit/f344e8b))
 * Improve labels on open buttons ([27c563c](https://github.com/block-core/blockcore-extension/commit/27c563c))
@@ -23,11 +24,17 @@
 * Remove the generated electron folder ([7666b04](https://github.com/block-core/blockcore-extension/commit/7666b04))
 * Remove unused packages ([c06974f](https://github.com/block-core/blockcore-extension/commit/c06974f))
 * Send indexing message on new wallets ([40e7ff3](https://github.com/block-core/blockcore-extension/commit/40e7ff3))
+* Update changelog and version ([3a090c0](https://github.com/block-core/blockcore-extension/commit/3a090c0))
 * Update instructions for desktop ([012ff55](https://github.com/block-core/blockcore-extension/commit/012ff55))
 * Update packages ([69b4fff](https://github.com/block-core/blockcore-extension/commit/69b4fff))
 * Update packages ([fafa17a](https://github.com/block-core/blockcore-extension/commit/fafa17a))
 * Update the base href ([0649e16](https://github.com/block-core/blockcore-extension/commit/0649e16))
 * using material-icons package ([10510e1](https://github.com/block-core/blockcore-extension/commit/10510e1))
+
+
+
+## <small>0.0.23 (2022-04-27)</small>
+
 * Update changelog and version ([7281264](https://github.com/block-core/blockcore-extension/commit/7281264))
 * Update packages ([0838de3](https://github.com/block-core/blockcore-extension/commit/0838de3))
 
