@@ -1,6 +1,6 @@
 <div class="page centered">
 
-    <mat-form-field appearance="outline" class="input-full-width" *ngIf="walletManager.hasWallets">
+    <mat-form-field appearance="outline" class="input-full-width">
         <mat-label>Network</mat-label>
 
         <mat-select (selectionChange)="onNetworkChanged()" [(value)]="network">
@@ -13,7 +13,7 @@
 
     <br>
 
-    <mat-form-field appearance="outline" class="input-full-width" *ngIf="walletManager.activeAccount">
+    <mat-form-field appearance="outline" class="input-full-width">
         <mat-label>Icon</mat-label>
         <mat-select [(value)]="icon">
             <mat-option *ngFor="let icon of icons.icons" [value]="icon">
@@ -27,7 +27,7 @@
 
     <br>
 
-    <mat-form-field appearance="outline" class="input-full-width" *ngIf="walletManager.hasWallets">
+    <mat-form-field appearance="outline" class="input-full-width">
         <mat-label>Account Index</mat-label>
         <mat-select (selectionChange)="onAccountIndexChanged($event)" [(value)]="index">
             <mat-option *ngFor="let accountindex of indexes;" [value]="accountindex">{{accountindex}}</mat-option>
@@ -48,16 +48,7 @@
         <input matInput [(ngModel)]="name" required>
     </mat-form-field>
 
-    <!-- 
-        <img class="logo" src="/assets/icon-light-128x128.png">
-
-        <h1>Blockcore</h1>
-
-        <p>A crypto wallet in your browser for coins, tokens, identities, NFTs and more.</p> -->
-
     <br>
     <button class="signup-button" mat-flat-button color="primary" (click)="create()">Create Account</button>
-    <br>
-    <!-- <button class="signup-button" mat-flat-button (click)="restore()">Use Existing Recovery Phrase</button> -->
 
 </div>
