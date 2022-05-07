@@ -1,6 +1,6 @@
 <div class="page centered">
 
-    <mat-form-field appearance="outline" *ngIf="walletManager.hasWallets">
+    <mat-form-field appearance="outline" class="input-full-width" *ngIf="walletManager.hasWallets">
         <mat-label>Network</mat-label>
 
         <mat-select (selectionChange)="onNetworkChanged()" [(value)]="network">
@@ -13,7 +13,7 @@
 
     <br>
 
-    <mat-form-field appearance="outline" *ngIf="walletManager.activeAccount">
+    <mat-form-field appearance="outline" class="input-full-width" *ngIf="walletManager.activeAccount">
         <mat-label>Icon</mat-label>
         <mat-select [(value)]="icon">
             <mat-option *ngFor="let icon of icons.icons" [value]="icon">
@@ -27,7 +27,7 @@
 
     <br>
 
-    <mat-form-field appearance="outline" *ngIf="walletManager.hasWallets">
+    <mat-form-field appearance="outline" class="input-full-width" *ngIf="walletManager.hasWallets">
         <mat-label>Account Index</mat-label>
         <mat-select (selectionChange)="onAccountIndexChanged($event)" [(value)]="index">
             <mat-option *ngFor="let accountindex of indexes;" [value]="accountindex">{{accountindex}}</mat-option>
