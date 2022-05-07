@@ -56,13 +56,16 @@ export class AccountSelectComponent implements OnInit, OnDestroy {
             await this.walletManager.addAccount(account, wallet, false); // Hold off indexing while we save all accounts.
         }
 
+        // Get latest status on all networks immediately.
+        await this.networkStatus.updateAll(accounts);
+
         if (wallet.restored) {
             const msg = this.communication.createMessage('index', { force: true }, 'background');
             this.communication.send(msg);
+        } else {
+            const msg = this.communication.createMessage('index', { force: false }, 'background');
+            this.communication.send(msg);
         }
-
-        // Get latest status on all networks immediately.
-        await this.networkStatus.updateAll(accounts);
 
         // this.refreshState();
         this.router.navigateByUrl('/dashboard');
