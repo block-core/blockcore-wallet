@@ -5,7 +5,7 @@
     <input matInput [(ngModel)]="accountName" required>
   </mat-form-field>
 
-  <mat-form-field appearance="fill" *ngIf="walletManager.activeAccount">
+  <mat-form-field appearance="outline" *ngIf="walletManager.activeAccount">
     <mat-label>Icon</mat-label>
     <mat-select [(value)]="icon">
       <mat-option *ngFor="let icon of icons.icons" [value]="icon">
