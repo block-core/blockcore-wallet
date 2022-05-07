@@ -6,6 +6,7 @@ import { NetworkLoader } from '../../shared/network-loader';
 import { Network } from '../../shared/networks';
 import { SettingsService } from './settings.service';
 import { WalletManager } from './wallet-manager';
+import { STATUS_INTERVAL } from '../shared/constants';
 const axios = require('axios').default;
 
 @Injectable({
@@ -70,7 +71,7 @@ export class NetworkStatusService {
 
         setTimeout(async () => {
             await this.refreshNetworkStatus();
-        }, 10000);
+        }, STATUS_INTERVAL);
     }
 
     /** Will attempt to query all the networks that are used in active wallet. */
