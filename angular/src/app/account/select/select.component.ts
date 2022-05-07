@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { WalletManager, NetworksService, UIState, CommunicationService } from '../../services';
+import { WalletManager, NetworksService, UIState, CommunicationService, NetworkStatusService } from '../../services';
 import { Account } from '../../../shared/interfaces';
 
 @Component({
@@ -19,6 +19,7 @@ export class AccountSelectComponent implements OnInit, OnDestroy {
         private networkService: NetworksService,
         public walletManager: WalletManager,
         private communication: CommunicationService,
+        private networkStatus: NetworkStatusService,
         private router: Router
     ) {
         uiState.title = 'Select accounts';
@@ -59,6 +60,9 @@ export class AccountSelectComponent implements OnInit, OnDestroy {
             const msg = this.communication.createMessage('index', { force: true }, 'background');
             this.communication.send(msg);
         }
+
+        // Get latest status on all networks immediately.
+        await this.networkStatus.updateAll(accounts);
 
         // this.refreshState();
         this.router.navigateByUrl('/dashboard');
