@@ -32,7 +32,7 @@
             </p>
         </mat-card-content>
         <mat-card-actions>
-            <button mat-raised-button color="primary" (click)="openExplorer(transaction.transactionHash)">Open in Block
+            <button mat-raised-button color="primary" (click)="openExplorer(transaction.transactionHash)">Open Transaction in Block
                 Explorer</button>
 
             <!-- <button *ngIf="transaction.hasContract" mat-raised-button color="primary" (click)="openExplorer(transaction.transactionHash)">Open in Block
@@ -55,7 +55,7 @@
                 {{transaction.details.outputsAmount | amount}}</p>
         </mat-card-content>
         <mat-card-actions>
-            <button mat-raised-button color="primary" (click)="openExplorerBlock(transaction.details.blockHash)">Open in
+            <button mat-raised-button color="primary" (click)="openExplorerBlock(transaction.details.blockHash)">Open Block in
                 Block Explorer</button>
         </mat-card-actions>
     </mat-card>
