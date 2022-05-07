@@ -521,14 +521,6 @@ export class IndexerBackgroundService {
 
                             // After processing, make sure we save the address state.
                             await this.addressStore.save();
-
-                            const address1 = await this.addressStore.get(address.address);
-                            await this.addressStore.load();
-                            const address2 = await this.addressStore.get(address.address);
-
-                            console.log('Address State saved', addressState);
-                            console.log('Address State saved 1', address1);
-                            console.log('Address State saved 2', address2);
                         }
 
                         // If we are on the last address, check if we should add new one.
@@ -650,11 +642,14 @@ export class IndexerBackgroundService {
         try {
             let nextLink = `/api/query/address/${state.address}/transactions?offset=${state.offset}&limit=${this.limit}`;
             const date = new Date().toISOString();
+            const clonedIndexerUrl = indexerUrl.slice(); // clone the URL
+            console.log(`indexerUrl ${indexerUrl} cloned into ${clonedIndexerUrl}`);
 
             // Loop through all pages until finished.
             while (nextLink != null) {
 
-                const url = `${indexerUrl}${nextLink}`;
+                const url = `${clonedIndexerUrl}${nextLink}`;
+                console.log(`nextlink url ${url}`);
 
                 // Default options are marked with *
                 const response = await fetch(url, {
@@ -703,7 +698,7 @@ export class IndexerBackgroundService {
                         const index = state.transactions.indexOf(transactionId);
 
                         // Keep updating with transaction info details until finalized (and it will no longer be returned in the paged query):
-                        transaction.details = await this.getTransactionInfo(transactionId, indexerUrl);
+                        transaction.details = await this.getTransactionInfo(transactionId, clonedIndexerUrl);
 
                         // Copy some of the details state to the container object.
                         transaction.confirmations = transaction.details.confirmations;
