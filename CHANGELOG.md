@@ -1,3 +1,14 @@
+## <small>0.0.25 (2022-05-08)</small>
+
+* Add store icons for CoinVault extension ([0a69cf9](https://github.com/block-core/blockcore-extension/commit/0a69cf9))
+* Fixes problem with watcher using invalid indexer URL ([1052772](https://github.com/block-core/blockcore-extension/commit/1052772)), closes [#121](https://github.com/block-core/blockcore-extension/issues/121)
+* Migrate the material font to "fontsource" ([8ddb33d](https://github.com/block-core/blockcore-extension/commit/8ddb33d))
+* Remove some unused debugging code ([5ba3fab](https://github.com/block-core/blockcore-extension/commit/5ba3fab))
+* Update packages ([1e455f3](https://github.com/block-core/blockcore-extension/commit/1e455f3))
+* Update version and changelog ([9c21ecd](https://github.com/block-core/blockcore-extension/commit/9c21ecd))
+
+
+
 ## <small>0.0.24 (2022-05-07)</small>
 
 * Add Electron setup for Blockcore Wallet ([1ff4b63](https://github.com/block-core/blockcore-extension/commit/1ff4b63))
