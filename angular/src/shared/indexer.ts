@@ -260,8 +260,12 @@ export class IndexerBackgroundService {
         const wallets = this.walletStore.getWallets();
         let anyAddressNotCompleteInAnyWallet = false;
 
+        console.log('Looping wallets', wallets);
+
         for (let i = 0; i < wallets.length; i++) {
             const wallet = wallets[i];
+
+            console.log('Looping accounts:', wallet.accounts);
 
             for (let j = 0; j < wallet.accounts.length; j++) {
                 const date = new Date().toISOString();
@@ -274,7 +278,8 @@ export class IndexerBackgroundService {
 
                 let anyAddressNotComplete = false;
 
-                console.log('Indexer:Process...', account);
+                console.log('AAA: Indexer:Process...', account);
+                console.log('indexerUrl:' + indexerUrl);
 
                 if (addressWatchStore) {
                     // If the account is not fully synced, we should not perform watch over the account yet.
@@ -283,7 +288,7 @@ export class IndexerBackgroundService {
                         continue;
                     }
 
-                    const addresses = addressWatchStore.all();
+                    const addresses = addressWatchStore.byAccountId(account.identifier);
                     console.log('Running Watcher', addresses);
 
                     // Process registered addresses until we've exhausted them.
@@ -295,11 +300,24 @@ export class IndexerBackgroundService {
                         addressWatchStore.set(address.address, address);
 
                         // Get the current state for this address:
-                        let addressState = this.addressStore.get(address.address);
+                        let addressState = this.addressStore.get(address.address); // TODO: Investigate if we potentially have issues with 
+                        // blockchains that use same prefix. They should result in different public keys, and hence different addresses, 
+                        // even though they are derived from same master and share the same prefix.
 
                         // If there are no addressState for this, create one now.
                         if (!addressState) {
                             addressState = { address: address.address, offset: 0, transactions: [] };
+                        }
+
+                        // Hit a debugger point if we are querying for test addresses in production URLs.
+                        if (addressState.address.startsWith('q') && indexerUrl.indexOf('tstrax') == -1) {
+                            console.log('1INVALID URL FOR ADDRESS TYPE!!');
+                            debugger;
+                        }
+
+                        if (addressState.address.startsWith('t') && indexerUrl.indexOf('tcrs') == -1) {
+                            console.log('1INVALID URL FOR ADDRESS TYPE!!');
+                            debugger;
                         }
 
                         const processState = await this.processAddress(indexerUrl, addressState);
@@ -369,6 +387,17 @@ export class IndexerBackgroundService {
                             addressState = { address: address.address, offset: 0, transactions: [] };
                         }
 
+                        // Hit a debugger point if we are querying for test addresses in production URLs.
+                        if (addressState.address.startsWith('q') && indexerUrl.indexOf('tstrax') == -1) {
+                            console.log('2INVALID URL FOR ADDRESS TYPE!!');
+                            debugger;
+                        }
+
+                        if (addressState.address.startsWith('t') && indexerUrl.indexOf('tcrs') == -1) {
+                            console.log('2INVALID URL FOR ADDRESS TYPE!!');
+                            debugger;
+                        }
+
                         const processState = await this.processAddress(indexerUrl, addressState);
 
                         if (!processState.completed) {
@@ -401,6 +430,17 @@ export class IndexerBackgroundService {
                     // If there are no addressState for this, create one now.
                     if (!addressState) {
                         addressState = { address: address.address, offset: 0, transactions: [] };
+                    }
+
+                    // Hit a debugger point if we are querying for test addresses in production URLs.
+                    if (addressState.address.startsWith('q') && indexerUrl.indexOf('tstrax') == -1) {
+                        console.log('3INVALID URL FOR ADDRESS TYPE!!');
+                        debugger;
+                    }
+
+                    if (addressState.address.startsWith('t') && indexerUrl.indexOf('tcrs') == -1) {
+                        console.log('3INVALID URL FOR ADDRESS TYPE!!');
+                        debugger;
                     }
 
                     const processState = await this.processAddress(indexerUrl, addressState);
@@ -455,6 +495,17 @@ export class IndexerBackgroundService {
                         addressStateChange = { address: addressChange.address, offset: 0, transactions: [] };
                     }
 
+                    // Hit a debugger point if we are querying for test addresses in production URLs.
+                    if (addressState.address.startsWith('q') && indexerUrl.indexOf('tstrax') == -1) {
+                        console.log('4INVALID URL FOR ADDRESS TYPE!!');
+                        debugger;
+                    }
+
+                    if (addressState.address.startsWith('t') && indexerUrl.indexOf('tcrs') == -1) {
+                        console.log('4INVALID URL FOR ADDRESS TYPE!!');
+                        debugger;
+                    }
+
                     const processAddressState = await this.processAddress(indexerUrl, addressStateChange);
 
                     if (!processAddressState.completed) {
@@ -505,6 +556,17 @@ export class IndexerBackgroundService {
                             addressState = { address: address.address, offset: 0, transactions: [] };
                         }
 
+                        // Hit a debugger point if we are querying for test addresses in production URLs.
+                        if (addressState.address.startsWith('q') && indexerUrl.indexOf('tstrax') == -1) {
+                            console.log('5NVALID URL FOR ADDRESS TYPE!!');
+                            debugger;
+                        }
+
+                        if (addressState.address.startsWith('t') && indexerUrl.indexOf('tcrs') == -1) {
+                            console.log('5INVALID URL FOR ADDRESS TYPE!!');
+                            debugger;
+                        }
+
                         const processState = await this.processAddress(indexerUrl, addressState);
 
                         console.log('Completed processing:', processState);
@@ -544,6 +606,17 @@ export class IndexerBackgroundService {
                             addressState = { address: address.address, offset: 0, transactions: [] };
                         }
 
+                        // Hit a debugger point if we are querying for test addresses in production URLs.
+                        if (addressState.address.startsWith('q') && indexerUrl.indexOf('tstrax') == -1) {
+                            console.log('6INVALID URL FOR ADDRESS TYPE!!');
+                            debugger;
+                        }
+
+                        if (addressState.address.startsWith('t') && indexerUrl.indexOf('tcrs') == -1) {
+                            console.log('6INVALID URL FOR ADDRESS TYPE!!');
+                            debugger;
+                        }
+
                         const processState = await this.processAddress(indexerUrl, addressState);
 
                         if (!processState.completed) {
@@ -571,6 +644,8 @@ export class IndexerBackgroundService {
                         }
                     }
                 }
+
+                console.log('BBB: Indexer:Process completed!...', account);
 
                 // When completely processes all the address, we'll save the transactions.
                 await this.transactionStore.save();
@@ -645,6 +720,15 @@ export class IndexerBackgroundService {
             const clonedIndexerUrl = indexerUrl.slice(); // clone the URL
             console.log(`indexerUrl ${indexerUrl} cloned into ${clonedIndexerUrl}`);
 
+            // Hit a debugger point if we are querying for test addresses in production URLs.
+            // if (state.address.startsWith('q') && indexerUrl.indexOf('tstrax') == -1) {
+            //     debugger;
+            // }
+
+            // if (state.address.startsWith('t') && indexerUrl.indexOf('tcrs') == -1) {
+            //     debugger;
+            // }
+
             // Loop through all pages until finished.
             while (nextLink != null) {
 
@@ -670,8 +754,6 @@ export class IndexerBackgroundService {
                 // const responseTransactions = await axios.get(`${indexerUrl}${nextLink}`);
                 // const transactions = responseTransactions.data;
                 const links = this.parseLinkHeader(response.headers.get('link'));
-
-                console.log('LINKS', links);
 
                 // const limit = response.headers.get('pagination-limit');
                 // const total = response.headers.get('pagination-total');
