@@ -1,7 +1,7 @@
 export const Servers: any = {
     group1: {
-        'BTC': ['btc.indexer.coinvault.io'],
-        'STRAX': ['https://strax.indexer.blockcore.net', 'https://strax.indexer.coinvault.io'],
+        'BTC': ['btc.indexer.blockcore.net', 'btc.indexer.coinvault.io'],
+        'STRAX': ['https://strax.indexer.blockcore.net'],
         'TSTRAX': ['https://tstrax.indexer.blockcore.net'],
         'CRS': ['https://crs.indexer.blockcore.net'],
         'TCRS': ['https://tcrs.indexer.blockcore.net'],

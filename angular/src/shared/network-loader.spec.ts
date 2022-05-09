@@ -8,11 +8,11 @@ describe('AddressManager', () => {
         const loader = new NetworkLoader();
 
         const servers = [
-            loader.getServer('STRAX', 'group1'),
-            loader.getServer('STRAX', 'group1'),
-            loader.getServer('STRAX', 'group1'),
-            loader.getServer('STRAX', 'group1'),
-            loader.getServer('STRAX', 'group1')
+            loader.getServer('BTC', 'group1'),
+            loader.getServer('BTC', 'group1'),
+            loader.getServer('BTC', 'group1'),
+            loader.getServer('BTC', 'group1'),
+            loader.getServer('BTC', 'group1')
         ];
 
         // Get unique list of servers.

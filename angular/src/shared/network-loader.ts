@@ -42,16 +42,23 @@ export class NetworkLoader {
     }
 
     getServer(networkType: string, networkGroup: string, customServer?: string) {
+
+        console.log(`getServer: ${networkType} | ${networkGroup} | ${customServer}`);
+
         if (networkGroup == 'custom') {
             const server = customServer.replace('{id}', networkGroup.toLowerCase());
         } else {
             const serversGroup = Servers[networkGroup];
             const servers = serversGroup[networkType];
 
+            console.log(`servers:`, servers);
+
             // TODO: Figure out the best way to pick and perhaps cycle the servers. 
             // As of now, we'll randomly pick every time this method is called.
-            const serverIndex = this.generateRandomNumber(0, servers.length);
+            const serverIndex = this.generateRandomNumber(0, servers.length - 1);
             const server = servers[serverIndex];
+
+            console.log(`server:`, server);
 
             return server;
         }
