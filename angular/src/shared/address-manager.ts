@@ -3,6 +3,7 @@ import { HDKey } from "micro-bip32";
 import { payments } from '@blockcore/blockcore-js';
 import { NetworkLoader } from "./network-loader";
 import { Network } from "./networks";
+import { Servers } from "./servers";
 
 export class AddressManager {
 
@@ -24,9 +25,25 @@ export class AddressManager {
         };
     }
 
+    private generateRandomNumber(min: number, max: number) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
     /** Get the network definition based upon the network identifier. */
     getNetwork(networkType: string) {
         return this.allNetworks.find(w => w.id == networkType);
+    }
+
+    getServer(networkType: string, networkGroup: string) {
+        const serversGroup = Servers[networkGroup];
+        const servers = serversGroup[networkType];
+
+        // TODO: Figure out the best way to pick and perhaps cycle the servers. As of now, we'll randomly
+        // pick every time this method is called.
+        const serverIndex = this.generateRandomNumber(0, servers.length);
+        const server = servers[serverIndex];
+
+        return server;
     }
 
     getAddressByNetwork(publicKey: Buffer, network: any, addressPurpose: number) {
