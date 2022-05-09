@@ -34,16 +34,20 @@ export class AddressManager {
         return this.allNetworks.find(w => w.id == networkType);
     }
 
-    getServer(networkType: string, networkGroup: string) {
-        const serversGroup = Servers[networkGroup];
-        const servers = serversGroup[networkType];
+    getServer(networkType: string, networkGroup: string, customServer?: string) {
+        if (networkGroup == 'custom') {
+            const server = customServer.replace('{id}', networkGroup.toLowerCase());
+        } else {
+            const serversGroup = Servers[networkGroup];
+            const servers = serversGroup[networkType];
 
-        // TODO: Figure out the best way to pick and perhaps cycle the servers. As of now, we'll randomly
-        // pick every time this method is called.
-        const serverIndex = this.generateRandomNumber(0, servers.length);
-        const server = servers[serverIndex];
+            // TODO: Figure out the best way to pick and perhaps cycle the servers. 
+            // As of now, we'll randomly pick every time this method is called.
+            const serverIndex = this.generateRandomNumber(0, servers.length);
+            const server = servers[serverIndex];
 
-        return server;
+            return server;
+        }
     }
 
     getAddressByNetwork(publicKey: Buffer, network: any, addressPurpose: number) {
