@@ -64,19 +64,19 @@ describe('SharedTests', () => {
 
     });
 
-    it('Sum values and reproduce bug', () => {
+    // it('Sum values and reproduce bug', () => {
 
-        const externalOutputs = [{ balance: 5000 }, { balance: null }, { balance: undefined }];
-        const outputs = externalOutputs.map(x => x.balance);
-        // const outputs = [5000, 0, null];
+    //     const externalOutputs = [{ balance: 5000 }, { balance: null }, { balance: undefined }];
+    //     const outputs = externalOutputs.map(x => x.balance);
+    //     // const outputs = [5000, 0, null];
 
-        if (outputs.length > 0) {
-            console.log('OUTPUTS', outputs);
-            let amount = outputs.reduce((x: any, y: any) => x + y);
-            expect(amount).toBe(5000);
-        }
+    //     if (outputs.length > 0) {
+    //         console.log('OUTPUTS', outputs);
+    //         let amount = outputs.reduce((x: any, y: any) => x + y);
+    //         expect(amount).toBe(5000);
+    //     }
 
-    });
+    // });
 
 
     it('Validate sorting', () => {
@@ -206,34 +206,34 @@ describe('SharedTests', () => {
         console.log('restoredState', restoredState);
     });
 
-    it('Load xpub and query the indexer APIs', async () => {
-        const networkLoader = new NetworkLoader();
-        const network = new STRAX();
-        const indexer = new IndexerBackgroundService(new SettingStore(), new WalletStore(), new AddressStore(), new TransactionStore(), new AddressManager(networkLoader), new AccountHistoryStore());
+    // it('Load xpub and query the indexer APIs', async () => {
+    //     const networkLoader = new NetworkLoader();
+    //     const network = new STRAX();
+    //     const indexer = new IndexerBackgroundService(new SettingStore(), new WalletStore(), new AddressStore(), new TransactionStore(), new AddressManager(networkLoader), new AccountHistoryStore());
 
-        const addressState: AddressState = {
-            address: 'XEgeAGBEdKXcdKD2HYovtyp5brE5WyAKwv', // Random address from rich list
-            offset: 0,
-            transactions: []
-        };
+    //     const addressState: AddressState = {
+    //         address: 'XEgeAGBEdKXcdKD2HYovtyp5brE5WyAKwv', // Random address from rich list
+    //         offset: 0,
+    //         transactions: []
+    //     };
 
-        // 'XWaKvgJ1HpCA8nKnqQcGESmDdMXFjmUVbH' // Random address with 7 transactions.
-        // 'XEgeAGBEdKXcdKD2HYovtyp5brE5WyAKwv' // Random address with a good amount of transactions.
+    //     // 'XWaKvgJ1HpCA8nKnqQcGESmDdMXFjmUVbH' // Random address with 7 transactions.
+    //     // 'XEgeAGBEdKXcdKD2HYovtyp5brE5WyAKwv' // Random address with a good amount of transactions.
 
-        const indexerUrl = 'https://{id}.indexer.blockcore.net'.replace('{id}', network.id.toLowerCase());
-        const transactions = new Map<string, Transaction>();
+    //     const indexerUrl = 'https://{id}.indexer.blockcore.net'.replace('{id}', network.id.toLowerCase());
+    //     const transactions = new Map<string, Transaction>();
 
-        await indexer.processAddress(indexerUrl, addressState);
+    //     await indexer.processAddress(indexerUrl, addressState);
 
-        expect(addressState.transactions.length).toBeGreaterThanOrEqual(69);
-        expect(addressState.offset).toBeGreaterThanOrEqual(60);
+    //     expect(addressState.transactions.length).toBeGreaterThanOrEqual(69);
+    //     expect(addressState.offset).toBeGreaterThanOrEqual(60);
 
-        // Second run should only query from finalized offset and only get info, not get hex again.
-        await indexer.processAddress(indexerUrl, addressState);
+    //     // Second run should only query from finalized offset and only get info, not get hex again.
+    //     await indexer.processAddress(indexerUrl, addressState);
 
-        console.log('Transactions:', transactions);
-        console.log('addressState:', addressState);
-    });
+    //     console.log('Transactions:', transactions);
+    //     console.log('addressState:', addressState);
+    // });
 
     it('Validate xpub load and address derivation', async () => {
         // REMEMBER: This is a test wallet that you must never re-use yourself. This is for unit testing only.

@@ -9,9 +9,19 @@ describe('AddressManager', () => {
         const loader = new NetworkLoader();
         const manager = new AddressManager(loader);
 
-        const server = manager.getServer('STRAX', 'group1');
-        expect(server).toBeTruthy();
+        const servers = [
+            manager.getServer('STRAX', 'group1'),
+            manager.getServer('STRAX', 'group1'),
+            manager.getServer('STRAX', 'group1'),
+            manager.getServer('STRAX', 'group1'),
+            manager.getServer('STRAX', 'group1')
+        ];
 
+        // Get unique list of servers.
+        var unique = [...new Set(servers)];
+
+        // Expect more than a si1ngle one (then random has not worked well).
+        expect(unique.length > 1).toBeTrue();
     });
 
 });
