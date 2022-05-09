@@ -45,6 +45,8 @@ export class SettingsComponent {
 
     this.uiState.title = 'Settings';
     this.uiState.showBackButton = true;
+
+    console.log('Settings:', this.settings);
   }
 
   updateAllInstances() {

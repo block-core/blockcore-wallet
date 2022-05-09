@@ -312,6 +312,7 @@ interface AppState {
 interface Settings {
     developer: boolean;
     indexer: string;
+    server: string;
     dataVault: string;
     autoTimeout: number;
     theme: string;

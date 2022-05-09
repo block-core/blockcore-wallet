@@ -12,6 +12,7 @@ export class SettingStore extends StoreBase<Settings> {
             autoTimeout: AUTO_TIMEOUT,
             indexer: INDEXER_URL,
             dataVault: VAULT_URL,
+            server: 'group1',
             theme: 'dark',
             themeColor: 'primary',
             language: 'en',

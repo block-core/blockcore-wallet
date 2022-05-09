@@ -109,6 +109,11 @@ export class LoadingComponent implements OnInit, OnDestroy {
       this.translate.addLangs(['en', 'no', 'fr']);
       this.translate.setDefaultLang('en');
 
+      // TODO: Backwards compatible fix. Remove on release.
+      if (!this.settings.values.server) {
+        this.settings.values.server = 'group1';
+      }
+
       if (this.settings.values.language) {
         this.translate.use(this.settings.values.language);
       } else {

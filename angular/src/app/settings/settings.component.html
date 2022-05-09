@@ -46,11 +46,26 @@
   <br><br>
 
   <mat-form-field class="input-full-width" appearance="outline">
-    <mat-label>Indexer</mat-label>
-    <input matInput [(ngModel)]="settings.indexer">
-    <mat-hint>Only change this if you want to connect your own indexer or third party indexer.
+    <mat-label>Servers</mat-label>
+    <mat-select [(value)]="settings.server">
+      <mat-option [value]="'group1'">Blockcore</mat-option>
+      <mat-option [value]="'group2'">Community</mat-option>
+      <mat-option [value]="'custom'">Custom</mat-option>
+    </mat-select>
+    <mat-hint>Select server group
     </mat-hint>
   </mat-form-field>
+
+  <div *ngIf="settings.server == 'custom'">
+    <br>
+
+    <mat-form-field class="input-full-width" appearance="outline">
+      <mat-label>Custom Server</mat-label>
+      <input matInput [(ngModel)]="settings.indexer">
+      <mat-hint>The custom server must contain a variable (id) which is the network for each account you make.
+      </mat-hint>
+    </mat-form-field>
+  </div>
 
   <!-- <br><br>
 
