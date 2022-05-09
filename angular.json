@@ -28,8 +28,13 @@
             "tsConfig": "angular/tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "styles": [
-              "angular/src/styles.scss"
+              "angular/src/styles/styles.scss"
             ],
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "angular/src/styles/blockcore"
+              ]
+            },
             "scripts": []
           },
           "configurations": {
@@ -112,6 +117,11 @@
               ]
             },
             "coinvault": {
+              "stylePreprocessorOptions": {
+                "includePaths": [
+                  "angular/src/styles/coinvault/"
+                ]
+              },
               "buildOptimizer": false,
               "optimization": {
                 "scripts": true,
@@ -165,6 +175,11 @@
               ]
             },
             "smartcityplatform": {
+              "stylePreprocessorOptions": {
+                "includePaths": [
+                  "angular/src/styles/smartcityplatform/"
+                ]
+              },
               "buildOptimizer": false,
               "optimization": {
                 "scripts": true,
@@ -260,7 +275,7 @@
               "angular/src/assets"
             ],
             "styles": [
-              "angular/src/styles.scss"
+              "angular/src/styles/styles.scss"
             ],
             "scripts": []
           }
