@@ -121,7 +121,8 @@ export class WalletManager {
     // TODO: This method is duplicate of Indexer due to circular dependency after refactoring away from background process.
     async getTransactionHex(account: Account, txid: string) {
         const network = this.getNetwork(account.networkType);
-        const indexerUrl = this.settings.values.indexer.replace('{id}', network.id.toLowerCase());
+        // const indexerUrl = this.settings.values.indexer.replace('{id}', network.id.toLowerCase());
+        const indexerUrl = this.networkLoader.getServer(network.id, this.settings.values.server, this.settings.values.indexer);
 
         const responseTransactionHex = await axios.get(`${indexerUrl}/api/query/transaction/${txid}/hex`);
         return responseTransactionHex.data;
@@ -131,7 +132,8 @@ export class WalletManager {
     async broadcastTransaction(account: Account, txhex: string) {
         // These two entries has been sent from
         const network = this.getNetwork(account.networkType);
-        const indexerUrl = this.settings.values.indexer.replace('{id}', network.id.toLowerCase());
+        // const indexerUrl = this.settings.values.indexer.replace('{id}', network.id.toLowerCase());
+        const indexerUrl = this.networkLoader.getServer(network.id, this.settings.values.server, this.settings.values.indexer);
 
         const response = await axios.post(`${indexerUrl}/api/command/send`, txhex, {
             headers: {

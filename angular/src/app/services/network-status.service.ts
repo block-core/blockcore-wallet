@@ -82,7 +82,8 @@ export class NetworkStatusService {
         for (let i = 0; i < uniqueAccounts.length; i++) {
             const account = accounts[i];
             const network = this.getNetwork(account.networkType);
-            const indexerUrl = this.settings.values.indexer.replace('{id}', network.id.toLowerCase());
+            // const indexerUrl = this.settings.values.indexer.replace('{id}', network.id.toLowerCase());
+            const indexerUrl = this.networkLoader.getServer(network.id, this.settings.values.server, this.settings.values.indexer);
             let networkStatus: NetworkStatus;
 
             try {

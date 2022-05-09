@@ -9,7 +9,7 @@ export class AddressManager {
 
     private allNetworks: Network[];
 
-    constructor(private networkLoader: NetworkLoader) {
+    constructor(public networkLoader: NetworkLoader) {
         this.allNetworks = this.networkLoader.getAllNetworks();
     }
 
@@ -25,30 +25,30 @@ export class AddressManager {
         };
     }
 
-    private generateRandomNumber(min: number, max: number) {
-        return Math.floor(Math.random() * (max - min + 1)) + min;
-    }
-
     /** Get the network definition based upon the network identifier. */
     getNetwork(networkType: string) {
         return this.allNetworks.find(w => w.id == networkType);
     }
 
-    getServer(networkType: string, networkGroup: string, customServer?: string) {
-        if (networkGroup == 'custom') {
-            const server = customServer.replace('{id}', networkGroup.toLowerCase());
-        } else {
-            const serversGroup = Servers[networkGroup];
-            const servers = serversGroup[networkType];
+    // private generateRandomNumber(min: number, max: number) {
+    //     return Math.floor(Math.random() * (max - min + 1)) + min;
+    // }
 
-            // TODO: Figure out the best way to pick and perhaps cycle the servers. 
-            // As of now, we'll randomly pick every time this method is called.
-            const serverIndex = this.generateRandomNumber(0, servers.length);
-            const server = servers[serverIndex];
+    // getServer(networkType: string, networkGroup: string, customServer?: string) {
+    //     if (networkGroup == 'custom') {
+    //         const server = customServer.replace('{id}', networkGroup.toLowerCase());
+    //     } else {
+    //         const serversGroup = Servers[networkGroup];
+    //         const servers = serversGroup[networkType];
 
-            return server;
-        }
-    }
+    //         // TODO: Figure out the best way to pick and perhaps cycle the servers. 
+    //         // As of now, we'll randomly pick every time this method is called.
+    //         const serverIndex = this.generateRandomNumber(0, servers.length);
+    //         const server = servers[serverIndex];
+
+    //         return server;
+    //     }
+    // }
 
     getAddressByNetwork(publicKey: Buffer, network: any, addressPurpose: number) {
         if (addressPurpose == 44) {

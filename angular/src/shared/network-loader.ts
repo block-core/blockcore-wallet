@@ -1,4 +1,5 @@
 import { Network, BTC44, BTC84, CITY, CRS, IDENTITY, NOSTR, STRAX, TSTRAX, TCRS } from './networks';
+import { Servers } from './servers';
 
 /** Holds a list of networks that is available. */
 export class NetworkLoader {
@@ -34,5 +35,25 @@ export class NetworkLoader {
         this.networks.push(new NOSTR());
         this.networks.push(new BTC44());
         this.networks.push(new BTC84());
+    }
+
+    private generateRandomNumber(min: number, max: number) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    getServer(networkType: string, networkGroup: string, customServer?: string) {
+        if (networkGroup == 'custom') {
+            const server = customServer.replace('{id}', networkGroup.toLowerCase());
+        } else {
+            const serversGroup = Servers[networkGroup];
+            const servers = serversGroup[networkType];
+
+            // TODO: Figure out the best way to pick and perhaps cycle the servers. 
+            // As of now, we'll randomly pick every time this method is called.
+            const serverIndex = this.generateRandomNumber(0, servers.length);
+            const server = servers[serverIndex];
+
+            return server;
+        }
     }
 }

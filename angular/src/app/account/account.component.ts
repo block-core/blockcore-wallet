@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, ChangeDetectorRef, NgZone } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { UIState, CommunicationService, NetworksService, NetworkStatusService, SettingsService, WalletManager, StateService } from '../services';
+import { UIState, CommunicationService, NetworksService, NetworkStatusService, SettingsService, WalletManager, StateService, NetworkLoader } from '../services';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AccountHistory, NetworkStatus, TransactionHistory } from '../../shared/interfaces';
@@ -49,6 +49,7 @@ export class AccountComponent implements OnInit, OnDestroy {
     private state: StateService,
     private accountHistoryStore: AccountHistoryStore,
     public walletManager: WalletManager,
+    private networkLoader: NetworkLoader,
     private snackBar: MatSnackBar) {
 
     this.uiState.title = '';
@@ -98,7 +99,9 @@ export class AccountComponent implements OnInit, OnDestroy {
     if (!this.networkStatus) {
       try {
         const network = this.network.getNetwork(this.walletManager.activeAccount.networkType);
-        const indexerUrl = this.settings.values.indexer.replace('{id}', network.id.toLowerCase());
+        // const indexerUrl = this.settings.values.indexer.replace('{id}', network.id.toLowerCase());
+        const indexerUrl = this.networkLoader.getServer(network.id, this.settings.values.server, this.settings.values.indexer);
+
         let result: any = await this.http.get(`${indexerUrl}/api/stats/info`).toPromise();
         this.networkStatus = result;
         console.log('NETWORK STATUS', this.networkStatus);

@@ -273,7 +273,8 @@ export class IndexerBackgroundService {
                 account.lastScan = date;
 
                 const network = this.addressManager.getNetwork(account.networkType);
-                const indexerUrl = settings.indexer.replace('{id}', network.id.toLowerCase());
+                // const indexerUrl = settings.indexer.replace('{id}', network.id.toLowerCase());
+                const indexerUrl = this.addressManager.networkLoader.getServer(network.id, settings.server, settings.indexer);
                 const primaryReceiveAddress = account.state.receive[0];
 
                 let anyAddressNotComplete = false;

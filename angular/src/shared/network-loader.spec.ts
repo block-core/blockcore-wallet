@@ -1,4 +1,3 @@
-import { AddressManager } from "./address-manager";
 import { NetworkLoader } from "./network-loader";
 
 describe('AddressManager', () => {
@@ -7,14 +6,13 @@ describe('AddressManager', () => {
     it('Should return random server', () => {
 
         const loader = new NetworkLoader();
-        const manager = new AddressManager(loader);
 
         const servers = [
-            manager.getServer('STRAX', 'group1'),
-            manager.getServer('STRAX', 'group1'),
-            manager.getServer('STRAX', 'group1'),
-            manager.getServer('STRAX', 'group1'),
-            manager.getServer('STRAX', 'group1')
+            loader.getServer('STRAX', 'group1'),
+            loader.getServer('STRAX', 'group1'),
+            loader.getServer('STRAX', 'group1'),
+            loader.getServer('STRAX', 'group1'),
+            loader.getServer('STRAX', 'group1')
         ];
 
         // Get unique list of servers.
