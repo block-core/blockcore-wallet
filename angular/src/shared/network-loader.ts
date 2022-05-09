@@ -42,11 +42,11 @@ export class NetworkLoader {
     }
 
     getServer(networkType: string, networkGroup: string, customServer?: string) {
-
         console.log(`getServer: ${networkType} | ${networkGroup} | ${customServer}`);
 
         if (networkGroup == 'custom') {
             const server = customServer.replace('{id}', networkGroup.toLowerCase());
+            return server;
         } else {
             const serversGroup = Servers[networkGroup];
             const servers = serversGroup[networkType];
