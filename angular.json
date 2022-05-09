@@ -277,6 +277,11 @@
             "styles": [
               "angular/src/styles/styles.scss"
             ],
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "angular/src/styles/blockcore"
+              ]
+            },
             "scripts": []
           }
         }
