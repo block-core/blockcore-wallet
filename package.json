@@ -77,7 +77,7 @@
     "micro-bip32": "^0.1.0",
     "ngx-build-plus": "^13.0.1",
     "ngx-logger": "5.0.9",
-    "nostr-tools": "0.23.0",
+    "nostr-tools": "0.23.2",
     "qrcode": "^1.5.0",
     "rxjs": "7.5.5",
     "satcomma": "^1.1.1",
