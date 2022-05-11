@@ -39,11 +39,8 @@
         </mat-card-content> -->
         <mat-divider inset></mat-divider>
         <mat-card-actions class="full-action-buttons">
-            <button class="half-width" mat-raised-button
-                [routerLink]="['/', 'account', 'receive', walletManager.activeAccount.index]"
-                color="primary">Receive</button>
-            <button [disabled]="accountHistory.balance == 0" class="half-width" [routerLink]="['/', 'account', 'send']"
-                mat-raised-button>Send</button>
+            <button class="half-width" mat-raised-button [routerLink]="['/', 'account', 'receive', walletManager.activeAccount.index]" color="primary">Receive</button>
+            <button [disabled]="accountHistory.balance == 0" class="half-width" [routerLink]="['/', 'account', 'send']" mat-raised-button>Send</button>
         </mat-card-actions>
         <mat-card-footer>
             <mat-progress-bar *ngIf="!walletManager.activeAccount.completedScan" mode="indeterminate"></mat-progress-bar>
@@ -51,7 +48,18 @@
     </mat-card>
 
     <mat-tab-group class="account-tabs">
-        <mat-tab>
+        <mat-tab *ngIf="walletManager.activeAccount.accountType !== 'normal'">
+            <ng-template mat-tab-label>
+                <mat-icon class="example-tab-icon">calendar_today</mat-icon>
+            </ng-template>
+            <br>
+            <p>
+                Account type "{{walletManager.activeAccount.accountType}}" does not support history.
+            </p>
+
+        </mat-tab>
+
+        <mat-tab *ngIf="walletManager.activeAccount.accountType === 'normal'">
             <ng-template mat-tab-label>
                 <mat-icon class="example-tab-icon">calendar_today</mat-icon>
             </ng-template>
@@ -65,8 +73,7 @@
                     <div mat-line> {{activity.address}} </div>
                 </a> -->
                 <div mat-subheader>Transactions ({{accountHistory.history.length}})</div>
-                <a mat-list-item *ngFor="let transaction of accountHistory.history"
-                    [routerLink]="['/', 'account', 'transaction', transaction.transactionHash]">
+                <a mat-list-item *ngFor="let transaction of accountHistory.history" [routerLink]="['/', 'account', 'transaction', transaction.transactionHash]">
                     <div mat-line>
                         <span *ngIf="!transaction.unconfirmed" class="transaction-timpestamp">{{transaction.timestamp *
                             1000 | date:'mediumDate'}}</span>
@@ -75,16 +82,12 @@
                         <mat-icon class="transaction-history-icon" *ngIf="transaction.entryType == 'mine'">shuffle
                         </mat-icon>
 
-                        <span class="positive-color" [ngClass]="{unconfirmed: transaction.unconfirmed}"
-                            *ngIf="transaction.entryType == 'mine'">+{{transaction.calculatedValue |
+                        <span class="positive-color" [ngClass]="{unconfirmed: transaction.unconfirmed}" *ngIf="transaction.entryType == 'mine'">+{{transaction.calculatedValue |
                             amount}}</span>
 
-                        <span class="positive-color" [ngClass]="{unconfirmed: transaction.unconfirmed}"
-                            *ngIf="transaction.entryType == 'receive'">+{{transaction.calculatedValue | amount}}</span>
-                        <span class="negative-color" [ngClass]="{unconfirmed: transaction.unconfirmed}"
-                            *ngIf="transaction.entryType == 'send'">-{{transaction.calculatedValue | amount}}</span>
-                        <span class="other-color" [ngClass]="{unconfirmed: transaction.unconfirmed}"
-                            *ngIf="transaction.entryType == 'consolidated'">{{transaction.entryType}}</span>
+                        <span class="positive-color" [ngClass]="{unconfirmed: transaction.unconfirmed}" *ngIf="transaction.entryType == 'receive'">+{{transaction.calculatedValue | amount}}</span>
+                        <span class="negative-color" [ngClass]="{unconfirmed: transaction.unconfirmed}" *ngIf="transaction.entryType == 'send'">-{{transaction.calculatedValue | amount}}</span>
+                        <span class="other-color" [ngClass]="{unconfirmed: transaction.unconfirmed}" *ngIf="transaction.entryType == 'consolidated'">{{transaction.entryType}}</span>
                         <!-- <span *ngIf="settings.values.developer"><br>Transacted total: {{transaction.value |
                             amount}}</span> -->
                     </div>
