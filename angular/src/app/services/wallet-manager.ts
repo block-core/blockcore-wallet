@@ -155,7 +155,6 @@ export class WalletManager {
 
         const affectedAddresses = [];
 
-        // We currently only support BTC-compatible transactions such as STRAX. We do not support other Blockcore chains that are not PoS v4.
         const tx = new Psbt({ network: network, maximumFeeRate: 5000 });  // satoshi per byte, 5000 is default.
         tx.setVersion(1); // Lock-time is not used so set to 1 (defaults to 2).
         tx.setLocktime(0); // These are defaults. This line is not needed.
