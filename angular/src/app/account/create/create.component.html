@@ -36,6 +36,16 @@
 
     <br>
 
+    <mat-form-field appearance="outline" class="input-full-width">
+        <mat-label>Account Type</mat-label>
+        <mat-select [(value)]="accountType">
+            <mat-option [value]="'normal'">Normal</mat-option>
+            <mat-option [value]="'basic'">Basic</mat-option>
+        </mat-select>
+    </mat-form-field>
+
+    <br>
+
     <mat-form-field class="input-full-width" appearance="outline">
         <mat-label>Account Derivation Path</mat-label>
         <input matInput [(ngModel)]="derivationPath" required>

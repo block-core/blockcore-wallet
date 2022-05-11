@@ -29,6 +29,7 @@ export class AccountCreateComponent implements OnInit, OnDestroy {
     sub: any;
     icon: string | undefined;
     selectedNetwork: Network;
+    accountType: string = 'normal';
 
     get passwordValidated(): boolean {
         return this.password === this.password2 && this.secondFormGroup.valid;
