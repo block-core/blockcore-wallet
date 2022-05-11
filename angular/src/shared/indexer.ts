@@ -1,8 +1,8 @@
 import axiosRetry from 'axios-retry';
 import { AddressState, Transaction } from '.';
 import { AddressManager } from './address-manager';
-import { AccountUnspentTransactionOutput, AddressIndexedState, TransactionHistory, UnspentTransactionOutput } from './interfaces';
-import { AccountHistoryStore, AddressStore, SettingStore, TransactionIndexedStore, TransactionStore, WalletStore } from './store';
+import { AccountUnspentTransactionOutput, AddressIndexedState, TransactionHistory } from './interfaces';
+import { AccountHistoryStore, AddressStore, SettingStore, TransactionStore, WalletStore } from './store';
 import { AddressIndexedStore } from './store/address-indexed-store';
 import { AddressWatchStore } from './store/address-watch-store';
 
@@ -37,7 +37,6 @@ export class IndexerBackgroundService {
         private walletStore: WalletStore,
         private addressStore: AddressStore,
         private addressIndexedStore: AddressIndexedStore,
-        private transactionIndexedStore: TransactionIndexedStore,
         private transactionStore: TransactionStore,
         private addressManager: AddressManager,
         private accountHistoryStore: AccountHistoryStore
@@ -65,7 +64,7 @@ export class IndexerBackgroundService {
             for (let j = 0; j < accounts.length; j++) {
                 const account = accounts[j];
 
-                if (account.accountType === 'quick') {
+                if (account.mode === 'quick') {
 
                     let totalBalance = 0;
                     addressIndexedStates.map(a => totalBalance += a.balance);
@@ -294,7 +293,13 @@ export class IndexerBackgroundService {
                 console.log('indexerUrl:' + indexerUrl);
 
                 // If the account type is quick, we'll rely fully on indexer APIs and not perform local historical processing.
-                if (account.accountType === 'quick') {
+                if (account.mode === 'quick') {
+                    // We'll only run when indexing is running, not on watch. If we run it on watch, we'll keep getting the full balance
+                    // every 15 seconds (or what the configuration is).
+                    if (addressWatchStore) {
+                        continue;
+                    }
+
                     // Process receive addresses until we've exhausted them.
                     for (let k = 0; k < account.state.receive.length; k++) {
                         const address = account.state.receive[k];
@@ -368,7 +373,6 @@ export class IndexerBackgroundService {
                         if ((k + 1) >= account.state.change.length) {
                             // If there are transactions on the last checked address, add the next address.
                             if (addressState.totalReceivedCount > 0) {
-                                debugger;
                                 const nextAddress = this.addressManager.getAddress(account, 1, address.index + 1);
                                 account.state.change.push(nextAddress);
                                 changes = true;

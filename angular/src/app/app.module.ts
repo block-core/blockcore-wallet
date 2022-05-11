@@ -71,7 +71,7 @@ import { HandlerComponent } from './settings/handler/handler.component';
 import { ActionStratisIdentityComponent } from './action/sid/sid.component';
 import { ActionNostrIdentityComponent } from './action/nostr/nostr.component';
 import { AboutComponent } from './settings/about/about.component';
-import { AccountHistoryStore, AddressStore, NetworkStatusStore, TransactionIndexedStore, TransactionStore, UIStore, WalletStore, AddressIndexedStore } from 'src/shared';
+import { AccountHistoryStore, AddressStore, NetworkStatusStore, TransactionStore, UIStore, WalletStore, AddressIndexedStore } from 'src/shared';
 import { ActionStore } from 'src/shared/store/action-store';
 import { SettingStore } from 'src/shared/store/setting-store';
 import { NetworkLoader } from './services';
@@ -184,7 +184,6 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     AddressWatchStore,
     NetworkLoader,
     AddressIndexedStore,
-    TransactionIndexedStore
   ],
   bootstrap: [AppComponent]
 })

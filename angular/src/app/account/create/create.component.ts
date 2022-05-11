@@ -29,7 +29,7 @@ export class AccountCreateComponent implements OnInit, OnDestroy {
     sub: any;
     icon: string | undefined;
     selectedNetwork: Network;
-    accountType: string = 'normal';
+    mode: string = 'normal';
 
     get passwordValidated(): boolean {
         return this.password === this.password2 && this.secondFormGroup.valid;
@@ -158,7 +158,7 @@ export class AccountCreateComponent implements OnInit, OnDestroy {
         const account: Account = {
             identifier: uuidv4(),
             type: 'coin', // TODO: Change this depending on what user selects.
-            accountType: this.accountType,
+            mode: this.mode,
             networkType: this.selectedNetwork.id,
             name: this.name,
             index: parsedIndex,

@@ -48,18 +48,18 @@
     </mat-card>
 
     <mat-tab-group class="account-tabs">
-        <mat-tab *ngIf="walletManager.activeAccount.accountType !== 'normal'">
+        <mat-tab *ngIf="walletManager.activeAccount.mode !== 'normal'">
             <ng-template mat-tab-label>
                 <mat-icon class="example-tab-icon">calendar_today</mat-icon>
             </ng-template>
             <br>
             <p>
-                Account type "{{walletManager.activeAccount.accountType}}" does not support history.
+                Account type "{{walletManager.activeAccount.mode}}" does not support history.
             </p>
 
         </mat-tab>
 
-        <mat-tab *ngIf="walletManager.activeAccount.accountType === 'normal'">
+        <mat-tab *ngIf="walletManager.activeAccount.mode === 'normal'">
             <ng-template mat-tab-label>
                 <mat-icon class="example-tab-icon">calendar_today</mat-icon>
             </ng-template>
