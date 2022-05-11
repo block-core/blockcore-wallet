@@ -12,7 +12,7 @@ The wallet supports having multiple active wallets at the same time, and each wa
 
 ### Normal vs Quick
 
-When adding additional accounts to your wallet, you have the option to choose the types `Normal` and `Quick`. The difference can be very important depending on your usage and needs.
+When adding additional accounts to your wallet, you have the option to choose the modes `Normal` and `Quick`. The difference can be very important depending on your usage and needs.
 
 `Normal` will retrieve all transaction history for your wallet, and calculate the balance locally. When sending transactions, the available unspent transaction outputs (UTXOs) are queried locally in the history of data.
 
