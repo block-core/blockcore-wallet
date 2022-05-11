@@ -1,10 +1,22 @@
 # Blockcore Wallet
 
-###  Web Browser Extension for crypto wallet in your browser for coins, tokens, identities, NFTs and more.
+### Web Browser Extension for crypto wallet in your browser for coins, tokens, identities, NFTs and more.
 
 The Blockcore Extension does wallet management, account management, identity management and signing.
 
 ![](/doc/blockcore-extension-walkthrough.gif)
+
+## Features
+
+The wallet supports having multiple active wallets at the same time, and each wallet can contain one or more accounts, even on different blockchains and networks.
+
+### Normal vs Quick
+
+When adding additional accounts to your wallet, you have the option to choose the types `Normal` and `Quick`. The difference can be very important depending on your usage and needs.
+
+`Normal` will retrieve all transaction history for your wallet, and calculate the balance locally. When sending transactions, the available unspent transaction outputs (UTXOs) are queried locally in the history of data.
+
+`Quick` will retrieve only the current balance information from the indexer APIs, even for very large wallets, this is very quick to do. When sending transactions, the indexer API is queried until the amount being sent has been fullfilled. This means even if you have thousands of UTXOs, the extension does not need to download all the data to perform transactions.
 
 ## Instances
 
@@ -14,19 +26,19 @@ This extension is made available in multiple different instances that has differ
 
 - Chains: All Blockcore supported blockchains
 - All features currently under development
-- Download: ["blockcore-*.zip](https://github.com/block-core/blockcore-extension/releases)
+- Download: ["blockcore-\*.zip](https://github.com/block-core/blockcore-extension/releases)
 
 ### CoinVault
 
 - Chains: Stratis and Cirrus.
 - Features: Wallet, NFT and more.
-- Download: ["coinvault-*.zip](https://github.com/block-core/blockcore-extension/releases)
+- Download: ["coinvault-\*.zip](https://github.com/block-core/blockcore-extension/releases)
 
 ### Smart City Platform
 
 - Chains: City Chain
 - Features: Focused on decentralized citizenship
-- Download: ["smartcityplatform-*.zip](https://github.com/block-core/blockcore-extension/releases)
+- Download: ["smartcityplatform-\*.zip](https://github.com/block-core/blockcore-extension/releases)
 
 ## Supported Browsers
 

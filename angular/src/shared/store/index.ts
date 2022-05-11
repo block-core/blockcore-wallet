@@ -7,3 +7,5 @@ export * from './ui-store';
 export * from './wallet-store';
 export * from './account-history-store';
 export * from './address-watch-store';
+export * from './transaction-indexed-store';
+export * from './address-indexed-store';

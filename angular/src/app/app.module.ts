@@ -68,17 +68,14 @@ import { HttpClient } from '@angular/common/http';
 import { NetworkStatusComponent } from './shared/network-status/network-status.component';
 import { NetworkStatusCardComponent } from './shared/network-status-card/network-status.component';
 import { HandlerComponent } from './settings/handler/handler.component';
-import { ActivatedRoute, ActivatedRouteSnapshot } from '@angular/router';
 import { ActionStratisIdentityComponent } from './action/sid/sid.component';
 import { ActionNostrIdentityComponent } from './action/nostr/nostr.component';
 import { AboutComponent } from './settings/about/about.component';
-import { AccountHistoryStore, AddressStore, NetworkStatusStore, TransactionStore, UIStore, WalletStore } from 'src/shared';
+import { AccountHistoryStore, AddressStore, NetworkStatusStore, TransactionIndexedStore, TransactionStore, UIStore, WalletStore, AddressIndexedStore } from 'src/shared';
 import { ActionStore } from 'src/shared/store/action-store';
 import { SettingStore } from 'src/shared/store/setting-store';
 import { NetworkLoader } from './services';
 import { AddressWatchStore } from 'src/shared/store/address-watch-store';
-import { AddressManager } from 'src/shared/address-manager';
-import { AddressIndexedStore } from 'src/shared/store/address-indexed-store';
 
 // required for AOT compilation
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
@@ -186,7 +183,8 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     AccountHistoryStore,
     AddressWatchStore,
     NetworkLoader,
-    AddressIndexedStore
+    AddressIndexedStore,
+    TransactionIndexedStore
   ],
   bootstrap: [AppComponent]
 })

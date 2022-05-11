@@ -1,8 +1,8 @@
 import axiosRetry from 'axios-retry';
 import { AddressState, Transaction } from '.';
 import { AddressManager } from './address-manager';
-import { AccountUnspentTransactionOutput, AddressIndexedState, TransactionHistory } from './interfaces';
-import { AccountHistoryStore, AddressStore, SettingStore, TransactionStore, WalletStore } from './store';
+import { AccountUnspentTransactionOutput, AddressIndexedState, TransactionHistory, UnspentTransactionOutput } from './interfaces';
+import { AccountHistoryStore, AddressStore, SettingStore, TransactionIndexedStore, TransactionStore, WalletStore } from './store';
 import { AddressIndexedStore } from './store/address-indexed-store';
 import { AddressWatchStore } from './store/address-watch-store';
 
@@ -37,6 +37,7 @@ export class IndexerBackgroundService {
         private walletStore: WalletStore,
         private addressStore: AddressStore,
         private addressIndexedStore: AddressIndexedStore,
+        private transactionIndexedStore: TransactionIndexedStore,
         private transactionStore: TransactionStore,
         private addressManager: AddressManager,
         private accountHistoryStore: AccountHistoryStore
@@ -292,11 +293,8 @@ export class IndexerBackgroundService {
                 console.log('AAA: Indexer:Process...', account);
                 console.log('indexerUrl:' + indexerUrl);
 
-
                 // If the account type is quick, we'll rely fully on indexer APIs and not perform local historical processing.
                 if (account.accountType === 'quick') {
-
-
                     // Process receive addresses until we've exhausted them.
                     for (let k = 0; k < account.state.receive.length; k++) {
                         const address = account.state.receive[k];
@@ -899,9 +897,8 @@ export class IndexerBackgroundService {
 
             console.log('Updated address indexed state:', state);
 
-            return { changes: true, completed: true };;
-
-            // let nextLink = `/api/query/address/${state.address}/transactions?offset=${state.offset}&limit=${this.limit}`;
+            // // Now get all UTXOs available:
+            // let nextLink = `/api/query/address/${state.address}/transactions/unspent?confirmations=0&offset=${state.offset}&limit=${this.limit}`;
             // const date = new Date().toISOString();
 
             // // Loop through all pages until finished.
@@ -950,28 +947,31 @@ export class IndexerBackgroundService {
             //         for (let j = 0; j < transactions.length; j++) {
             //             changes = true;
 
-            //             const transaction: Transaction = transactions[j];
-            //             const transactionId = transaction.transactionHash;
-            //             const index = state.transactions.indexOf(transactionId);
+            //             const transaction: UnspentTransactionOutput = transactions[j];
+            //             const transactionId = transaction.outpoint.transactionId;
 
-            //             // Keep updating with transaction info details until finalized (and it will no longer be returned in the paged query):
-            //             transaction.details = await this.getTransactionInfo(transactionId, clonedIndexerUrl);
+            //             this.transactionIndexedStore.set(transaction.address, transaction);
 
-            //             // Copy some of the details state to the container object.
-            //             transaction.confirmations = transaction.details.confirmations;
+            //             // const index = state.transactions.indexOf(transactionId);
 
-            //             // If the transaction ID is not present already on the AddressState, add it.
-            //             if (index == -1) {
-            //                 state.transactions.push(transactionId);
-            //             }
+            //             // // Keep updating with transaction info details until finalized (and it will no longer be returned in the paged query):
+            //             // transaction.details = await this.getTransactionInfo(transactionId, clonedIndexerUrl);
 
-            //             transaction.unconfirmed = (transaction.confirmations < this.confirmed);
-            //             transaction.finalized = (transaction.confirmations >= this.finalized);
+            //             // // Copy some of the details state to the container object.
+            //             // transaction.confirmations = transaction.details.confirmations;
+
+            //             // // If the transaction ID is not present already on the AddressState, add it.
+            //             // if (index == -1) {
+            //             //     state.transactions.push(transactionId);
+            //             // }
+
+            //             // transaction.unconfirmed = (transaction.confirmations < this.confirmed);
+            //             // transaction.finalized = (transaction.confirmations >= this.finalized);
 
             //             // Whenever we reseach finalized transactions, move the offset state forward.
-            //             if (transaction.finalized) {
+            //             // if (transaction.finalized) {
             //                 state.offset = offset + (j + 1);
-            //             }
+            //             // }
 
             //             // TODO: Temporarily drop this while testing a large wallet.
             //             // TODO: We have now implemented on-demand retreival of hex when sending, investigate if that is better and more proper as
@@ -980,11 +980,11 @@ export class IndexerBackgroundService {
             //             //     transaction.hex = await this.getTransactionHex(transactionId, indexerUrl);
             //             // }
 
-            //             // Update the store with latest info on the transaction.
-            //             this.transactionStore.set(transactionId, transaction);
+            //             // // Update the store with latest info on the transaction.
+            //             // this.transactionStore.set(transactionId, transaction);
 
-            //             // Persist immediately because the watcher need to have
-            //             await this.transactionStore.save();
+            //             // // Persist immediately because the watcher need to have
+            //             // await this.transactionStore.save();
             //         }
             //     }
 
@@ -999,6 +999,8 @@ export class IndexerBackgroundService {
             //         nextLink = links.next;
             //     }
             // }
+
+            return { changes: true, completed: true };
 
         } catch (error) {
             console.log('Failed to query indexer!!');
