@@ -96,6 +96,9 @@ interface Account {
     /** The type of Account, used to show the account in different sections of the UI. Should be 'coin', 'token' or 'other'. */
     type: string;
 
+    /** Account type indicates if this is a full (normal) or quick (basic) type of account. */
+    accountType: string;
+
     /** Temporary property used for UI-selections. */
     selected?: boolean;
 }

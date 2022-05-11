@@ -158,6 +158,7 @@ export class AccountCreateComponent implements OnInit, OnDestroy {
         const account: Account = {
             identifier: uuidv4(),
             type: 'coin', // TODO: Change this depending on what user selects.
+            accountType: this.accountType,
             networkType: this.selectedNetwork.id,
             name: this.name,
             index: parsedIndex,
