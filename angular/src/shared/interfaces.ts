@@ -188,6 +188,23 @@ interface AddressState {
     transactions: string[];
 }
 
+/** The pre-indexed state of address retreived from indexer API. */
+interface AddressIndexedState {
+    address: string;
+    balance?: number;
+    totalReceived?: number;
+    totalStake?: number;
+    totalMine?: number;
+    totalSent?: number;
+    totalReceivedCount?: number;
+    totalSentCount?: number;
+    totalStakeCount?: number;
+    totalMineCount?: number;
+    pendingSent?: number;
+    pendingReceived?: number;
+    offset?: number;
+}
+
 interface TransactionInfo {
     fee: number;
     symbol: string;
@@ -496,5 +513,6 @@ export {
     AppState,
     AccountHistory,
     AccountUnspentTransactionOutput,
-    AddressWatchState
+    AddressWatchState,
+    AddressIndexedState
 }

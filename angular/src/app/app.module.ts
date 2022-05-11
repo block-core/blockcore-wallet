@@ -78,6 +78,7 @@ import { SettingStore } from 'src/shared/store/setting-store';
 import { NetworkLoader } from './services';
 import { AddressWatchStore } from 'src/shared/store/address-watch-store';
 import { AddressManager } from 'src/shared/address-manager';
+import { AddressIndexedStore } from 'src/shared/store/address-indexed-store';
 
 // required for AOT compilation
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
@@ -184,7 +185,8 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     WalletStore,
     AccountHistoryStore,
     AddressWatchStore,
-    NetworkLoader
+    NetworkLoader,
+    AddressIndexedStore
   ],
   bootstrap: [AppComponent]
 })
