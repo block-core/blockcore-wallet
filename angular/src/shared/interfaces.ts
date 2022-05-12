@@ -146,19 +146,6 @@ interface Address {
     unspent?: UnspentTransactionOutput[]
 }
 
-interface UnspentTransactionOutput {
-    outpoint: {
-        transactionId: string;
-        outputIndex: number;
-    }
-    address: string;
-    scriptHex: string;
-    value: number;
-    blockIndex: number;
-    coinBase: boolean;
-    coinStake: boolean;
-}
-
 interface Transaction {
     entryType: string;
     transactionHash: string;
@@ -235,6 +222,19 @@ interface TransactionHistory {
     timestamp: number;
     blockIndex: number;
     hasContract?: boolean;
+}
+
+interface UnspentTransactionOutput {
+    outpoint: {
+        transactionId: string;
+        outputIndex: number;
+    }
+    address: string;
+    scriptHex: string;
+    value: number;
+    blockIndex: number;
+    coinBase: boolean;
+    coinStake: boolean;
 }
 
 interface AccountUnspentTransactionOutput {

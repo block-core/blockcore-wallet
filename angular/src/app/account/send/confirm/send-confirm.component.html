@@ -5,17 +5,33 @@
     <div><span>From</span><span>{{sendService.account.name}}</span></div>
     <div *ngIf="sendService.changeAddress"><span>Change (override)</span><span>{{sendService.changeAddress}}</span></div>
     <div><span>Amount</span><span>{{sendService.amountAsSatoshi | amount}} {{sendService.network.symbol}}</span></div>
-    
+
     <!-- <div><span>Fee</span><span>{{sendService.fee}} ({{sendService.feeAsSatoshi}}) {{sendService.network.symbol}}</span></div> -->
     <div *ngIf="transaction"><span>Fee</span><span>{{transaction.fee | amount}} {{sendService.network.symbol}}</span></div>
-    <div *ngIf="transaction"><span>FeeRate</span><span>{{transaction.feeRate}} sat/byte</span></div>
-    
+
     <!-- <div *ngIf="transaction"><span>virtualSize</span><span>{{transaction.virtualSize}}</span></div>
     <div *ngIf="transaction"><span>weight</span><span>{{transaction.weight}}</span></div> -->
 
+    <div *ngIf="detailsOpen" class="grid-row-label-value">
+
+        <div *ngIf="transaction"><span>Fee Rate</span><span>{{transaction.feeRate}} sat/byte</span></div>
+        <div *ngIf="transaction"><span>Change Amount</span><span>{{transaction.changeAmount | amount}} {{sendService.network.symbol}}</span></div>
+        <div *ngIf="transaction"><span>Change Address</span><span>{{transaction.changeAddress}}</span></div>
+
+        <!-- <mat-form-field class="input-full-width" appearance="outline">
+            <mat-label>Custom change address</mat-label>
+            <input matInput formControlName="changeAddressInput" [(ngModel)]="sendService.changeAddress">
+        </mat-form-field> -->
+
+    </div>
+
+    <button class="full-width" (click)="toggleDetails()" mat-raised-button>Details...</button>
+
     <div><span>Total</span><span class="total">{{sendService.total | amount}} {{sendService.network.symbol}}</span></div>
 
-    <div *ngIf="error" class="icon-warn"><h2>ERROR</h2><span>{{error}}</span></div>
+    <div *ngIf="error" class="icon-warn">
+        <h2>ERROR</h2><span>{{error}}</span>
+    </div>
 </div>
 
 <!-- <p>Sending to:</p>

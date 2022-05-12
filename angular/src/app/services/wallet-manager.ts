@@ -21,6 +21,7 @@ import Big from "big.js";
 import { StorageService } from "./storage.service";
 import * as bip39 from "bip39";
 import { RuntimeService } from "./runtime.service";
+import { UnspentOutputService } from "./unspent-output.service";
 const ECPair = ECPairFactory(ecc);
 var bitcoinMessage = require('bitcoinjs-message');
 const axios = require('axios').default;
@@ -55,6 +56,7 @@ export class WalletManager {
         private accountHistoryStore: AccountHistoryStore,
         private settings: SettingsService,
         private communication: CommunicationService,
+        private unspentService: UnspentOutputService,
         private storage: StorageService,
         private runtime: RuntimeService,
         private logger: LoggerService) {
@@ -148,7 +150,7 @@ export class WalletManager {
         return data;
     }
 
-    async createTransaction(wallet: Wallet, account: Account, address: string, changeAddress: string, amount: Big, fee: Big, unspent: AccountUnspentTransactionOutput[]): Promise<{ addresses: string[], transactionHex: string, fee: number, feeRate: number, virtualSize: number, weight: number }> {
+    async createTransaction(wallet: Wallet, account: Account, address: string, changeAddress: string, amount: Big, fee: Big, unspent: AccountUnspentTransactionOutput[]): Promise<{ changeAddress: string, changeAmount: Big, addresses: string[], transactionHex: string, fee: number, feeRate: number, virtualSize: number, weight: number }> {
         // TODO: Verify the address for this network!! ... Help the user avoid sending transactions on very wrong addresses.
         const network = this.getNetwork(account.networkType);
         console.log('NETWORK:', network);
@@ -165,17 +167,38 @@ export class WalletManager {
         const requiredAmount = amount.add(fee);
 
         let aggregatedAmount = Big(0);
-        const inputs: AccountUnspentTransactionOutput[] = [];
+        let inputs: AccountUnspentTransactionOutput[] = [];
 
-        for (let i = 0; i < unspent.length; i++) {
-            const tx = unspent[i];
-            aggregatedAmount = aggregatedAmount.plus(new Big(tx.balance));
+        if (account.mode === 'normal') {
+            for (let i = 0; i < unspent.length; i++) {
+                const tx = unspent[i];
+                aggregatedAmount = aggregatedAmount.plus(new Big(tx.balance));
 
-            inputs.push(tx);
+                inputs.push(tx);
 
-            if (aggregatedAmount.gte(requiredAmount)) {
-                break;
+                if (aggregatedAmount.gte(requiredAmount)) {
+                    break;
+                }
             }
+        } else {
+            // When performing send using a "quick" mode account, we will retrieve the UTXOs on-demand.
+            const result = await this.unspentService.getUnspentByAmount(requiredAmount, account);
+
+            aggregatedAmount = result.amount;
+            inputs.push(...result.utxo);
+
+            console.log('UTXO QUERY RESULT: ', result);
+
+            // for (let i = 0; i < unspentOutputs.length; i++) {
+            //     const tx = unspentOutputs[i];
+            //     aggregatedAmount = aggregatedAmount.plus(new Big(tx.balance));
+
+            //     inputs.push(tx);
+
+            //     if (aggregatedAmount.gte(requiredAmount)) {
+            //         break;
+            //     }
+            // }
         }
 
         console.log('SELECTED INPUTS FOR TRANSACTION: ', inputs);
@@ -262,7 +285,7 @@ export class WalletManager {
 
         this.logger.debug('TransactionHex', transactionHex);
 
-        return { addresses: affectedAddresses, transactionHex, fee: tx.getFee(), feeRate: tx.getFeeRate(), virtualSize: finalTransaction.virtualSize(), weight: finalTransaction.weight() };
+        return { changeAddress, changeAmount, addresses: affectedAddresses, transactionHex, fee: tx.getFee(), feeRate: tx.getFeeRate(), virtualSize: finalTransaction.virtualSize(), weight: finalTransaction.weight() };
     }
 
     async sendTransaction(account: Account, transactionHex: string): Promise<{ transactionId: string, transactionHex: string }> {

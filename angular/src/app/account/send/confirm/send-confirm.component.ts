@@ -10,6 +10,7 @@ export class AccountSendConfirmComponent implements OnInit, OnDestroy {
     sub: any;
     transaction: any;
     error: string;
+    detailsOpen = false;
 
     constructor(
         public sendService: SendService,
@@ -19,6 +20,10 @@ export class AccountSendConfirmComponent implements OnInit, OnDestroy {
 
     ngOnDestroy() {
 
+    }
+
+    toggleDetails() {
+        this.detailsOpen = !this.detailsOpen;
     }
 
     async ngOnInit() {

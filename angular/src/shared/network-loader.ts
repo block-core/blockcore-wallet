@@ -21,6 +21,11 @@ export class NetworkLoader {
         });
     }
 
+    /** Get the network definition based upon the network identifier. */
+    getNetwork(networkType: string) {
+        return this.networks.find(w => w.id == networkType);
+    }
+
     getAllNetworks() {
         return this.networks;
     }
