@@ -304,19 +304,17 @@ export class IndexerBackgroundService {
                     for (let k = 0; k < account.state.receive.length; k++) {
                         const address = account.state.receive[k];
 
-                        console.log('RECEIVE ADDRESS LOOP' + k, address);
-
                         // Get the current state for this address:
                         let addressState = this.addressIndexedStore.get(address.address);
 
-                        // If there are no addressState for this, create one now.
                         if (!addressState) {
                             addressState = { address: address.address, offset: 0 };
+                        } else {
+                            // Every time we reindex in quick mode, we must reset the balance.
+                            addressState.balance = 0;
                         }
 
                         const processState = await this.processAddressIndexed(indexerUrl, addressState);
-
-                        console.log('Completed processing:', processState);
 
                         if (!processState.completed) {
                             anyAddressNotComplete = true;
@@ -348,7 +346,6 @@ export class IndexerBackgroundService {
                         // Get the current state for this address:
                         let addressState = this.addressIndexedStore.get(address.address);
 
-                        // If there are no addressState for this, create one now.
                         if (!addressState) {
                             addressState = { address: address.address, offset: 0 };
                         }
@@ -871,7 +868,6 @@ export class IndexerBackgroundService {
     async processAddressIndexed(indexerUrl: string, state: AddressIndexedState) {
         let changes = false;
         let completed = false;
-
         let countProcessedItems = 0;
 
         try {
@@ -900,109 +896,6 @@ export class IndexerBackgroundService {
             state = Object.assign(state, addressData);
 
             console.log('Updated address indexed state:', state);
-
-            // // Now get all UTXOs available:
-            // let nextLink = `/api/query/address/${state.address}/transactions/unspent?confirmations=0&offset=${state.offset}&limit=${this.limit}`;
-            // const date = new Date().toISOString();
-
-            // // Loop through all pages until finished.
-            // while (nextLink != null) {
-
-            //     const url = `${clonedIndexerUrl}${nextLink}`;
-            //     console.log(`nextlink url ${url}`);
-
-            //     // Default options are marked with *
-            //     const response = await fetch(url, {
-            //         method: 'GET', // *GET, POST, PUT, DELETE, etc.
-            //         mode: 'cors', // no-cors, *cors, same-origin
-            //         cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-            //         credentials: 'same-origin', // include, *same-origin, omit
-            //         headers: {
-            //             'Content-Type': 'application/json'
-            //         },
-            //         redirect: 'follow', // manual, *follow, error
-            //         referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-            //     });
-
-            //     console.log('FETCHING: ', url);
-
-            //     const transactions = await response.json();
-            //     // const responseTransactions = await axios.get(`${indexerUrl}${nextLink}`);
-            //     // const transactions = responseTransactions.data;
-            //     const links = this.parseLinkHeader(response.headers.get('link'));
-
-            //     // const limit = response.headers.get('pagination-limit');
-            //     // const total = response.headers.get('pagination-total');
-            //     const offset = Number(response.headers.get('pagination-offset'));
-
-            //     // Store the latest offset on the state.
-            //     state.offset = offset;
-
-            //     // Increase the count process items, used to buffer large addresses.
-            //     countProcessedItems += this.limit;
-
-            //     if (response.ok) {
-            //         // var updatedReceiveAddress: Address = { ...receiveAddress };
-            //         // console.log(responseTransactions);
-
-            //         // Since we are paging, and all items in pages should be sorted correctly, we can simply
-            //         // replace the item at the right index for each page. This should update with new metadata,
-            //         // if there is anything new.
-            //         for (let j = 0; j < transactions.length; j++) {
-            //             changes = true;
-
-            //             const transaction: UnspentTransactionOutput = transactions[j];
-            //             const transactionId = transaction.outpoint.transactionId;
-
-            //             this.transactionIndexedStore.set(transaction.address, transaction);
-
-            //             // const index = state.transactions.indexOf(transactionId);
-
-            //             // // Keep updating with transaction info details until finalized (and it will no longer be returned in the paged query):
-            //             // transaction.details = await this.getTransactionInfo(transactionId, clonedIndexerUrl);
-
-            //             // // Copy some of the details state to the container object.
-            //             // transaction.confirmations = transaction.details.confirmations;
-
-            //             // // If the transaction ID is not present already on the AddressState, add it.
-            //             // if (index == -1) {
-            //             //     state.transactions.push(transactionId);
-            //             // }
-
-            //             // transaction.unconfirmed = (transaction.confirmations < this.confirmed);
-            //             // transaction.finalized = (transaction.confirmations >= this.finalized);
-
-            //             // Whenever we reseach finalized transactions, move the offset state forward.
-            //             // if (transaction.finalized) {
-            //                 state.offset = offset + (j + 1);
-            //             // }
-
-            //             // TODO: Temporarily drop this while testing a large wallet.
-            //             // TODO: We have now implemented on-demand retreival of hex when sending, investigate if that is better and more proper as
-            //             // there is no value in getting spent data.
-            //             // if (!transaction.hex) {
-            //             //     transaction.hex = await this.getTransactionHex(transactionId, indexerUrl);
-            //             // }
-
-            //             // // Update the store with latest info on the transaction.
-            //             // this.transactionStore.set(transactionId, transaction);
-
-            //             // // Persist immediately because the watcher need to have
-            //             // await this.transactionStore.save();
-            //         }
-            //     }
-
-            //     // When we have processed more items than batch size, and there is actually a next page, we'll stop processing and continue later.
-            //     if (links.next != null && countProcessedItems > this.batchSize) {
-            //         completed = false;
-            //         nextLink = null;
-            //     }
-            //     else {
-            //         // Just set the completed to true every time here, to override false done when batch size is hit.
-            //         completed = true;
-            //         nextLink = links.next;
-            //     }
-            // }
 
             return { changes: true, completed: true };
 
