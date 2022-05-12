@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { BehaviorSubject, Observable } from "rxjs";
-import { ActionStore, AddressStore, NetworkStatusStore, SettingStore, TransactionStore, UIStore, WalletStore, AccountHistoryStore } from "src/shared";
+import { ActionStore, AddressStore, NetworkStatusStore, SettingStore, TransactionStore, UIStore, WalletStore, AccountHistoryStore, AddressIndexedStore } from "src/shared";
 import { AddressWatchStore } from "src/shared/store/address-watch-store";
 import { StoreBase, StoreListBase } from "src/shared/store/store-base";
 
@@ -24,7 +24,9 @@ export class StateService {
         private uiStore: UIStore,
         private walletStore: WalletStore,
         private accountHistoryStore: AccountHistoryStore,
-        private addressWatchStore: AddressWatchStore
+        private addressWatchStore: AddressWatchStore,
+        private addressIndexedStore: AddressIndexedStore
+
     ) {
         this.changedSubject = new BehaviorSubject<StateService>(this);
 
@@ -37,6 +39,7 @@ export class StateService {
         this.stores.push(walletStore);
         this.stores.push(accountHistoryStore);
         this.stores.push(addressWatchStore);
+        this.stores.push(addressIndexedStore);
     }
 
     async wipe() {
@@ -73,6 +76,7 @@ export class StateService {
         await this.walletStore.load();
         await this.accountHistoryStore.load();
         await this.addressWatchStore.load();
+        await this.addressIndexedStore.load();
 
         console.log('RELOAD CALLED:');
         console.log(this.accountHistoryStore.all());
@@ -92,6 +96,7 @@ export class StateService {
         await this.walletStore.load();
         await this.accountHistoryStore.load();
         await this.addressWatchStore.load();
+        await this.addressIndexedStore.load();
 
         // console.log('AFTER:')
         // console.log(JSON.stringify(this.walletStore.all()));

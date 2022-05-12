@@ -69,28 +69,28 @@ export class UnspentOutputService {
 
                 // Query for what is left, take the required minus what we have already aggregated.
                 const processState = await this.processAddress(indexerUrl, address, requiredAmount.minus(aggregatedAmount));
-    
+
                 console.log(`Process state on address ${address.address}:`, processState);
-    
+
                 // Add the amount from address processing into the aggreated amount.
                 aggregatedAmount = aggregatedAmount.plus(processState.amount);
-    
+
                 console.log('processState.utxo:', processState);
-    
+
                 utxo.push(...processState.utxo);
-    
+
                 // If completed, it means we have reached the required amount.
                 if (processState.completed) {
                     console.log('SETTING COMPLETED TO TRUE AND BREAKING!');
                     completed = true;
                     break;
                 }
-    
+
                 // const tx = unspent[i];
                 // aggregatedAmount = aggregatedAmount.plus(new Big(tx.balance));
-    
+
                 // inputs.push(tx);
-    
+
                 // if (aggregatedAmount.gte(requiredAmount)) {
                 //     break;
                 // }
@@ -234,7 +234,11 @@ export class UnspentOutputService {
                     }
                 }
 
-                nextLink = links.next;
+                // Only set the next link if the current one is not null. This is because we are breaking when we have
+                // found the correct amount and we don't want to continue.
+                if (nextLink != null) {
+                    nextLink = links.next;
+                }
             }
 
         } catch (error) {
