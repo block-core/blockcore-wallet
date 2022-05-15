@@ -283,6 +283,7 @@ export class WalletManager {
         const finalTransaction = tx.finalizeAllInputs().extractTransaction();
         const transactionHex = finalTransaction.toHex();
 
+        console.log('TX:', tx);
         this.logger.debug('TransactionHex', transactionHex);
 
         return { changeAddress, changeAmount, addresses: affectedAddresses, transactionHex, fee: tx.getFee(), feeRate: tx.getFeeRate(), virtualSize: finalTransaction.virtualSize(), weight: finalTransaction.weight() };
