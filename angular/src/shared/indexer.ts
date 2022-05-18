@@ -289,15 +289,24 @@ export class IndexerBackgroundService {
 
                 let anyAddressNotComplete = false;
 
-                console.log('AAA: Indexer:Process...', account);
-                console.log('indexerUrl:' + indexerUrl);
-
                 // If the account type is quick, we'll rely fully on indexer APIs and not perform local historical processing.
                 if (account.mode === 'quick') {
                     // We'll only run when indexing is running, not on watch. If we run it on watch, we'll keep getting the full balance
                     // every 15 seconds (or what the configuration is).
                     if (addressWatchStore) {
-                        continue;
+                        // If there is a watch interval and there is anything in the watch store, the user might have just
+                        // recently been sending a transaction. So we'll perform an reindex and clear the watch list.
+                        const addresses = addressWatchStore.byAccountId(account.identifier);
+
+                        if (addresses.length == 0) {
+                            continue;
+                        }
+
+                        for (let ai = 0; ai < addresses.length; ai++) {
+                            addressWatchStore.remove(addresses[ai].address);
+                        }
+
+                        await addressWatchStore.save();
                     }
 
                     // Process receive addresses until we've exhausted them.
@@ -376,9 +385,7 @@ export class IndexerBackgroundService {
                             }
                         }
                     }
-
                 } else {
-
                     if (addressWatchStore) {
                         // If the account is not fully synced, we should not perform watch over the account yet.
                         if (!account.completedScan) {
@@ -387,7 +394,6 @@ export class IndexerBackgroundService {
                         }
 
                         const addresses = addressWatchStore.byAccountId(account.identifier);
-                        console.log('Running Watcher', addresses);
 
                         // Process registered addresses until we've exhausted them.
                         for (let k = 0; k < addresses.length; k++) {
@@ -600,8 +606,6 @@ export class IndexerBackgroundService {
                         for (let k = 0; k < account.state.receive.length; k++) {
                             const address = account.state.receive[k];
 
-                            console.log('RECEIVE ADDRESS LOOP' + k, address);
-
                             // Get the current state for this address:
                             let addressState = this.addressStore.get(address.address);
 
@@ -677,8 +681,6 @@ export class IndexerBackgroundService {
                         }
                     }
                 }
-
-                console.log('BBB: Indexer:Process completed!...', account);
 
                 // When completely processes all the address, we'll save the transactions.
                 await this.transactionStore.save();
