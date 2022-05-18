@@ -32,6 +32,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
   sub: any;
   history: Section[] = [];
   networkStatus$: Observable<NetworkStatus[]>;
+  SmartContractAccounts : Account[];
+
 
   constructor(
     public feature: FeatureService,
@@ -150,4 +152,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
   async logWatcher() {
     console.log(this.addressWatchStore);
   }
+
+  getSmartContracts():Account[] {
+  return this.SmartContractAccounts = this.walletManager.activeWallet.accounts
+    .filter((item:Account) => item.networkType == "CRS");
+}
 }

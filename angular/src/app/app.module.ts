@@ -78,6 +78,8 @@ import { NetworkLoader } from './services';
 import { AddressWatchStore } from 'src/shared/store/address-watch-store';
 import { SizePipe } from './shared/size.pipe';
 import { AccountStateStore } from 'src/shared/store/account-state-store';
+import {NonFungibleTokenComponent} from "./Collectables/non-fungible-token.component";
+import {collectables} from "./Collectables/collectables.component";
 
 // required for AOT compilation
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
@@ -124,7 +126,9 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     NetworkStatusCardComponent,
     HandlerComponent,
     ActionStratisIdentityComponent,
-    ActionNostrIdentityComponent
+    ActionNostrIdentityComponent,
+    collectables,
+    NonFungibleTokenComponent
   ],
   imports: [
     BrowserModule,

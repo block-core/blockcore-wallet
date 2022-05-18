@@ -33,6 +33,8 @@ import { HandlerComponent } from './settings/handler/handler.component';
 import { ActionStratisIdentityComponent } from './action/sid/sid.component';
 import { ActionNostrIdentityComponent } from './action/nostr/nostr.component';
 import { LoadingResolverService } from './services/loading-resolver.service';
+import {NonFungibleTokenComponent} from "./Collectables/non-fungible-token.component";
+import {collectables} from "./Collectables/collectables.component";
 
 const routes: Routes = [
   {
@@ -160,6 +162,11 @@ const routes: Routes = [
   },
   {
     path: 'account/remove/:index', component: AccountRemoveComponent, resolve: {
+      data: LoadingResolverService
+    }
+  },
+  {
+    path: 'account/collectables/:address', component: collectables, resolve: {
       data: LoadingResolverService
     }
   },
