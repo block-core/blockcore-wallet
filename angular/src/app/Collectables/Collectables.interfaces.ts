@@ -1,7 +1,7 @@
 export interface NonFungibleToken {
   Id: string;
   Creator: string;
-  Uri: string
+  uri: string
   IsBurned: boolean;
   PricePaid: number;
   TransactionId: string;
@@ -15,7 +15,7 @@ export interface attribute{
   display_type:string;
 }
 
-export interface TokenJson{
+export class TokenJson{
   name:string;
   image:string;
   description:string;

@@ -1,9 +1,4 @@
 
 <div>
-  <mat-action-list>
-    <mat-list-item *ngFor="let nft of NonFungibleTokens">
-      <app-non-fungible-token [nonFungibleToken]="nft"></app-non-fungible-token>
-
-    </mat-list-item>
-  </mat-action-list>
+      <app-non-fungible-token *ngFor="let nft of NonFungibleTokens" [nonFungibleToken]="nft"></app-non-fungible-token>
 </div>

@@ -26,7 +26,6 @@ export class collectables implements OnInit{
 
   async ngOnInit(): Promise<void> {
     if (this.address !== undefined && this.networkType !== undefined) {
-      debugger;
       const addressManager = new AddressManager(this.networkLoader);
       const network = addressManager.getNetwork(this.networkType);
       this.indexerUrl = this.networkLoader.getServer(network.id, this.settings.values.server, this.settings.values.indexer);
@@ -37,7 +36,7 @@ export class collectables implements OnInit{
         }
       });
 
-      console.log(response);
+      this.NonFungibleTokens = response.data.items;
     }
   }
 }

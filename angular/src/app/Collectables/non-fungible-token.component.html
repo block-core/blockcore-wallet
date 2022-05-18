@@ -1,4 +1,21 @@
 
-<div>
-  <h3>{{nonFungibleToken.Uri}}</h3>
+<div class="full-width">
+  <h3 class="centered full-width">{{tokenJson.name}}</h3>
+  <span class="full-width">{{tokenJson.description}}</span>
+  <span class="full-width">{{nonFungibleToken.PricePaid | amount}}</span>
+
+  <div class="full-width">
+    <img class="resize" [src]="tokenJson.image" />
+  </div>
+
+
+  <mat-list class="full-width" *ngIf="tokenJson.attributes">
+    <mat-list-item *ngFor="let attribute of tokenJson.attributes" >
+      <span class="full-width">{{attribute.display_type}}</span>
+      <span class="full-width">{{attribute.trait_type}}</span>
+      <span class="full-width">{{attribute.value}}</span>
+    </mat-list-item>
+
+  </mat-list>
+
 </div>
