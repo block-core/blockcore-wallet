@@ -255,42 +255,44 @@ export class NetworksService {
                         receive: [],
                         change: []
                     },
-                }, {
-                    identifier: uuidv4(),
-                    index: 0,
-                    selected: true,
-                    networkType: 'IDENTITY',
-                    mode: 'normal',
-                    name: 'Identity',
-                    type: 'other',
-                    network: 616,
-                    purpose: 302,
-                    purposeAddress: 302,
-                    icon: 'account_circle',
-                    state: {
-                        balance: 0,
-                        retrieved: null,
-                        receive: [],
-                        change: []
-                    },
-                }, {
-                    identifier: uuidv4(),
-                    index: 0,
-                    networkType: 'NOSTR',
-                    mode: 'normal',
-                    name: 'Nostr',
-                    type: 'other',
-                    network: 1237,
-                    purpose: 44,
-                    purposeAddress: 44, // TODO: Nostr should have custom derived address, add this ability (schnorr signature)
-                    icon: 'account_circle',
-                    state: {
-                        balance: 0,
-                        retrieved: null,
-                        receive: [],
-                        change: []
-                    },
-                }];
+                }
+                // , {
+                //     identifier: uuidv4(),
+                //     index: 0,
+                //     selected: true,
+                //     networkType: 'IDENTITY',
+                //     mode: 'normal',
+                //     name: 'Identity',
+                //     type: 'other',
+                //     network: 616,
+                //     purpose: 302,
+                //     purposeAddress: 302,
+                //     icon: 'account_circle',
+                //     state: {
+                //         balance: 0,
+                //         retrieved: null,
+                //         receive: [],
+                //         change: []
+                //     },
+                // }, {
+                //     identifier: uuidv4(),
+                //     index: 0,
+                //     networkType: 'NOSTR',
+                //     mode: 'normal',
+                //     name: 'Nostr',
+                //     type: 'other',
+                //     network: 1237,
+                //     purpose: 44,
+                //     purposeAddress: 44, // TODO: Nostr should have custom derived address, add this ability (schnorr signature)
+                //     icon: 'account_circle',
+                //     state: {
+                //         balance: 0,
+                //         retrieved: null,
+                //         receive: [],
+                //         change: []
+                //     },
+                // }
+            ];
                 break;
         }
 

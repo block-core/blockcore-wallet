@@ -12,12 +12,12 @@ export const environment: IEnvironment = {
   production: true,
   enableDebugTools: false,
   logLevel: 'info',
-  features: ['wallet', 'identity', 'collectible', 'vault', 'inbox', 'handler:vault', 'handler:did'],
+  features: ['wallet'],
   releaseUrl: 'https://github.com/CityChainFoundation/smart-city-platform/releases',
   sourceUrl: 'https://github.com/CityChainFoundation/smart-city-platform',
   instance: 'smartcityplatform',
   instanceName: 'Smart City Platform',
   instanceUrl: 'https://www.city-chain.org/',
   instanceExplorerUrl: 'https://explorer.city-chain.org',
-  networks: ['CITY', 'IDENTITY', 'NOSTR']
+  networks: ['CITY']
 };

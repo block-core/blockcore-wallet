@@ -1,3 +1,43 @@
+## <small>0.0.26 (2022-05-18)</small>
+
+* Add "CoinVault" server group option ([6dfda9a](https://github.com/block-core/blockcore-extension/commit/6dfda9a))
+* Add "getNetwork" to AddressManager ([99616d4](https://github.com/block-core/blockcore-extension/commit/99616d4))
+* Add "Reload account history" button on account view ([08c38b5](https://github.com/block-core/blockcore-extension/commit/08c38b5))
+* Add a notification on transaction history for "quick" types ([8dcb0d3](https://github.com/block-core/blockcore-extension/commit/8dcb0d3))
+* Add accountType to the Account class ([46f3cee](https://github.com/block-core/blockcore-extension/commit/46f3cee))
+* Add custom theme for different configurations ([cc90cd7](https://github.com/block-core/blockcore-extension/commit/cc90cd7))
+* Add fee rate validation on transaction send ([f2fad49](https://github.com/block-core/blockcore-extension/commit/f2fad49))
+* Add integration test to verify all group1 indexers ([dd51d11](https://github.com/block-core/blockcore-extension/commit/dd51d11))
+* Add reindex of "quick" account one initial time when watch addresses exists ([fbd7792](https://github.com/block-core/blockcore-extension/commit/fbd7792))
+* Add rudimentary support for a "quick" account ([efa058c](https://github.com/block-core/blockcore-extension/commit/efa058c))
+* Add server groups and settings to change them ([f3fe981](https://github.com/block-core/blockcore-extension/commit/f3fe981))
+* Add some info in README on account type ([1693cf9](https://github.com/block-core/blockcore-extension/commit/1693cf9))
+* Add some NFTs on the preview of Collectibles ([ca0ef45](https://github.com/block-core/blockcore-extension/commit/ca0ef45))
+* Add support for custom server ([036a008](https://github.com/block-core/blockcore-extension/commit/036a008))
+* Add Weight and Virtual Weight to TX details ([3ae7b41](https://github.com/block-core/blockcore-extension/commit/3ae7b41))
+* Allow creation of wallet without default accounts ([f3bd2fe](https://github.com/block-core/blockcore-extension/commit/f3bd2fe))
+* Disable sending transaction when fee is invalid ([73ea025](https://github.com/block-core/blockcore-extension/commit/73ea025))
+* Fix bug with server selection ([4c528bd](https://github.com/block-core/blockcore-extension/commit/4c528bd))
+* Fix issue where balance was not reset in quick-mode ([20509ea](https://github.com/block-core/blockcore-extension/commit/20509ea))
+* Fix issue with custom server ([9846261](https://github.com/block-core/blockcore-extension/commit/9846261))
+* Fix issue with unspent retrieval getting too many inputs ([f89ae8a](https://github.com/block-core/blockcore-extension/commit/f89ae8a))
+* Fully rename type to mode ([f0a8ac1](https://github.com/block-core/blockcore-extension/commit/f0a8ac1))
+* Make account type into account mode ([60a8c9e](https://github.com/block-core/blockcore-extension/commit/60a8c9e))
+* Refactor getServer to NetworkLoader ([c9e824e](https://github.com/block-core/blockcore-extension/commit/c9e824e))
+* Remove the handler:sid feature from CoinVault instance ([fdf5493](https://github.com/block-core/blockcore-extension/commit/fdf5493))
+* Retrieve UTXOs while performing send from quick-wallet ([27622fa](https://github.com/block-core/blockcore-extension/commit/27622fa))
+* Support for PoS v3 was added a while back, removing comment that says otherwise ([fd8451a](https://github.com/block-core/blockcore-extension/commit/fd8451a))
+* Update CoinVault server domains ([a6ce159](https://github.com/block-core/blockcore-extension/commit/a6ce159))
+* Update manifest description and packages ([7a9d72d](https://github.com/block-core/blockcore-extension/commit/7a9d72d))
+* Update packages ([3dc58cb](https://github.com/block-core/blockcore-extension/commit/3dc58cb))
+* Update packages ([bcb8065](https://github.com/block-core/blockcore-extension/commit/bcb8065))
+* Update the servers list ([e1bfa0c](https://github.com/block-core/blockcore-extension/commit/e1bfa0c))
+* Update version and changelog ([92de9da](https://github.com/block-core/blockcore-extension/commit/92de9da))
+* Use networkType instead of networkGroup on custom server ([a612ffc](https://github.com/block-core/blockcore-extension/commit/a612ffc))
+* Verify that we get random servers ([943a1f0](https://github.com/block-core/blockcore-extension/commit/943a1f0))
+
+
+
 ## <small>0.0.25 (2022-05-08)</small>
 
 * Add store icons for CoinVault extension ([0a69cf9](https://github.com/block-core/blockcore-extension/commit/0a69cf9))
