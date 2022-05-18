@@ -13,6 +13,7 @@ export class AccountSelectComponent implements OnInit, OnDestroy {
     coins: Account[];
     other: Account[];
     sub: any;
+    creating = false;
 
     constructor(
         private uiState: UIState,
@@ -45,6 +46,8 @@ export class AccountSelectComponent implements OnInit, OnDestroy {
     }
 
     async create() {
+        this.creating = true;
+
         const accounts = this.coins.filter(item => item.selected)
         accounts.push(...this.other.filter(item => item.selected));
 
@@ -70,6 +73,7 @@ export class AccountSelectComponent implements OnInit, OnDestroy {
         // this.refreshState();
         this.router.navigateByUrl('/dashboard');
 
+        this.creating = false;
         // TODO: Refresh all instances when new accounts is created.
         // this.communication.sendToAll('account-created');
     }

@@ -6,137 +6,134 @@ const { v4: uuidv4 } = require('uuid');
 })
 /** Service that handles channels between background and frontend, with subscriptions. */
 export class CommunicationBackgroundService {
-    private port!: chrome.runtime.Port | null;
-    // consumers: { [name: string]: any } = {};
-    // consumers: Record<string, any> = {};
     private consumers = new Map<string, any[]>();
     private secureChannels: chrome.runtime.Port[] = [];
     private insecureChannels: chrome.runtime.Port[] = [];
 
     constructor() {
 
-        chrome.runtime.onConnect.addListener((port) => {
-            console.log('onConnect:', port);
-            console.log('port.name:', port.name);
+        // chrome.runtime.onConnect.addListener((port) => {
+        //     console.log('onConnect:', port);
+        //     console.log('port.name:', port.name);
 
-            // This is the main channel from extension UI to background.
-            if (port.name === 'extension-channel') {
+        //     // This is the main channel from extension UI to background.
+        //     if (port.name === 'extension-channel') {
 
-            }
+        //     }
 
-            // Add the new Port to list of secure channels.
-            this.secureChannels.push(port);
+        //     // Add the new Port to list of secure channels.
+        //     this.secureChannels.push(port);
 
-            // Remove from list when disconnected.
-            port.onDisconnect.addListener(d => {
-                console.log('Disconnected:', d);
-                const index = this.secureChannels.indexOf(d);
-                if (index !== -1) {
-                    this.secureChannels.splice(index, 1);
-                }
-            });
+        //     // Remove from list when disconnected.
+        //     port.onDisconnect.addListener(d => {
+        //         console.log('Disconnected:', d);
+        //         const index = this.secureChannels.indexOf(d);
+        //         if (index !== -1) {
+        //             this.secureChannels.splice(index, 1);
+        //         }
+        //     });
 
-            port.onMessage.addListener((message) => {
+        //     port.onMessage.addListener((message) => {
 
-                if (!message.data?.hideFromLog) {
-                    console.log('onMessage listener:', message);
-                } else {
-                    console.log('onMessage listener (data hidden):', message.method);
-                }
+        //         if (!message.data?.hideFromLog) {
+        //             console.log('onMessage listener:', message);
+        //         } else {
+        //             console.log('onMessage listener (data hidden):', message.method);
+        //         }
 
-                if (!message.method) {
-                    return;
-                }
+        //         if (!message.method) {
+        //             return;
+        //         }
 
-                // TODO: Do we want to and need to protect ourself by verifying method and data structures?
-                // As a minimum, we'll serialize to JSON and back to Object.
-                // UPDATE: JSON serialization was removed since it destroyed the "Map" object instances.
-                const data = message.data // message.data ? JSON.parse(JSON.stringify(message.data)) : undefined;
-                const method = message.method; // JSON.parse(JSON.stringify(message.method));
+        //         // TODO: Do we want to and need to protect ourself by verifying method and data structures?
+        //         // As a minimum, we'll serialize to JSON and back to Object.
+        //         // UPDATE: JSON serialization was removed since it destroyed the "Map" object instances.
+        //         const data = message.data // message.data ? JSON.parse(JSON.stringify(message.data)) : undefined;
+        //         const method = message.method; // JSON.parse(JSON.stringify(message.method));
 
-                // console.log('Trigger:', method);
-                // console.log('Trigger:', data);
+        //         // console.log('Trigger:', method);
+        //         // console.log('Trigger:', data);
 
-                this.trigger(port, method, data);
+        //         this.trigger(port, method, data);
 
-                // console.log('UI sent us: ', msg);
+        //         // console.log('UI sent us: ', msg);
 
-                // if (msg.method === 'unlock') {
-                //     utility.password = msg.data;
-                //     port.postMessage({ method: 'unlocked', data: true });
-                // } else if (msg.method == 'unlocked') {
-                //     if (utility.password) {
-                //         port.postMessage({ method: 'unlocked', data: true });
-                //     }
-                //     else {
-                //         port.postMessage({ method: 'unlocked', data: false });
-                //     }
-                // } else if (msg.method == 'getlock') {
-                //     port.postMessage({ method: 'getlock', data: utility.password });
-                // } else if (msg.method == 'lock') {
-                //     utility.password = null;
-                //     port.postMessage({ method: 'locked' });
-                // }
+        //         // if (msg.method === 'unlock') {
+        //         //     utility.password = msg.data;
+        //         //     port.postMessage({ method: 'unlocked', data: true });
+        //         // } else if (msg.method == 'unlocked') {
+        //         //     if (utility.password) {
+        //         //         port.postMessage({ method: 'unlocked', data: true });
+        //         //     }
+        //         //     else {
+        //         //         port.postMessage({ method: 'unlocked', data: false });
+        //         //     }
+        //         // } else if (msg.method == 'getlock') {
+        //         //     port.postMessage({ method: 'getlock', data: utility.password });
+        //         // } else if (msg.method == 'lock') {
+        //         //     utility.password = null;
+        //         //     port.postMessage({ method: 'locked' });
+        //         // }
 
-                // port.postMessage({ answer: 'Yes I will!' });
-            });
+        //         // port.postMessage({ answer: 'Yes I will!' });
+        //     });
 
-            if (port.sender && port.sender.tab && port.sender.url) {
-                const tabId = port.sender.tab.id;
-                const url = new URL(port.sender.url);
-                const { origin } = url;
-            }
+        //     if (port.sender && port.sender.tab && port.sender.url) {
+        //         const tabId = port.sender.tab.id;
+        //         const url = new URL(port.sender.url);
+        //         const { origin } = url;
+        //     }
 
-            // console.log('onConnect!!', port);
-            // // TODO: Calculate if we are communicating with the extension or untrusted web pages.
-            // const trustedConnection = true;
+        //     // console.log('onConnect!!', port);
+        //     // // TODO: Calculate if we are communicating with the extension or untrusted web pages.
+        //     // const trustedConnection = true;
 
-            // if (trustedConnection) {
+        //     // if (trustedConnection) {
 
-            //   if (port.name === "app-state") {
+        //     //   if (port.name === "app-state") {
 
-            //   }
-            // }
-            // else {
-            //   console.log('UNTRUSTED CONNECTION!!');
+        //     //   }
+        //     // }
+        //     // else {
+        //     //   console.log('UNTRUSTED CONNECTION!!');
 
-            // }
+        //     // }
 
-        });
+        // });
 
-        chrome.runtime.onConnectExternal.addListener((port) => {
-            console.log('onConnectExternal:', port);
+        // chrome.runtime.onConnectExternal.addListener((port) => {
+        //     console.log('onConnectExternal:', port);
 
-            // Add the new Port to list of insecure channels (external connections from web pages or other extensions).
-            this.insecureChannels.push(port);
+        //     // Add the new Port to list of insecure channels (external connections from web pages or other extensions).
+        //     this.insecureChannels.push(port);
 
-            // Remove from list when disconnected.
-            port.onDisconnect.addListener(d => {
-                const index = this.insecureChannels.indexOf(d);
-                if (index !== -1) {
-                    this.insecureChannels.splice(index, 1);
-                }
-            });
+        //     // Remove from list when disconnected.
+        //     port.onDisconnect.addListener(d => {
+        //         const index = this.insecureChannels.indexOf(d);
+        //         if (index !== -1) {
+        //             this.insecureChannels.splice(index, 1);
+        //         }
+        //     });
 
-            port.onMessage.addListener((msg) => {
-                console.log('You sent us: ', msg);
+        //     port.onMessage.addListener((msg) => {
+        //         console.log('You sent us: ', msg);
 
-                // We will only allow certain messages to be forwarded.
-                if (msg.method == 'requestAccounts') {
+        //         // We will only allow certain messages to be forwarded.
+        //         if (msg.method == 'requestAccounts') {
 
-                    // TODO: Add validation (stripping) of input, perhaps some third party library that exists for it?
-                    const data = JSON.stringify(msg.data);
-                    const validData = JSON.parse(data);
+        //             // TODO: Add validation (stripping) of input, perhaps some third party library that exists for it?
+        //             const data = JSON.stringify(msg.data);
+        //             const validData = JSON.parse(data);
 
-                    for (const p of this.secureChannels) {
-                        console.log(p.postMessage({ method: 'requestAccounts', data: validData }));
-                    }
-                }
+        //             for (const p of this.secureChannels) {
+        //                 console.log(p.postMessage({ method: 'requestAccounts', data: validData }));
+        //             }
+        //         }
 
-                port.postMessage({ response: 'You have connected and we will forward your messages to the app.' });
-            });
+        //         port.postMessage({ response: 'You have connected and we will forward your messages to the app.' });
+        //     });
 
-        });
+        // });
 
         // this.port = chrome.runtime.connect({ name: 'extension-channel' });
 

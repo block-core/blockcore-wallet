@@ -1,3 +1,9 @@
+## <small>0.0.27 (2022-05-18)</small>
+
+* Set correct features for Smart City Platform ([019d8dc](https://github.com/block-core/blockcore-extension/commit/019d8dc))
+
+
+
 ## <small>0.0.26 (2022-05-18)</small>
 
 * Add "CoinVault" server group option ([6dfda9a](https://github.com/block-core/blockcore-extension/commit/6dfda9a))
