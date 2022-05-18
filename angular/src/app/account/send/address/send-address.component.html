@@ -11,8 +11,7 @@
         <mat-error *ngIf="form.controls['addressInput'].invalid">Address is required.</mat-error>
     </mat-form-field>
 
-    <div class="available-balance" matTooltip="Click to fill out maximum (minus fee)"
-        (click)="fillMax(sendService.accountHistory.balance)">Available: {{sendService.accountHistory.balance || 0 |
+    <div class="available-balance" matTooltip="Click to fill out maximum (minus fee)" (click)="fillMax(sendService.accountHistory.balance)">Available: {{sendService.accountHistory.balance || 0 |
         amount}}</div>
 
     <mat-form-field class="input-full-width" appearance="outline">
@@ -27,6 +26,7 @@
         <input matInput formControlName="feeInput" [(ngModel)]="sendService.fee" required>
         <mat-error *ngIf="form.controls['feeInput'].invalid">Fee is required and must be correctly entered.</mat-error>
         <mat-hint *ngIf="sendService.feeError" align="start"><strong>{{sendService.feeError}}</strong> </mat-hint>
+        <mat-hint align="end">Minimum fee rate: {{sendService.feeRate}} sat/byte</mat-hint>
     </mat-form-field>
 
     <div *ngIf="optionsOpen">
@@ -46,5 +46,4 @@
 
 </form>
 
-<button class="full-width" [disabled]="!form.valid" mat-raised-button routerLink="../confirm"
-    color="primary">Continue</button>
+<button class="full-width" [disabled]="!form.valid" mat-raised-button routerLink="../confirm" color="primary">Continue</button>

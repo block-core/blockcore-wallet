@@ -11,6 +11,8 @@ export class AccountSendConfirmComponent implements OnInit, OnDestroy {
     transaction: any;
     error: string;
     detailsOpen = false;
+    invalidFeeAmount = false;
+    loading = false;
 
     constructor(
         public sendService: SendService,
@@ -40,6 +42,9 @@ export class AccountSendConfirmComponent implements OnInit, OnDestroy {
             this.transaction = tx;
             this.sendService.transactionHex = tx.transactionHex;
             this.sendService.addresses = tx.addresses;
+
+            this.invalidFeeAmount = this.transaction.feeRate < this.sendService.feeRate;
+
         } catch (err: any) {
             console.error(err);
             this.error = err.message;

@@ -9,12 +9,14 @@
     <!-- <div><span>Fee</span><span>{{sendService.fee}} ({{sendService.feeAsSatoshi}}) {{sendService.network.symbol}}</span></div> -->
     <div *ngIf="transaction"><span>Fee</span><span>{{transaction.fee | amount}} {{sendService.network.symbol}}</span></div>
 
+    <div *ngIf="transaction"><span>Fee Rate</span><span>{{transaction.feeRate}} sat/byte</span></div>
+    <div *ngIf="invalidFeeAmount" class="mat-error"><span>Fee rate too low, minimum required</span><span>{{sendService.feeRate}} sat/byte</span></div>
+
     <!-- <div *ngIf="transaction"><span>virtualSize</span><span>{{transaction.virtualSize}}</span></div>
     <div *ngIf="transaction"><span>weight</span><span>{{transaction.weight}}</span></div> -->
 
     <div *ngIf="detailsOpen" class="grid-row-label-value">
 
-        <div *ngIf="transaction"><span>Fee Rate</span><span>{{transaction.feeRate}} sat/byte</span></div>
         <div *ngIf="transaction"><span>Change Amount</span><span>{{transaction.changeAmount | amount}} {{sendService.network.symbol}}</span></div>
         <div *ngIf="transaction"><span>Change Address</span><span>{{transaction.changeAddress}}</span></div>
 
@@ -75,6 +77,8 @@
 <br>
 
 <button class="full-width" [disabled]="!transaction" mat-raised-button routerLink="../sending" color="primary">Send</button>
+
+<mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
 
 <div *ngIf="transaction" class="wrap"><br>HEX: {{transaction.transactionHex}}</div>
 

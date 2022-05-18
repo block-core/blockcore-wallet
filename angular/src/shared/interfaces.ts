@@ -52,6 +52,7 @@ interface NetworkStatus {
     networkType: string;
     status: string;
     availability: IndexerApiStatus;
+    relayFee: number;
 }
 
 /** The user account, most of this data should be considered immutable. The index, etc. should never change after creation. See "AccountState" to get balance, 

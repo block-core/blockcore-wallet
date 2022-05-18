@@ -16,6 +16,7 @@ export class SendService {
     transactionId: string;
     routingIndex: number;
     accountHistory: AccountHistory;
+    feeRate: number;
 
     private feeValue: Big;
     private amountValue: Big;

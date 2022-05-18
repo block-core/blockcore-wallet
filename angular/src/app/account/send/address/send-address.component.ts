@@ -1,7 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import Big from 'big.js';
-import { WalletManager, UIState, SendService } from '../../../services';
+import { SATOSHI_FACTOR } from 'src/app/shared/constants';
+import { WalletManager, UIState, SendService, NetworkStatusService } from '../../../services';
 
 @Component({
     selector: 'app-account-send-address',
@@ -24,6 +25,7 @@ export class AccountSendAddressComponent implements OnInit, OnDestroy {
 
     form: FormGroup;
     optionsOpen = false;
+    // feeRate = 0;
 
     // hideRequiredControl = new FormControl(false);
     // floatLabelControl = new FormControl('auto');
@@ -32,6 +34,7 @@ export class AccountSendAddressComponent implements OnInit, OnDestroy {
         public uiState: UIState,
         public sendService: SendService,
         public walletManager: WalletManager,
+        public networkStatusService: NetworkStatusService,
         private fb: FormBuilder) {
 
         this.form = fb.group({
@@ -43,6 +46,11 @@ export class AccountSendAddressComponent implements OnInit, OnDestroy {
             // TODO: Make an custom validator that sets form error when fee input is too low.
             feeInput: new FormControl(this.sendService.getNetworkFee(), [Validators.required, Validators.min(0), Validators.pattern(/^-?(0|[0-9]+[.]?[0-9]*)?$/)])
         });
+
+        const networkStatus = this.networkStatusService.get(this.sendService.network.id);
+        console.log('networkStatus:', networkStatus);
+        this.sendService.feeRate = networkStatus.relayFee;
+        // this.feeRate = networkStatus.relayFee;
 
         // this.parts = fb.group({
         //     area: [null, [Validators.required, Validators.minLength(3), Validators.maxLength(3)]],

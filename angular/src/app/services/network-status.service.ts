@@ -6,7 +6,7 @@ import { NetworkLoader } from '../../shared/network-loader';
 import { Network } from '../../shared/networks';
 import { SettingsService } from './settings.service';
 import { WalletManager } from './wallet-manager';
-import { STATUS_INTERVAL } from '../shared/constants';
+import { FEE_FACTOR, SATOSHI_FACTOR, STATUS_INTERVAL } from '../shared/constants';
 const axios = require('axios').default;
 
 @Injectable({
@@ -95,12 +95,15 @@ export class NetworkStatusService {
 
                 const data = response.data;
 
+                console.log('Update All Network:', data);
+
                 if (data.error) {
                     networkStatus = {
                         blockSyncHeight: -1,
                         networkType: account.networkType,
                         availability: IndexerApiStatus.Error,
-                        status: 'Error: ' + data.error
+                        status: 'Error: ' + data.error,
+                        relayFee: 0.0001 * FEE_FACTOR
                     };
                 } else {
                     const blocksBehind = (data.blockchain.blocks - data.syncBlockIndex);
@@ -111,6 +114,7 @@ export class NetworkStatusService {
                             networkType: account.networkType,
                             availability: IndexerApiStatus.Syncing,
                             status: 'Syncing / Progress: ' + data.progress,
+                            relayFee: data.network?.relayFee * FEE_FACTOR
                         };
                     } else {
                         networkStatus = {
@@ -118,6 +122,7 @@ export class NetworkStatusService {
                             networkType: account.networkType,
                             availability: IndexerApiStatus.Online,
                             status: 'Online / Progress: ' + data.progress,
+                            relayFee: data.network?.relayFee * FEE_FACTOR
                         };
                     }
                 }
@@ -134,7 +139,8 @@ export class NetworkStatusService {
                         blockSyncHeight: -1,
                         networkType: account.networkType,
                         availability: IndexerApiStatus.Error,
-                        status: 'Error'
+                        status: 'Error',
+                        relayFee: 0.0001 * FEE_FACTOR
                     };
                 } else if (error.request) {
                     // The request was made but no response was received
@@ -147,7 +153,8 @@ export class NetworkStatusService {
                         blockSyncHeight: -1,
                         networkType: account.networkType,
                         availability: IndexerApiStatus.Offline,
-                        status: 'Offline'
+                        status: 'Offline',
+                        relayFee: 0.0001 * FEE_FACTOR
                     };
                 } else {
                     // Something happened in setting up the request that triggered an Error
@@ -157,7 +164,8 @@ export class NetworkStatusService {
                         blockSyncHeight: -1,
                         networkType: account.networkType,
                         availability: IndexerApiStatus.Unknown,
-                        status: error.message
+                        status: error.message,
+                        relayFee: 0.0001 * FEE_FACTOR
                     };
                 }
             }

@@ -15,5 +15,6 @@ export const AUTO_TIMEOUT = 15; // 15 minutes
 
 export const SATOSHI_FACTOR = 100000000;
 export const DECIMAL_POINTS = 8;
+export const FEE_FACTOR = 100000;
 
 export const STATUS_INTERVAL = SECOND * 45 // 45 seconds.
