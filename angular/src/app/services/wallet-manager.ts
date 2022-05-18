@@ -213,7 +213,9 @@ export class WalletManager {
                 hex = await this.getTransactionHex(account, input.transactionHash);
             }
 
-            affectedAddresses.push(input.address);
+            if (affectedAddresses.indexOf(input.address) == -1) {
+                affectedAddresses.push(input.address);
+            }
 
             tx.addInput({
                 hash: input.transactionHash,

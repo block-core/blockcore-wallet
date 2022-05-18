@@ -12,7 +12,8 @@ export class AccountSendConfirmComponent implements OnInit, OnDestroy {
     error: string;
     detailsOpen = false;
     invalidFeeAmount = false;
-    loading = false;
+    loading = true;
+    valid = false;
 
     constructor(
         public sendService: SendService,
@@ -42,12 +43,21 @@ export class AccountSendConfirmComponent implements OnInit, OnDestroy {
             this.transaction = tx;
             this.sendService.transactionHex = tx.transactionHex;
             this.sendService.addresses = tx.addresses;
-
             this.invalidFeeAmount = this.transaction.feeRate < this.sendService.feeRate;
+
+            // TODO: Add aditional conditions here if needed for validating the transaction before allowing
+            // it to be broadcasted. Perhaps checking the network status?
+            if (this.invalidFeeAmount) {
+                this.valid = false;
+            } else {
+                this.valid = true;
+            }
 
         } catch (err: any) {
             console.error(err);
             this.error = err.message;
         }
+
+        this.loading = false;
     }
 }

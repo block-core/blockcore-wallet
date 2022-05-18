@@ -76,10 +76,10 @@
 </mat-form-field> -->
 <br>
 
-<button class="full-width" [disabled]="!transaction" mat-raised-button routerLink="../sending" color="primary">Send</button>
+<button class="full-width" [disabled]="!valid" mat-raised-button routerLink="../sending" color="primary">Send</button>
 
 <mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
 
-<div *ngIf="transaction" class="wrap"><br>HEX: {{transaction.transactionHex}}</div>
+<!-- <div *ngIf="transaction" class="wrap"><br>HEX: {{transaction.transactionHex}}</div> -->
 
 <!-- <button class="full-width" mat-raised-button (click)="sendService.send()" color="primary">Send</button> -->
