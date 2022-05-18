@@ -12,7 +12,7 @@ export const environment: IEnvironment = {
   production: true,
   enableDebugTools: false,
   logLevel: 'info',
-  features: ['wallet', 'collectible', 'handler:sid'],
+  features: ['wallet', 'collectible:preview', 'handler:sid'],
   releaseUrl: 'https://github.com/CoinVault/coinvault-extension/releases',
   sourceUrl: 'https://github.com/CoinVault/coinvault-extension',
   instance: 'coinvault',

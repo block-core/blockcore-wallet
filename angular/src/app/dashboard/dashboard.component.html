@@ -9,14 +9,17 @@
             <mat-nav-list>
                 <div mat-subheader>{{ 'Dashboard.Accounts' | translate }}</div>
 
-                <a mat-list-item *ngFor="let account of walletManager.activeWallet.accounts; let i = index"
-                    routerLinkActive="active-link" [routerLink]="['/', 'account', 'view', account.identifier]">
+                <a mat-list-item *ngFor="let account of walletManager.activeWallet.accounts; let i = index" routerLinkActive="active-link" [routerLink]="['/', 'account', 'view', account.identifier]">
                     <mat-icon mat-list-icon>{{account.icon}}</mat-icon>
                     <div mat-line>{{account.name}}<span *ngIf="hasAccountHistory(account.identifier)" class="account-balance">{{balance(account.identifier) |
                             amount}}</span>
-                            <span *ngIf="!hasAccountHistory(account.identifier)" class="account-balance"><mat-spinner [diameter]="16"></mat-spinner></span>
-                            <span *ngIf="hasAccountHistory(account.identifier) && !account.completedScan" class="account-balance account-scanning"><mat-spinner [color]="'accent'" [diameter]="16"></mat-spinner></span>
-                        </div>
+                        <span *ngIf="!hasAccountHistory(account.identifier)" class="account-balance">
+                            <mat-spinner [diameter]="16"></mat-spinner>
+                        </span>
+                        <span *ngIf="hasAccountHistory(account.identifier) && !account.completedScan" class="account-balance account-scanning">
+                            <mat-spinner [color]="'accent'" [diameter]="16"></mat-spinner>
+                        </span>
+                    </div>
                     <div mat-line>{{account | network}}</div>
                     <div class="network-status-widget">
                         <app-network-status [status]="networkStatus.get(account.networkType)"></app-network-status>
@@ -38,14 +41,12 @@
                 <mat-divider></mat-divider>
                 <div mat-subheader>{{ 'Dashboard.Actions' | translate }}</div>
 
-                <a mat-list-item *ngIf="walletManager.activeWallet && walletManager.unlocked" [routerLink]="['/account/create']"
-                    routerLinkActive="active-link">
+                <a mat-list-item *ngIf="walletManager.activeWallet && walletManager.unlocked" [routerLink]="['/account/create']" routerLinkActive="active-link">
                     <mat-icon mat-list-icon>add_circle_outline</mat-icon>
                     <div mat-line>Add Account</div>
                 </a>
 
-                <a mat-list-item *ngIf="walletManager.activeWallet && walletManager.unlocked" [routerLink]="['/wallet/create']"
-                    routerLinkActive="active-link">
+                <a mat-list-item *ngIf="walletManager.activeWallet && walletManager.unlocked" [routerLink]="['/wallet/create']" routerLinkActive="active-link">
                     <mat-icon mat-list-icon>account_balance_wallet</mat-icon>
                     <div mat-line>Add Wallet</div>
                 </a>
@@ -132,6 +133,19 @@
 
     </mat-tab> -->
 
+    <mat-tab *ngIf="feature.enabled('collectible:preview')">
+        <ng-template mat-tab-label>
+            <mat-icon class="example-tab-icon">category</mat-icon>
+            &nbsp;
+            <span>{{ 'Dashboard.Collectibles' | translate }}</span>
+        </ng-template>
+
+        <div class="centered nft-view">
+            <img src="assets/nfts.png" class="nft-preview"><br>
+            Coming soon!
+        </div>
+    </mat-tab>
+
     <mat-tab *ngIf="feature.enabled('collectible')">
         <ng-template mat-tab-label>
             <mat-icon class="example-tab-icon">category</mat-icon>
@@ -141,7 +155,7 @@
 
         <div class="centered">
             <br><br>
-            Check back later!
+            Add list of NTFs here...
         </div>
     </mat-tab>
 

@@ -18,3 +18,18 @@
   top: 2.8em;
   font-size: 0.8em !important;
 }
+
+.nft-preview {
+  width: 100%;
+  max-width: 1024px;
+}
+
+.nft-view {
+  padding: 5em;
+}
+
+@media only screen and (max-width: 600px) {
+  .nft-view {
+    padding: 1em;
+  }
+}
