@@ -29,7 +29,9 @@
                 ({{accountHistory.unconfirmed || 0 | amount}} unconfirmed)
             </span></mat-card-subtitle>
         <mat-card-title>{{accountHistory.balance || 0 | amount}} {{walletManager.activeAccount |
-            network}}
+            network}} <button class="rescan-button" matTooltip="Reload account history" mat-icon-button (click)="scan(true)">
+                <mat-icon>history</mat-icon>
+            </button>
         </mat-card-title>
         <!-- <mat-card-content>
             <p>
@@ -44,6 +46,7 @@
         </mat-card-actions>
         <mat-card-footer>
             <mat-progress-bar *ngIf="!walletManager.activeAccount.completedScan" mode="indeterminate"></mat-progress-bar>
+            <mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
         </mat-card-footer>
     </mat-card>
 

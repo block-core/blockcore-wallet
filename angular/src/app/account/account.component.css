@@ -77,3 +77,8 @@ textarea {
 .transaction-history-icon {
   margin-right: 6px;
 }
+
+.rescan-button {
+  float: right;
+  margin-top: -2em;
+}

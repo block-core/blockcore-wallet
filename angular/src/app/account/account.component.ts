@@ -84,6 +84,7 @@ export class AccountComponent implements OnInit, OnDestroy {
   }
 
   async scan(force: boolean = false) {
+    this.loading = true;
     const accountHistory: AccountHistory = { balance: 0, unconfirmed: 0, history: [], unspent: [] };
     this.accountHistory = accountHistory;
 
@@ -93,6 +94,7 @@ export class AccountComponent implements OnInit, OnDestroy {
     // Send a message to run indexing on all wallets.
     const msg = this.communication.createMessage('index');
     this.communication.send(msg);
+    this.loading = false;
   }
 
   async toggleNetwork() {
