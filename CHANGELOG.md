@@ -1,3 +1,9 @@
+## <small>0.0.28 (2022-05-18)</small>
+
+* Disable "Get started" when creating default accounts ([3294a59](https://github.com/block-core/blockcore-extension/commit/3294a59))
+
+
+
 ## <small>0.0.27 (2022-05-18)</small>
 
 * Set correct features for Smart City Platform ([019d8dc](https://github.com/block-core/blockcore-extension/commit/019d8dc))
