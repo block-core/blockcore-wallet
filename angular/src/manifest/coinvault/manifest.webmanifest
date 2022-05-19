@@ -1,0 +1,69 @@
+{
+    "id": "/",
+    "scope": "/",
+    "name": "CoinVault",
+    "display": "standalone",
+    "start_url": "/",
+    "short_name": "coinvault",
+    "theme_color": "#9a54ae",
+    "description": "Non-Custodial wallet for Stratis, Cirrus, NFTs and more.",
+    "orientation": "any",
+    "background_color": "#212121",
+    "related_applications": [],
+    "prefer_related_applications": false,
+    "icons": [
+        {
+            "src": "assets/icon-128x128.png",
+            "sizes": "128x128",
+            "type": "image/png"
+        },
+        {
+            "src": "assets/icon-48x48.png",
+            "sizes": "48x48",
+            "type": "image/png"
+        },
+        {
+            "src": "assets/icon-32x32.png",
+            "sizes": "32x32",
+            "type": "image/png"
+        },
+        {
+            "src": "assets/icon-16x16.png",
+            "sizes": "16x16",
+            "type": "image/png"
+        }
+    ],
+    "screenshots": [
+        {
+            "src": "assets/screenshot-1280x800-01.png",
+            "sizes": "1280x800",
+            "type": "image/png"
+        }
+    ],
+    "features": [
+        "Non-Custodial Wallet",
+        "Coins",
+        "Tokens",
+        "Identities",
+        "NFT",
+        "Stratis",
+        "Cirrus"
+    ],
+    "categories": [
+        "productivity"
+    ],
+    "shortcuts": [
+        {
+            "name": "Open About",
+            "short_name": "About",
+            "description": "Open the about page",
+            "url": "/#/settings/about",
+            "icons": [
+                {
+                    "src": "assets/icon-128x128.png",
+                    "sizes": "128x128"
+                }
+            ]
+        }
+    ]
+}

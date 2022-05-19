@@ -80,7 +80,7 @@
                 {
                   "input": "angular/src/manifest/blockcore/",
                   "output": "/",
-                  "glob": "manifest.json"
+                  "glob": "*"
                 }
               ],
               "fileReplacements": [
@@ -112,7 +112,7 @@
                 {
                   "input": "angular/src/manifest/blockcore/",
                   "output": "/",
-                  "glob": "manifest.json"
+                  "glob": "*"
                 }
               ]
             },
@@ -170,7 +170,7 @@
                 {
                   "input": "angular/src/manifest/coinvault/",
                   "output": "/",
-                  "glob": "manifest.json"
+                  "glob": "*"
                 }
               ]
             },
@@ -222,7 +222,7 @@
                 {
                   "input": "angular/src/manifest/smartcityplatform/",
                   "output": "/",
-                  "glob": "manifest.json"
+                  "glob": "*"
                 }
               ],
               "fileReplacements": [
