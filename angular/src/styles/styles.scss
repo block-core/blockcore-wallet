@@ -49,6 +49,7 @@ body {
   font-family: "Roboto", "Helvetica Neue", sans-serif;
   background-color: #212121;
   color: white;
+  overscroll-behavior-y: contain;
   // scrollbar-gutter: stable both-edges;
 }
 
