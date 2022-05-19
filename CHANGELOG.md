@@ -1,3 +1,10 @@
+## <small>0.0.31 (2022-05-19)</small>
+
+* Add high-resolution icons ([9af94fc](https://github.com/block-core/blockcore-extension/commit/9af94fc))
+* Update version and changelog ([b065524](https://github.com/block-core/blockcore-extension/commit/b065524))
+
+
+
 ## <small>0.0.30 (2022-05-19)</small>
 
 * Add service worker for PWA ([8c071e5](https://github.com/block-core/blockcore-extension/commit/8c071e5))
