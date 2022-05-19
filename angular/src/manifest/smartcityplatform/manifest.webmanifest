@@ -13,6 +13,11 @@
     "prefer_related_applications": false,
     "icons": [
         {
+            "src": "assets/icon-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        },
+        {
             "src": "assets/icon-128x128.png",
             "sizes": "128x128",
             "type": "image/png"
