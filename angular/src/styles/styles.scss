@@ -78,6 +78,10 @@ mat-tab-group {
   min-width: 200px;
 }
 
+.unselectable {
+  user-select: none;
+}
+
 // .mat-drawer-content {
 //     overflow: hidden !important;
 // }
