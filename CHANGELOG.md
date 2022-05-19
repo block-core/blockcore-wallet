@@ -1,3 +1,12 @@
+## <small>0.0.29 (2022-05-19)</small>
+
+* Add PWA manifest to extension instances ([3d03a24](https://github.com/block-core/blockcore-extension/commit/3d03a24))
+* Update dependencies ([194b184](https://github.com/block-core/blockcore-extension/commit/194b184))
+* Update store screenshots ([ac90871](https://github.com/block-core/blockcore-extension/commit/ac90871))
+* Update version and changelog ([56adf48](https://github.com/block-core/blockcore-extension/commit/56adf48))
+
+
+
 ## <small>0.0.28 (2022-05-18)</small>
 
 * Disable "Get started" when creating default accounts ([3294a59](https://github.com/block-core/blockcore-extension/commit/3294a59))
