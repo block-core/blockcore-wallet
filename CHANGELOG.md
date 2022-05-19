@@ -1,3 +1,10 @@
+## <small>0.0.30 (2022-05-19)</small>
+
+* Add service worker for PWA ([8c071e5](https://github.com/block-core/blockcore-extension/commit/8c071e5))
+* Update version and changelog ([482de7c](https://github.com/block-core/blockcore-extension/commit/482de7c))
+
+
+
 ## <small>0.0.29 (2022-05-19)</small>
 
 * Add PWA manifest to extension instances ([3d03a24](https://github.com/block-core/blockcore-extension/commit/3d03a24))
