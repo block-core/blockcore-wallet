@@ -4,7 +4,7 @@
     "name": "Blockcore Wallet",
     "display": "standalone",
     "start_url": "/",
-    "short_name": "blockcore",
+    "short_name": "Blockcore",
     "theme_color": "#3870BA",
     "description": "Non-Custodial wallet for Coins, Tokens, Identities, NFTs and more.",
     "orientation": "any",
@@ -37,6 +37,11 @@
         {
             "src": "assets/screenshot-1280x800-01.png",
             "sizes": "1280x800",
+            "type": "image/png"
+        },
+        {
+            "src": "assets/screenshot-750x1334-02.png",
+            "sizes": "750x1334",
             "type": "image/png"
         }
     ],

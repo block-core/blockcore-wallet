@@ -10,6 +10,13 @@
   <link rel="manifest" href="/manifest.webmanifest">
   <!-- <link rel="icon" type="image/x-icon" href="favicon.ico"> -->
   <link rel="icon" type="image/png" href="assets/icon-128x128.png" />
+
+  <script type="module">
+    import 'https://cdn.jsdelivr.net/npm/@pwabuilder/pwaupdate';
+    const el = document.createElement('pwa-update');
+    document.body.appendChild(el);
+  </script>
+
 </head>
 
 <body class="mat-typography dark-theme">

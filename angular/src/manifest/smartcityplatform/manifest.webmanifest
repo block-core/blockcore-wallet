@@ -1,10 +1,10 @@
 {
     "id": "/",
     "scope": "/",
-    "name": "Blockcore Wallet",
+    "name": "Smart City Platform",
     "display": "standalone",
     "start_url": "/",
-    "short_name": "blockcore",
+    "short_name": "SmartCityPlatform",
     "theme_color": "#DFAB3C",
     "description": "Manage your citizenship, identity, properties, social network and more.",
     "orientation": "any",
@@ -37,6 +37,11 @@
         {
             "src": "assets/screenshot-1280x800-01.png",
             "sizes": "1280x800",
+            "type": "image/png"
+        },
+        {
+            "src": "assets/screenshot-750x1334-02.png",
+            "sizes": "750x1334",
             "type": "image/png"
         }
     ],

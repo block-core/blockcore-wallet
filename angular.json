@@ -66,7 +66,8 @@
                 }
               ],
               "assets": [
-                "angular/src/net_request_rules.json",
+                "angular/src/pwabuilder-sw-register.js",
+                "angular/src/pwabuilder-sw.js",
                 {
                   "input": "angular/src/assets/blockcore/",
                   "output": "/assets",
@@ -98,7 +99,8 @@
               "sourceMap": true,
               "namedChunks": true,
               "assets": [
-                "angular/src/net_request_rules.json",
+                "angular/src/pwabuilder-sw-register.js",
+                "angular/src/pwabuilder-sw.js",
                 {
                   "input": "angular/src/assets/blockcore/",
                   "output": "/assets",
@@ -156,7 +158,8 @@
                 }
               ],
               "assets": [
-                "angular/src/net_request_rules.json",
+                "angular/src/pwabuilder-sw-register.js",
+                "angular/src/pwabuilder-sw.js",
                 {
                   "input": "angular/src/assets/coinvault/",
                   "output": "/assets",
@@ -208,7 +211,8 @@
                 }
               ],
               "assets": [
-                "angular/src/net_request_rules.json",
+                "angular/src/pwabuilder-sw-register.js",
+                "angular/src/pwabuilder-sw.js",
                 {
                   "input": "angular/src/assets/smartcityplatform/",
                   "output": "/assets",
