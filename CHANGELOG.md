@@ -1,3 +1,11 @@
+## <small>0.0.33 (2022-05-20)</small>
+
+* Fix bug where wallet balance and history failed to reload ([f4cb307](https://github.com/block-core/blockcore-extension/commit/f4cb307)), closes [#128](https://github.com/block-core/blockcore-extension/issues/128)
+* Fix typo NTF -> NFT (#127) ([103c856](https://github.com/block-core/blockcore-extension/commit/103c856)), closes [#127](https://github.com/block-core/blockcore-extension/issues/127)
+* Update version and changelog ([31f5260](https://github.com/block-core/blockcore-extension/commit/31f5260))
+
+
+
 ## <small>0.0.32 (2022-05-20)</small>
 
 * Add PWA installation options in the app ([2e8c39a](https://github.com/block-core/blockcore-extension/commit/2e8c39a))
