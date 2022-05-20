@@ -23,10 +23,10 @@
                     <mat-card-subtitle>Improve the app experience</mat-card-subtitle>
                 </mat-card-header>
                 <mat-card-content>
-                    <p>By installing the app, you'll get a dedicated icon to launch and dedicated window on your device.</p>
-                    <p>On Apple device, you must use the "Share" button and choose the "Add to Home Screen" action.</p>
+                    <p *ngIf="!uiState.iOS">By installing the app, you'll get a dedicated icon to launch and dedicated window on your device.</p>
+                    <p *ngIf="uiState.iOS">On Apple devices, you must use the "Share" button and choose the "Add to Home Screen" action.</p>
                 </mat-card-content>
-                <mat-card-actions class="centered">
+                <mat-card-actions *ngIf="!uiState.iOS" class="centered">
                     <button mat-flat-button color="primary" (click)="uiState.install()">Install App</button>
                 </mat-card-actions>
             </mat-card>
