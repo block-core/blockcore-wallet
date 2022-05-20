@@ -1,3 +1,16 @@
+## <small>0.0.32 (2022-05-20)</small>
+
+* Add PWA installation options in the app ([2e8c39a](https://github.com/block-core/blockcore-extension/commit/2e8c39a))
+* Add style to allow disabling selection ([d2f091e](https://github.com/block-core/blockcore-extension/commit/d2f091e))
+* Customize install experience for iOS ([4b4f64d](https://github.com/block-core/blockcore-extension/commit/4b4f64d))
+* Disable drag down to reload ([88cca0f](https://github.com/block-core/blockcore-extension/commit/88cca0f))
+* Hide the install options by default and show on capability to install ([8cb45cd](https://github.com/block-core/blockcore-extension/commit/8cb45cd))
+* Make the app render behind camera notches, etc. ([13d2248](https://github.com/block-core/blockcore-extension/commit/13d2248))
+* Remove the shortcuts from manifest ([ac4bc0a](https://github.com/block-core/blockcore-extension/commit/ac4bc0a))
+* Update version and changelog ([5ab7844](https://github.com/block-core/blockcore-extension/commit/5ab7844))
+
+
+
 ## <small>0.0.31 (2022-05-19)</small>
 
 * Add high-resolution icons ([9af94fc](https://github.com/block-core/blockcore-extension/commit/9af94fc))
