@@ -24,6 +24,7 @@ export class UIState {
 
         // This will keep a copy of the install promt so we can trigger it manually.
         globalThis.addEventListener('beforeinstallprompt', (e) => {
+            this.showInstallButton = true;
             this.deferredInstallPrompt = e;
         });
 
@@ -60,7 +61,7 @@ export class UIState {
         return this.store.get();
     }
 
-    showInstallButton = true;
+    showInstallButton = false;
 
     deferredInstallPrompt: any;
 
