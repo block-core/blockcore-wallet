@@ -5,7 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AccountHistory, NetworkStatus, TransactionHistory } from '../../shared/interfaces';
 import { Subscription } from 'rxjs';
-import { AccountHistoryStore } from 'src/shared';
+import { AccountHistoryStore, AddressStore } from 'src/shared';
 
 @Component({
   selector: 'app-account',
@@ -48,6 +48,7 @@ export class AccountComponent implements OnInit, OnDestroy {
     private readonly cd: ChangeDetectorRef,
     private state: StateService,
     private accountHistoryStore: AccountHistoryStore,
+    private addressStore: AddressStore,
     public walletManager: WalletManager,
     private networkLoader: NetworkLoader,
     private snackBar: MatSnackBar) {
@@ -91,8 +92,20 @@ export class AccountComponent implements OnInit, OnDestroy {
     this.accountHistoryStore.set(this.walletManager.activeAccount.identifier, accountHistory);
     await this.accountHistoryStore.save();
 
+    // TODO: Refactor, add a method to address store that can take array of addresses for
+    // the remove operation, then we can simply map all addresses, combine in an array and provide that.
+    for (var i = 0; i < this.walletManager.activeAccount.state.receive.length; i++) {
+      this.addressStore.remove(this.walletManager.activeAccount.state.receive[i].address);
+    }
+
+    for (var i = 0; i < this.walletManager.activeAccount.state.change.length; i++) {
+      this.addressStore.remove(this.walletManager.activeAccount.state.change[i].address);
+    }
+
+    await this.addressStore.save();
+
     // Send a message to run indexing on all wallets.
-    const msg = this.communication.createMessage('index');
+    const msg = this.communication.createMessage('index', { force: true });
     this.communication.send(msg);
     this.loading = false;
   }
