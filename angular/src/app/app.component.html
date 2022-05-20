@@ -108,10 +108,12 @@
         <div mat-line>{{ 'App.Settings' | translate }}</div>
       </a>
 
-      <!-- <a mat-list-item [routerLink]="['/wipe']" (click)="drawer.toggle()" routerLinkActive="active-link">
-        <mat-icon mat-list-icon>delete_forever</mat-icon>
-        <div mat-line>Wipe Data</div>
-      </a> -->
+      <mat-divider *ngIf="uiState.showInstallButton"></mat-divider>
+
+      <a mat-list-item *ngIf="uiState.showInstallButton" (click)="uiState.install(); drawer.toggle()" routerLinkActive="active-link">
+        <mat-icon mat-list-icon>get_app</mat-icon>
+        <div mat-line>Install App</div>
+      </a>
 
     </mat-nav-list>
   </mat-sidenav>

@@ -83,6 +83,16 @@ mat-tab-group {
   user-select: none;
 }
 
+.install {
+  display: none;
+}
+
+@media (display-mode: browser) {
+  .install {
+    display: block;
+  }
+}
+
 // .mat-drawer-content {
 //     overflow: hidden !important;
 // }
@@ -175,6 +185,14 @@ header {
 
 .centered {
   text-align: center;
+}
+
+.left {
+  text-align: left;
+}
+
+.card-icon {
+  font-size: 3em;
 }
 
 textarea,

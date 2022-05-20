@@ -13,6 +13,25 @@
         <button class="signup-button" mat-flat-button color="primary" (click)="create()">Create New Wallet</button>
         <br>
         <button class="signup-button" mat-flat-button (click)="restore()">Use Existing Secret Recovery Phrase</button>
+        <br><br>
+
+        <div *ngIf="uiState.showInstallButton" id="install" class="left">
+            <mat-card>
+                <mat-card-header>
+                    <mat-icon class="card-icon" mat-card-avatar>get_app</mat-icon>
+                    <mat-card-title>Install App</mat-card-title>
+                    <mat-card-subtitle>Improve the app experience</mat-card-subtitle>
+                </mat-card-header>
+                <mat-card-content>
+                    <p>By installing the app, you'll get a dedicated icon to launch and dedicated window on your device.</p>
+                    <p>On Apple device, you must use the "Share" button and choose the "Add to Home Screen" action.</p>
+                </mat-card-content>
+                <mat-card-actions class="centered">
+                    <button mat-flat-button color="primary" (click)="uiState.install()">Install App</button>
+                </mat-card-actions>
+            </mat-card>
+        </div>
+
     </div>
 
     <div *ngIf="step == 1">

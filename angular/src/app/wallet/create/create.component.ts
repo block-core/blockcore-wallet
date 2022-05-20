@@ -22,6 +22,7 @@ export class WalletCreateComponent implements OnInit {
     mnemonicInputDisabled = true;
     password = '';
     password2 = '';
+    showInstallDialog = true;
 
     get passwordValidated(): boolean {
         return this.password === this.password2 && this.secondFormGroup.valid;
@@ -48,6 +49,17 @@ export class WalletCreateComponent implements OnInit {
         this.secondFormGroup = this._formBuilder.group({
             passwordCtrl: ['', Validators.required],
             password2Ctrl: ['', Validators.required]
+        });
+
+        globalThis.addEventListener('DOMContentLoaded', () => {
+            let displayMode = 'browser tab';
+
+            if (globalThis.matchMedia('(display-mode: standalone)').matches) {
+                displayMode = 'standalone';
+            }
+
+            // Log launch display mode to analytics
+            console.log('DISPLAY_MODE_LAUNCH:', displayMode);
         });
     }
 
