@@ -104,8 +104,8 @@ export class AccountComponent implements OnInit, OnDestroy {
 
     await this.addressStore.save();
 
-    // Send a message to run indexing on all wallets.
-    const msg = this.communication.createMessage('index', { force: true });
+    // Send a message to run indexing on all wallets, send accountId for future optimization of running index only on this account.
+    const msg = this.communication.createMessage('index', { force: true, accountId: this.walletManager.activeAccount.identifier });
     this.communication.send(msg);
     this.loading = false;
   }

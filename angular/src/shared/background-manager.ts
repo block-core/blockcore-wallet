@@ -14,7 +14,7 @@ export class BackgroundManager {
 
     }
 
-    async runWatcher() {
+    async runWatcher(force: boolean) {
         // Skip watcher while indexing.
         if (this.indexing == true) {
             return false;
@@ -56,7 +56,7 @@ export class BackgroundManager {
         }
 
         // If there are no changes, don't re-calculate the balance.
-        if (!processResult.changes) {
+        if (!processResult.changes && !force) {
             this.watching = false;
             return false;
         }
@@ -69,7 +69,7 @@ export class BackgroundManager {
         return true;
     }
 
-    async runIndexer(): Promise<{ changes: boolean, completed: boolean }> {
+    async runIndexer(force: boolean): Promise<{ changes: boolean, completed: boolean }> {
         // Skip if we are already indexing.
         if (this.indexing == true) {
             return { changes: false, completed: true };
@@ -78,7 +78,7 @@ export class BackgroundManager {
         if (this.watching == true) {
             // Delay and try again...
             setTimeout(async () => {
-                await this.runIndexer();
+                await this.runIndexer(force);
             }, 2000);
         }
 
@@ -120,7 +120,7 @@ export class BackgroundManager {
         }
 
         // If there are no changes, don't re-calculate the balance.
-        if (!processResult.changes) {
+        if (!processResult.changes && !force) {
             console.log('If there are no changes, don\'t re-calculate the balance.');
             this.indexing = false;
             return processResult;

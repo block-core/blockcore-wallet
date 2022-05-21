@@ -41,7 +41,7 @@ chrome.runtime.onInstalled.addListener(async ({ reason }) => {
     // UI was last activated. If it's 1 hour since last time, set the periodInMinutes to 60.
     // And if user has not used the extension UI in 24 hours, then set interval to 24 hours.
     chrome.alarms.get('index', a => {
-        if (!a) chrome.alarms.create('index', { periodInMinutes: 10 });
+        if (!a) chrome.alarms.create('index', { periodInMinutes: 5 });
     });
 
     if (reason === 'install') {
@@ -89,7 +89,7 @@ chrome.alarms.onAlarm.addListener(async (alarm: chrome.alarms.Alarm) => {
     } else if (alarm.name === 'index') {
         if (!indexing) {
             indexing = true;
-            await runIndexer();
+            await runIndexer(false);
             indexing = false;
         } else {
             console.log('Indexing is already running. Skipping for now.');
@@ -114,13 +114,13 @@ chrome.runtime.onMessage.addListener(async (message: Message, sender, sendRespon
             case 'watch': {
                 if (message.data.force) {
                     console.log('Force Watch was called!');
-                    runWatcher();
+                    runWatcher(message.data.force);
                     response = 'ok';
                 }
                 else if (!watching) {
                     watching = true;
                     // Run watch every 15 second until the service worker is killed.
-                    await runWatcher();
+                    await runWatcher(message.data.force);
                     setInterval(runWatcher, 15000);
                     response = 'ok';
                 } else {
@@ -135,7 +135,7 @@ chrome.runtime.onMessage.addListener(async (message: Message, sender, sendRespon
                 if (!indexing) {
                     indexing = true;
                     response = 'ok';
-                    await runIndexer();
+                    await runIndexer(message.data.force);
                     indexing = false;
                 } else {
                     console.log('Indexing is already running. Skipping for now.');
@@ -156,8 +156,8 @@ chrome.runtime.onMessage.addListener(async (message: Message, sender, sendRespon
     sendResponse(response);
 });
 
-const runIndexer = async () => {
-    const indexerRun = await manager.runIndexer();
+const runIndexer = async (force: boolean) => {
+    const indexerRun = await manager.runIndexer(force);
 
     console.log('RUN INDEXER COMPLETED!!', indexerRun);
 
@@ -189,16 +189,16 @@ const runIndexer = async () => {
 
     // If the indexer run is not completed (fully processed all accounts), we will run it again until it completes.
     if (!indexerRun.completed) {
-        await runIndexer();
+        await runIndexer(force);
     } else {
         indexing = false;
     }
 }
 
-const runWatcher = async () => {
+const runWatcher = async (force: boolean) => {
     // Do not run the watcher when the indexer is running.
     if (!indexing) {
-        const changes = await manager.runWatcher();
+        const changes = await manager.runWatcher(force);
         console.log('Watcher finished...', changes);
 
         if (changes) {

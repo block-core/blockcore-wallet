@@ -51,10 +51,6 @@ export class IndexerBackgroundService {
         const transactions = this.transactionStore.all();
         const addressIndexedStates = this.addressIndexedStore.all();
 
-        // console.log(walletStore);
-        // console.log(addressStore);
-        // console.log(transactionStore);
-
         for (let i = 0; i < wallets.length; i++) {
             const wallet = wallets[i];
 
@@ -67,11 +63,13 @@ export class IndexerBackgroundService {
                 if (account.mode === 'quick') {
 
                     let totalBalance = 0;
-                    addressIndexedStates.map(a => totalBalance += a.balance);
+                    const allAddresses = [...account.state.receive.map(a => a.address), ...account.state.change.map(a => a.address)];
+                    const filteredAddressIndexedStates = addressIndexedStates.filter(a => allAddresses.indexOf(a.address) > -1);
+                    filteredAddressIndexedStates.map(a => totalBalance += a.balance);
 
                     this.accountHistoryStore.set(account.identifier, {
                         history: [],
-                        unspent: [], // TODO, Get the unspent from API.
+                        unspent: [],
                         balance: totalBalance,
                         unconfirmed: 0
                     });
@@ -184,10 +182,6 @@ export class IndexerBackgroundService {
                                 if (t.details.outputs[1].outputType == "OP_INTERNALCONTRACTTRANSFER")
                                     tx.hasContract = true;
                             }
-
-                            // console.log(tx);
-                            // console.log(t);
-                            // console.log('tx.hasContract', tx.hasContract);
                         }
 
                         return tx;
