@@ -5,6 +5,7 @@ import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { UIState, CommunicationService, NetworksService, EnvironmentService, AppManager, SecureStateService, WalletManager, SettingsService } from './services';
 import { Location } from '@angular/common'
 import { TranslateService } from '@ngx-translate/core';
+import { RuntimeService } from './services/runtime.service';
 
 @Component({
   selector: 'app-root',
@@ -33,6 +34,7 @@ export class AppComponent implements OnInit {
     private settings: SettingsService,
     private ngZone: NgZone,
     private env: EnvironmentService,
+    private runtime: RuntimeService,
     public networkService: NetworksService,
     @Inject(DOCUMENT) private document: Document) {
 
@@ -58,6 +60,9 @@ export class AppComponent implements OnInit {
   }
 
   async ngOnInit() {
+    console.log('APP COMPONENT NG ON INIT!');
+    this.uiState.manifest = await this.runtime.getManifest();
+
     this.router.events.subscribe(async (val) => {
       if (val instanceof NavigationEnd) {
         await this.walletManager.resetTimer();

@@ -15,28 +15,27 @@ export class RuntimeService {
         return this.shared.isExtension;
     }
 
-    getManifest(): chrome.runtime.Manifest {
+    async getManifest(): Promise<chrome.runtime.Manifest> {
         if (this.isExtension) {
             return chrome.runtime.getManifest();
         }
         else {
-            return {
-                name: 'Blockcore Browser Wallet',
-                author: 'Blockcore',
-                version: '0.0.1',
-                manifest_version: 3,
-                description: 'Non-Custodial web browser wallet for Coins, Tokens, Identities, NFTs and more.'
-            }
+
+            // Default options are marked with *
+            const response = await fetch('/manifest.webmanifest', {
+                method: 'GET',
+                mode: 'cors',
+                cache: 'no-cache',
+                credentials: 'same-origin',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                redirect: 'follow',
+                referrerPolicy: 'no-referrer',
+            });
+
+            const manifest = await response.json();
+            return manifest;
         }
     }
-
-    // sendMessage<M = any, R = any>(message: M, responseCallback?: (response: R) => void) {
-    //     if (this._isExtension) {
-    //         chrome.runtime.sendMessage(message, (response) => {
-    //             console.log('CommunicationService:send:response:', response);
-    //         });
-    //     } else {
-    //         console.log('CommunicationService (BROWSER):send:', message);
-    //     }
-    // }
 }

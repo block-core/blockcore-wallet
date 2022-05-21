@@ -3,11 +3,11 @@
     <div *ngIf="step == 0">
         <img class="logo" src="assets/icon-light-128x128.png">
 
-        <h1>{{uiState.manifest.name}}</h1>
-        <div class="sub-title">by {{uiState.manifest.author}}</div>
-        <div class="sub-title">Version {{uiState.manifest.version}}</div>
+        <h1>{{uiState.manifest?.name}}</h1>
+        <div class="sub-title">by {{uiState.manifest?.author}}</div>
+        <div class="sub-title">Version {{uiState.manifest?.version}}</div>
 
-        <p>{{uiState.manifest.description}}</p>
+        <p>{{uiState.manifest?.description}}</p>
 
         <br>
         <button class="signup-button" mat-flat-button color="primary" (click)="create()">Create New Wallet</button>
