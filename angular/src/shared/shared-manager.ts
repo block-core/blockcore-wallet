@@ -32,7 +32,8 @@ export class SharedManager {
                     // await storage.session.clear(); // Might be dramatic to clear to whole session storage?
                     console.log('Timeout has been researched, session storage is cleared.');
 
-                    chrome.runtime.sendMessage({ event: 'timeout' }, function (response) {
+                    // TODO: #132
+                    chrome.runtime.sendMessage({ type: 'timeout' }, function (response) {
                         console.log('Extension:sendMessage:response:', response);
                     });
 

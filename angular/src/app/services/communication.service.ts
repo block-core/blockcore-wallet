@@ -1,4 +1,5 @@
 import { Injectable, NgZone } from '@angular/core';
+import { Router } from '@angular/router';
 import { EnvironmentService, SettingsService } from '.';
 import { Message, MessageResponse } from '../../shared/interfaces';
 import { EventBus } from './event-bus';
@@ -17,6 +18,7 @@ export class CommunicationService {
         private settings: SettingsService,
         private runtime: RuntimeService,
         private events: EventBus,
+        private router: Router,
         private logger: LoggerService,
         private env: EnvironmentService) {
 
@@ -90,10 +92,10 @@ export class CommunicationService {
     async handleMessage(message: Message) {
         console.log('CommunicationService:onMessage: ', message);
 
-        if (message.target !== 'tabs') {
-            console.log('This message is not handled by the tabs (extension) logic.');
-            return null;
-        }
+        // if (message.target !== 'tabs') {
+        //     console.log('This message is not handled by the tabs (extension) logic.');
+        //     return null;
+        // }
 
         try {
             switch (message.type) {
@@ -133,6 +135,7 @@ export class CommunicationService {
                     // that will reload state and redirect to home (unlock) if needed, so don't do that here. It will
                     // cause a race condition on loading new state if redirect is handled here.
                     console.log('Timeout was reached in the background service.');
+                    this.router.navigateByUrl('/home');
                     return null;
                 }
                 default:
@@ -151,10 +154,10 @@ export class CommunicationService {
         console.log('CommunicationService:onMessage: ', message);
         console.log('CommunicationService:onMessage:sender: ', sender);
 
-        if (message.target !== 'tabs') {
-            console.log('This message is not handled by the tabs (extension) logic.');
-            return null;
-        }
+        // if (message.target !== 'tabs') {
+        //     console.log('This message is not handled by the tabs (extension) logic.');
+        //     return null;
+        // }
 
         try {
             switch (message.type) {
@@ -193,7 +196,8 @@ export class CommunicationService {
                     // Timeout was reached in the background. There is already logic listening to the session storage
                     // that will reload state and redirect to home (unlock) if needed, so don't do that here. It will
                     // cause a race condition on loading new state if redirect is handled here.
-                    console.log('Timeout was reached in the background service.');
+                    console.log('Timeout was reached in the background service (handleInternalMessage).');
+                    this.router.navigateByUrl('/home');
                     return null;
                 }
                 default:
