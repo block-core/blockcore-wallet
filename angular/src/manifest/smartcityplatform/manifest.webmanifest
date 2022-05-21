@@ -3,7 +3,7 @@
     "scope": "/",
     "name": "Smart City Platform",
     "short_name": "SmartCityPlatform",
-    "version": "0.0.34",
+    "version": "0.0.35",
     "author": "City Chain Foundation",
     "display": "standalone",
     "start_url": "/",

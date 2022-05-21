@@ -3,7 +3,7 @@
     "scope": "/",
     "name": "CoinVault",
     "short_name": "CoinVault",
-    "version": "0.0.34",
+    "version": "0.0.35",
     "author": "Softchains Ltd",
     "display": "standalone",
     "start_url": "/",

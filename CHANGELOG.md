@@ -1,7 +1,15 @@
-## <small>0.0.33 (2022-05-20)</small>
+## <small>0.0.34 (2022-05-21)</small>
 
 * Fix bug where wallet balance and history failed to reload ([f4cb307](https://github.com/block-core/blockcore-extension/commit/f4cb307)), closes [#128](https://github.com/block-core/blockcore-extension/issues/128)
+* Fix problem with multiple quick accounts ([eac8f9a](https://github.com/block-core/blockcore-extension/commit/eac8f9a)), closes [#133](https://github.com/block-core/blockcore-extension/issues/133)
+* Fix problem with timeout lock ([f407879](https://github.com/block-core/blockcore-extension/commit/f407879)), closes [#124](https://github.com/block-core/blockcore-extension/issues/124)
 * Fix typo NTF -> NFT (#127) ([103c856](https://github.com/block-core/blockcore-extension/commit/103c856)), closes [#127](https://github.com/block-core/blockcore-extension/issues/127)
+* Read manifest in web mode ([4c8eac2](https://github.com/block-core/blockcore-extension/commit/4c8eac2))
+* Update network status when creating account ([d30419c](https://github.com/block-core/blockcore-extension/commit/d30419c)), closes [#126](https://github.com/block-core/blockcore-extension/issues/126)
+* Update packages ([81792a2](https://github.com/block-core/blockcore-extension/commit/81792a2))
+* Update servers.ts (#130) ([58684b2](https://github.com/block-core/blockcore-extension/commit/58684b2)), closes [#130](https://github.com/block-core/blockcore-extension/issues/130)
+* Update the list of available servers ([bab1b06](https://github.com/block-core/blockcore-extension/commit/bab1b06))
+* Update version and changelog ([4049a67](https://github.com/block-core/blockcore-extension/commit/4049a67))
 * Update version and changelog ([31f5260](https://github.com/block-core/blockcore-extension/commit/31f5260))
 
 
