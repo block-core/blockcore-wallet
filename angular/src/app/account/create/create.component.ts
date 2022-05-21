@@ -1,7 +1,7 @@
 import { Component, Inject, HostBinding, OnInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { UIState, CryptoService, CommunicationService, IconService, NetworksService, WalletManager } from '../../services';
+import { UIState, CryptoService, CommunicationService, IconService, NetworksService, WalletManager, NetworkStatusService } from '../../services';
 import { Account } from '../../../shared/interfaces';
 import { Router } from '@angular/router';
 import { Network } from '../../../shared/networks';
@@ -43,6 +43,7 @@ export class AccountCreateComponent implements OnInit, OnDestroy {
         public networkService: NetworksService,
         private communication: CommunicationService,
         public walletManager: WalletManager,
+        private networkStatusService: NetworkStatusService,
         private cd: ChangeDetectorRef
     ) {
         this.uiState.title = 'Create new account';
@@ -177,6 +178,10 @@ export class AccountCreateComponent implements OnInit, OnDestroy {
         // Don't persist the selected value.
         delete account.selected;
         await this.walletManager.addAccount(account, this.walletManager.activeWallet);
+
+        // Make sure we get a recent state of the network user added account on. If this is the first time the user have added
+        // account from this network, this will ensure that we have a status as early as possible.
+        this.networkStatusService.updateAll([account]);
 
         // When adding an account, the active account ID will be updated so we can read it here.
         this.router.navigateByUrl('/account/view/' + this.walletManager.activeAccountId);
