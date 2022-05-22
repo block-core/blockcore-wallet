@@ -16,7 +16,7 @@
                         <span *ngIf="!hasAccountHistory(account.identifier)" class="account-balance">
                             <mat-spinner [diameter]="16"></mat-spinner>
                         </span>
-                        <span *ngIf="hasAccountHistory(account.identifier) && !account.completedScan" class="account-balance account-scanning">
+                        <span *ngIf="hasAccountHistory(account.identifier) && !accountState(account).completedScan" class="account-balance account-scanning">
                             <mat-spinner [color]="'accent'" [diameter]="16"></mat-spinner>
                         </span>
                     </div>

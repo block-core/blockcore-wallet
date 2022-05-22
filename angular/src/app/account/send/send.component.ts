@@ -4,6 +4,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { AccountHistory, Address, UnspentTransactionOutput } from '../../../shared/interfaces';
 import { Network } from '../../../shared/networks';
 import { AccountHistoryStore } from 'src/shared';
+import { AccountStateStore } from 'src/shared/store/account-state-store';
 
 @Component({
     selector: 'app-account-send',
@@ -29,6 +30,7 @@ export class AccountSendComponent implements OnInit, OnDestroy {
         private communication: CommunicationService,
         public walletManager: WalletManager,
         private accountHistoryStore: AccountHistoryStore,
+        private accountStateStore: AccountStateStore,
         private snackBar: MatSnackBar) {
         // this.uiState.title = 'Receive Address';
         this.uiState.goBackHome = false;
@@ -46,7 +48,8 @@ export class AccountSendComponent implements OnInit, OnDestroy {
 
         // When using CRS/TCRS, the change address should always be the primary address.
         if (network.singleAddress === true) {
-            const primaryReceiveAddress = account.state.receive[0];
+            const accountState = this.accountStateStore.get(account.identifier);
+            const primaryReceiveAddress = accountState.receive[0];
             sendService.changeAddress = primaryReceiveAddress.address;
         }
 
@@ -77,8 +80,10 @@ export class AccountSendComponent implements OnInit, OnDestroy {
         // this.addressEntry = this.uiState.activeAccount.state.receive[this.uiState.activeAccount.state.receive.length - 1];
         // this.address = this.addressEntry.address;
 
-        const unspentReceive = this.walletManager.activeAccount.state.receive.flatMap(i => i.unspent).filter(i => i !== undefined);
-        const unspentChange = this.walletManager.activeAccount.state.change.flatMap(i => i.unspent).filter(i => i !== undefined);
+        const accountState = this.accountStateStore.get(this.walletManager.activeAccount.identifier);
+
+        const unspentReceive = accountState.receive.flatMap(i => i.unspent).filter(i => i !== undefined);
+        const unspentChange = accountState.change.flatMap(i => i.unspent).filter(i => i !== undefined);
 
         this.unspent = [...unspentReceive, ...unspentChange];
 

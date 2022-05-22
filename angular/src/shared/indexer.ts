@@ -3,6 +3,7 @@ import { AddressState, Transaction } from '.';
 import { AddressManager } from './address-manager';
 import { AccountUnspentTransactionOutput, AddressIndexedState, TransactionHistory } from './interfaces';
 import { AccountHistoryStore, AddressStore, SettingStore, TransactionStore, WalletStore } from './store';
+import { AccountStateStore } from './store/account-state-store';
 import { AddressIndexedStore } from './store/address-indexed-store';
 import { AddressWatchStore } from './store/address-watch-store';
 
@@ -39,6 +40,7 @@ export class IndexerBackgroundService {
         private addressIndexedStore: AddressIndexedStore,
         private transactionStore: TransactionStore,
         private addressManager: AddressManager,
+        private accountStateStore: AccountStateStore,
         private accountHistoryStore: AccountHistoryStore
     ) {
 
@@ -59,11 +61,14 @@ export class IndexerBackgroundService {
 
             for (let j = 0; j < accounts.length; j++) {
                 const account = accounts[j];
+                const accountState = this.accountStateStore.get(account.identifier);
 
                 if (account.mode === 'quick') {
 
                     let totalBalance = 0;
-                    const allAddresses = [...account.state.receive.map(a => a.address), ...account.state.change.map(a => a.address)];
+
+                    const allAddresses = this.accountStateStore.getAllAddresses(account.identifier);
+                    // const allAddresses = [...account.state.receive.map(a => a.address), ...account.state.change.map(a => a.address)];
                     const filteredAddressIndexedStates = addressIndexedStates.filter(a => allAddresses.indexOf(a.address) > -1);
                     filteredAddressIndexedStates.map(a => totalBalance += a.balance);
 
@@ -77,10 +82,11 @@ export class IndexerBackgroundService {
                     await this.accountHistoryStore.save();
 
                 } else {
-                    const receive = account.state.receive; // .flatMap(i => i.unspent).filter(i => i !== undefined);
-                    const change = account.state.change; // .flatMap(i => i.unspent).filter(i => i !== undefined);
-                    const addressesList = [...receive, ...change];
-                    const addresses = addressesList.flatMap(a => a.address);
+                    // const receive = accountState.receive; // .flatMap(i => i.unspent).filter(i => i !== undefined);
+                    // const change = accountState.change; // .flatMap(i => i.unspent).filter(i => i !== undefined);
+                    // const addressesList = [...receive, ...change];
+                    // const addresses = addressesList.flatMap(a => a.address);
+                    const addresses = this.accountStateStore.getAllAddresses(account.identifier);
 
                     const addressStatesInThisAccount = addressStates.filter(a => addresses.indexOf(a.address) > -1);
                     const transactionHashesInAccount = addressStatesInThisAccount.flatMap(a => a.transactions);
@@ -237,6 +243,9 @@ export class IndexerBackgroundService {
                     });
 
                     await this.accountHistoryStore.save();
+                    await this.accountStateStore.save();
+
+                    console.log('accountStateStore:', this.accountStateStore.all());
                 }
             }
         }
@@ -274,13 +283,11 @@ export class IndexerBackgroundService {
             for (let j = 0; j < wallet.accounts.length; j++) {
                 const date = new Date().toISOString();
                 const account = wallet.accounts[j];
-                account.lastScan = date;
-
+                const accountState = this.accountStateStore.get(account.identifier);
                 const network = this.addressManager.getNetwork(account.networkType);
-                // const indexerUrl = settings.indexer.replace('{id}', network.id.toLowerCase());
                 const indexerUrl = this.addressManager.networkLoader.getServer(network.id, settings.server, settings.indexer);
-                const primaryReceiveAddress = account.state.receive[0];
 
+                accountState.lastScan = date;
                 let anyAddressNotComplete = false;
 
                 // If the account type is quick, we'll rely fully on indexer APIs and not perform local historical processing.
@@ -304,8 +311,8 @@ export class IndexerBackgroundService {
                     }
 
                     // Process receive addresses until we've exhausted them.
-                    for (let k = 0; k < account.state.receive.length; k++) {
-                        const address = account.state.receive[k];
+                    for (let k = 0; k < accountState.receive.length; k++) {
+                        const address = accountState.receive[k];
 
                         // Get the current state for this address:
                         let addressState = this.addressIndexedStore.get(address.address);
@@ -334,18 +341,18 @@ export class IndexerBackgroundService {
                         }
 
                         // If we are on the last address, check if we should add new one.
-                        if ((k + 1) >= account.state.receive.length) {
+                        if ((k + 1) >= accountState.receive.length) {
                             // If there are transactions on the last checked address, add the next address.
                             if (addressState.totalReceivedCount > 0) {
                                 const nextAddress = this.addressManager.getAddress(account, 0, address.index + 1);
-                                account.state.receive.push(nextAddress);
+                                accountState.receive.push(nextAddress);
                                 changes = true;
                             }
                         }
                     }
 
-                    for (let k = 0; k < account.state.change.length; k++) {
-                        const address = account.state.change[k];
+                    for (let k = 0; k < accountState.change.length; k++) {
+                        const address = accountState.change[k];
                         // Get the current state for this address:
                         let addressState = this.addressIndexedStore.get(address.address);
 
@@ -370,11 +377,11 @@ export class IndexerBackgroundService {
                         }
 
                         // If we are on the last address, check if we should add new one.
-                        if ((k + 1) >= account.state.change.length) {
+                        if ((k + 1) >= accountState.change.length) {
                             // If there are transactions on the last checked address, add the next address.
                             if (addressState.totalReceivedCount > 0) {
                                 const nextAddress = this.addressManager.getAddress(account, 1, address.index + 1);
-                                account.state.change.push(nextAddress);
+                                accountState.change.push(nextAddress);
                                 changes = true;
                             }
                         }
@@ -382,7 +389,7 @@ export class IndexerBackgroundService {
                 } else {
                     if (addressWatchStore) {
                         // If the account is not fully synced, we should not perform watch over the account yet.
-                        if (!account.completedScan) {
+                        if (!accountState.completedScan) {
                             changes = false;
                             continue;
                         }
@@ -463,7 +470,7 @@ export class IndexerBackgroundService {
 
                         if (network.singleAddress === true) {
                             // Get the first receive addresses.
-                            const address = account.state.receive[0];
+                            const address = accountState.receive[0];
                             console.log('Running Watch on primary receive address', address);
 
                             // Get the current state for this address:
@@ -492,7 +499,7 @@ export class IndexerBackgroundService {
                         }
 
                         // Get the last receive addresses.
-                        const address = account.state.receive[account.state.receive.length - 1];
+                        const address = accountState.receive[accountState.receive.length - 1];
                         // const alreadyWatched = (addressWatchStore.get(address.address) != null);
 
                         // if (alreadyWatched) {
@@ -535,20 +542,20 @@ export class IndexerBackgroundService {
                             // If there are transactions on the last checked address, add the next address.
                             if (addressState.transactions.length > 0) {
                                 const nextAddress = this.addressManager.getAddress(account, 0, address.index + 1);
-                                account.state.receive.push(nextAddress);
+                                accountState.receive.push(nextAddress);
                                 changes = true;
                             }
                         }
 
                         // On newly created accounts, there might not be any change address.
-                        if (account.state.change.length === 0) {
+                        if (accountState.change.length === 0) {
                             const nextAddress = this.addressManager.getAddress(account, 1, 0);
-                            account.state.change.push(nextAddress);
+                            accountState.change.push(nextAddress);
                             changes = true;
                         }
 
                         // Get the last change addresses.
-                        const addressChange = account.state.change[account.state.change.length - 1];
+                        const addressChange = accountState.change[accountState.change.length - 1];
 
                         console.log('Running Watch on change address', addressChange);
 
@@ -587,7 +594,7 @@ export class IndexerBackgroundService {
                             // If there are transactions on the last checked address, add the next address.
                             if (addressStateChange.transactions.length > 0) {
                                 const nextAddress = this.addressManager.getAddress(account, 1, addressChange.index + 1);
-                                account.state.change.push(nextAddress);
+                                accountState.change.push(nextAddress);
                                 changes = true;
                             }
                         }
@@ -597,8 +604,8 @@ export class IndexerBackgroundService {
                     }
                     else {
                         // Process receive addresses until we've exhausted them.
-                        for (let k = 0; k < account.state.receive.length; k++) {
-                            const address = account.state.receive[k];
+                        for (let k = 0; k < accountState.receive.length; k++) {
+                            const address = accountState.receive[k];
 
                             // Get the current state for this address:
                             let addressState = this.addressStore.get(address.address);
@@ -627,18 +634,18 @@ export class IndexerBackgroundService {
                             }
 
                             // If we are on the last address, check if we should add new one.
-                            if ((k + 1) >= account.state.receive.length) {
+                            if ((k + 1) >= accountState.receive.length) {
                                 // If there are transactions on the last checked address, add the next address.
                                 if (addressState.transactions.length > 0) {
                                     const nextAddress = this.addressManager.getAddress(account, 0, address.index + 1);
-                                    account.state.receive.push(nextAddress);
+                                    accountState.receive.push(nextAddress);
                                     changes = true;
                                 }
                             }
                         }
 
-                        for (let k = 0; k < account.state.change.length; k++) {
-                            const address = account.state.change[k];
+                        for (let k = 0; k < accountState.change.length; k++) {
+                            const address = accountState.change[k];
                             // Get the current state for this address:
                             let addressState = this.addressStore.get(address.address);
 
@@ -664,11 +671,11 @@ export class IndexerBackgroundService {
                             }
 
                             // If we are on the last address, check if we should add new one.
-                            if ((k + 1) >= account.state.change.length) {
+                            if ((k + 1) >= accountState.change.length) {
                                 // If there are transactions on the last checked address, add the next address.
                                 if (addressState.transactions.length > 0) {
                                     const nextAddress = this.addressManager.getAddress(account, 1, address.index + 1);
-                                    account.state.change.push(nextAddress);
+                                    accountState.change.push(nextAddress);
                                     changes = true;
                                 }
                             }
@@ -680,7 +687,7 @@ export class IndexerBackgroundService {
                 await this.transactionStore.save();
 
                 // If any addresses on this account is not fully indexed, make sure we mark it.
-                account.completedScan = !anyAddressNotComplete;
+                accountState.completedScan = !anyAddressNotComplete;
 
                 if (!anyAddressNotComplete) {
                     anyAddressNotCompleteInAnyWallet = true;
@@ -689,6 +696,9 @@ export class IndexerBackgroundService {
 
             // When all accounts has been processes, saved the wallet.
             await this.walletStore.save();
+            await this.accountStateStore.save();
+
+            console.log('accountStateStore:', this.accountStateStore.all());
         }
 
         console.log('RETURNING FROM INDEXER: ', changes);

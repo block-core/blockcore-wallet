@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
 import { BehaviorSubject, Observable } from "rxjs";
 import { ActionStore, AddressStore, NetworkStatusStore, SettingStore, TransactionStore, UIStore, WalletStore, AccountHistoryStore, AddressIndexedStore } from "src/shared";
+import { AccountStateStore } from "src/shared/store/account-state-store";
 import { AddressWatchStore } from "src/shared/store/address-watch-store";
 import { StoreBase, StoreListBase } from "src/shared/store/store-base";
 
@@ -25,7 +26,8 @@ export class StateService {
         private walletStore: WalletStore,
         private accountHistoryStore: AccountHistoryStore,
         private addressWatchStore: AddressWatchStore,
-        private addressIndexedStore: AddressIndexedStore
+        private addressIndexedStore: AddressIndexedStore,
+        private accountStateStore: AccountStateStore,
 
     ) {
         this.changedSubject = new BehaviorSubject<StateService>(this);
@@ -40,6 +42,7 @@ export class StateService {
         this.stores.push(accountHistoryStore);
         this.stores.push(addressWatchStore);
         this.stores.push(addressIndexedStore);
+        this.stores.push(accountStateStore);
     }
 
     async wipe() {
@@ -77,6 +80,7 @@ export class StateService {
         await this.accountHistoryStore.load();
         await this.addressWatchStore.load();
         await this.addressIndexedStore.load();
+        await this.accountStateStore.load();
 
         console.log('RELOAD CALLED:');
         console.log(this.accountHistoryStore.all());
@@ -97,6 +101,7 @@ export class StateService {
         await this.accountHistoryStore.load();
         await this.addressWatchStore.load();
         await this.addressIndexedStore.load();
+        await this.accountStateStore.load();
 
         // console.log('AFTER:')
         // console.log(JSON.stringify(this.walletStore.all()));

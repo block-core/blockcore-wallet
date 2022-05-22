@@ -22,6 +22,7 @@ import { StorageService } from "./storage.service";
 import * as bip39 from "bip39";
 import { RuntimeService } from "./runtime.service";
 import { UnspentOutputService } from "./unspent-output.service";
+import { AccountStateStore } from "src/shared/store/account-state-store";
 const ECPair = ECPairFactory(ecc);
 var bitcoinMessage = require('bitcoinjs-message');
 const axios = require('axios').default;
@@ -58,6 +59,7 @@ export class WalletManager {
         private communication: CommunicationService,
         private unspentService: UnspentOutputService,
         private storage: StorageService,
+        private accountStateStore: AccountStateStore,
         private runtime: RuntimeService,
         private logger: LoggerService) {
         this.allNetworks = this.networkLoader.getAllNetworks();
@@ -86,13 +88,14 @@ export class WalletManager {
     async signData(wallet: Wallet, account: Account, address: string, content: string): Promise<string> {
         // TODO: Verify the address for this network!! ... Help the user avoid sending transactions on very wrong addresses.
         const network = this.getNetwork(account.networkType);
+        const accountState = this.accountStateStore.get(account.identifier);
 
         // Get the address from receive or change.
-        let addressItem = account.state.receive.find(a => a.address == address);
+        let addressItem = accountState.receive.find(a => a.address == address);
         let addressType = 0;
 
         if (!addressItem) {
-            addressItem = account.state.change.find(a => a.address == address);
+            addressItem = accountState.change.find(a => a.address == address);
             addressType = 1;
         }
 
@@ -155,6 +158,7 @@ export class WalletManager {
         const network = this.getNetwork(account.networkType);
         console.log('NETWORK:', network);
 
+        const accountState = this.accountStateStore.get(account.identifier);
         const affectedAddresses = [];
 
         const tx = new Psbt({ network: network, maximumFeeRate: 5000 });  // satoshi per byte, 5000 is default.
@@ -257,12 +261,12 @@ export class WalletManager {
             const input = inputs[i];
 
             // Get the index of the address, we need that to get the private key for signing.
-            let signingAddress = account.state.receive.find(item => item.address == input.address);
+            let signingAddress = accountState.receive.find(item => item.address == input.address);
 
             let addressNode: HDKey;
 
             if (!signingAddress) {
-                signingAddress = account.state.change.find(item => item.address == input.address);
+                signingAddress = accountState.change.find(item => item.address == input.address);
                 addressNode = masterNode.derive(`m/${account.purpose}'/${account.network}'/${account.index}'/1/${signingAddress.index}`);
             } else {
                 addressNode = masterNode.derive(`m/${account.purpose}'/${account.network}'/${account.index}'/0/${signingAddress.index}`);
@@ -537,7 +541,7 @@ export class WalletManager {
     }
 
     private removeAccountHistory(account: Account) {
-        const addresses = [...account.state.receive, ...account.state.change].map(a => a.address);
+        const addresses = this.accountStateStore.getAllAddresses(account.identifier);
 
         for (let j = 0; j < addresses.length; j++) {
             const address = addresses[j];
@@ -546,6 +550,7 @@ export class WalletManager {
         }
 
         this.accountHistoryStore.remove(account.identifier);
+        this.accountStateStore.remove(account.identifier);
     }
 
     private async saveAndUpdate() {
@@ -553,6 +558,9 @@ export class WalletManager {
         await this.addressWatchStore.save();
         await this.addressStore.save();
         await this.accountHistoryStore.save();
+        await this.accountStateStore.save();
+
+        console.log('accountStateStore:', this.accountStateStore.all());
 
         this.updateAllInstances();
     }
@@ -660,15 +668,22 @@ export class WalletManager {
         this._activeAccountId = account.identifier;
 
         // After new account has been added and set as active, we'll generate some addresses:
-
-        // Generate the first receive address.
-        await this.getReceiveAddress(account);
-
-        // Generate the first change address.
-        await this.getChangeAddress(account);
+        this.accountStateStore.set(account.identifier, {
+            id: account.identifier,
+            balance: 0,
+            receive: [{
+                address: this.getAddressByIndex(account, 0, 0),
+                index: 0
+            }],
+            change: [{
+                address: this.getAddressByIndex(account, 1, 0),
+                index: 0
+            }]
+        });
 
         await this.store.save();
         await this.state.save();
+        await this.accountStateStore.save();
 
         // If the wallet type is restored, force an index process to restore the state.
         if (wallet.restored && runIndexIfRestored == true) {
@@ -678,11 +693,13 @@ export class WalletManager {
     }
 
     async getChangeAddress(account: Account) {
-        return this.getAddress(account, 1, account.state.change);
+        const accountState = this.accountStateStore.get(account.identifier);
+        return this.getAddress(account, 1, accountState.change);
     }
 
     async getReceiveAddress(account: Account) {
-        return this.getAddress(account, 0, account.state.receive);
+        const accountState = this.accountStateStore.get(account.identifier);
+        return this.getAddress(account, 0, accountState.receive);
     }
 
     hasBeenUsed(address: Address) {
@@ -709,28 +726,42 @@ export class WalletManager {
                 address: address
             });
 
-            await this.store.save();
+            await this.accountStateStore.save();
+            // await this.store.save();
         }
 
         return address;
     }
 
+    private getAddressByIndex(account: Account, type: number, index: number) {
+        const network = this.getNetwork(account.networkType);
+        const accountNode = HDKey.fromExtendedKey(account.xpub, network.bip32);
+        const addressNode = accountNode.deriveChild(type).deriveChild(index);
+        const address = this.crypto.getAddressByNetwork(Buffer.from(addressNode.publicKey), network, account.purposeAddress);
+
+        return address;
+    }
+
     getReceiveAddressByIndex(account: Account, index: number) {
-        if (index > (account.state?.receive.length - 1)) {
+        const accountState = this.accountStateStore.get(account.identifier);
+
+        if (index > (accountState.receive.length - 1)) {
             throw Error('The index is higher than any known address. Use getReceiveAddress to get next receive address.');
         }
 
         // Get the last index without know transactions:
-        return account.state.receive[index];
+        return accountState.receive[index];
     }
 
     getChangeAddressByIndex(account: Account, index: number) {
-        if (index > (account.state?.change.length - 1)) {
+        const accountState = this.accountStateStore.get(account.identifier);
+
+        if (index > (accountState.change.length - 1)) {
             throw Error('The index is higher than any known address. Use getChangeAddress to get next change address.');
         }
 
         // Get the last index without know transactions:
-        return account.state.change[index];
+        return accountState.change[index];
     }
 
     async addWallet(wallet: Wallet) {

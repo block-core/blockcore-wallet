@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
 import Big from "big.js";
 import { Account, AccountUnspentTransactionOutput, Address, SettingStore, UnspentTransactionOutput } from "src/shared";
+import { AccountStateStore } from "src/shared/store/account-state-store";
 import { NetworkLoader } from ".";
 
 @Injectable({
@@ -10,7 +11,7 @@ import { NetworkLoader } from ".";
 export class UnspentOutputService {
     private limit = 20;
 
-    constructor(private networkLoader: NetworkLoader, private settingStore: SettingStore) {
+    constructor(private networkLoader: NetworkLoader, private settingStore: SettingStore, private accountStateStore: AccountStateStore) {
 
     }
 
@@ -21,6 +22,7 @@ export class UnspentOutputService {
         const settings = this.settingStore.get();
         const network = this.networkLoader.getNetwork(account.networkType);
         const indexerUrl = this.networkLoader.getServer(network.id, settings.server, settings.indexer);
+        const accountState = this.accountStateStore.get(account.identifier);
 
         let aggregatedAmount = Big(0);
         let completed = false;
@@ -30,8 +32,8 @@ export class UnspentOutputService {
         let utxo: UnspentTransactionOutput[] = [];
 
         // Process receive addresses until we've exhausted them.
-        for (let k = 0; k < account.state.receive.length; k++) {
-            const address = account.state.receive[k];
+        for (let k = 0; k < accountState.receive.length; k++) {
+            const address = accountState.receive[k];
 
             // Query for what is left, take the required minus what we have already aggregated.
             const processState = await this.processAddress(indexerUrl, address, requiredAmount.minus(aggregatedAmount));
@@ -64,8 +66,8 @@ export class UnspentOutputService {
 
         if (completed == false) {
             // Process change addresses until we've exhausted them.
-            for (let k = 0; k < account.state.change.length; k++) {
-                const address = account.state.change[k];
+            for (let k = 0; k < accountState.change.length; k++) {
+                const address = accountState.change[k];
 
                 // Query for what is left, take the required minus what we have already aggregated.
                 const processState = await this.processAddress(indexerUrl, address, requiredAmount.minus(aggregatedAmount));

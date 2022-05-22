@@ -3,6 +3,7 @@ import { CryptoService, UIState, NetworksService, CommunicationService, WalletMa
 import { Router } from '@angular/router';
 import axios from 'axios';
 import { ActionService } from 'src/app/services/action.service';
+import { AccountStateStore } from 'src/shared/store/account-state-store';
 
 @Component({
     selector: 'app-sid',
@@ -29,6 +30,7 @@ export class ActionStratisIdentityComponent implements OnInit {
         private manager: AppManager,
         public networkService: NetworksService,
         public walletManager: WalletManager,
+        private accountStateStore: AccountStateStore,
         private cd: ChangeDetectorRef) {
         this.uiState.title = 'Stratis Identity';
 
@@ -74,8 +76,10 @@ export class ActionStratisIdentityComponent implements OnInit {
             throw Error('Active wallet is not unlocked.');
         }
 
+        const accountState = this.accountStateStore.get(this.walletManager.activeAccount.identifier);
+
         // TODO: Provide the address from the Action UI.
-        const address = this.walletManager.activeAccount.state.receive[0].address;
+        const address = accountState.receive[0].address;
 
         const signature = await this.walletManager.signData(this.walletManager.activeWallet, this.walletManager.activeAccount, address, this.content);
 

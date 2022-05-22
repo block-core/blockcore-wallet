@@ -29,7 +29,7 @@
                 ({{accountHistory.unconfirmed || 0 | amount}} unconfirmed)
             </span></mat-card-subtitle>
         <mat-card-title>{{accountHistory.balance || 0 | amount}} {{walletManager.activeAccount |
-            network}} <button class="rescan-button" matTooltip="Reload account history" mat-icon-button (click)="scan(true)">
+            network}} <button class="rescan-button" matTooltip="Reload account history" mat-icon-button (click)="scan()">
                 <mat-icon>history</mat-icon>
             </button>
         </mat-card-title>
@@ -45,7 +45,7 @@
             <button [disabled]="accountHistory.balance == 0" class="half-width" [routerLink]="['/', 'account', 'send']" mat-raised-button>Send</button>
         </mat-card-actions>
         <mat-card-footer>
-            <mat-progress-bar *ngIf="!walletManager.activeAccount.completedScan" mode="indeterminate"></mat-progress-bar>
+            <mat-progress-bar *ngIf="!accountState(walletManager.activeAccount).completedScan" mode="indeterminate"></mat-progress-bar>
             <mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
         </mat-card-footer>
     </mat-card>
@@ -153,7 +153,7 @@
             <br>
 
             <mat-nav-list>
-                <!-- <a mat-list-item (click)="scan(true)">
+                <!-- <a mat-list-item (click)="scan()">
                     <mat-icon mat-list-icon>history</mat-icon>
                     <div mat-line>Resync All History</div>
                 </a> -->

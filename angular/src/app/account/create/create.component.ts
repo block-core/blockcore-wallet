@@ -166,13 +166,7 @@ export class AccountCreateComponent implements OnInit, OnDestroy {
             network: parsedNetwork,
             purpose: parsedPurpose,
             purposeAddress: parsedPurpose, // Until we have UI for selecting override, simply replicate the purpose from input.
-            icon: this.icon,
-            state: {
-                balance: 0,
-                change: [],
-                receive: [],
-                retrieved: null
-            }
+            icon: this.icon
         };
 
         // Don't persist the selected value.

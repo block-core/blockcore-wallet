@@ -9,6 +9,7 @@ import * as QRCode from 'qrcode';
 import { Address, NetworkStatus, Transaction, TransactionView } from '../../../shared/interfaces';
 import { Network } from '../../../shared/networks';
 import { TransactionStore } from 'src/shared';
+import { AccountStateStore } from 'src/shared/store/account-state-store';
 var QRCode2 = require('qrcode');
 
 @Component({
@@ -119,32 +120,33 @@ export class AccountTransactionComponent implements OnInit, OnDestroy {
     }
 
     async ngOnInit() {
-        // TODO: When can we start using .lastItem and similar functions on arrays?
-        this.addressEntry = this.walletManager.activeAccount.state.receive[this.walletManager.activeAccount.state.receive.length - 1];
-        this.address = this.addressEntry.address;
+        // // TODO: When can we start using .lastItem and similar functions on arrays?
+        // const accountState = this.accountStateStore.get(this.walletManager.activeAccount.identifier);
+        // this.addressEntry = accountState.receive[accountState.receive.length - 1];
+        // this.address = this.addressEntry.address;
 
-        try {
-            this.qrCode = await QRCode.toDataURL(this.address, {
-                errorCorrectionLevel: 'L',
-                margin: 2,
-                scale: 5,
-            });
+        // try {
+        //     this.qrCode = await QRCode.toDataURL(this.address, {
+        //         errorCorrectionLevel: 'L',
+        //         margin: 2,
+        //         scale: 5,
+        //     });
 
-            // LEFT TO HAVE INSTRUCTIONS ON POSSIBLE OPTIONS :-)
-            // this.qrCode = await QRCode.toDataURL(this.address, {
-            //     // version: this.version,
-            //     errorCorrectionLevel: 'L',
-            //     // margin: this.margin,
-            //     // scale: this.scale,
-            //     // width: this.width,
-            //     // color: {
-            //     //     dark: this.colorDark,
-            //     //     light: this.colorLight
-            //     // }
-            // });
+        //     // LEFT TO HAVE INSTRUCTIONS ON POSSIBLE OPTIONS :-)
+        //     // this.qrCode = await QRCode.toDataURL(this.address, {
+        //     //     // version: this.version,
+        //     //     errorCorrectionLevel: 'L',
+        //     //     // margin: this.margin,
+        //     //     // scale: this.scale,
+        //     //     // width: this.width,
+        //     //     // color: {
+        //     //     //     dark: this.colorDark,
+        //     //     //     light: this.colorLight
+        //     //     // }
+        //     // });
 
-        } catch (err) {
-            console.error(err);
-        }
+        // } catch (err) {
+        //     console.error(err);
+        // }
     }
 }

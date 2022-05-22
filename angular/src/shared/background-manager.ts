@@ -2,6 +2,7 @@ import { AddressManager } from "./address-manager";
 import { IndexerBackgroundService } from "./indexer";
 import { NetworkLoader } from "./network-loader";
 import { AddressStore, SettingStore, TransactionStore, WalletStore, AccountHistoryStore } from "./store";
+import { AccountStateStore } from "./store/account-state-store";
 import { AddressIndexedStore } from "./store/address-indexed-store";
 import { AddressWatchStore } from "./store/address-watch-store";
 
@@ -43,12 +44,15 @@ export class BackgroundManager {
         const addressWatchStore = new AddressWatchStore();
         await addressWatchStore.load();
 
+        const accountStateStore = new AccountStateStore();
+        await accountStateStore.load();
+
         const networkLoader = new NetworkLoader();
         const addressManager = new AddressManager(networkLoader);
 
         // Get what addresses to watch from local storage.
         // globalThis.chrome.storage.local.get('')
-        const indexer = new IndexerBackgroundService(settingStore, walletStore, addressStore, addressIndexedStore, transactionStore, addressManager, accountHistoryStore);
+        const indexer = new IndexerBackgroundService(settingStore, walletStore, addressStore, addressIndexedStore, transactionStore, addressManager, accountStateStore, accountHistoryStore);
         const processResult = await indexer.process(addressWatchStore);
 
         if (processResult.changes) {
@@ -103,12 +107,15 @@ export class BackgroundManager {
         const accountHistoryStore = new AccountHistoryStore();
         await accountHistoryStore.load();
 
+        const accountStateStore = new AccountStateStore();
+        await accountStateStore.load();
+
         const networkLoader = new NetworkLoader();
         const addressManager = new AddressManager(networkLoader);
 
         // Get what addresses to watch from local storage.
         // globalThis.chrome.storage.local.get('')
-        const indexer = new IndexerBackgroundService(settingStore, walletStore, addressStore, addressIndexedStore, transactionStore, addressManager, accountHistoryStore);
+        const indexer = new IndexerBackgroundService(settingStore, walletStore, addressStore, addressIndexedStore, transactionStore, addressManager, accountStateStore, accountHistoryStore);
 
         let processResult = null;
 

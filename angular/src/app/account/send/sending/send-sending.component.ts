@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AccountHistoryStore, AddressState, AddressStore, TransactionStore } from 'src/shared';
+import { AccountStateStore } from 'src/shared/store/account-state-store';
 import { AddressWatchStore } from 'src/shared/store/address-watch-store';
 import { CommunicationService, SendService, UIState, WalletManager } from '../../../services';
 
@@ -18,6 +19,7 @@ export class AccountSendSendingComponent implements OnInit, OnDestroy {
         public walletManager: WalletManager,
         private addressWatchStore: AddressWatchStore,
         private accountHistoryStore: AccountHistoryStore,
+        private accountStateStore: AccountStateStore,
         private addressStore: AddressStore,
         private transactionStore: TransactionStore,
         public uiState: UIState) {
@@ -41,13 +43,17 @@ export class AccountSendSendingComponent implements OnInit, OnDestroy {
         // Reload the watch store to ensure we have latest state, the watcher might have updated (and removed) some values.
         await this.addressWatchStore.load();
 
+        await this.accountStateStore.load();
+
+        const accountState = this.accountStateStore.get(this.sendService.account.identifier);
+
         for (let i = 0; i < this.sendService.addresses.length; i++) {
             const address = this.sendService.addresses[i];
 
-            let index = this.sendService.account.state.receive.findIndex(a => a.address == address);
+            let index = accountState.receive.findIndex(a => a.address == address);
 
             if (index === -1) {
-                index = this.sendService.account.state.change.findIndex(a => a.address == address);
+                index = accountState.change.findIndex(a => a.address == address);
             }
 
             // If we cannot find the address that is involved with this transaction, don't add a watch.

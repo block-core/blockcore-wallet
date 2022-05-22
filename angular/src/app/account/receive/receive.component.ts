@@ -8,6 +8,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import * as QRCode from 'qrcode';
 import { Address } from '../../../shared/interfaces';
 import { Network } from '../../../shared/networks';
+import { AccountStateStore } from 'src/shared/store/account-state-store';
 var QRCode2 = require('qrcode');
 
 @Component({
@@ -26,6 +27,7 @@ export class AccountReceiveComponent implements OnInit, OnDestroy {
         private renderer: Renderer2,
         private networks: NetworksService,
         public walletManager: WalletManager,
+        private accountStateStore: AccountStateStore,
         private snackBar: MatSnackBar) {
         // this.uiState.title = 'Receive Address';
         this.uiState.goBackHome = false;
@@ -50,12 +52,14 @@ export class AccountReceiveComponent implements OnInit, OnDestroy {
     }
 
     async ngOnInit() {
+        const accountState = this.accountStateStore.get(this.walletManager.activeAccount.identifier);
+
         // When using CRS/TCRS, the change address should always be the primary address.
         if (this.network.singleAddress === true) {
-            this.addressEntry = this.walletManager.activeAccount.state.receive[0];
+            this.addressEntry = accountState.receive[0];
         } else {
             // TODO: When can we start using .lastItem and similar functions on arrays?
-            this.addressEntry = this.walletManager.activeAccount.state.receive[this.walletManager.activeAccount.state.receive.length - 1];
+            this.addressEntry = accountState.receive[accountState.receive.length - 1];
         }
 
         this.address = this.addressEntry.address;

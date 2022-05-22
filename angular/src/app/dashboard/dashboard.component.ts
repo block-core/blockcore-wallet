@@ -6,10 +6,11 @@ import {
 import { ActivatedRoute, Router } from '@angular/router';
 import { copyToClipboard } from '../shared/utilities';
 import { Observable } from 'rxjs';
-import { NetworkStatus } from '../../shared/interfaces';
+import { Account, NetworkStatus } from '../../shared/interfaces';
 import { BackgroundManager } from 'src/shared/background-manager';
 import { AccountHistoryStore } from 'src/shared';
 import { AddressWatchStore } from 'src/shared/store/address-watch-store';
+import { AccountStateStore } from 'src/shared/store/account-state-store';
 
 export interface Section {
   name: string;
@@ -47,6 +48,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     private accountHistoryStore: AccountHistoryStore,
     private addressWatchStore: AddressWatchStore,
     private state: StateService,
+    private accountStateStore: AccountStateStore,
     private ngZone: NgZone,
     private debugLog: DebugLogService,
     private cd: ChangeDetectorRef) {
@@ -103,8 +105,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   hasAccountHistory(accountId: string) {
-    const account = this.walletManager.getAccount(this.walletManager.activeWallet, accountId);
-    return account.lastScan != null;
+    // const account = this.walletManager.getAccount(this.walletManager.activeWallet, accountId);
+    const accountState = this.accountStateStore.get(accountId);
+    return accountState?.lastScan != null;
   }
 
   balance(accountId: string) {
@@ -119,6 +122,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
     } else {
       return accountHistory.balance;
     }
+  }
+
+  accountState(account: Account) {
+    return this.accountStateStore.get(account.identifier);
   }
 
   copyDebugLogs() {

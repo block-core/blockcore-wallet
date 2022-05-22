@@ -60,17 +60,11 @@ interface NetworkStatus {
 interface Account {
     name: string | undefined;
 
-    /** The last date in ISO format the account was scanned for changes. */
-    lastScan?: string;
-
-    /** Indicates if the scan has been completed. */
-    completedScan?: boolean;
-
     /** The unique identifier for this network. */
     networkType: string;
 
     /** Latest status of this network. */
-    networkStatus?: string;
+    // networkStatus?: string;
 
     network: number;
 
@@ -92,7 +86,7 @@ interface Account {
     /** Extended Public Key for this account. */
     xpub?: string;
 
-    state?: AccountState;
+    // state?: AccountState;
 
     /** The type of Account, used to show the account in different sections of the UI. Should be 'coin', 'token' or 'other'. */
     type: string;
@@ -105,11 +99,14 @@ interface Account {
 }
 
 interface AccountState {
+    /** The unique identifier of the account that this state belongs to. */
+    id: string;
+
     /** The latest known balance of this account */
     balance: number;
 
     /** The time when this account data was updated */
-    retrieved: string;
+    retrieved?: string;
 
     /** The total amount of pending received on this account */
     pendingReceived?: number;
@@ -122,6 +119,12 @@ interface AccountState {
 
     /** All the known used and one unused change address. */
     change: Address[];
+
+    /** The last date in ISO format the account was scanned for changes. */
+    lastScan?: string;
+
+    /** Indicates if the scan has been completed. */
+    completedScan?: boolean;
 }
 
 interface Address {

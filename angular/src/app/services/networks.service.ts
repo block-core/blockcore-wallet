@@ -54,13 +54,7 @@ export class NetworksService {
                     network: 105105,
                     purpose: 44,
                     purposeAddress: 44,
-                    icon: 'paid',
-                    state: {
-                        balance: 0,
-                        retrieved: null,
-                        receive: [],
-                        change: []
-                    }
+                    icon: 'paid'
                 }, {
                     identifier: uuidv4(),
                     selected: true,
@@ -72,13 +66,7 @@ export class NetworksService {
                     network: 401,
                     purpose: 44,
                     purposeAddress: 44,
-                    icon: 'paid',
-                    state: {
-                        balance: 0,
-                        retrieved: null,
-                        receive: [],
-                        change: []
-                    }
+                    icon: 'paid'
                 }, {
                     identifier: uuidv4(),
                     index: 0,
@@ -90,13 +78,7 @@ export class NetworksService {
                     network: 1,
                     purpose: 44,
                     purposeAddress: 44,
-                    icon: 'account_circle',
-                    state: {
-                        balance: 0,
-                        retrieved: null,
-                        receive: [],
-                        change: []
-                    },
+                    icon: 'account_circle'
                 }, {
                     identifier: uuidv4(),
                     index: 0,
@@ -108,13 +90,7 @@ export class NetworksService {
                     network: 400,
                     purpose: 44,
                     purposeAddress: 44,
-                    icon: 'account_circle',
-                    state: {
-                        balance: 0,
-                        retrieved: null,
-                        receive: [],
-                        change: []
-                    },
+                    icon: 'account_circle'
                 }
                     // , {
                     //     index: 0,
@@ -173,13 +149,7 @@ export class NetworksService {
                     network: 105105,
                     purpose: 44,
                     purposeAddress: 44,
-                    icon: 'account_circle',
-                    state: {
-                        balance: 0,
-                        retrieved: null,
-                        receive: [],
-                        change: []
-                    },
+                    icon: 'account_circle'
                 }, {
                     identifier: uuidv4(),
                     index: 0,
@@ -191,13 +161,7 @@ export class NetworksService {
                     network: 401,
                     purpose: 44,
                     purposeAddress: 44,
-                    icon: 'account_circle',
-                    state: {
-                        balance: 0,
-                        retrieved: null,
-                        receive: [],
-                        change: []
-                    },
+                    icon: 'account_circle'
                 }, {
                     identifier: uuidv4(),
                     index: 0,
@@ -209,13 +173,7 @@ export class NetworksService {
                     network: 1,
                     purpose: 44,
                     purposeAddress: 44,
-                    icon: 'account_circle',
-                    state: {
-                        balance: 0,
-                        retrieved: null,
-                        receive: [],
-                        change: []
-                    },
+                    icon: 'account_circle'
                 }, {
                     identifier: uuidv4(),
                     index: 0,
@@ -227,13 +185,7 @@ export class NetworksService {
                     network: 400,
                     purpose: 44,
                     purposeAddress: 44,
-                    icon: 'account_circle',
-                    state: {
-                        balance: 0,
-                        retrieved: null,
-                        receive: [],
-                        change: []
-                    },
+                    icon: 'account_circle'
                 }];
                 break;
             case Environments.SmartCityPlatform:
@@ -248,13 +200,7 @@ export class NetworksService {
                     network: 1926,
                     purpose: 44,
                     purposeAddress: 44,
-                    icon: 'paid',
-                    state: {
-                        balance: 0,
-                        retrieved: null,
-                        receive: [],
-                        change: []
-                    },
+                    icon: 'paid'
                 }
                 // , {
                 //     identifier: uuidv4(),

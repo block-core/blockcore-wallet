@@ -3,9 +3,10 @@ import { HttpClient } from '@angular/common/http';
 import { UIState, CommunicationService, NetworksService, NetworkStatusService, SettingsService, WalletManager, StateService, NetworkLoader } from '../services';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { AccountHistory, NetworkStatus, TransactionHistory } from '../../shared/interfaces';
+import { Account, AccountHistory, NetworkStatus, TransactionHistory } from '../../shared/interfaces';
 import { Subscription } from 'rxjs';
 import { AccountHistoryStore, AddressStore } from 'src/shared';
+import { AccountStateStore } from 'src/shared/store/account-state-store';
 
 @Component({
   selector: 'app-account',
@@ -50,6 +51,7 @@ export class AccountComponent implements OnInit, OnDestroy {
     private accountHistoryStore: AccountHistoryStore,
     private addressStore: AddressStore,
     public walletManager: WalletManager,
+    private accountStateStore: AccountStateStore,
     private networkLoader: NetworkLoader,
     private snackBar: MatSnackBar) {
 
@@ -84,30 +86,47 @@ export class AccountComponent implements OnInit, OnDestroy {
     // clearInterval(this.scanTimer);
   }
 
-  async scan(force: boolean = false) {
+  async scan() {
+    const account = this.walletManager.activeAccount;
+    const accountState = this.accountStateStore.get(account.identifier);
+
     this.loading = true;
     const accountHistory: AccountHistory = { balance: 0, unconfirmed: 0, history: [], unspent: [] };
     this.accountHistory = accountHistory;
 
-    this.accountHistoryStore.set(this.walletManager.activeAccount.identifier, accountHistory);
+    this.accountHistoryStore.set(account.identifier, accountHistory);
     await this.accountHistoryStore.save();
 
     // TODO: Refactor, add a method to address store that can take array of addresses for
     // the remove operation, then we can simply map all addresses, combine in an array and provide that.
-    for (var i = 0; i < this.walletManager.activeAccount.state.receive.length; i++) {
-      this.addressStore.remove(this.walletManager.activeAccount.state.receive[i].address);
+    for (var i = 0; i < accountState.receive.length; i++) {
+      this.addressStore.remove(accountState.receive[i].address);
     }
 
-    for (var i = 0; i < this.walletManager.activeAccount.state.change.length; i++) {
-      this.addressStore.remove(this.walletManager.activeAccount.state.change[i].address);
+    for (var i = 0; i < accountState.change.length; i++) {
+      this.addressStore.remove(accountState.change[i].address);
     }
 
     await this.addressStore.save();
+
+    console.log('accountHistoryStore (before):', this.accountStateStore.all());
+
+    // Remove the account state store when performing a re-scan.
+    // Reset the account state when performing a re-scan.
+    accountState.balance = 0;
+    this.accountStateStore.set(account.identifier, accountState);
+    this.accountStateStore.save();
+
+    console.log('accountHistoryStore (after):', this.accountStateStore.all());
 
     // Send a message to run indexing on all wallets, send accountId for future optimization of running index only on this account.
     const msg = this.communication.createMessage('index', { force: true, accountId: this.walletManager.activeAccount.identifier });
     this.communication.send(msg);
     this.loading = false;
+  }
+
+  accountState(account: Account) {
+    return this.accountStateStore.get(account.identifier);
   }
 
   async toggleNetwork() {
