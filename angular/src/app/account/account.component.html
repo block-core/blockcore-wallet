@@ -76,6 +76,11 @@
                     <div mat-line> {{activity.address}} </div>
                 </a> -->
                 <div mat-subheader>Transactions ({{accountHistory.history.length}})</div>
+
+                <div class="centered" *ngIf="accountHistory.history.length == 0">
+                    Your wallet has zero transactions.<br><br>
+                </div>
+
                 <a mat-list-item *ngFor="let transaction of accountHistory.history" [routerLink]="['/', 'account', 'transaction', transaction.transactionHash]">
                     <div mat-line>
                         <span *ngIf="!transaction.unconfirmed" class="transaction-timpestamp">{{transaction.timestamp *
