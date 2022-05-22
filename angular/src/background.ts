@@ -158,7 +158,7 @@
 
 //     await manager.orchestrator.setAction({ action: request.action, document: request.document, tabId: sender.tab.id });
 
-//     // TODO: Figure out how to find the top-right of the browser window that activates the popup. https://github.com/block-core/blockcore-extension/issues/10
+//     // TODO: Figure out how to find the top-right of the browser window that activates the popup. https://github.com/block-core/blockcore-wallet/issues/10
 //     var leftPosition = 0;
 //     var topPosition = 0;
 

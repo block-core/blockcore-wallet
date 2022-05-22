@@ -186,10 +186,10 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
-  // it(`should have as title 'blockcore-extension'`, () => {
+  // it(`should have as title 'blockcore-wallet'`, () => {
   //   const fixture = TestBed.createComponent(AppComponent);
   //   const app = fixture.componentInstance;
-  //   expect(app.title).toEqual('blockcore-extension');
+  //   expect(app.title).toEqual('blockcore-wallet');
   // });
 
   // it('should render title', () => {

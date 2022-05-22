@@ -17,11 +17,11 @@ export const environment: IEnvironment = {
   enableDebugTools: true,
   logLevel: 'debug',
   features: ['wallet', 'identity', 'collectible', 'vault', 'handler:bitcoin', 'handler:vault', 'handler:sid', 'handler:did', 'handler:nostr'],
-  releaseUrl: 'https://github.com/block-core/blockcore-extension/releases',
-  sourceUrl: 'https://github.com/block-core/blockcore-extension',
+  releaseUrl: 'https://github.com/block-core/blockcore-wallet/releases',
+  sourceUrl: 'https://github.com/block-core/blockcore-wallet',
   instance: 'blockcore',
   instanceName: 'Blockcore Wallet',
-  instanceUrl: 'https://blockcore.net/',
+  instanceUrl: 'https://www.blockcore.net/',
   instanceExplorerUrl: 'https://explorer.blockcore.net',
   networks: [] as string[] // Returns all
 };

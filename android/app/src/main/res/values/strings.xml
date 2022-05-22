@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">blockcore-extension</string>
-    <string name="title_activity_main">blockcore-extension</string>
+    <string name="app_name">blockcore-wallet</string>
+    <string name="title_activity_main">blockcore-wallet</string>
     <string name="package_name">net.blockcore.coinvault</string>
     <string name="custom_url_scheme">net.blockcore.coinvault</string>
 </resources>
