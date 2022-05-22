@@ -13,7 +13,7 @@ import { RuntimeService } from './services/runtime.service';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-  title = 'blockcore-extension';
+  title = 'blockcore-wallet';
   wallet: any;
   @ViewChild('drawer') drawer!: MatSidenav;
   @ViewChild('draweraccount') draweraccount!: MatSidenav;

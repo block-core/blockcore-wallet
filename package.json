@@ -1,5 +1,5 @@
 {
-  "name": "blockcore-extension",
+  "name": "blockcore-wallet",
   "version": "0.0.35",
   "description": "An Non-Custodial HD wallet in your browser for Coins, Tokens, Identities, NFTs and more",
   "scripts": {

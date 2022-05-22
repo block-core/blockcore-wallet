@@ -97,5 +97,5 @@ jobs:
           files: "${{env.RELEASE_NAME_BLOCKCORE}};${{env.RELEASE_NAME_COINVAULT}};${{env.RELEASE_NAME_SMARTCITYPLATFORM}}"
           draft: true
           prerelease: false
-          name: "Blockcore Extension (Release ${{env.VERSION}})"
+          name: "Blockcore Wallet (Release ${{env.VERSION}})"
           tag: ${{env.VERSION}}

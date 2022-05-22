@@ -1,8 +1,9 @@
 # Blockcore Wallet
 
-### Web Browser Extension for crypto wallet in your browser for coins, tokens, identities, NFTs and more.
+### Wallet for your coins, tokens, identities, NFTs and more.
 
-The Blockcore Extension does wallet management, account management, identity management and signing.
+The Blockcore Wallet does wallet management, account management, identity management and signing. Built on web-technology, Blockcore Wallet is cross-platform and works in
+different modes, such as browser extension, Progressive Web App, native mobile and desktop app and more.
 
 ![](/doc/blockcore-extension-walkthrough.gif)
 
@@ -16,29 +17,29 @@ When adding additional accounts to your wallet, you have the option to choose th
 
 `Normal` will retrieve all transaction history for your wallet, and calculate the balance locally. When sending transactions, the available unspent transaction outputs (UTXOs) are queried locally in the history of data.
 
-`Quick` will retrieve only the current balance information from the indexer APIs, even for very large wallets, this is very quick to do. When sending transactions, the indexer API is queried until the amount being sent has been fullfilled. This means even if you have thousands of UTXOs, the extension does not need to download all the data to perform transactions.
+`Quick` will retrieve only the current balance information from the indexer APIs, even for very large wallets, this is very quick to do. When sending transactions, the indexer API is queried until the amount being sent has been fullfilled. This means even if you have thousands of UTXOs, the wallet does not need to download all the data to perform transactions.
 
 ## Instances
 
-This extension is made available in multiple different instances that has different featuresets:
+This wallet is made available in multiple different instances that has different featuresets:
 
 ### Blockcore
 
 - Chains: All Blockcore supported blockchains
 - All features currently under development
-- Download: ["blockcore-\*.zip](https://github.com/block-core/blockcore-extension/releases)
+- Download: ["blockcore-\*.zip](https://github.com/block-core/blockcore-wallet/releases)
 
 ### CoinVault
 
 - Chains: Stratis and Cirrus.
 - Features: Wallet, NFT and more.
-- Download: ["coinvault-\*.zip](https://github.com/block-core/blockcore-extension/releases)
+- Download: ["coinvault-\*.zip](https://github.com/block-core/blockcore-wallet/releases)
 
 ### Smart City Platform
 
 - Chains: City Chain
 - Features: Focused on decentralized citizenship
-- Download: ["smartcityplatform-\*.zip](https://github.com/block-core/blockcore-extension/releases)
+- Download: ["smartcityplatform-\*.zip](https://github.com/block-core/blockcore-wallet/releases)
 
 ## Supported Browsers
 
@@ -93,7 +94,7 @@ You can debug the active running app, using Chrome on the hosting device by open
 
 ## Desktop(electron) Debugging
 
-First build the extension from root:
+First build the wallet from root:
 
 ```
 npm run build:angular-production
