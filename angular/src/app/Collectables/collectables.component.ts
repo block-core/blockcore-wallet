@@ -1,4 +1,4 @@
-import {Component, Inject, Input, OnInit} from "@angular/core";
+import {Component, Input, OnInit} from "@angular/core";
 import {NonFungibleToken} from "./Collectables.interfaces";
 import {HttpClient} from "@angular/common/http";
 import {NetworkLoader} from "../../shared/network-loader";
@@ -30,7 +30,7 @@ export class collectables implements OnInit{
       const network = addressManager.getNetwork(this.networkType);
       this.indexerUrl = this.networkLoader.getServer(network.id, this.settings.values.server, this.settings.values.indexer);
 
-      const response = await axios.get(`${(this.indexerUrl)}/api/query/cirrus/CbVYEkBnexprTNHz4FtUJM9dGiTh7Pf48G/assets`, {
+      const response = await axios.get(`${(this.indexerUrl)}/api/query/cirrus/${(this.address)}/assets`, {
         'axios-retry': {
           retries: 0
         }

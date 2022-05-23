@@ -1,21 +1,20 @@
 
-<div class="full-width">
-  <h3 class="centered full-width">{{tokenJson.name}}</h3>
-  <span class="full-width">{{tokenJson.description}}</span>
-  <span class="full-width">{{nonFungibleToken.PricePaid | amount}}</span>
+<mat-card *ngIf="tokenJson.name">
+  <mat-card-title>{{tokenJson.name}}</mat-card-title>
+  <mat-card-subtitle>{{tokenJson.description}}</mat-card-subtitle>
+  <mat-card-content>
+    <p>price: {{nonFungibleToken.PricePaid | amount}}</p>
+    <div class="full-width">
+      <img class="resize" [src]="tokenJson.image" />
+    </div>
 
-  <div class="full-width">
-    <img class="resize" [src]="tokenJson.image" />
-  </div>
+    <mat-list class="full-width" *ngIf="tokenJson.attributes">
+      <mat-list-item *ngFor="let attribute of tokenJson.attributes" >
+        <p>type: {{attribute.display_type}}</p><br/>
+        <p>trait:{{attribute.trait_type}}</p><br/>
+        <p>value: {{attribute.value}}</p><br/>
+      </mat-list-item>
 
-
-  <mat-list class="full-width" *ngIf="tokenJson.attributes">
-    <mat-list-item *ngFor="let attribute of tokenJson.attributes" >
-      <span class="full-width">{{attribute.display_type}}</span>
-      <span class="full-width">{{attribute.trait_type}}</span>
-      <span class="full-width">{{attribute.value}}</span>
-    </mat-list-item>
-
-  </mat-list>
-
-</div>
+    </mat-list>
+  </mat-card-content>
+</mat-card>

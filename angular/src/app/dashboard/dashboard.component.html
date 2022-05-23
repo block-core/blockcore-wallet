@@ -158,16 +158,12 @@
         </ng-template>
 
         <div class="centered">
-          <div>
             <mat-nav-list>
-              <div mat-subheader>{{ 'Dashboard.Accounts' | translate }}</div>
-
-                       <app-collectable mat-list-item *ngFor="let account of getSmartContracts()"
+                       <app-collectable  *ngFor="let account of getSmartContracts()"
                                         [address]="account.state.receive[0].address"
                                         [networkType]="account.networkType">
                            </app-collectable>
             </mat-nav-list>
-          </div>
         </div>
     </mat-tab>
 

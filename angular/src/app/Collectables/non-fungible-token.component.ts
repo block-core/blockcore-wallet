@@ -1,4 +1,4 @@
-import {Component, Inject, inject, Input, OnDestroy, OnInit} from "@angular/core";
+import {Component, Input, OnDestroy, OnInit} from "@angular/core";
 import {NonFungibleToken, TokenJson} from "./Collectables.interfaces";
 import {ActivatedRoute} from "@angular/router";
 import axios from "axios";
@@ -26,16 +26,10 @@ export class NonFungibleTokenComponent implements OnInit, OnDestroy {
 
   async ngOnInit(): Promise<void> {
     const response = await axios.get(this.nonFungibleToken.uri,{
-      'axios-retry': {
-        retries: 0
-      }
+      'axios-retry': {  retries: 0  }
     });
 
     if (response.data != undefined)
       this.tokenJson = response.data;
-  }
-
-  toggleImage() {
-    this.showImage = !this.showImage;
   }
 }
