@@ -19,4 +19,5 @@ export class CITY implements Network {
     minFeeRate = 10000;
     testnet = false;
     isProofOfStake = true;
+    SmartContractSupport = false;
 }

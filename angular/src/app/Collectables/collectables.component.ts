@@ -5,6 +5,7 @@ import {NetworkLoader} from "../../shared/network-loader";
 import {NetworksService, SettingsService} from "../services";
 import {AddressManager} from "../../shared/address-manager";
 import axios from "axios";
+import {Account} from "../../shared";
 
 @Component({
   selector: 'app-collectable',
@@ -13,8 +14,7 @@ import axios from "axios";
 export class collectables implements OnInit{
   http:HttpClient;
   NonFungibleTokens:NonFungibleToken[];
-  @Input()address:string;
-  @Input()networkType:string
+  @Input()account:Account;
   private indexerUrl: string;
 
   constructor(
@@ -25,12 +25,15 @@ export class collectables implements OnInit{
 
 
   async ngOnInit(): Promise<void> {
-    if (this.address !== undefined && this.networkType !== undefined) {
+    if (this.account !== undefined) {
       const addressManager = new AddressManager(this.networkLoader);
-      const network = addressManager.getNetwork(this.networkType);
+      const network = addressManager.getNetwork(this.account.networkType);
       this.indexerUrl = this.networkLoader.getServer(network.id, this.settings.values.server, this.settings.values.indexer);
 
-      const response = await axios.get(`${(this.indexerUrl)}/api/query/cirrus/${(this.address)}/assets`, {
+      var receiveAddress = this.account.state.receive[0].address;
+      var queryNetwork = network.name.toLowerCase();
+
+      const response = await axios.get(`${(this.indexerUrl)}/api/query/${(queryNetwork)}/${(receiveAddress)}/assets`, {
         'axios-retry': {
           retries: 0
         }

@@ -155,6 +155,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   getSmartContracts():Account[] {
   return this.SmartContractAccounts = this.walletManager.activeWallet.accounts
-    .filter((item:Account) => item.networkType == "CRS");
+    .filter((item:Account) => this.network.getNetwork(item.networkType).SmartContractSupport);
 }
 }

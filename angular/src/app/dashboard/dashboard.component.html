@@ -160,8 +160,7 @@
         <div class="centered">
             <mat-nav-list>
                        <app-collectable  *ngFor="let account of getSmartContracts()"
-                                        [address]="account.state.receive[0].address"
-                                        [networkType]="account.networkType">
+                                        [account]="account">
                            </app-collectable>
             </mat-nav-list>
         </div>

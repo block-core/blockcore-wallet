@@ -19,4 +19,5 @@ export class CRS implements Network {
     minFeeRate = 10000;
     testnet = false;
     singleAddress = true;
+    SmartContractSupport = true;
 }
