@@ -17,9 +17,16 @@
     <mat-form-field class="input-full-width" appearance="outline">
         <mat-label>Amount</mat-label>
         <input matInput formControlName="amountInput" [(ngModel)]="sendService.amount" required>
-        <mat-error *ngIf="form.controls['amountInput'].invalid">Amount is required and must be correctly entered.
-        </mat-error>
+        <!-- <mat-error *ngIf="form.controls['amountInput'].invalid">Amount is required and must be correctly entered.</mat-error> -->
+        <mat-error *ngIf="form.controls['amountInput'].errors?.['min']">Amount cannot be negative.</mat-error>
+        <mat-error *ngIf="form.controls['amountInput'].errors?.['required']">Amount is required and must be correctly entered.</mat-error>
+        <mat-error *ngIf="form.controls['amountInput'].errors?.['tooManyDecimals']">The value of amount cannot have more than 8 decimals.</mat-error>
+        <mat-error *ngIf="form.controls['amountInput'].errors?.['tooHighValue']">The value of amount must be below 100000000000.</mat-error>
+        <mat-error *ngIf="form.controls['amountInput'].errors?.['tooHighAmount']">Insufficient funds available.</mat-error>
+        <!-- *ngIf="(myForm.get('phone').touched || myForm.get('phone').dirty) && myForm.get('phone').invalid" -->
     </mat-form-field>
+
+    <!-- <div>{{form.controls['amountInput'].errors | json}}</div> -->
 
     <mat-form-field class="input-full-width" appearance="outline">
         <mat-label>Fee</mat-label>

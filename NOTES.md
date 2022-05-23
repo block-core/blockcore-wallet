@@ -1,6 +1,6 @@
 # Blockcore Wallet: Notes
 
-## Different developer, architecture and technical notes for the implementation of Blockcore Wallet
+## Developer, architecture and technical notes for the implementation of Blockcore Wallet
 
 This document is used to document and capture some of the decisions that is being made during development of Blockcore Wallet.
 
