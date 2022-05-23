@@ -1,12 +1,12 @@
 export interface NonFungibleToken {
-  Id: string;
+  id: string;
   Creator: string;
   uri: string
-  IsBurned: boolean;
-  PricePaid: number;
-  TransactionId: string;
-  TokenSaleEvent: any;
-  ContractId: string
+  isBurned: boolean;
+  pricePaid: number;
+  transactionId: string;
+  tokenSaleEvent: any;
+  contractId: string
 }
 
 export interface attribute{

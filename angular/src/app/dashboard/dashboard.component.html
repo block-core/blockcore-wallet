@@ -158,11 +158,9 @@
         </ng-template>
 
         <div class="centered">
-            <mat-nav-list>
-                       <app-collectable  *ngFor="let account of getSmartContracts()"
-                                        [account]="account">
-                           </app-collectable>
-            </mat-nav-list>
+           <app-collectable  *ngFor="let account of SmartContractAccounts"
+               [account]="account">
+           </app-collectable>
         </div>
     </mat-tab>
 
