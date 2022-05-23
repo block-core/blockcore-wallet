@@ -3,7 +3,7 @@
   <mat-card-title>{{tokenJson.name}}</mat-card-title>
   <mat-card-subtitle>{{tokenJson.description}}</mat-card-subtitle>
   <mat-card-content>
-    <p>price: {{nonFungibleToken.PricePaid | amount}}</p>
+    <p>purchase price: {{nonFungibleToken.pricePaid | amount}}</p>
     <img class="resize" [src]="tokenJson.image" />
 
     <mat-list class="full-width" *ngIf="tokenJson.attributes">
