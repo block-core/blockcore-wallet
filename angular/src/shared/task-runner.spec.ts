@@ -1,3 +1,4 @@
+import { finished } from "stream";
 import { TaskRunner, TaskRunnerOptions } from "./task-runner";
 
 describe('TaskRunnerTests', () => {
@@ -38,25 +39,31 @@ describe('TaskRunnerTests', () => {
     //     }, options);
     // });
 
-    // it('Stop Running Task', async () => {
+    it('Stop Running Task', async () => {
 
-    //     const tasks = new TaskRunner();
+        const tasks = new TaskRunner();
 
-    //     const options: TaskRunnerOptions = {
-    //         exponentialDelay: true,
-    //         maximumWait: 1000 * 60, // one minute
-    //         cancel: false,
-    //         times: 10,
-    //         wait: 10 // Only wait 10 ms, this makes the calls: immediate, 20ms, 80ms, 640ms, 10240ms, 60000ms (maximum wait).
-    //     };
+        const options: TaskRunnerOptions = {
+            exponentialDelay: true,
+            maximumWait: 1000 * 60, // one minute
+            cancel: false,
+            times: 10,
+            wait: 10, // Only wait 10 ms, this makes the calls: immediate, 20ms, 80ms, 640ms, 10240ms, 60000ms (maximum wait).
+            finished: () => { console.log('FINISHED!!'); }
+        };
 
-    //     tasks.scheduleUntilStopped(() => {
-    //         console.log('I was executed!');
-    //     }, options);
+        const state = tasks.schedule(() => {
+            console.log('I was executed!');
+            
+        }, options);
 
-    //     setTimeout(() => {
-    //         console.log('stop execution!!!');
-    //         options.cancel = true;
-    //     }, 3000);
-    // });
+        setTimeout(() => {
+            // options.cancel = true;
+            tasks.stop(state, options);
+
+        }, 3000);
+
+        
+
+    });
 });
