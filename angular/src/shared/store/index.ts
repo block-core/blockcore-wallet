@@ -9,3 +9,4 @@ export * from './account-history-store';
 export * from './address-watch-store';
 // export * from './transaction-indexed-store';
 export * from './address-indexed-store';
+export * from './account-state-store';
