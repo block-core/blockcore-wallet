@@ -14,6 +14,7 @@ export class NonFungibleTokenComponent implements OnInit, OnDestroy {
   tokenJson:TokenJson;
   showImage:boolean;
   activatedRoute: ActivatedRoute;
+  showAttributes: boolean;
 
   constructor(activatedRoute: ActivatedRoute) {
     this.activatedRoute = activatedRoute;
@@ -31,5 +32,9 @@ export class NonFungibleTokenComponent implements OnInit, OnDestroy {
 
     if (response.data != undefined)
       this.tokenJson = response.data;
+  }
+
+  toggleAttributes()  {
+    this.showAttributes = !this.showAttributes;
   }
 }

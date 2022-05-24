@@ -1,18 +1,26 @@
 
+<div class="cardContainer">
 <mat-card *ngIf="tokenJson.name">
-  <mat-card-title>{{tokenJson.name}}</mat-card-title>
-  <mat-card-subtitle>{{tokenJson.description}}</mat-card-subtitle>
+    <mat-card-title>{{tokenJson.name}}</mat-card-title>
   <mat-card-content>
-    <p>purchase price: {{nonFungibleToken.pricePaid | amount}}</p>
+    <p>
+      {{tokenJson.description}}<br/>
+      <span *ngIf="nonFungibleToken.pricePaid">purchase price: {{nonFungibleToken.pricePaid | amount}}</span>
+    </p>
     <img class="resize" [src]="tokenJson.image" />
-
-    <mat-list class="full-width" *ngIf="tokenJson.attributes">
-      <mat-list-item *ngFor="let attribute of tokenJson.attributes" >
-        <p>type: {{attribute.display_type}}</p><br/>
-        <p>trait:{{attribute.trait_type}}</p><br/>
-        <p>value: {{attribute.value}}</p><br/>
-      </mat-list-item>
-
-    </mat-list>
+    <p>
+      <button mat-icon-button (click)="toggleAttributes()" *ngIf="tokenJson.attributes.length > 0">details
+        <mat-icon *ngIf="!showAttributes">keyboard_arrow_down</mat-icon>
+        <mat-icon *ngIf="showAttributes">keyboard_arrow_up</mat-icon>
+      </button>
+    </p>
+    <ng-container *ngIf="showAttributes">
+      <mat-list *ngIf="tokenJson.attributes">
+        <mat-list-item *ngFor="let attribute of tokenJson.attributes" >
+          <p>{{attribute.trait_type}} : {{attribute.value}}</p>
+        </mat-list-item>
+      </mat-list>
+    </ng-container>
   </mat-card-content>
 </mat-card>
+</div>

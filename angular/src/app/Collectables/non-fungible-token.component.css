@@ -1,18 +1,17 @@
 .resize {
-  width: 200px;
-  height: auto;
-}
-
-.resize {
   width: 150px;
   height: auto;
 }
 
 img {
-  border: 2px solid #C0C0C0;
+  /*border: 2px solid #C0C0C0;*/
   padding: 5px;
 }
 
 fullWidth{
   width: 100%;
+}
+
+.cardContainer{
+  margin: 20px;
 }
