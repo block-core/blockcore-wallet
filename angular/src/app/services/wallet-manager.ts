@@ -26,7 +26,7 @@ import { AccountStateStore } from "src/shared/store/account-state-store";
 const ECPair = ECPairFactory(ecc);
 var bitcoinMessage = require('bitcoinjs-message');
 const axios = require('axios').default;
-axiosRetry(axios, { retries: 3 });
+axiosRetry(axios, { retries: 3, retryDelay: axiosRetry.exponentialDelay });
 
 @Injectable({
     providedIn: 'root'
