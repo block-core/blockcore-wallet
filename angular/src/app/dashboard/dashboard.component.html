@@ -157,11 +157,11 @@
             <span>{{ 'Dashboard.Collectibles' | translate }}</span>
         </ng-template>
 
-        <div class="centered">
+        <ng-container class="centered">
            <app-collectable  *ngFor="let account of SmartContractAccounts"
                [account]="account">
            </app-collectable>
-        </div>
+        </ng-container>
     </mat-tab>
 
     <mat-tab *ngIf="feature.enabled('inbox')">

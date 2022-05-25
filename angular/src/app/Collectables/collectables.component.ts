@@ -6,6 +6,7 @@ import {NetworksService, SettingsService} from "../services";
 import {AddressManager} from "../../shared/address-manager";
 import axios from "axios";
 import {Account} from "../../shared";
+import {AccountStateStore} from "../../shared/store/account-state-store";
 
 @Component({
   selector: 'app-collectable',
@@ -14,13 +15,14 @@ import {Account} from "../../shared";
 export class collectables implements OnInit{
   http:HttpClient;
   NonFungibleTokens:NonFungibleToken[];
-  @Input()account:Account;
+  @Input() account:Account;
   private indexerUrl: string;
 
   constructor(
     private network: NetworksService,
     private settings: SettingsService,
-    private networkLoader: NetworkLoader) {
+    private networkLoader: NetworkLoader,
+    private accountStateStore: AccountStateStore) {
   }
 
 
@@ -30,16 +32,21 @@ export class collectables implements OnInit{
       const network = addressManager.getNetwork(this.account.networkType);
       this.indexerUrl = this.networkLoader.getServer(network.id, this.settings.values.server, this.settings.values.indexer);
 
-      var receiveAddress = this.account.state.receive[0].address;
-      var queryNetwork = network.name.toLowerCase();
+      const accountStore = this.accountStateStore.get(this.account.identifier);
+      if (accountStore != null)
+      {
+        let receiveAddress = accountStore.receive[0].address;
+        let queryNetwork = network.name.toLowerCase();
 
-      const response = await axios.get(`${(this.indexerUrl)}/api/query/${(queryNetwork)}/${(receiveAddress)}/assets`, {
-        'axios-retry': {
-          retries: 0
-        }
-      });
+        const response = await axios.get(`${(this.indexerUrl)}/api/query/${(queryNetwork)}/${(receiveAddress)}/assets`, {
+          'axios-retry': {
+            retries: 0
+          }
+        });
 
-      this.NonFungibleTokens = response.data.items;
+        this.NonFungibleTokens = response.data.items;
+      }
+
     }
   }
 }
