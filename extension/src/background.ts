@@ -4,46 +4,11 @@
 import { Message } from '../../angular/src/shared/interfaces';
 import { BackgroundManager, ProcessResult } from '../../angular/src/shared/background-manager';
 import { SharedManager } from '../../angular/src/shared/shared-manager';
-import { RunState, TaskRunner, TaskRunnerOptions, TaskRunnerState } from '../../angular/src/shared/task-runner';
-import { Mutex } from '../../angular/src/shared/mutex';
+import { RunState } from '../../angular/src/shared/task-runner';
 
-let indexing = false;
-let watching = false;
-
-// Create a shared manager that keeps state of indexing or watching.
 let watchManager: BackgroundManager = null;
+let indexing = false;
 let shared = new SharedManager();
-let runner = new TaskRunner();
-
-let indexerState: TaskRunnerState;
-let indexerOptions: TaskRunnerOptions = {
-    exponentialDelay: false,
-    times: 1,
-    wait: 0,
-    finished: () => {  // Whenever the indexer is finished, restart the watcher.
-        console.log('Indexer finished, schedule watcher again! Set indexing to false!');
-        indexing = false;
-        // watcherState = runner.schedule(runWatcher, watcherOptions);
-    },
-};
-
-let watcherState: TaskRunnerState;
-let watcherOptions: TaskRunnerOptions = {
-    exponentialDelay: true,
-    times: undefined,
-    maximumWait: 60000, // one minute
-    wait: 4, // This makes the calls: immediate, 8ms, 32ms, 256ms, 4096ms, 60000ms (maximum wait).
-    finished: () => { console.log('FINISHED WATCHER!!'); }
-};
-
-//     const options: TaskRunnerOptions = {
-//         exponentialDelay: true,
-//         maximumWait: 1000 * 60, // one minute
-//         cancel: false,
-//         times: 10,
-//         wait: 10, // Only wait 10 ms, this makes the calls: immediate, 20ms, 80ms, 640ms, 10240ms, 60000ms (maximum wait).
-//         finished: () => { console.log('FINISHED!!'); }
-//     };
 
 // Run when the browser has been fully exited and opened again.
 chrome.runtime.onStartup.addListener(async () => {

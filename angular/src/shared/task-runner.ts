@@ -21,7 +21,7 @@ export interface TaskRunnerOptions {
     finished?: Function;
 }
 
-interface TaskRunnerState {
+export interface TaskRunnerState {
     /** Number of times left of execution, will move down to 0 then stop. */
     times: number;
 
@@ -34,6 +34,10 @@ interface TaskRunnerState {
     logs: string[];
 
     timeoutRef?: any;
+}
+
+export interface RunState {
+    cancel?: boolean;
 }
 
 /** Allows different types of scheduled tasks.
