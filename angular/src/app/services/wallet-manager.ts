@@ -540,7 +540,7 @@ export class WalletManager {
         return this.store.get(id);
     }
 
-    private removeAccountHistory(account: Account) {
+    private async removeAccountHistory(account: Account) {
         const addresses = this.accountStateStore.getAllAddresses(account.identifier);
 
         for (let j = 0; j < addresses.length; j++) {
@@ -551,14 +551,15 @@ export class WalletManager {
 
         this.accountHistoryStore.remove(account.identifier);
         this.accountStateStore.remove(account.identifier);
+
+        await this.accountHistoryStore.save();
+        await this.accountStateStore.save();
     }
 
     private async saveAndUpdate() {
         await this.store.save();
         await this.addressWatchStore.save();
         await this.addressStore.save();
-        await this.accountHistoryStore.save();
-        await this.accountStateStore.save();
 
         console.log('accountStateStore:', this.accountStateStore.all());
 
@@ -577,7 +578,7 @@ export class WalletManager {
 
         try {
             const account = wallet.accounts[accountIndex];
-            this.removeAccountHistory(account);
+            await this.removeAccountHistory(account);
         }
         catch (err) {
             console.log('Failed to remove account history.');
@@ -615,7 +616,7 @@ export class WalletManager {
         try {
             for (let i = 0; i < wallet.accounts.length; i++) {
                 const account = wallet.accounts[i];
-                this.removeAccountHistory(account);
+                await this.removeAccountHistory(account);
             }
         }
         catch

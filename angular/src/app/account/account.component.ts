@@ -120,8 +120,8 @@ export class AccountComponent implements OnInit, OnDestroy {
     console.log('accountHistoryStore (after):', this.accountStateStore.all());
 
     // Send a message to run indexing on all wallets, send accountId for future optimization of running index only on this account.
-    const msg = this.communication.createMessage('index', { force: true, accountId: this.walletManager.activeAccount.identifier });
-    this.communication.send(msg);
+    this.communication.send(this.communication.createMessage('index', { accountId: this.walletManager.activeAccount.identifier }));
+
     this.loading = false;
   }
 
@@ -170,6 +170,8 @@ export class AccountComponent implements OnInit, OnDestroy {
     return this.walletManager.activeAccount.networkType;
   }
 
+  public history: TransactionHistory[] = [];
+
   updateAccountHistory() {
     if (this.walletManager.activeAccount == null) {
       return;
@@ -190,6 +192,8 @@ export class AccountComponent implements OnInit, OnDestroy {
       };
     }
 
+    this.history = this.accountHistory.history;
+
     // console.log('1:', this.accountHistoryStore);
     // console.log('2:', this.accountHistoryStore.get(this.walletManager.activeAccount.identifier))
     // console.log(this.accountHistory);
@@ -203,7 +207,7 @@ export class AccountComponent implements OnInit, OnDestroy {
   async ngOnInit() {
     this.subscriptions.push(this.state.changed$.subscribe((state) => {
       this.ngZone.run(() => {
-        console.log('state changed, update account history!');
+        console.log('this.state.changed$!!!!!!!! state changed, update account history!');
         this.updateAccountHistory();
       });
     }));

@@ -2,15 +2,48 @@
 // Responsible for orchestrating events and processing when running in extension mode.
 
 import { Message } from '../../angular/src/shared/interfaces';
-import { BackgroundManager } from '../../angular/src/shared/background-manager';
+import { BackgroundManager, ProcessResult } from '../../angular/src/shared/background-manager';
 import { SharedManager } from '../../angular/src/shared/shared-manager';
+import { RunState, TaskRunner, TaskRunnerOptions, TaskRunnerState } from '../../angular/src/shared/task-runner';
+import { Mutex } from '../../angular/src/shared/mutex';
 
 let indexing = false;
 let watching = false;
 
 // Create a shared manager that keeps state of indexing or watching.
-let manager = new BackgroundManager();
+let watchManager: BackgroundManager = null;
 let shared = new SharedManager();
+let runner = new TaskRunner();
+
+let indexerState: TaskRunnerState;
+let indexerOptions: TaskRunnerOptions = {
+    exponentialDelay: false,
+    times: 1,
+    wait: 0,
+    finished: () => {  // Whenever the indexer is finished, restart the watcher.
+        console.log('Indexer finished, schedule watcher again! Set indexing to false!');
+        indexing = false;
+        // watcherState = runner.schedule(runWatcher, watcherOptions);
+    },
+};
+
+let watcherState: TaskRunnerState;
+let watcherOptions: TaskRunnerOptions = {
+    exponentialDelay: true,
+    times: undefined,
+    maximumWait: 60000, // one minute
+    wait: 4, // This makes the calls: immediate, 8ms, 32ms, 256ms, 4096ms, 60000ms (maximum wait).
+    finished: () => { console.log('FINISHED WATCHER!!'); }
+};
+
+//     const options: TaskRunnerOptions = {
+//         exponentialDelay: true,
+//         maximumWait: 1000 * 60, // one minute
+//         cancel: false,
+//         times: 10,
+//         wait: 10, // Only wait 10 ms, this makes the calls: immediate, 20ms, 80ms, 640ms, 10240ms, 60000ms (maximum wait).
+//         finished: () => { console.log('FINISHED!!'); }
+//     };
 
 // Run when the browser has been fully exited and opened again.
 chrome.runtime.onStartup.addListener(async () => {
@@ -41,14 +74,15 @@ chrome.runtime.onInstalled.addListener(async ({ reason }) => {
     // UI was last activated. If it's 1 hour since last time, set the periodInMinutes to 60.
     // And if user has not used the extension UI in 24 hours, then set interval to 24 hours.
     chrome.alarms.get('index', a => {
-        if (!a) chrome.alarms.create('index', { periodInMinutes: 5 });
+        if (!a) chrome.alarms.create('index', { periodInMinutes: 10 });
     });
 
     if (reason === 'install') {
         // Open a new tab for initial setup.
         chrome.tabs.create({ url: "index.html" });
     } else if (reason === 'update') {
-
+        // Run a full indexing when the extension has been updated/reloaded.
+        await executeIndexer();
     }
 });
 
@@ -57,154 +91,57 @@ chrome.alarms.onAlarm.addListener(async (alarm: chrome.alarms.Alarm) => {
 
     if (alarm.name === 'periodic') {
         await shared.checkLockTimeout();
-
-        // const storage = globalThis.chrome.storage as any;
-
-        // // Get both "active" (Date) and timeout (number of minutes) from local settings.
-        // const { active, timeout } = await chrome.storage.local.get(['active', 'timeout']);
-
-        // // Reset storage if there is no 'active' state data.
-        // if (!active) {
-        //     await storage.session.remove(['keys']);
-        //     // await storage.session.clear(); // Might be dramatic to clear to whole session storage?
-        //     console.log('There are no active value, session storage is cleared.');
-        // } else {
-        //     // Parse the active date.
-        //     const timeoutDate = new Date(active);
-
-        //     // The reset date is current date minus the timeout.
-        //     var resetDate = new Date(new Date().valueOf() - timeout);
-
-        //     // Check of the timeout has been reached and clear if it has.
-        //     if (resetDate > timeoutDate) {
-        //         await storage.session.remove(['keys']);
-        //         // await storage.session.clear(); // Might be dramatic to clear to whole session storage?
-        //         console.log('Timeout has been researched, session storage is cleared.');
-
-        //         chrome.runtime.sendMessage({ event: 'timeout' }, function (response) {
-        //             console.log('Extension:sendMessage:response:', response);
-        //         });
-        //     }
-        // }
     } else if (alarm.name === 'index') {
-        if (!indexing) {
-            indexing = true;
-            await runIndexer(false);
-            indexing = false;
-        } else {
-            console.log('Indexing is already running. Skipping for now.');
-        }
+        await executeIndexer();
     }
 });
 
 chrome.runtime.onMessage.addListener(async (message: Message, sender, sendResponse) => {
-    if (message.target !== 'background') {
-        console.log('This message is not handled by the background logic.');
+    console.log('MESSAGE RECEIVED!', message);
+
+    if (message.type === 'keep-alive') {
+        console.log('Received keep-alive message.');
+    } else if (message.type === 'index') {
+        await executeIndexer();
+    } else if (message.type === 'watch') {
+        await runWatcher();
+    }
+});
+
+const executeIndexer = async () => {
+    // If we are already indexing, simply ignore this request.
+    if (indexing) {
+        console.log('Already indexing, skipping this indexing request.');
         return;
     }
 
-    console.log('Background:onMessage: ', message);
-    console.log('Background:onMessage:callback: ', sender);
+    indexing = true;
+    let result = await runIndexer();
+    indexing = false;
 
-    let response;
+    console.log('Result:', result);
 
-    // Do we want to allow events to be triggered from the web app -> provider -> content and into background script?
-    try {
-        switch (message.type) {
-            case 'watch': {
-                if (message.data.force) {
-                    console.log('Force Watch was called!');
-                    runWatcher(message.data.force);
-                    response = 'ok';
-                }
-                else if (!watching) {
-                    watching = true;
-                    // Run watch every 15 second until the service worker is killed.
-                    await runWatcher(message.data.force);
-                    setInterval(runWatcher, 15000);
-                    response = 'ok';
-                } else {
-                    console.log('Watcher is already running.');
-                    response = 'busy';
-                }
-
-                break;
-            }
-            case 'index': {
-                console.log('received index message....', indexing);
-                if (!indexing) {
-                    indexing = true;
-                    response = 'ok';
-                    await runIndexer(message.data.force);
-                    indexing = false;
-                } else {
-                    console.log('Indexing is already running. Skipping for now.');
-                    response = 'busy';
-                }
-
-                break;
-            }
-            default:
-                console.log(`The message type ${message.type} is not known.`);
-                response = null;
-                break;
-        }
-    } catch (error: any) {
-        return { error: { message: error.message, stack: error.stack } }
-    }
-
-    sendResponse(response);
-});
-
-const runIndexer = async (force: boolean) => {
-    const indexerRun = await manager.runIndexer(force);
-
-    console.log('RUN INDEXER COMPLETED!!', indexerRun);
-
-    if (indexerRun.changes) {
-        chrome.runtime.sendMessage({
-            type: 'indexed',
-            data: { source: 'indexer-on-demand' },
-            ext: 'blockcore',
-            source: 'background',
-            target: 'tabs',
-            host: location.host
-        }, function (response) {
-            console.log('Extension:sendMessage:response:indexed:', response);
-        });
-    } else {
-        console.log('Indexer found zero changes. We will still inform the UI to refresh wallet to get latest scan state.');
-
-        chrome.runtime.sendMessage({
-            type: 'updated',
-            data: { source: 'indexer-on-demand' },
-            ext: 'blockcore',
-            source: 'background',
-            target: 'tabs',
-            host: location.host
-        }, function (response) {
-            console.log('Extension:sendMessage:response:updated:', response);
-        });
-    }
-
-    // If the indexer run is not completed (fully processed all accounts), we will run it again until it completes.
-    if (!indexerRun.completed) {
-        await runIndexer(force);
-    } else {
-        indexing = false;
-    }
+    // When the indexer has finished, run watcher automatically.
+    await runWatcher();
 }
 
-const runWatcher = async (force: boolean) => {
-    // Do not run the watcher when the indexer is running.
-    if (!indexing) {
-        const changes = await manager.runWatcher(force);
-        console.log('Watcher finished...', changes);
+const runIndexer = async () => {
+    // Stop and ensure watcher doesn't start up while indexer is running.
+    if (watchManager) {
+        watchManager.onStopped = null;
+        watchManager.stop();
+        watchManager = null;
+    }
 
-        if (changes) {
+    // Whenever indexer is executed, we'll create a new manager.
+    let manager = new BackgroundManager();
+    manager.onUpdates = (status: ProcessResult) => {
+        if (status.changes) {
+            console.log('Indexer found changes. Send message!');
+
             chrome.runtime.sendMessage({
                 type: 'indexed',
-                data: { source: 'watcher' },
+                data: { source: 'indexer-on-schedule' },
                 ext: 'blockcore',
                 source: 'background',
                 target: 'tabs',
@@ -212,13 +149,12 @@ const runWatcher = async (force: boolean) => {
             }, function (response) {
                 console.log('Extension:sendMessage:response:indexed:', response);
             });
-        }
-        else {
-            console.log('Watcher found zero changes. We will still inform the UI to refresh wallet to get latest scan state.');
+        } else {
+            console.log('Indexer found zero changes. We will still inform the UI to refresh wallet to get latest scan state.');
 
             chrome.runtime.sendMessage({
                 type: 'updated',
-                data: { source: 'watcher' },
+                data: { source: 'indexer-on-schedule' },
                 ext: 'blockcore',
                 source: 'background',
                 target: 'tabs',
@@ -227,8 +163,73 @@ const runWatcher = async (force: boolean) => {
                 console.log('Extension:sendMessage:response:updated:', response);
             });
         }
+    }
+
+    await manager.runIndexer();
+
+    // Reset the manager after full indexer run.
+    manager = null;
+}
+
+const runWatcher = async () => {
+    // If we are indexing, simply ignore all calls to runWatcher.
+    if (indexing) {
+        return;
+    }
+
+    // If there are multiple requests incoming to stop the watcher at the same time
+    // they will all simply mark the watch manager to stop processing, which will 
+    // automatically start a new instance when finished.
+    if (watchManager != null) {
+        // First stop the existing watcher process.
+        watchManager.stop();
+        console.log('Calling to stop watch manager...');
     } else {
-        console.log('Is already indexing, skipping watch processing.');
+        watchManager = new BackgroundManager();
+
+        // Whenever the manager has successfully stopped, restart the watcher process.
+        watchManager.onStopped = () => {
+            console.log('Watch Manager actually stopped, re-running!!');
+            watchManager = null;
+            runWatcher();
+        };
+
+        watchManager.onUpdates = (status: ProcessResult) => {
+            if (status.changes) {
+                console.log('Watcher found changes. Send message!');
+
+                chrome.runtime.sendMessage({
+                    type: 'indexed',
+                    data: { source: 'watcher' },
+                    ext: 'blockcore',
+                    source: 'background',
+                    target: 'tabs',
+                    host: location.host
+                }, function (response) {
+                    console.log('Extension:sendMessage:response:indexed:', response);
+                });
+            }
+            else {
+                console.log('Watcher found zero changes. We will still inform the UI to refresh wallet to get latest scan state.');
+
+                chrome.runtime.sendMessage({
+                    type: 'updated',
+                    data: { source: 'watcher' },
+                    ext: 'blockcore',
+                    source: 'background',
+                    target: 'tabs',
+                    host: location.host
+                }, function (response) {
+                    console.log('Extension:sendMessage:response:updated:', response);
+                });
+            }
+        }
+
+        let runState: RunState = {
+
+        };
+
+        await watchManager.runWatcher(runState);
     }
 };
 

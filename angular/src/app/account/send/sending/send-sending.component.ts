@@ -69,6 +69,9 @@ export class AccountSendSendingComponent implements OnInit, OnDestroy {
         // Save the watch store so the background watcher will see the new entries.
         await this.addressWatchStore.save();
 
+        // Trigger watch process to start immediately now that we've broadcasted a new transaction.
+        this.communication.send(this.communication.createMessage('watch', {}, 'background'));
+
         // TODO: Parse the transaction locally and update the local UI state to match the future state of the indexer, ensuring 
         // a good user experience where the transaction is displayed in the history immediately. This requires updating multiple
         // stores.
@@ -96,15 +99,6 @@ export class AccountSendSendingComponent implements OnInit, OnDestroy {
         //         outputs: []
         //     }
         // });
-
-        // await this.transactionStore.save();
-        // this.accountHistoryStore.set();
-        // this.addressStore.set();
-        // Wait a little while before forcing watch to ensure the indexer has been able to update.
-        // setTimeout(() => {
-        //     // Trigger an watch process right now so the UI is updated as soon as possible.
-        //     this.communication.send(this.communication.createMessage('watch', { force: true }, 'background'));
-        // }, 2000);
 
         this.router.navigateByUrl('/account/send/success');
     }

@@ -1,11 +1,13 @@
 import axiosRetry from 'axios-retry';
 import { AddressState, Transaction } from '.';
 import { AddressManager } from './address-manager';
+import { ProcessResult } from './background-manager';
 import { AccountUnspentTransactionOutput, AddressIndexedState, TransactionHistory } from './interfaces';
 import { AccountHistoryStore, AddressStore, SettingStore, TransactionStore, WalletStore } from './store';
 import { AccountStateStore } from './store/account-state-store';
 import { AddressIndexedStore } from './store/address-indexed-store';
 import { AddressWatchStore } from './store/address-watch-store';
+import { RunState } from './task-runner';
 
 //const axios = require('axios');
 // In order to gain the TypeScript typings (for intellisense / autocomplete) while using CommonJS imports with require() use the following approach:
@@ -45,6 +47,8 @@ export class IndexerBackgroundService {
     ) {
 
     }
+
+    public runState: RunState;
 
     async calculateBalance() {
         // Then calculate the balance.
@@ -252,7 +256,7 @@ export class IndexerBackgroundService {
     }
 
     /** This is the main process that runs the indexing and persists the state. */
-    async process(addressWatchStore: AddressWatchStore) {
+    async process(addressWatchStore: AddressWatchStore): Promise<ProcessResult> {
         console.log('INDEXER:PROCESS ENTRY WAS TRIGGERED...');
 
         // TODO: There is a lot of duplicate code in this method, refactor when possible.
@@ -272,6 +276,10 @@ export class IndexerBackgroundService {
         console.log('Looping wallets', wallets);
 
         for (let i = 0; i < wallets.length; i++) {
+            if (this.runState.cancel) {
+                return { cancelled: true };
+            }
+
             const wallet = wallets[i];
 
             console.log('Looping accounts:', wallet.accounts);
@@ -281,6 +289,10 @@ export class IndexerBackgroundService {
             }
 
             for (let j = 0; j < wallet.accounts.length; j++) {
+                if (this.runState.cancel) {
+                    return { cancelled: true };
+                }
+
                 const date = new Date().toISOString();
                 const account = wallet.accounts[j];
                 const accountState = this.accountStateStore.get(account.identifier);
@@ -303,15 +315,20 @@ export class IndexerBackgroundService {
                             continue;
                         }
 
-                        for (let ai = 0; ai < addresses.length; ai++) {
-                            addressWatchStore.remove(addresses[ai].address);
-                        }
+                        // WE WILL NO LONGER REMOVE FROM ADDRESS WATCH ON QUICK, TO ENSURE IT UPDATES QUICKER.
+                        // for (let ai = 0; ai < addresses.length; ai++) {
+                        //     addressWatchStore.remove(addresses[ai].address);
+                        // }
 
-                        await addressWatchStore.save();
+                        // await addressWatchStore.save();
                     }
 
                     // Process receive addresses until we've exhausted them.
                     for (let k = 0; k < accountState.receive.length; k++) {
+                        if (this.runState.cancel) {
+                            return { cancelled: true };
+                        }
+
                         const address = accountState.receive[k];
 
                         // Get the current state for this address:
@@ -352,6 +369,10 @@ export class IndexerBackgroundService {
                     }
 
                     for (let k = 0; k < accountState.change.length; k++) {
+                        if (this.runState.cancel) {
+                            return { cancelled: true };
+                        }
+
                         const address = accountState.change[k];
                         // Get the current state for this address:
                         let addressState = this.addressIndexedStore.get(address.address);
@@ -398,6 +419,10 @@ export class IndexerBackgroundService {
 
                         // Process registered addresses until we've exhausted them.
                         for (let k = 0; k < addresses.length; k++) {
+                            if (this.runState.cancel) {
+                                return { cancelled: true };
+                            }
+
                             const address = addresses[k];
                             address.count = address.count + 1;
 
@@ -605,6 +630,10 @@ export class IndexerBackgroundService {
                     else {
                         // Process receive addresses until we've exhausted them.
                         for (let k = 0; k < accountState.receive.length; k++) {
+                            if (this.runState.cancel) {
+                                return { cancelled: true };
+                            }
+
                             const address = accountState.receive[k];
 
                             // Get the current state for this address:
@@ -645,6 +674,10 @@ export class IndexerBackgroundService {
                         }
 
                         for (let k = 0; k < accountState.change.length; k++) {
+                            if (this.runState.cancel) {
+                                return { cancelled: true };
+                            }
+
                             const address = accountState.change[k];
                             // Get the current state for this address:
                             let addressState = this.addressStore.get(address.address);
@@ -703,7 +736,7 @@ export class IndexerBackgroundService {
 
         console.log('RETURNING FROM INDEXER: ', changes);
 
-        return { changes, completed: anyAddressNotCompleteInAnyWallet };
+        return { changes, completed: anyAddressNotCompleteInAnyWallet, cancelled: false };
     }
 
     parseLinkHeader(linkHeader: string) {
