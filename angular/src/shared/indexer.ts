@@ -21,13 +21,13 @@ export class IndexerBackgroundService {
     private confirmed = 1;
 
     /** The height at which we will stop watching. */
-    private watch = 3;
+    private watch = 6;
 
     /** The maximum number of times we'll attempt to watch an address before it's wiped from the watch list. */
     private maxWatch = 500;
 
     /** We will attempt to query the address at minimum 10 times before we check the latest transactions if we should quit. */
-    private minWatchCount = 10;
+    private minWatchCount = 20;
 
     /** The number of entries pr. address to process before updating the UI with partially indexed data. This won't affect
      * large wallets that have a single transaction pr. address and many addresses, but it will make large staker/miner wallets
