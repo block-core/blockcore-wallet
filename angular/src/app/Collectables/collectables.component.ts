@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from "@angular/core";
+import {Component, EventEmitter, Input, OnInit, Output} from "@angular/core";
 import {NonFungibleToken} from "./Collectables.interfaces";
 import {HttpClient} from "@angular/common/http";
 import {NetworkLoader} from "../../shared/network-loader";
@@ -16,6 +16,7 @@ export class collectables implements OnInit{
   http:HttpClient;
   NonFungibleTokens:NonFungibleToken[];
   @Input() account:Account;
+  @Output() totalItemsOnAccount: EventEmitter<number> =new EventEmitter<number>();
   private indexerUrl: string;
 
   constructor(
@@ -45,6 +46,7 @@ export class collectables implements OnInit{
         });
 
         this.NonFungibleTokens = response.data.items;
+        this.totalItemsOnAccount.emit(response.data.total);
       }
 
     }

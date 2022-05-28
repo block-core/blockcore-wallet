@@ -33,6 +33,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
   history: Section[] = [];
   networkStatus$: Observable<NetworkStatus[]>;
   SmartContractAccounts : Account[];
+  totalCollectablesCount:number;
+  stratisphereUrl:string = "https://stratisphere.com/";
 
 
   constructor(
@@ -56,6 +58,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     private cd: ChangeDetectorRef) {
 
     this.uiState.showBackButton = false;
+    this.totalCollectablesCount = 0;
 
     if (this.walletManager.activeWallet) {
       this.uiState.title = this.walletManager.activeWallet.name;
@@ -155,4 +158,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   async logWatcher() {
     console.log(this.addressWatchStore);
   }
-}
+
+  AddToTotalItems(totalOnAccount: number) {
+    this.totalCollectablesCount += totalOnAccount;
+  }}

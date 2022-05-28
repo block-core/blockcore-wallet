@@ -158,12 +158,16 @@
         </ng-template>
 
         <ng-container class="centered">
-           <app-collectable  *ngFor="let account of SmartContractAccounts"
+          <div class="centered nft-view" *ngIf="totalCollectablesCount == 0">
+            <img src="assets/nfts.png" class="nft-preview"><br>
+            No collectables found
+            <a [href]="this.stratisphereUrl" target="_blank">Open marketplace</a>
+          </div>
+           <app-collectable  *ngFor="let account of SmartContractAccounts" (totalItemsOnAccount)="AddToTotalItems($event)"
                [account]="account">
            </app-collectable>
         </ng-container>
     </mat-tab>
-
     <mat-tab *ngIf="feature.enabled('inbox')">
         <ng-template mat-tab-label>
             <mat-icon class="example-tab-icon">mail</mat-icon>
@@ -171,6 +175,4 @@
             <span matBadge="2" matBadgeOverlap="false">{{ 'Dashboard.Inbox' | translate }}</span>
         </ng-template>
     </mat-tab>
-
 </mat-tab-group>
-
