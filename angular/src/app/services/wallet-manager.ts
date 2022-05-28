@@ -644,6 +644,10 @@ export class WalletManager {
                 console.log('Extension:sendMessage:response:updated:', response);
             });
         }
+
+        // After updating all UI instances, also make sure we restart the watcher
+        // because it holds state while interval looping.
+        this.communication.send(this.communication.createMessage('watch', { force: true }, 'background'));
     }
 
     async addAccount(account: Account, wallet: Wallet, runIndexIfRestored = true) {
@@ -688,8 +692,7 @@ export class WalletManager {
 
         // If the wallet type is restored, force an index process to restore the state.
         if (wallet.restored && runIndexIfRestored == true) {
-            const msg = this.communication.createMessage('index', { force: true }, 'background');
-            this.communication.send(msg);
+            this.communication.send(this.communication.createMessage('index', { force: true }, 'background'));
         }
     }
 
