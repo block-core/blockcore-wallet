@@ -250,6 +250,7 @@ export class IndexerBackgroundService {
                     await this.accountStateStore.save();
 
                     console.log('accountStateStore:', this.accountStateStore.all());
+                    console.log('accountHistoryStore:', this.accountHistoryStore.all());
                 }
             }
         }

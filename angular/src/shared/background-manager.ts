@@ -95,8 +95,9 @@ export class BackgroundManager {
             }
 
             if (processResult.changes) {
+                console.log('RECALCULATING BALANCE FOR WATCHER!');
                 // Calculate the balance of the wallets.
-                indexer.calculateBalance();
+                await indexer.calculateBalance();
             }
 
             if (this.onUpdates) {
