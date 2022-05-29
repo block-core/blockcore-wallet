@@ -114,7 +114,6 @@ export class WalletManager {
             const privateKey = ecPair.privateKey;
 
             var signature = bitcoinMessage.sign(content, privateKey, ecPair.compressed)
-            console.log(signature.toString('base64'));
             return signature.toString('base64');
         }
         catch (error) {
@@ -156,7 +155,7 @@ export class WalletManager {
     async createTransaction(wallet: Wallet, account: Account, address: string, changeAddress: string, amount: Big, fee: Big, unspent: AccountUnspentTransactionOutput[]): Promise<{ changeAddress: string, changeAmount: Big, addresses: string[], transactionHex: string, fee: number, feeRate: number, virtualSize: number, weight: number }> {
         // TODO: Verify the address for this network!! ... Help the user avoid sending transactions on very wrong addresses.
         const network = this.getNetwork(account.networkType);
-        console.log('NETWORK:', network);
+        this.logger.debug('NETWORK:', network);
 
         const accountState = this.accountStateStore.get(account.identifier);
         const affectedAddresses = [];
@@ -165,7 +164,7 @@ export class WalletManager {
         tx.setVersion(1); // Lock-time is not used so set to 1 (defaults to 2).
         tx.setLocktime(0); // These are defaults. This line is not needed.
 
-        console.log('unspent', unspent);
+        this.logger.debug('unspent', unspent);
 
         // Collect unspent until we have enough amount.
         const requiredAmount = amount.add(fee);
@@ -191,7 +190,7 @@ export class WalletManager {
             aggregatedAmount = result.amount;
             inputs.push(...result.utxo);
 
-            console.log('UTXO QUERY RESULT: ', result);
+            this.logger.debug('UTXO QUERY RESULT: ', result);
 
             // for (let i = 0; i < unspentOutputs.length; i++) {
             //     const tx = unspentOutputs[i];
@@ -205,7 +204,7 @@ export class WalletManager {
             // }
         }
 
-        console.log('SELECTED INPUTS FOR TRANSACTION: ', inputs);
+        this.logger.debug('SELECTED INPUTS FOR TRANSACTION: ', inputs);
 
         for (let i = 0; i < inputs.length; i++) {
             const input = inputs[i];
@@ -228,7 +227,7 @@ export class WalletManager {
             });
         }
 
-        console.log('affectedAddresses: ', affectedAddresses);
+        this.logger.debug('affectedAddresses: ', affectedAddresses);
 
         // Add the output the user requested.
         tx.addOutput({ address, value: amount.toNumber() });
@@ -288,8 +287,6 @@ export class WalletManager {
 
         const finalTransaction = tx.finalizeAllInputs().extractTransaction();
         const transactionHex = finalTransaction.toHex();
-
-        console.log('TX:', tx);
         this.logger.debug('TransactionHex', transactionHex);
 
         return { changeAddress, changeAmount, addresses: affectedAddresses, transactionHex, fee: tx.getFee(), feeRate: tx.getFeeRate(), virtualSize: finalTransaction.virtualSize(), weight: finalTransaction.weight() };
@@ -512,7 +509,7 @@ export class WalletManager {
     }
 
     async setActiveAccount(id: string) {
-        console.log('WalletManager:setActiveAccount:' + id);
+        this.logger.info('WalletManager:setActiveAccount:' + id);
 
         if (this.activeAccountId != id) {
             this._activeAccountId = id;
@@ -561,7 +558,7 @@ export class WalletManager {
         await this.addressWatchStore.save();
         await this.addressStore.save();
 
-        console.log('accountStateStore:', this.accountStateStore.all());
+        this.logger.debug('accountStateStore:', this.accountStateStore.all());
 
         this.updateAllInstances();
     }
@@ -581,8 +578,7 @@ export class WalletManager {
             await this.removeAccountHistory(account);
         }
         catch (err) {
-            console.log('Failed to remove account history.');
-            console.error(err);
+            this.logger.error('Failed to remove account history.', err);
         }
 
         // Remove from accounts list.
@@ -731,7 +727,6 @@ export class WalletManager {
             });
 
             await this.accountStateStore.save();
-            // await this.store.save();
         }
 
         return address;
@@ -773,8 +768,5 @@ export class WalletManager {
 
         // This will save it.
         await this.setActiveWallet(wallet.id);
-
-        // Persist the newly created wallet.
-        // await this.store.save();
     }
 }

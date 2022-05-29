@@ -1,5 +1,5 @@
 import { Component, Renderer2 } from '@angular/core';
-import { UIState, FeatureService, EnvironmentService, SettingsService, WalletManager, CommunicationService } from '../services';
+import { UIState, FeatureService, EnvironmentService, SettingsService, WalletManager, CommunicationService, LoggerService } from '../services';
 import { Location } from '@angular/common'
 import { Settings } from '../../shared/interfaces';
 import { INDEXER_URL } from '../shared/constants';
@@ -23,6 +23,7 @@ export class SettingsComponent {
     public feature: FeatureService,
     public env: EnvironmentService,
     private renderer: Renderer2,
+    private logger: LoggerService,
     private walletManager: WalletManager,
     private communication: CommunicationService,
     private settingsService: SettingsService,
@@ -46,7 +47,7 @@ export class SettingsComponent {
     this.uiState.title = 'Settings';
     this.uiState.showBackButton = true;
 
-    console.log('Settings:', this.settings);
+    this.logger.debug('Settings:', this.settings);
   }
 
   updateAllInstances() {
@@ -65,13 +66,13 @@ export class SettingsComponent {
   }
 
   async save() {
-    console.log('SAVING', this.settings);
+    this.logger.debug('SAVING', this.settings);
 
     await this.settingsService.replace(this.settings);
 
     await this.walletManager.resetTimer();
 
-    console.log('Theme is now after save in replace: ', this.settingsService.values.theme);
+    this.logger.debug('Theme is now after save in replace: ', this.settingsService.values.theme);
 
     // this.communication.send(this.communication.createMessage('settings:saved', this.settingsService.values));
 
@@ -89,6 +90,6 @@ export class SettingsComponent {
   }
 
   onAccentChanged(event: any) {
-    console.log(this.settings);
+    this.logger.debug(this.settings);
   }
 }

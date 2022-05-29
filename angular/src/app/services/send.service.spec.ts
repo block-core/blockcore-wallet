@@ -35,10 +35,6 @@ describe('SendService', () => {
         expect(service.total.toString()).toBe('110010000');
 
         service.fee = '0.00000001';
-        console.log('Fee:', service.fee);
-        console.log(service.amount);
-
-        service.fee = '0.00000001';
         service.amount = '92233720368'; // Int.Max which is often used as maximum on Blockcore based chains.
         expect(service.total.toString()).toBe('9223372036800000001');
 

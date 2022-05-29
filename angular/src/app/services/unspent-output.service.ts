@@ -3,6 +3,7 @@ import Big from "big.js";
 import { Account, AccountUnspentTransactionOutput, Address, SettingStore, UnspentTransactionOutput } from "src/shared";
 import { AccountStateStore } from "src/shared/store/account-state-store";
 import { NetworkLoader } from ".";
+import { LoggerService } from "./logger.service";
 
 @Injectable({
     providedIn: 'root'
@@ -11,7 +12,7 @@ import { NetworkLoader } from ".";
 export class UnspentOutputService {
     private limit = 20;
 
-    constructor(private networkLoader: NetworkLoader, private settingStore: SettingStore, private accountStateStore: AccountStateStore) {
+    constructor(private networkLoader: NetworkLoader, private logger: LoggerService, private settingStore: SettingStore, private accountStateStore: AccountStateStore) {
 
     }
 
@@ -38,30 +39,21 @@ export class UnspentOutputService {
             // Query for what is left, take the required minus what we have already aggregated.
             const processState = await this.processAddress(indexerUrl, address, requiredAmount.minus(aggregatedAmount));
 
-            console.log(`Process state on address ${address.address}:`, processState);
+            this.logger.debug(`Process state on address ${address.address}:`, processState);
 
             // Add the amount from address processing into the aggreated amount.
             aggregatedAmount = aggregatedAmount.plus(processState.amount);
 
-            console.log('processState.utxo:', processState);
+            this.logger.debug('processState.utxo:', processState);
 
             utxo.push(...processState.utxo);
 
             // If completed, it means we have reached the required amount.
             if (processState.completed) {
-                console.log('SETTING COMPLETED TO TRUE AND BREAKING!');
+                this.logger.debug('SETTING COMPLETED TO TRUE AND BREAKING!');
                 completed = true;
                 break;
             }
-
-            // const tx = unspent[i];
-            // aggregatedAmount = aggregatedAmount.plus(new Big(tx.balance));
-
-            // inputs.push(tx);
-
-            // if (aggregatedAmount.gte(requiredAmount)) {
-            //     break;
-            // }
         }
 
         if (completed == false) {
@@ -72,34 +64,25 @@ export class UnspentOutputService {
                 // Query for what is left, take the required minus what we have already aggregated.
                 const processState = await this.processAddress(indexerUrl, address, requiredAmount.minus(aggregatedAmount));
 
-                console.log(`Process state on address ${address.address}:`, processState);
+                this.logger.debug(`Process state on address ${address.address}:`, processState);
 
                 // Add the amount from address processing into the aggreated amount.
                 aggregatedAmount = aggregatedAmount.plus(processState.amount);
 
-                console.log('processState.utxo:', processState);
+                this.logger.debug('processState.utxo:', processState);
 
                 utxo.push(...processState.utxo);
 
                 // If completed, it means we have reached the required amount.
                 if (processState.completed) {
-                    console.log('SETTING COMPLETED TO TRUE AND BREAKING!');
+                    this.logger.debug('SETTING COMPLETED TO TRUE AND BREAKING!');
                     completed = true;
                     break;
                 }
-
-                // const tx = unspent[i];
-                // aggregatedAmount = aggregatedAmount.plus(new Big(tx.balance));
-
-                // inputs.push(tx);
-
-                // if (aggregatedAmount.gte(requiredAmount)) {
-                //     break;
-                // }
             }
         }
 
-        console.log('Performing mapping of all data...');
+        this.logger.debug('Performing mapping of all data...');
 
         let spendable = utxo.map<AccountUnspentTransactionOutput>((t) => {
             return {
@@ -112,8 +95,8 @@ export class UnspentOutputService {
             }
         });
 
-        console.log('utxo: ', utxo);
-        console.log('spendable: ', spendable);
+        this.logger.debug('utxo: ', utxo);
+        this.logger.debug('spendable: ', spendable);
 
         return { amount: aggregatedAmount, utxo: spendable };
     }
@@ -133,7 +116,7 @@ export class UnspentOutputService {
     }
 
     async processAddress(indexerUrl: string, address: Address, requiredAmount: Big) {
-        console.log('processAddress: start');
+        this.logger.debug('processAddress: start');
         let changes = false;
         let completed = false;
         let amount = Big(0);
@@ -144,12 +127,11 @@ export class UnspentOutputService {
             let nextLink = `/api/query/address/${address.address}/transactions/unspent?confirmations=0&offset=0&limit=${this.limit}`;
             const date = new Date().toISOString();
             const clonedIndexerUrl = indexerUrl.slice();
-            console.log(`indexerUrl ${indexerUrl} cloned into ${clonedIndexerUrl}`);
 
             // Loop through all pages until finished.
             while (nextLink != null) {
                 const url = `${clonedIndexerUrl}${nextLink}`;
-                console.log(`nextlink url ${url}`);
+                this.logger.debug(`nextlink: ${url}`);
 
                 // Default options are marked with *
                 const response = await fetch(url, {
@@ -181,7 +163,7 @@ export class UnspentOutputService {
                         changes = true;
 
                         const transaction: UnspentTransactionOutput = transactions[j];
-                        console.log('UTXO:', transaction);
+                        this.logger.debug('UTXO:', transaction);
 
                         const transactionId = transaction.outpoint.transactionId;
                         const index = transaction.outpoint.outputIndex;
@@ -191,48 +173,16 @@ export class UnspentOutputService {
                         // Increment the amount we have found on this address.
                         amount = amount.plus(transaction.value);
 
-                        console.log('Amount: ' + amount.toString());
+                        this.logger.debug('Amount: ' + amount.toString());
 
                         // If the amount aggregated has reached what is required, we're done.
                         if (amount.gte(requiredAmount)) {
-                            console.log('AMOUNT IS GREATER THAN REQUIRED! QUERY COMPLETE!');
+                            this.logger.debug('AMOUNT IS GREATER THAN REQUIRED! QUERY COMPLETE!');
 
                             nextLink = null;
                             completed = true;
                             break;
                         }
-
-                        // Keep updating with transaction info details until finalized (and it will no longer be returned in the paged query):
-                        // transaction.details = await this.getTransactionInfo(transactionId, clonedIndexerUrl);
-
-                        // Copy some of the details state to the container object.
-                        // transaction.confirmations = transaction.details.confirmations;
-
-                        // If the transaction ID is not present already on the AddressState, add it.
-                        // if (index == -1) {
-                        //     state.transactions.push(transactionId);
-                        // }
-
-                        // transaction.unconfirmed = (transaction.confirmations < this.confirmed);
-                        // transaction.finalized = (transaction.confirmations >= this.finalized);
-
-                        // // Whenever we reseach finalized transactions, move the offset state forward.
-                        // if (transaction.finalized) {
-                        //     state.offset = offset + (j + 1);
-                        // }
-
-                        // TODO: Temporarily drop this while testing a large wallet.
-                        // TODO: We have now implemented on-demand retreival of hex when sending, investigate if that is better and more proper as
-                        // there is no value in getting spent data.
-                        // if (!transaction.hex) {
-                        //     transaction.hex = await this.getTransactionHex(transactionId, indexerUrl);
-                        // }
-
-                        // Update the store with latest info on the transaction.
-                        // this.transactionStore.set(transactionId, transaction);
-
-                        // // Persist immediately because the watcher need to have
-                        // await this.transactionStore.save();
                     }
                 }
 
@@ -244,13 +194,12 @@ export class UnspentOutputService {
             }
 
         } catch (error) {
-            console.log('Failed to query indexer!!');
-            console.error(error);
+            this.logger.error('Failed to query indexer!!');
             // TODO: Implement error handling in background and how to send it to UI.
             // We should probably have an error log in settings, so users can see background problems as well.
         }
 
-        console.log('processAddress: end');
+        this.logger.debug('processAddress: end');
 
         return { changes, completed, amount, utxo };
     }

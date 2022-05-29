@@ -7,6 +7,7 @@ import { Network } from '../../shared/networks';
 import { SettingsService } from './settings.service';
 import { WalletManager } from './wallet-manager';
 import { FEE_FACTOR, SATOSHI_FACTOR, STATUS_INTERVAL } from '../shared/constants';
+import { LoggerService } from './logger.service';
 const axios = require('axios').default;
 
 @Injectable({
@@ -19,6 +20,7 @@ export class NetworkStatusService {
     constructor(
         private networkLoader: NetworkLoader,
         private env: EnvironmentService,
+        private logger: LoggerService,
         private store: NetworkStatusStore,
         private walletManager: WalletManager,
         private settings: SettingsService) {
@@ -95,7 +97,7 @@ export class NetworkStatusService {
 
                 const data = response.data;
 
-                console.log('Update All Network:', data);
+                this.logger.debug('Update All Network:', data);
 
                 if (data.error) {
                     networkStatus = {
@@ -130,9 +132,9 @@ export class NetworkStatusService {
                 if (error.response) {
                     // The request was made and the server responded with a status code
                     // that falls out of the range of 2xx
-                    console.log(error.response.data);
-                    console.log(error.response.status);
-                    console.log(error.response.headers);
+                    this.logger.debug(error.response.data);
+                    this.logger.debug(error.response.status);
+                    this.logger.debug(error.response.headers);
 
                     // When there is response, we'll set status to error.
                     networkStatus = {
@@ -146,7 +148,7 @@ export class NetworkStatusService {
                     // The request was made but no response was received
                     // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
                     // http.ClientRequest in node.js
-                    console.log(error.request);
+                    this.logger.debug(error.request);
 
                     // When there is no response, we'll set status to offline.
                     networkStatus = {
@@ -158,7 +160,7 @@ export class NetworkStatusService {
                     };
                 } else {
                     // Something happened in setting up the request that triggered an Error
-                    console.log('Error', error.message);
+                    this.logger.error('Error', error.message);
 
                     networkStatus = {
                         blockSyncHeight: -1,

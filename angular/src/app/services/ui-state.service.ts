@@ -3,12 +3,14 @@ import { Action, AppState, Persisted } from '../../shared/interfaces';
 import { ReplaySubject, Subject } from 'rxjs';
 import { Network } from '../../shared/networks';
 import { UIStore } from 'src/shared';
+import { LoggerService } from './logger.service';
 
 @Injectable({
     providedIn: 'root'
 })
 export class UIState {
     constructor(
+        private logger: LoggerService,
         private store: UIStore) {
 
         if ((<any>navigator).standalone === undefined) {
@@ -31,7 +33,7 @@ export class UIState {
         globalThis.addEventListener('appinstalled', () => {
             // If visible, hide the install promotion
             this.showInstallButton = false;
-            console.log('INSTALL: Success');
+            this.logger.info('INSTALL: Success');
         });
     }
 

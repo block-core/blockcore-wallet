@@ -95,13 +95,13 @@ export class BackgroundManager {
             }
 
             if (processResult.changes) {
-                console.log('RECALCULATING BALANCE FOR WATCHER!');
+                console.log('Calculate balance for watcher event.');
                 // Calculate the balance of the wallets.
                 await indexer.calculateBalance();
             }
 
             if (this.onUpdates) {
-                console.log('CALLING ON UPDATED WITH', processResult);
+                console.log('Process result:', processResult);
                 this.onUpdates.call(null, processResult);
             }
 
@@ -113,7 +113,6 @@ export class BackgroundManager {
             }
 
             // Continue running the watcher if it has not been cancelled.
-            console.log('Schedule Watcher: ', executionState);
             this.intervalRef = globalThis.setTimeout(interval, executionState.wait);
         }
 
@@ -169,6 +168,8 @@ export class BackgroundManager {
             }
 
             try {
+                console.log('Calculate balance for indexing event.');
+
                 // Calculate the balance of the wallets.
                 await indexer.calculateBalance();
             } catch (err) {
