@@ -60,7 +60,6 @@ export class AppComponent implements OnInit {
   }
 
   async ngOnInit() {
-    console.log('APP COMPONENT NG ON INIT!');
     this.uiState.manifest = await this.runtime.getManifest();
 
     this.router.events.subscribe(async (val) => {
@@ -80,45 +79,6 @@ export class AppComponent implements OnInit {
         this.translate.use(this.settings.values.language);
       }
     });
-
-    // const msg = this.communication.createMessage('index');
-    // const msg2 = this.communication.createMessage('hello_world');
-
-    // this.communication.send(msg);
-    // this.communication.sendToTabs(msg2);
-
-    // chrome.runtime.sendMessage({ onLoad: 'finished' }, function (response) {
-    //   console.log('AppComponent:sendMessage:response:', response);
-    // });
-
-    // chrome.runtime.onMessage.addListener((message, callback) => {
-    //   this.ngZone.run(async () => {
-    //     console.log('AppComponent:onMessage: ', message);
-    //     console.log('AppComponent:onMessage:callback: ', callback);
-
-    //     // Whenever the background process sends us tmeout, we know that wallets has been locked.
-    //     if (message.event === 'timeout') {
-    //       // Timeout was reached in the background. There is already logic listening to the session storage
-    //       // that will reload state and redirect to home (unlock) if needed, so don't do that here. It will
-    //       // cause a race condition on loading new state if redirect is handled here.
-    //       console.log('Timeout was reached in the background service.');
-    //     }
-    //   });
-
-    //   return "OK";
-
-    //   // if (message === 'hello') {
-    //   //   sendResponse({greeting: 'welcome!'})
-    //   // } else if (message === 'goodbye') {
-    //   //   chrome.runtime.Port.disconnect();
-    //   // }
-    // });
-
-    // Whenever the unlocked wallet changes, if there are zero unlocked wallets, redirect to /home for unlocking.
-    // this.secure.unlockedWallets$.subscribe(() => {
-    //   console.log('UNLOCKED WALLETS SUBSCRIPTION:');
-    //   console.log('hasUnlockedWallets', this.walletManager.hasUnlockedWallets);
-    // });
   }
 
   lock() {
@@ -134,7 +94,6 @@ export class AppComponent implements OnInit {
   }
 
   async onAccountChanged(accountId: string) {
-    // this.draweraccount.toggle();
     await this.walletManager.setActiveAccount(accountId);
   }
 }
