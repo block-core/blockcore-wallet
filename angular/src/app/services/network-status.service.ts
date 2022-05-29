@@ -84,7 +84,6 @@ export class NetworkStatusService {
         for (let i = 0; i < uniqueAccounts.length; i++) {
             const account = accounts[i];
             const network = this.getNetwork(account.networkType);
-            // const indexerUrl = this.settings.values.indexer.replace('{id}', network.id.toLowerCase());
             const indexerUrl = this.networkLoader.getServer(network.id, this.settings.values.server, this.settings.values.indexer);
             let networkStatus: NetworkStatus;
 
@@ -178,6 +177,13 @@ export class NetworkStatusService {
 
     getAll() {
         return this.store.all();
+    }
+
+    getActive() {
+        const accounts = this.walletManager.activeWallet.accounts;
+        const uniqueNetworks = accounts.filter((value, index, self) => self.map(x => x.networkType).indexOf(value.networkType) == index).map(m => m.networkType);
+        const networkStatuses = this.store.all();
+        return networkStatuses.filter(ns => uniqueNetworks.indexOf(ns.networkType) > -1);
     }
 
     get(networkType: string) {

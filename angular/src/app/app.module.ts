@@ -78,6 +78,8 @@ import { NetworkLoader } from './services';
 import { AddressWatchStore } from 'src/shared/store/address-watch-store';
 import { SizePipe } from './shared/size.pipe';
 import { AccountStateStore } from 'src/shared/store/account-state-store';
+import { NetworkComponent } from './settings/network/network.component';
+import { NetworkStatusPipe } from './shared/network-status.pipe';
 
 // required for AOT compilation
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
@@ -103,6 +105,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     SettingsComponent,
     ActionSignComponent,
     NetworkPipe,
+    NetworkStatusPipe,
     TruncatePipe,
     SizePipe,
     ActionIdentityComponent,
@@ -124,7 +127,8 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     NetworkStatusCardComponent,
     HandlerComponent,
     ActionStratisIdentityComponent,
-    ActionNostrIdentityComponent
+    ActionNostrIdentityComponent,
+    NetworkComponent
   ],
   imports: [
     BrowserModule,
@@ -174,7 +178,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     MatSnackBarModule,
     MatProgressBarModule
   ],
-  exports: [NetworkPipe, TruncatePipe],
+  exports: [NetworkPipe, TruncatePipe, NetworkStatusPipe],
   providers: [
     AddressStore,
     ActionStore,

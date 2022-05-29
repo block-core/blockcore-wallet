@@ -33,6 +33,7 @@ import { HandlerComponent } from './settings/handler/handler.component';
 import { ActionStratisIdentityComponent } from './action/sid/sid.component';
 import { ActionNostrIdentityComponent } from './action/nostr/nostr.component';
 import { LoadingResolverService } from './services/loading-resolver.service';
+import { NetworkComponent } from './settings/network/network.component';
 
 const routes: Routes = [
   {
@@ -88,6 +89,11 @@ const routes: Routes = [
   },
   {
     path: 'settings/handler', component: HandlerComponent, resolve: {
+      data: LoadingResolverService
+    }
+  },
+  {
+    path: 'settings/network', component: NetworkComponent, resolve: {
       data: LoadingResolverService
     }
   },
