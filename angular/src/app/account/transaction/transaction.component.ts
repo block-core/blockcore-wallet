@@ -2,7 +2,7 @@ import { Component, Inject, HostBinding, OnDestroy, OnInit, ViewChild, Renderer2
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common'
-import { UIState, CommunicationService, IconService, NetworksService, NetworkStatusService, EnvironmentService, WalletManager } from '../../services';
+import { UIState, CommunicationService, IconService, NetworksService, NetworkStatusService, EnvironmentService, WalletManager, LoggerService } from '../../services';
 import { copyToClipboard } from '../../shared/utilities';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import * as QRCode from 'qrcode';
@@ -35,8 +35,8 @@ export class AccountTransactionComponent implements OnInit, OnDestroy {
         private networkStatusService: NetworkStatusService,
         public walletManager: WalletManager,
         private transactionStore: TransactionStore,
+        private logger: LoggerService,
         private snackBar: MatSnackBar) {
-        // this.uiState.title = 'Receive Address';
         this.uiState.goBackHome = false;
         this.uiState.backUrl = null;
 
@@ -45,30 +45,8 @@ export class AccountTransactionComponent implements OnInit, OnDestroy {
 
         this.activatedRoute.paramMap.subscribe(async params => {
             this.txid = params.get('txid');
-
             this.currentNetworkStatus = this.networkStatusService.get(this.walletManager.activeAccount.networkType);
-
             this.transaction = this.transactionStore.get(this.txid) as TransactionView;
-
-            // TODO: Move this logic to an service.
-            // const account = this.walletManager.activeAccount;
-
-            // const receiveTransactions = account.state.receive.filter(item => item.transactions?.find(i => i.transactionHash == this.txid));
-            // const filteredReceiveTransactions = receiveTransactions.flatMap(i => i.transactions?.find(i => i.transactionHash == this.txid));
-            // const changeTransactions = account.state.change.filter(item => item.transactions?.find(i => i.transactionHash == this.txid));
-            // const filteredChangeTransactions = changeTransactions.flatMap(i => i.transactions?.find(i => i.transactionHash == this.txid));
-
-            // console.log('receiveTransactions', receiveTransactions);
-            // console.log('changeTransactions', changeTransactions);
-
-            // console.log('filteredReceiveTransactions', filteredReceiveTransactions);
-            // console.log('filteredChangeTransactions', filteredChangeTransactions);
-
-            // if (filteredReceiveTransactions.length > 0) {
-            //     this.transaction = filteredReceiveTransactions[0] as TransactionView;
-            // } else if (filteredChangeTransactions.length > 0) {
-            //     this.transaction = filteredChangeTransactions[0] as TransactionView;
-            // }
 
             // Calculate values on the transaction object.
             this.transaction.details.inputsAmount = this.transaction.details.inputs.reduce((sum, item) => {
@@ -81,15 +59,8 @@ export class AccountTransactionComponent implements OnInit, OnDestroy {
                 return sum;
             }, 0);;
 
-            // this.transaction.details.fees = this.transaction.details.inputsAmount - this.transaction.details.outputsAmount;
             this.transaction.details.data = this.transaction.details.outputs.filter(i => i.outputType == 'TX_NULL_DATA').map(i => i.scriptPubKeyAsm);
-
-            console.log('this.transaction', this.transaction);
-
-            // this.manager.setActiveAccountId(index);
-            // this.accountName = this.uiState.activeAccount?.name;
-            // this.icon = this.uiState.activeAccount?.icon;
-            // console.log('ROUTE CHANGE 2');
+            this.logger.info('Transaction:', this.transaction);
         });
     }
 
@@ -120,33 +91,6 @@ export class AccountTransactionComponent implements OnInit, OnDestroy {
     }
 
     async ngOnInit() {
-        // // TODO: When can we start using .lastItem and similar functions on arrays?
-        // const accountState = this.accountStateStore.get(this.walletManager.activeAccount.identifier);
-        // this.addressEntry = accountState.receive[accountState.receive.length - 1];
-        // this.address = this.addressEntry.address;
 
-        // try {
-        //     this.qrCode = await QRCode.toDataURL(this.address, {
-        //         errorCorrectionLevel: 'L',
-        //         margin: 2,
-        //         scale: 5,
-        //     });
-
-        //     // LEFT TO HAVE INSTRUCTIONS ON POSSIBLE OPTIONS :-)
-        //     // this.qrCode = await QRCode.toDataURL(this.address, {
-        //     //     // version: this.version,
-        //     //     errorCorrectionLevel: 'L',
-        //     //     // margin: this.margin,
-        //     //     // scale: this.scale,
-        //     //     // width: this.width,
-        //     //     // color: {
-        //     //     //     dark: this.colorDark,
-        //     //     //     light: this.colorLight
-        //     //     // }
-        //     // });
-
-        // } catch (err) {
-        //     console.error(err);
-        // }
     }
 }

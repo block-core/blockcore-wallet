@@ -28,24 +28,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     private cd: ChangeDetectorRef) {
 
     this.uiState.showBackButton = false;
-
-    // this.uiState.title = 'Unlock wallet';
     this.activateAlarm();
-
-    // When on home page and when unlocked, open account.
-    // this.sub = this.communication.listen('wallet-unlocked', () => {
-    //   if (this.uiState.action?.action) {
-    //     this.router.navigate(['action', this.uiState.action.action]);
-    //   } else {
-    //     // If user has zero accounts, we'll show the account select screen that will auto-create accounts the user chooses.
-    //     if (this.uiState.hasAccounts) {
-    //       this.router.navigateByUrl('/dashboard');
-    //       //this.router.navigateByUrl('/account/view/' + this.uiState.activeWallet.activeAccountIndex);
-    //     } else {
-    //       this.router.navigateByUrl('/account/select');
-    //     }
-    //   }
-    // });
 
     // Verify if the wallet is already unlocked.
     if (this.walletManager.activeWallet) {
@@ -67,11 +50,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   async ngOnInit() {
-    // this.walletManager.activeWallet$.subscribe((wallet => {
-    //   if (this.walletManager.activeWallet) {
-    //     this.uiState.title = `Unlock ${this.walletManager.activeWallet.name}`;
-    //   }
-    // }));
+
   }
 
   removeError(): void {
@@ -79,23 +58,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   activateAlarm() {
-    // TODO: Alarm is not needed as long as we use Manifest v2.
-    // chrome.alarms.getAll((alarms) => {
-    //   var hasAlarm = alarms.some((a) => {
-    //     return a.name == this.alarmName;
-    //   });
 
-    //   if (!hasAlarm) {
-    //     chrome.alarms.create('refresh', {
-    //       delayInMinutes: 0.1, periodInMinutes: 0.1
-    //     });
-
-    //     console.log('Created alarm.');
-    //   }
-    //   else {
-    //     console.log('Has alarm already!!');
-    //   }
-    // })
   }
 
   generate() {

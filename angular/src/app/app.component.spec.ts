@@ -215,9 +215,6 @@ describe('AppComponent', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-
-    // console.log(compiled);
-    // expect(compiled.querySelector('h2')?.textContent).toContain('Enter your password to unlock');
   });
 
   it('should be using the configured environment settings', () => {

@@ -68,7 +68,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
     });
 
     this.activatedRoute.paramMap.subscribe(async params => {
-      // console.log('PARAMS:', params);
       const walletId: any = params.get('id');
 
       // If the wallet ID is provided in the URL, use it, if not, leave the existing active wallet.
@@ -148,6 +147,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   async logWatcher() {
-    console.log(this.addressWatchStore);
+    this.logger.info(this.addressWatchStore);
   }
 }
