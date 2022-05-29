@@ -103,22 +103,22 @@ export class CommunicationService {
                 }
                 case 'updated': {
                     console.log('SERVICE WORKER HAS FINISHED INDEXING, but no changes to the data, but we get updated wallet info.', message.data);
-                    this.state.update();
+                    await this.state.update();
                     return 'ok';
                 }
                 case 'indexed': {
                     console.log('SERVICE WORKER HAS FINISHED INDEXING!!! WE MUST RELOAD STORES!', message.data);
-                    this.state.refresh();
+                    await this.state.refresh();
                     return 'ok';
                 }
                 case 'reload': {
                     console.log('Wallet / Account might be deleted, so we must reload state.');
-                    this.state.reload();
+                    await this.state.reload();
                     return 'ok';
                 }
                 case 'store-reload': {
                     console.log(`Specific store was requested to be updated: ${message.data}`);
-                    this.state.reloadStore(message.data);
+                    await this.state.reloadStore(message.data);
 
                     if (message.data === 'setting') {
                         await this.settings.update();
@@ -132,18 +132,22 @@ export class CommunicationService {
                     // cause a race condition on loading new state if redirect is handled here.
                     console.log('Timeout was reached in the background service.');
                     this.router.navigateByUrl('/home');
-                    return null;
+                    return true;
                 }
                 default:
                     console.log(`The message type ${message.type} is not known.`);
-                    return null;
+                    return true;
             }
         } catch (error: any) {
             return { error: { message: error.message, stack: error.stack } }
         }
+
+        return true;
     }
 
     async handleInternalMessage(message: Message, sender: chrome.runtime.MessageSender) {
+        return true;
+
         this.logger.info('CommunicationService:onMessage: ', message);
         this.logger.info('CommunicationService:onMessage:sender: ', sender);
 
@@ -162,22 +166,22 @@ export class CommunicationService {
                 }
                 case 'updated': {
                     console.log('SERVICE WORKER HAS FINISHED INDEXING, but no changes to the data, but we get updated wallet info.', message.data);
-                    this.state.update();
+                    await this.state.update();
                     return 'ok';
                 }
                 case 'indexed': {
                     console.log('SERVICE WORKER HAS FINISHED INDEXING!!! WE MUST RELOAD STORES!', message.data);
-                    this.state.refresh();
+                    await this.state.refresh();
                     return 'ok';
                 }
                 case 'reload': {
                     console.log('Wallet / Account might be deleted, so we must reload state.');
-                    this.state.reload();
+                    await this.state.reload();
                     return 'ok';
                 }
                 case 'store-reload': {
                     console.log(`Specific store was requested to be updated: ${message.data}`);
-                    this.state.reloadStore(message.data);
+                    await this.state.reloadStore(message.data);
 
                     if (message.data === 'setting') {
                         await this.settings.update();

@@ -91,7 +91,7 @@ export class UIState {
 
     timer: any;
 
-    port!: chrome.runtime.Port | null;
+    // port!: chrome.runtime.Port | null;
 
     background: any;
 

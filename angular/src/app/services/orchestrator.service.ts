@@ -119,6 +119,8 @@ export class OrchestratorService {
             return { error: { message: error.message, stack: error.stack } }
         }
 
+        return true;
+
         // this.ngZone.run(async () => {
         // });
     }

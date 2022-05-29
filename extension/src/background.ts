@@ -71,6 +71,9 @@ chrome.runtime.onMessage.addListener(async (message: Message, sender, sendRespon
     } else if (message.type === 'watch') {
         await runWatcher();
     }
+
+    sendResponse('ok');
+    return 'ok';
 });
 
 const executeIndexer = async () => {
@@ -81,10 +84,8 @@ const executeIndexer = async () => {
     }
 
     indexing = true;
-    let result = await runIndexer();
+    await runIndexer();
     indexing = false;
-
-    console.log('Result:', result);
 
     // When the indexer has finished, run watcher automatically.
     await runWatcher();
@@ -114,6 +115,7 @@ const runIndexer = async () => {
             }, function (response) {
                 console.log('Extension:sendMessage:response:indexed:', response);
             });
+
         } else {
             console.log('Indexer found zero changes. We will still inform the UI to refresh wallet to get latest scan state.');
 
