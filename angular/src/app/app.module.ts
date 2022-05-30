@@ -129,7 +129,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     ActionStratisIdentityComponent,
     ActionNostrIdentityComponent,
     collectables,
-    NonFungibleTokenComponent
+    NonFungibleTokenComponent,
     ActionStratisIdentityComponent, 
     ActionNostrIdentityComponent,
     NetworkComponent
