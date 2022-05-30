@@ -45,7 +45,7 @@ export class AccountSendAddressComponent implements OnInit, OnDestroy {
         });
 
         const networkStatus = this.networkStatusService.get(this.sendService.network.id);
-        this.sendService.feeRate = networkStatus.relayFee;
+        this.sendService.feeRate = networkStatus[0].relayFee;
     }
 
     ngOnDestroy() {

@@ -45,7 +45,7 @@ export class AccountTransactionComponent implements OnInit, OnDestroy {
 
         this.activatedRoute.paramMap.subscribe(async params => {
             this.txid = params.get('txid');
-            this.currentNetworkStatus = this.networkStatusService.get(this.walletManager.activeAccount.networkType);
+            // this.currentNetworkStatus = this.networkStatusService.get(this.walletManager.activeAccount.networkType);
             this.transaction = this.transactionStore.get(this.txid) as TransactionView;
 
             // Calculate values on the transaction object.

@@ -48,11 +48,17 @@ interface IEnvironment {
 }
 
 interface NetworkStatus {
+    domain: string,
     blockSyncHeight?: number,
     networkType: string;
     status: string;
     availability: IndexerApiStatus;
     relayFee: number;
+}
+
+interface NetworkStatusEntry {
+    type: string;
+    networks: NetworkStatus[]
 }
 
 /** The user account, most of this data should be considered immutable. The index, etc. should never change after creation. See "AccountState" to get balance, 
@@ -518,5 +524,6 @@ export {
     AccountHistory,
     AccountUnspentTransactionOutput,
     AddressWatchState,
-    AddressIndexedState
+    AddressIndexedState,
+    NetworkStatusEntry
 }

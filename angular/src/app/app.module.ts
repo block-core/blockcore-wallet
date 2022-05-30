@@ -66,7 +66,6 @@ import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { HttpClient } from '@angular/common/http';
 import { NetworkStatusComponent } from './shared/network-status/network-status.component';
-import { NetworkStatusCardComponent } from './shared/network-status-card/network-status.component';
 import { HandlerComponent } from './settings/handler/handler.component';
 import { ActionStratisIdentityComponent } from './action/sid/sid.component';
 import { ActionNostrIdentityComponent } from './action/nostr/nostr.component';
@@ -124,9 +123,8 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     AccountSendSuccessComponent,
     AccountSendSendingComponent,
     NetworkStatusComponent,
-    NetworkStatusCardComponent,
     HandlerComponent,
-    ActionStratisIdentityComponent,
+    ActionStratisIdentityComponent, 
     ActionNostrIdentityComponent,
     NetworkComponent
   ],

@@ -153,9 +153,9 @@ export class AccountComponent implements OnInit, OnDestroy {
     }
   }
 
-  updateNetworkStatus() {
-    this.currentNetworkStatus = this.networkStatusService.get(this.walletManager.activeAccount.networkType);
-  }
+  // updateNetworkStatus() {
+  //   this.currentNetworkStatus = this.networkStatusService.get(this.walletManager.activeAccount.networkType);
+  // }
 
   get networkType() {
     return this.walletManager.activeAccount.networkType;
@@ -191,10 +191,10 @@ export class AccountComponent implements OnInit, OnDestroy {
       });
     }));
 
-    this.updateNetworkStatus();
+    // this.updateNetworkStatus();
 
     this.subscriptions.push(this.walletManager.activeAccount$.subscribe((account) => {
-      this.updateNetworkStatus();
+      // this.updateNetworkStatus();
       this.uiState.title = this.walletManager.activeAccount?.name || '';
       this.updateAccountHistory();
     }));

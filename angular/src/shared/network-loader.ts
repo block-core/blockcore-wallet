@@ -68,4 +68,17 @@ export class NetworkLoader {
             return server;
         }
     }
+
+    getServers(networkType: string, networkGroup: string, customServer?: string) {
+        console.log(`getServers: ${networkType} | ${networkGroup} | ${customServer}`);
+
+        if (networkGroup == 'custom') {
+            const server = customServer.replace('{id}', networkType.toLowerCase());
+            return server;
+        } else {
+            const serversGroup = Servers[networkGroup];
+            const servers = serversGroup[networkType];
+            return servers;
+        }
+    }
 }
