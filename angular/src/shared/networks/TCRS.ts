@@ -19,4 +19,5 @@ export class TCRS implements Network {
     minFeeRate = 10000;
     testnet = true;
     singleAddress = true;
+    SmartContractSupport = true;
 }

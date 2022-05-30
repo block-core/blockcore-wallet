@@ -77,6 +77,8 @@ import { NetworkLoader } from './services';
 import { AddressWatchStore } from 'src/shared/store/address-watch-store';
 import { SizePipe } from './shared/size.pipe';
 import { AccountStateStore } from 'src/shared/store/account-state-store';
+import {NonFungibleTokenComponent} from "./Collectables/non-fungible-token.component";
+import {collectables} from "./Collectables/collectables.component";
 import { NetworkComponent } from './settings/network/network.component';
 import { NetworkStatusPipe } from './shared/network-status.pipe';
 
@@ -124,6 +126,10 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     AccountSendSendingComponent,
     NetworkStatusComponent,
     HandlerComponent,
+    ActionStratisIdentityComponent,
+    ActionNostrIdentityComponent,
+    collectables,
+    NonFungibleTokenComponent
     ActionStratisIdentityComponent, 
     ActionNostrIdentityComponent,
     NetworkComponent

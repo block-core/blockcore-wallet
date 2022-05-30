@@ -41,5 +41,7 @@ export interface Network {
     isProofOfStake?: boolean;
 
     /** A logo that can be displayed in UI for the specific network. */
-    // logo: ''; 
+    // logo: '';
+
+    SmartContractSupport: boolean;
 }

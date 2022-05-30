@@ -32,6 +32,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
   sub: any;
   history: Section[] = [];
   networkStatus$: Observable<NetworkStatus[]>;
+  SmartContractAccounts : Account[];
+  totalCollectablesCount:number;
+  stratisphereUrl:string = "https://stratisphere.com/";
+
 
   constructor(
     public feature: FeatureService,
@@ -54,6 +58,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     private cd: ChangeDetectorRef) {
 
     this.uiState.showBackButton = false;
+    this.totalCollectablesCount = 0;
 
     if (this.walletManager.activeWallet) {
       this.uiState.title = this.walletManager.activeWallet.name;
@@ -82,6 +87,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
           }
         }
       }
+
+      this.SmartContractAccounts = this.walletManager.activeWallet.accounts
+        .filter((item:Account) => this.network.getNetwork(item.networkType).SmartContractSupport);
     });
 
     // If anything redirected to dashboard without wallet being unlocked, go to home and unlock.
@@ -149,4 +157,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   async logWatcher() {
     this.logger.info(this.addressWatchStore);
   }
-}
+
+  AddToTotalItems(totalOnAccount: number) {
+    this.totalCollectablesCount += totalOnAccount;
+  }}

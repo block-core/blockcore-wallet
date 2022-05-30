@@ -18,6 +18,7 @@ export class BTC44 implements Network {
     feeRate = 10000;
     minFeeRate = 10000;
     testnet = false;
+  SmartContractSupport = false;
 }
 
 // WE DO NOT SUPPORT THESE ADDRESS TYPES AS THEY WAS TRANSITIONAL.
@@ -57,4 +58,5 @@ export class BTC84 implements Network {
     feeRate = 10000;
     minFeeRate = 10000;
     testnet = false;
+    SmartContractSupport = false;
 }
