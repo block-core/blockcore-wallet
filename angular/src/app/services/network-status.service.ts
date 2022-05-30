@@ -8,6 +8,7 @@ import { SettingsService } from './settings.service';
 import { WalletManager } from './wallet-manager';
 import { FEE_FACTOR, SATOSHI_FACTOR, STATUS_INTERVAL } from '../shared/constants';
 import { LoggerService } from './logger.service';
+import { NetworksService } from './networks.service';
 const axios = require('axios').default;
 
 @Injectable({
@@ -22,6 +23,7 @@ export class NetworkStatusService {
         private env: EnvironmentService,
         private logger: LoggerService,
         private store: NetworkStatusStore,
+        private networkService: NetworksService,
         private walletManager: WalletManager,
         private settings: SettingsService) {
 
@@ -62,10 +64,14 @@ export class NetworkStatusService {
         return this.allNetworks.find(w => w.network == network && w.purpose == purpose);
     }
 
-    /** Iterate over all active accounts and check the latest networks status. */
+    /** Iterate over all active accounts (or default accounts) and check the latest networks status. */
     async refreshNetworkStatus() {
         try {
-            await this.updateAll(this.walletManager.activeWallet.accounts);
+            if (this.walletManager.activeWallet.accounts.length === 0) {
+                await this.updateAll(this.walletManager.activeWallet.accounts); // TODO: This should be ALL accounts, not just active wallet.
+            } else {
+                await this.updateAll(this.networkService.getDefaultAccounts());
+            }
         }
         catch (err) {
 

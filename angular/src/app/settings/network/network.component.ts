@@ -1,5 +1,5 @@
 import { Location } from '@angular/common';
-import { Component, HostBinding, OnDestroy, ViewEncapsulation } from '@angular/core';
+import { Component, OnDestroy, ViewEncapsulation } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { UIState, CommunicationService, FeatureService, NetworkStatusService } from '../../services';
 
@@ -21,9 +21,6 @@ export class NetworkComponent implements OnDestroy {
         this.uiState.title = 'Network Status';
         this.uiState.showBackButton = true;
         this.uiState.goBackHome = false;
-
-        
-
     }
 
     ngOnDestroy() {

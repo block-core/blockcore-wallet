@@ -7,12 +7,14 @@ import { NetworkStatusStore } from './store';
 export class NetworkLoader {
     private networks: Network[] = [];
     private store: NetworkStatusStore = new NetworkStatusStore();
+    private loaded = false;
 
     constructor() {
         this.createNetworks();
     }
 
     async load() {
+        this.loaded = true;
         return this.store.load();
     }
 
@@ -64,15 +66,24 @@ export class NetworkLoader {
             const servers = serversGroup[networkType];
 
             const serverStatuses = this.store.get(networkType);
-            const availableServers = serverStatuses.filter(s => s.availability === IndexerApiStatus.Online);
-            const availableServersUrl = availableServers.map(s => s.url);
+            console.log(serverStatuses);
 
-            const serverIndex = this.generateRandomNumber(0, availableServersUrl.length - 1);
-            const server = availableServersUrl[serverIndex];
+            if (!serverStatuses) {
+                console.log('NO STATUSES!!! - get URL from list of servers:');
+                const serverIndex = this.generateRandomNumber(0, servers.length - 1);
+                const server = servers[serverIndex];
+                return server;
+            } else {
+                const availableServers = serverStatuses.filter(s => s.availability === IndexerApiStatus.Online);
+                const availableServersUrl = availableServers.map(s => s.url);
 
-            console.log(`server:`, server);
+                const serverIndex = this.generateRandomNumber(0, availableServersUrl.length - 1);
+                const server = availableServersUrl[serverIndex];
 
-            return server;
+                console.log(`server:`, server);
+
+                return server;
+            }
         }
     }
 
