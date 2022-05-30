@@ -64,14 +64,12 @@ export class AccountComponent implements OnInit, OnDestroy {
     }
 
     this.subscriptions.push(this.activatedRoute.paramMap.subscribe(async params => {
-      console.log('PARAMS:', params);
       const accountIdentifier: any = params.get('index');
 
       if (!this.walletManager.activeWallet) {
         return;
       }
 
-      // this.manager.setActiveAccountId(index);
       await this.walletManager.setActiveAccount(accountIdentifier);
     }));
   }
@@ -82,8 +80,6 @@ export class AccountComponent implements OnInit, OnDestroy {
     });
 
     this.subscriptions = [];
-
-    // clearInterval(this.scanTimer);
   }
 
   async scan() {
@@ -109,19 +105,15 @@ export class AccountComponent implements OnInit, OnDestroy {
 
     await this.addressStore.save();
 
-    console.log('accountHistoryStore (before):', this.accountStateStore.all());
-
     // Remove the account state store when performing a re-scan.
     // Reset the account state when performing a re-scan.
     accountState.balance = 0;
     this.accountStateStore.set(account.identifier, accountState);
     this.accountStateStore.save();
 
-    console.log('accountHistoryStore (after):', this.accountStateStore.all());
-
     // Send a message to run indexing on all wallets, send accountId for future optimization of running index only on this account.
-    const msg = this.communication.createMessage('index', { force: true, accountId: this.walletManager.activeAccount.identifier });
-    this.communication.send(msg);
+    this.communication.send(this.communication.createMessage('index', { accountId: this.walletManager.activeAccount.identifier }));
+
     this.loading = false;
   }
 
@@ -138,10 +130,9 @@ export class AccountComponent implements OnInit, OnDestroy {
 
         let result: any = await this.http.get(`${indexerUrl}/api/stats/info`).toPromise();
         this.networkStatus = result;
-        console.log('NETWORK STATUS', this.networkStatus);
       }
       catch (error: any) {
-        console.log('oops', error);
+        console.error(error);
 
         if (error.error?.title) {
           this.snackBar.open('Error: ' + error.error.title, 'Hide', {
@@ -162,21 +153,20 @@ export class AccountComponent implements OnInit, OnDestroy {
     }
   }
 
-  updateNetworkStatus() {
-    this.currentNetworkStatus = this.networkStatusService.get(this.walletManager.activeAccount.networkType);
-  }
+  // updateNetworkStatus() {
+  //   this.currentNetworkStatus = this.networkStatusService.get(this.walletManager.activeAccount.networkType);
+  // }
 
   get networkType() {
     return this.walletManager.activeAccount.networkType;
   }
 
+  public history: TransactionHistory[] = [];
+
   updateAccountHistory() {
     if (this.walletManager.activeAccount == null) {
       return;
     }
-
-    // Make sure we first reload the store to ensure we get latest items.
-    // await this.accountHistoryStore.load();
 
     this.accountHistory = this.accountHistoryStore.get(this.walletManager.activeAccount.identifier);
 
@@ -190,28 +180,21 @@ export class AccountComponent implements OnInit, OnDestroy {
       };
     }
 
-    // console.log('1:', this.accountHistoryStore);
-    // console.log('2:', this.accountHistoryStore.get(this.walletManager.activeAccount.identifier))
-    // console.log(this.accountHistory);
-    // console.log(this.walletManager.activeAccount.identifier);
-
-    console.log('accountHistory.history', this.accountHistory);
-
+    this.history = this.accountHistory.history;
     this.cd.detectChanges();
   }
 
   async ngOnInit() {
     this.subscriptions.push(this.state.changed$.subscribe((state) => {
       this.ngZone.run(() => {
-        console.log('state changed, update account history!');
         this.updateAccountHistory();
       });
     }));
 
-    this.updateNetworkStatus();
+    // this.updateNetworkStatus();
 
     this.subscriptions.push(this.walletManager.activeAccount$.subscribe((account) => {
-      this.updateNetworkStatus();
+      // this.updateNetworkStatus();
       this.uiState.title = this.walletManager.activeAccount?.name || '';
       this.updateAccountHistory();
     }));

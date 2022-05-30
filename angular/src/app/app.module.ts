@@ -66,7 +66,6 @@ import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { HttpClient } from '@angular/common/http';
 import { NetworkStatusComponent } from './shared/network-status/network-status.component';
-import { NetworkStatusCardComponent } from './shared/network-status-card/network-status.component';
 import { HandlerComponent } from './settings/handler/handler.component';
 import { ActionStratisIdentityComponent } from './action/sid/sid.component';
 import { ActionNostrIdentityComponent } from './action/nostr/nostr.component';
@@ -80,6 +79,8 @@ import { SizePipe } from './shared/size.pipe';
 import { AccountStateStore } from 'src/shared/store/account-state-store';
 import {NonFungibleTokenComponent} from "./Collectables/non-fungible-token.component";
 import {collectables} from "./Collectables/collectables.component";
+import { NetworkComponent } from './settings/network/network.component';
+import { NetworkStatusPipe } from './shared/network-status.pipe';
 
 // required for AOT compilation
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
@@ -105,6 +106,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     SettingsComponent,
     ActionSignComponent,
     NetworkPipe,
+    NetworkStatusPipe,
     TruncatePipe,
     SizePipe,
     ActionIdentityComponent,
@@ -123,12 +125,14 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     AccountSendSuccessComponent,
     AccountSendSendingComponent,
     NetworkStatusComponent,
-    NetworkStatusCardComponent,
     HandlerComponent,
     ActionStratisIdentityComponent,
     ActionNostrIdentityComponent,
     collectables,
     NonFungibleTokenComponent
+    ActionStratisIdentityComponent, 
+    ActionNostrIdentityComponent,
+    NetworkComponent
   ],
   imports: [
     BrowserModule,
@@ -178,7 +182,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     MatSnackBarModule,
     MatProgressBarModule
   ],
-  exports: [NetworkPipe, TruncatePipe],
+  exports: [NetworkPipe, TruncatePipe, NetworkStatusPipe],
   providers: [
     AddressStore,
     ActionStore,

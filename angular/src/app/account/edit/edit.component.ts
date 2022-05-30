@@ -27,11 +27,9 @@ export class AccountEditComponent implements OnInit, OnDestroy {
     this.uiState.title = 'Edit Account'
 
     this.activatedRoute.paramMap.subscribe(async params => {
-      console.log('ROUTE CHANGE 1');
       const index: any = params.get('index');
 
       if (!this.walletManager.activeWallet) {
-        console.log('ROUTE CHANGE 3');
         return;
       }
 
@@ -39,13 +37,11 @@ export class AccountEditComponent implements OnInit, OnDestroy {
       // this.manager.setActiveAccountId(index);
       this.accountName = this.walletManager.activeAccount?.name;
       this.icon = this.walletManager.activeAccount?.icon;
-      console.log('ROUTE CHANGE 2');
     });
 
     this.sub2 = this.walletManager.activeAccount$.subscribe(() => {
       this.accountName = this.walletManager.activeAccount?.name;
       this.icon = this.walletManager.activeAccount?.icon;
-      console.log('ROUTE CHANGE 2');
     });
   }
 

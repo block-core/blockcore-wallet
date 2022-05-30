@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import Big from 'big.js';
+import { InputValidators } from 'src/app/services/inputvalidators';
 import { SATOSHI_FACTOR } from 'src/app/shared/constants';
 import { WalletManager, UIState, SendService, NetworkStatusService } from '../../../services';
 
@@ -10,25 +11,17 @@ import { WalletManager, UIState, SendService, NetworkStatusService } from '../..
     styleUrls: ['./send-address.component.css']
 })
 export class AccountSendAddressComponent implements OnInit, OnDestroy {
-
-    // addressInput = new FormControl('', [Validators.required, Validators.email]);
-    // amountInput = new FormControl('', [Validators.required, Validators.email]);
-    // feeInput = new FormControl('', [Validators.required, Validators.email]);
-
-    // form: FormGroup = new FormGroup({
-    //     addressInput: new FormControl('', [Validators.required, Validators.email]),
-    //     amountInput: new FormControl('', [Validators.required]),
-    //     feeInput: new FormControl('', [Validators.required])
-    // });
-
-    // parts: FormGroup;
-
     form: FormGroup;
     optionsOpen = false;
-    // feeRate = 0;
+    amountTooLarge = false;
 
-    // hideRequiredControl = new FormControl(false);
-    // floatLabelControl = new FormControl('auto');
+    get optionAmountInput() {
+        return this.form.get('amountInput') as FormControl;
+    }
+
+    get optionFeeInput() {
+        return this.form.get('feeInput') as FormControl;
+    }
 
     constructor(
         public uiState: UIState,
@@ -40,28 +33,20 @@ export class AccountSendAddressComponent implements OnInit, OnDestroy {
         this.form = fb.group({
             addressInput: new FormControl('', [Validators.required, Validators.minLength(6)]),
             changeAddressInput: new FormControl('', []),
-            // min(0) will ensure negative values is not allowed.
-            amountInput: new FormControl('', [Validators.required, Validators.min(0), Validators.pattern(/^-?(0|[0-9]+[.]?[0-9]*)?$/)]),
-
+            amountInput: new FormControl('', [Validators.required, Validators.min(0), Validators.pattern(/^-?(0|[0-9]+[.]?[0-9]*)?$/), InputValidators.maximumBitcoin(sendService)]),
             // TODO: Make an custom validator that sets form error when fee input is too low.
             feeInput: new FormControl(this.sendService.getNetworkFee(), [Validators.required, Validators.min(0), Validators.pattern(/^-?(0|[0-9]+[.]?[0-9]*)?$/)])
         });
 
+        this.optionFeeInput.valueChanges.subscribe(value => {
+            this.sendService.fee = value;
+            this.optionAmountInput.updateValueAndValidity();
+            this.optionAmountInput.markAsTouched();
+        });
+
         const networkStatus = this.networkStatusService.get(this.sendService.network.id);
-        console.log('networkStatus:', networkStatus);
-        this.sendService.feeRate = networkStatus.relayFee;
-        // this.feeRate = networkStatus.relayFee;
-
-        // this.parts = fb.group({
-        //     area: [null, [Validators.required, Validators.minLength(3), Validators.maxLength(3)]],
-        //     exchange: [null, [Validators.required, Validators.minLength(3), Validators.maxLength(3)]],
-        //     subscriber: [null, [Validators.required, Validators.minLength(4), Validators.maxLength(4)]],
-        // });
+        this.sendService.feeRate = networkStatus[0].relayFee;
     }
-
-    // get firstFormGroupControls() {
-    //     return this.form.get('firstFormGroup')['controls'];
-    // }
 
     ngOnDestroy() {
 

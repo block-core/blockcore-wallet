@@ -29,7 +29,7 @@ export class AccountSelectComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         // Get the default accounts for the current wallet:
-        const accounts = this.networkService.getDefaultAccounts(this.walletManager.activeWallet);
+        const accounts = this.networkService.getDefaultAccounts();
 
         this.coins = accounts.filter(item => item.type === 'coin' || item.type === 'token');
         this.other = accounts.filter(item => item.type === 'other');
@@ -60,7 +60,8 @@ export class AccountSelectComponent implements OnInit, OnDestroy {
         }
 
         // Get latest status on all networks immediately.
-        await this.networkStatus.updateAll(accounts);
+        // UPDATE: Status is now updated earlier than this and we don't want the UI to wait.
+        // await this.networkStatus.updateAll(accounts);
 
         if (wallet.restored) {
             const msg = this.communication.createMessage('index', { force: true }, 'background');

@@ -35,6 +35,7 @@ import { ActionNostrIdentityComponent } from './action/nostr/nostr.component';
 import { LoadingResolverService } from './services/loading-resolver.service';
 import {NonFungibleTokenComponent} from "./Collectables/non-fungible-token.component";
 import {collectables} from "./Collectables/collectables.component";
+import { NetworkComponent } from './settings/network/network.component';
 
 const routes: Routes = [
   {
@@ -90,6 +91,11 @@ const routes: Routes = [
   },
   {
     path: 'settings/handler', component: HandlerComponent, resolve: {
+      data: LoadingResolverService
+    }
+  },
+  {
+    path: 'settings/network', component: NetworkComponent, resolve: {
       data: LoadingResolverService
     }
   },

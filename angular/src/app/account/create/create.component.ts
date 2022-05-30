@@ -1,5 +1,4 @@
-import { Component, Inject, HostBinding, OnInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { Component, OnInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UIState, CryptoService, CommunicationService, IconService, NetworksService, WalletManager, NetworkStatusService } from '../../services';
 import { Account } from '../../../shared/interfaces';
@@ -72,13 +71,6 @@ export class AccountCreateComponent implements OnInit, OnDestroy {
         });
 
         this.derivationPath = this.getDerivationPath();
-
-        // this.sub = this.communication.listen('account-created', () => {
-        //     if (this.walletManager.activeWallet) {
-        //         const mostRecentAccount = this.walletManager.activeWallet.accounts[this.walletManager.activeWallet.accounts.length - 1];
-        //         this.router.navigateByUrl('/account/view/' + mostRecentAccount.identifier);
-        //     }
-        // });
     }
 
     ngOnDestroy(): void {
@@ -114,9 +106,6 @@ export class AccountCreateComponent implements OnInit, OnDestroy {
 
         textArea.value = this.mnemonic;
 
-        console.log(`${this.mnemonic}`);
-        console.log(`${textArea.value}`);
-
         document.body.appendChild(textArea);
         textArea.focus();
         textArea.select();
@@ -124,9 +113,8 @@ export class AccountCreateComponent implements OnInit, OnDestroy {
         try {
             var successful = document.execCommand('copy');
             var msg = successful ? 'successful' : 'unsuccessful';
-            console.log('Copying text command was ' + msg);
         } catch (err) {
-            console.log('Oops, unable to copy');
+            console.error('Oops, unable to copy');
         }
 
         document.body.removeChild(textArea);
@@ -148,7 +136,6 @@ export class AccountCreateComponent implements OnInit, OnDestroy {
     }
 
     async create() {
-        // const splittedPath = this.derivationPath.split('/');
         const splittedPathReplaced = this.derivationPath.replaceAll(`'`, ``).split('/');
 
         const parsedPurpose = Number(splittedPathReplaced[1]);
@@ -175,59 +162,9 @@ export class AccountCreateComponent implements OnInit, OnDestroy {
 
         // Make sure we get a recent state of the network user added account on. If this is the first time the user have added
         // account from this network, this will ensure that we have a status as early as possible.
-        this.networkStatusService.updateAll([account]);
+        await this.networkStatusService.updateAll([account]); // TODO: This should perhaps not send single account, but all accounts.
 
         // When adding an account, the active account ID will be updated so we can read it here.
         this.router.navigateByUrl('/account/view/' + this.walletManager.activeAccountId);
-
-        // this.communication.sendToAll('account-created');
-        // this.manager.createAccount(this.uiState.activeWallet.id, account);
-
-        // this.step = 1;
-        // this.recover = false;
-        // this.generate();
-
-        // this.firstFormGroup = this._formBuilder.group({
-        //     // firstCtrl: ['', Validators.required]
-        // });
     }
-
-    // restore() {
-    //     this.step = 1;
-    //     this.recover = true;
-
-    //     this.firstFormGroup = this._formBuilder.group({
-    //         firstCtrl: ['', Validators.required]
-    //     });
-    // }
-
-    // async save() {
-    //     let recoveryPhrase = await this.crypto.encryptData(this.mnemonic, this.password);
-
-    //     if (!recoveryPhrase) {
-    //         console.error('Fatal error, unable to encrypt recovery phrase!');
-    //         alert('Fatal error, unable to encrypt recovery phrase!');
-    //     }
-    //     else {
-    //         this.appState.persisted.wallets.push({
-    //             name: 'Wallet ' + (this.appState.persisted.wallets.length + 1),
-    //             // chains: ['identity', 'city'],
-    //             mnemonic: recoveryPhrase,
-    //             accounts: [
-    //                 {
-    //                     index: 0,
-    //                     name: 'Identity',
-    //                     network: 'profile',
-    //                     derivationPath: `302'/616'`
-    //                 }
-    //             ]
-    //         });
-
-    //         // Make the newly created wallet the selected one.
-    //         this.appState.persisted.activeWalletIndex = this.appState.persisted.wallets.length - 1;
-
-    //         // Persist the state.
-    //         await this.appState.save();
-    //     }
-    // }
 }

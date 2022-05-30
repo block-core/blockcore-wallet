@@ -53,7 +53,6 @@ export class ActionNostrIdentityComponent implements OnInit {
         //     } else {
         //         this.status = 2;
         //         this.result = data.data;
-        //         console.log(data.data);
         //     }
         // });
     }

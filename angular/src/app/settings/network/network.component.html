@@ -1,0 +1,33 @@
+<div class="page">
+    <div class="centered">
+        <mat-icon class="large-icon">travel_explore</mat-icon>
+        <br>
+        <h1>Network Status</h1>
+        <p>
+            Based upon your selection of server groups.
+        </p>
+    </div>
+
+    <div *ngFor="let status of networkStatus.getActive(); let i = index">
+        <strong class="network-type">{{status.type}}</strong><br>
+        <span *ngIf="status.networks.length == 0">No servers online for this network.<br></span>
+        <div mat-line *ngFor="let network of status.networks">
+
+            <!-- <div class="network-status-widget"> -->
+            <app-network-status [value]="network.availability"></app-network-status>
+            <!-- </div> -->
+
+            {{network.domain}}<br><span class="dimmed">{{network.status}}</span><br><br>
+        </div>
+    </div>
+
+    <!-- <mat-nav-list>
+        <div mat-subheader>Networks for accounts in your wallets:</div>
+        <a mat-list-item *ngFor="let status of networkStatus.getActive(); let i = index">
+            <mat-icon mat-list-icon>travel_explore</mat-icon>
+            <div mat-line>{{status.type}}</div>
+            <div mat-line *ngIf="status.networks.length == 0">No servers online for this network.</div>
+            <div mat-line *ngFor="let network of status.networks">{{network.domain}}<br><span class="dimmed">{{network.status}}</span><br><br></div>
+        </a>
+    </mat-nav-list> -->
+</div>

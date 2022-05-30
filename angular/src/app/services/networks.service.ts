@@ -17,6 +17,9 @@ export class NetworksService {
         const networkLoader = new NetworkLoader();
         this.networks = networkLoader.getNetworks(env.networks);
         this.allNetworks = networkLoader.getAllNetworks();
+        networkLoader.load().then(() => {
+            console.log('Network Loader load completed.');
+        });
     }
 
     getDerivationPathForNetwork(network: Network) {
@@ -38,7 +41,7 @@ export class NetworksService {
     }
 
     /** Used to display options on first wallet unlock. User can pick which of these default accounts they want to activate on their wallet. */
-    getDefaultAccounts(wallet: Wallet) {
+    getDefaultAccounts() {
         let accounts: Account[] = [];
 
         switch (this.env.instance) {

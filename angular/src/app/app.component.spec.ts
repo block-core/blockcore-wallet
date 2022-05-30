@@ -70,7 +70,7 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { HttpClient } from '@angular/common/http';
 import { NetworkStatusComponent } from './shared/network-status/network-status.component';
 import { IEnvironment } from '../shared/interfaces';
-import { AccountHistoryStore, ActionStore, AddressStore, AddressWatchStore, NetworkStatusStore, SettingStore, TransactionStore, UIStore, WalletStore } from 'src/shared';
+import { AccountHistoryStore, AccountStateStore, ActionStore, AddressIndexedStore, AddressStore, AddressWatchStore, NetworkStatusStore, SettingStore, TransactionStore, UIStore, WalletStore } from 'src/shared';
 
 // required for AOT compilation
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
@@ -191,7 +191,9 @@ describe('AppComponent', () => {
         WalletStore,
         AccountHistoryStore,
         AddressWatchStore,
-        NetworkLoader
+        NetworkLoader,
+        AddressIndexedStore,
+        AccountStateStore
       
       ],
     }).compileComponents();
@@ -213,9 +215,6 @@ describe('AppComponent', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-
-    // console.log(compiled);
-    // expect(compiled.querySelector('h2')?.textContent).toContain('Enter your password to unlock');
   });
 
   it('should be using the configured environment settings', () => {

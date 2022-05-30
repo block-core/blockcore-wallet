@@ -1,9 +1,10 @@
-import { Injectable } from "@angular/core";
+import { ChangeDetectorRef, Injectable, NgZone } from "@angular/core";
 import { BehaviorSubject, Observable } from "rxjs";
 import { ActionStore, AddressStore, NetworkStatusStore, SettingStore, TransactionStore, UIStore, WalletStore, AccountHistoryStore, AddressIndexedStore } from "src/shared";
 import { AccountStateStore } from "src/shared/store/account-state-store";
 import { AddressWatchStore } from "src/shared/store/address-watch-store";
 import { StoreBase, StoreListBase } from "src/shared/store/store-base";
+import { LoggerService } from "./logger.service";
 
 @Injectable({
     providedIn: 'root'
@@ -24,6 +25,8 @@ export class StateService {
         private transactionStore: TransactionStore,
         private uiStore: UIStore,
         private walletStore: WalletStore,
+        private logger: LoggerService,
+        private ngZone: NgZone,
         private accountHistoryStore: AccountHistoryStore,
         private addressWatchStore: AddressWatchStore,
         private addressIndexedStore: AddressIndexedStore,
@@ -58,7 +61,7 @@ export class StateService {
             await store.load();
         }
 
-        console.log('Stores:', this.stores);
+        this.logger.info('Stores:', this.stores);
     }
 
     /** Find an individual store and reload that. */
@@ -74,46 +77,47 @@ export class StateService {
     }
 
     async reload() {
-        await this.addressStore.load();
-        await this.transactionStore.load();
-        await this.walletStore.load();
-        await this.accountHistoryStore.load();
-        await this.addressWatchStore.load();
-        await this.addressIndexedStore.load();
-        await this.accountStateStore.load();
+        this.ngZone.run(async () => {
+            this.logger.debug('RELOAD ON STATE SERVICE (in zone):');
 
-        console.log('RELOAD CALLED:');
-        console.log(this.accountHistoryStore.all());
-
-        this.changedSubject.next(this);
+            await this.addressStore.load();
+            await this.transactionStore.load();
+            await this.walletStore.load();
+            await this.accountHistoryStore.load();
+            await this.addressWatchStore.load();
+            await this.addressIndexedStore.load();
+            await this.accountStateStore.load();
+    
+            this.logger.debug('RELOAD CALLED:');
+            this.logger.debug(this.accountHistoryStore.all());
+    
+            this.changedSubject.next(this);
+        });
     }
 
     async refresh() {
+        this.ngZone.run(async () => {
+            this.logger.debug('REFRESH ON STATE SERVICE (in zone):');
 
-        // console.log('BEFORE:')
-        // console.log(JSON.stringify(this.walletStore.all()));
-        // console.log(JSON.stringify(this.addressStore.all()));
-        // console.log(JSON.stringify(this.accountHistoryStore.all()));
+            await this.addressStore.load();
+            await this.transactionStore.load();
+            await this.walletStore.load();
+            await this.accountHistoryStore.load();
+            await this.addressWatchStore.load();
+            await this.addressIndexedStore.load();
+            await this.accountStateStore.load();
 
-        await this.addressStore.load();
-        await this.transactionStore.load();
-        await this.walletStore.load();
-        await this.accountHistoryStore.load();
-        await this.addressWatchStore.load();
-        await this.addressIndexedStore.load();
-        await this.accountStateStore.load();
-
-        // console.log('AFTER:')
-        // console.log(JSON.stringify(this.walletStore.all()));
-        // console.log(JSON.stringify(this.addressStore.all()));
-        // console.log(JSON.stringify(this.accountHistoryStore.all()));
-
-        this.changedSubject.next(this);
+            this.changedSubject.next(this);
+        });
     }
 
     async update() {
-        await this.walletStore.load();
-        console.log('GET WALLETS:', this.walletStore.getWallets())
-        this.changedSubject.next(this);
+        this.ngZone.run(async () => {
+            this.logger.debug('UPDATE ON STATE SERVICE (in zone):');
+
+            await this.walletStore.load();
+            this.logger.debug('GET WALLETS:', this.walletStore.getWallets())
+            this.changedSubject.next(this);
+        });
     }
 }

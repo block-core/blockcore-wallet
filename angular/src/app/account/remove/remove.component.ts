@@ -2,7 +2,7 @@ import { Component, Inject, HostBinding } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common'
-import { UIState, WalletManager } from '../../services';
+import { LoggerService, UIState, WalletManager } from '../../services';
 
 @Component({
   selector: 'app-account-remove',
@@ -14,6 +14,7 @@ export class AccountRemoveComponent {
     private router: Router,
     private location: Location,
     public uiState: UIState,
+    private logger: LoggerService,
     public walletManager: WalletManager,
     private activatedRoute: ActivatedRoute,
   ) {
@@ -21,10 +22,7 @@ export class AccountRemoveComponent {
 
     this.activatedRoute.paramMap.subscribe(async params => {
 
-      console.log('PARAMS:', params);
       const accountId: any = params.get('index');
-      console.log('Account Index:', accountId);
-
       const accountCount = this.walletManager.activeWallet?.accounts?.length;
 
       if (this.walletManager.activeWallet) {
@@ -33,12 +31,12 @@ export class AccountRemoveComponent {
           // this.walletManager.activeWallet.activeAccountId = accountId;
         }
         else {
-          console.log('Attempting to show account that does not exists.');
+          this.logger.warn('Attempting to show account that does not exists.');
           this.router.navigateByUrl('/account');
         }
       }
       else {
-        console.log('Attempting to show account when no wallet is selected.');
+        this.logger.warn('Attempting to show account when no wallet is selected.');
         this.router.navigateByUrl('/');
       }
     });

@@ -2,7 +2,7 @@ import { Component, ChangeDetectorRef, OnInit, OnDestroy, Renderer2, Inject } fr
 import {
   UIState, CommunicationService, AppManager, SecureStateService,
   WalletManager, EnvironmentService, NetworksService,
-  SettingsService, NetworkStatusService
+  SettingsService, NetworkStatusService, LoggerService
 } from '../services';
 import { ActivatedRoute, Data, Params, Router } from '@angular/router';
 import { Action } from '../../shared/interfaces';
@@ -35,6 +35,7 @@ export class LoadingComponent implements OnInit, OnDestroy {
     private cd: ChangeDetectorRef,
     private route: ActivatedRoute,
     private env: EnvironmentService,
+    private logger: LoggerService,
     private status: NetworkStatusService,
     private settings: SettingsService,
     public networkService: NetworksService,
@@ -129,14 +130,10 @@ export class LoadingComponent implements OnInit, OnDestroy {
         this.renderer.addClass(document.body, 'dark-theme');
       }
 
-      // this.uiState.persisted$.next(this.uiState.persisted);
-      // this.uiState.activeWalletSubject.next(this.uiState.activeWallet);
-      // this.uiState.activeAccountSubject.next(this.uiState.activeAccount);
       this.uiState.initialized = true;
     }
 
     const queryParam = globalThis.location.search;
-    console.log('queryParam:', queryParam);
 
     // TODO: IT IS NOT POSSIBLE TO "EXIT" ACTIONS THAT ARE TRIGGERED WITH QUERY PARAMS.
     // FIX THIS ... attempted to check previous, but that does not work...
@@ -147,15 +144,9 @@ export class LoadingComponent implements OnInit, OnDestroy {
       if (JSON.stringify(param) != JSON.stringify(this.uiState.params)) {
         this.uiState.params = param;
       } else {
-        console.log('PARAMS IS NOT DIFFERENT!! CONTINUE AS BEFORE!');
+        this.logger.debug('PARAMS IS NOT DIFFERENT!! CONTINUE AS BEFORE!');
       }
-
-      console.log('PARAM:', param);
     }
-
-    // this.uiState.action = state.action;
-    // this.uiState.persisted = state.persisted;
-    // this.uiState.store = state.store;
 
     // If there is any params, it means there might be an action triggered by protocol handlers. Parse the params and set action.
     if (this.uiState.params) {
@@ -184,7 +175,7 @@ export class LoadingComponent implements OnInit, OnDestroy {
       }
     }
 
-    console.log('ACTION:', this.uiState.action);
+    this.logger.debug('ACTION:', this.uiState.action);
 
     // If an action has been triggered, we'll always show action until user closes the action.
     if (this.uiState.action?.action && this.walletManager.activeWallet && this.secure.unlocked(this.walletManager.activeWallet.id)) {

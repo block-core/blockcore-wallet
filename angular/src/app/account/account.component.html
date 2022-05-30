@@ -10,7 +10,7 @@
 
 <div class="page" *ngIf="walletManager.activeAccount">
 
-    <app-network-status-card class="balance-card" [type]="networkType"></app-network-status-card>
+    <!-- <app-network-status-card class="balance-card" [type]="networkType"></app-network-status-card> -->
 
     <!-- <mat-card class="network-status-card" *ngIf="currentNetworkStatus && currentNetworkStatus.availability > 1">
         <mat-card-subtitle>There are issues with the network</mat-card-subtitle>
@@ -75,13 +75,13 @@
                     <div mat-line>{{activity.title}}</div>
                     <div mat-line> {{activity.address}} </div>
                 </a> -->
-                <div mat-subheader>Transactions ({{accountHistory.history.length}})</div>
+                <div mat-subheader>Transactions ({{history.length}})</div>
 
-                <div class="centered" *ngIf="accountHistory.history.length == 0">
+                <div class="centered" *ngIf="history.length == 0">
                     Your wallet has zero transactions.<br><br>
                 </div>
 
-                <a mat-list-item *ngFor="let transaction of accountHistory.history" [routerLink]="['/', 'account', 'transaction', transaction.transactionHash]">
+                <a mat-list-item *ngFor="let transaction of history" [routerLink]="['/', 'account', 'transaction', transaction.transactionHash]">
                     <div mat-line>
                         <span *ngIf="!transaction.unconfirmed" class="transaction-timpestamp">{{transaction.timestamp *
                             1000 | date:'mediumDate'}}</span>

@@ -5,23 +5,45 @@ import { AddressStore, SettingStore, TransactionStore, WalletStore, AccountHisto
 import { AccountStateStore } from "./store/account-state-store";
 import { AddressIndexedStore } from "./store/address-indexed-store";
 import { AddressWatchStore } from "./store/address-watch-store";
+import { RunState } from "./task-runner";
+
+export interface ProcessResult {
+    changes?: boolean;
+    completed?: boolean;
+    cancelled?: boolean;
+    failed?: boolean;
+}
 
 export class BackgroundManager {
-
-    indexing = false;
-    watching = false;
+    watcherState: RunState;
+    onUpdates: Function;
+    onStopped: Function;
 
     constructor() {
 
     }
 
-    async runWatcher(force: boolean) {
-        // Skip watcher while indexing.
-        if (this.indexing == true) {
-            return false;
+    stop() {
+        if (this.watcherState) {
+            this.watcherState.cancel = true;
         }
 
-        this.watching = true;
+        if (this.intervalRef) {
+            globalThis.clearTimeout(this.intervalRef);
+            this.intervalRef = null;
+        }
+
+        // We can call onStopped immediately here, since the next interval will
+        // either not happen or it will simply exit without updating state.
+        if (this.onStopped) {
+            this.onStopped.call(null);
+        }
+    }
+
+    intervalRef: any;
+
+    async runWatcher(runState: RunState) {
+        this.watcherState = runState;
 
         const settingStore = new SettingStore();
         await settingStore.load();
@@ -49,45 +71,60 @@ export class BackgroundManager {
 
         const networkLoader = new NetworkLoader();
         const addressManager = new AddressManager(networkLoader);
-
-        // Get what addresses to watch from local storage.
-        // globalThis.chrome.storage.local.get('')
         const indexer = new IndexerBackgroundService(settingStore, walletStore, addressStore, addressIndexedStore, transactionStore, addressManager, accountStateStore, accountHistoryStore);
-        const processResult = await indexer.process(addressWatchStore);
+        indexer.runState = this.watcherState;
 
-        if (processResult.changes) {
-            console.log('There was changes...');
+        const executionState = {
+            executions: 0,
+            wait: 4
+        };
+
+        var interval = async () => {
+            executionState.executions++;
+
+            // If the interval is triggered and state is set to cancel, simply ignore processing.
+            if (this.watcherState.cancel) {
+                return;
+            }
+
+            // Load the latest network status store.
+            await networkLoader.load();
+
+            const processResult = await indexer.process(addressWatchStore);
+
+            // If the process was cancelled mid-process, return immeidately.
+            if (processResult.cancelled) {
+                return;
+            }
+
+            if (processResult.changes) {
+                console.log('Calculate balance for watcher event.');
+                // Calculate the balance of the wallets.
+                await indexer.calculateBalance();
+            }
+
+            if (this.onUpdates) {
+                console.log('Process result:', processResult);
+                this.onUpdates.call(null, processResult);
+            }
+
+            // Schedule next execution.
+            executionState.wait = 2 ** executionState.executions * executionState.wait;
+
+            if (executionState.wait > 30000) {
+                executionState.wait = 30000;
+            }
+
+            // Continue running the watcher if it has not been cancelled.
+            this.intervalRef = globalThis.setTimeout(interval, executionState.wait);
         }
 
-        // If there are no changes, don't re-calculate the balance.
-        if (!processResult.changes && !force) {
-            this.watching = false;
-            return false;
-        }
-
-        // Calculate the balance of the wallets.
-        indexer.calculateBalance();
-
-        this.watching = false;
-
-        return true;
+        this.intervalRef = globalThis.setTimeout(async () => {
+            await interval();
+        }, 0);
     }
 
-    async runIndexer(force: boolean): Promise<{ changes: boolean, completed: boolean }> {
-        // Skip if we are already indexing.
-        if (this.indexing == true) {
-            return { changes: false, completed: true };
-        }
-
-        if (this.watching == true) {
-            // Delay and try again...
-            setTimeout(async () => {
-                await this.runIndexer(force);
-            }, 2000);
-        }
-
-        this.indexing = true;
-
+    async runIndexer() {
         // First update all the data.
         const settingStore = new SettingStore();
         await settingStore.load();
@@ -116,32 +153,38 @@ export class BackgroundManager {
         // Get what addresses to watch from local storage.
         // globalThis.chrome.storage.local.get('')
         const indexer = new IndexerBackgroundService(settingStore, walletStore, addressStore, addressIndexedStore, transactionStore, addressManager, accountStateStore, accountHistoryStore);
+        indexer.runState = {};
 
-        let processResult = null;
+        let processResult: ProcessResult = { completed: false };
 
-        try {
-            processResult = await indexer.process(null);
-        }
-        catch (err) {
-            console.error('Failure during indexer processing.', err);
-        }
+        while (!processResult.completed) {
+            try {
+                // Load the latest network status store.
+                await networkLoader.load();
 
-        // If there are no changes, don't re-calculate the balance.
-        if (!processResult.changes && !force) {
-            console.log('If there are no changes, don\'t re-calculate the balance.');
-            this.indexing = false;
-            return processResult;
-        }
+                processResult = await indexer.process(null);
+            } catch (err) {
+                console.error('Failure during indexer processing.', err);
+                throw err;
+            }
 
-        try {
-            // Calculate the balance of the wallets.
-            await indexer.calculateBalance();
-        }
-        catch (err) {
-            console.error('Failure during calculate balance.', err);
-        }
+            // If there are no changes, don't re-calculate the balance.
+            if (!processResult.changes) {
+                console.log('If there are no changes, don\'t re-calculate the balance.');
+            }
 
-        this.indexing = false;
-        return processResult;
+            try {
+                console.log('Calculate balance for indexing event.');
+
+                // Calculate the balance of the wallets.
+                await indexer.calculateBalance();
+            } catch (err) {
+                console.error('Failure during calculate balance.', err);
+            }
+
+            if (this.onUpdates) {
+                this.onUpdates.call(null, processResult);
+            }
+        }
     }
 }

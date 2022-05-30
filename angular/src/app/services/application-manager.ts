@@ -45,10 +45,10 @@ export class AppManager {
      * back to live. */
     scheduledWatcher() {
         setInterval(() => {
-            this.communication.send(this.communication.createMessage('watch', {}, 'background'));
+            this.communication.send(this.communication.createMessage('keep-alive', {}, 'background'));
         }, MINUTE * 5);
 
         // Activate the watch right away.
-        this.communication.send(this.communication.createMessage('watch', {}, 'background'));
+        this.communication.send(this.communication.createMessage('keep-alive', {}, 'background'));
     }
 }

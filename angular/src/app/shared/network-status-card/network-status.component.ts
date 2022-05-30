@@ -8,7 +8,7 @@ import { IndexerApiStatus, NetworkStatus } from '../../../shared/interfaces';
     styleUrls: ['./network-status-card.component.css']
 })
 export class NetworkStatusCardComponent implements OnInit {
-    @Input() status: NetworkStatus;
+    @Input() status: NetworkStatus[];
     @Input() type: string;
 
     constructor(private networkStatusService: NetworkStatusService) {
@@ -22,13 +22,19 @@ export class NetworkStatusCardComponent implements OnInit {
     }
 
     get class(): string {
-        if (this.status) {
-            const apiStatus = IndexerApiStatus[this.status.availability].toLowerCase();
-            return `network-status-${apiStatus}`;
-
+        if (this.status.length === 0) {
+            return `network-status-offline`;
         } else {
-            return 'network-status-unknown';
+            return `network-status-online`;
         }
+
+        // if (this.status) {
+        //     const apiStatus = IndexerApiStatus[this.status.availability].toLowerCase();
+        //     return `network-status-${apiStatus}`;
+
+        // } else {
+        //     return 'network-status-unknown';
+        // }
     }
 
     getNetworkStatusLabel(status: IndexerApiStatus) {

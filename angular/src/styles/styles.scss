@@ -408,3 +408,11 @@ select {
 .right {
   float: right;
 }
+
+.dimmed {
+  color: gray;
+}
+
+.dark-mode .dimmed {
+  color: silver;
+}

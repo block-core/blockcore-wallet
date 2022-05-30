@@ -14,8 +14,6 @@ import { AccountStateStore } from 'src/shared/store/account-state-store';
 export class AccountSendComponent implements OnInit, OnDestroy {
     addressEntry: Address;
     address: string = '';
-    // amount: string = '100000000'; // 1 coin
-    // fee: string = '00100000'; // 0.001 coin
     qrCode: string;
     network: Network;
     unspent: UnspentTransactionOutput[];
@@ -56,69 +54,15 @@ export class AccountSendComponent implements OnInit, OnDestroy {
         this.network = network;
     }
 
-    // send() {
-    //     this.loading = true;
-    //     this.communication.send('transaction-send', { address: this.address, amount: this.amount, fee: this.fee });
-    // }
-
     ngOnDestroy(): void {
 
     }
 
-    // copy() {
-    //     copyToClipboard(this.address);
-
-    //     this.snackBar.open('Receive address copied to clipboard', 'Hide', {
-    //         duration: 1500,
-    //         horizontalPosition: 'center',
-    //         verticalPosition: 'bottom',
-    //     });
-    // }
-
     async ngOnInit() {
-        // TODO: When can we start using .lastItem and similar functions on arrays?
-        // this.addressEntry = this.uiState.activeAccount.state.receive[this.uiState.activeAccount.state.receive.length - 1];
-        // this.address = this.addressEntry.address;
-
         const accountState = this.accountStateStore.get(this.walletManager.activeAccount.identifier);
-
         const unspentReceive = accountState.receive.flatMap(i => i.unspent).filter(i => i !== undefined);
         const unspentChange = accountState.change.flatMap(i => i.unspent).filter(i => i !== undefined);
 
         this.unspent = [...unspentReceive, ...unspentChange];
-
-        console.log(this.unspent);
-
-        // this.accountHistory = this.accountHistoryStore.get(this.walletManager.activeAccount.identifier);
-
-        // this.sub = this.communication.listen('transaction-sent', async (data: { transactionId: string, transactionHex: string }) => {
-        //     this.loading = false;
-        //     debugger;
-        //     this.transactionHex = data.transactionHex;
-        // });
-
-        // try {
-        //     this.qrCode = await QRCode.toDataURL(this.address, {
-        //         errorCorrectionLevel: 'L',
-        //         margin: 2,
-        //         scale: 5,
-        //     });
-
-        //     // LEFT TO HAVE INSTRUCTIONS ON POSSIBLE OPTIONS :-)
-        //     // this.qrCode = await QRCode.toDataURL(this.address, {
-        //     //     // version: this.version,
-        //     //     errorCorrectionLevel: 'L',
-        //     //     // margin: this.margin,
-        //     //     // scale: this.scale,
-        //     //     // width: this.width,
-        //     //     // color: {
-        //     //     //     dark: this.colorDark,
-        //     //     //     light: this.colorLight
-        //     //     // }
-        //     // });
-
-        // } catch (err) {
-        //     console.error(err);
-        // }
     }
 }

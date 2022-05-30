@@ -1,16 +1,18 @@
 import axiosRetry from 'axios-retry';
 import { AddressState, Transaction } from '.';
 import { AddressManager } from './address-manager';
+import { ProcessResult } from './background-manager';
 import { AccountUnspentTransactionOutput, AddressIndexedState, TransactionHistory } from './interfaces';
 import { AccountHistoryStore, AddressStore, SettingStore, TransactionStore, WalletStore } from './store';
 import { AccountStateStore } from './store/account-state-store';
 import { AddressIndexedStore } from './store/address-indexed-store';
 import { AddressWatchStore } from './store/address-watch-store';
+import { RunState } from './task-runner';
 
 //const axios = require('axios');
 // In order to gain the TypeScript typings (for intellisense / autocomplete) while using CommonJS imports with require() use the following approach:
 const axios = require('axios').default;
-axiosRetry(axios, { retries: 3 });
+axiosRetry(axios, { retries: 3, retryDelay: axiosRetry.exponentialDelay });
 
 /** Service that handles queries against the blockchain indexer to retrieve data for accounts. Runs in the background. */
 export class IndexerBackgroundService {
@@ -19,13 +21,13 @@ export class IndexerBackgroundService {
     private confirmed = 1;
 
     /** The height at which we will stop watching. */
-    private watch = 3;
+    private watch = 6;
 
     /** The maximum number of times we'll attempt to watch an address before it's wiped from the watch list. */
     private maxWatch = 500;
 
     /** We will attempt to query the address at minimum 10 times before we check the latest transactions if we should quit. */
-    private minWatchCount = 10;
+    private minWatchCount = 20;
 
     /** The number of entries pr. address to process before updating the UI with partially indexed data. This won't affect
      * large wallets that have a single transaction pr. address and many addresses, but it will make large staker/miner wallets
@@ -45,6 +47,8 @@ export class IndexerBackgroundService {
     ) {
 
     }
+
+    public runState: RunState;
 
     async calculateBalance() {
         // Then calculate the balance.
@@ -82,12 +86,7 @@ export class IndexerBackgroundService {
                     await this.accountHistoryStore.save();
 
                 } else {
-                    // const receive = accountState.receive; // .flatMap(i => i.unspent).filter(i => i !== undefined);
-                    // const change = accountState.change; // .flatMap(i => i.unspent).filter(i => i !== undefined);
-                    // const addressesList = [...receive, ...change];
-                    // const addresses = addressesList.flatMap(a => a.address);
                     const addresses = this.accountStateStore.getAllAddresses(account.identifier);
-
                     const addressStatesInThisAccount = addressStates.filter(a => addresses.indexOf(a.address) > -1);
                     const transactionHashesInAccount = addressStatesInThisAccount.flatMap(a => a.transactions);
                     var uniqueTransactionHashes = Array.from(new Set(transactionHashesInAccount));
@@ -123,11 +122,6 @@ export class IndexerBackgroundService {
                         const externalInputs = t.details.inputs.filter(o => addresses.indexOf(o.inputAddress) === -1);
                         const internalInputs = t.details.inputs.filter(o => addresses.indexOf(o.inputAddress) > -1);
 
-                        // console.log('externalOutputs', externalOutputs);
-                        // console.log('internalOutputs', internalOutputs);
-                        // console.log('externalInputs', externalInputs);
-                        // console.log('internalInputs', internalInputs);
-
                         // Check if there is any external outputs or inputs. If not, user is sending to themselves:
                         if (externalOutputs.length == 0 && externalInputs.length == 0) {
                             tx.entryType = 'consolidated';
@@ -155,7 +149,6 @@ export class IndexerBackgroundService {
                                 const outputs = externalOutputs.map(x => x.balance);
 
                                 if (outputs.length > 0) {
-                                    // console.log('OUTPUTS', outputs);
                                     amount = outputs.reduce((x: any, y: any) => x + y);
                                 }
 
@@ -244,17 +237,13 @@ export class IndexerBackgroundService {
 
                     await this.accountHistoryStore.save();
                     await this.accountStateStore.save();
-
-                    console.log('accountStateStore:', this.accountStateStore.all());
                 }
             }
         }
     }
 
     /** This is the main process that runs the indexing and persists the state. */
-    async process(addressWatchStore: AddressWatchStore) {
-        console.log('INDEXER:PROCESS ENTRY WAS TRIGGERED...');
-
+    async process(addressWatchStore: AddressWatchStore): Promise<ProcessResult> {
         // TODO: There is a lot of duplicate code in this method, refactor when possible.
         let changes = false;
         const settings = this.settingStore.get();
@@ -272,6 +261,10 @@ export class IndexerBackgroundService {
         console.log('Looping wallets', wallets);
 
         for (let i = 0; i < wallets.length; i++) {
+            if (this.runState.cancel) {
+                return { cancelled: true };
+            }
+
             const wallet = wallets[i];
 
             console.log('Looping accounts:', wallet.accounts);
@@ -281,6 +274,10 @@ export class IndexerBackgroundService {
             }
 
             for (let j = 0; j < wallet.accounts.length; j++) {
+                if (this.runState.cancel) {
+                    return { cancelled: true };
+                }
+
                 const date = new Date().toISOString();
                 const account = wallet.accounts[j];
                 const accountState = this.accountStateStore.get(account.identifier);
@@ -302,16 +299,14 @@ export class IndexerBackgroundService {
                         if (addresses.length == 0) {
                             continue;
                         }
-
-                        for (let ai = 0; ai < addresses.length; ai++) {
-                            addressWatchStore.remove(addresses[ai].address);
-                        }
-
-                        await addressWatchStore.save();
                     }
 
                     // Process receive addresses until we've exhausted them.
                     for (let k = 0; k < accountState.receive.length; k++) {
+                        if (this.runState.cancel) {
+                            return { cancelled: true };
+                        }
+
                         const address = accountState.receive[k];
 
                         // Get the current state for this address:
@@ -352,6 +347,10 @@ export class IndexerBackgroundService {
                     }
 
                     for (let k = 0; k < accountState.change.length; k++) {
+                        if (this.runState.cancel) {
+                            return { cancelled: true };
+                        }
+
                         const address = accountState.change[k];
                         // Get the current state for this address:
                         let addressState = this.addressIndexedStore.get(address.address);
@@ -398,6 +397,10 @@ export class IndexerBackgroundService {
 
                         // Process registered addresses until we've exhausted them.
                         for (let k = 0; k < addresses.length; k++) {
+                            if (this.runState.cancel) {
+                                return { cancelled: true };
+                            }
+
                             const address = addresses[k];
                             address.count = address.count + 1;
 
@@ -433,14 +436,7 @@ export class IndexerBackgroundService {
                             // If we have watched this address for max amount, remove it.
                             if (address.count >= this.maxWatch) {
                                 console.log('Stopping to watch (max watch reached):', address);
-
-                                // if (network.singleAddress === true && address.address === primaryReceiveAddress.address) {
-                                //     console.log(`Single address enabled and continue to watch primary address: ${primaryReceiveAddress.address}`);
-                                // }
-                                // else {
                                 addressWatchStore.remove(address.address);
-                                // }
-
                             } else if (address.count >= this.minWatchCount) {
                                 console.log('minWatchCount reached, validate against latest tx now:', this.minWatchCount);
 
@@ -456,13 +452,7 @@ export class IndexerBackgroundService {
                                     if (!continueWatching) {
                                         // Do not watch any longer ...
                                         console.log('Stopping to watch:', address);
-
-                                        // if (network.singleAddress === true && address.address === primaryReceiveAddress.address) {
-                                        //     console.log(`Single address enabled and continue to watch primary address: ${primaryReceiveAddress.address}`);
-                                        // }
-                                        // else {
                                         addressWatchStore.remove(address.address);
-                                        // }
                                     }
                                 }
                             }
@@ -500,10 +490,6 @@ export class IndexerBackgroundService {
 
                         // Get the last receive addresses.
                         const address = accountState.receive[accountState.receive.length - 1];
-                        // const alreadyWatched = (addressWatchStore.get(address.address) != null);
-
-                        // if (alreadyWatched) {
-                        // }
 
                         console.log('Running Watch on receive address', address);
 
@@ -605,6 +591,10 @@ export class IndexerBackgroundService {
                     else {
                         // Process receive addresses until we've exhausted them.
                         for (let k = 0; k < accountState.receive.length; k++) {
+                            if (this.runState.cancel) {
+                                return { cancelled: true };
+                            }
+
                             const address = accountState.receive[k];
 
                             // Get the current state for this address:
@@ -645,6 +635,10 @@ export class IndexerBackgroundService {
                         }
 
                         for (let k = 0; k < accountState.change.length; k++) {
+                            if (this.runState.cancel) {
+                                return { cancelled: true };
+                            }
+
                             const address = accountState.change[k];
                             // Get the current state for this address:
                             let addressState = this.addressStore.get(address.address);
@@ -698,17 +692,16 @@ export class IndexerBackgroundService {
             await this.walletStore.save();
             await this.accountStateStore.save();
 
-            console.log('accountStateStore:', this.accountStateStore.all());
+            console.log('AccountStateStore:', this.accountStateStore.all());
         }
 
-        console.log('RETURNING FROM INDEXER: ', changes);
+        console.log('Indexer finished:', changes);
 
-        return { changes, completed: anyAddressNotCompleteInAnyWallet };
+        return { changes, completed: anyAddressNotCompleteInAnyWallet, cancelled: false };
     }
 
     parseLinkHeader(linkHeader: string) {
         const sections = linkHeader.split(', ');
-        //const links: Record<string, string> = { };
         const links = { first: null as string, last: null as string, previous: null as string, next: null as string } as any;
 
         sections.forEach(section => {
@@ -757,13 +750,12 @@ export class IndexerBackgroundService {
             let nextLink = `/api/query/address/${state.address}/transactions?offset=${state.offset}&limit=${this.limit}`;
             const date = new Date().toISOString();
             const clonedIndexerUrl = indexerUrl.slice(); // clone the URL
-            console.log(`indexerUrl ${indexerUrl} cloned into ${clonedIndexerUrl}`);
 
             // Loop through all pages until finished.
             while (nextLink != null) {
 
                 const url = `${clonedIndexerUrl}${nextLink}`;
-                console.log(`nextlink url ${url}`);
+                console.log(`nextlink: ${url}`);
 
                 // Default options are marked with *
                 const response = await fetch(url, {
@@ -777,8 +769,6 @@ export class IndexerBackgroundService {
                     redirect: 'follow', // manual, *follow, error
                     referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
                 });
-
-                console.log('FETCHING: ', url);
 
                 const transactions = await response.json();
                 // const responseTransactions = await axios.get(`${indexerUrl}${nextLink}`);
@@ -796,9 +786,6 @@ export class IndexerBackgroundService {
                 countProcessedItems += this.limit;
 
                 if (response.ok) {
-                    // var updatedReceiveAddress: Address = { ...receiveAddress };
-                    // console.log(responseTransactions);
-
                     // Since we are paging, and all items in pages should be sorted correctly, we can simply
                     // replace the item at the right index for each page. This should update with new metadata,
                     // if there is anything new.
@@ -878,8 +865,6 @@ export class IndexerBackgroundService {
 
         try {
             const clonedIndexerUrl = indexerUrl.slice(); // clone the URL
-            console.log(`indexerUrl ${indexerUrl} cloned into ${clonedIndexerUrl}`);
-
             const url = `${clonedIndexerUrl}/api/query/address/${state.address}`;
             console.log(`address url ${url}`);
 
@@ -895,13 +880,10 @@ export class IndexerBackgroundService {
                 referrerPolicy: 'no-referrer',
             });
 
-            console.log('FETCHING: ', url);
             const addressData = await response.json();
 
             // Merge the new data into the existing data.
             state = Object.assign(state, addressData);
-
-            console.log('Updated address indexed state:', state);
 
             return { changes: true, completed: true };
 

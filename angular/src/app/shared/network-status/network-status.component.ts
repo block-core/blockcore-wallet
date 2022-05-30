@@ -3,22 +3,35 @@ import { IndexerApiStatus, NetworkStatus } from '../../../shared/interfaces';
 
 @Component({
     selector: 'app-network-status',
-    template: '<mat-icon class="network-status" [matTooltip]="status?.status" [ngClass]="class">circle</mat-icon>',
+    template: '<span class="material-icons network-status" [ngClass]="class">circle</span>',
     styles: ['.network-status { font-size: 0.6em;} .network-status-syncing { color: orange; } .network-status-online { color: green; }  .network-status-error { color: red; } .network-status-offline { color: red; } .network-status-unknown { color: gray; }']
 })
 export class NetworkStatusComponent {
-    @Input() status: NetworkStatus;
+    @Input() status: NetworkStatus[];
+    @Input() value: number;
 
     constructor() {
     }
 
     get class(): string {
-        if (this.status) {
-            const apiStatus = IndexerApiStatus[this.status.availability].toLowerCase();
-            return `network-status-${apiStatus}`;
-
+        // Value will override status.
+        if (this.value) {
+            return `network-status-${IndexerApiStatus[this.value].toLowerCase()}`;
         } else {
-            return 'network-status-unknown';
+            if (!this.status || this.status.length === 0) {
+                return `network-status-offline`;
+            } else {
+                return `network-status-online`;
+            }
         }
+
+        // if (this.status) {
+
+        //     const apiStatus = IndexerApiStatus[this.status.availability].toLowerCase();
+        //     return `network-status-${apiStatus}`;
+
+        // } else {
+        //     return 'network-status-unknown';
+        // }
     }
 }
