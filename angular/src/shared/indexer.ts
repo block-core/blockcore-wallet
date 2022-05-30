@@ -284,6 +284,11 @@ export class IndexerBackgroundService {
                 const network = this.addressManager.getNetwork(account.networkType);
                 const indexerUrl = this.addressManager.networkLoader.getServer(network.id, settings.server, settings.indexer);
 
+                // If we did not receive any indexer URL, it means all servers are unavailable for this network and we cannot perform indexing.
+                if (indexerUrl == null || indexerUrl == '') {
+                    continue;
+                }
+
                 accountState.lastScan = date;
                 let anyAddressNotComplete = false;
 

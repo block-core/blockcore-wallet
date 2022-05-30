@@ -79,6 +79,9 @@ export class AppComponent implements OnInit {
         this.translate.use(this.settings.values.language);
       }
     });
+
+    // Send event every time the UI has been activated.
+    this.communication.send(this.communication.createMessage('activated'));
   }
 
   lock() {

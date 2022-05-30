@@ -73,14 +73,14 @@ import { AboutComponent } from './settings/about/about.component';
 import { AccountHistoryStore, AddressStore, NetworkStatusStore, TransactionStore, UIStore, WalletStore, AddressIndexedStore } from 'src/shared';
 import { ActionStore } from 'src/shared/store/action-store';
 import { SettingStore } from 'src/shared/store/setting-store';
-import { NetworkLoader } from './services';
 import { AddressWatchStore } from 'src/shared/store/address-watch-store';
 import { SizePipe } from './shared/size.pipe';
 import { AccountStateStore } from 'src/shared/store/account-state-store';
-import {NonFungibleTokenComponent} from "./Collectables/non-fungible-token.component";
-import {collectables} from "./Collectables/collectables.component";
+import { NonFungibleTokenComponent } from "./Collectables/non-fungible-token.component";
+import { collectables } from "./Collectables/collectables.component";
 import { NetworkComponent } from './settings/network/network.component';
 import { NetworkStatusPipe } from './shared/network-status.pipe';
+import { networkLoaderServiceProvider } from './services/network-loader.provider';
 
 // required for AOT compilation
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
@@ -130,7 +130,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     ActionNostrIdentityComponent,
     collectables,
     NonFungibleTokenComponent,
-    ActionStratisIdentityComponent, 
+    ActionStratisIdentityComponent,
     ActionNostrIdentityComponent,
     NetworkComponent
   ],
@@ -193,7 +193,8 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     WalletStore,
     AccountHistoryStore,
     AddressWatchStore,
-    NetworkLoader,
+    // NetworkLoader,
+    networkLoaderServiceProvider,
     AddressIndexedStore,
     AccountStateStore
   ],

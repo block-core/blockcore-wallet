@@ -7,6 +7,7 @@ import { SharedManager } from '../../angular/src/shared/shared-manager';
 import { RunState } from '../../angular/src/shared/task-runner';
 
 let watchManager: BackgroundManager = null;
+let networkManager: BackgroundManager = null;
 let indexing = false;
 let shared = new SharedManager();
 
@@ -47,6 +48,7 @@ chrome.runtime.onInstalled.addListener(async ({ reason }) => {
         chrome.tabs.create({ url: "index.html" });
     } else if (reason === 'update') {
         // Run a full indexing when the extension has been updated/reloaded.
+        await networkStatusWatcher();
         await executeIndexer();
     }
 });
@@ -70,11 +72,61 @@ chrome.runtime.onMessage.addListener(async (message: Message, sender, sendRespon
         await executeIndexer();
     } else if (message.type === 'watch') {
         await runWatcher();
+    } else if (message.type === 'network') {
+        await networkStatusWatcher();
+    } else if (message.type === 'activated') {
+        console.log('THE UI WAS ACTIVATED!!');
+        // When UI is triggered, we'll also trigger network watcher.
+        await networkStatusWatcher();
     }
 
     sendResponse('ok');
     return 'ok';
 });
+
+// let store = new NetworkStatusStore();
+let networkWatcherRef = null;
+
+const networkStatusWatcher = async () => {
+    // const manifest = chrome.runtime.getManifest();
+
+    if (networkWatcherRef) {
+        globalThis.clearTimeout(networkWatcherRef);
+        networkWatcherRef = null;
+    }
+
+    if (networkManager == null) {
+        networkManager = new BackgroundManager();
+    }
+
+    var interval = async () => {
+        // We don't have the Angular environment information available in the service worker,
+        // so we'll default to the default blockcore accounts, which should include those that
+        // are default on CoinVault.
+        await networkManager.updateNetworkStatus('blockcore');
+
+        chrome.runtime.sendMessage({
+            type: 'network-updated',
+            data: { source: 'network-status-watcher' },
+            ext: 'blockcore',
+            source: 'background',
+            target: 'tabs',
+            host: location.host
+        }, function (response) {
+            console.log('Extension:sendMessage:response:indexed:', response);
+        });
+
+        // Continue running the watcher if it has not been cancelled.
+        networkWatcherRef = globalThis.setTimeout(interval, 15000);
+    }
+
+    // First interval we'll wait for complete run.
+    await interval();
+
+    // networkWatcherRef = globalThis.setTimeout(async () => {
+    //     await interval();
+    // }, 0);
+}
 
 const executeIndexer = async () => {
     // If we are already indexing, simply ignore this request.

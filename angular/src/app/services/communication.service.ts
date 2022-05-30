@@ -116,6 +116,11 @@ export class CommunicationService {
                     await this.state.reload();
                     return 'ok';
                 }
+                case 'network-updated': {
+                    console.log('Network status was updated, reload the networkstatus store!');
+                    await this.state.reloadStore('networkstatus');
+                    return 'ok';
+                }
                 case 'store-reload': {
                     console.log(`Specific store was requested to be updated: ${message.data}`);
                     await this.state.reloadStore(message.data);
@@ -146,8 +151,6 @@ export class CommunicationService {
     }
 
     async handleInternalMessage(message: Message, sender: chrome.runtime.MessageSender) {
-        return true;
-
         this.logger.info('CommunicationService:onMessage: ', message);
         this.logger.info('CommunicationService:onMessage:sender: ', sender);
 

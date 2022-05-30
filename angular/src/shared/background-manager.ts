@@ -1,11 +1,16 @@
 import { AddressManager } from "./address-manager";
 import { IndexerBackgroundService } from "./indexer";
 import { NetworkLoader } from "./network-loader";
-import { AddressStore, SettingStore, TransactionStore, WalletStore, AccountHistoryStore } from "./store";
+import { AddressStore, SettingStore, TransactionStore, WalletStore, AccountHistoryStore, NetworkStatusStore } from "./store";
 import { AccountStateStore } from "./store/account-state-store";
 import { AddressIndexedStore } from "./store/address-indexed-store";
 import { AddressWatchStore } from "./store/address-watch-store";
 import { RunState } from "./task-runner";
+import { Defaults } from './defaults';
+import { Account, IndexerApiStatus, NetworkStatus } from "./interfaces";
+const axios = require('axios').default;
+
+const FEE_FACTOR = 100000;
 
 export interface ProcessResult {
     changes?: boolean;
@@ -42,6 +47,194 @@ export class BackgroundManager {
 
     intervalRef: any;
 
+    async updateNetworkStatus(instance: string) {
+        const walletStore = new WalletStore();
+        await walletStore.load();
+
+        const settingStore = new SettingStore();
+        await settingStore.load();
+
+        let accounts = walletStore.all().flatMap(w => w.accounts);
+
+        if (accounts.length == 0) {
+            accounts = Defaults.getDefaultAccounts(instance);
+        }
+
+        const networkTypes = accounts.filter((value, index, self) => self.map(x => x.networkType).indexOf(value.networkType) == index).map(m => m.networkType);
+        console.log('networkTypes:', networkTypes);
+
+        const store = new NetworkStatusStore();
+        await store.load();
+
+        const networkLoader = new NetworkLoader(store);
+
+        console.log('All networks:', networkLoader.getAllNetworks());
+
+        try {
+            await this.updateAll(accounts, networkLoader, settingStore);
+        }
+        catch (err) {
+
+        }
+    }
+
+    async fetchWithTimeout(resource: RequestInfo, options: any) {
+        const { timeout = 15000 } = options;
+
+        const abortController = new AbortController();
+        const id = setTimeout(() => abortController.abort(), timeout);
+
+        const response = await fetch(resource, {
+            ...options,
+            signal: abortController.signal
+        });
+        clearTimeout(id);
+        return response;
+    }
+
+    /** Will attempt to query all the networks that are used in active wallet. */
+    private async updateAll(accounts: Account[], networkLoader: NetworkLoader, settingStore: SettingStore) {
+        // Make only a unique list of accounts:
+        const uniqueAccounts = accounts.filter((value, index, self) => self.map(x => x.networkType).indexOf(value.networkType) == index);
+
+        const settings = settingStore.get();
+
+        for (let i = 0; i < uniqueAccounts.length; i++) {
+            const account = accounts[i];
+            const network = networkLoader.getNetwork(account.networkType);
+            const indexerUrls = networkLoader.getServers(network.id, settings.server, settings.indexer);
+
+            let networkStatuses: NetworkStatus[] = [];
+
+            for (let j = 0; j < indexerUrls.length; j++) {
+                let indexerUrl = indexerUrls[j];
+                let domain = indexerUrl.substring(indexerUrl.indexOf('//') + 2);
+                let networkStatus: NetworkStatus;
+
+                try {
+                    // Default options are marked with *
+                    const response = await this.fetchWithTimeout(`${indexerUrl}/api/stats`, {
+                        timeout: 3000,
+                        method: 'GET',
+                        mode: 'cors', // no-cors, *cors, same-origin
+                        cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+                        credentials: 'same-origin', // include, *same-origin, omit
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        redirect: 'follow', // manual, *follow, error
+                        referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+                    });
+
+                    const data = await response.json();
+
+                    // const response = await axios.get(`${indexerUrl}/api/stats`, {
+                    //     timeout: 3000,
+                    //     'axios-retry': {
+                    //         retries: 0
+                    //     }
+                    // });
+
+                    // const data = response.data;
+
+                    if (data.error) {
+                        networkStatus = {
+                            domain,
+                            url: indexerUrl,
+                            blockSyncHeight: -1,
+                            networkType: account.networkType,
+                            availability: IndexerApiStatus.Error,
+                            status: 'Error: ' + data.error,
+                            relayFee: 0.0001 * FEE_FACTOR
+                        };
+                    } else {
+                        const blocksBehind = (data.blockchain.blocks - data.syncBlockIndex);
+
+                        if (blocksBehind > 10) {
+                            networkStatus = {
+                                domain,
+                                url: indexerUrl,
+                                blockSyncHeight: data.syncBlockIndex,
+                                networkType: account.networkType,
+                                availability: IndexerApiStatus.Syncing,
+                                status: 'Syncing / Progress: ' + data.progress,
+                                relayFee: data.network?.relayFee * FEE_FACTOR
+                            };
+                        } else {
+                            networkStatus = {
+                                domain,
+                                url: indexerUrl,
+                                blockSyncHeight: data.syncBlockIndex,
+                                networkType: account.networkType,
+                                availability: IndexerApiStatus.Online,
+                                status: 'Online / Progress: ' + data.progress,
+                                relayFee: data.network?.relayFee * FEE_FACTOR
+                            };
+                        }
+                    }
+                } catch (error: any) {
+                    console.log('Error on Network Status Service:', error);
+
+                    if (error.response) {
+                        // The request was made and the server responded with a status code
+                        // that falls out of the range of 2xx
+                        console.debug(error.response.data);
+                        console.debug(error.response.status);
+                        console.debug(error.response.headers);
+
+                        // When there is response, we'll set status to error.
+                        networkStatus = {
+                            domain,
+                            url: indexerUrl,
+                            blockSyncHeight: -1,
+                            networkType: account.networkType,
+                            availability: IndexerApiStatus.Error,
+                            status: 'Error',
+                            relayFee: 0.0001 * FEE_FACTOR
+                        };
+                    } else if (error.request) {
+                        // The request was made but no response was received
+                        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+                        // http.ClientRequest in node.js
+                        console.debug(error.request);
+
+                        // When there is no response, we'll set status to offline.
+                        networkStatus = {
+                            domain,
+                            url: indexerUrl,
+                            blockSyncHeight: -1,
+                            networkType: account.networkType,
+                            availability: IndexerApiStatus.Offline,
+                            status: 'Offline',
+                            relayFee: 0.0001 * FEE_FACTOR
+                        };
+                    } else {
+                        // Something happened in setting up the request that triggered an Error
+                        console.error('Error', error.message);
+
+                        networkStatus = {
+                            domain,
+                            url: indexerUrl,
+                            blockSyncHeight: -1,
+                            networkType: account.networkType,
+                            availability: IndexerApiStatus.Unknown,
+                            status: error.message,
+                            relayFee: 0.0001 * FEE_FACTOR
+                        };
+                    }
+                }
+
+                console.log('networkStatus:', networkStatus);
+                networkStatuses.push(networkStatus);
+            }
+
+            networkLoader.update(network.id, networkStatuses);
+            console.log('networkStatuses:', networkStatuses);
+        }
+    }
+
+
+
     async runWatcher(runState: RunState) {
         this.watcherState = runState;
 
@@ -69,7 +262,11 @@ export class BackgroundManager {
         const accountStateStore = new AccountStateStore();
         await accountStateStore.load();
 
-        const networkLoader = new NetworkLoader();
+        const networkStatusStore = new NetworkStatusStore();
+        await networkStatusStore.load();
+
+        const networkLoader = new NetworkLoader(networkStatusStore);
+
         const addressManager = new AddressManager(networkLoader);
         const indexer = new IndexerBackgroundService(settingStore, walletStore, addressStore, addressIndexedStore, transactionStore, addressManager, accountStateStore, accountHistoryStore);
         indexer.runState = this.watcherState;
@@ -86,9 +283,6 @@ export class BackgroundManager {
             if (this.watcherState.cancel) {
                 return;
             }
-
-            // Load the latest network status store.
-            await networkLoader.load();
 
             const processResult = await indexer.process(addressWatchStore);
 
@@ -147,7 +341,10 @@ export class BackgroundManager {
         const accountStateStore = new AccountStateStore();
         await accountStateStore.load();
 
-        const networkLoader = new NetworkLoader();
+        const networkStatusStore = new NetworkStatusStore();
+        await networkStatusStore.load();
+
+        const networkLoader = new NetworkLoader(networkStatusStore);
         const addressManager = new AddressManager(networkLoader);
 
         // Get what addresses to watch from local storage.
@@ -159,9 +356,6 @@ export class BackgroundManager {
 
         while (!processResult.completed) {
             try {
-                // Load the latest network status store.
-                await networkLoader.load();
-
                 processResult = await indexer.process(null);
             } catch (err) {
                 console.error('Failure during indexer processing.', err);

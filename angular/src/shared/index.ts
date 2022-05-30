@@ -7,3 +7,4 @@ export * from './indexer';
 export * from './persistence';
 export * from './store';
 export * from './servers';
+export * from './defaults';

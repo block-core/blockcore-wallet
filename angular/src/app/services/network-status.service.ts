@@ -50,8 +50,6 @@ export class NetworkStatusService {
         //         this.store.set(n.id, <NetworkStatus>{ networkType: n.id, availability: IndexerApiStatus.Unknown });
         //     }
         // });
-
-        await this.refreshNetworkStatus();
     }
 
     /** Get the network definition based upon the network identifier. */
@@ -62,149 +60,6 @@ export class NetworkStatusService {
     /** Get the network definition based upon the network number and purpose. The purpose defaults to 44. */
     getNetworkByPurpose(network: number, purpose: number = 44) {
         return this.allNetworks.find(w => w.network == network && w.purpose == purpose);
-    }
-
-    /** Iterate over all active accounts (or default accounts) and check the latest networks status. */
-    async refreshNetworkStatus() {
-        try {
-            if (this.walletManager.activeWallet.accounts.length === 0) {
-                await this.updateAll(this.walletManager.activeWallet.accounts); // TODO: This should be ALL accounts, not just active wallet.
-            } else {
-                await this.updateAll(this.networkService.getDefaultAccounts());
-            }
-        }
-        catch (err) {
-
-        }
-
-        setTimeout(async () => {
-            await this.refreshNetworkStatus();
-        }, STATUS_INTERVAL);
-    }
-
-    /** Will attempt to query all the networks that are used in active wallet. */
-    async updateAll(accounts: Account[]) {
-        // Make only a unique list of accounts:
-        const uniqueAccounts = accounts.filter((value, index, self) => self.map(x => x.networkType).indexOf(value.networkType) == index);
-
-        for (let i = 0; i < uniqueAccounts.length; i++) {
-            const account = accounts[i];
-            const network = this.getNetwork(account.networkType);
-            const indexerUrls = this.networkLoader.getServers(network.id, this.settings.values.server, this.settings.values.indexer);
-
-            let networkStatuses: NetworkStatus[] = [];
-
-            for (let j = 0; j < indexerUrls.length; j++) {
-                let indexerUrl = indexerUrls[j];
-                let domain = indexerUrl.substring(indexerUrl.indexOf('//') + 2);
-                let networkStatus: NetworkStatus;
-
-                try {
-                    const response = await axios.get(`${indexerUrl}/api/stats`, {
-                        'axios-retry': {
-                            retries: 0
-                        }
-                    });
-
-                    const data = response.data;
-
-                    this.logger.debug('Update All Network:', data);
-
-                    if (data.error) {
-                        networkStatus = {
-                            domain,
-                            url: indexerUrl,
-                            blockSyncHeight: -1,
-                            networkType: account.networkType,
-                            availability: IndexerApiStatus.Error,
-                            status: 'Error: ' + data.error,
-                            relayFee: 0.0001 * FEE_FACTOR
-                        };
-                    } else {
-                        const blocksBehind = (data.blockchain.blocks - data.syncBlockIndex);
-
-                        if (blocksBehind > 10) {
-                            networkStatus = {
-                                domain,
-                                url: indexerUrl,
-                                blockSyncHeight: data.syncBlockIndex,
-                                networkType: account.networkType,
-                                availability: IndexerApiStatus.Syncing,
-                                status: 'Syncing / Progress: ' + data.progress,
-                                relayFee: data.network?.relayFee * FEE_FACTOR
-                            };
-                        } else {
-                            networkStatus = {
-                                domain,
-                                url: indexerUrl,
-                                blockSyncHeight: data.syncBlockIndex,
-                                networkType: account.networkType,
-                                availability: IndexerApiStatus.Online,
-                                status: 'Online / Progress: ' + data.progress,
-                                relayFee: data.network?.relayFee * FEE_FACTOR
-                            };
-                        }
-                    }
-                } catch (error: any) {
-                    if (error.response) {
-                        // The request was made and the server responded with a status code
-                        // that falls out of the range of 2xx
-                        this.logger.debug(error.response.data);
-                        this.logger.debug(error.response.status);
-                        this.logger.debug(error.response.headers);
-
-                        // When there is response, we'll set status to error.
-                        networkStatus = {
-                            domain,
-                            url: indexerUrl,
-                            blockSyncHeight: -1,
-                            networkType: account.networkType,
-                            availability: IndexerApiStatus.Error,
-                            status: 'Error',
-                            relayFee: 0.0001 * FEE_FACTOR
-                        };
-                    } else if (error.request) {
-                        // The request was made but no response was received
-                        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-                        // http.ClientRequest in node.js
-                        this.logger.debug(error.request);
-
-                        // When there is no response, we'll set status to offline.
-                        networkStatus = {
-                            domain,
-                            url: indexerUrl,
-                            blockSyncHeight: -1,
-                            networkType: account.networkType,
-                            availability: IndexerApiStatus.Offline,
-                            status: 'Offline',
-                            relayFee: 0.0001 * FEE_FACTOR
-                        };
-                    } else {
-                        // Something happened in setting up the request that triggered an Error
-                        this.logger.error('Error', error.message);
-
-                        networkStatus = {
-                            domain,
-                            url: indexerUrl,
-                            blockSyncHeight: -1,
-                            networkType: account.networkType,
-                            availability: IndexerApiStatus.Unknown,
-                            status: error.message,
-                            relayFee: 0.0001 * FEE_FACTOR
-                        };
-                    }
-                }
-
-                console.log('networkStatus:', networkStatus);
-
-                networkStatuses.push(networkStatus);
-                // this.update(networkStatus);
-            }
-
-            this.update(network.id, networkStatuses);
-
-            console.log('networkStatuses:', networkStatuses);
-        }
     }
 
     getAll() {
@@ -231,17 +86,5 @@ export class NetworkStatusService {
 
     get(networkType: string) {
         return this.store.get(networkType);
-    }
-
-    /** Update the network status. This can be done internally or externally, depending on the scenario. */
-    async update(networkType: string, networkStatuses: NetworkStatus[]) {
-        // If there are no block height provided, copy the latest:
-        // if (!networkStatus.blockSyncHeight) {
-        //     networkStatus.blockSyncHeight = this.store.get(networkStatus.networkType).blockSyncHeight;
-        // }
-
-        this.store.set(networkType, networkStatuses);
-
-        await this.store.save();
     }
 }

@@ -1,4 +1,4 @@
-import { IndexerApiStatus } from './interfaces';
+import { IndexerApiStatus, NetworkStatus } from './interfaces';
 import { Network, BTC44, BTC84, CITY, CRS, IDENTITY, NOSTR, STRAX, TSTRAX, TCRS } from './networks';
 import { Servers } from './servers';
 import { NetworkStatusStore } from './store';
@@ -6,16 +6,11 @@ import { NetworkStatusStore } from './store';
 /** Holds a list of networks that is available. */
 export class NetworkLoader {
     private networks: Network[] = [];
-    private store: NetworkStatusStore = new NetworkStatusStore();
+    // private store: NetworkStatusStore = new NetworkStatusStore();
     private loaded = false;
 
-    constructor() {
+    constructor(private store?: NetworkStatusStore) {
         this.createNetworks();
-    }
-
-    async load() {
-        this.loaded = true;
-        return this.store.load();
     }
 
     /** Returns a list of networks that correspond to the filter supplied. */
@@ -69,10 +64,12 @@ export class NetworkLoader {
             console.log(serverStatuses);
 
             if (!serverStatuses) {
-                console.log('NO STATUSES!!! - get URL from list of servers:');
-                const serverIndex = this.generateRandomNumber(0, servers.length - 1);
-                const server = servers[serverIndex];
-                return server;
+                console.log('NO STATUSES!!! - returning empty URL!');
+                return null;
+                // console.log('NO STATUSES!!! - get URL from list of servers:');
+                // const serverIndex = this.generateRandomNumber(0, servers.length - 1);
+                // const server = servers[serverIndex];
+                // return server;
             } else {
                 const availableServers = serverStatuses.filter(s => s.availability === IndexerApiStatus.Online);
                 const availableServersUrl = availableServers.map(s => s.url);
@@ -98,5 +95,17 @@ export class NetworkLoader {
             const servers = serversGroup[networkType];
             return servers;
         }
+    }
+
+    /** Update the network status. This can be done internally or externally, depending on the scenario. */
+    async update(networkType: string, networkStatuses: NetworkStatus[]) {
+        // If there are no block height provided, copy the latest:
+        // if (!networkStatus.blockSyncHeight) {
+        //     networkStatus.blockSyncHeight = this.store.get(networkStatus.networkType).blockSyncHeight;
+        // }
+
+        this.store.set(networkType, networkStatuses);
+
+        await this.store.save();
     }
 }

@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { WalletManager, NetworksService, UIState, CommunicationService, NetworkStatusService } from '../../services';
-import { Account } from '../../../shared/interfaces';
+import { WalletManager, NetworksService, UIState, CommunicationService, NetworkStatusService, EnvironmentService } from '../../services';
+import { Account, Defaults } from '../../../shared';
 
 @Component({
     selector: 'app-account-select',
@@ -21,6 +21,7 @@ export class AccountSelectComponent implements OnInit, OnDestroy {
         public walletManager: WalletManager,
         private communication: CommunicationService,
         private networkStatus: NetworkStatusService,
+        private env: EnvironmentService,
         private router: Router
     ) {
         uiState.title = 'Select accounts';
@@ -29,7 +30,9 @@ export class AccountSelectComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         // Get the default accounts for the current wallet:
-        const accounts = this.networkService.getDefaultAccounts();
+        console.log('this.env.instanceName:', this.env.instance);
+        const accounts = Defaults.getDefaultAccounts(this.env.instance);
+        console.log('DEFAULT ACCOUNTS:', accounts);
 
         this.coins = accounts.filter(item => item.type === 'coin' || item.type === 'token');
         this.other = accounts.filter(item => item.type === 'other');

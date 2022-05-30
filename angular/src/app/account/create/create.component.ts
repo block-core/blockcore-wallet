@@ -162,7 +162,8 @@ export class AccountCreateComponent implements OnInit, OnDestroy {
 
         // Make sure we get a recent state of the network user added account on. If this is the first time the user have added
         // account from this network, this will ensure that we have a status as early as possible.
-        await this.networkStatusService.updateAll([account]); // TODO: This should perhaps not send single account, but all accounts.
+        this.communication.send(this.communication.createMessage('network', { accounts: [account] }));
+        // await this.networkStatusService.updateAll([account]); // TODO: This should perhaps not send single account, but all accounts.
 
         // When adding an account, the active account ID will be updated so we can read it here.
         this.router.navigateByUrl('/account/view/' + this.walletManager.activeAccountId);
