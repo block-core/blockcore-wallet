@@ -87,6 +87,9 @@ export class BackgroundManager {
                 return;
             }
 
+            // Load the latest network status store.
+            await networkLoader.load();
+
             const processResult = await indexer.process(addressWatchStore);
 
             // If the process was cancelled mid-process, return immeidately.
@@ -156,6 +159,9 @@ export class BackgroundManager {
 
         while (!processResult.completed) {
             try {
+                // Load the latest network status store.
+                await networkLoader.load();
+
                 processResult = await indexer.process(null);
             } catch (err) {
                 console.error('Failure during indexer processing.', err);

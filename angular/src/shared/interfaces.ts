@@ -48,8 +48,9 @@ interface IEnvironment {
 }
 
 interface NetworkStatus {
-    domain: string,
-    blockSyncHeight?: number,
+    domain: string;
+    url: string;
+    blockSyncHeight?: number;
     networkType: string;
     status: string;
     availability: IndexerApiStatus;

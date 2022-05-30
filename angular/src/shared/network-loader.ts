@@ -1,12 +1,19 @@
+import { IndexerApiStatus } from './interfaces';
 import { Network, BTC44, BTC84, CITY, CRS, IDENTITY, NOSTR, STRAX, TSTRAX, TCRS } from './networks';
 import { Servers } from './servers';
+import { NetworkStatusStore } from './store';
 
 /** Holds a list of networks that is available. */
 export class NetworkLoader {
     private networks: Network[] = [];
+    private store: NetworkStatusStore = new NetworkStatusStore();
 
     constructor() {
         this.createNetworks();
+    }
+
+    async load() {
+        return this.store.load();
     }
 
     /** Returns a list of networks that correspond to the filter supplied. */
@@ -56,12 +63,12 @@ export class NetworkLoader {
             const serversGroup = Servers[networkGroup];
             const servers = serversGroup[networkType];
 
-            console.log(`servers:`, servers);
+            const serverStatuses = this.store.get(networkType);
+            const availableServers = serverStatuses.filter(s => s.availability === IndexerApiStatus.Online);
+            const availableServersUrl = availableServers.map(s => s.url);
 
-            // TODO: Figure out the best way to pick and perhaps cycle the servers. 
-            // As of now, we'll randomly pick every time this method is called.
-            const serverIndex = this.generateRandomNumber(0, servers.length - 1);
-            const server = servers[serverIndex];
+            const serverIndex = this.generateRandomNumber(0, availableServersUrl.length - 1);
+            const server = availableServersUrl[serverIndex];
 
             console.log(`server:`, server);
 

@@ -107,6 +107,7 @@ export class NetworkStatusService {
                     if (data.error) {
                         networkStatus = {
                             domain,
+                            url: indexerUrl,
                             blockSyncHeight: -1,
                             networkType: account.networkType,
                             availability: IndexerApiStatus.Error,
@@ -119,6 +120,7 @@ export class NetworkStatusService {
                         if (blocksBehind > 10) {
                             networkStatus = {
                                 domain,
+                                url: indexerUrl,
                                 blockSyncHeight: data.syncBlockIndex,
                                 networkType: account.networkType,
                                 availability: IndexerApiStatus.Syncing,
@@ -128,6 +130,7 @@ export class NetworkStatusService {
                         } else {
                             networkStatus = {
                                 domain,
+                                url: indexerUrl,
                                 blockSyncHeight: data.syncBlockIndex,
                                 networkType: account.networkType,
                                 availability: IndexerApiStatus.Online,
@@ -147,6 +150,7 @@ export class NetworkStatusService {
                         // When there is response, we'll set status to error.
                         networkStatus = {
                             domain,
+                            url: indexerUrl,
                             blockSyncHeight: -1,
                             networkType: account.networkType,
                             availability: IndexerApiStatus.Error,
@@ -162,6 +166,7 @@ export class NetworkStatusService {
                         // When there is no response, we'll set status to offline.
                         networkStatus = {
                             domain,
+                            url: indexerUrl,
                             blockSyncHeight: -1,
                             networkType: account.networkType,
                             availability: IndexerApiStatus.Offline,
@@ -174,6 +179,7 @@ export class NetworkStatusService {
 
                         networkStatus = {
                             domain,
+                            url: indexerUrl,
                             blockSyncHeight: -1,
                             networkType: account.networkType,
                             availability: IndexerApiStatus.Unknown,
