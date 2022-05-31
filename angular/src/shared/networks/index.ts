@@ -7,3 +7,4 @@ export * from './TCRS';
 export * from './CITY';
 export * from './NOSTR';
 export * from './BTC';
+export * from './SBC';
