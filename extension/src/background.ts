@@ -26,7 +26,7 @@ async function getTabId() {
 }
 
 chrome.runtime.onInstalled.addListener(async ({ reason }) => {
-    console.log('onInstalled', reason);
+    // console.debug('onInstalled', reason);
 
     // Periodic alarm that will check if wallet should be locked.
     chrome.alarms.get('periodic', a => {
@@ -54,7 +54,7 @@ chrome.runtime.onInstalled.addListener(async ({ reason }) => {
 });
 
 chrome.alarms.onAlarm.addListener(async (alarm: chrome.alarms.Alarm) => {
-    console.log('onAlarm', alarm);
+    // console.debug('onAlarm', alarm);
 
     if (alarm.name === 'periodic') {
         await shared.checkLockTimeout();
@@ -64,10 +64,10 @@ chrome.alarms.onAlarm.addListener(async (alarm: chrome.alarms.Alarm) => {
 });
 
 chrome.runtime.onMessage.addListener(async (message: Message, sender, sendResponse) => {
-    console.log('MESSAGE RECEIVED!', message);
+    // console.debug('MESSAGE RECEIVED!', message);
 
     if (message.type === 'keep-alive') {
-        console.log('Received keep-alive message.');
+        // console.debug('Received keep-alive message.');
     } else if (message.type === 'index') {
         await executeIndexer();
     } else if (message.type === 'watch') {
@@ -113,7 +113,7 @@ const networkStatusWatcher = async () => {
             target: 'tabs',
             host: location.host
         }, function (response) {
-            console.log('Extension:sendMessage:response:indexed:', response);
+            // console.log('Extension:sendMessage:response:indexed:', response);
         });
 
         // Continue running the watcher if it has not been cancelled.
@@ -131,7 +131,7 @@ const networkStatusWatcher = async () => {
 const executeIndexer = async () => {
     // If we are already indexing, simply ignore this request.
     if (indexing) {
-        console.log('Already indexing, skipping this indexing request.');
+        // console.log('Already indexing, skipping this indexing request.');
         return;
     }
 
@@ -165,11 +165,11 @@ const runIndexer = async () => {
                 target: 'tabs',
                 host: location.host
             }, function (response) {
-                console.log('Extension:sendMessage:response:indexed:', response);
+                // console.log('Extension:sendMessage:response:indexed:', response);
             });
 
         } else {
-            console.log('Indexer found zero changes. We will still inform the UI to refresh wallet to get latest scan state.');
+            // console.log('Indexer found zero changes. We will still inform the UI to refresh wallet to get latest scan state.');
 
             chrome.runtime.sendMessage({
                 type: 'updated',
@@ -179,7 +179,7 @@ const runIndexer = async () => {
                 target: 'tabs',
                 host: location.host
             }, function (response) {
-                console.log('Extension:sendMessage:response:updated:', response);
+                // console.log('Extension:sendMessage:response:updated:', response);
             });
         }
     }
@@ -202,20 +202,20 @@ const runWatcher = async () => {
     if (watchManager != null) {
         // First stop the existing watcher process.
         watchManager.stop();
-        console.log('Calling to stop watch manager...');
+        // console.log('Calling to stop watch manager...');
     } else {
         watchManager = new BackgroundManager();
 
         // Whenever the manager has successfully stopped, restart the watcher process.
         watchManager.onStopped = () => {
-            console.log('Watch Manager actually stopped, re-running!!');
+            // console.log('Watch Manager actually stopped, re-running!!');
             watchManager = null;
             runWatcher();
         };
 
         watchManager.onUpdates = (status: ProcessResult) => {
             if (status.changes) {
-                console.log('Watcher found changes. Send message!');
+                console.log('Watcher found changes. Sending message to UI!');
 
                 chrome.runtime.sendMessage({
                     type: 'indexed',
@@ -225,11 +225,11 @@ const runWatcher = async () => {
                     target: 'tabs',
                     host: location.host
                 }, function (response) {
-                    console.log('Extension:sendMessage:response:indexed:', response);
+                    // console.log('Extension:sendMessage:response:indexed:', response);
                 });
             }
             else {
-                console.log('Watcher found zero changes. We will still inform the UI to refresh wallet to get latest scan state.');
+                // console.debug('Watcher found zero changes. We will still inform the UI to refresh wallet to get latest scan state.');
 
                 chrome.runtime.sendMessage({
                     type: 'updated',
@@ -239,7 +239,7 @@ const runWatcher = async () => {
                     target: 'tabs',
                     host: location.host
                 }, function (response) {
-                    console.log('Extension:sendMessage:response:updated:', response);
+                    // console.log('Extension:sendMessage:response:updated:', response);
                 });
             }
         }

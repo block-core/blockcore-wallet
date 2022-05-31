@@ -51,7 +51,7 @@ export class NetworkLoader {
     }
 
     getServer(networkType: string, networkGroup: string, customServer?: string) {
-        console.log(`getServer: ${networkType} | ${networkGroup} | ${customServer}`);
+        // console.debug(`getServer: ${networkType} | ${networkGroup} | ${customServer}`);
 
         if (networkGroup == 'custom') {
             const server = customServer.replace('{id}', networkType.toLowerCase());
@@ -61,10 +61,10 @@ export class NetworkLoader {
             const servers = serversGroup[networkType];
 
             const serverStatuses = this.store.get(networkType);
-            console.log(serverStatuses);
+            // console.log(serverStatuses);
 
             if (!serverStatuses) {
-                console.log('NO STATUSES!!! - returning empty URL!');
+                console.warn(`No indexers for ${networkType} available. Returning empty URL!`);
                 return null;
                 // console.log('NO STATUSES!!! - get URL from list of servers:');
                 // const serverIndex = this.generateRandomNumber(0, servers.length - 1);
@@ -77,7 +77,7 @@ export class NetworkLoader {
                 const serverIndex = this.generateRandomNumber(0, availableServersUrl.length - 1);
                 const server = availableServersUrl[serverIndex];
 
-                console.log(`server:`, server);
+                // console.debug(`server:`, server);
 
                 return server;
             }
@@ -85,7 +85,7 @@ export class NetworkLoader {
     }
 
     getServers(networkType: string, networkGroup: string, customServer?: string) {
-        console.log(`getServers: ${networkType} | ${networkGroup} | ${customServer}`);
+        // console.debug(`getServers: ${networkType} | ${networkGroup} | ${customServer}`);
 
         if (networkGroup == 'custom') {
             const server = customServer.replace('{id}', networkType.toLowerCase());

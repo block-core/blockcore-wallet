@@ -83,10 +83,11 @@ export class AccountComponent implements OnInit, OnDestroy {
   }
 
   async scan() {
+    this.loading = true;
+
     const account = this.walletManager.activeAccount;
     const accountState = this.accountStateStore.get(account.identifier);
 
-    this.loading = true;
     const accountHistory: AccountHistory = { balance: 0, unconfirmed: 0, history: [], unspent: [] };
     this.accountHistory = accountHistory;
 

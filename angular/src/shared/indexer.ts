@@ -258,7 +258,7 @@ export class IndexerBackgroundService {
             return { changes: false, completed: true };
         }
 
-        console.log('Looping wallets', wallets);
+        // console.debug('Looping wallets', wallets);
 
         for (let i = 0; i < wallets.length; i++) {
             if (this.runState.cancel) {
@@ -267,7 +267,7 @@ export class IndexerBackgroundService {
 
             const wallet = wallets[i];
 
-            console.log('Looping accounts:', wallet.accounts);
+            // console.debug('Looping accounts:', wallet.accounts);
 
             if (wallet.accounts.length == 0) {
                 return { changes: false, completed: true };
@@ -466,7 +466,7 @@ export class IndexerBackgroundService {
                         if (network.singleAddress === true) {
                             // Get the first receive addresses.
                             const address = accountState.receive[0];
-                            console.log('Running Watch on primary receive address', address);
+                            // console.debug('Running Watch on primary receive address', address);
 
                             // Get the current state for this address:
                             let addressState = this.addressStore.get(address.address);
@@ -496,7 +496,7 @@ export class IndexerBackgroundService {
                         // Get the last receive addresses.
                         const address = accountState.receive[accountState.receive.length - 1];
 
-                        console.log('Running Watch on receive address', address);
+                        // console.debug('Running Watch on receive address', address);
 
                         // Get the current state for this address:
                         let addressState = this.addressStore.get(address.address);
@@ -548,7 +548,7 @@ export class IndexerBackgroundService {
                         // Get the last change addresses.
                         const addressChange = accountState.change[accountState.change.length - 1];
 
-                        console.log('Running Watch on change address', addressChange);
+                        // console.debug('Running Watch on change address', addressChange);
 
                         // Get the current state for this address:
                         let addressStateChange = this.addressStore.get(addressChange.address);
@@ -612,7 +612,7 @@ export class IndexerBackgroundService {
 
                             const processState = await this.processAddress(indexerUrl, addressState);
 
-                            console.log('Completed processing:', processState);
+                            // console.debug('Completed processing:', processState);
 
                             if (!processState.completed) {
                                 anyAddressNotComplete = true;
@@ -697,10 +697,10 @@ export class IndexerBackgroundService {
             await this.walletStore.save();
             await this.accountStateStore.save();
 
-            console.log('AccountStateStore:', this.accountStateStore.all());
+            // console.debug('AccountStateStore:', this.accountStateStore.all());
         }
 
-        console.log('Indexer finished:', changes);
+        // console.debug('Indexer finished:', changes);
 
         return { changes, completed: anyAddressNotCompleteInAnyWallet, cancelled: false };
     }
@@ -760,7 +760,7 @@ export class IndexerBackgroundService {
             while (nextLink != null) {
 
                 const url = `${clonedIndexerUrl}${nextLink}`;
-                console.log(`nextlink: ${url}`);
+                // console.debug(`nextlink: ${url}`);
 
                 // Default options are marked with *
                 const response = await fetch(url, {

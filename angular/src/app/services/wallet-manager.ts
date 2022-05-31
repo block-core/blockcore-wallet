@@ -637,7 +637,7 @@ export class WalletManager {
                 target: 'tabs',
                 host: location.host
             }, function (response) {
-                console.log('Extension:sendMessage:response:updated:', response);
+                // console.log('Extension:sendMessage:response:updated:', response);
             });
         }
 

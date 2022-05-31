@@ -60,15 +60,15 @@ export class BackgroundManager {
             accounts = Defaults.getDefaultAccounts(instance);
         }
 
-        const networkTypes = accounts.filter((value, index, self) => self.map(x => x.networkType).indexOf(value.networkType) == index).map(m => m.networkType);
-        console.log('networkTypes:', networkTypes);
+        // const networkTypes = accounts.filter((value, index, self) => self.map(x => x.networkType).indexOf(value.networkType) == index).map(m => m.networkType);
+        // console.debug('networkTypes:', networkTypes);
 
         const store = new NetworkStatusStore();
         await store.load();
 
         const networkLoader = new NetworkLoader(store);
 
-        console.log('All networks:', networkLoader.getAllNetworks());
+        // console.debug('All networks:', networkLoader.getAllNetworks());
 
         try {
             await this.updateAll(accounts, networkLoader, settingStore);
@@ -224,12 +224,12 @@ export class BackgroundManager {
                     }
                 }
 
-                console.log('networkStatus:', networkStatus);
+                // console.debug('networkStatus:', networkStatus);
                 networkStatuses.push(networkStatus);
             }
 
             networkLoader.update(network.id, networkStatuses);
-            console.log('networkStatuses:', networkStatuses);
+            // console.debug('networkStatuses:', networkStatuses);
         }
     }
 
@@ -292,13 +292,13 @@ export class BackgroundManager {
             }
 
             if (processResult.changes) {
-                console.log('Calculate balance for watcher event.');
+                // console.log('Calculate balance for watcher event.');
                 // Calculate the balance of the wallets.
                 await indexer.calculateBalance();
             }
 
             if (this.onUpdates) {
-                console.log('Process result:', processResult);
+                // console.log('Process result:', processResult);
                 this.onUpdates.call(null, processResult);
             }
 
@@ -364,11 +364,11 @@ export class BackgroundManager {
 
             // If there are no changes, don't re-calculate the balance.
             if (!processResult.changes) {
-                console.log('If there are no changes, don\'t re-calculate the balance.');
+                // console.log('If there are no changes, don\'t re-calculate the balance.');
             }
 
             try {
-                console.log('Calculate balance for indexing event.');
+                // console.log('Calculate balance for indexing event.');
 
                 // Calculate the balance of the wallets.
                 await indexer.calculateBalance();

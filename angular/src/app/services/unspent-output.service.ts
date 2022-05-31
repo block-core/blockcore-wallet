@@ -131,7 +131,7 @@ export class UnspentOutputService {
             // Loop through all pages until finished.
             while (nextLink != null) {
                 const url = `${clonedIndexerUrl}${nextLink}`;
-                this.logger.debug(`nextlink: ${url}`);
+                // this.logger.debug(`nextlink: ${url}`);
 
                 // Default options are marked with *
                 const response = await fetch(url, {

@@ -6,7 +6,7 @@ export class SharedManager {
     }
 
     async checkLockTimeout() {
-        console.log('SharedManager:checkLockTimeout');
+        // console.log('SharedManager:checkLockTimeout');
 
         if (this.isExtension) {
             const storage = globalThis.chrome.storage as any;
@@ -34,7 +34,7 @@ export class SharedManager {
 
                     // TODO: #132
                     chrome.runtime.sendMessage({ type: 'timeout' }, function (response) {
-                        console.log('Extension:sendMessage:response:', response);
+                        // console.log('Extension:sendMessage:response:', response);
                     });
 
                     return true;

@@ -60,7 +60,7 @@ export class SettingsComponent {
         target: 'tabs',
         host: location.host
       }, function (response) {
-        console.log('Extension:sendMessage:response:updated:', response);
+        // console.log('Extension:sendMessage:response:updated:', response);
       });
     }
   }
