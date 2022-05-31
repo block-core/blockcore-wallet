@@ -1,3 +1,35 @@
+## <small>0.0.36 (2022-05-31)</small>
+
+* Add a component for Network Status accessible from Settings ([57ec860](https://github.com/block-core/blockcore-wallet/commit/57ec860))
+* Add a notification of zero transactions ([9e175f6](https://github.com/block-core/blockcore-wallet/commit/9e175f6)), closes [#66](https://github.com/block-core/blockcore-wallet/issues/66)
+* Add a TaskRunner to be used by watcher enabling exponential delay ([c9b0f28](https://github.com/block-core/blockcore-wallet/commit/c9b0f28))
+* Add ability to stop the timeout itself ([392ec9c](https://github.com/block-core/blockcore-wallet/commit/392ec9c))
+* Add exponential delay to retries upon errors ([bc84641](https://github.com/block-core/blockcore-wallet/commit/bc84641))
+* Add missing await for calculate balance on watcher ([024de37](https://github.com/block-core/blockcore-wallet/commit/024de37))
+* Add validation of amount input ([beb130e](https://github.com/block-core/blockcore-wallet/commit/beb130e)), closes [#92](https://github.com/block-core/blockcore-wallet/issues/92)
+* Added showing the NFTs on the extension (#138) ([0220acc](https://github.com/block-core/blockcore-wallet/commit/0220acc)), closes [#138](https://github.com/block-core/blockcore-wallet/issues/138)
+* Clean up debug logging ([c1c1c4f](https://github.com/block-core/blockcore-wallet/commit/c1c1c4f))
+* Clean up debug logging ([64b12c7](https://github.com/block-core/blockcore-wallet/commit/64b12c7))
+* Clean up old code ([d18df63](https://github.com/block-core/blockcore-wallet/commit/d18df63))
+* Code cleanup ([4a90a28](https://github.com/block-core/blockcore-wallet/commit/4a90a28))
+* Code cleanup ([0429ec8](https://github.com/block-core/blockcore-wallet/commit/0429ec8))
+* Code cleanup ([3c4b096](https://github.com/block-core/blockcore-wallet/commit/3c4b096))
+* Continued work on network status ([85ea274](https://github.com/block-core/blockcore-wallet/commit/85ea274)), closes [#139](https://github.com/block-core/blockcore-wallet/issues/139)
+* Create NOTES.md ([d494aa5](https://github.com/block-core/blockcore-wallet/commit/d494aa5))
+* Display a message when there are zero accounts ([e8e1780](https://github.com/block-core/blockcore-wallet/commit/e8e1780))
+* Fix a syntax error ([45e0a11](https://github.com/block-core/blockcore-wallet/commit/45e0a11))
+* Improve the indexer and watcher scheduling ([2e293b1](https://github.com/block-core/blockcore-wallet/commit/2e293b1))
+* Improve the Network Status ([1d5c496](https://github.com/block-core/blockcore-wallet/commit/1d5c496)), closes [#139](https://github.com/block-core/blockcore-wallet/issues/139)
+* Make sure that the watch is restarted when editing wallet ([6bd4af2](https://github.com/block-core/blockcore-wallet/commit/6bd4af2))
+* Migrate the network watcher status from UI to background ([90cbc43](https://github.com/block-core/blockcore-wallet/commit/90cbc43)), closes [#139](https://github.com/block-core/blockcore-wallet/issues/139)
+* Minor improvements to Chrome communication error when sending messages ([c47a49a](https://github.com/block-core/blockcore-wallet/commit/c47a49a))
+* Pick only servers that are currently online ([ade2db3](https://github.com/block-core/blockcore-wallet/commit/ade2db3)), closes [#139](https://github.com/block-core/blockcore-wallet/issues/139)
+* Separate Account and Account State ([b180e2b](https://github.com/block-core/blockcore-wallet/commit/b180e2b)), closes [#123](https://github.com/block-core/blockcore-wallet/issues/123)
+* Tune the watching variables ([ed5da82](https://github.com/block-core/blockcore-wallet/commit/ed5da82))
+* Update version and changelog ([d5c6280](https://github.com/block-core/blockcore-wallet/commit/d5c6280))
+
+
+
 ## <small>0.0.35 (2022-05-22)</small>
 
 * Rename from "Blockcore Extension" to "Blockcore Wallet" ([1930ce0](https://github.com/block-core/blockcore-wallet/commit/1930ce0))
