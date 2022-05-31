@@ -29,19 +29,19 @@ export class CommunicationService {
         if (this.runtime.isExtension) {
             chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
                 const result = await this.handleInternalMessage(message, sender);
-                this.logger.debug(`Process messaged ${message.type} and returning this response: `, result);
+                // this.logger.debug(`Process messaged ${message.type} and returning this response: `, result);
                 sendResponse(result);
             });
 
             chrome.runtime.onMessageExternal.addListener(async (message, sender, sendResponse) => {
                 const result = await this.handleExternalMessage(message, sender);
-                this.logger.debug(`Process (external) messaged ${message.type} and returning this response: `, result);
+                // this.logger.debug(`Process (external) messaged ${message.type} and returning this response: `, result);
                 sendResponse(result);
             });
         } else {
             this.events.subscribeAll().subscribe(async (message) => {
                 // Compared to the extension based messaging, we don't have response messages.
-                this.logger.debug(`Process message:`, message);
+                // this.logger.debug(`Process message:`, message);
                 await this.handleMessage(message.data);
             });
         }
@@ -69,11 +69,11 @@ export class CommunicationService {
 
     /** Send message to the background service. */
     send(message: Message) {
-        this.logger.info('CommunicationService::send:', message);
+        // this.logger.info('CommunicationService::send:', message);
 
         if (this.runtime.isExtension) {
             chrome.runtime.sendMessage(message, (response) => {
-                this.logger.info('CommunicationService:send:response:', response);
+                // this.logger.info('CommunicationService:send:response:', response);
             });
         } else {
             this.events.publish(message.type, message);
@@ -86,7 +86,7 @@ export class CommunicationService {
     }
 
     async handleMessage(message: Message) {
-        this.logger.info('CommunicationService:onMessage: ', message);
+        // this.logger.info('CommunicationService:onMessage: ', message);
 
         // if (message.target !== 'tabs') {
         //     console.log('This message is not handled by the tabs (extension) logic.');
@@ -102,22 +102,22 @@ export class CommunicationService {
                     return 'success';
                 }
                 case 'updated': {
-                    console.log('SERVICE WORKER HAS FINISHED INDEXING, but no changes to the data, but we get updated wallet info.', message.data);
+                    // console.log('SERVICE WORKER HAS FINISHED INDEXING, but no changes to the data, but we get updated wallet info.', message.data);
                     await this.state.update();
                     return 'ok';
                 }
                 case 'indexed': {
-                    console.log('SERVICE WORKER HAS FINISHED INDEXING!!! WE MUST RELOAD STORES!', message.data);
+                    // console.log('SERVICE WORKER HAS FINISHED INDEXING!!! WE MUST RELOAD STORES!', message.data);
                     await this.state.refresh();
                     return 'ok';
                 }
                 case 'reload': {
-                    console.log('Wallet / Account might be deleted, so we must reload state.');
+                    // console.log('Wallet / Account might be deleted, so we must reload state.');
                     await this.state.reload();
                     return 'ok';
                 }
                 case 'network-updated': {
-                    console.log('Network status was updated, reload the networkstatus store!');
+                    // console.log('Network status was updated, reload the networkstatus store!');
                     await this.state.reloadStore('networkstatus');
                     return 'ok';
                 }
@@ -151,8 +151,8 @@ export class CommunicationService {
     }
 
     async handleInternalMessage(message: Message, sender: chrome.runtime.MessageSender) {
-        this.logger.info('CommunicationService:onMessage: ', message);
-        this.logger.info('CommunicationService:onMessage:sender: ', sender);
+        // this.logger.info('CommunicationService:onMessage: ', message);
+        // this.logger.info('CommunicationService:onMessage:sender: ', sender);
 
         // if (message.target !== 'tabs') {
         //     console.log('This message is not handled by the tabs (extension) logic.');
@@ -168,17 +168,17 @@ export class CommunicationService {
                     return 'success';
                 }
                 case 'updated': {
-                    console.log('SERVICE WORKER HAS FINISHED INDEXING, but no changes to the data, but we get updated wallet info.', message.data);
+                    // console.log('SERVICE WORKER HAS FINISHED INDEXING, but no changes to the data, but we get updated wallet info.', message.data);
                     await this.state.update();
                     return 'ok';
                 }
                 case 'indexed': {
-                    console.log('SERVICE WORKER HAS FINISHED INDEXING!!! WE MUST RELOAD STORES!', message.data);
+                    // console.log('SERVICE WORKER HAS FINISHED INDEXING!!! WE MUST RELOAD STORES!', message.data);
                     await this.state.refresh();
                     return 'ok';
                 }
                 case 'reload': {
-                    console.log('Wallet / Account might be deleted, so we must reload state.');
+                    // console.log('Wallet / Account might be deleted, so we must reload state.');
                     await this.state.reload();
                     return 'ok';
                 }

@@ -178,9 +178,9 @@ export class BackgroundManager {
                     if (error.response) {
                         // The request was made and the server responded with a status code
                         // that falls out of the range of 2xx
-                        console.debug(error.response.data);
-                        console.debug(error.response.status);
-                        console.debug(error.response.headers);
+                        // console.debug(error.response.data);
+                        // console.debug(error.response.status);
+                        // console.debug(error.response.headers);
 
                         // When there is response, we'll set status to error.
                         networkStatus = {
@@ -196,7 +196,7 @@ export class BackgroundManager {
                         // The request was made but no response was received
                         // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
                         // http.ClientRequest in node.js
-                        console.debug(error.request);
+                        // console.debug(error.request);
 
                         // When there is no response, we'll set status to offline.
                         networkStatus = {
@@ -210,7 +210,7 @@ export class BackgroundManager {
                         };
                     } else {
                         // Something happened in setting up the request that triggered an Error
-                        console.error('Error', error.message);
+                        // console.error('Error', error.message);
 
                         networkStatus = {
                             domain,

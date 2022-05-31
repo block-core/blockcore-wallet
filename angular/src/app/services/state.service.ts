@@ -61,7 +61,7 @@ export class StateService {
             await store.load();
         }
 
-        this.logger.info('Stores:', this.stores);
+        // this.logger.info('Stores:', this.stores);
     }
 
     /** Find an individual store and reload that. */
@@ -78,7 +78,7 @@ export class StateService {
 
     async reload() {
         this.ngZone.run(async () => {
-            this.logger.debug('RELOAD ON STATE SERVICE (in zone):');
+            // this.logger.debug('RELOAD ON STATE SERVICE (in zone):');
 
             await this.addressStore.load();
             await this.transactionStore.load();
@@ -97,7 +97,7 @@ export class StateService {
 
     async refresh() {
         this.ngZone.run(async () => {
-            this.logger.debug('REFRESH ON STATE SERVICE (in zone):');
+            // this.logger.debug('REFRESH ON STATE SERVICE (in zone):');
 
             await this.addressStore.load();
             await this.transactionStore.load();
@@ -113,10 +113,10 @@ export class StateService {
 
     async update() {
         this.ngZone.run(async () => {
-            this.logger.debug('UPDATE ON STATE SERVICE (in zone):');
+            // this.logger.debug('UPDATE ON STATE SERVICE (in zone):');
 
             await this.walletStore.load();
-            this.logger.debug('GET WALLETS:', this.walletStore.getWallets())
+            // this.logger.debug('GET WALLETS:', this.walletStore.getWallets())
             this.changedSubject.next(this);
         });
     }

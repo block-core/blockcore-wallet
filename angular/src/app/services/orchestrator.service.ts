@@ -58,7 +58,7 @@ export class OrchestratorService {
     }
 
     async handleMessage(message: Message) {
-        this.logger.info('CommunicationService:onMessage: ', message);
+        // this.logger.info('CommunicationService:onMessage: ', message);
 
         // if (message.target !== 'background') {
         //     console.log('This message is not handled by the orchestrator logic.');

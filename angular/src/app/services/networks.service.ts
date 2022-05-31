@@ -16,7 +16,6 @@ export class NetworksService {
     constructor(private env: EnvironmentService, networkLoader: NetworkLoader) {
         this.networks = networkLoader.getNetworks(env.networks);
         this.allNetworks = networkLoader.getAllNetworks();
-
     }
 
     getDerivationPathForNetwork(network: Network) {

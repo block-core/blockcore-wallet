@@ -75,7 +75,7 @@ chrome.runtime.onMessage.addListener(async (message: Message, sender, sendRespon
     } else if (message.type === 'network') {
         await networkStatusWatcher();
     } else if (message.type === 'activated') {
-        console.log('THE UI WAS ACTIVATED!!');
+        // console.log('THE UI WAS ACTIVATED!!');
         // When UI is triggered, we'll also trigger network watcher.
         await networkStatusWatcher();
     }
