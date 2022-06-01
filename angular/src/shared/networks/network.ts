@@ -15,6 +15,9 @@ export interface Network {
     /** Purpose part of the derivation path. This is normally 44 for most use cases. */
     purpose: number;
 
+    /** Used to override the default purpose, which can be different than the purpose used for key derivation. */
+    purposeAddress?: number;
+
     messagePrefix: string;
 
     bech32: string;
