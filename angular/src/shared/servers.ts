@@ -6,6 +6,9 @@ export const Servers: any = {
         'CRS': ['https://crs.indexer.blockcore.net', 'https://crs.indexer.coinvault.io', 'https://crs.indexer.thedude.pro'],
         'TCRS': ['https://tcrs.indexer.blockcore.net'],
         'CITY': ['https://city.indexer.blockcore.net'],
+        'CYBITS': ['https://cybits.indexer.blockcore.net'],
+        'RSC': ['https://rsc.indexer.blockcore.net'],
+        'SBC': ['https://sbc.indexer.blockcore.net'],
     },
     group2: {
         'BTC': ['https://btc.indexer.coinvault.io'],
