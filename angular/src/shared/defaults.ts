@@ -64,7 +64,7 @@ export class Defaults {
                     networkType: 'RSC',
                     mode: 'normal',
                     selected: false,
-                    name: 'Royal Sports Club',
+                    name: 'Royal Sports City',
                     type: 'coin',
                     network: 6599,
                     purpose: 44,

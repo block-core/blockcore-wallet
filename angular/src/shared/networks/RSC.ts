@@ -2,7 +2,7 @@ import { Network } from './network';
 
 export class RSC implements Network {
     id = 'RSC';
-    name = 'Royal';
+    name = 'Royal Sports City';
     symbol = 'RSC';
     network = 6599;
     purpose = 44;
