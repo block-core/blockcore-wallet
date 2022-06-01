@@ -2,7 +2,7 @@ import { Network } from './network';
 
 export class SBC implements Network {
     id = 'SBC';
-    name = 'Senior';
+    name = 'Senior Blockchain';
     symbol = 'SBC';
     network = 5006;
     purpose = 44;
