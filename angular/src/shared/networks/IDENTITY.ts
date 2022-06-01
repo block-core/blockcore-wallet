@@ -16,5 +16,5 @@ export class IDENTITY implements Network {
     scriptHash = 117;
     wif = 0x08;
     testnet = false;
-    SmartContractSupport = false;
+    smartContractSupport = false;
 }

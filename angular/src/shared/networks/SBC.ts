@@ -18,6 +18,6 @@ export class SBC implements Network {
     feeRate = 10000;
     minFeeRate = 10000;
     testnet = false;
-    SmartContractSupport = false;
+    smartContractSupport = false;
     isProofOfStake = true;
 }

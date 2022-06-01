@@ -18,5 +18,5 @@ export class TSTRAX implements Network {
     feeRate = 10000;
     minFeeRate = 10000;
     testnet = true;
-    SmartContractSupport = false;
+    smartContractSupport = false;
 }

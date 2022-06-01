@@ -18,6 +18,6 @@ export class CY implements Network {
     feeRate = 0;
     minFeeRate = 0;
     testnet = false;
-    SmartContractSupport = false;
+    smartContractSupport = false;
     isProofOfStake = true;
 }

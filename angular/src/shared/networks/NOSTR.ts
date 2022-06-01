@@ -16,5 +16,5 @@ export class NOSTR implements Network {
     scriptHash = 5;
     wif = 0x08;
     testnet = false;
-    SmartContractSupport = false;
+    smartContractSupport = false;
 }

@@ -89,7 +89,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       }
 
       this.SmartContractAccounts = this.walletManager.activeWallet.accounts
-        .filter((item:Account) => this.network.getNetwork(item.networkType).SmartContractSupport);
+        .filter((item:Account) => this.network.getNetwork(item.networkType).smartContractSupport);
     });
 
     // If anything redirected to dashboard without wallet being unlocked, go to home and unlock.

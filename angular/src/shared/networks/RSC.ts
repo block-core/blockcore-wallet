@@ -18,6 +18,6 @@ export class RSC implements Network {
     feeRate = 1000000;
     minFeeRate = 1000000;
     testnet = false;
-    SmartContractSupport = false;
+    smartContractSupport = false;
     isProofOfStake = true;
 }

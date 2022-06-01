@@ -43,5 +43,5 @@ export interface Network {
     /** A logo that can be displayed in UI for the specific network. */
     // logo: '';
 
-    SmartContractSupport: boolean;
+    smartContractSupport: boolean;
 }
