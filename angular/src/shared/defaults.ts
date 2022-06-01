@@ -94,7 +94,7 @@ export class Defaults {
           type: 'coin',
           network: 424242,
           purpose: 44,
-          purposeAddress: 84,
+          purposeAddress: 44,
           icon: 'paid'
         },
         {
