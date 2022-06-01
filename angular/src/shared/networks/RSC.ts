@@ -9,7 +9,7 @@ export class RSC implements Network {
     symbol = 'RSC';
     network: number = 6599;
     purpose: number = 84;
-    messagePrefix = '\x18RSC Signed Message:\n';
+    messagePrefix = '\x18Bitcoin Signed Message:\n';
     bech32 = 'rsc';
     bip32 = {
         public: 0x0488b21e,

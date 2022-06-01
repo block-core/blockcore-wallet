@@ -9,7 +9,7 @@ export class SBC implements Network {
     symbol = 'SBC';
     network: number = 5006;
     purpose: number = 84;
-    messagePrefix = '\x18SBC Signed Message:\n';
+    messagePrefix = '\x18Bitcoin Signed Message:\n';
     bech32 = 'sbc';
     bip32 = {
         public: 0x0488b21e,

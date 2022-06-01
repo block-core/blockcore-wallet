@@ -9,7 +9,7 @@ export class CY implements Network {
     symbol = 'CY';
     network: number = 3601;
     purpose: number = 84;
-    messagePrefix = '\x18Cybits Signed Message:\n';
+    messagePrefix = '\x18Bitcoin Signed Message:\n';
     bech32 = 'cy';
     bip32 = {
         public: 0x0488b21e,
