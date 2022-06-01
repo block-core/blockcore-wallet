@@ -9,6 +9,7 @@ export const Servers: any = {
         'CYBITS': ['https://cybits.indexer.blockcore.net'],
         'RSC': ['https://rsc.indexer.blockcore.net'],
         'SBC': ['https://sbc.indexer.blockcore.net'],
+        'X42': ['https://x42.indexer.blockcore.net'],
     },
     group2: {
         'BTC': ['https://btc.indexer.coinvault.io'],
