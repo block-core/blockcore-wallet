@@ -1,9 +1,6 @@
 import { Network } from './network';
 
 export class RSC implements Network {
-    singleAddress?: boolean;
-    isProofOfStake?: boolean;
-    SmartContractSupport: boolean;
     id: string = 'RSC';
     name: string = 'Royal';
     symbol = 'RSC';
@@ -21,4 +18,6 @@ export class RSC implements Network {
     feeRate = 1000000;
     minFeeRate = 1000000;
     testnet = false;
+    SmartContractSupport = false;
+    isProofOfStake = true;
 }

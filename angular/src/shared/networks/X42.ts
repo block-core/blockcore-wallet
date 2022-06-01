@@ -18,7 +18,6 @@ export class X42 implements Network {
     feeRate = 0;
     minFeeRate = 0;
     testnet = false;
-    singleAddress = true;
     SmartContractSupport = false;
     isProofOfStake = true;
 
