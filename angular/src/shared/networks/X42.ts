@@ -5,7 +5,7 @@ export class X42 implements Network {
     name = 'X42';
     symbol = 'x42';
     network = 424242;
-    purpose = 84;
+    purpose = 44;
     messagePrefix = '\x18Bitcoin Signed Message:\n';
     bech32 = 'X';
     bip32 = {
