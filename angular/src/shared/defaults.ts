@@ -10,19 +10,7 @@ export class Defaults {
             case 'blockcore':
                 accounts = [{
                     identifier: uuidv4(),
-                    selected: true,
-                    networkType: 'STRAX',
-                    mode: 'normal',
-                    index: 0,
-                    name: 'Stratis',
-                    type: 'coin',
-                    network: 105105,
-                    purpose: 44,
-                    purposeAddress: 44,
-                    icon: 'paid'
-                }, {
-                    identifier: uuidv4(),
-                    selected: true,
+                    selected: false,
                     networkType: 'CRS',
                     mode: 'normal',
                     index: 0,
@@ -35,15 +23,66 @@ export class Defaults {
                 }, {
                     identifier: uuidv4(),
                     index: 0,
-                    networkType: 'TSTRAX',
+                    networkType: 'CITY',
                     mode: 'normal',
                     selected: false,
-                    name: 'StratisTest',
+                    name: 'City Coin',
                     type: 'coin',
-                    network: 1,
+                    network: 1926,
                     purpose: 44,
                     purposeAddress: 44,
-                    icon: 'account_circle'
+                    icon: 'paid'
+                },
+                {
+                    identifier: uuidv4(),
+                    index: 0,
+                    networkType: 'CYBITS',
+                    mode: 'normal',
+                    selected: false,
+                    name: 'Cybits',
+                    type: 'coin',
+                    network: 3601,
+                    purpose: 44,
+                    purposeAddress: 84,
+                    icon: 'paid'
+                }, {
+                    identifier: uuidv4(),
+                    selected: false,
+                    networkType: 'STRAX',
+                    mode: 'normal',
+                    index: 0,
+                    name: 'Stratis',
+                    type: 'coin',
+                    network: 105105,
+                    purpose: 44,
+                    purposeAddress: 44,
+                    icon: 'paid'
+                },
+                {
+                    identifier: uuidv4(),
+                    index: 0,
+                    networkType: 'RSC',
+                    mode: 'normal',
+                    selected: false,
+                    name: 'Royal Sports Club',
+                    type: 'coin',
+                    network: 6599,
+                    purpose: 44,
+                    purposeAddress: 84,
+                    icon: 'paid'
+                },
+                {
+                    identifier: uuidv4(),
+                    index: 0,
+                    networkType: 'SBC',
+                    mode: 'normal',
+                    selected: false,
+                    name: 'Senior Blockchain',
+                    type: 'coin',
+                    network: 5006,
+                    purpose: 44,
+                    purposeAddress: 84,
+                    icon: 'paid'
                 }, {
                     identifier: uuidv4(),
                     index: 0,
@@ -56,21 +95,20 @@ export class Defaults {
                     purpose: 44,
                     purposeAddress: 44,
                     icon: 'account_circle'
+                }, {
+                    identifier: uuidv4(),
+                    index: 0,
+                    networkType: 'TSTRAX',
+                    mode: 'normal',
+                    selected: false,
+                    name: 'StratisTest',
+                    type: 'coin',
+                    network: 1,
+                    purpose: 44,
+                    purposeAddress: 44,
+                    icon: 'account_circle'
                 }
-                    // , {
-                    //     index: 0,
-                    //     name: 'City Coin',
-                    //     type: 'coin',
-                    //     network: 1926,
-                    //     purpose: 44,
-                    //     purposeAddress: 44,
-                    //     icon: 'paid',
-                    //     state: {
-                    //         balance: 0,
-                    //         retrieved: null,
-                    //         receive: [],
-                    //         change: []
-                    //     },
+
                     // }, {
                     //     index: 0,
                     //     name: 'Identity',

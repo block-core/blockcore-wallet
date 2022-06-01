@@ -5,7 +5,7 @@ export class CY implements Network {
     name = 'Cybits';
     symbol = 'CY';
     network = 3601;
-    purpose = 84;
+    purpose = 44;
     messagePrefix = '\x18Bitcoin Signed Message:\n';
     bech32 = 'cy';
     bip32 = {

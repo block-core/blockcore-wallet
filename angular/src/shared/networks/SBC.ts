@@ -5,7 +5,7 @@ export class SBC implements Network {
     name = 'Senior';
     symbol = 'SBC';
     network = 5006;
-    purpose = 84;
+    purpose = 44;
     messagePrefix = '\x18Bitcoin Signed Message:\n';
     bech32 = 'sbc';
     bip32 = {
