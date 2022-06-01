@@ -1,11 +1,11 @@
 import { Network } from './network';
 
 export class CRS implements Network {
-    id: string = 'CRS';
-    name: string = 'Cirrus';
+    id = 'CRS';
+    name = 'Cirrus';
     symbol = 'CRS';
-    network: number = 401;
-    purpose: number = 44;
+    network = 401;
+    purpose = 44;
     messagePrefix = '\x18Bitcoin Signed Message:\n';
     bech32 = 'tb';
     bip32 = {

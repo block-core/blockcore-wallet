@@ -1,11 +1,11 @@
 import { Network } from './network';
 
 export class X42 implements Network {
-    id: string = 'X42';
-    name: string = 'X42';
+    id = 'X42';
+    name = 'X42';
     symbol = 'x42';
-    network: number = 424242;
-    purpose: number = 84;
+    network = 424242;
+    purpose = 84;
     messagePrefix = '\x18Bitcoin Signed Message:\n';
     bech32 = 'X';
     bip32 = {

@@ -1,11 +1,11 @@
 import { Network } from './network';
 
 export class TSTRAX implements Network {
-    id: string = 'TSTRAX';
-    name: string = 'StratisTest';
+    id = 'TSTRAX';
+    name = 'StratisTest';
     symbol = 'TSTRAX';
-    network: number = 1;
-    purpose: number = 44;
+    network = 1;
+    purpose = 44;
     messagePrefix = '\x18Bitcoin Signed Message:\n';
     bech32 = 'tstrax';
     bip32 = {

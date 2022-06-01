@@ -1,11 +1,11 @@
 import { Network } from './network';
 
 export class TCRS implements Network {
-    id: string = 'TCRS';
-    name: string = 'CirrusTest';
+    id = 'TCRS';
+    name = 'CirrusTest';
     symbol = 'TCRS';
-    network: number = 400;
-    purpose: number = 44;
+    network = 400;
+    purpose = 44;
     messagePrefix = '\x18Bitcoin Signed Message:\n';
     bech32 = 'tb';
     bip32 = {

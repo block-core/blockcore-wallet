@@ -1,11 +1,11 @@
 import { Network } from './network';
 
 export class SBC implements Network {
-    id: string = 'SBC';
-    name: string = 'Senior';
+    id = 'SBC';
+    name = 'Senior';
     symbol = 'SBC';
-    network: number = 5006;
-    purpose: number = 84;
+    network = 5006;
+    purpose = 84;
     messagePrefix = '\x18Bitcoin Signed Message:\n';
     bech32 = 'sbc';
     bip32 = {

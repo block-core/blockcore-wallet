@@ -1,11 +1,11 @@
 import { Network } from './network';
 
 export class IDENTITY implements Network {
-    id: string = 'IDENTITY';
-    name: string = 'Identity';
+    id = 'IDENTITY';
+    name = 'Identity';
     symbol = 'did:is';
-    network: number = 616;
-    purpose: number = 302;
+    network = 616;
+    purpose = 302;
     messagePrefix = '\x18Bitcoin Signed Message:\n';
     bech32 = 'id';
     bip32 = {

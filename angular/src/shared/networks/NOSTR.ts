@@ -1,11 +1,11 @@
 import { Network } from './network';
 
 export class NOSTR implements Network {
-    id: string = 'NOSTR';
-    name: string = 'Nostr';
+    id = 'NOSTR';
+    name = 'Nostr';
     symbol = 'nostr:key';
-    network: number = 1237;
-    purpose: number = 44;
+    network = 1237;
+    purpose = 44;
     messagePrefix = '\x18Bitcoin Signed Message:\n';
     bech32 = 'bc';
     bip32 = {

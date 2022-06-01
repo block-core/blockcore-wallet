@@ -1,11 +1,11 @@
 import { Network } from './network';
 
 export class CY implements Network {
-    id: string = 'CYBITS';
-    name: string = 'Cybits';
+    id = 'CYBITS';
+    name = 'Cybits';
     symbol = 'CY';
-    network: number = 3601;
-    purpose: number = 84;
+    network = 3601;
+    purpose = 84;
     messagePrefix = '\x18Bitcoin Signed Message:\n';
     bech32 = 'cy';
     bip32 = {

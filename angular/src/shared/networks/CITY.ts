@@ -1,11 +1,11 @@
 import { Network } from './network';
 
 export class CITY implements Network {
-    id: string = 'CITY';
-    name: string = 'City Chain';
+    id = 'CITY';
+    name = 'City Chain';
     symbol = 'CITY';
-    network: number = 1926;
-    purpose: number = 44;
+    network = 1926;
+    purpose = 44;
     messagePrefix = '\x18Bitcoin Signed Message:\n';
     bech32 = 'city';
     bip32 = {

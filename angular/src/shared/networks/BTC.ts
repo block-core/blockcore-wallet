@@ -1,12 +1,12 @@
 import { Network } from './network';
 
 export class BTC44 implements Network {
-    id: string = 'BTC';
-    name: string = 'Bitcoin (Legacy)';
+    id = 'BTC';
+    name = 'Bitcoin (Legacy)';
     symbol = 'BTC';
     bech32 = 'bc';
-    network: number = 0;
-    purpose: number = 44;
+    network = 0;
+    purpose = 44;
     messagePrefix = '\x18Bitcoin Signed Message:\n';
     bip32 = {
         public: 0x0488b21e,
@@ -41,12 +41,12 @@ export class BTC44 implements Network {
 // }
 
 export class BTC84 implements Network {
-    id: string = 'BTC';
-    name: string = 'Bitcoin (Segwit)';
+    id = 'BTC';
+    name = 'Bitcoin (Segwit)';
     symbol = 'BTC';
     bech32 = 'bc';
-    network: number = 0;
-    purpose: number = 84;
+    network = 0;
+    purpose = 84;
     messagePrefix = '\x18Bitcoin Signed Message:\n';
     bip32 = {
         public: 0x0488b21e,

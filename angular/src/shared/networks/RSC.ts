@@ -1,11 +1,11 @@
 import { Network } from './network';
 
 export class RSC implements Network {
-    id: string = 'RSC';
-    name: string = 'Royal';
+    id = 'RSC';
+    name = 'Royal';
     symbol = 'RSC';
-    network: number = 6599;
-    purpose: number = 84;
+    network = 6599;
+    purpose = 84;
     messagePrefix = '\x18Bitcoin Signed Message:\n';
     bech32 = 'rsc';
     bip32 = {
