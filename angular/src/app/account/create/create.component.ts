@@ -29,6 +29,7 @@ export class AccountCreateComponent implements OnInit, OnDestroy {
     icon: string | undefined;
     selectedNetwork: Network;
     mode: string = 'normal';
+    purposeAddress: number = 44;
 
     get passwordValidated(): boolean {
         return this.password === this.password2 && this.secondFormGroup.valid;
@@ -128,6 +129,11 @@ export class AccountCreateComponent implements OnInit, OnDestroy {
     onNetworkChanged() {
         this.selectedNetwork = this.networkService.getNetwork(this.network);
         this.derivationPath = this.getDerivationPath();
+
+        console.log('selectedNetwork', this.selectedNetwork);
+        console.log('purposeAddress:', this.selectedNetwork.purposeAddress);
+
+        this.purposeAddress = this.selectedNetwork.purposeAddress ?? 44;
     }
 
     async onAccountIndexChanged(event: any) {

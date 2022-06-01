@@ -35,18 +35,18 @@ export class NetworkLoader {
     }
 
     createNetworks() {
-        this.networks.push(new STRAX());
-        this.networks.push(new CRS());
-        this.networks.push(new TSTRAX());
-        this.networks.push(new TCRS());
-        this.networks.push(new CITY());
-        this.networks.push(new IDENTITY());
-        this.networks.push(new NOSTR());
         this.networks.push(new BTC44());
         this.networks.push(new BTC84());
-        this.networks.push(new SBC());
-        this.networks.push(new RSC());
+        this.networks.push(new CITY());
+        this.networks.push(new CRS());
         this.networks.push(new CY());
+        this.networks.push(new IDENTITY());
+        this.networks.push(new NOSTR());
+        this.networks.push(new RSC());
+        this.networks.push(new SBC());
+        this.networks.push(new STRAX());
+        this.networks.push(new TCRS());
+        this.networks.push(new TSTRAX());
         this.networks.push(new X42());
     }
 

@@ -4,8 +4,7 @@
         <mat-label>Network</mat-label>
 
         <mat-select (selectionChange)="onNetworkChanged()" [(value)]="network">
-            <mat-option *ngFor="let net of this.networkService.networks;"
-                [value]="net.id">{{net.name}}
+            <mat-option *ngFor="let net of this.networkService.networks;" [value]="net.id">{{net.name}}
             </mat-option>
         </mat-select>
 
@@ -46,7 +45,17 @@
 
     <br>
 
-    <mat-form-field class="input-full-width" appearance="outline">
+    <mat-form-field appearance="outline" class="input-full-width">
+        <mat-label>Address Format</mat-label>
+        <mat-select [(value)]="purposeAddress">
+            <mat-option [value]="44">Legacy</mat-option>
+            <mat-option [value]="84">Segwit</mat-option>
+        </mat-select>
+    </mat-form-field>
+
+    <br>
+
+    <mat-form-field class=" input-full-width" appearance="outline">
         <mat-label>Account Derivation Path</mat-label>
         <input matInput [(ngModel)]="derivationPath" required>
     </mat-form-field>

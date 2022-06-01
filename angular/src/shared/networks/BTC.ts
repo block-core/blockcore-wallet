@@ -18,7 +18,7 @@ export class BTC44 implements Network {
     feeRate = 10000;
     minFeeRate = 10000;
     testnet = false;
-  smartContractSupport = false;
+    smartContractSupport = false;
 }
 
 // WE DO NOT SUPPORT THESE ADDRESS TYPES AS THEY WAS TRANSITIONAL.
@@ -41,12 +41,13 @@ export class BTC44 implements Network {
 // }
 
 export class BTC84 implements Network {
-    id = 'BTC';
+    id = 'BTC84';
     name = 'Bitcoin (Segwit)';
     symbol = 'BTC';
     bech32 = 'bc';
     network = 0;
     purpose = 84;
+    purposeAddress = 84;
     messagePrefix = '\x18Bitcoin Signed Message:\n';
     bip32 = {
         public: 0x0488b21e,
