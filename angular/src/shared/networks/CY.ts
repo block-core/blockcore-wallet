@@ -4,7 +4,7 @@ export class CY implements Network {
     singleAddress?: boolean;
     isProofOfStake?: boolean;
     SmartContractSupport: boolean;
-    id: string = 'CY';
+    id: string = 'CYBITS';
     name: string = 'Cybits';
     symbol = 'CY';
     network: number = 3601;
