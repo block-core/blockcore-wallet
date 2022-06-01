@@ -1,9 +1,6 @@
 import { Network } from './network';
 
 export class SBC implements Network {
-    singleAddress?: boolean;
-    isProofOfStake?: boolean;
-    SmartContractSupport: boolean;
     id: string = 'SBC';
     name: string = 'Senior';
     symbol = 'SBC';
@@ -21,4 +18,6 @@ export class SBC implements Network {
     feeRate = 10000;
     minFeeRate = 10000;
     testnet = false;
+    SmartContractSupport = false;
+    isProofOfStake = true;
 }

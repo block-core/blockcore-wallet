@@ -1,9 +1,6 @@
 import { Network } from './network';
 
 export class CY implements Network {
-    singleAddress?: boolean;
-    isProofOfStake?: boolean;
-    SmartContractSupport: boolean;
     id: string = 'CYBITS';
     name: string = 'Cybits';
     symbol = 'CY';
@@ -21,4 +18,6 @@ export class CY implements Network {
     feeRate = 0;
     minFeeRate = 0;
     testnet = false;
+    SmartContractSupport = false;
+    isProofOfStake = true;
 }
