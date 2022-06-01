@@ -11,6 +11,7 @@ import { Account, Defaults } from '../../../shared';
 export class AccountSelectComponent implements OnInit, OnDestroy {
 
     coins: Account[];
+    coinsTest: Account[];
     other: Account[];
     sub: any;
     creating = false;
@@ -34,7 +35,9 @@ export class AccountSelectComponent implements OnInit, OnDestroy {
         const accounts = Defaults.getDefaultAccounts(this.env.instance);
         console.log('DEFAULT ACCOUNTS:', accounts);
 
-        this.coins = accounts.filter(item => item.type === 'coin' || item.type === 'token');
+        this.coins = accounts.filter(item => (item.type === 'coin' || item.type === 'token') && !this.networkService.getNetwork(item.networkType).testnet);
+        this.coinsTest = accounts.filter(item => (item.type === 'coin' || item.type === 'token') && this.networkService.getNetwork(item.networkType).testnet);
+
         this.other = accounts.filter(item => item.type === 'other');
 
         // this.sub = this.communication.listen('account-created', () => {
