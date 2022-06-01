@@ -1,5 +1,8 @@
 <h2>Send {{sendService.network.symbol}}</h2>
 
+<button (click)="scanQrCode()">QR</button>
+<div class="qr-scan" id="reader" width="600px"></div>
+
 <form [formGroup]="form">
 
     <mat-form-field class="input-full-width" appearance="outline">

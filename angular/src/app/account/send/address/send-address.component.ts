@@ -1,9 +1,10 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, NgZone, OnDestroy, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import Big from 'big.js';
 import { InputValidators } from 'src/app/services/inputvalidators';
 import { SATOSHI_FACTOR } from 'src/app/shared/constants';
 import { WalletManager, UIState, SendService, NetworkStatusService } from '../../../services';
+import { Html5QrcodeScanner, Html5QrcodeSupportedFormats } from "html5-qrcode";
 
 @Component({
     selector: 'app-account-send-address',
@@ -28,6 +29,7 @@ export class AccountSendAddressComponent implements OnInit, OnDestroy {
         public sendService: SendService,
         public walletManager: WalletManager,
         public networkStatusService: NetworkStatusService,
+        private ngZone: NgZone,
         private fb: FormBuilder) {
 
         this.form = fb.group({
@@ -53,6 +55,40 @@ export class AccountSendAddressComponent implements OnInit, OnDestroy {
     }
 
     async ngOnInit() {
+    }
+
+    scanQrCode() {
+        let config: any = {
+            fps: 10,
+            qrbox: {
+                width: 250, height: 250
+            },
+            formatsToSupport: [Html5QrcodeSupportedFormats.QR_CODE]
+        };
+
+        let html5QrcodeScanner = new Html5QrcodeScanner("reader", config, /* verbose= */ false);
+
+        html5QrcodeScanner.render((decodedText: any, decodedResult: any) => {
+            this.onScanSuccess(decodedText, decodedResult);
+        }, (error) => {
+            this.onScanFailure(error);
+        });
+    }
+
+    onScanSuccess(decodedText: any, decodedResult: any) {
+        this.ngZone.run(() => {
+            // handle the scanned code as you like, for example:
+            console.log(`Code matched = ${decodedText}`, decodedResult);
+            this.sendService.address = decodedText;
+        });
+    }
+
+    onScanFailure(error: any) {
+        this.ngZone.run(() => {
+            // handle scan failure, usually better to ignore and keep scanning.
+            // for example:
+            console.warn(`Code scan error = ${error}`);
+        });
     }
 
     fillMax(amount?: number) {
