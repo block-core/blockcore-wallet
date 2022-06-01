@@ -6,7 +6,7 @@ export class CITY implements Network {
     symbol = 'CITY';
     network: number = 1926;
     purpose: number = 44;
-    messagePrefix = '\x18CityCoin Signed Message:\n'; // TODO: City Chain should migrate to use same prefix as Bitcoin.
+    messagePrefix = '\x18Bitcoin Signed Message:\n';
     bech32 = 'city';
     bip32 = {
         public: 0x0488b21e,
