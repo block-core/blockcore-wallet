@@ -1,5 +1,5 @@
 import { IndexerApiStatus, NetworkStatus } from './interfaces';
-import { Network, BTC44, BTC84, CITY, CRS, IDENTITY, NOSTR, STRAX, TSTRAX, TCRS, SBC, RSC, CY} from './networks';
+import { Network, BTC44, BTC84, CITY, CRS, IDENTITY, NOSTR, STRAX, TSTRAX, TCRS, SBC, RSC, CY, X42} from './networks';
 import { Servers } from './servers';
 import { NetworkStatusStore } from './store';
 
@@ -47,6 +47,7 @@ export class NetworkLoader {
         this.networks.push(new SBC());
         this.networks.push(new RSC());
         this.networks.push(new CY());
+        this.networks.push(new X42());
     }
 
     private generateRandomNumber(min: number, max: number) {
