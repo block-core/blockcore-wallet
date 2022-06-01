@@ -1,11 +1,8 @@
 import { Network } from './network';
 
 export class X42 implements Network {
-    singleAddress?: boolean;
-    isProofOfStake?: boolean;
-    SmartContractSupport: boolean;
-    id: string = 'x42';
-    name: string = 'x42';
+    id: string = 'X42';
+    name: string = 'X42';
     symbol = 'x42';
     network: number = 424242;
     purpose: number = 84;
@@ -21,4 +18,8 @@ export class X42 implements Network {
     feeRate = 0;
     minFeeRate = 0;
     testnet = false;
+    singleAddress = true;
+    SmartContractSupport = false;
+    isProofOfStake = true;
+
 }
