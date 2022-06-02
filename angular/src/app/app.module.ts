@@ -81,6 +81,8 @@ import { collectables } from "./Collectables/collectables.component";
 import { NetworkComponent } from './settings/network/network.component';
 import { NetworkStatusPipe } from './shared/network-status.pipe';
 import { networkLoaderServiceProvider } from './services/network-loader.provider';
+import { MatDialogModule } from '@angular/material/dialog';
+import { QrScanDialog } from './account/send/address/qr-scanning.component';
 
 // required for AOT compilation
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
@@ -132,7 +134,8 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     NonFungibleTokenComponent,
     ActionStratisIdentityComponent,
     ActionNostrIdentityComponent,
-    NetworkComponent
+    NetworkComponent,
+    QrScanDialog
   ],
   imports: [
     BrowserModule,
@@ -180,7 +183,8 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     MatProgressSpinnerModule,
     MatChipsModule,
     MatSnackBarModule,
-    MatProgressBarModule
+    MatProgressBarModule,
+    MatDialogModule
   ],
   exports: [NetworkPipe, TruncatePipe, NetworkStatusPipe],
   providers: [

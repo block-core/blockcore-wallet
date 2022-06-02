@@ -1,0 +1,8 @@
+<div>
+    <h1>Scan QR code</h1>
+    <div class="qr-scan" id="reader"></div>
+</div>
+<div mat-dialog-actions>
+    <button mat-raised-button color="primary" [mat-dialog-close]="data.address" cdkFocusInitial>Ok</button>
+    <button mat-button (click)="onNoClick()">Cancel</button>
+</div>
