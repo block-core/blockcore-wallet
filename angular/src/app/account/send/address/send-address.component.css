@@ -4,6 +4,11 @@
     cursor: pointer;
 }
 
+.input-actions {
+    float: right;
+    margin-top: 0.5em;
+}
+
 .qr-scan {
     margin-bottom: 1em;
 }

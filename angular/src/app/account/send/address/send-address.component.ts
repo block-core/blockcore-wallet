@@ -47,7 +47,12 @@ export class AccountSendAddressComponent implements OnInit, OnDestroy {
         });
 
         const networkStatus = this.networkStatusService.get(this.sendService.network.id);
-        this.sendService.feeRate = networkStatus[0].relayFee;
+
+        if (networkStatus.length == 0) {
+            this.sendService.feeRate = this.sendService.network.feeRate;
+        } else {
+            this.sendService.feeRate = networkStatus[0].relayFee;
+        }
     }
 
     ngOnDestroy() {
@@ -73,6 +78,26 @@ export class AccountSendAddressComponent implements OnInit, OnDestroy {
         }, (error) => {
             this.onScanFailure(error);
         });
+    }
+
+    async paste() {
+        try {
+            const options: any = { name: 'clipboard-read' };
+            const permission = await navigator.permissions.query(options);
+
+            if (permission.state === 'denied') {
+                throw new Error('Not allowed to read clipboard.');
+            }
+
+            const clipboardContents = await navigator.clipboard.readText();
+
+            if (clipboardContents) {
+                this.sendService.address = clipboardContents;
+            }
+        }
+        catch (error) {
+            console.error(error);
+        }
     }
 
     onScanSuccess(decodedText: any, decodedResult: any) {

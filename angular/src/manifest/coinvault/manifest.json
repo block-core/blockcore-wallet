@@ -14,7 +14,8 @@
         "storage",
         "unlimitedStorage",
         "alarms",
-        "clipboardWrite"
+        "clipboardWrite",
+        "clipboardRead"
     ],
     "background": {
         "service_worker": "background.js"
