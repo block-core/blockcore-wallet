@@ -6,7 +6,10 @@ import { copyToClipboard } from '../../shared/utilities';
 import { map, Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common'
+import { wordlists } from 'bip39';
 const { v4: uuidv4 } = require('uuid');
+// import { wordlists } from 'micro-bip39';
+// import * as bip39 from 'bip39';
 
 @Component({
     selector: 'app-wallet-create',
@@ -23,6 +26,8 @@ export class WalletCreateComponent implements OnInit {
     password = '';
     password2 = '';
     showInstallDialog = true;
+    wordlists: any;
+    wordlist = 'english';
 
     get passwordValidated(): boolean {
         return this.password === this.password2 && this.secondFormGroup.valid;
@@ -42,6 +47,12 @@ export class WalletCreateComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.wordlists = wordlists;
+
+        // These are shortcut duplicates, just remove them.
+        delete wordlists['EN'];
+        delete wordlists['JA'];
+
         this.firstFormGroup = this._formBuilder.group({
             // firstCtrl: ['', Validators.required]
         });
@@ -72,7 +83,7 @@ export class WalletCreateComponent implements OnInit {
     }
 
     create() {
-      debugger;
+        debugger;
         this.step = 1;
         this.recover = false;
         this.generate();
@@ -80,6 +91,14 @@ export class WalletCreateComponent implements OnInit {
         this.firstFormGroup = this._formBuilder.group({
             // firstCtrl: ['', Validators.required]
         });
+    }
+
+    getKey(item: any): string {
+        return item.key;
+    }
+
+    onLanguageChanged(event: any) {
+        this.mnemonic = this.crypto.generateMnemonic(this.wordlist);
     }
 
     restore() {

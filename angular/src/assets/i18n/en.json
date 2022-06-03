@@ -23,5 +23,15 @@
 	},
 	"Settings": {
 		"Save": "Save"
-	}
+	},
+	"english": "English",
+	"chinese_simplified": "Chinese (Simplified)",
+	"chinese_traditional": "Chinese (Traditional)",
+	"czech": "Czech",
+	"french": "French",
+	"italian": "Italian",
+	"japanese": "Japanese",
+	"korean": "Korean",
+	"portuguese": "Portuguese",
+	"spanish": "Spanish"
 }
