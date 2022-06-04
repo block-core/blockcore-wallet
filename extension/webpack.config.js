@@ -1,4 +1,3 @@
-const { CheckerPlugin } = require('awesome-typescript-loader');
 const { join } = require('path');
 const { ProvidePlugin } = require('webpack');
 
@@ -23,7 +22,7 @@ module.exports = {
     path: join(__dirname, '../dist/extension'),
     filename: '[name].js'
   },
-  plugins: [new CheckerPlugin(), new ProvidePlugin({
+  plugins: [new ProvidePlugin({
     Buffer: ['buffer', 'Buffer'],
   })],
   resolve: {
