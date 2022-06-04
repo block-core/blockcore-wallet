@@ -54,7 +54,8 @@ export class AccountSelectComponent implements OnInit, OnDestroy {
     async create() {
         this.creating = true;
 
-        const accounts = this.coins.filter(item => item.selected)
+        const accounts = this.coins.filter(item => item.selected);
+        accounts.push(...this.coinsTest.filter(item => item.selected));
         accounts.push(...this.other.filter(item => item.selected));
 
         const wallet = this.walletManager.activeWallet;
