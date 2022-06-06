@@ -1,5 +1,5 @@
 import { Component, Inject, NgZone, OnDestroy, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import Big from 'big.js';
 import { InputValidators } from 'src/app/services/inputvalidators';
 import { SATOSHI_FACTOR } from 'src/app/shared/constants';
@@ -14,16 +14,16 @@ import { QrScanDialog } from './qr-scanning.component';
     styleUrls: ['./send-address.component.css']
 })
 export class AccountSendAddressComponent implements OnInit, OnDestroy {
-    form: FormGroup;
+    form: UntypedFormGroup;
     optionsOpen = false;
     amountTooLarge = false;
 
     get optionAmountInput() {
-        return this.form.get('amountInput') as FormControl;
+        return this.form.get('amountInput') as UntypedFormControl;
     }
 
     get optionFeeInput() {
-        return this.form.get('feeInput') as FormControl;
+        return this.form.get('feeInput') as UntypedFormControl;
     }
 
     constructor(
@@ -33,14 +33,14 @@ export class AccountSendAddressComponent implements OnInit, OnDestroy {
         public networkStatusService: NetworkStatusService,
         private ngZone: NgZone,
         public dialog: MatDialog,
-        private fb: FormBuilder) {
+        private fb: UntypedFormBuilder) {
 
         this.form = fb.group({
-            addressInput: new FormControl('', [Validators.required, Validators.minLength(6)]),
-            changeAddressInput: new FormControl('', []),
-            amountInput: new FormControl('', [Validators.required, Validators.min(0), Validators.pattern(/^-?(0|[0-9]+[.]?[0-9]*)?$/), InputValidators.maximumBitcoin(sendService)]),
+            addressInput: new UntypedFormControl('', [Validators.required, Validators.minLength(6)]),
+            changeAddressInput: new UntypedFormControl('', []),
+            amountInput: new UntypedFormControl('', [Validators.required, Validators.min(0), Validators.pattern(/^-?(0|[0-9]+[.]?[0-9]*)?$/), InputValidators.maximumBitcoin(sendService)]),
             // TODO: Make an custom validator that sets form error when fee input is too low.
-            feeInput: new FormControl(this.sendService.getNetworkFee(), [Validators.required, Validators.min(0), Validators.pattern(/^-?(0|[0-9]+[.]?[0-9]*)?$/)])
+            feeInput: new UntypedFormControl(this.sendService.getNetworkFee(), [Validators.required, Validators.min(0), Validators.pattern(/^-?(0|[0-9]+[.]?[0-9]*)?$/)])
         });
 
         this.optionFeeInput.valueChanges.subscribe(value => {

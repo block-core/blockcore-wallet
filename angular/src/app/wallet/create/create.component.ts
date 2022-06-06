@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { AbstractControl, AsyncValidatorFn, FormBuilder, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import { AbstractControl, AsyncValidatorFn, UntypedFormBuilder, FormControl, UntypedFormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { UIState, FeatureService, WalletManager, CommunicationService, CryptoService } from '../../services';
 import { Wallet } from '../../../shared/interfaces';
 import { copyToClipboard } from '../../shared/utilities';
@@ -18,8 +18,8 @@ const { v4: uuidv4 } = require('uuid');
 })
 export class WalletCreateComponent implements OnInit {
     mnemonic = '';
-    firstFormGroup!: FormGroup;
-    secondFormGroup!: FormGroup;
+    firstFormGroup!: UntypedFormGroup;
+    secondFormGroup!: UntypedFormGroup;
     step = 0;
     recover = false;
     mnemonicInputDisabled = true;
@@ -33,7 +33,7 @@ export class WalletCreateComponent implements OnInit {
         return this.password === this.password2 && this.secondFormGroup.valid;
     }
 
-    constructor(private _formBuilder: FormBuilder,
+    constructor(private _formBuilder: UntypedFormBuilder,
         public feature: FeatureService,
         public uiState: UIState,
         private crypto: CryptoService,

@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { UIState, CryptoService, CommunicationService, IconService, NetworksService, WalletManager, NetworkStatusService } from '../../services';
 import { Account } from '../../../shared/interfaces';
 import { Router } from '@angular/router';
@@ -13,8 +13,8 @@ const { v4: uuidv4 } = require('uuid');
 })
 export class AccountCreateComponent implements OnInit, OnDestroy {
     mnemonic = '';
-    firstFormGroup!: FormGroup;
-    secondFormGroup!: FormGroup;
+    firstFormGroup!: UntypedFormGroup;
+    secondFormGroup!: UntypedFormGroup;
     step = 0;
     recover = false;
     mnemonicInputDisabled = true;
@@ -35,7 +35,7 @@ export class AccountCreateComponent implements OnInit, OnDestroy {
         return this.password === this.password2 && this.secondFormGroup.valid;
     }
 
-    constructor(private _formBuilder: FormBuilder,
+    constructor(private _formBuilder: UntypedFormBuilder,
         public uiState: UIState,
         private crypto: CryptoService,
         private router: Router,
