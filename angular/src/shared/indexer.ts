@@ -265,10 +265,8 @@ export class IndexerBackgroundService {
         // const allAccountTypes = wallets.flatMap(w => w.accounts).flatMap(a => a.networkType);
         // const uniqueAccountTypes = Array.from([...new Set(allAccountTypes)]);;
         const uniqueAccounts = wallets.flatMap(w => w.accounts).filter((value, index, self) => self.map(x => x.networkType).indexOf(value.networkType) == index);
-
         let anyIndexerOnline = false;
-
-        console.log('uniqueAccountTypes:', uniqueAccounts);
+        // console.log('uniqueAccountTypes:', uniqueAccounts);
 
         for (let i = 0; i < uniqueAccounts.length; i++) {
 
