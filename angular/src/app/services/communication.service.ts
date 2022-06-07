@@ -28,21 +28,27 @@ export class CommunicationService {
         // TODO: Handle these messages internally when running outside of extension context.
         if (this.runtime.isExtension) {
             chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
-                const result = await this.handleInternalMessage(message, sender);
-                // this.logger.debug(`Process messaged ${message.type} and returning this response: `, result);
-                sendResponse(result);
+                this.ngZone.run(async () => {
+                    const result = await this.handleInternalMessage(message, sender);
+                    // this.logger.debug(`Process messaged ${message.type} and returning this response: `, result);
+                    sendResponse(result);
+                });
             });
 
             chrome.runtime.onMessageExternal.addListener(async (message, sender, sendResponse) => {
-                const result = await this.handleExternalMessage(message, sender);
-                // this.logger.debug(`Process (external) messaged ${message.type} and returning this response: `, result);
-                sendResponse(result);
+                this.ngZone.run(async () => {
+                    const result = await this.handleExternalMessage(message, sender);
+                    // this.logger.debug(`Process (external) messaged ${message.type} and returning this response: `, result);
+                    sendResponse(result);
+                });
             });
         } else {
             this.events.subscribeAll().subscribe(async (message) => {
-                // Compared to the extension based messaging, we don't have response messages.
-                // this.logger.debug(`Process message:`, message);
-                await this.handleMessage(message.data);
+                this.ngZone.run(async () => {
+                    // Compared to the extension based messaging, we don't have response messages.
+                    // this.logger.debug(`Process message:`, message);
+                    await this.handleMessage(message.data);
+                });
             });
         }
     }
@@ -169,7 +175,8 @@ export class CommunicationService {
                 }
                 case 'updated': {
                     // console.log('SERVICE WORKER HAS FINISHED INDEXING, but no changes to the data, but we get updated wallet info.', message.data);
-                    await this.state.update();
+                    // await this.state.update();
+                    await this.state.refresh();
                     return 'ok';
                 }
                 case 'indexed': {
@@ -180,6 +187,11 @@ export class CommunicationService {
                 case 'reload': {
                     // console.log('Wallet / Account might be deleted, so we must reload state.');
                     await this.state.reload();
+                    return 'ok';
+                }
+                case 'network-updated': {
+                    // console.log('Network status was updated, reload the networkstatus store!');
+                    await this.state.reloadStore('networkstatus');
                     return 'ok';
                 }
                 case 'store-reload': {

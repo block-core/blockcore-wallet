@@ -262,12 +262,17 @@ export class IndexerBackgroundService {
         // Check if there is any indexers online for any of the accounts in all of the wallets.
         // If there are no indexers online, we'll simply return "completed: true" to avoid
         // the loop.
-        const allAccountTypes = wallets.flatMap(w => w.accounts).flatMap(a => a.networkType);
-        const uniqueAccountTypes = Array.from([...new Set(allAccountTypes)]);;
+        // const allAccountTypes = wallets.flatMap(w => w.accounts).flatMap(a => a.networkType);
+        // const uniqueAccountTypes = Array.from([...new Set(allAccountTypes)]);;
+        const uniqueAccounts = wallets.flatMap(w => w.accounts).filter((value, index, self) => self.map(x => x.networkType).indexOf(value.networkType) == index);
+
         let anyIndexerOnline = false;
 
-        for (let i = 0; i < uniqueAccountTypes.length; i++) {
-            const indexerUrl = this.addressManager.networkLoader.getServer(uniqueAccountTypes[i], settings.server, settings.indexer);
+        console.log('uniqueAccountTypes:', uniqueAccounts);
+
+        for (let i = 0; i < uniqueAccounts.length; i++) {
+
+            const indexerUrl = this.addressManager.networkLoader.getServer(uniqueAccounts[i].networkType, settings.server, settings.indexer);
 
             if (indexerUrl == null || indexerUrl == '') {
                 continue;

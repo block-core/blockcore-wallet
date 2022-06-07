@@ -131,7 +131,7 @@ const networkStatusWatcher = async () => {
 const executeIndexer = async () => {
     // If we are already indexing, simply ignore this request.
     if (indexing) {
-        // console.log('Already indexing, skipping this indexing request.');
+        console.log('Already indexing, skipping this indexing request.');
         return;
     }
 
@@ -169,7 +169,7 @@ const runIndexer = async () => {
             });
 
         } else {
-            // console.log('Indexer found zero changes. We will still inform the UI to refresh wallet to get latest scan state.');
+            console.log('Indexer found zero changes. We will still inform the UI to refresh wallet to get latest scan state.');
 
             chrome.runtime.sendMessage({
                 type: 'updated',
@@ -229,7 +229,7 @@ const runWatcher = async () => {
                 });
             }
             else {
-                // console.debug('Watcher found zero changes. We will still inform the UI to refresh wallet to get latest scan state.');
+                console.debug('Watcher found zero changes. We will still inform the UI to refresh wallet to get latest scan state.');
 
                 chrome.runtime.sendMessage({
                     type: 'updated',

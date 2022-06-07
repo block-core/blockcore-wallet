@@ -128,6 +128,8 @@ export class BackgroundManager {
 
                     const data = await response.json();
 
+                    console.log('Update network for: ' + indexerUrl);
+
                     // const response = await axios.get(`${indexerUrl}/api/stats`, {
                     //     timeout: 3000,
                     //     'axios-retry': {
@@ -296,7 +298,6 @@ export class BackgroundManager {
             }
 
             if (this.onUpdates) {
-                // console.log('Process result:', processResult);
                 this.onUpdates.call(null, processResult);
             }
 
@@ -309,6 +310,8 @@ export class BackgroundManager {
 
             // Continue running the watcher if it has not been cancelled.
             this.intervalRef = globalThis.setTimeout(interval, executionState.wait);
+
+            console.log('WATCHER: Interval executed completely.');
         }
 
         this.intervalRef = globalThis.setTimeout(async () => {
@@ -378,6 +381,8 @@ export class BackgroundManager {
             if (this.onUpdates) {
                 this.onUpdates.call(null, processResult);
             }
+
+            console.log('INDEXER: Interval executed completely.');
         }
     }
 }
