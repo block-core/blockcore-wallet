@@ -25,7 +25,7 @@ export class WalletCreateComponent implements OnInit {
     password2 = '';
     showInstallDialog = true;
     wordlists: any;
-    wordlist = 'english';
+    wordlist: string;
 
     get passwordValidated(): boolean {
         return this.password === this.password2 && this.secondFormGroup.valid;
@@ -45,6 +45,7 @@ export class WalletCreateComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.wordlist = this.crypto.listname;
         this.wordlists = this.crypto.languages();
 
         this.firstFormGroup = this._formBuilder.group({

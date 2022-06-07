@@ -693,8 +693,7 @@ export class IndexerBackgroundService {
                 }
             }
 
-            // When all accounts has been processes, saved the wallet.
-            await this.walletStore.save();
+            // When all accounts has been processes, saved the account state.
             await this.accountStateStore.save();
 
             // console.debug('AccountStateStore:', this.accountStateStore.all());

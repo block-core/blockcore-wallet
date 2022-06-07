@@ -24,7 +24,13 @@ const dec = new TextDecoder();
 })
 export class CryptoService {
 
+    /** The list of all wordlists */
     wordlists: any = {};
+
+    /** The name (language) of the selected wordlist */
+    listname: string = 'english';
+
+    /** The list of current wordlist being used. */
     words: string[];
 
     constructor() {
@@ -41,9 +47,10 @@ export class CryptoService {
         this.words = this.wordlists.english;
     }
 
-    generateMnemonic(wordlist?: string) {
-        if (wordlist) {
-            this.words = this.wordlists[wordlist];
+    generateMnemonic(listname?: string) {
+        if (listname) {
+            this.listname = listname;
+            this.words = this.wordlists[listname];
             // bip39.setDefaultWordlist(wordlist);
         }
 
@@ -51,14 +58,12 @@ export class CryptoService {
         // return bip39.generateMnemonic();
     }
 
-    setWordList(wordlist: string) {
-        this.words = this.wordlists[wordlist];
+    setWordList(listname: string) {
+        this.listname = listname;
+        this.words = this.wordlists[listname];
     }
 
     validateMnemonic(mnemonic: string) {
-        console.log(mnemonic);
-        console.log(this.words);
-
         return of(bip39.validateMnemonic(mnemonic, this.words)).pipe();
     }
 
