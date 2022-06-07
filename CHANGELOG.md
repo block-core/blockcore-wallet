@@ -1,3 +1,11 @@
+## <small>0.0.38 (2022-06-07)</small>
+
+* Improve the behavior when indexers are all offline (or user is offline) ([ba68591](https://github.com/block-core/blockcore-wallet/commit/ba68591)), closes [#148](https://github.com/block-core/blockcore-wallet/issues/148)
+* Improve UI updating and stop indexing when indexers are offline ([9172716](https://github.com/block-core/blockcore-wallet/commit/9172716)), closes [#148](https://github.com/block-core/blockcore-wallet/issues/148)
+* Update version and changelog ([b753896](https://github.com/block-core/blockcore-wallet/commit/b753896))
+
+
+
 ## <small>0.0.37 (2022-06-07)</small>
 
 * Add a default purpose address to networks that primarily use bech32 address format ([ad76c94](https://github.com/block-core/blockcore-wallet/commit/ad76c94))
