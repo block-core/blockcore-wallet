@@ -22,7 +22,13 @@
 		"Inbox": "Inbox"
 	},
 	"Settings": {
-		"Save": "Save"
+		"Save": "Save",
+		"DisplayLanguage": "Display Language",
+		"DisplayLanguageHint": "Change the display language for the app.",
+		"ChooseMode": "Choose your mode",
+		"ChooseModeHint": "You must save the settings for mode and accent color to be persisted.",
+		"Dark": "Dark",
+		"Light": "Light"
 	},
 	"english": "English",
 	"chinese_simplified": "Chinese (Simplified)",

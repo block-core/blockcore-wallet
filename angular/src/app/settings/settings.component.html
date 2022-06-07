@@ -1,24 +1,24 @@
 <div class="page">
 
   <mat-form-field class="input-full-width" appearance="outline">
-    <mat-label>Display Language</mat-label>
+    <mat-label>{{ 'Settings.DisplayLanguage' | translate}}</mat-label>
     <mat-select (selectionChange)="onLanguageChanged($event)" [(value)]="settings.language">
       <mat-option *ngFor="let lang of translate.getLangs()" [value]="lang">
         {{ lang | translate }}</mat-option>
     </mat-select>
-    <mat-hint>Change the display language for the extension.
+    <mat-hint>{{ 'Settings.DisplayLanguageHint' | translate}}
     </mat-hint>
   </mat-form-field>
 
   <br><br>
 
   <mat-form-field class="input-full-width" appearance="outline">
-    <mat-label>Choose your mode</mat-label>
+    <mat-label>{{ 'Settings.ChooseMode' | translate }}</mat-label>
     <mat-select (selectionChange)="onThemeChanged($event)" [(value)]="settings.theme">
-      <mat-option [value]="'dark'">Dark</mat-option>
-      <mat-option [value]="'light'">Light</mat-option>
+      <mat-option [value]="'dark'">{{ 'Dark' | translate }}</mat-option>
+      <mat-option [value]="'light'">{{ 'Light' | translate }}</mat-option>
     </mat-select>
-    <mat-hint>You must save the settings for mode and accent color to be persisted.
+    <mat-hint>{{ 'Settings.ChooseModeHint' | translate }}
     </mat-hint>
   </mat-form-field>
 
@@ -125,7 +125,7 @@
   <br>
 
   <mat-nav-list>
-    <div mat-subheader>Other Actions</div>
+    <div mat-subheader>{{ 'Settings.OtherActions' | translate }}</div>
 
     <!-- TODO: Add this feature before showing in the UI. -->
     <!-- <a mat-list-item routerLinkActive="active-link" [routerLink]="['trusted']">
@@ -140,7 +140,7 @@
 
     <a mat-list-item routerLinkActive="active-link" [routerLink]="['network']">
       <mat-icon mat-list-icon>travel_explore</mat-icon>
-      <div mat-line>Network Status</div>
+      <div mat-line>{{ 'Settings.NetworkStatus' | translate }}</div>
     </a>
 
     <a mat-list-item routerLinkActive="active-link" [routerLink]="['password']">

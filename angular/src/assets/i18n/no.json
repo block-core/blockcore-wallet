@@ -22,6 +22,15 @@
 		"Inbox": "Innboks"
 	},
 	"Settings": {
-		"Save": "Lagre"
+		"Save": "Lagre",
+		"DisplayLanguage": "Velg språk",
+		"DisplayLanguageHint": "Endre språket som brukes i appen.",
+		"ChooseMode": "Choose your mode",
+		"ChooseModeHint": "You must save the settings for mode and accent color to be persisted.",
+		"Dark": "Mørk",
+		"Light": "Lys",
+		"OtherActions": "Flere handlinger",
+		"NetworkStatus": "Nettverkstatus",
+		"ChangePassword": "Endre passord"
 	}
 }
