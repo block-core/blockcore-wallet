@@ -12,7 +12,10 @@
 		"EditWallet": "Endre lommebok",
 		"RemoveWallet": "Slett lommebok",
 		"Settings": "Innstillinger",
-		"EditAccount": "Endre konto"
+		"EditAccount": "Endre konto",
+		"EnterPassordToUnlock": "Fyll inn passord for å låse opp",
+		"Password": "Passord",
+		"Unlock": "Lås opp"
 	},
 	"Dashboard": {
 		"Accounts": "Kontoer",
@@ -31,6 +34,12 @@
 		"Light": "Lys",
 		"OtherActions": "Flere handlinger",
 		"NetworkStatus": "Nettverkstatus",
-		"ChangePassword": "Endre passord"
+		"ChangePassword": "Endre passord",
+		"WipeData": "Slett data",
+		"Information": "Informasjon",
+		"About": "Om",
+		"ThirdPartyLicenses": "Tredjepartslisenser",
+		"PrivacyPolicy": "Personvern",
+		"SourceCode": "Kildekode"
 	}
 }

@@ -12,7 +12,10 @@
 		"EditWallet": "Edit Wallet",
 		"RemoveWallet": "Remove Wallet",
 		"Settings": "Settings",
-		"EditAccount": "Edit account"
+		"EditAccount": "Edit account",
+		"EnterPassordToUnlock": "Enter your password to unlock",
+		"Password": "Password",
+		"Unlock": "Unlock"
 	},
 	"Dashboard": {
 		"Accounts": "Accounts",
@@ -28,7 +31,16 @@
 		"ChooseMode": "Choose your mode",
 		"ChooseModeHint": "You must save the settings for mode and accent color to be persisted.",
 		"Dark": "Dark",
-		"Light": "Light"
+		"Light": "Light",
+		"OtherActions": "Other Actions",
+		"NetworkStatus": "Network Status",
+		"ChangePassword": "Change Password",
+		"WipeData": "Wipe Data",
+		"Information": "Information",
+		"About": "About",
+		"ThirdPartyLicenses": "Third party licenses",
+		"PrivacyPolicy": "Privacy policy",
+		"SourceCode": "Source code"
 	},
 	"english": "English",
 	"chinese_simplified": "Chinese (Simplified)",

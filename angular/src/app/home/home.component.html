@@ -6,11 +6,11 @@
     <div class="sub-title">by {{uiState.manifest.author}}</div>
     <!-- <div class="sub-title">Version {{uiState.manifest.version}}</div> -->
 
-    <h2>Enter your password to unlock</h2>
+    <h2>{{ 'App.EnterPassordToUnlock' | translate }}</h2>
 
     <mat-form-field appearance="outline" class="input-full-width">
-        <mat-label>Password</mat-label>
-        <input matInput type="password" [(ngModel)]="unlockPassword" placeholder="Password" (keydown.enter)="unlock()">
+        <mat-label>{{ 'App.Password' | translate }}</mat-label>
+        <input matInput type="password" [(ngModel)]="unlockPassword" (keydown.enter)="unlock()">
     </mat-form-field>
 
     <div class="error-list">
@@ -22,6 +22,6 @@
         </mat-chip-list>
     </div>
 
-    <button class="wide-button" mat-flat-button color="primary" (click)="unlock()">Unlock</button>
+    <button class="wide-button" mat-flat-button color="primary" (click)="unlock()">{{ 'App.Unlock' | translate }}</button>
 
 </div>

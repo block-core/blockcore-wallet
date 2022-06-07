@@ -145,7 +145,7 @@
 
     <a mat-list-item routerLinkActive="active-link" [routerLink]="['password']">
       <mat-icon mat-list-icon>password</mat-icon>
-      <div mat-line>Change Password</div>
+      <div mat-line>{{ 'Settings.ChangePassword' | translate }}</div>
     </a>
 
     <!-- TODO: Perhaps these should be on account level and not wallet level? Consider adding based upon user feedback. -->
@@ -166,18 +166,18 @@
 
     <a mat-list-item [routerLink]="['/wipe']">
       <mat-icon mat-list-icon>delete_forever</mat-icon>
-      <div mat-line>Wipe Data</div>
+      <div mat-line>{{ 'Settings.WipeData' | translate }}</div>
     </a>
 
   </mat-nav-list>
 
 
   <mat-nav-list>
-    <div mat-subheader>About CoinVault</div>
+    <div mat-subheader>{{ 'Settings.Information' | translate }}</div>
 
     <a mat-list-item [routerLink]="['about']">
       <mat-icon mat-list-icon>new_releases</mat-icon>
-      <div mat-line>About</div>
+      <div mat-line>{{ 'Settings.About' | translate }}</div>
     </a>
 
     <a mat-list-item [href]="env.releaseUrl" target="_blank">
@@ -192,12 +192,12 @@
 
     <a mat-list-item [routerLink]="['licenses']">
       <mat-icon mat-list-icon>description</mat-icon>
-      <div mat-line>Third party licenses</div>
+      <div mat-line>{{ 'Settings.ThirdPartyLicenses' | translate }}</div>
     </a>
 
     <a mat-list-item [routerLink]="['privacy']">
       <mat-icon mat-list-icon>privacy_tip</mat-icon>
-      <div mat-line>Privacy policy</div>
+      <div mat-line>{{ 'Settings.PrivacyPolicy' | translate }}</div>
     </a>
 
     <a mat-list-item [href]="env.instanceUrl" target="_blank" *ngIf="env.instanceName">
@@ -207,7 +207,7 @@
 
     <a mat-list-item [href]="env.sourceUrl" target="_blank">
       <mat-icon mat-list-icon>code</mat-icon>
-      <div mat-line>Source code</div>
+      <div mat-line>{{ 'Settings.SourceCode' | translate }}</div>
     </a>
 
   </mat-nav-list>
