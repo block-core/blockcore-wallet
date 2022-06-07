@@ -395,8 +395,12 @@ select {
 }
 
 .large-icon {
+  width: 64px !important;
+  height: 64px !important;
   font-size: 4em;
-  margin-left: -0.5em;
+  // font-size: 4em;
+  // margin-left: -0.5em;
+  // height: 32px;
 }
 
 .recovery-phrase {
