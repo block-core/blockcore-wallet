@@ -21,7 +21,12 @@ export class NetworkStatusComponent {
             if (!this.status || this.status.length === 0) {
                 return `network-status-offline`;
             } else {
-                return `network-status-online`;
+                const availableCount = this.status.filter(s => s.availability == 1).length;
+                if (availableCount == 0) {
+                    return `network-status-offline`;
+                } else {
+                    return `network-status-online`;
+                }
             }
         }
 

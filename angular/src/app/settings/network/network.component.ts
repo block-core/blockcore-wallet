@@ -1,7 +1,6 @@
 import { Location } from '@angular/common';
 import { Component, OnDestroy, ViewEncapsulation } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { UIState, CommunicationService, FeatureService, NetworkStatusService } from '../../services';
+import { UIState, FeatureService, NetworkStatusService } from '../../services';
 
 @Component({
     selector: 'app-network',
@@ -13,8 +12,6 @@ export class NetworkComponent implements OnDestroy {
     constructor(
         public uiState: UIState,
         public location: Location,
-        private snackBar: MatSnackBar,
-        private communication: CommunicationService,
         public networkStatus: NetworkStatusService,
         public feature: FeatureService,
     ) {

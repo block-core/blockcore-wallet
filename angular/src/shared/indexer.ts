@@ -259,6 +259,27 @@ export class IndexerBackgroundService {
         }
 
         // console.debug('Looping wallets', wallets);
+        // Check if there is any indexers online for any of the accounts in all of the wallets.
+        // If there are no indexers online, we'll simply return "completed: true" to avoid
+        // the loop.
+        const allAccountTypes = wallets.flatMap(w => w.accounts).flatMap(a => a.networkType);
+        const uniqueAccountTypes = Array.from([...new Set(allAccountTypes)]);;
+        let anyIndexerOnline = false;
+
+        for (let i = 0; i < uniqueAccountTypes.length; i++) {
+            const indexerUrl = this.addressManager.networkLoader.getServer(uniqueAccountTypes[i], settings.server, settings.indexer);
+
+            if (indexerUrl == null || indexerUrl == '') {
+                continue;
+            }
+
+            anyIndexerOnline = true;
+        }
+
+        if (!anyIndexerOnline) {
+            console.warn('There are no indexers for the current accounts that are online.');
+            return { cancelled: true, completed: true };
+        }
 
         for (let i = 0; i < wallets.length; i++) {
             if (this.runState.cancel) {

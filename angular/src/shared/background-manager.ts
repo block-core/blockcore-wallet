@@ -74,7 +74,7 @@ export class BackgroundManager {
             await this.updateAll(accounts, networkLoader, settingStore);
         }
         catch (err) {
-
+            console.error('Failure during update all network status:', err);
         }
     }
 
@@ -232,8 +232,6 @@ export class BackgroundManager {
             // console.debug('networkStatuses:', networkStatuses);
         }
     }
-
-
 
     async runWatcher(runState: RunState) {
         this.watcherState = runState;
