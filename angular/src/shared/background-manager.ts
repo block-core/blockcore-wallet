@@ -128,8 +128,6 @@ export class BackgroundManager {
 
                     const data = await response.json();
 
-                    console.log('Update network for: ' + indexerUrl);
-
                     // const response = await axios.get(`${indexerUrl}/api/stats`, {
                     //     timeout: 3000,
                     //     'axios-retry': {

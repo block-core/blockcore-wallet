@@ -10,6 +10,7 @@ let watchManager: BackgroundManager = null;
 let networkManager: BackgroundManager = null;
 let indexing = false;
 let shared = new SharedManager();
+const networkUpdateInterval = 45000;
 
 // Run when the browser has been fully exited and opened again.
 chrome.runtime.onStartup.addListener(async () => {
@@ -117,7 +118,7 @@ const networkStatusWatcher = async () => {
         });
 
         // Continue running the watcher if it has not been cancelled.
-        networkWatcherRef = globalThis.setTimeout(interval, 15000);
+        networkWatcherRef = globalThis.setTimeout(interval, networkUpdateInterval);
     }
 
     // First interval we'll wait for complete run.
