@@ -15,7 +15,9 @@
 		"EditAccount": "Endre konto",
 		"EnterPassordToUnlock": "Fyll inn passord for å låse opp",
 		"Password": "Passord",
-		"Unlock": "Lås opp"
+		"Unlock": "Lås opp",
+		"ExpandView": "Ekspandér vinduet",
+		"Cancel": "Avbryt"
 	},
 	"Dashboard": {
 		"Accounts": "Kontoer",
@@ -42,5 +44,10 @@
 		"ThirdPartyLicenses": "Tredjepartslisenser",
 		"PrivacyPolicy": "Personvern",
 		"SourceCode": "Kildekode"
+	},
+	"Wallet": {
+		"CreateNew": "Lag ny lommebok",
+		"Recover": "Bruk eksisterende Hemmelig gjenopprettingsfrase",
+		"SecretRecoveryPhrase": "Hemmelig gjenopprettingsfrase"
 	}
 }

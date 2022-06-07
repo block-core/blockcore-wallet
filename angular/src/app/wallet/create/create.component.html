@@ -10,9 +10,9 @@
         <p>{{uiState.manifest?.description}}</p>
 
         <br>
-        <button class="signup-button" mat-flat-button color="primary" (click)="create()">Create New Wallet</button>
+        <button class="signup-button" mat-flat-button color="primary" (click)="create()">{{ 'Wallet.CreateNew' | translate }}</button>
         <br>
-        <button class="signup-button" mat-flat-button (click)="restore()">Use Existing Secret Recovery Phrase</button>
+        <button class="signup-button" mat-flat-button (click)="restore()">{{ 'Wallet.Recover' | translate }}</button>
         <br><br>
 
         <div *ngIf="uiState.showInstallButton" id="install" class="left">
@@ -40,7 +40,7 @@
             <mat-step [stepControl]="firstFormGroup" [editable]="false">
                 <form [formGroup]="firstFormGroup">
 
-                    <h1>Secret Recovery Phrase</h1>
+                    <h1>{{ 'Wallet.SecretRecoveryPhrase' | translate }}</h1>
 
                     <p *ngIf="!recover">This is your private and secret sentence that is your account. You must store it
                         safely, if you
@@ -72,7 +72,7 @@
                         <br>
                         <button *ngIf="!recover" class="signup-button" mat-flat-button color="primary" matStepperNext>OK, I have saved it</button>
                         <button *ngIf="recover" class="signup-button" mat-flat-button color="primary" [disabled]="!firstFormGroup.valid" matStepperNext>Import secret recovery phrase</button>
-                        <button class="signup-button" mat-stroked-button (click)="cancel()">Cancel</button>
+                        <button class="signup-button" mat-stroked-button (click)="cancel()">{{ 'App.Cancel' | translate }}</button>
                     </div>
                 </form>
             </mat-step>
@@ -95,7 +95,7 @@
 
                     <div>
                         <button class="signup-button" (click)="save()" [disabled]="!passwordValidated" mat-button mat-flat-button color="primary" matStepperNext>Save</button>
-                        <button class="signup-button" mat-stroked-button (click)="cancel()">Cancel</button>
+                        <button class="signup-button" mat-stroked-button (click)="cancel()">{{ 'App.Cancel' | translate }}</button>
                     </div>
                 </form>
             </mat-step>

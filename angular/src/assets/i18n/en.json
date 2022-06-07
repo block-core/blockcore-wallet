@@ -15,7 +15,9 @@
 		"EditAccount": "Edit account",
 		"EnterPassordToUnlock": "Enter your password to unlock",
 		"Password": "Password",
-		"Unlock": "Unlock"
+		"Unlock": "Unlock",
+		"ExpandView": "Expand the view",
+		"Cancel": "Cancel"
 	},
 	"Dashboard": {
 		"Accounts": "Accounts",
@@ -42,6 +44,11 @@
 		"ThirdPartyLicenses": "Third party licenses",
 		"PrivacyPolicy": "Privacy policy",
 		"SourceCode": "Source code"
+	},
+	"Wallet": {
+		"CreateNew": "Create New Wallet",
+		"Recover": "Use Existing Secret Recovery Phrase",
+		"SecretRecoveryPhrase": "Secret Recovery Phrase"
 	},
 	"english": "English",
 	"chinese_simplified": "Chinese (Simplified)",
