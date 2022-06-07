@@ -48,10 +48,10 @@
 
                     <p *ngIf="recover">Restore your existing wallet with your 12 or 24-word secret recovery phrase.</p>
 
-                    <mat-form-field *ngIf="!recover" class="input-full-width" appearance="outline">
+                    <mat-form-field class="input-full-width" appearance="outline">
                         <mat-label>Language</mat-label>
                         <mat-select (selectionChange)="onLanguageChanged($event)" [(value)]="wordlist">
-                            <mat-option *ngFor="let list of wordlists | keyvalue" [value]="list.key">{{ getKey(list) | translate }}</mat-option>
+                            <mat-option *ngFor="let list of wordlists" [value]="list">{{ list | translate }}</mat-option>
                         </mat-select>
                         <!-- <mat-hint>Change recovery phrase language
                         </mat-hint> -->

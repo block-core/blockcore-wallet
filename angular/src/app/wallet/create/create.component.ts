@@ -8,8 +8,6 @@ import { Router } from '@angular/router';
 import { Location } from '@angular/common'
 import { wordlists } from 'bip39';
 const { v4: uuidv4 } = require('uuid');
-// import { wordlists } from 'micro-bip39';
-// import * as bip39 from 'bip39';
 
 @Component({
     selector: 'app-wallet-create',
@@ -47,11 +45,7 @@ export class WalletCreateComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.wordlists = wordlists;
-
-        // These are shortcut duplicates, just remove them.
-        delete wordlists['EN'];
-        delete wordlists['JA'];
+        this.wordlists = this.crypto.languages();
 
         this.firstFormGroup = this._formBuilder.group({
             // firstCtrl: ['', Validators.required]
@@ -75,6 +69,7 @@ export class WalletCreateComponent implements OnInit {
     }
 
     generate() {
+        // this.mnemonic = this.crypto.generateMnemonic();
         this.mnemonic = this.crypto.generateMnemonic();
     }
 
@@ -93,12 +88,14 @@ export class WalletCreateComponent implements OnInit {
         });
     }
 
-    getKey(item: any): string {
-        return item.key;
-    }
-
     onLanguageChanged(event: any) {
-        this.mnemonic = this.crypto.generateMnemonic(this.wordlist);
+        this.crypto.setWordList(this.wordlist);
+
+        if (!this.recover) {
+            this.mnemonic = this.crypto.generateMnemonic(this.wordlist);
+        } else {
+            this.firstFormGroup.controls['firstCtrl'].updateValueAndValidity();
+        }
     }
 
     restore() {
@@ -108,7 +105,7 @@ export class WalletCreateComponent implements OnInit {
             firstCtrl: [
                 null,
                 [Validators.required],
-                [WalletCreateComponent.validateMnemonic(this.walletManager)]
+                [WalletCreateComponent.validateMnemonic(this.crypto)]
             ],
         });
     }
@@ -117,9 +114,9 @@ export class WalletCreateComponent implements OnInit {
         this.location.back();
     }
 
-    static validateMnemonic(walletManager: WalletManager): AsyncValidatorFn {
+    static validateMnemonic(crypto: CryptoService): AsyncValidatorFn {
         return (control: AbstractControl): Observable<ValidationErrors> => {
-            return walletManager
+            return crypto
                 .validateMnemonic(control.value)
                 .pipe(
                     map((result: boolean) =>

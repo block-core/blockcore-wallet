@@ -1,8 +1,20 @@
 /* Source based on example by Brady Joslin - https://github.com/bradyjoslin */
 
+import { BehaviorSubject, delay, Observable, of } from "rxjs";
 import { Injectable } from '@angular/core';
-import * as bip39 from 'bip39';
 import { Base64 } from 'js-base64';
+
+// import * as bip39 from 'bip39';
+import * as bip39 from '@scure/bip39';
+import { wordlist as czech } from '@scure/bip39/wordlists/czech';
+import { wordlist as english } from '@scure/bip39/wordlists/english';
+import { wordlist as french } from '@scure/bip39/wordlists/french';
+import { wordlist as italian } from '@scure/bip39/wordlists/italian';
+import { wordlist as japanese } from '@scure/bip39/wordlists/japanese';
+import { wordlist as korean } from '@scure/bip39/wordlists/korean';
+import { wordlist as chinese_simplified } from '@scure/bip39/wordlists/simplified-chinese';
+import { wordlist as chinese_traditional } from '@scure/bip39/wordlists/traditional-chinese';
+import { wordlist as spanish } from '@scure/bip39/wordlists/spanish';
 
 const enc = new TextEncoder();
 const dec = new TextDecoder();
@@ -11,15 +23,47 @@ const dec = new TextDecoder();
     providedIn: 'root'
 })
 export class CryptoService {
+
+    wordlists: any = {};
+    words: string[];
+
     constructor() {
+        this.wordlists.chinese_simplified = chinese_simplified;
+        this.wordlists.chinese_traditional = chinese_traditional;
+        this.wordlists.czech = czech;
+        this.wordlists.english = english;
+        this.wordlists.french = french;
+        this.wordlists.italian = italian;
+        this.wordlists.japanese = japanese;
+        this.wordlists.korean = korean;
+        this.wordlists.spanish = spanish;
+
+        this.words = this.wordlists.english;
     }
 
     generateMnemonic(wordlist?: string) {
         if (wordlist) {
-            bip39.setDefaultWordlist(wordlist);
+            this.words = this.wordlists[wordlist];
+            // bip39.setDefaultWordlist(wordlist);
         }
 
-        return bip39.generateMnemonic();
+        return bip39.generateMnemonic(this.words);
+        // return bip39.generateMnemonic();
+    }
+
+    setWordList(wordlist: string) {
+        this.words = this.wordlists[wordlist];
+    }
+
+    validateMnemonic(mnemonic: string) {
+        console.log(mnemonic);
+        console.log(this.words);
+
+        return of(bip39.validateMnemonic(mnemonic, this.words)).pipe();
+    }
+
+    languages() {
+        return Object.keys(this.wordlists);
     }
 
     getPasswordKey(password: string) {

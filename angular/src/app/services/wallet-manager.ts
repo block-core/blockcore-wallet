@@ -73,9 +73,10 @@ export class WalletManager {
         return (this.secure.get(this.activeWalletId) != null);
     }
 
-    validateMnemonic(mnemonic: string) {
-        return of(bip39.validateMnemonic(mnemonic)).pipe();
-    }
+    // validateMnemonic(mnemonic: string, wordlist: string) {
+    //     return of(bip39.validateMnemonic(mnemonic)).pipe();
+    // }
+    
     async save() {
         return this.store.save();
     }
