@@ -20,6 +20,9 @@
         "build": {
           "builder": "ngx-build-plus:browser",
           "options": {
+            "allowedCommonJsDependencies": [
+              "micro-bip32"
+            ],
             "aot": true,
             "outputPath": "dist/extension",
             "index": "angular/src/index.html",
@@ -291,5 +294,8 @@
         }
       }
     }
+  },
+  "cli": {
+    "analytics": false
   }
 }

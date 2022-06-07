@@ -3,7 +3,6 @@ import { HDKey } from "micro-bip32";
 import { payments } from '@blockcore/blockcore-js';
 import { NetworkLoader } from "./network-loader";
 import { Network } from "./networks";
-import { Servers } from "./servers";
 
 export class AddressManager {
 
@@ -41,7 +40,7 @@ export class AddressManager {
     //         const serversGroup = Servers[networkGroup];
     //         const servers = serversGroup[networkType];
 
-    //         // TODO: Figure out the best way to pick and perhaps cycle the servers. 
+    //         // TODO: Figure out the best way to pick and perhaps cycle the servers.
     //         // As of now, we'll randomly pick every time this method is called.
     //         const serverIndex = this.generateRandomNumber(0, servers.length);
     //         const server = servers[serverIndex];
