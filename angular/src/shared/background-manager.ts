@@ -104,6 +104,11 @@ export class BackgroundManager {
             const network = networkLoader.getNetwork(account.networkType);
             const indexerUrls = networkLoader.getServers(network.id, settings.server, settings.indexer);
 
+            if (indexerUrls == null) {
+                console.warn(`Invalid configuration of servers. There are no servers registered for network of type ${network.id}.`);
+                continue;
+            }
+
             let networkStatuses: NetworkStatus[] = [];
 
             for (let j = 0; j < indexerUrls.length; j++) {

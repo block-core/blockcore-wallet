@@ -33,9 +33,9 @@
         </mat-select>
     </mat-form-field>
 
-    <br>
+    <br *ngIf="selectedNetwork.purpose != 302">
 
-    <mat-form-field appearance="outline" class="input-full-width">
+    <mat-form-field *ngIf="selectedNetwork.purpose != 302" appearance="outline" class="input-full-width">
         <mat-label>Account Mode</mat-label>
         <mat-select [(value)]="mode">
             <mat-option [value]="'normal'">Normal</mat-option>
@@ -43,9 +43,9 @@
         </mat-select>
     </mat-form-field>
 
-    <br>
+    <br *ngIf="selectedNetwork.purpose != 302">
 
-    <mat-form-field appearance="outline" class="input-full-width">
+    <mat-form-field *ngIf="selectedNetwork.purpose != 302" appearance="outline" class="input-full-width">
         <mat-label>Address Format</mat-label>
         <mat-select [(value)]="purposeAddress">
             <mat-option [value]="44">Legacy</mat-option>
