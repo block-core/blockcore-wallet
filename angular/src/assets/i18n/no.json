@@ -17,7 +17,8 @@
 		"Password": "Passord",
 		"Unlock": "Lås opp",
 		"ExpandView": "Ekspandér vinduet",
-		"Cancel": "Avbryt"
+		"Cancel": "Avbryt",
+		"By": "Av"
 	},
 	"Dashboard": {
 		"Accounts": "Kontoer",
@@ -43,7 +44,9 @@
 		"About": "Om",
 		"ThirdPartyLicenses": "Tredjepartslisenser",
 		"PrivacyPolicy": "Personvern",
-		"SourceCode": "Kildekode"
+		"SourceCode": "Kildekode",
+		"AmountFormat": "Beløpsformat",
+		"AmountFormatHint": "Endre visning av beløpsformat."
 	},
 	"Wallet": {
 		"CreateNew": "Lag ny lommebok",

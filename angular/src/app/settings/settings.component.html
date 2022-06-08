@@ -25,13 +25,13 @@
   <br><br>
 
   <mat-form-field class="input-full-width" appearance="outline">
-    <mat-label>Amount Format</mat-label>
+    <mat-label>{{ 'Settings.AmountFormat' | translate }}</mat-label>
     <mat-select [(value)]="settings.amountFormat">
       <mat-option [value]="'bitcoin'">Default (0.0)</mat-option>
       <mat-option [value]="'satcommas'">Satcommas (000,000.000,000)</mat-option>
       <mat-option [value]="'sat'">Satoshis</mat-option>
     </mat-select>
-    <mat-hint>Change the display format for amounts.
+    <mat-hint>{{ 'Settings.AmountFormatHint' | translate}}
     </mat-hint>
   </mat-form-field>
 
