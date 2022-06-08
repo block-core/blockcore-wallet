@@ -46,7 +46,12 @@
 		"PrivacyPolicy": "Personvern",
 		"SourceCode": "Kildekode",
 		"AmountFormat": "Beløpsformat",
-		"AmountFormatHint": "Endre visning av beløpsformat."
+		"AmountFormatHint": "Endre visning av beløpsformat.",
+		"Default": "Standard",
+		"AutoLockTimer": "Autolås (minutes)",
+		"AutoLockTimerHint": "Sett tiden for automatisk låsing av lommeboken.",
+		"Servers": "Servere",
+		"ShowSecretRecoveryPhrase": "Vis hemmelig gjenopprettingsfrase"
 	},
 	"Wallet": {
 		"CreateNew": "Lag ny lommebok",

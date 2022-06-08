@@ -27,7 +27,7 @@
   <mat-form-field class="input-full-width" appearance="outline">
     <mat-label>{{ 'Settings.AmountFormat' | translate }}</mat-label>
     <mat-select [(value)]="settings.amountFormat">
-      <mat-option [value]="'bitcoin'">Default (0.0)</mat-option>
+      <mat-option [value]="'bitcoin'">{{ 'Settings.Default' | translate }} (0.0)</mat-option>
       <mat-option [value]="'satcommas'">Satcommas (000,000.000,000)</mat-option>
       <mat-option [value]="'sat'">Satoshis</mat-option>
     </mat-select>
@@ -38,23 +38,21 @@
   <br><br>
 
   <mat-form-field class="input-full-width" appearance="outline">
-    <mat-label>Auto-Lock Timer (minutes)</mat-label>
+    <mat-label>{{ 'Settings.AutoLockTimer' | translate }}</mat-label>
     <input matInput [(ngModel)]="settings.autoTimeout" required>
-    <mat-hint>Set the idle time in minutes before the wallet becomes locked.</mat-hint>
+    <mat-hint>{{ 'Settings.AutoLockTimerHint' | translate }}</mat-hint>
   </mat-form-field>
 
   <br><br>
 
   <mat-form-field class="input-full-width" appearance="outline">
-    <mat-label>Servers</mat-label>
+    <mat-label>{{ 'Settings.Servers' | translate }}</mat-label>
     <mat-select [(value)]="settings.server">
       <mat-option [value]="'group1'">CoinVault</mat-option>
       <mat-option [value]="'group2'">Blockcore</mat-option>
       <mat-option [value]="'group3'">Community</mat-option>
       <mat-option [value]="'custom'">Custom</mat-option>
     </mat-select>
-    <mat-hint>Select server group
-    </mat-hint>
   </mat-form-field>
 
   <div *ngIf="settings.server == 'custom'">
@@ -161,7 +159,7 @@
 
     <a mat-list-item [routerLink]="['export-recovery-phrase']">
       <mat-icon mat-list-icon>key</mat-icon>
-      <div mat-line>Show Secret Recovery Phrase</div>
+      <div mat-line>{{ 'Settings.ShowSecretRecoveryPhrase' | translate }}</div>
     </a>
 
     <a mat-list-item [routerLink]="['/wipe']">

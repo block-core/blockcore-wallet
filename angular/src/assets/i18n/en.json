@@ -46,7 +46,12 @@
 		"PrivacyPolicy": "Privacy policy",
 		"SourceCode": "Source code",
 		"AmountFormat": "Amount Format",
-		"AmountFormatHint": "Change the display format for amounts."
+		"AmountFormatHint": "Change the display format for amounts.",
+		"Default": "Default",
+		"AutoLockTimer": "Auto-Lock Timer (minutes)",
+		"AutoLockTimerHint": "Set the idle time in minutes before the wallet becomes locked.",
+		"Servers": "Servers",
+		"ShowSecretRecoveryPhrase": "Show Secret Recovery Phrase"
 	},
 	"Wallet": {
 		"CreateNew": "Create New Wallet",
