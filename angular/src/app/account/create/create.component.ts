@@ -147,11 +147,12 @@ export class AccountCreateComponent implements OnInit, OnDestroy {
         const parsedPurpose = Number(splittedPathReplaced[1]);
         const parsedNetwork = Number(splittedPathReplaced[2]);
         const parsedIndex = Number(splittedPathReplaced[3]);
+        const accountType = this.selectedNetwork.purpose == 302 ? 'identity' : 'coin';
 
         // TODO: Get the account index from the derivation path if user customizes it.
         const account: Account = {
             identifier: uuidv4(),
-            type: 'coin', // TODO: Change this depending on what user selects.
+            type: accountType,
             mode: this.mode,
             networkType: this.selectedNetwork.id,
             name: this.name,
