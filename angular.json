@@ -21,7 +21,8 @@
           "builder": "ngx-build-plus:browser",
           "options": {
             "allowedCommonJsDependencies": [
-              "micro-bip32"
+              "micro-bip32",
+              "@blockcore/blockcore-js"
             ],
             "aot": true,
             "outputPath": "dist/extension",
