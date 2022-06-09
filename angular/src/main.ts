@@ -6,23 +6,24 @@ import { TAB_ID } from './app/providers/tab-id.provider';
 import { environment } from './environments/environment';
 
 if (globalThis.chrome && globalThis.chrome.runtime && globalThis.chrome.tabs) {
-  chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+        if (environment.production) {
+            enableProdMode();
+        }
+
+        const { id: tabId } = [...tabs].pop();
+
+        // provides the current Tab ID so you can send messages to the content page
+        platformBrowserDynamic([{ provide: TAB_ID, useValue: tabId }])
+            .bootstrapModule(AppModule)
+            .catch((error) => console.error(error));
+    });
+} else {
     if (environment.production) {
-      enableProdMode();
+        enableProdMode();
     }
 
-    const { id: tabId } = [...tabs].pop();
-
-    // provides the current Tab ID so you can send messages to the content page
-    platformBrowserDynamic([{ provide: TAB_ID, useValue: tabId }])
-      .bootstrapModule(AppModule)
-      .catch(error => console.error(error));
-  });
-} else {
-  if (environment.production) {
-    enableProdMode();
-  }
-
-  platformBrowserDynamic().bootstrapModule(AppModule)
-    .catch(err => console.error(err));
+    platformBrowserDynamic()
+        .bootstrapModule(AppModule)
+        .catch((err) => console.error(err));
 }

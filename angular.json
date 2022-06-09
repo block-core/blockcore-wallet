@@ -1,302 +1,294 @@
 {
-  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
-  "version": 1,
-  "newProjectRoot": "projects",
-  "projects": {
-    "blockcore-wallet": {
-      "projectType": "application",
-      "schematics": {
-        "@schematics/angular:component": {
-          "style": "scss"
-        },
-        "@schematics/angular:application": {
-          "strict": true
-        }
-      },
-      "root": "angular",
-      "sourceRoot": "angular/src",
-      "prefix": "app",
-      "architect": {
-        "build": {
-          "builder": "ngx-build-plus:browser",
-          "options": {
-            "allowedCommonJsDependencies": [
-              "micro-bip32",
-              "@blockcore/blockcore-js"
-            ],
-            "aot": true,
-            "outputPath": "dist/extension",
-            "index": "angular/src/index.html",
-            "main": "angular/src/main.ts",
-            "polyfills": "angular/src/polyfills.ts",
-            "tsConfig": "angular/tsconfig.app.json",
-            "inlineStyleLanguage": "scss",
-            "styles": [
-              "angular/src/styles/styles.scss"
-            ],
-            "stylePreprocessorOptions": {
-              "includePaths": [
-                "angular/src/styles/blockcore"
-              ]
+    "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+    "version": 1,
+    "newProjectRoot": "projects",
+    "projects": {
+        "blockcore-wallet": {
+            "projectType": "application",
+            "schematics": {
+                "@schematics/angular:component": {
+                    "style": "scss"
+                },
+                "@schematics/angular:application": {
+                    "strict": true
+                }
             },
-            "scripts": []
-          },
-          "configurations": {
-            "production": {
-              "buildOptimizer": false,
-              "optimization": {
-                "scripts": true,
-                "styles": {
-                  "minify": true,
-                  "inlineCritical": false
+            "root": "angular",
+            "sourceRoot": "angular/src",
+            "prefix": "app",
+            "architect": {
+                "build": {
+                    "builder": "ngx-build-plus:browser",
+                    "options": {
+                        "allowedCommonJsDependencies": [
+                            "micro-bip32",
+                            "@blockcore/blockcore-js"
+                        ],
+                        "aot": true,
+                        "outputPath": "dist/extension",
+                        "index": "angular/src/index.html",
+                        "main": "angular/src/main.ts",
+                        "polyfills": "angular/src/polyfills.ts",
+                        "tsConfig": "angular/tsconfig.app.json",
+                        "inlineStyleLanguage": "scss",
+                        "styles": ["angular/src/styles/styles.scss"],
+                        "stylePreprocessorOptions": {
+                            "includePaths": ["angular/src/styles/blockcore"]
+                        },
+                        "scripts": []
+                    },
+                    "configurations": {
+                        "production": {
+                            "buildOptimizer": false,
+                            "optimization": {
+                                "scripts": true,
+                                "styles": {
+                                    "minify": true,
+                                    "inlineCritical": false
+                                },
+                                "fonts": true
+                            },
+                            "vendorChunk": false,
+                            "extractLicenses": true,
+                            "sourceMap": false,
+                            "namedChunks": true,
+                            "outputHashing": "all",
+                            "budgets": [
+                                {
+                                    "type": "initial",
+                                    "maximumWarning": "6mb",
+                                    "maximumError": "16mb"
+                                },
+                                {
+                                    "type": "anyComponentStyle",
+                                    "maximumWarning": "2kb",
+                                    "maximumError": "4kb"
+                                }
+                            ],
+                            "assets": [
+                                "angular/src/pwabuilder-sw-register.js",
+                                "angular/src/pwabuilder-sw.js",
+                                {
+                                    "input": "angular/src/assets/blockcore/",
+                                    "output": "/assets",
+                                    "glob": "*"
+                                },
+                                {
+                                    "input": "angular/src/assets/i18n/",
+                                    "output": "/assets/i18n",
+                                    "glob": "*"
+                                },
+                                {
+                                    "input": "angular/src/manifest/blockcore/",
+                                    "output": "/",
+                                    "glob": "*"
+                                }
+                            ],
+                            "fileReplacements": [
+                                {
+                                    "replace": "angular/src/environments/environment.ts",
+                                    "with": "angular/src/environments/environment.prod.ts"
+                                }
+                            ]
+                        },
+                        "development": {
+                            "buildOptimizer": false,
+                            "optimization": false,
+                            "vendorChunk": true,
+                            "extractLicenses": true,
+                            "sourceMap": true,
+                            "namedChunks": true,
+                            "assets": [
+                                "angular/src/pwabuilder-sw-register.js",
+                                "angular/src/pwabuilder-sw.js",
+                                {
+                                    "input": "angular/src/assets/blockcore/",
+                                    "output": "/assets",
+                                    "glob": "*"
+                                },
+                                {
+                                    "input": "angular/src/assets/i18n/",
+                                    "output": "/assets/i18n",
+                                    "glob": "*"
+                                },
+                                {
+                                    "input": "angular/src/manifest/blockcore/",
+                                    "output": "/",
+                                    "glob": "*"
+                                }
+                            ]
+                        },
+                        "coinvault": {
+                            "stylePreprocessorOptions": {
+                                "includePaths": [
+                                    "angular/src/styles/coinvault/"
+                                ]
+                            },
+                            "buildOptimizer": false,
+                            "optimization": {
+                                "scripts": true,
+                                "styles": {
+                                    "minify": true,
+                                    "inlineCritical": false
+                                },
+                                "fonts": true
+                            },
+                            "vendorChunk": false,
+                            "extractLicenses": true,
+                            "sourceMap": false,
+                            "namedChunks": true,
+                            "outputHashing": "all",
+                            "outputPath": "dist/extension",
+                            "budgets": [
+                                {
+                                    "type": "initial",
+                                    "maximumWarning": "6mb",
+                                    "maximumError": "16mb"
+                                },
+                                {
+                                    "type": "anyComponentStyle",
+                                    "maximumWarning": "2kb",
+                                    "maximumError": "4kb"
+                                }
+                            ],
+                            "fileReplacements": [
+                                {
+                                    "replace": "angular/src/environments/environment.ts",
+                                    "with": "angular/src/environments/environment.coinvault.ts"
+                                }
+                            ],
+                            "assets": [
+                                "angular/src/pwabuilder-sw-register.js",
+                                "angular/src/pwabuilder-sw.js",
+                                {
+                                    "input": "angular/src/assets/coinvault/",
+                                    "output": "/assets",
+                                    "glob": "*"
+                                },
+                                {
+                                    "input": "angular/src/assets/i18n/",
+                                    "output": "/assets/i18n",
+                                    "glob": "*"
+                                },
+                                {
+                                    "input": "angular/src/manifest/coinvault/",
+                                    "output": "/",
+                                    "glob": "*"
+                                }
+                            ]
+                        },
+                        "smartcityplatform": {
+                            "stylePreprocessorOptions": {
+                                "includePaths": [
+                                    "angular/src/styles/smartcityplatform/"
+                                ]
+                            },
+                            "buildOptimizer": false,
+                            "optimization": {
+                                "scripts": true,
+                                "styles": {
+                                    "minify": true,
+                                    "inlineCritical": false
+                                },
+                                "fonts": true
+                            },
+                            "vendorChunk": false,
+                            "extractLicenses": true,
+                            "sourceMap": false,
+                            "namedChunks": true,
+                            "outputHashing": "all",
+                            "outputPath": "dist/extension",
+                            "budgets": [
+                                {
+                                    "type": "initial",
+                                    "maximumWarning": "6mb",
+                                    "maximumError": "16mb"
+                                },
+                                {
+                                    "type": "anyComponentStyle",
+                                    "maximumWarning": "2kb",
+                                    "maximumError": "4kb"
+                                }
+                            ],
+                            "assets": [
+                                "angular/src/pwabuilder-sw-register.js",
+                                "angular/src/pwabuilder-sw.js",
+                                {
+                                    "input": "angular/src/assets/smartcityplatform/",
+                                    "output": "/assets",
+                                    "glob": "*"
+                                },
+                                {
+                                    "input": "angular/src/assets/i18n/",
+                                    "output": "/assets/i18n",
+                                    "glob": "*"
+                                },
+                                {
+                                    "input": "angular/src/manifest/smartcityplatform/",
+                                    "output": "/",
+                                    "glob": "*"
+                                }
+                            ],
+                            "fileReplacements": [
+                                {
+                                    "replace": "angular/src/environments/environment.ts",
+                                    "with": "angular/src/environments/environment.smartcityplatform.ts"
+                                }
+                            ]
+                        }
+                    },
+                    "defaultConfiguration": "coinvault"
                 },
-                "fonts": true
-              },
-              "vendorChunk": false,
-              "extractLicenses": true,
-              "sourceMap": false,
-              "namedChunks": true,
-              "outputHashing": "all",
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "6mb",
-                  "maximumError": "16mb"
+                "serve": {
+                    "options": {
+                        "port": 4201
+                    },
+                    "builder": "ngx-build-plus:dev-server",
+                    "configurations": {
+                        "production": {
+                            "browserTarget": "blockcore-wallet:build:production"
+                        },
+                        "development": {
+                            "browserTarget": "blockcore-wallet:build:development"
+                        },
+                        "coinvault": {
+                            "browserTarget": "blockcore-wallet:build:coinvault"
+                        },
+                        "smartcityplatform": {
+                            "browserTarget": "blockcore-wallet:build:smartcityplatform"
+                        }
+                    },
+                    "defaultConfiguration": "development"
                 },
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "2kb",
-                  "maximumError": "4kb"
+                "extract-i18n": {
+                    "builder": "@angular-devkit/build-angular:extract-i18n",
+                    "options": {
+                        "browserTarget": "blockcore-wallet:build"
+                    }
+                },
+                "test": {
+                    "builder": "ngx-build-plus:karma",
+                    "options": {
+                        "main": "angular/src/test.ts",
+                        "polyfills": "angular/src/polyfills.ts",
+                        "tsConfig": "angular/tsconfig.spec.json",
+                        "karmaConfig": "angular/karma.conf.js",
+                        "inlineStyleLanguage": "scss",
+                        "assets": [
+                            "angular/src/favicon.ico",
+                            "angular/src/assets"
+                        ],
+                        "styles": ["angular/src/styles/styles.scss"],
+                        "stylePreprocessorOptions": {
+                            "includePaths": ["angular/src/styles/blockcore"]
+                        },
+                        "scripts": []
+                    }
                 }
-              ],
-              "assets": [
-                "angular/src/pwabuilder-sw-register.js",
-                "angular/src/pwabuilder-sw.js",
-                {
-                  "input": "angular/src/assets/blockcore/",
-                  "output": "/assets",
-                  "glob": "*"
-                },
-                {
-                  "input": "angular/src/assets/i18n/",
-                  "output": "/assets/i18n",
-                  "glob": "*"
-                },
-                {
-                  "input": "angular/src/manifest/blockcore/",
-                  "output": "/",
-                  "glob": "*"
-                }
-              ],
-              "fileReplacements": [
-                {
-                  "replace": "angular/src/environments/environment.ts",
-                  "with": "angular/src/environments/environment.prod.ts"
-                }
-              ]
-            },
-            "development": {
-              "buildOptimizer": false,
-              "optimization": false,
-              "vendorChunk": true,
-              "extractLicenses": true,
-              "sourceMap": true,
-              "namedChunks": true,
-              "assets": [
-                "angular/src/pwabuilder-sw-register.js",
-                "angular/src/pwabuilder-sw.js",
-                {
-                  "input": "angular/src/assets/blockcore/",
-                  "output": "/assets",
-                  "glob": "*"
-                },
-                {
-                  "input": "angular/src/assets/i18n/",
-                  "output": "/assets/i18n",
-                  "glob": "*"
-                },
-                {
-                  "input": "angular/src/manifest/blockcore/",
-                  "output": "/",
-                  "glob": "*"
-                }
-              ]
-            },
-            "coinvault": {
-              "stylePreprocessorOptions": {
-                "includePaths": [
-                  "angular/src/styles/coinvault/"
-                ]
-              },
-              "buildOptimizer": false,
-              "optimization": {
-                "scripts": true,
-                "styles": {
-                  "minify": true,
-                  "inlineCritical": false
-                },
-                "fonts": true
-              },
-              "vendorChunk": false,
-              "extractLicenses": true,
-              "sourceMap": false,
-              "namedChunks": true,
-              "outputHashing": "all",
-              "outputPath": "dist/extension",
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "6mb",
-                  "maximumError": "16mb"
-                },
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "2kb",
-                  "maximumError": "4kb"
-                }
-              ],
-              "fileReplacements": [
-                {
-                  "replace": "angular/src/environments/environment.ts",
-                  "with": "angular/src/environments/environment.coinvault.ts"
-                }
-              ],
-              "assets": [
-                "angular/src/pwabuilder-sw-register.js",
-                "angular/src/pwabuilder-sw.js",
-                {
-                  "input": "angular/src/assets/coinvault/",
-                  "output": "/assets",
-                  "glob": "*"
-                },
-                {
-                  "input": "angular/src/assets/i18n/",
-                  "output": "/assets/i18n",
-                  "glob": "*"
-                },
-                {
-                  "input": "angular/src/manifest/coinvault/",
-                  "output": "/",
-                  "glob": "*"
-                }
-              ]
-            },
-            "smartcityplatform": {
-              "stylePreprocessorOptions": {
-                "includePaths": [
-                  "angular/src/styles/smartcityplatform/"
-                ]
-              },
-              "buildOptimizer": false,
-              "optimization": {
-                "scripts": true,
-                "styles": {
-                  "minify": true,
-                  "inlineCritical": false
-                },
-                "fonts": true
-              },
-              "vendorChunk": false,
-              "extractLicenses": true,
-              "sourceMap": false,
-              "namedChunks": true,
-              "outputHashing": "all",
-              "outputPath": "dist/extension",
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "6mb",
-                  "maximumError": "16mb"
-                },
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "2kb",
-                  "maximumError": "4kb"
-                }
-              ],
-              "assets": [
-                "angular/src/pwabuilder-sw-register.js",
-                "angular/src/pwabuilder-sw.js",
-                {
-                  "input": "angular/src/assets/smartcityplatform/",
-                  "output": "/assets",
-                  "glob": "*"
-                },
-                {
-                  "input": "angular/src/assets/i18n/",
-                  "output": "/assets/i18n",
-                  "glob": "*"
-                },
-                {
-                  "input": "angular/src/manifest/smartcityplatform/",
-                  "output": "/",
-                  "glob": "*"
-                }
-              ],
-              "fileReplacements": [
-                {
-                  "replace": "angular/src/environments/environment.ts",
-                  "with": "angular/src/environments/environment.smartcityplatform.ts"
-                }
-              ]
             }
-          },
-          "defaultConfiguration": "coinvault"
-        },
-        "serve": {
-          "options": {
-            "port": 4201
-          },
-          "builder": "ngx-build-plus:dev-server",
-          "configurations": {
-            "production": {
-              "browserTarget": "blockcore-wallet:build:production"
-            },
-            "development": {
-              "browserTarget": "blockcore-wallet:build:development"
-            },
-            "coinvault": {
-              "browserTarget": "blockcore-wallet:build:coinvault"
-            },
-            "smartcityplatform": {
-              "browserTarget": "blockcore-wallet:build:smartcityplatform"
-            }
-          },
-          "defaultConfiguration": "development"
-        },
-        "extract-i18n": {
-          "builder": "@angular-devkit/build-angular:extract-i18n",
-          "options": {
-            "browserTarget": "blockcore-wallet:build"
-          }
-        },
-        "test": {
-          "builder": "ngx-build-plus:karma",
-          "options": {
-            "main": "angular/src/test.ts",
-            "polyfills": "angular/src/polyfills.ts",
-            "tsConfig": "angular/tsconfig.spec.json",
-            "karmaConfig": "angular/karma.conf.js",
-            "inlineStyleLanguage": "scss",
-            "assets": [
-              "angular/src/favicon.ico",
-              "angular/src/assets"
-            ],
-            "styles": [
-              "angular/src/styles/styles.scss"
-            ],
-            "stylePreprocessorOptions": {
-              "includePaths": [
-                "angular/src/styles/blockcore"
-              ]
-            },
-            "scripts": []
-          }
         }
-      }
+    },
+    "cli": {
+        "analytics": false
     }
-  },
-  "cli": {
-    "analytics": false
-  }
 }

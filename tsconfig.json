@@ -5,10 +5,10 @@
   To learn more about this file see: https://angular.io/config/solution-tsconfig.
 */
 {
-  "files": [],
-  "references": [
-    {
-      "path": "./angular/tsconfig.app.json"
-    }
-  ]
+    "files": [],
+    "references": [
+        {
+            "path": "./angular/tsconfig.app.json"
+        }
+    ]
 }
