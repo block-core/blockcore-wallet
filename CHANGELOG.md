@@ -1,3 +1,16 @@
+## <small>0.0.39 (2022-06-09)</small>
+
+* Add more Norwegian translations ([68f976f](https://github.com/block-core/blockcore-wallet/commit/68f976f))
+* Add more Norwegian translations ([6bf0e5e](https://github.com/block-core/blockcore-wallet/commit/6bf0e5e))
+* Fix issue with invalid server configuration ([0b79b4d](https://github.com/block-core/blockcore-wallet/commit/0b79b4d))
+* Increase the network update interval from 15 seconds to 45 seconds ([85288fc](https://github.com/block-core/blockcore-wallet/commit/85288fc))
+* Remove request for clipboardWrite and clipboardRead ([2be1c03](https://github.com/block-core/blockcore-wallet/commit/2be1c03))
+* Remove some debug logging ([797eb7f](https://github.com/block-core/blockcore-wallet/commit/797eb7f))
+* Set the type of account based upon selection ([1b74948](https://github.com/block-core/blockcore-wallet/commit/1b74948))
+* Update version, changelog and packages ([0b0b023](https://github.com/block-core/blockcore-wallet/commit/0b0b023))
+
+
+
 ## <small>0.0.38 (2022-06-07)</small>
 
 * Improve the behavior when indexers are all offline (or user is offline) ([ba68591](https://github.com/block-core/blockcore-wallet/commit/ba68591)), closes [#148](https://github.com/block-core/blockcore-wallet/issues/148)
