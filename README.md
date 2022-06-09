@@ -57,6 +57,13 @@ All the standard practices for cryptocurrency wallets apply: Make sure you take 
 
 - Node.js LTS (16.x): https://nodejs.org/en/
 - Angular CLI: `npm install -g @angular/cli`
+- Install the suggested workspace extensions for VS Code
+
+## Code Formatting Rules
+
+Please use an editor that respects the .editorconfig when auto-formatting the code.
+
+If formatting is not applied according to the rules, make sure you don't have configuration in user settings for VS Code: `%APPDATA%\Code\User\settings.json`
 
 ## Run with Hot-Reload
 

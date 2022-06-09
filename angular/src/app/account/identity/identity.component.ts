@@ -1,14 +1,27 @@
-import { Component, Inject, HostBinding, ChangeDetectorRef, OnInit, OnDestroy } from '@angular/core';
+import {
+    Component,
+    Inject,
+    HostBinding,
+    ChangeDetectorRef,
+    OnInit,
+    OnDestroy,
+} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Identity } from 'src/shared';
-import { CommunicationService, CryptoService, SettingsService, UIState, WalletManager } from 'src/app/services';
+import {
+    CommunicationService,
+    CryptoService,
+    SettingsService,
+    UIState,
+    WalletManager,
+} from 'src/app/services';
 
 @Component({
     selector: 'app-identity',
     templateUrl: './identity.component.html',
-    styleUrls: ['./identity.component.css']
+    styleUrls: ['./identity.component.css'],
 })
 export class IdentityComponent implements OnInit, OnDestroy {
     mnemonic = '';
@@ -24,7 +37,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
     profile = {
         name: '',
         email: '',
-        website: ''
+        website: '',
     };
 
     get identityUrl(): string {
@@ -44,8 +57,8 @@ export class IdentityComponent implements OnInit, OnDestroy {
         private communication: CommunicationService,
         private activatedRoute: ActivatedRoute,
         private settings: SettingsService,
-        private cd: ChangeDetectorRef) {
-
+        private cd: ChangeDetectorRef
+    ) {
         this.uiState.title = 'Account: ';
         this.uiState.showBackButton = true;
 
@@ -53,7 +66,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
         //     this.router.navigateByUrl('/account/create');
         // }
 
-        this.activatedRoute.paramMap.subscribe(async params => {
+        this.activatedRoute.paramMap.subscribe(async (params) => {
             const accountIdentifier: any = params.get('index');
 
             if (!this.walletManager.activeWallet) {
@@ -78,7 +91,8 @@ export class IdentityComponent implements OnInit, OnDestroy {
             // // }
 
             // this.manager.setActiveAccountId(index);
-            this.uiState.title = 'Account: ' + this.walletManager.activeAccount?.name;
+            this.uiState.title =
+                'Account: ' + this.walletManager.activeAccount?.name;
 
             // this.uiState.persisted.activeAccountIndex = Number(index);
 
@@ -90,7 +104,9 @@ export class IdentityComponent implements OnInit, OnDestroy {
             // var did = this.walletManager.activeAccount?.identifier;
             // this.identity = this.uiState.store.identities.find(i => i.id == did);
 
-            let service = this.identity?.services.find(s => s.type == 'VerifiableDataRegistry');
+            let service = this.identity?.services.find(
+                (s) => s.type == 'VerifiableDataRegistry'
+            );
 
             if (service) {
                 this.verifiableDataRegistryUrl = service.serviceEndpoint;
@@ -98,9 +114,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
         });
     }
 
-    ngOnDestroy(): void {
-
-    }
+    ngOnDestroy(): void {}
 
     save() {
         if (!this.identity) {
@@ -109,23 +123,29 @@ export class IdentityComponent implements OnInit, OnDestroy {
 
         var vdr = null;
 
-        if (this.verifiableDataRegistryUrl && this.verifiableDataRegistryUrl.length > 0) {
+        if (
+            this.verifiableDataRegistryUrl &&
+            this.verifiableDataRegistryUrl.length > 0
+        ) {
             vdr = {
                 id: this.identity.id + '#vdr',
                 type: 'VerifiableDataRegistry',
-                serviceEndpoint: this.verifiableDataRegistryUrl
+                serviceEndpoint: this.verifiableDataRegistryUrl,
             };
         }
 
-        if (this.verifiableDataRegistryUrl && this.verifiableDataRegistryUrl.length > 0) {
-
+        if (
+            this.verifiableDataRegistryUrl &&
+            this.verifiableDataRegistryUrl.length > 0
+        ) {
             // Attempt to find existing VerifiableDataRegistry service. We do not want to replace any third party
             // services the user might have added to their DID Document through other means.
             if (this.identity.services.length > 0) {
-                var existingIndex = this.identity.services.findIndex(s => s.type == 'VerifiableDataRegistry');
+                var existingIndex = this.identity.services.findIndex(
+                    (s) => s.type == 'VerifiableDataRegistry'
+                );
 
                 if (existingIndex > -1) {
-
                     if (vdr) {
                         // Replace existing.
                         this.identity.services.splice(existingIndex, 1);
@@ -140,8 +160,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
                         this.identity.services.push(vdr);
                     }
                 }
-            }
-            else {
+            } else {
                 if (vdr) {
                     this.identity.services = [vdr];
                 }
@@ -176,69 +195,52 @@ export class IdentityComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         // this.sub4 = this.communication.listen('identity-published', (data: Identity) => {
-
         //   this.identity = data;
-
         //   this.snackBar.open('Your identity has been published', 'Hide', {
         //     duration: 8000,
         //     horizontalPosition: 'center',
         //     verticalPosition: 'bottom',
         //   });
         // });
-
         // this.sub3 = this.communication.listen('vault-configuration', (data: any) => {
         //   const vaultConfiguration = {
         //     didConfiguration: data,
         //     didDocument: this.identity?.didDocument
         //   };
-
         //   copyToClipboard(JSON.stringify(vaultConfiguration));
         // });
-
         // this.sub2 = this.communication.listen('identity-updated', () => {
         //   this.identity = this.uiState.store.identities.find(i => i.id == this.identity?.id);
         // });
-
         // this.sub = this.communication.listen('active-account-changed', (data: { walletId: string, accountId: string }) => {
         //   // If we are currently viewing an account and the user changes, we'll refresh this view.
         //   // if (this.previousIndex != data.index) {
         //   //   this.router.navigate(['account', 'view', data.index]);
         //   // }
-
         //   // console.log('PARAMS:', params);
         //   // const index: any = params.get('index');
         //   // const index = data.index;
         //   // console.log('Index to view:', index);
-
         //   if (!this.walletManager.activeWallet) {
         //     return;
         //   }
-
         //   // this.manager.setActiveAccountId(index);
         //   this.uiState.title = 'Account: ' + this.walletManager.activeAccount?.name;
-
         //   // this.uiState.persisted.activeAccountIndex = Number(index);
-
         //   // Persist when changing accounts.
         //   // this.uiState.save();
-
         //   // this.previou1sIndex = index;
-
         //   var did = this.walletManager.activeAccount?.identifier;
         //   this.identity = this.uiState.store.identities.find(i => i.id == did);
-
         //   // if (this.identity) {
         //   //   this.identity = { id }
         //   // }
-
         //   let service = this.identity?.services.find(s => s.type == 'VerifiableDataRegistry');
-
         //   if (service) {
         //     this.verifiableDataRegistryUrl = service.serviceEndpoint;
         //   } else {
         //     this.verifiableDataRegistryUrl = '';
         //   }
-
         // });
     }
 }
