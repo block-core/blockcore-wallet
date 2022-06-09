@@ -33,8 +33,8 @@ import { HandlerComponent } from './settings/handler/handler.component';
 import { ActionStratisIdentityComponent } from './action/sid/sid.component';
 import { ActionNostrIdentityComponent } from './action/nostr/nostr.component';
 import { LoadingResolverService } from './services/loading-resolver.service';
-import {NonFungibleTokenComponent} from "./Collectables/non-fungible-token.component";
-import {collectables} from "./Collectables/collectables.component";
+import { NonFungibleTokenComponent } from "./collectables/non-fungible-token.component";
+import { CollectablesComponent } from "./collectables/collectables.component";
 import { NetworkComponent } from './settings/network/network.component';
 
 const routes: Routes = [
@@ -172,7 +172,7 @@ const routes: Routes = [
     }
   },
   {
-    path: 'account/collectables/:address', component: collectables, resolve: {
+    path: 'account/collectables/:address', component: CollectablesComponent, resolve: {
       data: LoadingResolverService
     }
   },

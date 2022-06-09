@@ -1,7 +1,7 @@
-import {Component, Input, OnDestroy, OnInit} from "@angular/core";
-import {NonFungibleToken, TokenJson} from "./Collectables.interfaces";
-import {ActivatedRoute} from "@angular/router";
+import { Component, Input, OnDestroy, OnInit } from "@angular/core";
+import { ActivatedRoute } from "@angular/router";
 import axios from "axios";
+import { NonFungibleToken, TokenJson } from "./collectables.interfaces";
 
 @Component({
   selector: 'app-non-fungible-token',
@@ -10,9 +10,9 @@ import axios from "axios";
 })
 
 export class NonFungibleTokenComponent implements OnInit, OnDestroy {
-  @Input()nonFungibleToken: NonFungibleToken;
-  tokenJson:TokenJson;
-  showImage:boolean;
+  @Input() nonFungibleToken: NonFungibleToken;
+  tokenJson: TokenJson;
+  showImage: boolean;
   activatedRoute: ActivatedRoute;
   showAttributes: boolean;
 
@@ -26,15 +26,15 @@ export class NonFungibleTokenComponent implements OnInit, OnDestroy {
   }
 
   async ngOnInit(): Promise<void> {
-    const response = await axios.get(this.nonFungibleToken.uri,{
-      'axios-retry': {  retries: 0  }
+    const response = await axios.get(this.nonFungibleToken.uri, {
+      'axios-retry': { retries: 0 }
     });
 
     if (response.data != undefined)
       this.tokenJson = response.data;
   }
 
-  toggleAttributes()  {
+  toggleAttributes() {
     this.showAttributes = !this.showAttributes;
   }
 }

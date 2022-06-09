@@ -76,13 +76,14 @@ import { SettingStore } from 'src/shared/store/setting-store';
 import { AddressWatchStore } from 'src/shared/store/address-watch-store';
 import { SizePipe } from './shared/size.pipe';
 import { AccountStateStore } from 'src/shared/store/account-state-store';
-import { NonFungibleTokenComponent } from "./Collectables/non-fungible-token.component";
-import { collectables } from "./Collectables/collectables.component";
+import { NonFungibleTokenComponent } from "./collectables/non-fungible-token.component";
+import { CollectablesComponent } from "./collectables/collectables.component";
 import { NetworkComponent } from './settings/network/network.component';
 import { NetworkStatusPipe } from './shared/network-status.pipe';
 import { networkLoaderServiceProvider } from './services/network-loader.provider';
 import { MatDialogModule } from '@angular/material/dialog';
 import { QrScanDialog } from './account/send/address/qr-scanning.component';
+import { IdentityComponent } from './account/identity/identity.component';
 
 // required for AOT compilation
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
@@ -130,12 +131,13 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     HandlerComponent,
     ActionStratisIdentityComponent,
     ActionNostrIdentityComponent,
-    collectables,
+    CollectablesComponent,
     NonFungibleTokenComponent,
     ActionStratisIdentityComponent,
     ActionNostrIdentityComponent,
     NetworkComponent,
-    QrScanDialog
+    QrScanDialog,
+    IdentityComponent
   ],
   imports: [
     BrowserModule,
