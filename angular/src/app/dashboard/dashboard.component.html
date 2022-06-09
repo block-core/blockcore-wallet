@@ -13,7 +13,7 @@
                     Your wallet has zero accounts.<br><br>
                 </div>
 
-                <a mat-list-item *ngFor="let account of walletManager.activeWallet.accounts; let i = index" routerLinkActive="active-link" [routerLink]="['/', 'account', 'view', account.identifier]">
+                <a mat-list-item *ngFor="let account of walletManager.activeWallet.accounts; let i = index" routerLinkActive="active-link" [routerLink]="getLink(account)">
                     <mat-icon mat-list-icon>{{account.icon}}</mat-icon>
                     <div mat-line>{{account.name}}<span *ngIf="hasAccountHistory(account.identifier)" class="account-balance">{{balance(account.identifier) |
                             amount}}</span>
@@ -163,7 +163,7 @@
                 No collectables found
                 <a [href]="this.stratisphereUrl" target="_blank">Open marketplace</a>
             </div>
-            <app-collectable *ngFor="let account of SmartContractAccounts" (totalItemsOnAccount)="AddToTotalItems($event)" [account]="account">
+            <app-collectable *ngFor="let account of smartContractAccounts" (totalItemsOnAccount)="addToTotalItems($event)" [account]="account">
             </app-collectable>
         </ng-container>
     </mat-tab>

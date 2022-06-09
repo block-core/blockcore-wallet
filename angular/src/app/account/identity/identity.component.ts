@@ -49,11 +49,19 @@ export class IdentityComponent implements OnInit, OnDestroy {
         this.uiState.title = 'Account: ';
         this.uiState.showBackButton = true;
 
-        if (!this.walletManager.hasAccounts) {
-            this.router.navigateByUrl('/account/create');
-        }
+        // if (!this.walletManager.hasAccounts) {
+        //     this.router.navigateByUrl('/account/create');
+        // }
 
         this.activatedRoute.paramMap.subscribe(async params => {
+            const accountIdentifier: any = params.get('index');
+
+            if (!this.walletManager.activeWallet) {
+                return;
+            }
+
+            await this.walletManager.setActiveAccount(accountIdentifier);
+
             // If we are currently viewing an account and the user changes, we'll refresh this view.
             // if (this.previousIndex != data.index) {
             //   this.router.navigate(['account', 'view', data.index]);
@@ -61,13 +69,13 @@ export class IdentityComponent implements OnInit, OnDestroy {
 
             // console.log('PARAMS:', params);
             // const index: any = params.get('index');
-            // const index = data.index;
+            // // const index = data.index;
 
             // console.log('Index to view:', index);
 
-            // if (!this.uiState.activeWallet) {
-            //   return;
-            // }
+            // // if (!this.uiState.activeWallet) {
+            // //   return;
+            // // }
 
             // this.manager.setActiveAccountId(index);
             this.uiState.title = 'Account: ' + this.walletManager.activeAccount?.name;
@@ -79,7 +87,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
 
             // this.previousIndex = index;
 
-            var did = this.walletManager.activeAccount?.identifier;
+            // var did = this.walletManager.activeAccount?.identifier;
             // this.identity = this.uiState.store.identities.find(i => i.id == did);
 
             let service = this.identity?.services.find(s => s.type == 'VerifiableDataRegistry');

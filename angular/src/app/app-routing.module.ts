@@ -36,6 +36,7 @@ import { LoadingResolverService } from './services/loading-resolver.service';
 import { NonFungibleTokenComponent } from "./collectables/non-fungible-token.component";
 import { CollectablesComponent } from "./collectables/collectables.component";
 import { NetworkComponent } from './settings/network/network.component';
+import { IdentityComponent } from './account/identity/identity.component';
 
 const routes: Routes = [
   {
@@ -150,9 +151,11 @@ const routes: Routes = [
       data: LoadingResolverService
     }
   },
-  // {
-  //   path: 'account/view/identity/:index', component: AccountIdentityComponent
-  // },
+  {
+    path: 'account/identity/:index', component: IdentityComponent, resolve: {
+      data: LoadingResolverService
+    }
+  },
   // {
   //   path: 'account/view/nostr/:index', component: NostrIdentityComponent
   // },
