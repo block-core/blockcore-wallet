@@ -302,7 +302,13 @@ interface Wallet {
 
     /** Accounts that belong to a wallet. Do not manipulate this list directly, but do all operations through the WalletManager. */
     accounts: Account[];
+
+    /** This is the encrypted cipher of the mnemonic. */
     mnemonic: string;
+
+    /** This is the encrypted cipher of the personal extension words (passphrase). */
+    extensionWords: string;
+
     // activeAccountIndex: number;
     // activeAccountId: string;
 }

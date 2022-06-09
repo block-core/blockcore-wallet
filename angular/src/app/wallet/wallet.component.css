@@ -1,28 +1,32 @@
 h1 {
-    font-size: 2em;
+  font-size: 2em;
 }
 
 .logo {
-    height: 96px;
-    margin-bottom: 1em;
+  height: 96px;
+  margin-bottom: 1em;
 }
 
 .mat-stepper-horizontal {
-    margin-top: 8px;
+  margin-top: 8px;
 }
 
 .mat-form-field {
-    margin-top: 16px;
+  margin-top: 16px;
 }
 
 textarea {
-    font-size: 1.2em;
-    word-spacing: 0.4em;
-    height: 100px;
+  font-size: 1.2em;
+  word-spacing: 0.4em;
+  height: 100px;
 }
 
 .copy-button {
-    position: absolute;
-    right: 0px;
-    bottom: 0px;
+  position: absolute;
+  right: 0px;
+  bottom: 0px;
+}
+
+.input-button {
+  right: 0px;
 }

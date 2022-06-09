@@ -26,6 +26,8 @@ export class WalletCreateComponent implements OnInit {
     showInstallDialog = true;
     wordlists: any;
     wordlist: string;
+    optionsOpen = false;
+    extensionWords = '';
 
     get passwordValidated(): boolean {
         return this.password === this.password2 && this.secondFormGroup.valid;
@@ -49,7 +51,7 @@ export class WalletCreateComponent implements OnInit {
         this.wordlists = this.crypto.languages();
 
         this.firstFormGroup = this._formBuilder.group({
-            // firstCtrl: ['', Validators.required]
+            extensionWordsCtrl: ['']
         });
 
         this.secondFormGroup = this._formBuilder.group({
@@ -78,14 +80,19 @@ export class WalletCreateComponent implements OnInit {
         copyToClipboard(this.mnemonic);
     }
 
+    toggleOptions() {
+        this.optionsOpen = !this.optionsOpen;
+    }
+
     create() {
         debugger;
-        this.step = 1;
+        this.next(1);
         this.recover = false;
         this.generate();
 
         this.firstFormGroup = this._formBuilder.group({
             // firstCtrl: ['', Validators.required]
+            extensionWordsCtrl: ['']
         });
     }
 
@@ -103,6 +110,7 @@ export class WalletCreateComponent implements OnInit {
         this.step = 1;
         this.recover = true;
         this.firstFormGroup = this._formBuilder.group({
+            extensionWordsCtrl: [''],
             firstCtrl: [
                 null,
                 [Validators.required],
@@ -127,11 +135,21 @@ export class WalletCreateComponent implements OnInit {
         };
     }
 
+    next(step: number) {
+        this.step = step;
+    }
+
     async save() {
-        let recoveryPhrase = await this.crypto.encryptData(this.mnemonic, this.password);
+        let recoveryPhraseCipher = await this.crypto.encryptData(this.mnemonic, this.password);
+        let extensionWordsCipher = undefined;
+
+        if (this.extensionWords != null && this.extensionWords != '') {
+            extensionWordsCipher = await this.crypto.encryptData(this.extensionWords, this.password);
+        }
+
         const id = uuidv4();
 
-        if (!recoveryPhrase) {
+        if (!recoveryPhraseCipher) {
             console.error('Fatal error, unable to encrypt secret recovery phrase!');
             alert('Fatal error, unable to encrypt secret recovery phrase!');
         }
@@ -143,7 +161,8 @@ export class WalletCreateComponent implements OnInit {
                 restored: this.recover,
                 id: id,
                 name: walletName,
-                mnemonic: recoveryPhrase,
+                mnemonic: recoveryPhraseCipher,
+                extensionWords: extensionWordsCipher,
                 accounts: []
             };
 
@@ -152,5 +171,7 @@ export class WalletCreateComponent implements OnInit {
             // Save the newly added wallet.
             await this.walletManager.save();
         }
+
+        this.next(3);
     }
 }

@@ -6,6 +6,7 @@ import { BlockcoreIdentity, BlockcoreIdentityTools } from '@blockcore/identity';
 import * as bs58 from 'bs58';
 import { Secp256k1KeyPair } from '@transmute/did-key-secp256k1';
 import { Injectable } from '@angular/core';
+import { CryptoService } from './crypto.service';
 
 const enc = new TextEncoder();
 const dec = new TextDecoder();
@@ -14,7 +15,7 @@ const dec = new TextDecoder();
     providedIn: 'root'
 })
 export class CryptoUtility {
-    constructor() {
+    constructor(private cryptoService: CryptoService) {
     }
 
     getProfileNetwork() {
@@ -169,26 +170,6 @@ export class CryptoUtility {
     }
 
     async decryptData(encryptedData: string, password: string) {
-        try {
-            const encryptedDataBuff = Base64.toUint8Array(encryptedData);
-
-            const salt = encryptedDataBuff.slice(0, 16);
-            const iv = encryptedDataBuff.slice(16, 16 + 12);
-            const data = encryptedDataBuff.slice(16 + 12);
-            const passwordKey = await this.getPasswordKey(password.toString());
-            const aesKey = await this.deriveKey(passwordKey, salt, ["decrypt"]);
-            const decryptedContent = await window.crypto.subtle.decrypt(
-                {
-                    name: "AES-GCM",
-                    iv: iv,
-                },
-                aesKey,
-                data
-            );
-            return dec.decode(decryptedContent);
-        } catch (e) {
-            console.error(e);
-            return "";
-        }
+        return this.cryptoService.decryptData(encryptedData, password);
     }
 }

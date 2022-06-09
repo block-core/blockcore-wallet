@@ -76,7 +76,7 @@ export class WalletManager {
     // validateMnemonic(mnemonic: string, wordlist: string) {
     //     return of(bip39.validateMnemonic(mnemonic)).pipe();
     // }
-    
+
     async save() {
         return this.store.save();
     }
@@ -346,13 +346,16 @@ export class WalletManager {
 
         unlockedMnemonic = await this.crypto.decryptData(wallet.mnemonic, password);
 
-        if (unlockedMnemonic) {
-            // this._activeWalletId = wallet.id;
-            // this.state.persisted.previousWalletId = wallet.id;
+        let unlockedExtensionWords = undefined;
 
+        if (wallet.extensionWords != null && wallet.extensionWords != '') {
+            unlockedExtensionWords = await this.crypto.decryptData(wallet.extensionWords, password);
+        }
+
+        if (unlockedMnemonic) {
             // From the secret receovery phrase, the master seed is derived.
             // Learn more about the HD keys: https://raw.githubusercontent.com/bitcoin/bips/master/bip-0032/derivation.png
-            const masterSeed = mnemonicToSeedSync(unlockedMnemonic);
+            const masterSeed = mnemonicToSeedSync(unlockedMnemonic, unlockedExtensionWords);
 
             // Store the decrypted master seed in session state.
             this.secure.set(walletId, Buffer.from(masterSeed).toString('base64'));
@@ -378,6 +381,12 @@ export class WalletManager {
 
         unlockedMnemonic = await this.crypto.decryptData(wallet.mnemonic, oldpassword);
 
+        let unlockedExtensionWords = undefined;
+
+        if (wallet.extensionWords != null && wallet.extensionWords != '') {
+            unlockedExtensionWords = await this.crypto.decryptData(wallet.extensionWords, oldpassword);
+        }
+
         if (unlockedMnemonic) {
             // Encrypt the recovery phrase with new password and persist.
             let encryptedRecoveryPhrase = await this.crypto.encryptData(unlockedMnemonic, newpassword);
@@ -386,7 +395,7 @@ export class WalletManager {
             // Make sure we persist the newly encrypted recovery phrase.
             await this.store.save();
 
-            const masterSeed = mnemonicToSeedSync(unlockedMnemonic);
+            const masterSeed = mnemonicToSeedSync(unlockedMnemonic, unlockedExtensionWords);
 
             // Store the decrypted master seed in session state.
             this.secure.set(walletId, Buffer.from(masterSeed).toString('base64'));
