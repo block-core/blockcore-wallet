@@ -1,3 +1,10 @@
+## <small>0.0.40 (2022-06-09)</small>
+
+* Add the ability to supply personal extension word (passphrase) ([78b617f](https://github.com/block-core/blockcore-wallet/commit/78b617f)), closes [#162](https://github.com/block-core/blockcore-wallet/issues/162)
+* Update version and changelog ([13c680a](https://github.com/block-core/blockcore-wallet/commit/13c680a))
+
+
+
 ## <small>0.0.39 (2022-06-09)</small>
 
 * Add more Norwegian translations ([68f976f](https://github.com/block-core/blockcore-wallet/commit/68f976f))
