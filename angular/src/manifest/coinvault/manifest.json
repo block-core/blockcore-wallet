@@ -13,9 +13,7 @@
     "permissions": [
         "storage",
         "unlimitedStorage",
-        "alarms",
-        "clipboardWrite",
-        "clipboardRead"
+        "alarms"
     ],
     "background": {
         "service_worker": "background.js"
