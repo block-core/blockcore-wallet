@@ -1,4 +1,4 @@
-<mat-tab-group mat-stretch-tabs *ngIf="walletManager.activeAccount && identity">
+<mat-tab-group mat-stretch-tabs *ngIf="walletManager.activeAccount">
   <mat-tab>
     <ng-template mat-tab-label>
       <mat-icon class="example-tab-icon">person</mat-icon>&nbsp;
@@ -7,13 +7,13 @@
 
     <div class="page">
       <!-- <h2>Identity:</h2> -->
-      <h4>{{ identity.id }}</h4>
+      <h4>{{identifier}}</h4>
 
-      <p class="icon-indicator" *ngIf="!identity.published">
+      <p class="icon-indicator" *ngIf="!identity?.published">
         <mat-icon class="icon-warn">done</mat-icon> This identity is currently
         NOT public
       </p>
-      <p class="icon-indicator" *ngIf="identity.published">
+      <p class="icon-indicator" *ngIf="identity?.published">
         <mat-icon class="icon-success">done</mat-icon> This identity is
         currently public
       </p>
@@ -52,7 +52,7 @@
         </button>
       </p>
 
-      <p *ngIf="identity.published">
+      <p *ngIf="identity?.published">
         <a [href]="identityUrl" target="_blank">View identity on server</a>
       </p>
 
@@ -94,11 +94,11 @@
       <!-- <h2>Profile:</h2> -->
       <!-- <h4>{{identity.id}}</h4> -->
 
-      <p class="icon-indicator" *ngIf="!identity.published">
+      <p class="icon-indicator" *ngIf="!identity?.published">
         <mat-icon class="icon-warn">done</mat-icon> This profile is currently
         NOT public
       </p>
-      <p class="icon-indicator" *ngIf="identity.published">
+      <p class="icon-indicator" *ngIf="identity?.published">
         <mat-icon class="icon-success">done</mat-icon> This profile is currently
         public
       </p>
@@ -158,7 +158,7 @@
         </button>
       </p>
 
-      <p *ngIf="identity.published">
+      <p *ngIf="identity?.published">
         <a [href]="identityUrl" target="_blank">View identity on server</a>
       </p>
 

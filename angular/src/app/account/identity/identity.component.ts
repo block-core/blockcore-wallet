@@ -9,7 +9,7 @@ import {
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Identity } from 'src/shared';
+import { AccountStateStore, Identity } from 'src/shared';
 import {
   CommunicationService,
   CryptoService,
@@ -33,6 +33,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
   account!: any;
   previousIndex!: number;
   identity: Identity | undefined;
+  identifier: string;
   verifiableDataRegistryUrl = '';
   profile = {
     name: '',
@@ -56,6 +57,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
     private router: Router,
     private communication: CommunicationService,
     private activatedRoute: ActivatedRoute,
+    private accountStateStore: AccountStateStore,
     private settings: SettingsService,
     private cd: ChangeDetectorRef
   ) {
@@ -92,6 +94,17 @@ export class IdentityComponent implements OnInit, OnDestroy {
 
       // this.manager.setActiveAccountId(index);
       this.uiState.title = 'Account: ' + this.walletManager.activeAccount?.name;
+
+      const accountState = this.accountStateStore.get(
+        this.walletManager.activeAccount.identifier
+      );
+
+      // The very first receive address is the actual identity of the account.
+      const address = accountState.receive[0];
+
+      this.identifier = address.address;
+
+      console.log(this.identifier);
 
       // this.uiState.persisted.activeAccountIndex = Number(index);
 
