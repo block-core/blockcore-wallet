@@ -1,5 +1,4 @@
 // import * as secp from "@noble/secp256k1";
-// import { mnemonicToSeedSync } from "bip39";
 // import { HDKey } from "micro-bip32";
 // import { IndexerBackgroundService } from "src/shared/indexer";
 // import { AccountComponent } from "./account/account.component";

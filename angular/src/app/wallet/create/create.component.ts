@@ -6,7 +6,6 @@ import { copyToClipboard } from '../../shared/utilities';
 import { map, Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common'
-import { wordlists } from 'bip39';
 const { v4: uuidv4 } = require('uuid');
 
 @Component({

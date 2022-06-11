@@ -1,6 +1,5 @@
 import { CommunicationBackgroundService } from './communication';
 import { CryptoUtility } from './crypto-utility';
-import * as bip39 from 'bip39';
 import * as bip32 from 'bip32';
 import { decodeJWT, verifyJWT } from 'did-jwt';
 import { ServiceEndpoint } from 'did-resolver';

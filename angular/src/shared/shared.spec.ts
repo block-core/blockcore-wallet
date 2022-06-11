@@ -1,6 +1,5 @@
 import * as secp from "@noble/secp256k1";
-import { mnemonicToSeedSync } from "bip39";
-import { HDKey } from "micro-bip32";
+import { HDKey } from "@scure/bip32";
 import { CryptoUtility } from "src/app/services";
 import { STRAX } from "src/shared/networks";
 import {

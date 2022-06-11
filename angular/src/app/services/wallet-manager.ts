@@ -1,5 +1,7 @@
-import { HDKey } from "micro-bip32";
-import { mnemonicToSeedSync } from 'micro-bip39';
+// import { HDKey } from "micro-bip32"; // TODO: Uninstall the previous package, replaced with @scure.
+import { HDKey } from '@scure/bip32';
+import { mnemonicToSeedSync } from '@scure/bip39';
+
 import { Account, AccountUnspentTransactionOutput, Address, Logger, Wallet } from "../../shared/interfaces";
 import { MINUTE } from "../shared/constants";
 import { Psbt } from '@blockcore/blockcore-js';
@@ -19,7 +21,6 @@ import { CommunicationService } from ".";
 import { AccountHistoryStore, AddressStore, AddressWatchStore, WalletStore } from "src/shared";
 import Big from "big.js";
 import { StorageService } from "./storage.service";
-import * as bip39 from "bip39";
 import { RuntimeService } from "./runtime.service";
 import { UnspentOutputService } from "./unspent-output.service";
 import { AccountStateStore } from "src/shared/store/account-state-store";
