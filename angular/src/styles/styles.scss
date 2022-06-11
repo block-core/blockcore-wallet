@@ -280,6 +280,10 @@ select {
   color: silver;
 }
 
+.break {
+  overflow-wrap: break-word;
+}
+
 .grid-row-label-value {
   display: grid;
   // grid-template-columns: repeat(2, minmax(0, 1fr));

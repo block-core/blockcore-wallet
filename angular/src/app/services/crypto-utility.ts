@@ -65,7 +65,7 @@ export class CryptoUtility {
     } else if (network.type === 'identity') {
       // Remove the header indicator on the key.
       const schnorrPublicKey = publicKey.slice(1);
-      return `did:is:${secp.utils.bytesToHex(schnorrPublicKey)}`;
+      return secp.utils.bytesToHex(schnorrPublicKey);
     }
 
     throw Error(
