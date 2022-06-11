@@ -21,4 +21,5 @@ export class RSC implements Network {
     testnet = false;
     smartContractSupport = false;
     isProofOfStake = true;
+    type = 'coin';
 }

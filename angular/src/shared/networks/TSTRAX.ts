@@ -19,4 +19,5 @@ export class TSTRAX implements Network {
     minFeeRate = 10000;
     testnet = true;
     smartContractSupport = false;
+    type = 'coin';
 }

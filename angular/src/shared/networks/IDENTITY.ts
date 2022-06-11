@@ -17,4 +17,5 @@ export class IDENTITY implements Network {
     wif = 0x08;
     testnet = false;
     smartContractSupport = false;
+    type = 'identity';
 }

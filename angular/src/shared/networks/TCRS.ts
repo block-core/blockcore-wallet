@@ -20,4 +20,5 @@ export class TCRS implements Network {
     testnet = true;
     singleAddress = true;
     smartContractSupport = true;
+    type = 'coin';
 }

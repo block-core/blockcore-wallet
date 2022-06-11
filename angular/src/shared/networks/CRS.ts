@@ -20,4 +20,5 @@ export class CRS implements Network {
     testnet = false;
     singleAddress = true;
     smartContractSupport = true;
+    type = 'coin';
 }

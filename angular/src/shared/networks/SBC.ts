@@ -21,4 +21,5 @@ export class SBC implements Network {
     testnet = false;
     smartContractSupport = false;
     isProofOfStake = true;
+    type = 'coin';
 }

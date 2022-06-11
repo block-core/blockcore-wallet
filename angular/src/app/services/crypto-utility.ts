@@ -7,6 +7,7 @@ import { Secp256k1KeyPair } from '@transmute/did-key-secp256k1';
 import { Injectable } from '@angular/core';
 import { CryptoService } from './crypto.service';
 import * as secp from '@noble/secp256k1';
+import { Network } from 'src/shared/networks';
 
 const enc = new TextEncoder();
 const dec = new TextDecoder();
@@ -31,7 +32,11 @@ export class CryptoUtility {
     return address;
   }
 
-  getAddressByNetwork(publicKey: Buffer, network: any, addressPurpose: number) {
+  getAddressByNetwork(
+    publicKey: Buffer,
+    network: Network,
+    addressPurpose: number
+  ) {
     if (addressPurpose == 44) {
       const { address } = payments.p2pkh({
         pubkey: publicKey,
@@ -57,10 +62,10 @@ export class CryptoUtility {
       });
 
       return address;
-    } else if (addressPurpose == 302) {
-      // TODO: Fix this to properly generate the DID:
-      // return `did:is:${publicKey.toString('hex')}`;
-      return `did:is:${secp.utils.bytesToHex(publicKey)}`;
+    } else if (network.type === 'identity') {
+      // Remove the header indicator on the key.
+      const schnorrPublicKey = publicKey.slice(1);
+      return `did:is:${secp.utils.bytesToHex(schnorrPublicKey)}`;
     }
 
     throw Error(
@@ -108,10 +113,6 @@ export class CryptoUtility {
     var identity = new BlockcoreIdentity(keyPair.toKeyPair(false));
     return identity;
   }
-
-  // generateMnemonic() {
-  //   return bip39.generateMnemonic();
-  // }
 
   getPasswordKey(password: string) {
     return window.crypto.subtle.importKey(

@@ -19,4 +19,5 @@ export class STRAX implements Network {
     minFeeRate = 10000;
     testnet = false;
     smartContractSupport = false;
+    type = 'coin';
 }

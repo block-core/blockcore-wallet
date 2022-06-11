@@ -20,4 +20,5 @@ export class CITY implements Network {
     testnet = false;
     isProofOfStake = true;
     smartContractSupport = false;
+    type = 'coin';
 }

@@ -129,10 +129,6 @@ export class AccountCreateComponent implements OnInit, OnDestroy {
     onNetworkChanged() {
         this.selectedNetwork = this.networkService.getNetwork(this.network);
         this.derivationPath = this.getDerivationPath();
-
-        console.log('selectedNetwork', this.selectedNetwork);
-        console.log('purposeAddress:', this.selectedNetwork.purposeAddress);
-
         this.purposeAddress = this.selectedNetwork.purposeAddress ?? 44;
     }
 
