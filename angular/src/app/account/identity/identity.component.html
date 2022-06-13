@@ -7,7 +7,9 @@
 
     <div class="page">
       <!-- <h2>Identity:</h2> -->
-      <h4 class="break">did:is:{{identifier}}</h4>
+      <h4 class="break">{{identifier}} <button class="copy-button" mat-icon-button (click)="copy()">
+        <mat-icon>content_copy</mat-icon>
+    </button></h4>
       <!-- <h4>{{walletManager.activeAccount.did}}</h4> -->
 
       <p class="icon-indicator" *ngIf="!identity?.published">
@@ -19,7 +21,7 @@
         currently public
       </p>
 
-      <mat-form-field class="input-full-width" appearance="outline">
+      <!-- <mat-form-field class="input-full-width" appearance="outline">
         <mat-label>Verifiable Data Registry URL</mat-label>
         <input matInput [(ngModel)]="verifiableDataRegistryUrl" />
         <mat-hint
@@ -51,7 +53,7 @@
         >
           Publish
         </button>
-      </p>
+      </p> -->
 
       <p *ngIf="identity?.published">
         <a [href]="identityUrl" target="_blank">View identity on server</a>

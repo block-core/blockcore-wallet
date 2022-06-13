@@ -62,15 +62,33 @@ export class CryptoUtility {
       });
 
       return address;
-    } else if (network.type === 'identity') {
-      // Remove the header indicator on the key.
-      const schnorrPublicKey = publicKey.slice(1);
-      return secp.utils.bytesToHex(schnorrPublicKey);
+    } else if (addressPurpose == 340) {
+      return this.getIdentifier(publicKey);
     }
 
     throw Error(
       `The address purpose ${addressPurpose} is currently not supported.`
     );
+  }
+
+  getIdentifier(publicKey: Buffer)
+  {
+      return this.schnorrPublicKeyToHex(this.convertEdcsaPublicKeyToSchnorr(publicKey));
+  }
+
+  convertEdcsaPublicKeyToSchnorr(publicKey: Buffer)
+  {
+      if (publicKey.length != 33) {
+          throw Error('The public key must be compressed EDCSA public key of length 33.');
+      }
+
+      const schnorrPublicKey = publicKey.slice(1);
+      return schnorrPublicKey;
+  }
+
+  schnorrPublicKeyToHex(publicKey: Buffer)
+  {
+      return secp.utils.bytesToHex(publicKey);
   }
 
   getAddressByNetworkp2wsh(node: any, network: any) {

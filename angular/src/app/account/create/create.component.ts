@@ -168,7 +168,13 @@ export class AccountCreateComponent implements OnInit, OnDestroy {
         this.communication.send(this.communication.createMessage('network', { accounts: [account] }));
         // await this.networkStatusService.updateAll([account]); // TODO: This should perhaps not send single account, but all accounts.
 
-        // When adding an account, the active account ID will be updated so we can read it here.
-        this.router.navigateByUrl('/account/view/' + this.walletManager.activeAccountId);
+        if (account.type == 'identity')
+        {
+            // When adding an account, the active account ID will be updated so we can read it here.
+            this.router.navigateByUrl('/account/identity/' + this.walletManager.activeAccountId);
+        } else {
+            // When adding an account, the active account ID will be updated so we can read it here.
+            this.router.navigateByUrl('/account/view/' + this.walletManager.activeAccountId);
+        }
     }
 }

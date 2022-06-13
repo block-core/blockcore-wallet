@@ -94,7 +94,7 @@ interface Account {
     xpub?: string;
 
     /** When the account is created, the DID is generated and never changes. */
-    did?: string;
+    // did?: string;
 
     // state?: AccountState;
 

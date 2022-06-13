@@ -154,7 +154,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   getLink(account: Account) {
-    if (account.networkType == 'IDENTITY') {
+    if (account.type == 'identity') {
       return ['/', 'account', 'identity', account.identifier];
     } else {
       return ['/', 'account', 'view', account.identifier];
