@@ -791,9 +791,7 @@ export class WalletManager {
     // Get the secret seed.
     const masterSeedBase64 = this.secure.get(wallet.id);
     const masterSeed = Buffer.from(masterSeedBase64, 'base64');
-
     const network = this.getNetwork(account.networkType);
-
     const masterNode = HDKey.fromMasterSeed(masterSeed, network.bip32);
 
     const accountNode = masterNode.derive(
