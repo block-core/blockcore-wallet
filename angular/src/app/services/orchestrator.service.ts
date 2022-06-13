@@ -68,7 +68,7 @@ export class OrchestratorService {
         try {
             switch (message.type) {
                 case 'getpublickey': {
-                    return '545555';
+                    return '444444';
                 }
                 case 'watch': {
                     return 'success';

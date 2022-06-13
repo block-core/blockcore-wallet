@@ -98,7 +98,9 @@
             }
 
             let result = await window.blockcore.login();
-            console.log('Login result:', result);
+          console.log('Login result:', result);
+
+          document.getElementById('blockcore-extension-output').innerText = result + " " + pubKey;
         }
 
         (function () {

@@ -102,7 +102,7 @@ export class CommunicationService {
         try {
             switch (message.type) {
                 case 'getpublickey': {
-                    return '545555';
+                    return '22222';
                 }
                 case 'login': {
                     return 'success';
@@ -168,7 +168,7 @@ export class CommunicationService {
         try {
             switch (message.type) {
                 case 'getpublickey': {
-                    return '545555';
+                    return '3333333';
                 }
                 case 'login': {
                     return 'success';
