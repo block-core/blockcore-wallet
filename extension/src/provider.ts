@@ -32,10 +32,10 @@ globalThis.blockcore = {
 
     },
     async getPublicKey() {
-        return this._call('ext:getpublickey', null);
+        return this._call('ext-getpublickey', null);
     },
     async login() {
-        return this._call('ext:login', { ok: false });
+        return this._call('ext-login', { ok: false });
     },
     // loadScript: (url) => {
     //     var script = document.createElement("script");
