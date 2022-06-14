@@ -43,11 +43,11 @@
   },
   "web_accessible_resources": [
     {
-      "resources": [ "blockcore-loader.js", "provider.js" ],
+      "resources": [ "provider.js" ],
       "matches": [ "http://localhost/*" ]
     },
     {
-      "resources": [ "blockcore-loader.js", "provider.js" ],
+      "resources": [ "provider.js" ],
       "matches": [ "http://127.0.0.1/*" ]
     }
   ]
