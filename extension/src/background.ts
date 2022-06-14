@@ -1,16 +1,22 @@
 // OrchestratorBackgroundService
 // Responsible for orchestrating events and processing when running in extension mode.
 
+import { HDKey } from '@scure/bip32';
+
 import { Message } from '../../angular/src/shared/interfaces';
 import { BackgroundManager, ProcessResult } from '../../angular/src/shared/background-manager';
 import { SharedManager } from '../../angular/src/shared/shared-manager';
 import { RunState } from '../../angular/src/shared/task-runner';
+
+import { WalletStore } from '../../angular/src/shared/store/wallet-store';
 
 let watchManager: BackgroundManager = null;
 let networkManager: BackgroundManager = null;
 let indexing = false;
 let shared = new SharedManager();
 const networkUpdateInterval = 45000;
+
+let walletStore: WalletStore = null;
 
 // Run when the browser has been fully exited and opened again.
 chrome.runtime.onStartup.addListener(async () => {
@@ -67,19 +73,47 @@ chrome.alarms.onAlarm.addListener(async (alarm: chrome.alarms.Alarm) => {
 chrome.runtime.onMessage.addListener(async (message: Message, sender, sendResponse) => {
     // console.debug('MESSAGE RECEIVED!', message);
 
-    if (message.type === 'keep-alive') {
-        // console.debug('Received keep-alive message.');
-    } else if (message.type === 'index') {
-        await executeIndexer();
-    } else if (message.type === 'watch') {
-        await runWatcher();
-    } else if (message.type === 'network') {
-        await networkStatusWatcher();
-    } else if (message.type === 'activated') {
-        // console.log('THE UI WAS ACTIVATED!!');
-        // When UI is triggered, we'll also trigger network watcher.
-        await networkStatusWatcher();
+  if (message.type === 'keep-alive') {
+    // console.debug('Received keep-alive message.');
+  } else if (message.type === 'index') {
+    await executeIndexer();
+  } else if (message.type === 'watch') {
+    await runWatcher();
+  } else if (message.type === 'network') {
+    await networkStatusWatcher();
+  } else if (message.type === 'activated') {
+    // console.log('THE UI WAS ACTIVATED!!');
+    // When UI is triggered, we'll also trigger network watcher.
+    await networkStatusWatcher();
+  } else if (message.type === 'getpublickey') {
+
+    if (walletStore == null) {
+      walletStore = new WalletStore();
+      await walletStore.load();
     }
+
+    var wallets = walletStore.getWallets();
+
+    var res: any;
+    for (let i = 0; i < wallets.length; i++) {
+      const wallet = wallets[i];
+      for (let j = 0; j < wallet.accounts.length; j++) {
+        const account = wallet.accounts[j];
+        res = account.xpub
+      }
+    }
+
+    ////const accountNode = HDKey.fromExtendedKey(account.xpub, network.bip32);
+
+
+    sendResponse(res);
+    return 'ok';
+  }
+  else if (message.type === 'login') {
+    sendResponse('login');
+    return 'ok';
+
+  }
 
     sendResponse('ok');
     return 'ok';
@@ -87,6 +121,8 @@ chrome.runtime.onMessage.addListener(async (message: Message, sender, sendRespon
 
 // let store = new NetworkStatusStore();
 let networkWatcherRef = null;
+
+
 
 const networkStatusWatcher = async () => {
     // const manifest = chrome.runtime.getManifest();

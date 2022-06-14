@@ -3,7 +3,7 @@ import { MINUTE } from "../shared/constants";
 import {
     SecureStateService,
     CryptoUtility, DataSyncService, NetworkLoader,
-    CommunicationService, WalletManager
+  CommunicationService, WalletManager, CommunicationExternal
 } from "./";
 import { StateService } from "./state.service";
 
@@ -16,7 +16,8 @@ export class AppManager {
         public sync: DataSyncService,
         public state: StateService,
         public walletManager: WalletManager,
-        public communication: CommunicationService,
+      public communication: CommunicationService,
+      public communicationExternal: CommunicationExternal,
         public networkLoader: NetworkLoader,
         public crypto: CryptoUtility,
         public secure: SecureStateService
@@ -26,6 +27,8 @@ export class AppManager {
 
     async initialize() {
         await this.communication.initialize();
+
+        await this.communicationExternal.initialize();
 
         // Load all the stores.
         await this.state.load();

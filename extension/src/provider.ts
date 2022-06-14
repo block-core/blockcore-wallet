@@ -32,10 +32,10 @@ globalThis.blockcore = {
 
     },
     async getPublicKey() {
-        return this._call('getpublickey', null);
+        return this._call('ext-getpublickey', null);
     },
     async login() {
-        return this._call('login', { ok: false });
+        return this._call('ext-login', { ok: false });
     },
     // loadScript: (url) => {
     //     var script = document.createElement("script");
@@ -47,6 +47,9 @@ globalThis.blockcore = {
 // This will receive various messages that are posted to the window. Make sure we filter out anything that
 // is not related to the extension.
 globalThis.addEventListener('message', message => {
+
+  //console.log(message);
+
     // Make sure there is data, extension is setup and it belongs to the existing promises in this web app.
     if (!message.data || !message.data.ext || !message.data.response || !globalThis.blockcore._promises[message.data.id]) {
         return;
@@ -55,7 +58,8 @@ globalThis.addEventListener('message', message => {
     // It is possible that calls to the extension is returned without handled by an instance of the extension,
     // if that happens, then response will be undefined.
 
-    console.log('globalThis.addEventListener (PROVIDER), HANDLE THIS MESSAGE: ', message);
+    //console.log('globalThis.addEventListener (PROVIDER), HANDLE THIS MESSAGE: ', message);
+  console.log('DATA =: ', message.data);
 
     if (message.data.response?.error) {
         let error = new Error('blockcore: ' + message.data.response.error.message);

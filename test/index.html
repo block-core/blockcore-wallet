@@ -87,7 +87,10 @@
 
 
     <script>
-        async function connect() {
+      async function connect() {
+
+        document.getElementById('blockcore-extension-output').innerText = "";
+
             console.log(window.blockcore);
             let pubKey = await window.blockcore.getPublicKey();
 
@@ -97,8 +100,10 @@
                 console.log('pubKey:', pubKey);
             }
 
-            let result = await window.blockcore.login();
-            console.log('Login result:', result);
+          //  let result = await window.blockcore.login();
+          //console.log('Login result:', result);
+
+          document.getElementById('blockcore-extension-output').innerText = pubKey;
         }
 
         (function () {
