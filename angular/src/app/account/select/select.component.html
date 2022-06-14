@@ -16,9 +16,9 @@
             <div mat-line>{{account.name}} ({{account | network}})</div>
             <!-- <div mat-line> {{account.purpose}} / {{account.network}} </div> -->
         </mat-list-option>
-        <mat-divider *ngIf="other.length > 0"></mat-divider>
-        <div mat-subheader *ngIf="other.length > 0">Other</div>
-        <mat-list-option *ngFor="let account of other" [(selected)]="account.selected">
+        <mat-divider *ngIf="identity.length > 0"></mat-divider>
+        <div mat-subheader *ngIf="identity.length > 0">Identity</div>
+        <mat-list-option *ngFor="let account of identity" [(selected)]="account.selected">
             <mat-icon mat-list-icon>{{account.icon}}</mat-icon>
             <div mat-line>{{account.name}} ({{account | network}})</div>
             <!-- <div mat-line> {{account.purpose}} / {{account.network}} </div> -->

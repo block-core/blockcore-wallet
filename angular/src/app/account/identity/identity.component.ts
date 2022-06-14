@@ -17,6 +17,8 @@ import {
   UIState,
   WalletManager,
 } from 'src/app/services';
+import { copyToClipboard } from 'src/app/shared/utilities';
+import { Network } from '../../../shared/networks';
 
 @Component({
   selector: 'app-identity',
@@ -34,7 +36,9 @@ export class IdentityComponent implements OnInit, OnDestroy {
   previousIndex!: number;
   identity: Identity | undefined;
   identifier: string;
+  network: Network;
   verifiableDataRegistryUrl = '';
+  prefix = '';
   profile = {
     name: '',
     email: '',
@@ -95,14 +99,18 @@ export class IdentityComponent implements OnInit, OnDestroy {
       // this.manager.setActiveAccountId(index);
       this.uiState.title = 'Account: ' + this.walletManager.activeAccount?.name;
 
+      this.network = this.walletManager.getNetwork(this.walletManager.activeAccount.networkType);
+
       const accountState = this.accountStateStore.get(
         this.walletManager.activeAccount.identifier
       );
 
+      console.log('accountState:', this.accountStateStore.all());
+
       // The very first receive address is the actual identity of the account.
       const address = accountState.receive[0];
 
-      this.identifier = address.address;
+      this.identifier = `${this.network.symbol}:${address.address}`;
 
       console.log(this.identifier);
 
@@ -125,6 +133,16 @@ export class IdentityComponent implements OnInit, OnDestroy {
       }
     });
   }
+
+  copy() {
+    copyToClipboard(this.identifier);
+
+    this.snackBar.open('Identifier copied to clipboard', 'Hide', {
+        duration: 1500,
+        horizontalPosition: 'center',
+        verticalPosition: 'bottom',
+    });
+}
 
   ngOnDestroy(): void {}
 

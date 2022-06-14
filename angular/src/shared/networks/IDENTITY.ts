@@ -2,7 +2,7 @@ import { Network } from './network';
 
 export class IDENTITY implements Network {
     id = 'IDENTITY';
-    name = 'Identity';
+    name = 'Identity (did:is)';
     symbol = 'did:is';
     network = 616;
     purpose = 302;

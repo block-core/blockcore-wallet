@@ -3,6 +3,7 @@ import { HDKey } from "micro-bip32";
 import { payments } from '@blockcore/blockcore-js';
 import { NetworkLoader } from "./network-loader";
 import { Network } from "./networks";
+import * as secp from '@noble/secp256k1';
 
 export class AddressManager {
 
@@ -73,12 +74,31 @@ export class AddressManager {
             });
 
             return address;
-        } else if (addressPurpose == 302) {
-            // TODO: Fix this to properly generate the DID:
-            return `did:is:${publicKey.toString('hex')}`;
+        } else if (addressPurpose == 340) {
+            return this.getIdentifier(publicKey);
         }
 
         throw Error(`The address purpose ${addressPurpose} is currently not supported.`);
+    }
+
+    getIdentifier(publicKey: Buffer)
+    {
+        return this.schnorrPublicKeyToHex(this.convertEdcsaPublicKeyToSchnorr(publicKey));
+    }
+
+    convertEdcsaPublicKeyToSchnorr(publicKey: Buffer)
+    {
+        if (publicKey.length != 33) {
+            throw Error('The public key must be compressed EDCSA public key of length 33.');
+        }
+
+        const schnorrPublicKey = publicKey.slice(1);
+        return schnorrPublicKey;
+    }
+
+    schnorrPublicKeyToHex(publicKey: Buffer)
+    {
+        return secp.utils.bytesToHex(publicKey);
     }
 
     getAddressByNetworkp2wsh(node: any, network: any) {

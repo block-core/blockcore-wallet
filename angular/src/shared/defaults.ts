@@ -121,37 +121,31 @@ export class Defaults {
           purpose: 44,
           purposeAddress: 44,
           icon: 'account_circle'
-        }
-
-          // }, {
-          //     index: 0,
-          //     name: 'Identity',
-          //     type: 'other',
-          //     network: 616,
-          //     purpose: 302,
-          //     purposeAddress: 302,
-          //     icon: 'account_circle',
-          //     state: {
-          //         balance: 0,
-          //         retrieved: null,
-          //         receive: [],
-          //         change: []
-          //     },
-          // }, {
-          //     index: 0,
-          //     name: 'Nostr',
-          //     type: 'other',
-          //     network: 1237,
-          //     purpose: 44,
-          //     purposeAddress: 44, // TODO: Nostr should have custom derived address, add this ability (schnorr signature)
-          //     icon: 'account_circle',
-          //     state: {
-          //         balance: 0,
-          //         retrieved: null,
-          //         receive: [],
-          //         change: []
-          //     },
-          // }
+        }, {
+            identifier: uuidv4(),
+            index: 0,
+            networkType: 'IDENTITY',
+            selected: false,
+            mode: 'normal',
+            name: 'Identity',
+            type: 'identity',
+            network: 616,
+            purpose: 302,
+            purposeAddress: 340, // BIP0340
+            icon: 'account_circle'
+          }, {
+            identifier: uuidv4(),
+            index: 0,
+            networkType: 'NOSTR',
+            selected: false,
+            mode: 'normal',
+            name: 'Nostr',
+            type: 'identity',
+            network: 1237,
+            purpose: 44,
+            purposeAddress: 340, // BIP0340
+            icon: 'account_circle'
+          }
         ];
         break;
       case 'coinvault':
