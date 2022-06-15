@@ -17,7 +17,7 @@ import { WalletManager } from './wallet-manager';
 import { CryptoUtility, NetworkLoader } from '.';
 import { HDKey } from '@scure/bip32';
 import * as secp from '@noble/secp256k1';
-import { decodeJWT } from 'did-jwt';
+import { decodeJWT, createJWT } from 'did-jwt';
 
 @Injectable({
   providedIn: 'root',
@@ -104,9 +104,26 @@ export class IdentityService {
 
     const secureState = this.secure.get(account.identifier);
     const addressNode = this.getIdentityNode(wallet, account);
+    const identifier = this.crypto.getIdentifier(addressNode.publicKey);
+    const did = `did:is:${identifier}`;
 
     // const address0 = this.crypto.getAddress(addressNode);
     var signer = await this.crypto.getSigner(addressNode);
+
+    let jwt = await createJWT(
+      {
+        aud: did,
+        exp: 1957463421,
+        name: 'Blockcore Developer',
+      },
+      { issuer: did, signer },
+      { alg: 'ES256K' }
+    );
+
+    console.log(jwt);
+
+    let decoded = decodeJWT(jwt);
+    console.log(decoded);
 
     // Get the identity corresponding with the key pair, does not contain the private key any longer.
     // var identity = this.crypto.getIdentity(keyPair);
