@@ -8,6 +8,8 @@ import { Injectable } from '@angular/core';
 import { CryptoService } from './crypto.service';
 import * as secp from '@noble/secp256k1';
 import { Network } from 'src/shared/networks';
+import { ES256KSigner, createJWT } from 'did-jwt';
+import { HDKey } from '@scure/bip32';
 
 const enc = new TextEncoder();
 const dec = new TextDecoder();
@@ -71,12 +73,12 @@ export class CryptoUtility {
     );
   }
 
-  getIdentifier(publicKey: Buffer)
+  getIdentifier(publicKey: Uint8Array)
   {
       return this.schnorrPublicKeyToHex(this.convertEdcsaPublicKeyToSchnorr(publicKey));
   }
 
-  convertEdcsaPublicKeyToSchnorr(publicKey: Buffer)
+  convertEdcsaPublicKeyToSchnorr(publicKey: Uint8Array)
   {
       if (publicKey.length != 33) {
           throw Error('The public key must be compressed EDCSA public key of length 33.');
@@ -86,7 +88,7 @@ export class CryptoUtility {
       return schnorrPublicKey;
   }
 
-  schnorrPublicKeyToHex(publicKey: Buffer)
+  schnorrPublicKeyToHex(publicKey: Uint8Array)
   {
       return secp.utils.bytesToHex(publicKey);
   }
@@ -188,15 +190,28 @@ export class CryptoUtility {
     }
   }
 
-  async getKeyPairFromNode(node: any) {
-    const tools = new BlockcoreIdentityTools();
+  async getSigner(node: HDKey) {
+    const signer = ES256KSigner(node.privateKey);
+    return signer;
+  }
 
-    let keyPair = await tools.keyPairFrom({
-      publicKeyBase58: bs58.encode(node.publicKey),
-      privateKeyHex: node.privateKey.toString('hex'),
-    });
+  async getKeyPairFromNode(node: HDKey) {
+    const signer = ES256KSigner(node.privateKey);
+    return signer;
+    // let jwt = await createJWT(
+    //   { aud: 'did:ethr:0xf3beac30c498d9e26865f34fcaa57dbb935b0d74', exp: 1957463421, name: 'uPort Developer' },
+    //   { issuer: 'did:ethr:0xf3beac30c498d9e26865f34fcaa57dbb935b0d74', signer },
+    //   { alg: 'ES256K' }
+    // )
 
-    return keyPair;
+    // const tools = new BlockcoreIdentityTools();
+
+    // let keyPair = await tools.keyPairFrom({
+    //   publicKeyBase58: bs58.encode(node.publicKey),
+    //   privateKeyHex: node.privateKey.toString('hex'),
+    // });
+
+    // return keyPair;
   }
 
   async decryptData(encryptedData: string, password: string) {

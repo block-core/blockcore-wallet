@@ -19,6 +19,7 @@ import {
 } from 'src/app/services';
 import { copyToClipboard } from 'src/app/shared/utilities';
 import { Network } from '../../../shared/networks';
+import { IdentityService } from 'src/app/services/identity.service';
 
 @Component({
   selector: 'app-identity',
@@ -63,6 +64,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
     private activatedRoute: ActivatedRoute,
     private accountStateStore: AccountStateStore,
     private settings: SettingsService,
+    private identityService: IdentityService,
     private cd: ChangeDetectorRef
   ) {
     this.uiState.title = 'Account: ';
@@ -210,7 +212,11 @@ export class IdentityComponent implements OnInit, OnDestroy {
     }
   }
 
-  copyDIDDocument() {
+  async copyDIDDocument() {
+
+    const document = await this.identityService.createIdentityDocument();
+    console.log(document);
+
     // copyToClipboard(JSON.stringify(this.identity?.didDocument));
   }
 
