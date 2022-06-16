@@ -2,6 +2,8 @@ import { BlockcoreIdentity } from './identity';
 import { KeyPair } from './interfaces';
 import { VerificationMethod } from 'did-resolver';
 import * as secp from '@noble/secp256k1';
+import { HDKey } from '@scure/bip32';
+import { ES256KSigner } from 'did-jwt';
 
 export class BlockcoreIdentityTools {
   /** Get the address (identity) of this DID. Returned format is "did:is:[publicKey]". Supports using publicKeyMultibase or publicKey, which can be in format of schnorr string, or array of both Schnorr and ECDSA type. */
@@ -87,6 +89,11 @@ export class BlockcoreIdentityTools {
   //     const schnorrPublicKey = publicKey.slice(1);
   //     return schnorrPublicKey;
   //   }
+
+  async getSigner(node: HDKey) {
+    const signer = ES256KSigner(node.privateKey);
+    return signer;
+  }
 
   schnorrPublicKeyToHex(publicKey: Uint8Array) {
     return secp.utils.bytesToHex(publicKey);

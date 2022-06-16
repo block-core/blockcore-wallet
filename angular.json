@@ -21,7 +21,7 @@
           "builder": "ngx-build-plus:browser",
           "options": {
             "allowedCommonJsDependencies": [
-              "micro-bip32",
+              "@scure/bip32",
               "@blockcore/blockcore-js"
             ],
             "aot": true,
