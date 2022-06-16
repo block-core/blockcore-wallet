@@ -11,5 +11,6 @@
   
   export interface KeyPair {
     privateKey: Uint8Array,
-    publicKey: string
+    publicKey: Uint8Array,
+    identifier: string
   }

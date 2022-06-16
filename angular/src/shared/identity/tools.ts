@@ -1,16 +1,13 @@
-import { keyUtils, Secp256k1KeyPair } from '@transmute/did-key-secp256k1';
-import { ISecp256k1PrivateKeyJwk } from '@transmute/did-key-secp256k1/dist/keyUtils';
 import { BlockcoreIdentity } from './identity';
 import { KeyPair } from './interfaces';
-import * as bs58 from 'bs58';
-import * as secp from '@noble/secp256k1';
 import { VerificationMethod } from 'did-resolver';
+import * as secp from '@noble/secp256k1';
 
 export class BlockcoreIdentityTools {
   /** Get the address (identity) of this DID. Returned format is "did:is:[publicKey]". Supports using publicKeyMultibase or publicKey, which can be in format of schnorr string, or array of both Schnorr and ECDSA type. */
   getIdentifier(options: {
-    publicKey: string | Uint8Array;
-    publicKeyMultibase: string;
+    publicKey?: string | Uint8Array;
+    publicKeyMultibase?: string;
   }) {
     let pubkey = '';
 
@@ -34,6 +31,14 @@ export class BlockcoreIdentityTools {
     return `${BlockcoreIdentity.PREFIX}${pubkey}`;
   }
 
+  getPublicKey(publicKey: Uint8Array) {
+    return this.schnorrPublicKeyToHex(publicKey);
+  }
+
+  getPublicKeyFromPrivateKey(privateKey: Uint8Array) {
+    return secp.schnorr.getPublicKey(privateKey);
+  }
+
   convertEdcsaPublicKeyToSchnorr(publicKey: Uint8Array) {
     if (publicKey.length != 33) {
       throw Error(
@@ -52,19 +57,19 @@ export class BlockcoreIdentityTools {
   //     };
   //   }
 
-  getProfileNetwork() {
-    return {
-      messagePrefix: '\x18Identity Signed Message:\n',
-      bech32: 'id',
-      bip32: {
-        public: 0x0488b21e,
-        private: 0x0488ade4,
-      },
-      pubKeyHash: 55,
-      scriptHash: 117,
-      wif: 0x08,
-    };
-  }
+  //   getProfileNetwork() {
+  //     return {
+  //       messagePrefix: '\x18Identity Signed Message:\n',
+  //       bech32: 'id',
+  //       bip32: {
+  //         public: 0x0488b21e,
+  //         private: 0x0488ade4,
+  //       },
+  //       pubKeyHash: 55,
+  //       scriptHash: 117,
+  //       wif: 0x08,
+  //     };
+  //   }
 
   //   getIdentifier(publicKey: Uint8Array) {
   //     return this.schnorrPublicKeyToHex(
@@ -91,13 +96,16 @@ export class BlockcoreIdentityTools {
     return secp.utils.randomPrivateKey();
   }
 
+  /** Generates a random private key and includes the public key and the full identifier (with did:is prefix). */
   generateKeyPair(): KeyPair {
     const key = this.generateKey();
-    const identifier = this.getIdentifier(key);
+    const pubkey = this.getPublicKeyFromPrivateKey(key);
+    const identifier = this.getIdentifier({ publicKey: pubkey });
 
     return {
       privateKey: key,
-      publicKey: identifier,
+      publicKey: pubkey,
+      identifier: identifier,
     };
   }
 

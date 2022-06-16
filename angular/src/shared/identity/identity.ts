@@ -2,15 +2,9 @@
 // W3C Working Draft 26 January 2021 / W3C Working Draft 09 March 2021
 // https://w3c.github.io/did-core/
 
-import base64url from 'base64url'; // Should we replicate this code to avoid dependency? It's a very simple utility.
-import utf8 from 'utf8';
 import { createJWS, createJWT, decodeJWT, ES256KSigner } from 'did-jwt';
-import { DIDDocument, ParsedDID, Resolver } from 'did-resolver';
-import randomBytes from 'randombytes';
+import { DIDDocument, ParsedDID, Resolver, VerificationMethod } from 'did-resolver';
 import * as secp256k1 from '@transmute/did-key-secp256k1';
-import { Secp256k1KeyPair } from '@transmute/did-key-secp256k1';
-import { ISecp256k1PrivateKeyJwk } from '@transmute/did-key-secp256k1/dist/keyUtils';
-import { VerificationMethod } from './interfaces';
 import {
   createVerifiableCredentialJwt,
   Issuer,
@@ -20,15 +14,7 @@ import {
 
 export class BlockcoreIdentityIssuer {}
 
-async function _generateKeyPair() {
-  const keyPair = await Secp256k1KeyPair.generate({
-    secureRandom: () => randomBytes(32),
-  });
-
-  return keyPair;
-}
-
-/** Blockcore DID only supports secp256k so APIs and code is simplified compared to variuos other implementations. */
+/** Blockcore DID only supports SchnorrSecp256k1Signature2019. Each instance of this object represents an DID. */
 export class BlockcoreIdentity {
   public static readonly PREFIX = 'did:is:';
   public readonly id: string;
