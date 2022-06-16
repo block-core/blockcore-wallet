@@ -3,7 +3,12 @@
 // https://w3c.github.io/did-core/
 
 import { createJWS, createJWT, decodeJWT, ES256KSigner } from 'did-jwt';
-import { DIDDocument, ParsedDID, Resolver, VerificationMethod } from 'did-resolver';
+import {
+  DIDDocument,
+  ParsedDID,
+  Resolver,
+  VerificationMethod,
+} from 'did-resolver';
 import * as secp256k1 from '@transmute/did-key-secp256k1';
 import {
   createVerifiableCredentialJwt,
@@ -137,32 +142,32 @@ export class BlockcoreIdentity {
     return data;
   }
 
-  public async getJsonWebKeyPair(keyPair?: secp256k1.Secp256k1KeyPair) {
-    if (!keyPair) {
-      keyPair = await _generateKeyPair();
-    }
+//   public async getJsonWebKeyPair(keyPair?: secp256k1.Secp256k1KeyPair) {
+//     if (!keyPair) {
+//       keyPair = await _generateKeyPair();
+//     }
 
-    const { publicKeyJwk, privateKeyJwk } = await keyPair.toJsonWebKeyPair(
-      true
-    );
-    return {
-      publicJwk: publicKeyJwk,
-      privateJwk: privateKeyJwk,
-    };
-  }
+//     const { publicKeyJwk, privateKeyJwk } = await keyPair.toJsonWebKeyPair(
+//       true
+//     );
+//     return {
+//       publicJwk: publicKeyJwk,
+//       privateJwk: privateKeyJwk,
+//     };
+//   }
 
-  public async generateKeyPair() {
-    return await _generateKeyPair();
-  }
+//   public async generateKeyPair() {
+//     return await _generateKeyPair();
+//   }
 
-  public async generateDidPayload(content = {}) {
-    return {
-      operation: 'create',
-      content: content,
-      recovery: await this.getJsonWebKeyPair(), // Generate random keys
-      update: await this.getJsonWebKeyPair(), // Generate random keys
-    };
-  }
+//   public async generateDidPayload(content = {}) {
+//     return {
+//       operation: 'create',
+//       content: content,
+//       recovery: await this.getJsonWebKeyPair(), // Generate random keys
+//       update: await this.getJsonWebKeyPair(), // Generate random keys
+//     };
+//   }
 
   public async generateOperation(
     type: string,
