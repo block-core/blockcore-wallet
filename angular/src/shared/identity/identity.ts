@@ -29,8 +29,8 @@ export class BlockcoreIdentity {
   private readonly verificationMethod;
 
   constructor(verificationMethod: VerificationMethod) {
-    console.log('BlockcoreIdentity input:');
-    console.log(verificationMethod);
+    // console.log('BlockcoreIdentity input:');
+    // console.log(verificationMethod);
 
     this.id = verificationMethod.controller;
     this.verificationMethod = verificationMethod;

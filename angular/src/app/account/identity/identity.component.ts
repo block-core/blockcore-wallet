@@ -200,7 +200,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
     const document = await this.identityService.createIdentityDocument();
     console.log(document);
 
-    // copyToClipboard(JSON.stringify(this.identity?.didDocument));
+    copyToClipboard(JSON.stringify(doc));
   }
 
   copyProfileDocument() {
