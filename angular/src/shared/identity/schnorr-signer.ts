@@ -1,11 +1,5 @@
-import { leftpad } from '../util';
-import { toJose } from '../util';
-import { Signer } from '../JWT';
-import { sha256 } from '../Digest';
-import elliptic from 'elliptic';
 import * as secp from '@noble/secp256k1';
-
-const secp256k1 = new elliptic.ec('secp256k1');
+import { Signer } from 'did-jwt';
 
 /**
  *  Creates a configured signer function for signing data using the ES256K algorithm and Schnorr signatures.
@@ -32,12 +26,10 @@ export function SchnorrSigner(privateKey: Uint8Array): Signer {
     throw new Error(`bad_key: Invalid private key format. Expecting 32 bytes, but got ${privateKeyBytes.length}`);
   }
 
-  const keyPair: elliptic.ec.KeyPair = secp256k1.keyFromPrivate(privateKeyBytes);
-
-  return async (data: string | Uint8Array): Promise<Uint8Array> => {
+  return async (data: string | Uint8Array): Promise<string> => {
     const dataBytes: Uint8Array = typeof data === 'string' ? new Uint8Array(Buffer.from(data)) : data;
     const messageHash = await secp.utils.sha256(dataBytes);
     const signature = await secp.schnorr.sign(messageHash, privateKey);
-    return signature;
+    return secp.utils.bytesToHex(signature);
   };
 }

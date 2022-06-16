@@ -1,5 +1,5 @@
 import { Account, Address } from "./interfaces";
-import { HDKey } from "micro-bip32";
+import { HDKey } from "@scure/bip32";
 import { payments } from '@blockcore/blockcore-js';
 import { NetworkLoader } from "./network-loader";
 import { Network } from "./networks";
