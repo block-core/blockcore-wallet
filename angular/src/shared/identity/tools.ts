@@ -3,14 +3,11 @@ import { KeyPair } from './interfaces';
 import { VerificationMethod } from 'did-resolver';
 import * as secp from '@noble/secp256k1';
 import { HDKey } from '@scure/bip32';
-import { ES256KSigner } from 'did-jwt';
+import { SchnorrSigner } from './schnorr-signer';
 
 export class BlockcoreIdentityTools {
   /** Get the address (identity) of this DID. Returned format is "did:is:[publicKey]". Supports using publicKeyMultibase or publicKey, which can be in format of schnorr string, or array of both Schnorr and ECDSA type. */
-  getIdentifier(options: {
-    publicKey?: string | Uint8Array;
-    publicKeyMultibase?: string;
-  }) {
+  getIdentifier(options: { publicKey?: string | Uint8Array; publicKeyMultibase?: string }) {
     let pubkey = '';
 
     // If the buffer is not supplied, then we'll convert base58 to buffer.
@@ -19,10 +16,12 @@ export class BlockcoreIdentityTools {
     }
 
     if (options.publicKey instanceof Uint8Array) {
-      let buffer;
+      let buffer = null;
 
       if (options.publicKey.length == 33) {
         buffer = this.convertEdcsaPublicKeyToSchnorr(options.publicKey);
+      } else {
+        buffer = options.publicKey;
       }
 
       pubkey = this.schnorrPublicKeyToHex(buffer);
@@ -43,9 +42,7 @@ export class BlockcoreIdentityTools {
 
   convertEdcsaPublicKeyToSchnorr(publicKey: Uint8Array) {
     if (publicKey.length != 33) {
-      throw Error(
-        'The public key must be compressed EDCSA public key of length 33.'
-      );
+      throw Error('The public key must be compressed EDCSA public key of length 33.');
     }
 
     const schnorrPublicKey = publicKey.slice(1);
@@ -91,7 +88,7 @@ export class BlockcoreIdentityTools {
   //   }
 
   async getSigner(node: HDKey) {
-    const signer = ES256KSigner(node.privateKey);
+    const signer = SchnorrSigner(node.privateKey);
     return signer;
   }
 
@@ -142,14 +139,15 @@ export class BlockcoreIdentityTools {
   /** Converts the KeyPair and returns an verificationMethod structure with multibase public key. */
 
   /** Get a VerificationMethod structure from a keypair instance. */
-  getVerificationMethod(key: KeyPair): VerificationMethod {
-    const did = `${BlockcoreIdentity.PREFIX}${key.publicKey}`;
+  getVerificationMethod(key: KeyPair, keyIndex: number = 1): VerificationMethod {
+    const pubKeyHex = secp.utils.bytesToHex(key.publicKey);
+    const did = `${BlockcoreIdentity.PREFIX}${pubKeyHex}`;
 
     return {
-      id: did,
+      id: `${did}#keys-${keyIndex}`,
       type: 'SchnorrSecp256k1Signature2019',
       controller: did,
-      publicKeyMultibase: 'f' + key.publicKey,
+      publicKeyMultibase: 'f' + pubKeyHex,
     };
   }
 }

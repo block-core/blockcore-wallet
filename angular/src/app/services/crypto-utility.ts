@@ -8,8 +8,9 @@ import { Injectable } from '@angular/core';
 import { CryptoService } from './crypto.service';
 import * as secp from '@noble/secp256k1';
 import { Network } from 'src/shared/networks';
-import { ES256KSigner, createJWT } from 'did-jwt';
+import { createJWT } from 'did-jwt';
 import { HDKey } from '@scure/bip32';
+import { SchnorrSigner } from 'src/shared/identity';
 
 const enc = new TextEncoder();
 const dec = new TextDecoder();
@@ -34,11 +35,7 @@ export class CryptoUtility {
     return address;
   }
 
-  getAddressByNetwork(
-    publicKey: Buffer,
-    network: Network,
-    addressPurpose: number
-  ) {
+  getAddressByNetwork(publicKey: Buffer, network: Network, addressPurpose: number) {
     if (addressPurpose == 44) {
       const { address } = payments.p2pkh({
         pubkey: publicKey,
@@ -47,9 +44,7 @@ export class CryptoUtility {
 
       return address;
     } else if (addressPurpose == 49) {
-      throw Error(
-        `The address purpose ${addressPurpose} is currently not supported.`
-      );
+      throw Error(`The address purpose ${addressPurpose} is currently not supported.`);
 
       // const { address } = payments.p2wsh({
       //     pubkey: publicKey,
@@ -68,29 +63,24 @@ export class CryptoUtility {
       return this.getIdentifier(publicKey);
     }
 
-    throw Error(
-      `The address purpose ${addressPurpose} is currently not supported.`
-    );
+    throw Error(`The address purpose ${addressPurpose} is currently not supported.`);
   }
 
-  getIdentifier(publicKey: Uint8Array)
-  {
-      return this.schnorrPublicKeyToHex(this.convertEdcsaPublicKeyToSchnorr(publicKey));
+  getIdentifier(publicKey: Uint8Array) {
+    return this.schnorrPublicKeyToHex(this.convertEdcsaPublicKeyToSchnorr(publicKey));
   }
 
-  convertEdcsaPublicKeyToSchnorr(publicKey: Uint8Array)
-  {
-      if (publicKey.length != 33) {
-          throw Error('The public key must be compressed EDCSA public key of length 33.');
-      }
+  convertEdcsaPublicKeyToSchnorr(publicKey: Uint8Array) {
+    if (publicKey.length != 33) {
+      throw Error('The public key must be compressed EDCSA public key of length 33.');
+    }
 
-      const schnorrPublicKey = publicKey.slice(1);
-      return schnorrPublicKey;
+    const schnorrPublicKey = publicKey.slice(1);
+    return schnorrPublicKey;
   }
 
-  schnorrPublicKeyToHex(publicKey: Uint8Array)
-  {
-      return secp.utils.bytesToHex(publicKey);
+  schnorrPublicKeyToHex(publicKey: Uint8Array) {
+    return secp.utils.bytesToHex(publicKey);
   }
 
   getAddressByNetworkp2wsh(node: any, network: any) {
@@ -135,13 +125,7 @@ export class CryptoUtility {
   }
 
   getPasswordKey(password: string) {
-    return window.crypto.subtle.importKey(
-      'raw',
-      enc.encode(password),
-      'PBKDF2',
-      false,
-      ['deriveKey']
-    );
+    return window.crypto.subtle.importKey('raw', enc.encode(password), 'PBKDF2', false, ['deriveKey']);
   }
 
   deriveKey(passwordKey: any, salt: any, keyUsage: any) {
@@ -176,9 +160,7 @@ export class CryptoUtility {
       );
 
       const encryptedContentArr = new Uint8Array(encryptedContent);
-      let buff = new Uint8Array(
-        salt.byteLength + iv.byteLength + encryptedContentArr.byteLength
-      );
+      let buff = new Uint8Array(salt.byteLength + iv.byteLength + encryptedContentArr.byteLength);
       buff.set(salt, 0);
       buff.set(iv, salt.byteLength);
       buff.set(encryptedContentArr, salt.byteLength + iv.byteLength);
@@ -191,12 +173,13 @@ export class CryptoUtility {
   }
 
   async getSigner(node: HDKey) {
-    const signer = ES256KSigner(node.privateKey);
+    const signer = SchnorrSigner(node.privateKey);
+    //const signer = ES256KSigner(node.privateKey);
     return signer;
   }
 
   async getKeyPairFromNode(node: HDKey) {
-    const signer = ES256KSigner(node.privateKey);
+    const signer = SchnorrSigner(node.privateKey);
     return signer;
     // let jwt = await createJWT(
     //   { aud: 'did:ethr:0xf3beac30c498d9e26865f34fcaa57dbb935b0d74', exp: 1957463421, name: 'uPort Developer' },

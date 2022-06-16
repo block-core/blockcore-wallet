@@ -1,12 +1,5 @@
 import { Injectable } from '@angular/core';
-import {
-  Account,
-  Action,
-  AppState,
-  DIDPayload,
-  Persisted,
-  Wallet,
-} from '../../shared/interfaces';
+import { Account, Action, AppState, DIDPayload, Persisted, Wallet } from '../../shared/interfaces';
 import { ReplaySubject, Subject } from 'rxjs';
 import { Network } from '../../shared/networks';
 import { AccountStateStore, UIStore } from 'src/shared';
@@ -25,14 +18,7 @@ import { decodeJWT, createJWT } from 'did-jwt';
 export class IdentityService {
   private allNetworks: Network[];
 
-  constructor(
-    private logger: LoggerService,
-    private networkLoader: NetworkLoader,
-    private secure: SecureStateService,
-    private crypto: CryptoUtility,
-    private accountStateStore: AccountStateStore,
-    private walletManager: WalletManager
-  ) {
+  constructor(private logger: LoggerService, private networkLoader: NetworkLoader, private secure: SecureStateService, private crypto: CryptoUtility, private accountStateStore: AccountStateStore, private walletManager: WalletManager) {
     this.allNetworks = this.networkLoader.getAllNetworks();
   }
 
@@ -41,11 +27,7 @@ export class IdentityService {
     return this.allNetworks.find((w) => w.id == networkType);
   }
 
-  async signData(
-    wallet: Wallet,
-    account: Account,
-    content: string
-  ): Promise<string> {
+  async signData(wallet: Wallet, account: Account, content: string): Promise<string> {
     const addressNode = this.getIdentityNode(wallet, account);
 
     const accountState = this.accountStateStore.get(account.identifier);
@@ -55,10 +37,7 @@ export class IdentityService {
     const messageHash = await secp.utils.sha256(messageArray);
     const identifier = this.crypto.getIdentifier(addressNode.publicKey);
 
-    const signatureArray = await secp.schnorr.sign(
-      messageHash,
-      addressNode.privateKey!
-    );
+    const signatureArray = await secp.schnorr.sign(messageHash, addressNode.privateKey!);
 
     const signature = secp.utils.bytesToHex(signatureArray);
     return signature;
@@ -78,8 +57,6 @@ export class IdentityService {
       `m/${account.purpose}'/${account.network}'/${account.index}'/0'/0'` // Only use hardened keys for identity.
     );
 
-    console.log('Address Node: ', addressNode);
-
     return addressNode;
   }
 
@@ -90,9 +67,6 @@ export class IdentityService {
     if (!account || !wallet) {
       return;
     }
-
-    console.log(wallet);
-    console.log(this.secure);
 
     if (!this.secure.unlocked(wallet.id)) {
       console.warn('There are no secure state available for this wallet.');

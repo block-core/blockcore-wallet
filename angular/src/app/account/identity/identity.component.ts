@@ -1,25 +1,13 @@
-import {
-  Component,
-  Inject,
-  HostBinding,
-  ChangeDetectorRef,
-  OnInit,
-  OnDestroy,
-} from '@angular/core';
+import { Component, Inject, HostBinding, ChangeDetectorRef, OnInit, OnDestroy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AccountStateStore, Identity } from 'src/shared';
-import {
-  CommunicationService,
-  CryptoService,
-  SettingsService,
-  UIState,
-  WalletManager,
-} from 'src/app/services';
+import { CommunicationService, CryptoService, SettingsService, UIState, WalletManager } from 'src/app/services';
 import { copyToClipboard } from 'src/app/shared/utilities';
 import { Network } from '../../../shared/networks';
 import { IdentityService } from 'src/app/services/identity.service';
+import { BlockcoreIdentity, BlockcoreIdentityTools } from 'src/shared/identity';
 
 @Component({
   selector: 'app-identity',
@@ -103,9 +91,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
 
       this.network = this.walletManager.getNetwork(this.walletManager.activeAccount.networkType);
 
-      const accountState = this.accountStateStore.get(
-        this.walletManager.activeAccount.identifier
-      );
+      const accountState = this.accountStateStore.get(this.walletManager.activeAccount.identifier);
 
       console.log('accountState:', this.accountStateStore.all());
 
@@ -126,9 +112,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
       // var did = this.walletManager.activeAccount?.identifier;
       // this.identity = this.uiState.store.identities.find(i => i.id == did);
 
-      let service = this.identity?.services.find(
-        (s) => s.type == 'VerifiableDataRegistry'
-      );
+      let service = this.identity?.services.find((s) => s.type == 'VerifiableDataRegistry');
 
       if (service) {
         this.verifiableDataRegistryUrl = service.serviceEndpoint;
@@ -140,11 +124,11 @@ export class IdentityComponent implements OnInit, OnDestroy {
     copyToClipboard(this.identifier);
 
     this.snackBar.open('Identifier copied to clipboard', 'Hide', {
-        duration: 1500,
-        horizontalPosition: 'center',
-        verticalPosition: 'bottom',
+      duration: 1500,
+      horizontalPosition: 'center',
+      verticalPosition: 'bottom',
     });
-}
+  }
 
   ngOnDestroy(): void {}
 
@@ -155,10 +139,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
 
     var vdr = null;
 
-    if (
-      this.verifiableDataRegistryUrl &&
-      this.verifiableDataRegistryUrl.length > 0
-    ) {
+    if (this.verifiableDataRegistryUrl && this.verifiableDataRegistryUrl.length > 0) {
       vdr = {
         id: this.identity.id + '#vdr',
         type: 'VerifiableDataRegistry',
@@ -166,16 +147,11 @@ export class IdentityComponent implements OnInit, OnDestroy {
       };
     }
 
-    if (
-      this.verifiableDataRegistryUrl &&
-      this.verifiableDataRegistryUrl.length > 0
-    ) {
+    if (this.verifiableDataRegistryUrl && this.verifiableDataRegistryUrl.length > 0) {
       // Attempt to find existing VerifiableDataRegistry service. We do not want to replace any third party
       // services the user might have added to their DID Document through other means.
       if (this.identity.services.length > 0) {
-        var existingIndex = this.identity.services.findIndex(
-          (s) => s.type == 'VerifiableDataRegistry'
-        );
+        var existingIndex = this.identity.services.findIndex((s) => s.type == 'VerifiableDataRegistry');
 
         if (existingIndex > -1) {
           if (vdr) {
@@ -213,6 +189,13 @@ export class IdentityComponent implements OnInit, OnDestroy {
   }
 
   async copyDIDDocument() {
+    const tools = new BlockcoreIdentityTools();
+    const keyPair = tools.generateKeyPair();
+    const verificationMethod = tools.getVerificationMethod(keyPair);
+    const identity = new BlockcoreIdentity(verificationMethod);
+
+    const doc = identity.document();
+    console.log(doc);
 
     const document = await this.identityService.createIdentityDocument();
     console.log(document);
