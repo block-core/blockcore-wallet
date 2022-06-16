@@ -4,6 +4,7 @@ import { VerificationMethod } from 'did-resolver';
 import * as secp from '@noble/secp256k1';
 import { HDKey } from '@scure/bip32';
 import { SchnorrSigner } from './schnorr-signer';
+import { base64url } from '@scure/base';
 
 export class BlockcoreIdentityTools {
   /** Get the address (identity) of this DID. Returned format is "did:is:[publicKey]". Supports using publicKeyMultibase or publicKey, which can be in format of schnorr string, or array of both Schnorr and ECDSA type. */
@@ -31,6 +32,21 @@ export class BlockcoreIdentityTools {
 
     return `${BlockcoreIdentity.PREFIX}${pubkey}`;
   }
+
+  getJsonWebKey(publicKey: Uint8Array) {
+    return {
+        kty: 'EC',
+        crv: 'secp256k1',
+        x: base64url.encode(publicKey)
+        // We don't need the y coordinate, with Schnorr there is only one y value corresponding with the x.
+      }
+  }
+
+  //   var webKey = JSONWebKey.fromJSON({
+  //     "kty": "RSA",
+  //     "n": "oL9U7lsMfBGZiFO...",
+  //     "e": "AQAB"
+  //   })
 
   getPublicKey(publicKey: Uint8Array) {
     return this.schnorrPublicKeyToHex(publicKey);

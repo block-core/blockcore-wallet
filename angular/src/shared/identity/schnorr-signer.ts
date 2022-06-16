@@ -1,5 +1,10 @@
 import * as secp from '@noble/secp256k1';
 import { Signer } from 'did-jwt';
+import { base64url } from '@scure/base';
+// SchnorrSecp256k1Signature2019
+// JOSE Alg: SS256K
+
+
 
 /**
  *  Creates a configured signer function for signing data using the ES256K algorithm and Schnorr signatures.
