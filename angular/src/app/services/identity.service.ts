@@ -10,7 +10,7 @@ import { WalletManager } from './wallet-manager';
 import { CryptoUtility, NetworkLoader } from '.';
 import { HDKey } from '@scure/bip32';
 import * as secp from '@noble/secp256k1';
-import { decodeJWT, createJWT } from 'did-jwt';
+import { decodeJWT, createJWT, verifyJWT, ES256KSigner } from 'did-jwt';
 
 @Injectable({
   providedIn: 'root',
@@ -43,7 +43,7 @@ export class IdentityService {
     return signature;
   }
 
-  private getIdentityNode(wallet: Wallet, account: Account) {
+  public getIdentityNode(wallet: Wallet, account: Account) {
     const network = this.getNetwork(account.networkType);
 
     // Get the secret seed.
@@ -60,29 +60,31 @@ export class IdentityService {
     return addressNode;
   }
 
-  async createIdentityDocument(services?: ServiceEndpoint[]) {
-    var account = this.walletManager.activeAccount;
-    var wallet = this.walletManager.activeWallet;
+  async createIdentityDocument(privateKey: Uint8Array, services?: ServiceEndpoint[]) {
+    // var account = this.walletManager.activeAccount;
+    // var wallet = this.walletManager.activeWallet;
 
-    if (!account || !wallet) {
-      return;
-    }
+    // if (!account || !wallet) {
+    //   return;
+    // }
 
-    if (!this.secure.unlocked(wallet.id)) {
-      console.warn('There are no secure state available for this wallet.');
-      return;
-    }
+    // if (!this.secure.unlocked(wallet.id)) {
+    //   console.warn('There are no secure state available for this wallet.');
+    //   return;
+    // }
 
-    const data = 'hello world';
-    const signature = this.signData(wallet, account, data);
+    // const data = 'hello world';
+    // const signature = this.signData(wallet, account, data);
+    // const secureState = this.secure.get(account.identifier);
+    // const addressNode = this.getIdentityNode(wallet, account);
 
-    const secureState = this.secure.get(account.identifier);
-    const addressNode = this.getIdentityNode(wallet, account);
-    const identifier = this.crypto.getIdentifier(addressNode.publicKey);
+    const publicKey = secp.schnorr.getPublicKey(privateKey);
+    const identifier = this.crypto.getIdentifier(publicKey);
     const did = `did:is:${identifier}`;
 
     // const address0 = this.crypto.getAddress(addressNode);
-    var signer = await this.crypto.getSigner(addressNode);
+    // var signer = await this.crypto.getSigner(addressNode);
+    var signer = ES256KSigner(privateKey);
 
     let jwt = await createJWT(
       {
@@ -98,6 +100,30 @@ export class IdentityService {
 
     let decoded = decodeJWT(jwt);
     console.log(decoded);
+
+    const resolver = {
+      resolve: async () => ({
+        didResolutionMetadata: {},
+        didDocumentMetadata: {},
+        didDocument: {
+          id: 'did:is:43eecb783ca67406b88e2ee70ba44e51dbf75566f4a30e53e7ae2147f22dd42b',
+          verificationMethod: [
+            {
+              id: 'did:is:43eecb783ca67406b88e2ee70ba44e51dbf75566f4a30e53e7ae2147f22dd42b#keys-1',
+              type: 'EcdsaSecp256k1VerificationKey2019',
+              controller: 'did:is:43eecb783ca67406b88e2ee70ba44e51dbf75566f4a30e53e7ae2147f22dd42b',
+              publicKeyJwk: { kty: 'EC', crv: 'secp256k1', x: 'Q-7LeDymdAa4ji7nC6ROUdv3VWb0ow5T564hR_It1Cs=', y: 'WU14yxpWK8eT_wHwlt4tOgCTCkhSUCqkf4ksUi76qRg=' },
+            },
+          ],
+          authentication: ['did:is:43eecb783ca67406b88e2ee70ba44e51dbf75566f4a30e53e7ae2147f22dd42b#keys-1'],
+          assertionMethod: ['did:is:43eecb783ca67406b88e2ee70ba44e51dbf75566f4a30e53e7ae2147f22dd42b#keys-1'],
+        },
+      }),
+    };
+
+    const { payload } = await verifyJWT(jwt, { resolver, audience: 'did:is:43eecb783ca67406b88e2ee70ba44e51dbf75566f4a30e53e7ae2147f22dd42b' });
+
+    console.log('Payload:', payload);
 
     // Get the identity corresponding with the key pair, does not contain the private key any longer.
     // var identity = this.crypto.getIdentity(keyPair);

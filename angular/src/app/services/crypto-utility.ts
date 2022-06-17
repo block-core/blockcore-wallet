@@ -8,9 +8,9 @@ import { Injectable } from '@angular/core';
 import { CryptoService } from './crypto.service';
 import * as secp from '@noble/secp256k1';
 import { Network } from 'src/shared/networks';
-import { createJWT } from 'did-jwt';
+import { createJWT, ES256KSigner } from 'did-jwt';
 import { HDKey } from '@scure/bip32';
-import { SchnorrSigner } from 'src/shared/identity';
+import { SS256KSigner } from 'src/shared/identity';
 
 const enc = new TextEncoder();
 const dec = new TextDecoder();
@@ -67,7 +67,11 @@ export class CryptoUtility {
   }
 
   getIdentifier(publicKey: Uint8Array) {
-    return this.schnorrPublicKeyToHex(this.convertEdcsaPublicKeyToSchnorr(publicKey));
+    if (publicKey.length == 33) {
+      return this.schnorrPublicKeyToHex(this.convertEdcsaPublicKeyToSchnorr(publicKey));
+    } else {
+      return this.schnorrPublicKeyToHex(publicKey);
+    }
   }
 
   convertEdcsaPublicKeyToSchnorr(publicKey: Uint8Array) {
@@ -173,13 +177,13 @@ export class CryptoUtility {
   }
 
   async getSigner(node: HDKey) {
-    const signer = SchnorrSigner(node.privateKey);
-    //const signer = ES256KSigner(node.privateKey);
+    //const signer = SS256KSigner(node.privateKey);
+    const signer = ES256KSigner(node.privateKey);
     return signer;
   }
 
   async getKeyPairFromNode(node: HDKey) {
-    const signer = SchnorrSigner(node.privateKey);
+    const signer = ES256KSigner(node.privateKey);
     return signer;
     // let jwt = await createJWT(
     //   { aud: 'did:ethr:0xf3beac30c498d9e26865f34fcaa57dbb935b0d74', exp: 1957463421, name: 'uPort Developer' },

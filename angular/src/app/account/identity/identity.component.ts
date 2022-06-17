@@ -190,18 +190,21 @@ export class IdentityComponent implements OnInit, OnDestroy {
 
   async copyDIDDocument() {
     const tools = new BlockcoreIdentityTools();
-    const keyPair = tools.generateKeyPair();
-    const verificationMethod = tools.getVerificationMethod(keyPair);
+    // const keyPair = tools.generateKeyPair();
+
+    const identityNode = this.identityService.getIdentityNode(this.walletManager.activeWallet, this.walletManager.activeAccount);
+    const privateKey = identityNode.privateKey;
+    const verificationMethod = tools.getVerificationMethod(privateKey);
 
     console.log('verificationMethod:', verificationMethod);
 
     const identity = new BlockcoreIdentity(verificationMethod);
 
     const doc = identity.document();
-    console.log(doc);
+    console.log(JSON.stringify(doc));
 
-    const document = await this.identityService.createIdentityDocument();
-    console.log(document);
+    const document = await this.identityService.createIdentityDocument(privateKey);
+    console.log(JSON.stringify(document));
 
     copyToClipboard(JSON.stringify(doc));
   }

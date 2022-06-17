@@ -3,13 +3,7 @@ import { HDKey } from '@scure/bip32';
 import { mnemonicToSeedSync } from '@scure/bip39';
 import * as secp from '@noble/secp256k1';
 
-import {
-  Account,
-  AccountUnspentTransactionOutput,
-  Address,
-  Logger,
-  Wallet,
-} from '../../shared/interfaces';
+import { Account, AccountUnspentTransactionOutput, Address, Logger, Wallet } from '../../shared/interfaces';
 import { MINUTE } from '../shared/constants';
 import { Psbt } from '@blockcore/blockcore-js';
 import * as ecc from 'tiny-secp256k1';
@@ -25,12 +19,7 @@ import { BehaviorSubject, delay, Observable, of } from 'rxjs';
 import { NetworkLoader } from '../../shared/network-loader';
 import { Network } from '../../shared/networks';
 import { CommunicationService } from '.';
-import {
-  AccountHistoryStore,
-  AddressStore,
-  AddressWatchStore,
-  WalletStore,
-} from 'src/shared';
+import { AccountHistoryStore, AddressStore, AddressWatchStore, WalletStore } from 'src/shared';
 import Big from 'big.js';
 import { StorageService } from './storage.service';
 import { RuntimeService } from './runtime.service';
@@ -100,12 +89,27 @@ export class WalletManager {
     return this.allNetworks.find((w) => w.id == networkType);
   }
 
-  async signData(
-    wallet: Wallet,
-    account: Account,
-    address: string,
-    content: string
-  ): Promise<string> {
+  // getIdentityPrivateKey(wallet: Wallet, account: Account) {
+  //   // TODO: Verify the address for this network!! ... Help the user avoid sending transactions on very wrong addresses.
+  //   const network = this.getNetwork(account.networkType);
+  //   const accountState = this.accountStateStore.get(account.identifier);
+
+  //   // Get the secret seed.
+  //   const masterSeedBase64 = this.secure.get(wallet.id);
+  //   const masterSeed = Buffer.from(masterSeedBase64, 'base64');
+
+  //   // Create the master node.
+  //   const masterNode = HDKey.fromMasterSeed(masterSeed, network.bip32);
+
+  //   let addressNode: HDKey;
+
+  //   // TODO: Verify if we need to make hardened keys always for identity?
+  //   addressNode = masterNode.derive(`m/${account.purpose}'/${account.network}'/${account.index}'/0'/0'`);
+
+  //   return addressNode;
+  // }
+
+  async signData(wallet: Wallet, account: Account, address: string, content: string): Promise<string> {
     // TODO: Verify the address for this network!! ... Help the user avoid sending transactions on very wrong addresses.
     const network = this.getNetwork(account.networkType);
     const accountState = this.accountStateStore.get(account.identifier);
@@ -127,22 +131,13 @@ export class WalletManager {
     const masterNode = HDKey.fromMasterSeed(masterSeed, network.bip32);
 
     let addressNode: HDKey;
-    addressNode = masterNode.derive(
-      `m/${account.purpose}'/${account.network}'/${account.index}'/${addressType}/${addressItem.index}`
-    );
+    addressNode = masterNode.derive(`m/${account.purpose}'/${account.network}'/${account.index}'/${addressType}/${addressItem.index}`);
 
     try {
-      const ecPair = ECPair.fromPrivateKey(
-        Buffer.from(addressNode.privateKey),
-        { network: network }
-      );
+      const ecPair = ECPair.fromPrivateKey(Buffer.from(addressNode.privateKey), { network: network });
       const privateKey = ecPair.privateKey;
 
-      var signature = bitcoinMessage.sign(
-        content,
-        privateKey,
-        ecPair.compressed
-      );
+      var signature = bitcoinMessage.sign(content, privateKey, ecPair.compressed);
       return signature.toString('base64');
     } catch (error) {
       this.logger.error(error);
@@ -154,15 +149,9 @@ export class WalletManager {
   async getTransactionHex(account: Account, txid: string) {
     const network = this.getNetwork(account.networkType);
     // const indexerUrl = this.settings.values.indexer.replace('{id}', network.id.toLowerCase());
-    const indexerUrl = this.networkLoader.getServer(
-      network.id,
-      this.settings.values.server,
-      this.settings.values.indexer
-    );
+    const indexerUrl = this.networkLoader.getServer(network.id, this.settings.values.server, this.settings.values.indexer);
 
-    const responseTransactionHex = await axios.get(
-      `${indexerUrl}/api/query/transaction/${txid}/hex`
-    );
+    const responseTransactionHex = await axios.get(`${indexerUrl}/api/query/transaction/${txid}/hex`);
     return responseTransactionHex.data;
   }
 
@@ -171,11 +160,7 @@ export class WalletManager {
     // These two entries has been sent from
     const network = this.getNetwork(account.networkType);
     // const indexerUrl = this.settings.values.indexer.replace('{id}', network.id.toLowerCase());
-    const indexerUrl = this.networkLoader.getServer(
-      network.id,
-      this.settings.values.server,
-      this.settings.values.indexer
-    );
+    const indexerUrl = this.networkLoader.getServer(network.id, this.settings.values.server, this.settings.values.indexer);
 
     const response = await axios.post(`${indexerUrl}/api/command/send`, txhex, {
       headers: {
@@ -185,10 +170,7 @@ export class WalletManager {
 
     const data = response.data;
 
-    this.logger.debug(
-      'Should contain transaction ID if broadcast was OK:',
-      data
-    );
+    this.logger.debug('Should contain transaction ID if broadcast was OK:', data);
 
     return data;
   }
@@ -243,10 +225,7 @@ export class WalletManager {
       }
     } else {
       // When performing send using a "quick" mode account, we will retrieve the UTXOs on-demand.
-      const result = await this.unspentService.getUnspentByAmount(
-        requiredAmount,
-        account
-      );
+      const result = await this.unspentService.getUnspentByAmount(requiredAmount, account);
 
       aggregatedAmount = result.amount;
       inputs.push(...result.utxo);
@@ -321,36 +300,23 @@ export class WalletManager {
       const input = inputs[i];
 
       // Get the index of the address, we need that to get the private key for signing.
-      let signingAddress = accountState.receive.find(
-        (item) => item.address == input.address
-      );
+      let signingAddress = accountState.receive.find((item) => item.address == input.address);
 
       let addressNode: HDKey;
 
       if (!signingAddress) {
-        signingAddress = accountState.change.find(
-          (item) => item.address == input.address
-        );
-        addressNode = masterNode.derive(
-          `m/${account.purpose}'/${account.network}'/${account.index}'/1/${signingAddress.index}`
-        );
+        signingAddress = accountState.change.find((item) => item.address == input.address);
+        addressNode = masterNode.derive(`m/${account.purpose}'/${account.network}'/${account.index}'/1/${signingAddress.index}`);
       } else {
-        addressNode = masterNode.derive(
-          `m/${account.purpose}'/${account.network}'/${account.index}'/0/${signingAddress.index}`
-        );
+        addressNode = masterNode.derive(`m/${account.purpose}'/${account.network}'/${account.index}'/0/${signingAddress.index}`);
       }
 
       if (!signingAddress) {
-        throw Error(
-          'Unable to find the signing address for the selected transaction input. Unable to continue.'
-        );
+        throw Error('Unable to find the signing address for the selected transaction input. Unable to continue.');
       }
 
       try {
-        const ecPair = ECPair.fromPrivateKey(
-          Buffer.from(addressNode.privateKey),
-          { network: network }
-        );
+        const ecPair = ECPair.fromPrivateKey(Buffer.from(addressNode.privateKey), { network: network });
         tx.signInput(i, ecPair);
       } catch (error) {
         this.logger.error(error);
@@ -374,15 +340,9 @@ export class WalletManager {
     };
   }
 
-  async sendTransaction(
-    account: Account,
-    transactionHex: string
-  ): Promise<{ transactionId: string; transactionHex: string }> {
+  async sendTransaction(account: Account, transactionHex: string): Promise<{ transactionId: string; transactionHex: string }> {
     this.logger.debug('sendTransaction:TransactionHex', transactionHex);
-    const transactionId = await this.broadcastTransaction(
-      account,
-      transactionHex
-    );
+    const transactionId = await this.broadcastTransaction(account, transactionHex);
     this.logger.debug('TransactionId', transactionId);
     return { transactionId, transactionHex };
   }
@@ -404,10 +364,7 @@ export class WalletManager {
     }
 
     try {
-      unlockedMnemonic = await this.crypto.decryptData(
-        wallet.mnemonic,
-        password
-      );
+      unlockedMnemonic = await this.crypto.decryptData(wallet.mnemonic, password);
     } catch (error) {
       this.logger.error(error);
     }
@@ -438,19 +395,13 @@ export class WalletManager {
     let unlockedExtensionWords = undefined;
 
     if (wallet.extensionWords != null && wallet.extensionWords != '') {
-      unlockedExtensionWords = await this.crypto.decryptData(
-        wallet.extensionWords,
-        password
-      );
+      unlockedExtensionWords = await this.crypto.decryptData(wallet.extensionWords, password);
     }
 
     if (unlockedMnemonic) {
       // From the secret receovery phrase, the master seed is derived.
       // Learn more about the HD keys: https://raw.githubusercontent.com/bitcoin/bips/master/bip-0032/derivation.png
-      const masterSeed = mnemonicToSeedSync(
-        unlockedMnemonic,
-        unlockedExtensionWords
-      );
+      const masterSeed = mnemonicToSeedSync(unlockedMnemonic, unlockedExtensionWords);
 
       // Store the decrypted master seed in session state.
       this.secure.set(walletId, Buffer.from(masterSeed).toString('base64'));
@@ -465,11 +416,7 @@ export class WalletManager {
   }
 
   /** Cange the wallet password in one operation. */
-  async changeWalletPassword(
-    walletId: string,
-    oldpassword: string,
-    newpassword: string
-  ) {
+  async changeWalletPassword(walletId: string, oldpassword: string, newpassword: string) {
     var wallet = this.getWallet(walletId);
     let unlockedMnemonic = null;
 
@@ -477,35 +424,23 @@ export class WalletManager {
       return unlockedMnemonic;
     }
 
-    unlockedMnemonic = await this.crypto.decryptData(
-      wallet.mnemonic,
-      oldpassword
-    );
+    unlockedMnemonic = await this.crypto.decryptData(wallet.mnemonic, oldpassword);
 
     let unlockedExtensionWords = undefined;
 
     if (wallet.extensionWords != null && wallet.extensionWords != '') {
-      unlockedExtensionWords = await this.crypto.decryptData(
-        wallet.extensionWords,
-        oldpassword
-      );
+      unlockedExtensionWords = await this.crypto.decryptData(wallet.extensionWords, oldpassword);
     }
 
     if (unlockedMnemonic) {
       // Encrypt the recovery phrase with new password and persist.
-      let encryptedRecoveryPhrase = await this.crypto.encryptData(
-        unlockedMnemonic,
-        newpassword
-      );
+      let encryptedRecoveryPhrase = await this.crypto.encryptData(unlockedMnemonic, newpassword);
       wallet.mnemonic = encryptedRecoveryPhrase;
 
       // Make sure we persist the newly encrypted recovery phrase.
       await this.store.save();
 
-      const masterSeed = mnemonicToSeedSync(
-        unlockedMnemonic,
-        unlockedExtensionWords
-      );
+      const masterSeed = mnemonicToSeedSync(unlockedMnemonic, unlockedExtensionWords);
 
       // Store the decrypted master seed in session state.
       this.secure.set(walletId, Buffer.from(masterSeed).toString('base64'));
@@ -521,15 +456,8 @@ export class WalletManager {
       return;
     }
 
-    this.logger.debug(
-      'User was active, reset lock timer:',
-      this.settings.values.autoTimeout * MINUTE
-    );
-    await this.storage.set(
-      'timeout',
-      this.settings.values.autoTimeout * MINUTE,
-      true
-    );
+    this.logger.debug('User was active, reset lock timer:', this.settings.values.autoTimeout * MINUTE);
+    await this.storage.set('timeout', this.settings.values.autoTimeout * MINUTE, true);
     // await globalThis.chrome.storage.local.set({ 'timeout': this.settings.values.autoTimeout * MINUTE });
 
     // Set the active date from startup.
@@ -541,15 +469,13 @@ export class WalletManager {
     return this.getWallets().length > 0;
   }
 
-  activeAccountSubject: BehaviorSubject<Account | undefined> =
-    new BehaviorSubject<Account | undefined>(undefined);
+  activeAccountSubject: BehaviorSubject<Account | undefined> = new BehaviorSubject<Account | undefined>(undefined);
 
   public get activeAccount$(): Observable<Account | undefined> {
     return this.activeAccountSubject.asObservable();
   }
 
-  activeWalletSubject: BehaviorSubject<Wallet | undefined> =
-    new BehaviorSubject<Wallet | undefined>(undefined);
+  activeWalletSubject: BehaviorSubject<Wallet | undefined> = new BehaviorSubject<Wallet | undefined>(undefined);
 
   public get activeWallet$(): Observable<Wallet | undefined> {
     return this.activeWalletSubject.asObservable();
@@ -574,9 +500,7 @@ export class WalletManager {
       return undefined;
     }
 
-    const accountIndex = activeWallet.accounts.findIndex(
-      (a) => a.identifier == this.activeAccountId
-    );
+    const accountIndex = activeWallet.accounts.findIndex((a) => a.identifier == this.activeAccountId);
 
     // This can happen if the wallet has changed but not the account identifier. When this happens, we'll reset the active account ID.
     if (accountIndex === -1) {
@@ -669,9 +593,7 @@ export class WalletManager {
   }
 
   private async removeAccountHistory(account: Account) {
-    const addresses = this.accountStateStore.getAllAddresses(
-      account.identifier
-    );
+    const addresses = this.accountStateStore.getAllAddresses(account.identifier);
 
     for (let j = 0; j < addresses.length; j++) {
       const address = addresses[j];
@@ -704,9 +626,7 @@ export class WalletManager {
       return;
     }
 
-    const accountIndex = wallet.accounts.findIndex(
-      (a) => a.identifier == accountId
-    );
+    const accountIndex = wallet.accounts.findIndex((a) => a.identifier == accountId);
 
     try {
       const account = wallet.accounts[accountIndex];
@@ -776,16 +696,10 @@ export class WalletManager {
 
     // After updating all UI instances, also make sure we restart the watcher
     // because it holds state while interval looping.
-    this.communication.send(
-      this.communication.createMessage('watch', { force: true }, 'background')
-    );
+    this.communication.send(this.communication.createMessage('watch', { force: true }, 'background'));
   }
 
-  async addAccount(
-    account: Account,
-    wallet: Wallet,
-    runIndexIfRestored = true
-  ) {
+  async addAccount(account: Account, wallet: Wallet, runIndexIfRestored = true) {
     // First derive the xpub and store that on the account.
     // const secret = this.walletSecrets.get(wallet.id);
     // Get the secret seed.
@@ -794,9 +708,7 @@ export class WalletManager {
     const network = this.getNetwork(account.networkType);
     const masterNode = HDKey.fromMasterSeed(masterSeed, network.bip32);
 
-    const accountNode = masterNode.derive(
-      `m/${account.purpose}'/${account.network}'/${account.index}'`
-    );
+    const accountNode = masterNode.derive(`m/${account.purpose}'/${account.network}'/${account.index}'`);
 
     account.xpub = accountNode.publicExtendedKey;
 
@@ -841,9 +753,7 @@ export class WalletManager {
 
     // If the wallet type is restored, force an index process to restore the state.
     if (wallet.restored && runIndexIfRestored == true) {
-      this.communication.send(
-        this.communication.createMessage('index', { force: true }, 'background')
-      );
+      this.communication.send(this.communication.createMessage('index', { force: true }, 'background'));
     }
   }
 
@@ -858,19 +768,10 @@ export class WalletManager {
   }
 
   hasBeenUsed(address: Address) {
-    return (
-      address.totalReceivedCount > 0n ||
-      address.totalSent > 0n ||
-      address.totalStakeCount > 0n ||
-      address.totalMineCount > 0n
-    );
+    return address.totalReceivedCount > 0n || address.totalSent > 0n || address.totalStakeCount > 0n || address.totalMineCount > 0n;
   }
 
-  private async getAddress(
-    account: Account,
-    type: number,
-    addresses: Address[]
-  ) {
+  private async getAddress(account: Account, type: number, addresses: Address[]) {
     const index = addresses.length - 1;
 
     // Get the last index without know transactions:
@@ -882,14 +783,8 @@ export class WalletManager {
 
       const network = this.getNetwork(account.networkType);
       const accountNode = HDKey.fromExtendedKey(account.xpub, network.bip32);
-      const addressNode = accountNode
-        .deriveChild(type)
-        .deriveChild(addressIndex);
-      const address = this.crypto.getAddressByNetwork(
-        Buffer.from(addressNode.publicKey),
-        network,
-        account.purposeAddress
-      );
+      const addressNode = accountNode.deriveChild(type).deriveChild(addressIndex);
+      const address = this.crypto.getAddressByNetwork(Buffer.from(addressNode.publicKey), network, account.purposeAddress);
 
       addresses.push({
         index: addressIndex,
@@ -907,11 +802,7 @@ export class WalletManager {
     const accountNode = HDKey.fromExtendedKey(account.xpub, network.bip32);
     const addressNode = accountNode.deriveChild(type).deriveChild(index);
 
-    const address = this.crypto.getAddressByNetwork(
-      Buffer.from(addressNode.publicKey),
-      network,
-      account.purposeAddress
-    );
+    const address = this.crypto.getAddressByNetwork(Buffer.from(addressNode.publicKey), network, account.purposeAddress);
 
     return address;
   }
@@ -920,9 +811,7 @@ export class WalletManager {
     const accountState = this.accountStateStore.get(account.identifier);
 
     if (index > accountState.receive.length - 1) {
-      throw Error(
-        'The index is higher than any known address. Use getReceiveAddress to get next receive address.'
-      );
+      throw Error('The index is higher than any known address. Use getReceiveAddress to get next receive address.');
     }
 
     // Get the last index without know transactions:
@@ -933,9 +822,7 @@ export class WalletManager {
     const accountState = this.accountStateStore.get(account.identifier);
 
     if (index > accountState.change.length - 1) {
-      throw Error(
-        'The index is higher than any known address. Use getChangeAddress to get next change address.'
-      );
+      throw Error('The index is higher than any known address. Use getChangeAddress to get next change address.');
     }
 
     // Get the last index without know transactions:

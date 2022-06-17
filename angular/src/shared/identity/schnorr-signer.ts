@@ -19,7 +19,7 @@ import { Signer } from 'did-jwt';
  *  @param    {Boolean}   recoverable  an optional flag to add the recovery param to the generated signatures
  *  @return   {Function}               a configured signer function `(data: string | Uint8Array): Promise<string>`
  */
-export function SchnorrSigner(privateKey: Uint8Array): Signer {
+export function SS256KSigner(privateKey: Uint8Array): Signer {
   const privateKeyBytes: Uint8Array = privateKey;
 
   if (privateKeyBytes.length !== 32) {

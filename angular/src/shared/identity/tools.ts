@@ -3,8 +3,8 @@ import { KeyPair } from './interfaces';
 import { JsonWebKey, VerificationMethod } from 'did-resolver';
 import * as secp from '@noble/secp256k1';
 import { HDKey } from '@scure/bip32';
-import { SchnorrSigner } from './schnorr-signer';
 import { base64url } from '@scure/base';
+import { ES256KSigner } from 'did-jwt';
 
 export class BlockcoreIdentityTools {
   /** Get the address (identity) of this DID. Returned format is "did:is:[publicKey]". Supports using publicKeyMultibase or publicKey, which can be in format of schnorr string, or array of both Schnorr and ECDSA type. */
@@ -34,8 +34,8 @@ export class BlockcoreIdentityTools {
   }
 
   /** The  */
-  getJsonWebKey(publicKey: Uint8Array): JsonWebKey {
-    const pub = secp.Point.fromHex(publicKey);
+  getJsonWebKey(publicKeyHex: string): JsonWebKey {
+    const pub = secp.Point.fromHex(publicKeyHex);
     const x = secp.utils.hexToBytes(pub.x.toString(16));
     const y = secp.utils.hexToBytes(pub.y.toString(16));
 
@@ -124,7 +124,7 @@ export class BlockcoreIdentityTools {
   //   }
 
   async getSigner(node: HDKey) {
-    const signer = SchnorrSigner(node.privateKey);
+    const signer = ES256KSigner(node.privateKey);
     return signer;
   }
 
@@ -175,15 +175,17 @@ export class BlockcoreIdentityTools {
   /** Converts the KeyPair and returns an verificationMethod structure with multibase public key. */
 
   /** Get a VerificationMethod structure from a keypair instance. */
-  getVerificationMethod(key: KeyPair, keyIndex: number = 1): VerificationMethod {
-    const pubKeyHex = secp.utils.bytesToHex(key.publicKey);
-    const did = `${BlockcoreIdentity.PREFIX}${pubKeyHex}`;
+  getVerificationMethod(privateKey: Uint8Array, keyIndex: number = 1): VerificationMethod {
+    const publicKey = secp.schnorr.getPublicKey(privateKey);
+    const publicKeyHex = secp.utils.bytesToHex(publicKey);
+    const did = `${BlockcoreIdentity.PREFIX}${publicKeyHex}`;
 
     return {
       id: `${did}#keys-${keyIndex}`,
-      type: 'JsonWebKey2020', // Reference: 'SchnorrSecp256k1Signature2019'
+      // We must use this type while we wait for "did-jwt" support Schnorr:
+      type: 'EcdsaSecp256k1VerificationKey2019', // Reference: 'SchnorrSecp256k1Signature2019' / 'JsonWebKey2020'
       controller: did,
-      publicKeyJwk: this.getJsonWebKey(key.publicKey)
+      publicKeyJwk: this.getJsonWebKey(publicKeyHex),
       // publicKeyMultibase: 'f' + pubKeyHex,
     };
   }

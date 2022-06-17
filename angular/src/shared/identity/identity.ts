@@ -2,7 +2,7 @@
 // W3C Working Draft 26 January 2021 / W3C Working Draft 09 March 2021
 // https://w3c.github.io/did-core/
 
-import { createJWS, createJWT, decodeJWT } from 'did-jwt';
+import { createJWS, createJWT, decodeJWT, ES256KSigner } from 'did-jwt';
 import {
   DIDDocument,
   ParsedDID,
@@ -16,10 +16,8 @@ import {
   JwtCredentialPayload,
   normalizeCredential,
 } from 'did-jwt-vc';
-import { SchnorrSigner } from './schnorr-signer';
 
 export class BlockcoreIdentityIssuer {}
-
 
 // NOTES:
 
@@ -98,14 +96,14 @@ export class BlockcoreIdentity {
 
   /** Signs a payload and encodes as JWT (JWS). The key should be in string format (hex, base58, base64). Adds "iat", "iss" to payload and "typ" to header. */
   public async jwt(options: { privateKey: string | any; payload: any }) {
-    const signer = SchnorrSigner(options.privateKey);
+    const signer = ES256KSigner(options.privateKey);
     let jwt = await createJWT(options.payload, { issuer: this.id, signer });
     return jwt;
   }
 
   /** Returns a signed JWS from the payload. This method does NOT append any extra fields to the payload, but adds "issuer" to header. */
   public async jws(options: { privateKey: string | any; payload: any }) {
-    const signer = SchnorrSigner(options.privateKey);
+    const signer = ES256KSigner(options.privateKey);
     let jwt = await createJWS(options.payload, signer, { issuer: this.id });
     return jwt;
   }
@@ -226,8 +224,8 @@ export class BlockcoreIdentity {
   public issuer(options: { privateKey: Uint8Array | string | any }): Issuer {
     return {
       did: this.id,
-      signer: SchnorrSigner(options.privateKey),
-      alg: 'SS256K',
+      signer: ES256KSigner(options.privateKey),
+      alg: 'ES256K',
     };
   }
 
