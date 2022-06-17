@@ -1,6 +1,6 @@
 import { BlockcoreIdentity } from './identity';
 import { KeyPair } from './interfaces';
-import { VerificationMethod } from 'did-resolver';
+import { JsonWebKey, VerificationMethod } from 'did-resolver';
 import * as secp from '@noble/secp256k1';
 import { HDKey } from '@scure/bip32';
 import { SchnorrSigner } from './schnorr-signer';
@@ -33,13 +33,33 @@ export class BlockcoreIdentityTools {
     return `${BlockcoreIdentity.PREFIX}${pubkey}`;
   }
 
-  getJsonWebKey(publicKey: Uint8Array) {
+  /** The  */
+  getJsonWebKey(publicKey: Uint8Array): JsonWebKey {
+    const pub = secp.Point.fromHex(publicKey);
+    const x = secp.utils.hexToBytes(pub.x.toString(16));
+    const y = secp.utils.hexToBytes(pub.y.toString(16));
+
     return {
-        kty: 'EC',
-        crv: 'secp256k1',
-        x: base64url.encode(publicKey)
-        // We don't need the y coordinate, with Schnorr there is only one y value corresponding with the x.
-      }
+      kty: 'EC',
+      crv: 'secp256k1',
+      x: base64url.encode(x), // This version of base64url uses padding.
+      y: base64url.encode(y), // Without padding: Buffer.from(bytesOfX).toString('base64url')
+    };
+
+    // const pub = secp.Point.fromHex(publicKey); // fromHex also does from Uint8Array.
+    // const x = pub.x.toString(16).padStart(64, '0');
+    // const y = pub.y.toString(16).padStart(64, '0');
+
+    // secp.utils.bytesToHex();
+
+    // const [x, y] = [pub.x, pub.y].map((n) => n.toString());
+
+    // return {
+    //   kty: 'EC',
+    //   crv: 'secp256k1',
+    //   x: base64url.encode(x.toString(16)),
+    //   y: base64url.encode(y.toString(16)),
+    // };
   }
 
   //   var webKey = JSONWebKey.fromJSON({
@@ -161,9 +181,10 @@ export class BlockcoreIdentityTools {
 
     return {
       id: `${did}#keys-${keyIndex}`,
-      type: 'SchnorrSecp256k1Signature2019',
+      type: 'JsonWebKey2020', // Reference: 'SchnorrSecp256k1Signature2019'
       controller: did,
-      publicKeyMultibase: 'f' + pubKeyHex,
+      publicKeyJwk: this.getJsonWebKey(key.publicKey)
+      // publicKeyMultibase: 'f' + pubKeyHex,
     };
   }
 }

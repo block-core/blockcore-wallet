@@ -192,6 +192,9 @@ export class IdentityComponent implements OnInit, OnDestroy {
     const tools = new BlockcoreIdentityTools();
     const keyPair = tools.generateKeyPair();
     const verificationMethod = tools.getVerificationMethod(keyPair);
+
+    console.log('verificationMethod:', verificationMethod);
+
     const identity = new BlockcoreIdentity(verificationMethod);
 
     const doc = identity.document();

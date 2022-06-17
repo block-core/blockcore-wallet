@@ -20,6 +20,24 @@ import { SchnorrSigner } from './schnorr-signer';
 
 export class BlockcoreIdentityIssuer {}
 
+
+// NOTES:
+
+// Signature scheme: "SchnorrSecp256k1Signature2019" 
+// This is part of the "proof": { "type": "SchnorrSecp256k1Signature2019" } part of the VC.
+// Link: https://github.com/decentralized-identity/SchnorrSecp256k1Signature2019
+
+// What about "JsonWebSignature2020"? ... it would mean we can't do Schnorr, but ECSDA.
+
+// JOSE Alg: "SS256K"
+// The signed JWT (JWS) should use this value for "alg" field. 
+// Link: https://identity.foundation/SchnorrSecp256k1Signature2019/#SS256K
+
+// JsonWebKey2020
+// This is the type of verificationMethod (key) to be used.
+// Link: https://w3c-ccg.github.io/lds-jws2020/
+
+
 /** Blockcore DID only supports SchnorrSecp256k1Signature2019. Each instance of this object represents an DID. */
 export class BlockcoreIdentity {
   public static readonly PREFIX = 'did:is:';
@@ -209,7 +227,7 @@ export class BlockcoreIdentity {
     return {
       did: this.id,
       signer: SchnorrSigner(options.privateKey),
-      alg: 'ES256K',
+      alg: 'SS256K',
     };
   }
 
