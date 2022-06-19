@@ -33,11 +33,15 @@ export class BlockcoreIdentityTools {
     return `${BlockcoreIdentity.PREFIX}${pubkey}`;
   }
 
+  private numTo32String(num: number | bigint): string {
+    return num.toString(16).padStart(64, '0');
+  }
+
   /** The  */
   getJsonWebKey(publicKeyHex: string): JsonWebKey {
     const pub = secp.Point.fromHex(publicKeyHex);
-    const x = secp.utils.hexToBytes(pub.x.toString(16));
-    const y = secp.utils.hexToBytes(pub.y.toString(16));
+    const x = secp.utils.hexToBytes(this.numTo32String(pub.x));
+    const y = secp.utils.hexToBytes(this.numTo32String(pub.y));
 
     return {
       kty: 'EC',
@@ -45,28 +49,7 @@ export class BlockcoreIdentityTools {
       x: base64url.encode(x), // This version of base64url uses padding.
       y: base64url.encode(y), // Without padding: Buffer.from(bytesOfX).toString('base64url')
     };
-
-    // const pub = secp.Point.fromHex(publicKey); // fromHex also does from Uint8Array.
-    // const x = pub.x.toString(16).padStart(64, '0');
-    // const y = pub.y.toString(16).padStart(64, '0');
-
-    // secp.utils.bytesToHex();
-
-    // const [x, y] = [pub.x, pub.y].map((n) => n.toString());
-
-    // return {
-    //   kty: 'EC',
-    //   crv: 'secp256k1',
-    //   x: base64url.encode(x.toString(16)),
-    //   y: base64url.encode(y.toString(16)),
-    // };
   }
-
-  //   var webKey = JSONWebKey.fromJSON({
-  //     "kty": "RSA",
-  //     "n": "oL9U7lsMfBGZiFO...",
-  //     "e": "AQAB"
-  //   })
 
   getPublicKey(publicKey: Uint8Array) {
     return this.schnorrPublicKeyToHex(publicKey);
