@@ -41,5 +41,17 @@
             "https://www.coinvault.io/*",
             "http://localhost/*"
         ]
-    }
+    },
+    "web_accessible_resources": [
+        {
+            "resources": [
+                "provider.js"
+            ],
+            "matches": [
+                "https://*/*",
+                "http://localhost:*/*",
+                "http://127.0.0.1:*/*"
+            ]
+        }
+    ]
 }

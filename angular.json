@@ -31,9 +31,13 @@
             "polyfills": "angular/src/polyfills.ts",
             "tsConfig": "angular/tsconfig.app.json",
             "inlineStyleLanguage": "scss",
-            "styles": ["angular/src/styles/styles.scss"],
+            "styles": [
+              "angular/src/styles/styles.scss"
+            ],
             "stylePreprocessorOptions": {
-              "includePaths": ["angular/src/styles/blockcore"]
+              "includePaths": [
+                "angular/src/styles/blockcore"
+              ]
             },
             "scripts": []
           },
@@ -120,7 +124,9 @@
             },
             "coinvault": {
               "stylePreprocessorOptions": {
-                "includePaths": ["angular/src/styles/coinvault/"]
+                "includePaths": [
+                  "angular/src/styles/coinvault/"
+                ]
               },
               "buildOptimizer": false,
               "optimization": {
@@ -177,7 +183,9 @@
             },
             "smartcityplatform": {
               "stylePreprocessorOptions": {
-                "includePaths": ["angular/src/styles/smartcityplatform/"]
+                "includePaths": [
+                  "angular/src/styles/smartcityplatform/"
+                ]
               },
               "buildOptimizer": false,
               "optimization": {
@@ -270,10 +278,17 @@
             "tsConfig": "angular/tsconfig.spec.json",
             "karmaConfig": "angular/karma.conf.js",
             "inlineStyleLanguage": "scss",
-            "assets": ["angular/src/favicon.ico", "angular/src/assets"],
-            "styles": ["angular/src/styles/styles.scss"],
+            "assets": [
+              "angular/src/favicon.ico",
+              "angular/src/assets"
+            ],
+            "styles": [
+              "angular/src/styles/styles.scss"
+            ],
             "stylePreprocessorOptions": {
-              "includePaths": ["angular/src/styles/blockcore"]
+              "includePaths": [
+                "angular/src/styles/blockcore"
+              ]
             },
             "scripts": []
           }

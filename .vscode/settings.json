@@ -4,5 +4,11 @@
     "yaml.format.printWidth": 360,
     "scssFormatter.printWidth": 360,
     "editor.wordWrapColumn": 360,
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "[json]": {
+        "editor.defaultFormatter": "vscode.json-language-features"
+    },
+    "[jsonc]": {
+        "editor.defaultFormatter": "vscode.json-language-features"
+    }
 }

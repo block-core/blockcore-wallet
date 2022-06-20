@@ -1,47 +1,46 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="utf-8">
+  <head>
+    <meta charset="utf-8" />
     <title>Blockcore Provider - Sample Web Page</title>
-    <base href="/">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <base href="/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <!-- <link rel="icon" type="image/x-icon" href="favicon.ico"> -->
-    <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <script src="blockcore-loader.js"></script>
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
     <style>
-        #blockcore-extension-input {
-            width: 400px;
-            height: 200px;
-        }
+      #blockcore-extension-input {
+        width: 400px;
+        height: 200px;
+      }
 
-        #blockcore-extension-output {
-            border: 1px solid gray;
-            padding: 3em;
-            margin: 1em;
-        }
+      #blockcore-extension-output {
+        border: 1px solid gray;
+        padding: 3em;
+        margin: 1em;
+      }
     </style>
-</head>
+  </head>
 
-<body>
-
+  <body>
     <h1>Blockcore Provider - Sample Web Page</h1>
 
-    <textarea id="blockcore-extension-input">{
+    <textarea id="blockcore-extension-input">
+{
         "id": "123",
         "identity": "I am who I am."
-}</textarea>
-    <br><br>
-    <button class="blockcore-extension-button" purpose="login">Click to login with Blockcore</button>
+}</textarea
+    >
+    <br /><br />
+    <!-- <button class="blockcore-extension-button" purpose="login">Click to login with Blockcore</button>
     <button class="blockcore-extension-button" purpose="sign">Click to sign with Blockcore</button>
-    <button class="blockcore-extension-button" purpose="identity">Click to give identity with Blockcore</button>
+    <button class="blockcore-extension-button" purpose="identity">Click to give identity with Blockcore</button> -->
 
-    <br>
+    <br />
     <button id="connectButton">Login me in!</button>
 
-    <br>
+    <br />
     <div id="blockcore-extension-output"></div>
 
     <!-- <button id="blockcore-extension-button" purpose="signing">Sign with Blockcore</button> -->
@@ -49,70 +48,68 @@
     <!-- <button onclick="connect();">Click to sign</button> with Blockcore Wallet. -->
 
     <script>
-        function connect() {
-            console.log('Attempting to connect with Blockcore Wallet...');
+      function connect() {
+        console.log("Attempting to connect with Blockcore Wallet...");
 
-            // console.log(window.blockcore2);
+        // console.log(window.blockcore2);
 
-            if (!window.blockcore) {
-                alert('The Blockcore Provider has not loaded.');
-            } else {
-                var provider = window.blockcore;
+        if (!window.blockcore) {
+          alert("The Blockcore Provider has not loaded.");
+        } else {
+          var provider = window.blockcore;
 
-                window.blockcore.open();
+          window.blockcore.open();
 
-                // Subscribe to accounts change
-                provider.on("accountsChanged", (accounts) => {
-                    console.log(accounts);
-                });
+          // Subscribe to accounts change
+          provider.on("accountsChanged", (accounts) => {
+            console.log(accounts);
+          });
 
-                // Subscribe to chainId change
-                provider.on("networkChanged", (chainId) => {
-                    console.log(chainId);
-                });
+          // Subscribe to chainId change
+          provider.on("networkChanged", (chainId) => {
+            console.log(chainId);
+          });
 
-                // Subscribe to session disconnection
-                provider.on("disconnect", (code, reason) => {
-                    console.log(code, reason);
-                });
+          // Subscribe to session disconnection
+          provider.on("disconnect", (code, reason) => {
+            console.log(code, reason);
+          });
 
-                // Open the UI:
-                // provider.open();
+          // Open the UI:
+          // provider.open();
 
-                // console.log(provider);
-                // const accounts = provider.getAccounts();
-            }
+          // console.log(provider);
+          // const accounts = provider.getAccounts();
         }
+      }
     </script>
-
 
     <script>
       async function connect() {
+        document.getElementById("blockcore-extension-output").innerText = "";
 
-        document.getElementById('blockcore-extension-output').innerText = "";
+        console.log("Blockcore:", window.blockcore);
+        window.blockcore.open();
 
-            console.log(window.blockcore);
-            let pubKey = await window.blockcore.getPublicKey();
+        let pubKey = await window.blockcore.getPublicKey();
 
-            if (pubKey.error) {
-                console.error(pubKey.error);
-            } else {
-                console.log('pubKey:', pubKey);
-            }
-
-          //  let result = await window.blockcore.login();
-          //console.log('Login result:', result);
-
-          document.getElementById('blockcore-extension-output').innerText = pubKey;
+        if (pubKey.error) {
+          console.error(pubKey.error);
+        } else {
+          console.log("pubKey:", pubKey);
         }
 
-        (function () {
-            // Examples of wiring up click handler:
-            // document.getElementById("connectButton").onclick = connect;
-            document.getElementById("connectButton").addEventListener("click", connect);
-        })();
+        //  let result = await window.blockcore.login();
+        //console.log('Login result:', result);
+
+        document.getElementById("blockcore-extension-output").innerText = pubKey;
+      }
+
+      (function () {
+        // Examples of wiring up click handler:
+        // document.getElementById("connectButton").onclick = connect;
+        document.getElementById("connectButton").addEventListener("click", connect);
+      })();
     </script>
-
-</body>
-
+  </body>
 </html>
