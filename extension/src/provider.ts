@@ -7,32 +7,46 @@ globalThis.blockcore = {
       const id = v4();
       this._promises[id] = { resolve, reject };
 
-      globalThis.postMessage({ type, id, data, source: 'provider', target: 'tabs', ext: 'blockcore' }, '*');
+      console.log('SENDING MESSAGE!!');
+
+      globalThis.postMessage({ type, id, data, src: 'provider', target: 'tabs', ext: 'blockcore' }, '*');
     });
   },
 
   connect: (callback) => {},
+
+  async sign(event) {
+    console.log('Sign was called...');
+    return this._call('ext-sign', event);
+  },
+
   open: () => {
+    return;
+
     console.log('OPEN WAS CALLED!');
     console.log('chrome.runtime:', chrome.runtime);
 
-    chrome.runtime.sendMessage({ greeting: 'hello from provider' }, function (response) {
-        console.log('runtime.sendMessage!');
-      // console.log(response.farewell);
-    });
+    // chrome.runtime.sendMessage({ greeting: 'hello from provider' }, function (response) {
+    //     console.log('runtime.sendMessage!');
+    //   // console.log(response.farewell);
+    // });
 
-    chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-      console.log('onMessage (PROVIDER): ' + JSON.stringify(request));
-      sendResponse({ fromcontent: 'This message is from provider.js' });
-    });
+    // chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+    //   console.log('onMessage (PROVIDER): ' + JSON.stringify(request));
+    //   sendResponse({ fromcontent: 'This message is from provider.js' });
+    // });
   },
+
   getAccounts: () => {
     console.log('Getting accounts!');
   },
+
   on: (event, callback) => {},
+
   async getPublicKey() {
     return this._call('ext-getpublickey', null);
   },
+
   async login() {
     return this._call('ext-login', { ok: false });
   },
@@ -46,7 +60,7 @@ globalThis.blockcore = {
 // This will receive various messages that are posted to the window. Make sure we filter out anything that
 // is not related to the extension.
 globalThis.addEventListener('message', (message) => {
-  //console.log(message);
+  console.log('MESSAGE RECEIVED IN PROVIDER:', message);
 
   // Make sure there is data, extension is setup and it belongs to the existing promises in this web app.
   if (!message.data || !message.data.ext || !message.data.response || !globalThis.blockcore._promises[message.data.id]) {

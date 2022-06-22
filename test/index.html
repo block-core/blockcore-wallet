@@ -48,7 +48,7 @@
     <!-- <button onclick="connect();">Click to sign</button> with Blockcore Wallet. -->
 
     <script>
-      function connect() {
+      function connect2() {
         console.log("Attempting to connect with Blockcore Wallet...");
 
         // console.log(window.blockcore2);
@@ -88,7 +88,16 @@
       async function connect() {
         document.getElementById("blockcore-extension-output").innerText = "";
 
-        console.log("Blockcore:", window.blockcore);
+        const blockcore = globalThis.blockcore;
+
+        if (!blockcore) {
+          alert("The Blockcore provider is not available. Unable to continue.");
+          return;
+        }
+
+        console.log("Blockcore:", blockcore);
+        await blockcore.sign({ type: 'sign' });
+
         window.blockcore.open();
 
         let pubKey = await window.blockcore.getPublicKey();

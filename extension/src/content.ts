@@ -13,10 +13,14 @@ if (!globalThis.blockcore) {
 
   // listen for messages from the provider script
   window.addEventListener('message', async (message) => {
+    console.log('message received!!', message);
+
     if (message.source !== window) return;
     if (!message.data) return;
     if (!message.data.params) return;
-    if (message.data.extension !== 'blockcore') return;
+    if (message.data.ext !== 'blockcore') return;
+
+    console.log('extension is Blockcore!!');
 
     var response;
     try {
@@ -24,8 +28,8 @@ if (!globalThis.blockcore) {
       response = await chrome.runtime.sendMessage({
         type: message.data.type,
         params: message.data.params,
-        extension: 'blockcore',
-        source: 'content',
+        ext: 'blockcore',
+        src: 'content',
         target: 'tabs', // tabs = extension windows, popups, tabs.
         host: location.host,
       });
@@ -37,8 +41,8 @@ if (!globalThis.blockcore) {
       {
         id: message.data.id,
         type: message.data.type,
-        extension: 'blockcore',
-        source: 'content',
+        ext: 'blockcore',
+        src: 'content',
         target: 'provider',
         host: location.host,
         response,
