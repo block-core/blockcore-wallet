@@ -33,9 +33,9 @@ export class SharedManager {
                     console.log('Timeout has been researched, session storage is cleared.');
 
                     // TODO: #132
-                    chrome.runtime.sendMessage({ type: 'timeout' }, function (response) {
-                        // console.log('Extension:sendMessage:response:', response);
-                    });
+                    // chrome.runtime.sendMessage({ type: 'timeout' }, function (response) {
+                    //     // console.log('Extension:sendMessage:response:', response);
+                    // });
 
                     return true;
                 }

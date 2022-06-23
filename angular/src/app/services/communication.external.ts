@@ -38,23 +38,24 @@ export class CommunicationExternal {
 
   initialize() {
     if (this.runtime.isExtension) {
-      chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
-        this.ngZone.run(async () => {
-          const result = await this.handleExternalMessage(message, sender);
-          if (result != null) {
-            sendResponse(result);
-          }
-        });
-      });
+      // chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
+      //   this.ngZone.run(async () => {
+      //     const result = await this.handleExternalMessage(message, sender);
+      //     if (result != null) {
+      //       sendResponse(result);
+      //     }
+      //   });
+      // });
 
-      chrome.runtime.onMessageExternal.addListener(async (message, sender, sendResponse) => {
-        this.ngZone.run(async () => {
-          const result = await this.handleExternalMessage(message, sender);
-          if (result != null) {
-            sendResponse(result);
-          }
-        });
-      });
+      // chrome.runtime.onMessageExternal.addListener(async (message, sender, sendResponse) => {
+      //   console.log('chrome.runtime.onMessageExternal within ANGULAR!');
+      //   this.ngZone.run(async () => {
+      //     const result = await this.handleExternalMessage(message, sender);
+      //     if (result != null) {
+      //       sendResponse(result);
+      //     }
+      //   });
+      // });
     }
   }
 

@@ -13,14 +13,19 @@ if (!globalThis.blockcore) {
 
   // listen for messages from the provider script
   window.addEventListener('message', async (message) => {
-    console.log('message received!!', message);
+    console.log('message received!!3333', message);
 
-    if (message.source !== window) return;
-    if (!message.data) return;
-    if (!message.data.params) return;
-    if (message.data.ext !== 'blockcore') return;
+    console.log(message.source !== window);
+    console.log(message.data.ext !== 'blockcore');
+    console.log(message.data.target !== 'tabs');
 
-    console.log('extension is Blockcore!!');
+    // if (message.source !== window) return;
+    // // if (!message.data) return;
+    // // if (!message.data.params) return;
+    // if (message.data.ext !== 'blockcore') return; // We'll only handle messages marked with extension 'blockcore'.
+    // if (message.data.target !== 'tabs') return; // We'll only forward messages that has target tabs.
+
+    console.log('extension is Blockcore!!22');
 
     var response;
     try {
@@ -36,6 +41,8 @@ if (!globalThis.blockcore) {
     } catch (error) {
       response = { error };
     }
+
+    console.log('RESPONSE:', response);
 
     window.postMessage(
       {

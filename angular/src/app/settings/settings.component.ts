@@ -52,16 +52,16 @@ export class SettingsComponent {
 
   updateAllInstances() {
     if (this.runtime.isExtension) {
-      chrome.runtime.sendMessage({
-        type: 'store-reload',
-        data: 'setting',
-        ext: 'blockcore',
-        source: 'tab',
-        target: 'tabs',
-        host: location.host
-      }, function (response) {
-        // console.log('Extension:sendMessage:response:updated:', response);
-      });
+      // chrome.runtime.sendMessage({
+      //   type: 'store-reload',
+      //   data: 'setting',
+      //   ext: 'blockcore',
+      //   source: 'tab',
+      //   target: 'tabs',
+      //   host: location.host
+      // }, function (response) {
+      //   // console.log('Extension:sendMessage:response:updated:', response);
+      // });
     }
   }
 

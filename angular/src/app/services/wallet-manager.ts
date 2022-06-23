@@ -680,18 +680,18 @@ export class WalletManager {
 
   updateAllInstances() {
     if (this.runtime.isExtension) {
-      chrome.runtime.sendMessage(
-        {
-          type: 'reload',
-          ext: 'blockcore',
-          source: 'tab',
-          target: 'tabs',
-          host: location.host,
-        },
-        function (response) {
-          // console.log('Extension:sendMessage:response:updated:', response);
-        }
-      );
+      // chrome.runtime.sendMessage(
+      //   {
+      //     type: 'reload',
+      //     ext: 'blockcore',
+      //     source: 'tab',
+      //     target: 'tabs',
+      //     host: location.host,
+      //   },
+      //   function (response) {
+      //     // console.log('Extension:sendMessage:response:updated:', response);
+      //   }
+      // );
     }
 
     // After updating all UI instances, also make sure we restart the watcher
