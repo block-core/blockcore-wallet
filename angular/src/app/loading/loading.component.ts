@@ -1,13 +1,9 @@
 import { Component, ChangeDetectorRef, OnInit, OnDestroy, Renderer2, Inject } from '@angular/core';
-import {
-  UIState, CommunicationService, AppManager, SecureStateService,
-  WalletManager, EnvironmentService, NetworksService,
-  SettingsService, NetworkStatusService, LoggerService
-} from '../services';
+import { UIState, CommunicationService, AppManager, SecureStateService, WalletManager, EnvironmentService, NetworksService, SettingsService, NetworkStatusService, LoggerService } from '../services';
 import { ActivatedRoute, Data, Params, Router } from '@angular/router';
 import { Action } from '../../shared/interfaces';
 import { TranslateService } from '@ngx-translate/core';
-import { DOCUMENT, Location } from '@angular/common'
+import { DOCUMENT, Location } from '@angular/common';
 import { combineLatest } from 'rxjs';
 import { RuntimeService } from '../services/runtime.service';
 import { OrchestratorService } from '../services/orchestrator.service';
@@ -15,7 +11,7 @@ import { OrchestratorService } from '../services/orchestrator.service';
 @Component({
   selector: 'app-loading',
   templateUrl: './loading.component.html',
-  styleUrls: ['./loading.component.css']
+  styleUrls: ['./loading.component.css'],
 })
 export class LoadingComponent implements OnInit, OnDestroy {
   problems: boolean;
@@ -44,6 +40,7 @@ export class LoadingComponent implements OnInit, OnDestroy {
     @Inject(DOCUMENT) private document: Document
   ) {
     this.uiState.title = 'Loading...';
+    console.log('LOADING CONSTRUCTOR');
   }
 
   ngOnDestroy(): void {
@@ -63,15 +60,12 @@ export class LoadingComponent implements OnInit, OnDestroy {
   instanceName: string;
 
   async ngOnInit() {
+    console.log('LOADING ngOnInit');
 
-    this.sub = combineLatest(
-      [this.route.params,
-      this.route.data,],
-      (params: Params, data: Data) => ({
-        params,
-        data,
-      })
-    ).subscribe((res: { params: Params; data: Data }) => {
+    this.sub = combineLatest([this.route.params, this.route.data], (params: Params, data: Data) => ({
+      params,
+      data,
+    })).subscribe((res: { params: Params; data: Data }) => {
       const { params, data } = res;
 
       // NOTE: This logic is executed every time / is navigated to.
@@ -95,7 +89,6 @@ export class LoadingComponent implements OnInit, OnDestroy {
     document.title = this.env.instanceName;
 
     if (!this.uiState.initialized) {
-
       // When not running in extension context, we will initialize the frontend orchestrator.
       if (!this.runtime.isExtension) {
         // Run this before app manager initialize, because it will add listeners for communication messages
@@ -133,52 +126,68 @@ export class LoadingComponent implements OnInit, OnDestroy {
       this.uiState.initialized = true;
     }
 
-    const queryParam = globalThis.location.search;
+    // const queryParam = globalThis.location.search;
 
     // TODO: IT IS NOT POSSIBLE TO "EXIT" ACTIONS THAT ARE TRIGGERED WITH QUERY PARAMS.
     // FIX THIS ... attempted to check previous, but that does not work...
-    if (queryParam) {
-      const param = Object.fromEntries(new URLSearchParams(queryParam)) as any;
+    // if (queryParam) {
+    //   const param = Object.fromEntries(new URLSearchParams(queryParam)) as any;
 
-      // Only when the param is different than before, will we re-trigger the action.
-      if (JSON.stringify(param) != JSON.stringify(this.uiState.params)) {
-        this.uiState.params = param;
-      } else {
-        this.logger.debug('PARAMS IS NOT DIFFERENT!! CONTINUE AS BEFORE!');
-      }
-    }
+    //   console.log('THERE ARE PARAMS', param);
+
+    //   // Only when the param is different than before, will we re-trigger the action.
+    //   if (JSON.stringify(param) != JSON.stringify(this.uiState.params)) {
+    //     this.uiState.params = param;
+    //   } else {
+    //     this.logger.debug('PARAMS IS NOT DIFFERENT!! CONTINUE AS BEFORE!');
+    //   }
+    // }
 
     // If there is any params, it means there might be an action triggered by protocol handlers. Parse the params and set action.
     if (this.uiState.params) {
       if (this.uiState.params.sid) {
         this.uiState.action = {
           action: 'sid',
-          document: this.uiState.params.sid
-        }
+          document: this.uiState.params.sid,
+        };
 
         setTimeout(() => {
           // Persist the action, but don't broadcast this change as we've already written local state.
           this.setAction(this.uiState.action, true);
         }, 0);
-      }
-
-      if (this.uiState.params.nostr) {
+      } else if (this.uiState.params.nostr) {
         this.uiState.action = {
           action: 'nostr',
-          document: this.uiState.params.nostr
-        }
+          document: this.uiState.params.nostr,
+        };
 
         setTimeout(() => {
           // Persist the action, but don't broadcast this change as we've already written local state.
           this.setAction(this.uiState.action, true);
         }, 0);
+      } else if (this.uiState.params.action) {
+        this.uiState.action = {
+          action: this.uiState.params.action,
+          args: this.uiState.params.args,
+        };
       }
     }
 
-    this.logger.debug('ACTION:', this.uiState.action);
+    console.log('WHAT IS THE ACTION:', this.uiState.action);
+    this.logger.debug('LOADING ACTION:', this.uiState.action);
+
+    console.log(this.uiState.action?.action);
+    console.log(this.walletManager.activeWallet);
+    // console.log(this.secure.unlocked(this.walletManager.activeWallet.id));
+
+    // Activate a wallet if not active.
+    if (this.walletManager.hasWallets && !this.walletManager.activeWallet && this.uiState.persisted.previousWalletId) {
+      await this.walletManager.setActiveWallet(this.uiState.persisted.previousWalletId);
+    }
 
     // If an action has been triggered, we'll always show action until user closes the action.
     if (this.uiState.action?.action && this.walletManager.activeWallet && this.secure.unlocked(this.walletManager.activeWallet.id)) {
+      console.log('REDIRECT TO ACTION!!!!');
       // TODO: Add support for more actions.
       this.router.navigate(['action', this.uiState.action?.action]);
     } else {
@@ -195,17 +204,21 @@ export class LoadingComponent implements OnInit, OnDestroy {
             this.router.navigateByUrl('/account/select');
           }
         } else {
-          // No active wallet... Set the previous active wallet.
-          await this.walletManager.setActiveWallet(this.uiState.persisted.previousWalletId);
+          // When the initial state is loaded and user has not unlocked any wallets, we'll show the unlock screen on home.
+          this.router.navigateByUrl('/home');
+          
+          // console.log('USING PREVIOUS ACTIVE WALLET!!');
+          // // No active wallet... Set the previous active wallet.
+          // await this.walletManager.setActiveWallet(this.uiState.persisted.previousWalletId);
 
-          // If the previous wallet ID is actually unlocked already, which can happen when a new
-          // instance of the extension is opened, then send user directly to dashboard.
-          if (this.secure.unlocked(this.uiState.persisted.previousWalletId)) {
-            this.router.navigateByUrl('/dashboard');
-          } else {
-            // When the initial state is loaded and user has not unlocked any wallets, we'll show the unlock screen on home.
-            this.router.navigateByUrl('/home');
-          }
+          // // If the previous wallet ID is actually unlocked already, which can happen when a new
+          // // instance of the extension is opened, then send user directly to dashboard.
+          // if (this.secure.unlocked(this.uiState.persisted.previousWalletId)) {
+          //   this.router.navigateByUrl('/dashboard');
+          // } else {
+          //   // When the initial state is loaded and user has not unlocked any wallets, we'll show the unlock screen on home.
+          //   this.router.navigateByUrl('/home');
+          // }
         }
       }
     }

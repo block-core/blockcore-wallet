@@ -13,7 +13,8 @@
   "permissions": [
     "storage",
     "unlimitedStorage",
-    "alarms"
+    "alarms",
+    "activeTab"
   ],
   "background": {
     "service_worker": "background.js"

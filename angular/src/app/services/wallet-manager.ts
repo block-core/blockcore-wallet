@@ -547,6 +547,7 @@ export class WalletManager {
 
   async setActiveWallet(id: string) {
     this.logger.debug(`Changing the active wallet to ${id}.`);
+    console.log(`Changing the active wallet to ${id}.`);
 
     if (this.activeWalletId != id) {
       this._activeWalletId = id;
@@ -680,18 +681,18 @@ export class WalletManager {
 
   updateAllInstances() {
     if (this.runtime.isExtension) {
-      chrome.runtime.sendMessage(
-        {
-          type: 'reload',
-          ext: 'blockcore',
-          source: 'tab',
-          target: 'tabs',
-          host: location.host,
-        },
-        function (response) {
-          // console.log('Extension:sendMessage:response:updated:', response);
-        }
-      );
+      // chrome.runtime.sendMessage(
+      //   {
+      //     type: 'reload',
+      //     ext: 'blockcore',
+      //     source: 'tab',
+      //     target: 'tabs',
+      //     host: location.host,
+      //   },
+      //   function (response) {
+      //     // console.log('Extension:sendMessage:response:updated:', response);
+      //   }
+      // );
     }
 
     // After updating all UI instances, also make sure we restart the watcher

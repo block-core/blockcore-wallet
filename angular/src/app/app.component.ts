@@ -3,14 +3,14 @@ import { ChangeDetectorRef, Component, Inject, NgZone, OnInit, Renderer2, ViewCh
 import { MatSidenav } from '@angular/material/sidenav';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { UIState, CommunicationService, NetworksService, EnvironmentService, AppManager, SecureStateService, WalletManager, SettingsService } from './services';
-import { Location } from '@angular/common'
+import { Location } from '@angular/common';
 import { TranslateService } from '@ngx-translate/core';
 import { RuntimeService } from './services/runtime.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit {
   title = 'blockcore-wallet';
@@ -20,7 +20,8 @@ export class AppComponent implements OnInit {
 
   instanceName: string;
 
-  constructor(public uiState: UIState,
+  constructor(
+    public uiState: UIState,
     private router: Router,
     private renderer: Renderer2,
     public translate: TranslateService,
@@ -36,13 +37,13 @@ export class AppComponent implements OnInit {
     private env: EnvironmentService,
     private runtime: RuntimeService,
     public networkService: NetworksService,
-    @Inject(DOCUMENT) private document: Document) {
-
+    @Inject(DOCUMENT) private document: Document
+  ) {
     this.instanceName = this.env.instanceName;
   }
 
   maximize() {
-    chrome.tabs.create({ active: true, selected: true, url: "index.html" });
+    chrome.tabs.create({ active: true, selected: true, url: 'index.html' });
   }
 
   goBack() {
@@ -61,6 +62,34 @@ export class AppComponent implements OnInit {
 
   async ngOnInit() {
     this.uiState.manifest = await this.runtime.getManifest();
+
+    const queryParam = globalThis.location.search;
+
+    // TODO: IT IS NOT POSSIBLE TO "EXIT" ACTIONS THAT ARE TRIGGERED WITH QUERY PARAMS.
+    // FIX THIS ... attempted to check previous, but that does not work...
+    if (queryParam) {
+      const param = Object.fromEntries(new URLSearchParams(queryParam)) as any;
+      console.log('THERE ARE PARAMS', param);
+      // Only when the param is different than before, will we re-trigger the action.
+      if (JSON.stringify(param) != JSON.stringify(this.uiState.params)) {
+        this.uiState.params = param;
+      } else {
+        console.debug('PARAMS IS NOT DIFFERENT!! CONTINUE AS BEFORE!');
+      }
+    }
+
+    console.log('uiState.params:', this.uiState.params);
+
+    // let qs = new URLSearchParams(location.search);
+    // let id = qs.get('id');
+    // let host = qs.get('host');
+    // let level = parseInt(qs.get('level'));
+    // let params;
+    // try {
+    //   params = JSON.parse(qs.get('params'));
+    // } catch (err) {
+    //   params = null;
+    // }
 
     this.router.events.subscribe(async (val) => {
       if (val instanceof NavigationEnd) {

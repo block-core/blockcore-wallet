@@ -24,24 +24,38 @@ export class CommunicationService {
 
     }
 
+
+
+
     initialize() {
         // TODO: Handle these messages internally when running outside of extension context.
         if (this.runtime.isExtension) {
-            chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
-                this.ngZone.run(async () => {
-                    const result = await this.handleInternalMessage(message, sender);
-                    // this.logger.debug(`Process messaged ${message.type} and returning this response: `, result);
-                    sendResponse(result);
-                });
-            });
 
-            chrome.runtime.onMessageExternal.addListener(async (message, sender, sendResponse) => {
-                this.ngZone.run(async () => {
-                    const result = await this.handleExternalMessage(message, sender);
-                    // this.logger.debug(`Process (external) messaged ${message.type} and returning this response: `, result);
-                    sendResponse(result);
-                });
-            });
+
+
+            // chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
+
+            //     console.log('chrome.runtime.onMessage within ANGULAR!');
+
+
+
+            //     this.ngZone.run(async () => {
+            //         const result = await this.handleInternalMessage(message, sender);
+            //         // this.logger.debug(`Process messaged ${message.type} and returning this response: `, result);
+            //         sendResponse(result);
+            //     });
+            // });
+
+            // chrome.runtime.onMessageExternal.addListener(async (message, sender, sendResponse) => {
+
+            //     console.log('chrome.runtime.onMessageExternal 2222 within ANGULAR!');
+
+            //     this.ngZone.run(async () => {
+            //         const result = await this.handleExternalMessage(message, sender);
+            //         // this.logger.debug(`Process (external) messaged ${message.type} and returning this response: `, result);
+            //         sendResponse(result);
+            //     });
+            // });
         } else {
             this.events.subscribeAll().subscribe(async (message) => {
                 this.ngZone.run(async () => {
@@ -56,6 +70,7 @@ export class CommunicationService {
     createMessage(type: string, data?: any, target: string = 'background'): Message {
         let key = uuidv4();
 
+
         return {
             id: key,
             type: type,
@@ -64,6 +79,7 @@ export class CommunicationService {
             source: 'tabs',
             target: target
         }
+        
     }
 
     createResponse(message: Message, data?: any): MessageResponse {
@@ -78,9 +94,10 @@ export class CommunicationService {
         // this.logger.info('CommunicationService::send:', message);
 
         if (this.runtime.isExtension) {
-            chrome.runtime.sendMessage(message, (response) => {
-                // this.logger.info('CommunicationService:send:response:', response);
-            });
+            // chrome.runtime.sendMessage(message, (response) => {
+            //     // this.logger.info('CommunicationService:send:response:', response);
+            // });
+            
         } else {
             this.events.publish(message.type, message);
         }
@@ -88,7 +105,7 @@ export class CommunicationService {
 
     /** Send message to every single instance of the extension. */
     sendToTabs(message: Message) {
-        chrome.tabs.query({}, (tabs) => tabs.forEach(tab => chrome.tabs.sendMessage(tab.id, message)));
+        // chrome.tabs.query({}, (tabs) => tabs.forEach(tab => chrome.tabs.sendMessage(tab.id, message)));
     }
 
     async handleMessage(message: Message) {
