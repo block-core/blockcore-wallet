@@ -363,11 +363,17 @@ interface Settings {
 }
 
 interface Action {
-    args?: string[];
+    args?: string[] | PermissionArguments | any;
     action?: string;
     document?: string;
     tabId?: string;
     id?: string;
+}
+
+interface PermissionArguments {
+    host: string,
+    level: number,
+    condition: string
 }
 
 interface State {
@@ -537,5 +543,6 @@ export {
     AccountUnspentTransactionOutput,
     AddressWatchState,
     AddressIndexedState,
-    NetworkStatusEntry
+    NetworkStatusEntry,
+    PermissionArguments
 }

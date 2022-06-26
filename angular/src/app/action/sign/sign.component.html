@@ -12,6 +12,12 @@
         <textarea class="signing-content" matInput [ngModel]="content"></textarea>
     </mat-form-field>
 
-    <button class="signup-button" mat-flat-button color="primary" (click)="sign()">Sign and close</button>&nbsp;
-    <button class="signup-button" mat-flat-button (click)="exit()">Exit Action</button>
+    <!-- <button class="signup-button" mat-flat-button color="primary" (click)="sign()">Sign and close</button>&nbsp;
+    <button class="signup-button" mat-flat-button (click)="exit()">Exit Action</button> -->
+
+    <button class="signup-button" mat-flat-button color="primary" (click)="authorize('once')">Authorize once</button>&nbsp;
+    <button class="signup-button" mat-flat-button (click)="authorize('expirable')">Authorize for 5 minutes</button>&nbsp;
+    <button class="signup-button" mat-flat-button (click)="authorize('forever')">Authorize forever</button>&nbsp;
+    <button class="signup-button" mat-flat-button (click)="exit()">Cancel</button>
+
 </div>

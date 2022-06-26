@@ -1,0 +1,26 @@
+<div class="page">
+
+    <h2>Permission approval</h2>
+
+    <p>IMPORTANT: Verify all details below before you accept the permission request.</p>
+
+    <p>Account: {{walletManager.activeAccount?.name}} (change in top-right menu)</p>
+    
+    <h3>{{permission.host}}</h3>
+
+    <!-- Derivation path: {{networkService.getDerivationPathForAccount(walletManager.activeAccount)}}<br><br> -->
+
+    <!-- You attest with your select account to the following content:
+    <br><br>
+    <mat-form-field class="input-full-width" appearance="outline">
+        <mat-label>Signing content</mat-label>
+        <textarea class="signing-content" matInput [ngModel]="content"></textarea>
+    </mat-form-field> -->
+
+    <button class="signup-button" mat-flat-button color="primary" (click)="sign()">Sign and close</button>&nbsp;
+    
+    <button class="signup-button" mat-flat-button (click)="exit()">Authorize once</button>
+    <button class="signup-button" mat-flat-button (click)="exit()">Authorize for 5 minutes</button>
+    <button class="signup-button" mat-flat-button (click)="exit()">Authorize forever</button>
+    <button class="signup-button" mat-flat-button (click)="exit()">Cancel</button>
+</div>
