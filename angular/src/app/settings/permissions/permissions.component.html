@@ -1,0 +1,19 @@
+<div class="page">
+  <div class="centered">
+    <mat-icon class="large-icon">vpn_lock</mat-icon>
+    <br />
+    <h1>Permissions</h1>
+    <p>Manage persisted permissions you have authorized web apps.</p>
+  </div>
+
+  <div *ngFor="let status of networkStatus.getActive(); let i = index">
+    <strong class="network-type">{{ status.type }}</strong
+    ><br />
+    <span *ngIf="status.networks?.length == 0">No servers online for this network.<br /></span>
+    <div mat-line *ngFor="let network of status.networks">
+      <app-network-status [value]="network.availability"></app-network-status>
+      {{ network.domain }}<br /><span class="dimmed">{{ network.status }}</span
+      ><br /><br />
+    </div>
+  </div>
+</div>

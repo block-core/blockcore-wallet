@@ -37,6 +37,7 @@ import { NonFungibleTokenComponent } from "./collectables/non-fungible-token.com
 import { CollectablesComponent } from "./collectables/collectables.component";
 import { NetworkComponent } from './settings/network/network.component';
 import { IdentityComponent } from './account/identity/identity.component';
+import { PermissionsComponent } from './settings/permissions/permissions.component';
 
 const routes: Routes = [
   {
@@ -97,6 +98,11 @@ const routes: Routes = [
   },
   {
     path: 'settings/network', component: NetworkComponent, resolve: {
+      data: LoadingResolverService
+    }
+  },
+  {
+    path: 'settings/permissions', component: PermissionsComponent, resolve: {
       data: LoadingResolverService
     }
   },

@@ -85,6 +85,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { QrScanDialog } from './account/send/address/qr-scanning.component';
 import { IdentityComponent } from './account/identity/identity.component';
 import { ActionPermissionComponent } from './action/permission/permission.component';
+import { PermissionsComponent } from './settings/permissions/permissions.component';
 
 // required for AOT compilation
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
@@ -139,7 +140,8 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     NetworkComponent,
     QrScanDialog,
     IdentityComponent,
-    ActionPermissionComponent
+    ActionPermissionComponent,
+    PermissionsComponent
   ],
   imports: [
     BrowserModule,

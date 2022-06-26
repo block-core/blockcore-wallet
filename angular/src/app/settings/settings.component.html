@@ -141,6 +141,11 @@
       <div mat-line>{{ 'Settings.NetworkStatus' | translate }}</div>
     </a>
 
+    <a mat-list-item [routerLink]="['permissions']">
+      <mat-icon mat-list-icon>vpn_lock</mat-icon>
+      <div mat-line>Permissions</div>
+    </a>
+
     <a mat-list-item routerLinkActive="active-link" [routerLink]="['password']">
       <mat-icon mat-list-icon>password</mat-icon>
       <div mat-line>{{ 'Settings.ChangePassword' | translate }}</div>
@@ -162,10 +167,86 @@
       <div mat-line>{{ 'Settings.ShowSecretRecoveryPhrase' | translate }}</div>
     </a>
 
+    <!-- <a mat-list-item [routerLink]="['/permissions']">
+      <mat-icon mat-list-icon>policy</mat-icon>
+      <div mat-line>Permissions</div>
+    </a>
+
+    <a mat-list-item [routerLink]="['/permissions']">
+      <mat-icon mat-list-icon>disabled_visible</mat-icon>
+      <div mat-line>Permissions</div>
+    </a>
+
+    <a mat-list-item [routerLink]="['/permissions']">
+      <mat-icon mat-list-icon>app_settings_alt</mat-icon>
+      <div mat-line>Permissions</div>
+    </a>
+
+    <a mat-list-item [routerLink]="['/permissions']">
+      <mat-icon mat-list-icon>construction</mat-icon>
+      <div mat-line>Permissions</div>
+    </a>
+
+    <a mat-list-item [routerLink]="['/permissions']">
+      <mat-icon mat-list-icon>public_off</mat-icon>
+      <div mat-line>Permissions</div>
+    </a>
+
+    <a mat-list-item [routerLink]="['/permissions']">
+      <mat-icon mat-list-icon>remove_moderator</mat-icon>
+      <div mat-line>Permissions</div>
+    </a>
+
+    <a mat-list-item [routerLink]="['/permissions']">
+      <mat-icon mat-list-icon>block</mat-icon>
+      <div mat-line>Permissions</div>
+    </a>
+
+    <a mat-list-item [routerLink]="['/permissions']">
+      <mat-icon mat-list-icon>vpn_key</mat-icon>
+      <div mat-line>Permissions</div>
+    </a>
+
+    <a mat-list-item [routerLink]="['/permissions']">
+      <mat-icon mat-list-icon>key</mat-icon>
+      <div mat-line>Permissions</div>
+    </a>
+
+    <a mat-list-item [routerLink]="['/permissions']">
+      <mat-icon mat-list-icon>handyman</mat-icon>
+      <div mat-line>Permissions</div>
+    </a>
+
+    <a mat-list-item [routerLink]="['/permissions']">
+      <mat-icon mat-list-icon>miscellaneous_services</mat-icon>
+      <div mat-line>Permissions</div>
+    </a>
+
+    <a mat-list-item [routerLink]="['/permissions']">
+      <mat-icon mat-list-icon>local_police</mat-icon>
+      <div mat-line>Permissions</div>
+    </a>
+
+    <a mat-list-item [routerLink]="['/permissions']">
+      <mat-icon mat-list-icon>playlist_remove</mat-icon>
+      <div mat-line>Permissions</div>
+    </a>
+
+    <a mat-list-item [routerLink]="['/permissions']">
+      <mat-icon mat-list-icon>beenhere</mat-icon>
+      <div mat-line>Permissions</div>
+    </a>
+
+    <a mat-list-item [routerLink]="['/permissions']">
+      <mat-icon mat-list-icon>security</mat-icon>
+      <div mat-line>Permissions</div>
+    </a> -->
+    
     <a mat-list-item [routerLink]="['/wipe']">
       <mat-icon mat-list-icon>delete_forever</mat-icon>
       <div mat-line>{{ 'Settings.WipeData' | translate }}</div>
     </a>
+    
 
   </mat-nav-list>
 
