@@ -376,6 +376,14 @@ interface PermissionArguments {
     condition: string
 }
 
+interface Permission
+{
+    domain: string,
+    level: number,
+    condition: string,
+    created: Date
+}
+
 interface State {
     action?: Action
     persisted: Persisted
@@ -544,5 +552,6 @@ export {
     AddressWatchState,
     AddressIndexedState,
     NetworkStatusEntry,
-    PermissionArguments
+    PermissionArguments,
+    Permission
 }

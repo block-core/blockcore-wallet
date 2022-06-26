@@ -3,6 +3,7 @@ import { BehaviorSubject, Observable } from "rxjs";
 import { ActionStore, AddressStore, NetworkStatusStore, SettingStore, TransactionStore, UIStore, WalletStore, AccountHistoryStore, AddressIndexedStore } from "src/shared";
 import { AccountStateStore } from "src/shared/store/account-state-store";
 import { AddressWatchStore } from "src/shared/store/address-watch-store";
+import { PermissionStore } from "src/shared/store/permission-store";
 import { StoreBase, StoreListBase } from "src/shared/store/store-base";
 import { LoggerService } from "./logger.service";
 
@@ -31,6 +32,7 @@ export class StateService {
         private addressWatchStore: AddressWatchStore,
         private addressIndexedStore: AddressIndexedStore,
         private accountStateStore: AccountStateStore,
+        private permissionStore: PermissionStore
 
     ) {
         this.changedSubject = new BehaviorSubject<StateService>(this);
@@ -46,6 +48,7 @@ export class StateService {
         this.stores.push(addressWatchStore);
         this.stores.push(addressIndexedStore);
         this.stores.push(accountStateStore);
+        this.stores.push(permissionStore);
     }
 
     async wipe() {
@@ -87,6 +90,7 @@ export class StateService {
             await this.addressWatchStore.load();
             await this.addressIndexedStore.load();
             await this.accountStateStore.load();
+            await this.permissionStore.load();
     
             this.logger.debug('RELOAD CALLED:');
             this.logger.debug(this.accountHistoryStore.all());
@@ -106,6 +110,7 @@ export class StateService {
             await this.addressWatchStore.load();
             await this.addressIndexedStore.load();
             await this.accountStateStore.load();
+            await this.permissionStore.load();
 
             this.changedSubject.next(this);
         });
