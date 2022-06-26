@@ -5,35 +5,31 @@ import { Router } from '@angular/router';
 import { ActionService } from 'src/app/services/action.service';
 
 @Component({
-    selector: 'app-sign',
-    templateUrl: './sign.component.html',
-    styleUrls: ['./sign.component.css']
+  selector: 'app-sign',
+  templateUrl: './sign.component.html',
+  styleUrls: ['./sign.component.css'],
 })
 export class ActionSignComponent {
-    content?: string;
+  content?: string;
 
-    constructor(
-        public uiState: UIState,
-        private crypto: CryptoService,
-        private router: Router,
-        private app: ApplicationRef,
-        private ngZone: NgZone,
-        private action: ActionService,
-        public networkService: NetworksService,
-        public walletManager: WalletManager,
-        private manager: AppManager,
-        private cd: ChangeDetectorRef) {
-        this.uiState.title = 'Action: Signing';
+  constructor(public uiState: UIState, private crypto: CryptoService, private router: Router, private app: ApplicationRef, private ngZone: NgZone, private action: ActionService, public networkService: NetworksService, public walletManager: WalletManager, private manager: AppManager, private cd: ChangeDetectorRef) {
+    this.uiState.title = 'Action: Signing';
 
-        this.content = this.uiState.action?.document;
-    }
+    this.content = this.uiState.action?.document;
+  }
 
-    sign() {
-        // this.manager.sign(this.content, this.uiState.action?.tabId);
-        window.close();
-    }
+  sign() {
+    // this.manager.sign(this.content, this.uiState.action?.tabId);
 
-    exit() {
-        this.action.clearAction();
-    }
+    // Reset params so the action can be re-triggered.
+    this.uiState.params = null;
+    window.close();
+  }
+
+  exit() {
+    this.action.clearAction();
+    this.uiState.params = null;
+
+    window.close();
+  }
 }

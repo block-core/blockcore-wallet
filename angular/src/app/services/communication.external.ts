@@ -68,7 +68,7 @@ export class CommunicationExternal {
 
     try {
       switch (message.type) {
-        case 'ext-getpublickey': {
+        case 'getpublickey': {
 
           const account = this.walletManager.activeAccount;
 

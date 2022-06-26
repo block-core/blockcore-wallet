@@ -363,6 +363,7 @@ interface Settings {
 }
 
 interface Action {
+    args?: string[];
     action?: string;
     document?: string;
     tabId?: string;

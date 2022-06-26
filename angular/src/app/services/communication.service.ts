@@ -24,12 +24,20 @@ export class CommunicationService {
 
     }
 
+
+
+
     initialize() {
         // TODO: Handle these messages internally when running outside of extension context.
         if (this.runtime.isExtension) {
+
+
+
             // chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
 
             //     console.log('chrome.runtime.onMessage within ANGULAR!');
+
+
 
             //     this.ngZone.run(async () => {
             //         const result = await this.handleInternalMessage(message, sender);
@@ -62,6 +70,7 @@ export class CommunicationService {
     createMessage(type: string, data?: any, target: string = 'background'): Message {
         let key = uuidv4();
 
+
         return {
             id: key,
             type: type,
@@ -70,6 +79,7 @@ export class CommunicationService {
             source: 'tabs',
             target: target
         }
+        
     }
 
     createResponse(message: Message, data?: any): MessageResponse {

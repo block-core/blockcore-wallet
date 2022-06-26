@@ -6,7 +6,7 @@ import { CommunicationService, SecureStateService, WalletManager } from '../serv
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.css']
+  styleUrls: ['./home.component.css'],
 })
 export class HomeComponent implements OnInit, OnDestroy {
   mnemonic = '';
@@ -18,14 +18,8 @@ export class HomeComponent implements OnInit, OnDestroy {
   error = '';
   sub2: any;
 
-  constructor(
-    public uiState: UIState,
-    private crypto: CryptoService,
-    private router: Router,
-    private communication: CommunicationService,
-    private secure: SecureStateService,
-    public walletManager: WalletManager,
-    private cd: ChangeDetectorRef) {
+  constructor(public uiState: UIState, private crypto: CryptoService, private router: Router, private communication: CommunicationService, private secure: SecureStateService, public walletManager: WalletManager, private cd: ChangeDetectorRef) {
+    console.log('HOME COMPONENT!');
 
     this.uiState.showBackButton = false;
     this.activateAlarm();
@@ -35,12 +29,18 @@ export class HomeComponent implements OnInit, OnDestroy {
       this.uiState.title = `Unlock ${this.walletManager.activeWallet.name}`;
 
       if (this.secure.unlocked(this.walletManager.activeWallet?.id)) {
-        this.router.navigateByUrl('/dashboard');
+
+        console.log('Wallet already unlocked!!');
+
+        if (this.uiState.action?.action) {
+          this.router.navigate(['action', this.uiState.action.action]);
+          console.log('THERE IS ACTION!');
+        } else {
+          console.log('No action...');
+          this.router.navigateByUrl('/dashboard');
+        }
       }
     }
-
-
-
   }
 
   ngOnDestroy(): void {
@@ -49,17 +49,13 @@ export class HomeComponent implements OnInit, OnDestroy {
     }
   }
 
-  async ngOnInit() {
-
-  }
+  async ngOnInit() {}
 
   removeError(): void {
     this.error = '';
   }
 
-  activateAlarm() {
-
-  }
+  activateAlarm() {}
 
   generate() {
     this.mnemonic = this.crypto.generateMnemonic();

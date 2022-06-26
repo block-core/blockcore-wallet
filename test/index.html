@@ -96,14 +96,17 @@
         }
 
         console.log("Blockcore:", blockcore);
-        await blockcore.sign({ type: 'sign' });
-
-        window.blockcore.open();
+        // await blockcore.sign({ type: "sign" });
+        // window.blockcore.open();
 
         let pubKey = await window.blockcore.getPublicKey();
 
-        if (pubKey.error) {
+        if (!pubKey) {
+          console.error("Returned empty public key!");
+          pubKey = 'ERROR!';
+        } else if (pubKey.error) {
           console.error(pubKey.error);
+          pubKey = pubKey.error;
         } else {
           console.log("pubKey:", pubKey);
         }
