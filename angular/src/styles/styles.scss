@@ -428,8 +428,10 @@ select {
 
 .dimmed {
   color: gray;
+  // color: rgba(0, 0, 0, 0.87);
 }
 
 .dark-mode .dimmed {
   color: silver;
+  // color: rgba(0, 0, 0, 0.87);
 }

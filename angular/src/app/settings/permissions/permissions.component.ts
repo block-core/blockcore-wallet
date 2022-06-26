@@ -9,6 +9,9 @@ import { UIState, FeatureService, NetworkStatusService } from '../../services';
     encapsulation: ViewEncapsulation.None
 })
 export class PermissionsComponent implements OnDestroy {
+
+    permissions: any[];
+
     constructor(
         public uiState: UIState,
         public location: Location,
@@ -18,6 +21,25 @@ export class PermissionsComponent implements OnDestroy {
         this.uiState.title = 'Permissions';
         this.uiState.showBackButton = true;
         this.uiState.goBackHome = false;
+
+        this.permissions = [{
+            domain: 'epmiiicbebgckgoggnflbpcglnabbage',
+            created: new Date(),
+            condition: 'forever',
+            level: 1
+        },
+        {
+            domain: 'http://localhost:3000',
+            created: new Date(),
+            condition: 'expires',
+            level: 2
+        }];
+
+    }
+
+    remove(permission: any)
+    {
+        alert('remove!');
     }
 
     ngOnDestroy() {
