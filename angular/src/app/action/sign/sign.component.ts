@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { CryptoService, UIState, NetworksService, AppManager, WalletManager } from '../../services';
 import { Router } from '@angular/router';
 import { ActionService } from 'src/app/services/action.service';
+import * as browser from 'webextension-polyfill';
 
 @Component({
   selector: 'app-sign',
@@ -23,12 +24,38 @@ export class ActionSignComponent {
 
     // Reset params so the action can be re-triggered.
     this.uiState.params = null;
+
+    // TODO: Move this to a communication service.
+    // Inform the provider script that user has signed the data.
+    browser.runtime.sendMessage({
+      prompt: true,
+      target: 'provider',
+      src: 'tabs',
+      ext: 'blockcore',
+      args: ['cipher'],
+      id: this.uiState.action.id,
+      type: this.uiState.action.action
+    });
+
     window.close();
   }
 
   exit() {
     this.action.clearAction();
     this.uiState.params = null;
+
+        // TODO: Move this to a communication service.
+    // Inform the provider script that user has signed the data.
+    browser.runtime.sendMessage({
+      prompt: true,
+      target: 'provider',
+      cancelled: true,
+      src: 'tabs',
+      ext: 'blockcore',
+      args: ['cipher'],
+      id: this.uiState.action.id,
+      type: this.uiState.action.action
+    });
 
     window.close();
   }

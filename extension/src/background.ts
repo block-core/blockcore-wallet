@@ -154,6 +154,9 @@ function promptPermission(host, level, args) {
     });
 
     prompts[id] = { resolve, reject };
+
+    console.log('promts:', prompts);
+
   });
 }
 
