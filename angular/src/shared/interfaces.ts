@@ -367,7 +367,7 @@ interface Action {
     action?: string;
     document?: string;
     tabId?: string;
-    id: string;
+    id?: string;
 }
 
 interface State {

@@ -39,12 +39,12 @@
   "private": true,
   "dependencies": {
     "@angular/animations": "14.0.3",
-    "@angular/cdk": "14.0.2",
+    "@angular/cdk": "14.0.3",
     "@angular/common": "14.0.3",
     "@angular/compiler": "14.0.3",
     "@angular/core": "14.0.3",
     "@angular/forms": "14.0.3",
-    "@angular/material": "14.0.2",
+    "@angular/material": "14.0.3",
     "@angular/platform-browser": "14.0.3",
     "@angular/platform-browser-dynamic": "14.0.3",
     "@angular/router": "14.0.3",
@@ -70,7 +70,7 @@
     "bs58": "^5.0.0",
     "buffer": "^6.0.3",
     "crypto-browserify": "^3.12.0",
-    "did-jwt": "6.1.2",
+    "did-jwt": "6.2.0",
     "did-jwt-vc": "2.1.12",
     "did-resolver": "3.2.2",
     "ecpair": "^2.0.1",
@@ -90,12 +90,12 @@
     "zone.js": "~0.11.6"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "14.0.2",
-    "@angular/cli": "14.0.2",
+    "@angular-devkit/build-angular": "14.0.3",
+    "@angular/cli": "14.0.3",
     "@angular/compiler-cli": "14.0.3",
     "@bartholomej/ngx-translate-extract": "^8.0.2",
     "@capacitor/cli": "latest",
-    "@types/big.js": "^6.1.3",
+    "@types/big.js": "^6.1.4",
     "@types/bs58": "^4.0.1",
     "@types/chrome": "0.0.190",
     "@types/jasmine": "4.0.3",
@@ -114,7 +114,7 @@
     "sinon-chrome": "^3.0.1",
     "ts-loader": "^9.3.1",
     "ts-node": "~10.8.1",
-    "typescript": "4.6.4",
+    "typescript": "4.7.4",
     "webpack-cli": "^4.10.0",
     "webpack-ext-reloader": "1.1.9"
   }
