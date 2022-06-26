@@ -1,23 +1,26 @@
 <div class="page">
+  <h2>Signing</h2>
 
-    <h2>Signing</h2>
+  <!-- <p>IMPORTANT: Verify all details below before you accept the permission request.</p> -->
 
-    Signing account: {{walletManager.activeAccount?.name}}<br>
-    <!-- Derivation path: {{networkService.getDerivationPathForAccount(walletManager.activeAccount)}}<br><br> -->
+  <p>
+    Account: <strong>{{ walletManager.activeAccount?.name }}</strong
+    ><br />
+    Permission: <strong>"Read your public key"</strong>
+  </p>
 
-    You attest with your select account to the following content:
-    <br><br>
-    <mat-form-field class="input-full-width" appearance="outline">
-        <mat-label>Signing content</mat-label>
-        <textarea class="signing-content" matInput [ngModel]="content"></textarea>
-    </mat-form-field>
+  <!-- Derivation path: {{networkService.getDerivationPathForAccount(walletManager.activeAccount)}}<br><br> -->
 
-    <!-- <button class="signup-button" mat-flat-button color="primary" (click)="sign()">Sign and close</button>&nbsp;
+  You attest with your selected account to the following content:
+  <br /><br />
+  <mat-form-field class="input-full-width" appearance="outline">
+    <mat-label>Signing content</mat-label>
+    <textarea class="signing-content" matInput [ngModel]="content"></textarea>
+  </mat-form-field>
+
+  <!-- <button class="signup-button" mat-flat-button color="primary" (click)="sign()">Sign and close</button>&nbsp;
     <button class="signup-button" mat-flat-button (click)="exit()">Exit Action</button> -->
 
-    <button class="signup-button" mat-flat-button color="primary" (click)="authorize('once')">Authorize once</button>&nbsp;
-    <button class="signup-button" mat-flat-button (click)="authorize('expirable')">Authorize for 5 minutes</button>&nbsp;
-    <button class="signup-button" mat-flat-button (click)="authorize('forever')">Authorize forever</button>&nbsp;
-    <button class="signup-button" mat-flat-button (click)="exit()">Cancel</button>
-
+  <button class="action-button" mat-flat-button color="primary" (click)="authorize('once')">Authorize once</button>&nbsp; <button class="action-button" mat-flat-button (click)="authorize('expirable')">Authorize for 5 minutes</button>&nbsp; <button class="action-button" mat-flat-button (click)="authorize('forever')">Authorize forever</button>&nbsp;
+  <button class="action-button" mat-flat-button (click)="exit()">Cancel</button>
 </div>
