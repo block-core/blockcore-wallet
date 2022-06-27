@@ -56,7 +56,7 @@ async function handleContentScriptMessage(message: ActionMessageResponse) {
     } catch (_) {
       // not authorized, stop here
       return {
-        error: `Insufficient permissions, required ${message.action}`,
+        error: { message: `Insufficient permissions, required "${message.action}".` },
       };
     }
   }
@@ -98,7 +98,7 @@ function handlePromptMessage(message: ActionMessageResponse, sender) {
       prompts[message.id]?.resolve?.();
       permissionService.updatePermission(message.app, message.action, message.permission);
       break;
-    case 'single':
+    case 'once':
       prompts[message.id]?.resolve?.();
       break;
     case 'no':

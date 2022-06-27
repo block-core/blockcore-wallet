@@ -84,13 +84,12 @@ globalThis.addEventListener('message', (message) => {
 
   // It is possible that calls to the extension is returned without handled by an instance of the extension,
   // if that happens, then response will be undefined.
-
   //console.log('globalThis.addEventListener (PROVIDER), HANDLE THIS MESSAGE: ', message);
   console.log('DATA =: ', message.data);
 
   if (message.data.response?.error) {
-    let error = new Error('blockcore: ' + message.data.response.error.message);
-    error.stack = message.data.response.error.stack;
+    let error = new Error(message.data.response.error?.message);
+    error.stack = message.data.response.error?.stack;
     globalThis.blockcore._requests[message.data.id].reject(error);
   } else {
     globalThis.blockcore._requests[message.data.id].resolve(message.data.response);
