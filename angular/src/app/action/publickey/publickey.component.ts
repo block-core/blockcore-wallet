@@ -91,7 +91,7 @@ export class ActionPublicKeyComponent {
       args: ['cipher'],
       id: this.uiState.action.id,
       action: this.uiState.action.action,
-      app: this.uiState.action.app
+      app: this.uiState.action.app,
     };
 
     // TODO: Move this to a communication service.

@@ -15,7 +15,6 @@ export class ActionService {
     }
 
     async setAction(data: Action, broadcast: boolean) {
-        debugger;
         if (typeof data.action !== 'string') {
             console.error('Only objects that are string are allowed as actions.');
             return;

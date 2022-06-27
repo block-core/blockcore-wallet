@@ -45,8 +45,12 @@ export class BackgroundManager {
 
   intervalRef: any;
 
-  async performTask() {
-    return 'ok';
+  async performTask(publicKey: boolean) {
+    if (publicKey) {
+      return 'public key!';
+    } else {
+      return 'signature!!';
+    }
   }
 
   async updateNetworkStatus(instance: string) {

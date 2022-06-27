@@ -51,10 +51,9 @@ browser.runtime.onMessageExternal.addListener(async (message: ActionMessageRespo
 // });
 
 async function handleContentScriptMessage(message: ActionMessageResponse) {
-  debugger;
   // { type, params, host }
   // Reload the permissions each time.
-  permissionStore.load();
+  await permissionStore.load();
 
   let permission: Permission | null = null;
   let permissionSet = permissionStore.get(message.app);
@@ -75,7 +74,7 @@ async function handleContentScriptMessage(message: ActionMessageResponse) {
     } catch (_) {
       // not authorized, stop here
       return {
-        error: `insufficient permissions, required ${message.action}`,
+        error: `Insufficient permissions, required ${message.action}`,
       };
     }
   }
@@ -83,7 +82,7 @@ async function handleContentScriptMessage(message: ActionMessageResponse) {
   try {
     switch (message.action) {
       case 'publicKey': {
-        return watchManager.performTask();
+        return watchManager.performTask(true);
         // return getPublicKey(sk);
       }
       case 'sign': {
@@ -93,7 +92,7 @@ async function handleContentScriptMessage(message: ActionMessageResponse) {
         // if (!event.id) event.id = getEventHash(event);
 
         // if (!validateEvent(event)) return { error: 'invalid event' };
-        return watchManager.performTask();
+        return watchManager.performTask(false);
         // return await signEvent(event, sk);
       }
       case 'encrypt': {

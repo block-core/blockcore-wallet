@@ -10,8 +10,6 @@ export class PermissionServiceShared {
   }
 
   updatePermission(app: string, action: string, type: string) {
-    debugger;
-
     if (!app || !action) {
       return;
     }
@@ -25,7 +23,6 @@ export class PermissionServiceShared {
     };
 
     if (!permissionSet) {
-      debugger;
       permissionSet = {
         app: app,
         permissions: {
