@@ -15,11 +15,13 @@ const { v4: uuidv4 } = require('uuid');
 })
 export class ActionSignComponent {
   content?: string;
+  domain: string;
 
   constructor(public uiState: UIState, private permissionStore: PermissionStore, private crypto: CryptoService, private router: Router, private app: ApplicationRef, private ngZone: NgZone, private action: ActionService, public networkService: NetworksService, public walletManager: WalletManager, private manager: AppManager, private cd: ChangeDetectorRef) {
     this.uiState.title = 'Action: Signing';
 
     this.content = this.uiState.action?.document;
+    this.domain = this.uiState.action?.domain;
   }
 
   sign() {

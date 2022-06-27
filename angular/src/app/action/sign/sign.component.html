@@ -6,7 +6,9 @@
   <p>
     Account: <strong>{{ walletManager.activeAccount?.name }}</strong
     ><br />
-    Permission: <strong>"Read your public key"</strong>
+    Permission: <strong>"Sign data using your private key"</strong>
+    <br />
+    Domain: <strong>{{ domain }}</strong>
   </p>
 
   <!-- Derivation path: {{networkService.getDerivationPathForAccount(walletManager.activeAccount)}}<br><br> -->
