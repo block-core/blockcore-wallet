@@ -16,21 +16,20 @@ export class PermissionServiceShared {
   /** Will reload the permissions, and remove permissions that has timed out. */
   async refresh() {
     await this.store.load();
-
     const permissions = this.store.all();
 
     for (let i = 0; i < permissions.length; i++) {
-      var needsUpdate = false;
+      var updated = false;
       const permissionSet = permissions[i];
 
       for (let permission in permissionSet.permissions) {
-        if (permissionSet.permissions[permission].condition === 'expirable' && permissionSet.permissions[permission].created_at < Date.now() / 1000 - 5 * 60) {
+        if (permissionSet.permissions[permission].type === 'expirable' && permissionSet.permissions[permission].created < Date.now() / 1000 - 5 * 60) {
           delete permissionSet.permissions[permission];
-          needsUpdate = true;
+          updated = true;
         }
       }
 
-      if (needsUpdate) {
+      if (updated) {
         this.store.set(permissionSet.app, permissionSet);
         await this.store.save();
       }
