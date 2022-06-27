@@ -24,13 +24,13 @@ export class PermissionsComponent implements OnDestroy {
       this.permissions = [
         {
           domain: 'epmiiicbebgckgoggnflbpcglnabbage',
-          created: new Date(),
+          created: new Date().toISOString(),
           condition: 'forever',
           level: 1,
         },
         {
           domain: 'http://localhost:3000',
-          created: new Date(),
+          created: new Date().toISOString(),
           condition: 'expires',
           level: 2,
         },

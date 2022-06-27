@@ -4,6 +4,9 @@ import { CryptoService, UIState, NetworksService, AppManager, WalletManager } fr
 import { Router } from '@angular/router';
 import { ActionService } from 'src/app/services/action.service';
 import * as browser from 'webextension-polyfill';
+import { Permission } from 'src/shared';
+import { PermissionStore } from 'src/shared/store/permission-store';
+const { v4: uuidv4 } = require('uuid');
 
 @Component({
   selector: 'app-sign',
@@ -13,7 +16,7 @@ import * as browser from 'webextension-polyfill';
 export class ActionSignComponent {
   content?: string;
 
-  constructor(public uiState: UIState, private crypto: CryptoService, private router: Router, private app: ApplicationRef, private ngZone: NgZone, private action: ActionService, public networkService: NetworksService, public walletManager: WalletManager, private manager: AppManager, private cd: ChangeDetectorRef) {
+  constructor(public uiState: UIState, private permissionStore: PermissionStore, private crypto: CryptoService, private router: Router, private app: ApplicationRef, private ngZone: NgZone, private action: ActionService, public networkService: NetworksService, public walletManager: WalletManager, private manager: AppManager, private cd: ChangeDetectorRef) {
     this.uiState.title = 'Action: Signing';
 
     this.content = this.uiState.action?.document;
@@ -34,13 +37,47 @@ export class ActionSignComponent {
       ext: 'blockcore',
       args: ['cipher'],
       id: this.uiState.action.id,
-      type: this.uiState.action.action
+      type: this.uiState.action.action,
     });
 
     window.close();
   }
 
+  updatePermission(permission: Permission) {
+    const id = uuidv4();
+    this.permissionStore.set(id, permission);
+    this.permissionStore.save();
+  }
+
   authorize(permission: string) {
+    switch (permission) {
+      case 'forever':
+      case 'expirable':
+        this.updatePermission({
+          domain: this.uiState.action.domain,
+          level: 2,
+          condition: permission,
+          created: new Date().toISOString()
+        });
+        // prompts[id]?.resolve?.()
+        // updatePermission(host, {
+        //   level,
+        //   condition
+        // })
+        break;
+      case 'once':
+        // prompts[id]?.resolve?.()
+        break;
+      case 'no':
+        // prompts[id]?.reject?.()
+        break;
+    }
+
+    debugger;
+
+    // delete prompts[id]
+    // browser.windows.remove(sender.tab.windowId)
+
     // this.manager.sign(this.content, this.uiState.action?.tabId);
 
     // Reset params so the action can be re-triggered.
@@ -55,7 +92,7 @@ export class ActionSignComponent {
       ext: 'blockcore',
       args: ['cipher'],
       id: this.uiState.action.id,
-      type: this.uiState.action.action
+      type: this.uiState.action.action,
     });
 
     window.close();
@@ -65,7 +102,7 @@ export class ActionSignComponent {
     this.action.clearAction();
     this.uiState.params = null;
 
-        // TODO: Move this to a communication service.
+    // TODO: Move this to a communication service.
     // Inform the provider script that user has signed the data.
     browser.runtime.sendMessage({
       prompt: true,
@@ -75,7 +112,7 @@ export class ActionSignComponent {
       ext: 'blockcore',
       args: ['cipher'],
       id: this.uiState.action.id,
-      type: this.uiState.action.action
+      type: this.uiState.action.action,
     });
 
     window.close();

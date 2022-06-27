@@ -149,6 +149,7 @@ export class LoadingComponent implements OnInit, OnDestroy {
         this.uiState.action = {
           action: 'sid',
           document: this.uiState.params.sid,
+          domain: this.uiState.params.host,
         };
 
         setTimeout(() => {
@@ -159,6 +160,7 @@ export class LoadingComponent implements OnInit, OnDestroy {
         this.uiState.action = {
           action: 'nostr',
           document: this.uiState.params.nostr,
+          domain: this.uiState.params.host,
         };
 
         setTimeout(() => {
@@ -169,6 +171,7 @@ export class LoadingComponent implements OnInit, OnDestroy {
         this.uiState.action = {
           action: this.uiState.params.action,
           args: this.uiState.params.args,
+          domain: this.uiState.params.host,
         };
       }
     }

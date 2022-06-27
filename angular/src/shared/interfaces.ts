@@ -368,6 +368,9 @@ interface Action {
     document?: string;
     tabId?: string;
     id?: string;
+    domain: string;
+    // level?: number;
+    // condition?: string
 }
 
 interface PermissionArguments {
@@ -381,7 +384,7 @@ interface Permission
     domain: string,
     level: number,
     condition: string,
-    created: Date
+    created: string
 }
 
 interface State {
