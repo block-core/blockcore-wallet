@@ -17,22 +17,22 @@ export class PermissionsComponent implements OnDestroy, OnInit {
     this.uiState.title = 'Permissions';
     this.uiState.showBackButton = true;
     this.uiState.goBackHome = false;
-
-    this.refresh();
   }
 
-  ngOnInit(): void {
+  async ngOnInit() {
     // Make sure we reload the permission store every time user opens the UI.
     // this.permissionStore.load();
+    await this.refresh();
   }
 
   async remove(permission: Permission, permissionSet: PermissionDomain) {
     delete permissionSet.permissions[permission.action];
     await this.permissionStore.save();
-    this.refresh();
+    await this.refresh();
   }
 
-  refresh() {
+  async refresh() {
+    await this.permissionStore.load();
     this.permissions = this.permissionStore.all();
     console.log(this.permissions);
   }
@@ -49,6 +49,6 @@ export class PermissionsComponent implements OnDestroy, OnInit {
 
   async removeAllPermissions() {
     await this.permissionStore.wipe();
-    this.refresh();
+    await this.refresh();
   }
 }
