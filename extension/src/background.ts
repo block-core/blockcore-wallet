@@ -145,6 +145,8 @@ function promptPermission(host, level, args) {
     args: JSON.stringify(args),
   });
 
+  console.log('QS:', qs);
+
   return new Promise((resolve, reject) => {
     browser.windows.create({
       url: `${browser.runtime.getURL('index.html')}?action=sign&${qs.toString()}`,
@@ -154,9 +156,7 @@ function promptPermission(host, level, args) {
     });
 
     prompts[id] = { resolve, reject };
-
     console.log('promts:', prompts);
-
   });
 }
 
@@ -229,7 +229,7 @@ export async function updatePermission(host, permission) {
 
   browser.storage.local.set({
     permissions: {
-      ...((existingPermissions.permissions) || {}),
+      ...(existingPermissions.permissions || {}),
       [host]: {
         ...permission,
         created_at: Math.round(Date.now() / 1000),

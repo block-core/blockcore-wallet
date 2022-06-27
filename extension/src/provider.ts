@@ -45,8 +45,8 @@ globalThis.blockcore = {
 
   on: (event, callback) => {},
 
-  async getPublicKey() {
-    return this._call('getpublickey', null);
+  async publicKey() {
+    return this._call('publicKey', null);
   },
 
   async login() {

@@ -38,7 +38,8 @@
     <button class="blockcore-extension-button" purpose="identity">Click to give identity with Blockcore</button> -->
 
     <br />
-    <button id="connectButton">Login me in!</button>
+    <button id="connectButton">Ask for Public Key</button>
+    <button id="connectButton2">Ask for Signing</button>
 
     <br />
     <div id="blockcore-extension-output"></div>
@@ -48,7 +49,7 @@
     <!-- <button onclick="connect();">Click to sign</button> with Blockcore Wallet. -->
 
     <script>
-      function connect2() {
+      function connectRefactor() {
         console.log("Attempting to connect with Blockcore Wallet...");
 
         // console.log(window.blockcore2);
@@ -100,11 +101,11 @@
         // window.blockcore.open();
 
         // let pubKey = await window.blockcore.getPublicKey();
-        let pubKey = await window.blockcore.getPublicKey();
+        let pubKey = await window.blockcore.publicKey();
 
         if (!pubKey) {
           console.error("Returned empty public key!");
-          pubKey = 'ERROR!';
+          pubKey = "ERROR!";
         } else if (pubKey.error) {
           console.error(pubKey.error);
           pubKey = pubKey.error;
@@ -118,10 +119,36 @@
         document.getElementById("blockcore-extension-output").innerText = pubKey;
       }
 
+      async function connect2() {
+        document.getElementById("blockcore-extension-output").innerText = "";
+
+        const blockcore = globalThis.blockcore;
+
+        if (!blockcore) {
+          alert("The Blockcore provider is not available. Unable to continue.");
+          return;
+        }
+
+        let signature = await window.blockcore.sign("data");
+
+        if (!signature) {
+          console.error("Returned empty signature!");
+          signature = "ERROR!";
+        } else if (signature.error) {
+          console.error(signature.error);
+          signature = signature.error;
+        } else {
+          console.log("signature:", signature);
+        }
+
+        document.getElementById("blockcore-extension-output").innerText = signature;
+      }
+
       (function () {
         // Examples of wiring up click handler:
         // document.getElementById("connectButton").onclick = connect;
         document.getElementById("connectButton").addEventListener("click", connect);
+        document.getElementById("connectButton2").addEventListener("click", connect2);
       })();
     </script>
   </body>
