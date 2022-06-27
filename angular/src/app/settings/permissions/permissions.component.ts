@@ -26,9 +26,9 @@ export class PermissionsComponent implements OnDestroy, OnInit {
     // this.permissionStore.load();
   }
 
-  remove(id: string) {
-    this.permissionStore.remove(id);
-    this.permissionStore.save();
+  async remove(permission: Permission, permissionSet: PermissionDomain) {
+    delete permissionSet.permissions[permission.action];
+    await this.permissionStore.save();
     this.refresh();
   }
 
@@ -37,14 +37,18 @@ export class PermissionsComponent implements OnDestroy, OnInit {
     console.log(this.permissions);
   }
 
+  toArray(items: any): Permission[] {
+    return Object.values(items);
+  }
+
   ngOnDestroy() {}
 
   cancel() {
     this.location.back();
   }
 
-  removeAllPermissions() {
-    this.permissionStore.wipe();
+  async removeAllPermissions() {
+    await this.permissionStore.wipe();
     this.refresh();
   }
 }

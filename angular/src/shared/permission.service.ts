@@ -15,7 +15,7 @@ export class PermissionServiceShared {
 
   /** Will reload the permissions, and remove permissions that has timed out. */
   async refresh() {
-    this.store.load();
+    await this.store.load();
 
     const permissions = this.store.all();
 
