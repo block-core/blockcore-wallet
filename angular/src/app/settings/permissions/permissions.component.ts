@@ -19,32 +19,22 @@ export class PermissionsComponent implements OnDestroy {
     this.uiState.goBackHome = false;
 
     this.permissions = this.permissionStore.all();
-
-    if (this.permissions.length == 0) {
-      this.permissions = [
-        {
-          domain: 'epmiiicbebgckgoggnflbpcglnabbage',
-          created: new Date().toISOString(),
-          condition: 'forever',
-          level: 1,
-        },
-        {
-          domain: 'http://localhost:3000',
-          created: new Date().toISOString(),
-          condition: 'expires',
-          level: 2,
-        },
-      ];
-    }
   }
 
-  remove(permission: any) {
-    alert('remove!');
+  remove(id: string) {
+    this.permissionStore.remove(id);
+    this.permissionStore.save();
+
+    this.permissions = this.permissionStore.all();
   }
 
   ngOnDestroy() {}
 
   cancel() {
     this.location.back();
+  }
+
+  removeAllPermissions() {
+    this.permissionStore.wipe();
   }
 }

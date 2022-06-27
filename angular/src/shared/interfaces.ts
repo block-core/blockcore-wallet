@@ -381,6 +381,7 @@ interface PermissionArguments {
 
 interface Permission
 {
+    id: string,
     domain: string,
     level: number,
     condition: string,

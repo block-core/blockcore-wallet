@@ -14,10 +14,13 @@
         <span class="dimmed">{{ permission.condition }} | Created: {{ permission.created }}</span>
       </div>
       <div>
-        <button mat-icon-button>
+        <button mat-icon-button (click)="remove(permission.id)">
           <mat-icon>delete</mat-icon>
         </button>
       </div>
     </div>
   </div>
+
+  <button *ngIf="permissions.length > 0" class="signup-button" mat-flat-button color="primary" (click)="removeAllPermissions()">Remove all permissions</button>
+
 </div>

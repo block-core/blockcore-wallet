@@ -44,8 +44,7 @@ export class ActionSignComponent {
   }
 
   updatePermission(permission: Permission) {
-    const id = uuidv4();
-    this.permissionStore.set(id, permission);
+    this.permissionStore.set(permission.id, permission);
     this.permissionStore.save();
   }
 
@@ -54,6 +53,7 @@ export class ActionSignComponent {
       case 'forever':
       case 'expirable':
         this.updatePermission({
+          id: uuidv4(),
           domain: this.uiState.action.domain,
           level: 2,
           condition: permission,
