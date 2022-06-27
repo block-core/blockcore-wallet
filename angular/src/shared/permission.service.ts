@@ -9,7 +9,37 @@ export class PermissionServiceShared {
     this.store.load();
   }
 
-  updatePermission(app: string, action: string, type: string) {
+  get(app: string) {
+    return this.store.get(app);
+  }
+
+  /** Will reload the permissions, and remove permissions that has timed out. */
+  async refresh() {
+    this.store.load();
+
+    const permissions = this.store.all();
+
+    for (let i = 0; i < permissions.length; i++) {
+      var needsUpdate = false;
+      const permissionSet = permissions[i];
+
+      for (let permission in permissionSet.permissions) {
+        if (permissionSet.permissions[permission].condition === 'expirable' && permissionSet.permissions[permission].created_at < Date.now() / 1000 - 5 * 60) {
+          delete permissionSet.permissions[permission];
+          needsUpdate = true;
+        }
+      }
+
+      if (needsUpdate) {
+        this.store.set(permissionSet.app, permissionSet);
+        await this.store.save();
+      }
+    }
+
+    return permissions;
+  }
+
+  async updatePermission(app: string, action: string, type: string) {
     if (!app || !action) {
       return;
     }
@@ -51,6 +81,6 @@ export class PermissionServiceShared {
     }
 
     this.store.set(app, permissionSet);
-    this.store.save();
+    await this.store.save();
   }
 }

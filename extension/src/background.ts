@@ -11,7 +11,6 @@ import { PERMISSIONS } from '../../angular/src/app/shared/constants';
 
 const prompts = {};
 let watchManager: BackgroundManager = new BackgroundManager();
-let permissionStore = new PermissionStore();
 let permissionService = new PermissionServiceShared();
 
 // Don't mark this method async, it will result in caller not being called in "sendResponse".
@@ -31,32 +30,15 @@ browser.runtime.onMessageExternal.addListener(async (message: ActionMessageRespo
   console.log('BACKGROUND:EXTERNAL:MSG:', message);
   let extensionId = new URL(sender.url!).host;
   message.app = extensionId;
-  handleContentScriptMessage(message); // { message.type, message.params, host: extensionId }
+  handleContentScriptMessage(message);
 });
 
-// browser.runtime.onMessageExternal.addListener(async (req, sender) => {
-//   console.log('BACKGROUND:EXTERNAL:MSG:', req);
-//   let extensionId = new URL(sender.url!).host;
-//   console.log('EXTERNAL: handleContentScriptMessage222!!');
-
-//   const result = {
-//     result: 'ok!',
-//   };
-
-//   console.log('RETURNING: ', result);
-
-//   return result;
-
-//   // handleContentScriptMessage({type, params, host: extensionId})
-// });
-
 async function handleContentScriptMessage(message: ActionMessageResponse) {
-  // { type, params, host }
   // Reload the permissions each time.
-  await permissionStore.load();
+  await permissionService.refresh();
 
   let permission: Permission | null = null;
-  let permissionSet = permissionStore.get(message.app);
+  let permissionSet = permissionService.get(message.app);
 
   console.log('PermissionSet:', permissionSet);
 
@@ -87,10 +69,8 @@ async function handleContentScriptMessage(message: ActionMessageResponse) {
       }
       case 'sign': {
         // let { event } = params;
-
         // if (!event.pubkey) event.pubkey = getPublicKey(sk);
         // if (!event.id) event.id = getEventHash(event);
-
         // if (!validateEvent(event)) return { error: 'invalid event' };
         return watchManager.performTask(false);
         // return await signEvent(event, sk);
@@ -109,40 +89,6 @@ async function handleContentScriptMessage(message: ActionMessageResponse) {
   } catch (error) {
     return { error: { message: error.message, stack: error.stack } };
   }
-
-  // if (!currentLevel) {
-  //   currentLevel = 0;
-  // }
-
-  // if (currentLevel >= PERMISSIONS[type]) {
-  // }
-
-  // PERMISSIONS[type];
-
-  // let currentLevel = await readPermissionLevel(host);
-  // let level = await readPermissionLevel(host);
-
-  // if (level >= PERMISSIONS_REQUIRED[type]) {
-  //   // authorized, proceed
-  // } else {
-  //   // ask for authorization
-  //   try {
-  //     await promptPermission(host, PERMISSIONS_REQUIRED[type], params);
-  //     // authorized, proceed
-  //   } catch (_) {
-  //     // not authorized, stop here
-  //     return {
-  //       error: `insufficient permissions, required ${PERMISSIONS_REQUIRED[type]}`,
-  //     };
-  //   }
-  // }
-
-  // let results = await browser.storage.local.get('private_key');
-  // if (!results || !results.private_key) {
-  //   return { error: 'no private key found' };
-  // }
-
-  // let sk = results.private_key;
 }
 
 function handlePromptMessage(message: ActionMessageResponse, sender) {
@@ -191,54 +137,4 @@ function promptPermission(app, action, args) {
     prompts[id] = { resolve, reject };
     console.log('promts:', prompts);
   });
-}
-
-export const PERMISSIONS_REQUIRED = {
-  getPublicKey: 1,
-  signEvent: 10,
-  encrypt: 20,
-  decrypt: 20,
-};
-
-const ORDERED_PERMISSIONS = [
-  [1, ['getPublicKey']],
-  [10, ['signEvent']],
-  [20, ['encrypt']],
-  [20, ['decrypt']],
-];
-
-const PERMISSION_NAMES = {
-  getPublicKey: 'read your public key',
-  signEvent: 'sign events using your private key',
-  encrypt: 'encrypt messages to peers',
-  decrypt: 'decrypt messages from peers',
-};
-
-export function getAllowedCapabilities(permission) {
-  let requestedMethods = [];
-  for (let i = 0; i < ORDERED_PERMISSIONS.length; i++) {
-    let [perm, methods] = ORDERED_PERMISSIONS[i];
-    if (perm > permission) break;
-    requestedMethods = requestedMethods.concat(methods as any);
-  }
-
-  if (requestedMethods.length === 0) return 'nothing';
-
-  return requestedMethods.map((method) => PERMISSION_NAMES[method]);
-}
-
-export async function readPermissions() {
-  let { permissions = {} } = await browser.storage.local.get('permissions');
-
-  // delete expired
-  var needsUpdate = false;
-  for (let app in permissions) {
-    if (permissions[app].condition === 'expirable' && permissions[app].created_at < Date.now() / 1000 - 5 * 60) {
-      delete permissions[app];
-      needsUpdate = true;
-    }
-  }
-  if (needsUpdate) browser.storage.local.set({ permissions });
-
-  return permissions;
 }
