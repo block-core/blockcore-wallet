@@ -1,4 +1,4 @@
-import { Component, Inject, HostBinding, ChangeDetectorRef, ApplicationRef, NgZone } from '@angular/core';
+import { Component, Inject, HostBinding, ChangeDetectorRef, ApplicationRef, NgZone, HostListener } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { CryptoService, UIState, NetworksService, AppManager, WalletManager } from '../../services';
 import { Router } from '@angular/router';
@@ -22,6 +22,11 @@ export class ActionPublicKeyComponent {
     this.uiState.title = 'Action: Signing';
     this.content = this.uiState.action?.document;
     this.app = this.uiState.action?.app;
+  }
+
+  @HostListener('window:beforeunload')
+  rejectDialog() {
+    this.authorize('no');
   }
 
   // sign() {
