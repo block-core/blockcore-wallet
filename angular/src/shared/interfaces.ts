@@ -379,13 +379,18 @@ interface PermissionArguments {
     condition: string
 }
 
+interface PermissionDomain {
+    domain: string;
+    permissions: any;
+}
+
 interface Permission
 {
     id: string,
     domain: string,
     level: number,
     condition: string,
-    created: string
+    created: number
 }
 
 interface State {
@@ -557,5 +562,6 @@ export {
     AddressIndexedState,
     NetworkStatusEntry,
     PermissionArguments,
-    Permission
+    Permission,
+    PermissionDomain
 }

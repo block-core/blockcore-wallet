@@ -17,4 +17,12 @@ export const SATOSHI_FACTOR = 100000000;
 export const DECIMAL_POINTS = 8;
 export const FEE_FACTOR = 100000;
 
-export const STATUS_INTERVAL = SECOND * 45 // 45 seconds.
+export const STATUS_INTERVAL = SECOND * 45; // 45 seconds.
+
+export const PERMISSIONS: any = {
+  publicKey: 1,
+  identity: 25,
+  sign: 50,
+  encrypt: 100,
+  decrypt: 200,
+};

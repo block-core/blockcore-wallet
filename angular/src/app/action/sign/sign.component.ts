@@ -1,6 +1,6 @@
 import { Component, Inject, HostBinding, ChangeDetectorRef, ApplicationRef, NgZone } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { CryptoService, UIState, NetworksService, AppManager, WalletManager } from '../../services';
+import { CryptoService, UIState, NetworksService, AppManager, WalletManager, PermissionService } from '../../services';
 import { Router } from '@angular/router';
 import { ActionService } from 'src/app/services/action.service';
 import * as browser from 'webextension-polyfill';
@@ -17,11 +17,27 @@ export class ActionSignComponent {
   content?: string;
   domain: string;
 
-  constructor(public uiState: UIState, private permissionStore: PermissionStore, private crypto: CryptoService, private router: Router, private app: ApplicationRef, private ngZone: NgZone, private action: ActionService, public networkService: NetworksService, public walletManager: WalletManager, private manager: AppManager, private cd: ChangeDetectorRef) {
+  constructor(
+    public uiState: UIState,
+    private permissionService: PermissionService,
+    private permissionStore: PermissionStore,
+    private crypto: CryptoService,
+    private router: Router,
+    private app: ApplicationRef,
+    private ngZone: NgZone,
+    private action: ActionService,
+    public networkService: NetworksService,
+    public walletManager: WalletManager,
+    private manager: AppManager,
+    private cd: ChangeDetectorRef
+  ) {
     this.uiState.title = 'Action: Signing';
 
     this.content = this.uiState.action?.document;
     this.domain = this.uiState.action?.domain;
+
+    console.log(this.permissionService.getLevel('publicKey'));
+    console.log(this.permissionService.getLevel('decrypt'));
   }
 
   sign() {
@@ -46,11 +62,12 @@ export class ActionSignComponent {
   }
 
   updatePermission(permission: Permission) {
-    this.permissionStore.set(permission.id, permission);
-    this.permissionStore.save();
+    this.permissionService.updatePermission(permission);
   }
 
   authorize(permission: string) {
+    console.log('permission:', permission);
+
     switch (permission) {
       case 'forever':
       case 'expirable':
@@ -59,7 +76,8 @@ export class ActionSignComponent {
           domain: this.uiState.action.domain,
           level: 2,
           condition: permission,
-          created: new Date().toISOString()
+          created: Math.round(Date.now() / 1000),
+          // created: new Date().toISOString(),
         });
         // prompts[id]?.resolve?.()
         // updatePermission(host, {
@@ -74,8 +92,6 @@ export class ActionSignComponent {
         // prompts[id]?.reject?.()
         break;
     }
-
-    debugger;
 
     // delete prompts[id]
     // browser.windows.remove(sender.tab.windowId)

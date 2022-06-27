@@ -84,7 +84,6 @@ import { networkLoaderServiceProvider } from './services/network-loader.provider
 import { MatDialogModule } from '@angular/material/dialog';
 import { QrScanDialog } from './account/send/address/qr-scanning.component';
 import { IdentityComponent } from './account/identity/identity.component';
-import { ActionPermissionComponent } from './action/permission/permission.component';
 import { PermissionsComponent } from './settings/permissions/permissions.component';
 import { PermissionStore } from 'src/shared/store/permission-store';
 
@@ -141,7 +140,6 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     NetworkComponent,
     QrScanDialog,
     IdentityComponent,
-    ActionPermissionComponent,
     PermissionsComponent
   ],
   imports: [
