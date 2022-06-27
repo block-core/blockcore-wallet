@@ -8,7 +8,7 @@
 
   <div class="list-action-table" *ngFor="let permissionSet of permissions">
 
-    <div mat-subheader>{{ permissionSet.app }}</div>
+    <h2>{{ permissionSet.app }}</h2>
 
     <div class="list-action-row" *ngFor="let permission of toArray(permissionSet.permissions)">
       <div>
