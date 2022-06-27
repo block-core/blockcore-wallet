@@ -38,6 +38,7 @@ import { CollectablesComponent } from "./collectables/collectables.component";
 import { NetworkComponent } from './settings/network/network.component';
 import { IdentityComponent } from './account/identity/identity.component';
 import { PermissionsComponent } from './settings/permissions/permissions.component';
+import { ActionPublicKeyComponent } from './action/publickey/publickey.component';
 
 const routes: Routes = [
   {
@@ -227,6 +228,11 @@ const routes: Routes = [
   },
   {
     path: 'action/sign', component: ActionSignComponent, resolve: {
+      data: LoadingResolverService
+    }
+  },
+  {
+    path: 'action/publicKey', component: ActionPublicKeyComponent, resolve: {
       data: LoadingResolverService
     }
   },

@@ -19,10 +19,20 @@ export const FEE_FACTOR = 100000;
 
 export const STATUS_INTERVAL = SECOND * 45; // 45 seconds.
 
-export const PERMISSIONS: any = {
-  publicKey: 1,
-  identity: 25,
-  sign: 50,
-  encrypt: 100,
-  decrypt: 200,
+export enum Actions {
+  'publicKey',
+  'identity',
+  'sign',
+  'encrypt',
+  'decrypt',
 };
+
+export const PERMISSIONS: any = ['publicKey', 'identity', 'sign', 'encrypt', 'decrypt'];
+
+// {
+//   publicKey: 'publicKey',
+//   identity: 'identity',
+//   sign: 'sign',
+//   encrypt: 100,
+//   decrypt: 200,
+// };

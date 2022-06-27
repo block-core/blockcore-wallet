@@ -10,11 +10,11 @@ import { Actions, PERMISSIONS } from 'src/app/shared/constants';
 const { v4: uuidv4 } = require('uuid');
 
 @Component({
-  selector: 'app-sign',
-  templateUrl: './sign.component.html',
-  styleUrls: ['./sign.component.css'],
+  selector: 'app-publickey',
+  templateUrl: './publickey.component.html',
+  styleUrls: ['./publickey.component.css'],
 })
-export class ActionSignComponent {
+export class ActionPublicKeyComponent {
   content?: string;
   app: string;
 

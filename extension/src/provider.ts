@@ -2,12 +2,12 @@
 globalThis.blockcore = {
   _requests: {},
 
-  _call(type, args) {
+  _call(action, args) {
     return new Promise((resolve, reject) => {
       const id = v4();
       this._requests[id] = { resolve, reject };
 
-      const msg = { type, id, args, src: 'provider', target: 'tabs', ext: 'blockcore' };
+      const msg = { action, id, args, src: 'provider', target: 'tabs', ext: 'blockcore' };
 
       console.log('Provider:postMessage:', msg);
 

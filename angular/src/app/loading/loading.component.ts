@@ -53,10 +53,6 @@ export class LoadingComponent implements OnInit, OnDestroy {
     window.location.href = 'index.html';
   }
 
-  setAction(action: Action, broadcast = true) {
-    // this.communication.send('set-action', { action, broadcast });
-  }
-
   instanceName: string;
 
   async ngOnInit() {
@@ -149,29 +145,24 @@ export class LoadingComponent implements OnInit, OnDestroy {
         this.uiState.action = {
           action: 'sid',
           document: this.uiState.params.sid,
-          domain: this.uiState.params.host,
+          app: this.uiState.params.app,
+          id: this.uiState.params.id,
+          args: this.uiState.params.args,
         };
-
-        setTimeout(() => {
-          // Persist the action, but don't broadcast this change as we've already written local state.
-          this.setAction(this.uiState.action, true);
-        }, 0);
       } else if (this.uiState.params.nostr) {
         this.uiState.action = {
           action: 'nostr',
           document: this.uiState.params.nostr,
-          domain: this.uiState.params.host,
+          app: this.uiState.params.app,
+          id: this.uiState.params.id,
+          args: this.uiState.params.args,
         };
-
-        setTimeout(() => {
-          // Persist the action, but don't broadcast this change as we've already written local state.
-          this.setAction(this.uiState.action, true);
-        }, 0);
       } else if (this.uiState.params.action) {
         this.uiState.action = {
           action: this.uiState.params.action,
+          id: this.uiState.params.id,
           args: this.uiState.params.args,
-          domain: this.uiState.params.host,
+          app: this.uiState.params.app,
         };
       }
     }
@@ -209,7 +200,7 @@ export class LoadingComponent implements OnInit, OnDestroy {
         } else {
           // When the initial state is loaded and user has not unlocked any wallets, we'll show the unlock screen on home.
           this.router.navigateByUrl('/home');
-          
+
           // console.log('USING PREVIOUS ACTIVE WALLET!!');
           // // No active wallet... Set the previous active wallet.
           // await this.walletManager.setActiveWallet(this.uiState.persisted.previousWalletId);

@@ -8,11 +8,11 @@
 
   <div class="list-action-table" *ngFor="let permissionSet of permissions">
 
-    <div mat-subheader>{{ permissionSet.domain }}</div>
+    <div mat-subheader>{{ permissionSet.app }}</div>
 
     <div class="list-action-row" *ngFor="let permission of permissionSet.permissions">
       <div>
-        <strong>{{ permission.domain }}</strong>
+        <strong>{{ permission.action }}</strong>
         <br />
         <span class="dimmed">{{ permission.condition }} | Created: {{ permission.created }}</span>
       </div>

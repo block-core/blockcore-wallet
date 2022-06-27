@@ -86,6 +86,7 @@ import { QrScanDialog } from './account/send/address/qr-scanning.component';
 import { IdentityComponent } from './account/identity/identity.component';
 import { PermissionsComponent } from './settings/permissions/permissions.component';
 import { PermissionStore } from 'src/shared/store/permission-store';
+import { ActionPublicKeyComponent } from './action/publickey/publickey.component';
 
 // required for AOT compilation
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
@@ -140,7 +141,8 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     NetworkComponent,
     QrScanDialog,
     IdentityComponent,
-    PermissionsComponent
+    PermissionsComponent,
+    ActionPublicKeyComponent
   ],
   imports: [
     BrowserModule,

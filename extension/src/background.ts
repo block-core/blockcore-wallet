@@ -1,43 +1,37 @@
 import { HDKey } from '@scure/bip32';
-import { Message } from '../../angular/src/shared/interfaces';
+import { ActionMessageResponse, Message, Permission } from '../../angular/src/shared/interfaces';
 import { BackgroundManager, ProcessResult } from '../../angular/src/shared/background-manager';
 import { SharedManager } from '../../angular/src/shared/shared-manager';
 import { RunState } from '../../angular/src/shared/task-runner';
 import { WalletStore } from '../../angular/src/shared/store/wallet-store';
+import { PermissionStore } from '../../angular/src/shared/store/permission-store';
+import { PermissionServiceShared } from '../../angular/src/shared/permission.service';
 import * as browser from 'webextension-polyfill';
+import { PERMISSIONS } from '../../angular/src/app/shared/constants';
 
 const prompts = {};
 let watchManager: BackgroundManager = new BackgroundManager();
+let permissionStore = new PermissionStore();
+let permissionService = new PermissionServiceShared();
 
 // Don't mark this method async, it will result in caller not being called in "sendResponse".
-browser.runtime.onMessage.addListener(async (req, sender) => {
-  console.log('BACKGROUND:MSG:', req);
-  let { prompt } = req;
-  // let promise: Promise<any> | null = null;
-  // let result: any = null;
+browser.runtime.onMessage.addListener(async (msg: ActionMessageResponse, sender) => {
+  console.log('BACKGROUND:MSG:', msg);
 
-  if (prompt) {
+  if (msg.prompt) {
     console.log('handlePromptMessage!!');
-    return handlePromptMessage(req, sender);
+    return handlePromptMessage(msg, sender);
   } else {
     console.log('handleContentScriptMessage!!');
-    return handleContentScriptMessage(req);
+    return handleContentScriptMessage(msg);
   }
-
-  // if (req.type === 'getpublickey') {
-  //   result = await watchManager.performTask();
-  // } else {
-  //   console.log('UNKNOWN EVENT!');
-  //   result = { error: `Event type ${req.type} is not handled.` };
-  // }
-
-  // return result;
 });
 
-browser.runtime.onMessageExternal.addListener(async ({ type, params }, sender) => {
-  console.log('BACKGROUND:EXTERNAL:MSG:', type);
+browser.runtime.onMessageExternal.addListener(async (message: ActionMessageResponse, sender) => {
+  console.log('BACKGROUND:EXTERNAL:MSG:', message);
   let extensionId = new URL(sender.url!).host;
-  handleContentScriptMessage({ type, params, host: extensionId });
+  message.app = extensionId;
+  handleContentScriptMessage(message); // { message.type, message.params, host: extensionId }
 });
 
 // browser.runtime.onMessageExternal.addListener(async (req, sender) => {
@@ -56,39 +50,43 @@ browser.runtime.onMessageExternal.addListener(async ({ type, params }, sender) =
 //   // handleContentScriptMessage({type, params, host: extensionId})
 // });
 
-async function handleContentScriptMessage({ type, params, host }) {
-  let level = await readPermissionLevel(host);
+async function handleContentScriptMessage(message: ActionMessageResponse) {
+  // { type, params, host }
+  // Reload the permissions each time.
+  permissionStore.load();
 
-  if (level >= PERMISSIONS_REQUIRED[type]) {
-    // authorized, proceed
+  let permission: Permission | null = null;
+  let permissionSet = permissionStore.get(message.app);
+
+  console.log('PermissionSet:', permissionSet);
+
+  if (permissionSet) {
+    permission = permissionSet[message.action];
+  }
+
+  // Check if user have already approved this kind of access on this domain/host.
+  if (permission) {
+    console.log('User already granted permission.');
   } else {
-    // ask for authorization
     try {
-      await promptPermission(host, PERMISSIONS_REQUIRED[type], params);
+      await promptPermission(message.app, message.action, message.args);
       // authorized, proceed
     } catch (_) {
       // not authorized, stop here
       return {
-        error: `insufficient permissions, required ${PERMISSIONS_REQUIRED[type]}`,
+        error: `insufficient permissions, required ${message.action}`,
       };
     }
   }
 
-  let results = await browser.storage.local.get('private_key');
-  if (!results || !results.private_key) {
-    return { error: 'no private key found' };
-  }
-
-  let sk = results.private_key;
-
   try {
-    switch (type) {
+    switch (message.action) {
       case 'publicKey': {
         return watchManager.performTask();
         // return getPublicKey(sk);
       }
       case 'sign': {
-        let { event } = params;
+        // let { event } = params;
 
         // if (!event.pubkey) event.pubkey = getPublicKey(sk);
         // if (!event.id) event.id = getEventHash(event);
@@ -98,12 +96,12 @@ async function handleContentScriptMessage({ type, params, host }) {
         // return await signEvent(event, sk);
       }
       case 'encrypt': {
-        let { peer, plaintext } = params;
+        // let { peer, plaintext } = params;
         // return encrypt(sk, peer, plaintext);
         return 'encrypt';
       }
       case 'decrypt': {
-        let { peer, ciphertext } = params;
+        // let { peer, ciphertext } = params;
         // return decrypt(sk, peer, ciphertext);
         return 'decrypt';
       }
@@ -111,45 +109,80 @@ async function handleContentScriptMessage({ type, params, host }) {
   } catch (error) {
     return { error: { message: error.message, stack: error.stack } };
   }
+
+  // if (!currentLevel) {
+  //   currentLevel = 0;
+  // }
+
+  // if (currentLevel >= PERMISSIONS[type]) {
+  // }
+
+  // PERMISSIONS[type];
+
+  // let currentLevel = await readPermissionLevel(host);
+  // let level = await readPermissionLevel(host);
+
+  // if (level >= PERMISSIONS_REQUIRED[type]) {
+  //   // authorized, proceed
+  // } else {
+  //   // ask for authorization
+  //   try {
+  //     await promptPermission(host, PERMISSIONS_REQUIRED[type], params);
+  //     // authorized, proceed
+  //   } catch (_) {
+  //     // not authorized, stop here
+  //     return {
+  //       error: `insufficient permissions, required ${PERMISSIONS_REQUIRED[type]}`,
+  //     };
+  //   }
+  // }
+
+  // let results = await browser.storage.local.get('private_key');
+  // if (!results || !results.private_key) {
+  //   return { error: 'no private key found' };
+  // }
+
+  // let sk = results.private_key;
 }
 
-function handlePromptMessage({ id, condition, host, level }, sender) {
-  switch (condition) {
+function handlePromptMessage(message: ActionMessageResponse, sender) {
+  switch (message.permission) {
     case 'forever':
     case 'expirable':
-      prompts[id]?.resolve?.();
-      updatePermission(host, {
-        level,
-        condition,
-      });
+      prompts[message.id]?.resolve?.();
+      permissionService.updatePermission(message.app, message.action, message.permission);
       break;
     case 'single':
-      prompts[id]?.resolve?.();
+      prompts[message.id]?.resolve?.();
       break;
     case 'no':
-      prompts[id]?.reject?.();
+      prompts[message.id]?.reject?.();
       break;
   }
 
-  delete prompts[id];
+  delete prompts[message.id];
   browser.windows.remove(sender.tab.windowId);
 }
 
-function promptPermission(host, level, args) {
+function promptPermission(app, action, args) {
   let id = Math.random().toString().slice(4);
 
+  console.log('CHECK:');
+  console.log(app);
+  console.log(action);
+  console.log(args);
+  console.log('QS:', JSON.stringify(args));
+
   let qs = new URLSearchParams({
-    host,
-    level,
+    app,
+    action,
     id,
     args: JSON.stringify(args),
   });
 
-  console.log('QS:', qs);
-
   return new Promise((resolve, reject) => {
     browser.windows.create({
-      url: `${browser.runtime.getURL('index.html')}?action=sign&${qs.toString()}`,
+      url: `${browser.runtime.getURL('index.html')}?${qs.toString()}`,
       type: 'popup',
       width: 600,
       height: 600,
@@ -194,46 +227,18 @@ export function getAllowedCapabilities(permission) {
   return requestedMethods.map((method) => PERMISSION_NAMES[method]);
 }
 
-export function getPermissionsString(permission) {
-  let capabilities = getAllowedCapabilities(permission);
-
-  if (capabilities.length === 0) return 'none';
-  if (capabilities.length === 1) return capabilities[0];
-
-  const sliced = capabilities.slice(0, -1) as any;
-  return sliced.join(', ') + ' and ' + capabilities[capabilities.length - 1];
-}
-
 export async function readPermissions() {
   let { permissions = {} } = await browser.storage.local.get('permissions');
 
   // delete expired
   var needsUpdate = false;
-  for (let host in permissions) {
-    if (permissions[host].condition === 'expirable' && permissions[host].created_at < Date.now() / 1000 - 5 * 60) {
-      delete permissions[host];
+  for (let app in permissions) {
+    if (permissions[app].condition === 'expirable' && permissions[app].created_at < Date.now() / 1000 - 5 * 60) {
+      delete permissions[app];
       needsUpdate = true;
     }
   }
   if (needsUpdate) browser.storage.local.set({ permissions });
 
   return permissions;
-}
-
-export async function readPermissionLevel(host) {
-  return (await readPermissions())[host]?.level || 0;
-}
-
-export async function updatePermission(host, permission) {
-  const existingPermissions = await browser.storage.local.get('permissions');
-
-  browser.storage.local.set({
-    permissions: {
-      ...(existingPermissions.permissions || {}),
-      [host]: {
-        ...permission,
-        created_at: Math.round(Date.now() / 1000),
-      },
-    },
-  });
 }

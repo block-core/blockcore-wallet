@@ -23,7 +23,7 @@ if (!globalThis.blockcore) {
 
     console.log('Content:MessageReceived', message);
     console.log('Content: Message will be processed, passed the filters...');
-    const msg = { ...message.data, host: location.host };
+    const msg = { ...message.data, app: location.host };
 
     console.log('Content:SendMessageToBackground', msg);
     msg.isFromContent = true;

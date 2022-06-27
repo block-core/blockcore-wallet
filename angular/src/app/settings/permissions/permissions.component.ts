@@ -1,5 +1,5 @@
 import { Location } from '@angular/common';
-import { Component, OnDestroy, ViewEncapsulation } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { Permission, PermissionDomain } from 'src/shared';
 import { PermissionStore } from 'src/shared/store/permission-store';
 import { UIState, FeatureService, NetworkStatusService } from '../../services';
@@ -10,7 +10,7 @@ import { UIState, FeatureService, NetworkStatusService } from '../../services';
   styleUrls: ['./permissions.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class PermissionsComponent implements OnDestroy {
+export class PermissionsComponent implements OnDestroy, OnInit {
   permissions: PermissionDomain[];
 
   constructor(public uiState: UIState, public location: Location, public networkStatus: NetworkStatusService, public feature: FeatureService, private permissionStore: PermissionStore) {
@@ -19,6 +19,11 @@ export class PermissionsComponent implements OnDestroy {
     this.uiState.goBackHome = false;
 
     this.refresh();
+  }
+
+  ngOnInit(): void {
+    // Make sure we reload the permission store every time user opens the UI.
+    // this.permissionStore.load();
   }
 
   remove(id: string) {
