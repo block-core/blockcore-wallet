@@ -51,6 +51,7 @@ browser.runtime.onMessageExternal.addListener(async (message: ActionMessageRespo
 // });
 
 async function handleContentScriptMessage(message: ActionMessageResponse) {
+  debugger;
   // { type, params, host }
   // Reload the permissions each time.
   permissionStore.load();
@@ -61,7 +62,7 @@ async function handleContentScriptMessage(message: ActionMessageResponse) {
   console.log('PermissionSet:', permissionSet);
 
   if (permissionSet) {
-    permission = permissionSet[message.action];
+    permission = permissionSet.permissions[message.action];
   }
 
   // Check if user have already approved this kind of access on this domain/host.
