@@ -24,6 +24,6 @@
     </div>
   </div>
 
-  <button *ngIf="permissions.length > 0" class="signup-button" mat-flat-button color="primary" (click)="removeAllPermissions()">Remove all permissions</button>
+  <button *ngIf="permissions?.length > 0" class="signup-button" mat-flat-button color="primary" (click)="removeAllPermissions()">Remove all permissions</button>
 
 </div>
