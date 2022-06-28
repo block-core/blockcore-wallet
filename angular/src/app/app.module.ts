@@ -87,6 +87,8 @@ import { IdentityComponent } from './account/identity/identity.component';
 import { PermissionsComponent } from './settings/permissions/permissions.component';
 import { PermissionStore } from 'src/shared/store/permission-store';
 import { ActionPublicKeyComponent } from './action/publickey/publickey.component';
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { environment } from '../environments/environment';
 
 // required for AOT compilation
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
@@ -191,7 +193,13 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     MatChipsModule,
     MatSnackBarModule,
     MatProgressBarModule,
-    MatDialogModule
+    MatDialogModule,
+    ServiceWorkerModule.register('ngsw-worker.js', {
+      enabled: environment.production,
+      // Register the ServiceWorker as soon as the application is stable
+      // or after 30 seconds (whichever comes first).
+      registrationStrategy: 'registerWhenStable:30000'
+    })
   ],
   exports: [NetworkPipe, TruncatePipe, NetworkStatusPipe],
   providers: [

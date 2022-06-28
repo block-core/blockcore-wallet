@@ -39,7 +39,9 @@
                 "angular/src/styles/blockcore"
               ]
             },
-            "scripts": []
+            "scripts": [],
+            "serviceWorker": true,
+            "ngswConfigPath": "angular/ngsw-config.json"
           },
           "configurations": {
             "production": {

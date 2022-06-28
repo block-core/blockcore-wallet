@@ -48,6 +48,7 @@
     "@angular/platform-browser": "14.0.3",
     "@angular/platform-browser-dynamic": "14.0.3",
     "@angular/router": "14.0.3",
+    "@angular/service-worker": "14.0.3",
     "@blockcore/blockcore-js": "^7.0.2",
     "@blockcore/identity": "0.0.1",
     "@capacitor-community/electron": "^4.1.2",
