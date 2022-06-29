@@ -47,7 +47,7 @@ async function handleContentScriptMessage(message: ActionMessageResponse) {
   // Check if user have already approved this kind of access on this domain/host.
   if (!permission) {
     try {
-      await promptPermission(message.app, message.action, message.args);
+     await promptPermission(message.app, message.action, message.args);
       // authorized, proceed
     } catch (_) {
       // not authorized, stop here
@@ -60,7 +60,7 @@ async function handleContentScriptMessage(message: ActionMessageResponse) {
   try {
     switch (message.action) {
       case 'publicKey': {
-        return watchManager!.performTask(true);
+        return watchManager!.getActiveAccountPublicKey();
         // return getPublicKey(sk);
       }
       case 'sign': {
@@ -186,7 +186,7 @@ chrome.alarms.onAlarm.addListener(async (alarm: chrome.alarms.Alarm) => {
 //   if (prompt) {
 //     console.log('handlePromptMessage');
 //     // return handlePromptMessage(req, sender);
-//   } else {
+//   } else { 
 //     console.log('handleContentScriptMessage');
 //     // return handleContentScriptMessage(req);
 //   }
