@@ -17,6 +17,8 @@ const { v4: uuidv4 } = require('uuid');
 export class ActionPublicKeyComponent {
   content?: string;
   app: string;
+  
+  message: string;
 
   constructor(public uiState: UIState, private permissionStore: PermissionStore, private action: ActionService, public networkService: NetworksService, public walletManager: WalletManager, private manager: AppManager, private cd: ChangeDetectorRef) {
     this.uiState.title = 'Action: Signing';
@@ -83,6 +85,12 @@ export class ActionPublicKeyComponent {
     // browser.windows.remove(sender.tab.windowId);
 
     // this.manager.sign(this.content, this.uiState.action?.tabId);
+
+    if(this.walletManager.activeAccount?.name == null){
+
+      this.message = "Select an account to continue!";
+      return;
+    }
 
     // Reset params so the action can be re-triggered.
     this.uiState.params = null;

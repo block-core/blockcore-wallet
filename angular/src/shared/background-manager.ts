@@ -53,6 +53,11 @@ export class BackgroundManager {
     }
   }
 
+ async getActiveAccountPublicKey() {
+  debugger;
+
+ }
+
   async updateNetworkStatus(instance: string) {
     const walletStore = new WalletStore();
     await walletStore.load();
