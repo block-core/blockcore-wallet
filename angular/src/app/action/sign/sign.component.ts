@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { CryptoService, UIState, NetworksService, AppManager, WalletManager } from '../../services';
 import { Router } from '@angular/router';
 import { ActionService } from 'src/app/services/action.service';
-import * as browser from 'webextension-polyfill';
+// import * as browser from 'webextension-polyfill';
 import { ActionMessageResponse, Permission } from 'src/shared';
 import { PermissionStore } from 'src/shared/store/permission-store';
 import { Actions, PERMISSIONS } from 'src/app/shared/constants';
@@ -101,7 +101,7 @@ export class ActionSignComponent {
 
     // TODO: Move this to a communication service.
     // Inform the provider script that user has signed the data.
-    browser.runtime.sendMessage(reply);
+    chrome.runtime.sendMessage(reply);
 
     // window.close();
   }
