@@ -19,10 +19,43 @@ let walletStore: WalletStore;
 
 // Don't mark this method async, it will result in caller not being called in "sendResponse".
 browser.runtime.onMessage.addListener(async (msg: ActionMessageResponse, sender) => {
+  // else if (msg.action === 'getpublickey') {
+  //   if (walletStore == null) {
+  //     walletStore = new WalletStore();
+  //     await walletStore.load();
+  //   }
+
+  //   var wallets = walletStore.getWallets();
+
+  //   var res: any;
+  //   for (let i = 0; i < wallets.length; i++) {
+  //     const wallet = wallets[i];
+  //     for (let j = 0; j < wallet.accounts.length; j++) {
+  //       const account = wallet.accounts[j];
+  //       res = account.xpub;
+  //     }
+  //   }
+  // }
+
   if (msg.prompt) {
     return handlePromptMessage(msg, sender);
-  } else {
+  } else if (msg.src == 'provider') {
     return handleContentScriptMessage(msg);
+  } else if (msg.src == 'tabs') {
+    // Handle messages coming from the UI.
+    if (msg.action === 'keep-alive') {
+      // console.debug('Received keep-alive message.');
+    } else if (msg.action === 'index') {
+      await executeIndexer();
+    } else if (msg.action === 'watch') {
+      await runWatcher();
+    } else if (msg.action === 'network') {
+      await networkStatusWatcher();
+    } else if (msg.action === 'activated') {
+      // console.log('THE UI WAS ACTIVATED!!');
+      // When UI is triggered, we'll also trigger network watcher.
+      await networkStatusWatcher();
+    }
   }
 });
 
@@ -193,46 +226,7 @@ chrome.alarms.onAlarm.addListener(async (alarm: chrome.alarms.Alarm) => {
 // });
 
 // chrome.runtime.onMessage.addListener(async (message: Message, sender, sendResponse) => {
-//   if (message.type === 'keep-alive') {
-//     // console.debug('Received keep-alive message.');
-//   } else if (message.type === 'index') {
-//     await executeIndexer();
-//   } else if (message.type === 'watch') {
-//     await runWatcher();
-//   } else if (message.type === 'network') {
-//     await networkStatusWatcher();
-//   } else if (message.type === 'activated') {
-//     // console.log('THE UI WAS ACTIVATED!!');
-//     // When UI is triggered, we'll also trigger network watcher.
-//     await networkStatusWatcher();
-//   } else if (message.type === 'getpublickey') {
-//     if (walletStore == null) {
-//       walletStore = new WalletStore();
-//       await walletStore.load();
-//     }
 
-//     var wallets = walletStore.getWallets();
-
-//     var res: any;
-//     for (let i = 0; i < wallets.length; i++) {
-//       const wallet = wallets[i];
-//       for (let j = 0; j < wallet.accounts.length; j++) {
-//         const account = wallet.accounts[j];
-//         res = account.xpub;
-//       }
-//     }
-
-//     ////const accountNode = HDKey.fromExtendedKey(account.xpub, network.bip32);
-
-//     sendResponse(res);
-//     return 'ok';
-//   } else if (message.type === 'login') {
-//     sendResponse('login');
-//     return 'ok';
-//   }
-
-//   sendResponse('ok');
-//   return 'ok';
 // });
 
 // let store = new NetworkStatusStore();
