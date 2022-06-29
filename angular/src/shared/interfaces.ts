@@ -389,6 +389,9 @@ interface Permission {
   //   app: string;
   type: string;
   created: number;
+  walletId: string;
+  accountId: string;
+  keyId?: string;
 }
 
 interface State {
@@ -484,6 +487,9 @@ interface ActionMessageResponse {
   id: string;
   action: string;
   app: string;
+  walletId: string;
+  accountId: string;
+  keyId?: string;
 }
 
 interface Message {

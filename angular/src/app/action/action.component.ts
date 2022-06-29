@@ -38,6 +38,8 @@ export class ActionComponent {
       id: this.uiState.action.id,
       action: this.uiState.action.action,
       app: this.uiState.action.app,
+      walletId: this.walletManager.activeWalletId,
+      accountId: this.walletManager.activeAccountId,
     };
 
     // TODO: Move this to a communication service.

@@ -38,7 +38,7 @@ export class PermissionServiceShared {
     return permissions;
   }
 
-  async updatePermission(app: string, action: string, type: string) {
+  async updatePermission(app: string, action: string, type: string, walletId: string, accountId: string, keyId?: string) {
     if (!app || !action) {
       return;
     }
@@ -49,6 +49,9 @@ export class PermissionServiceShared {
       action: action,
       type: type,
       created: Math.round(Date.now() / 1000),
+      walletId,
+      accountId,
+      keyId,
     };
 
     if (!permissionSet) {

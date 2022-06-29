@@ -125,7 +125,7 @@ function handlePromptMessage(message: ActionMessageResponse, sender) {
     case 'forever':
     case 'expirable':
       prompts[message.id]?.resolve?.();
-      permissionService.updatePermission(message.app, message.action, message.permission);
+      permissionService.updatePermission(message.app, message.action, message.permission, message.walletId, message.accountId, message.keyId);
       break;
     case 'once':
       prompts[message.id]?.resolve?.();
