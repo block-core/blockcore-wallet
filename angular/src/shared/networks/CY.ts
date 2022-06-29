@@ -1,7 +1,7 @@
 import { Network } from './network';
 
 export class CY implements Network {
-    id = 'CYBITS';
+    id = 'CY';
     name = 'Cybits';
     symbol = 'CY';
     network = 3601;

@@ -36,7 +36,7 @@ export class Defaults {
         {
           identifier: uuidv4(),
           index: 0,
-          networkType: 'CYBITS',
+          networkType: 'CY',
           mode: 'normal',
           selected: false,
           name: 'Cybits',
