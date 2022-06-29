@@ -1,0 +1,7 @@
+<div class="page">
+  <router-outlet></router-outlet>
+  <div>
+    <button class="action-button" mat-flat-button color="primary" (click)="authorize('once')">Authorize once</button>&nbsp; <button class="action-button" mat-flat-button (click)="authorize('expirable')">Authorize for 5 minutes</button>&nbsp; <button class="action-button" mat-flat-button (click)="authorize('forever')">Authorize forever</button>&nbsp;
+    <button class="action-button" mat-flat-button (click)="authorize('no')">Cancel</button>
+  </div>
+</div>

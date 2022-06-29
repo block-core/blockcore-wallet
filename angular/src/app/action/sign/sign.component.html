@@ -1,28 +1,23 @@
-<div class="page">
-  <h2>Signing</h2>
+<h2>Signing</h2>
 
-  <!-- <p>IMPORTANT: Verify all details below before you accept the permission request.</p> -->
+<!-- <p>IMPORTANT: Verify all details below before you accept the permission request.</p> -->
 
-  <p>
-    Account: <strong>{{ walletManager.activeAccount?.name }}</strong
-    ><br />
-    Permission: <strong>"Sign data using your private key"</strong>
-    <br />
-    Domain: <strong>{{ app }}</strong>
-  </p>
+<p>
+  Account: <strong>{{ walletManager.activeAccount?.name }}</strong
+  ><br />
+  Permission: <strong>"Sign data using your private key"</strong>
+  <br />
+  Domain: <strong>{{ action.app }}</strong>
+</p>
 
-  <!-- Derivation path: {{networkService.getDerivationPathForAccount(walletManager.activeAccount)}}<br><br> -->
+<!-- Derivation path: {{networkService.getDerivationPathForAccount(walletManager.activeAccount)}}<br><br> -->
 
-  You attest with your selected account to the following content:
-  <br /><br />
-  <mat-form-field class="input-full-width" appearance="outline">
-    <mat-label>Signing content</mat-label>
-    <textarea class="signing-content" matInput [ngModel]="content"></textarea>
-  </mat-form-field>
+You attest with your selected account to the following content:
+<br /><br />
+<mat-form-field class="input-full-width" appearance="outline">
+  <mat-label>Signing content</mat-label>
+  <textarea class="signing-content" matInput [ngModel]="action.content"></textarea>
+</mat-form-field>
 
-  <!-- <button class="signup-button" mat-flat-button color="primary" (click)="sign()">Sign and close</button>&nbsp;
+<!-- <button class="signup-button" mat-flat-button color="primary" (click)="sign()">Sign and close</button>&nbsp;
     <button class="signup-button" mat-flat-button (click)="exit()">Exit Action</button> -->
-
-  <button class="action-button" mat-flat-button color="primary" (click)="authorize('once')">Authorize once</button>&nbsp; <button class="action-button" mat-flat-button (click)="authorize('expirable')">Authorize for 5 minutes</button>&nbsp; <button class="action-button" mat-flat-button (click)="authorize('forever')">Authorize forever</button>&nbsp;
-  <button class="action-button" mat-flat-button (click)="authorize('no')">Cancel</button>
-</div>

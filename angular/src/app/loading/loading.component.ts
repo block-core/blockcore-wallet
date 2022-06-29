@@ -177,11 +177,12 @@ export class LoadingComponent implements OnInit, OnDestroy {
     // Activate a wallet if not active.
     if (this.walletManager.hasWallets && !this.walletManager.activeWallet && this.uiState.persisted.previousWalletId) {
       await this.walletManager.setActiveWallet(this.uiState.persisted.previousWalletId);
+      await this.walletManager.setActiveAccount(this.uiState.persisted.previousAccountId);
     }
 
     // If an action has been triggered, we'll always show action until user closes the action.
     if (this.uiState.action?.action && this.walletManager.activeWallet && this.secure.unlocked(this.walletManager.activeWallet.id)) {
-      console.log('REDIRECT TO ACTION!!!!');
+      console.log('REDIRECT TO ACTION!!!!', this.uiState.action?.action);
       // TODO: Add support for more actions.
       this.router.navigate(['action', this.uiState.action?.action]);
     } else {

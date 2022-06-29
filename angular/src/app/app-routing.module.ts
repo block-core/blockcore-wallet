@@ -33,158 +33,212 @@ import { HandlerComponent } from './settings/handler/handler.component';
 import { ActionStratisIdentityComponent } from './action/sid/sid.component';
 import { ActionNostrIdentityComponent } from './action/nostr/nostr.component';
 import { LoadingResolverService } from './services/loading-resolver.service';
-import { NonFungibleTokenComponent } from "./collectables/non-fungible-token.component";
-import { CollectablesComponent } from "./collectables/collectables.component";
+import { NonFungibleTokenComponent } from './collectables/non-fungible-token.component';
+import { CollectablesComponent } from './collectables/collectables.component';
 import { NetworkComponent } from './settings/network/network.component';
 import { IdentityComponent } from './account/identity/identity.component';
 import { PermissionsComponent } from './settings/permissions/permissions.component';
 import { ActionPublicKeyComponent } from './action/publickey/publickey.component';
+import { ActionComponent } from './action/action.component';
 
 const routes: Routes = [
   {
-    path: '', component: LoadingComponent, pathMatch: 'full'
+    path: '',
+    component: LoadingComponent,
+    pathMatch: 'full',
   },
   {
-    path: 'popup', component: LoadingComponent, data: { popup: true }
+    path: 'popup',
+    component: LoadingComponent,
+    data: { popup: true },
   },
   {
-    path: 'home', component: HomeComponent, resolve: {
-      data: LoadingResolverService
-    }
+    path: 'home',
+    component: HomeComponent,
+    resolve: {
+      data: LoadingResolverService,
+    },
   },
   {
-    path: 'wipe', component: WipeComponent, resolve: {
-      data: LoadingResolverService
-    }
+    path: 'wipe',
+    component: WipeComponent,
+    resolve: {
+      data: LoadingResolverService,
+    },
   },
   {
-    path: 'settings', component: SettingsComponent, resolve: {
-      data: LoadingResolverService
-    }
+    path: 'settings',
+    component: SettingsComponent,
+    resolve: {
+      data: LoadingResolverService,
+    },
   },
   {
-    path: 'settings/privacy', component: PrivacyComponent, resolve: {
-      data: LoadingResolverService
-    }
+    path: 'settings/privacy',
+    component: PrivacyComponent,
+    resolve: {
+      data: LoadingResolverService,
+    },
   },
   {
-    path: 'settings/licenses', component: LicensesComponent, resolve: {
-      data: LoadingResolverService
-    }
+    path: 'settings/licenses',
+    component: LicensesComponent,
+    resolve: {
+      data: LoadingResolverService,
+    },
   },
   {
-    path: 'settings/changes', component: ChangesComponent, resolve: {
-      data: LoadingResolverService
-    }
+    path: 'settings/changes',
+    component: ChangesComponent,
+    resolve: {
+      data: LoadingResolverService,
+    },
   },
   {
-    path: 'settings/password', component: PasswordComponent, resolve: {
-      data: LoadingResolverService
-    }
+    path: 'settings/password',
+    component: PasswordComponent,
+    resolve: {
+      data: LoadingResolverService,
+    },
   },
   {
-    path: 'settings/about', component: AboutComponent, resolve: {
-      data: LoadingResolverService
-    }
+    path: 'settings/about',
+    component: AboutComponent,
+    resolve: {
+      data: LoadingResolverService,
+    },
   },
   {
-    path: 'settings/export-recovery-phrase', component: RecoveryComponent, resolve: {
-      data: LoadingResolverService
-    }
+    path: 'settings/export-recovery-phrase',
+    component: RecoveryComponent,
+    resolve: {
+      data: LoadingResolverService,
+    },
   },
   {
-    path: 'settings/handler', component: HandlerComponent, resolve: {
-      data: LoadingResolverService
-    }
+    path: 'settings/handler',
+    component: HandlerComponent,
+    resolve: {
+      data: LoadingResolverService,
+    },
   },
   {
-    path: 'settings/network', component: NetworkComponent, resolve: {
-      data: LoadingResolverService
-    }
+    path: 'settings/network',
+    component: NetworkComponent,
+    resolve: {
+      data: LoadingResolverService,
+    },
   },
   {
-    path: 'settings/permissions', component: PermissionsComponent, resolve: {
-      data: LoadingResolverService
-    }
+    path: 'settings/permissions',
+    component: PermissionsComponent,
+    resolve: {
+      data: LoadingResolverService,
+    },
   },
   {
-    path: 'account/select', component: AccountSelectComponent, resolve: {
-      data: LoadingResolverService
-    }
+    path: 'account/select',
+    component: AccountSelectComponent,
+    resolve: {
+      data: LoadingResolverService,
+    },
   },
   {
-    path: 'account/view/:index', component: AccountComponent, resolve: {
-      data: LoadingResolverService
-    }
+    path: 'account/view/:index',
+    component: AccountComponent,
+    resolve: {
+      data: LoadingResolverService,
+    },
   },
   {
-    path: 'account/send', component: AccountSendComponent, children: [
+    path: 'account/send',
+    component: AccountSendComponent,
+    children: [
       { path: '', redirectTo: 'address', pathMatch: 'full' },
       {
         path: 'address',
-        component: AccountSendAddressComponent, resolve: {
-          data: LoadingResolverService
-        }
+        component: AccountSendAddressComponent,
+        resolve: {
+          data: LoadingResolverService,
+        },
       },
       {
         path: 'confirm',
-        component: AccountSendConfirmComponent, resolve: {
-          data: LoadingResolverService
-        }
+        component: AccountSendConfirmComponent,
+        resolve: {
+          data: LoadingResolverService,
+        },
       },
       {
         path: 'sending',
-        component: AccountSendSendingComponent, resolve: {
-          data: LoadingResolverService
-        }
+        component: AccountSendSendingComponent,
+        resolve: {
+          data: LoadingResolverService,
+        },
       },
       {
         path: 'success',
-        component: AccountSendSuccessComponent, resolve: {
-          data: LoadingResolverService
-        }
-      }
-    ], resolve: {
-      data: LoadingResolverService
-    }
+        component: AccountSendSuccessComponent,
+        resolve: {
+          data: LoadingResolverService,
+        },
+      },
+    ],
+    resolve: {
+      data: LoadingResolverService,
+    },
   },
   {
-    path: 'account/receive/:index', component: AccountReceiveComponent, resolve: {
-      data: LoadingResolverService
-    }
+    path: 'account/receive/:index',
+    component: AccountReceiveComponent,
+    resolve: {
+      data: LoadingResolverService,
+    },
   },
   {
-    path: 'account/transaction/:txid', component: AccountTransactionComponent, resolve: {
-      data: LoadingResolverService
-    }
+    path: 'account/transaction/:txid',
+    component: AccountTransactionComponent,
+    resolve: {
+      data: LoadingResolverService,
+    },
   },
   {
-    path: 'account/identity/:index', component: IdentityComponent, resolve: {
-      data: LoadingResolverService
-    }
+    path: 'account/identity/:index',
+    component: IdentityComponent,
+    resolve: {
+      data: LoadingResolverService,
+    },
   },
   // {
   //   path: 'account/view/nostr/:index', component: NostrIdentityComponent
   // },
   {
-    path: 'account/create', component: AccountCreateComponent, resolve: {
-      data: LoadingResolverService
-    }
+    path: 'account/create',
+    component: AccountCreateComponent,
+    resolve: {
+      data: LoadingResolverService,
+    },
   },
   {
-    path: 'account/edit/:index', component: AccountEditComponent, resolve: {
-      data: LoadingResolverService
-    }
+    path: 'account/edit/:index',
+    component: AccountEditComponent,
+    resolve: {
+      data: LoadingResolverService,
+    },
   },
   {
-    path: 'account/remove/:index', component: AccountRemoveComponent, resolve: {
-      data: LoadingResolverService
-    }
+    path: 'account/remove/:index',
+    component: AccountRemoveComponent,
+    resolve: {
+      data: LoadingResolverService,
+    },
   },
   {
-    path: 'account/collectables/:address', component: CollectablesComponent, resolve: {
-      data: LoadingResolverService
-    }
+    path: 'account/collectables/:address',
+    component: CollectablesComponent,
+    resolve: {
+      data: LoadingResolverService,
+    },
   },
   // {
   //   path: 'vault/view/:index', component: VaultComponent
@@ -202,80 +256,113 @@ const routes: Routes = [
   //   path: 'vault/remove/:index', component: VaultRemoveComponent
   // },
   {
-    path: 'dashboard', component: DashboardComponent, resolve: {
-      data: LoadingResolverService
-    }
+    path: 'dashboard',
+    component: DashboardComponent,
+    resolve: {
+      data: LoadingResolverService,
+    },
   },
   {
-    path: 'dashboard/:id', component: DashboardComponent, resolve: {
-      data: LoadingResolverService
-    }
+    path: 'dashboard/:id',
+    component: DashboardComponent,
+    resolve: {
+      data: LoadingResolverService,
+    },
   },
   {
-    path: 'wallet/create', component: WalletCreateComponent, resolve: {
-      data: LoadingResolverService
-    }
+    path: 'wallet/create',
+    component: WalletCreateComponent,
+    resolve: {
+      data: LoadingResolverService,
+    },
   },
   {
-    path: 'wallet/edit', component: WalletEditComponent, resolve: {
-      data: LoadingResolverService
-    }
+    path: 'wallet/edit',
+    component: WalletEditComponent,
+    resolve: {
+      data: LoadingResolverService,
+    },
   },
   {
-    path: 'wallet/remove', component: WalletRemoveComponent, resolve: {
-      data: LoadingResolverService
-    }
+    path: 'wallet/remove',
+    component: WalletRemoveComponent,
+    resolve: {
+      data: LoadingResolverService,
+    },
   },
   {
-    path: 'action/sign', component: ActionSignComponent, resolve: {
-      data: LoadingResolverService
-    }
-  },
-  {
-    path: 'action/publicKey', component: ActionPublicKeyComponent, resolve: {
-      data: LoadingResolverService
-    }
-  },
-  {
-    path: 'action/identity', component: ActionIdentityComponent, resolve: {
-      data: LoadingResolverService
-    }
-  },
-  {
-    path: 'action/login', component: ActionLoginComponent, resolve: {
-      data: LoadingResolverService
-    }
-  },
-  {
-    path: 'action/sid', component: ActionStratisIdentityComponent, resolve: {
-      data: LoadingResolverService
-    }
-  },
-  {
-    path: 'action/nostr', component: ActionNostrIdentityComponent, resolve: {
-      data: LoadingResolverService
-    }
+    path: 'action',
+    component: ActionComponent,
+    children: [
+      // { path: '', redirectTo: 'sign', pathMatch: 'full' },
+      {
+        path: 'sign',
+        component: ActionSignComponent,
+        resolve: {
+          data: LoadingResolverService,
+        },
+      },
+      {
+        path: 'publicKey',
+        component: ActionPublicKeyComponent,
+        resolve: {
+          data: LoadingResolverService,
+        },
+      },
+      {
+        path: 'identity',
+        component: ActionIdentityComponent,
+        resolve: {
+          data: LoadingResolverService,
+        },
+      },
+      {
+        path: 'login',
+        component: ActionLoginComponent,
+        resolve: {
+          data: LoadingResolverService,
+        },
+      },
+      {
+        path: 'sid',
+        component: ActionStratisIdentityComponent,
+        resolve: {
+          data: LoadingResolverService,
+        },
+      },
+      {
+        path: 'nostr',
+        component: ActionNostrIdentityComponent,
+        resolve: {
+          data: LoadingResolverService,
+        },
+      },
+    ],
+    resolve: {
+      data: LoadingResolverService,
+    },
   },
   {
     path: 'popup2',
-    loadChildren: () => import('./modules/popup/popup.module').then(m => m.PopupModule)
+    loadChildren: () => import('./modules/popup/popup.module').then((m) => m.PopupModule),
   },
   {
     path: 'tab',
-    loadChildren: () => import('./modules/tab/tab.module').then(m => m.TabModule)
+    loadChildren: () => import('./modules/tab/tab.module').then((m) => m.TabModule),
   },
   {
     path: 'options',
-    loadChildren: () => import('./modules/options/options.module').then(m => m.OptionsModule)
+    loadChildren: () => import('./modules/options/options.module').then((m) => m.OptionsModule),
   },
   {
-    path: '**', redirectTo: '/'
+    path: '**',
+    redirectTo: '/',
   },
 ];
 
 @NgModule({
   // imports: [RouterModule.forRoot(routes)],
   imports: [RouterModule.forRoot(routes, { enableTracing: false, useHash: true })],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

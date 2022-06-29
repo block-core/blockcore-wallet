@@ -1,16 +1,11 @@
-<div class="page">
-  <h2>Public Key</h2>
+<h2>Public Key</h2>
 
-  <!-- <p>IMPORTANT: Verify all details below before you accept the permission request.</p> -->
+<!-- <p>IMPORTANT: Verify all details below before you accept the permission request.</p> -->
 
-  <p>
-    Account: <strong>{{ walletManager.activeAccount?.name }}</strong
-    ><br />
-    Permission: <strong>"Read your public key"</strong>
-    <br />
-    Domain: <strong>{{ app }}</strong>
-  </p>
-
-  <button class="action-button" mat-flat-button color="primary" (click)="authorize('once')">Authorize once</button>&nbsp; <button class="action-button" mat-flat-button (click)="authorize('expirable')">Authorize for 5 minutes</button>&nbsp; <button class="action-button" mat-flat-button (click)="authorize('forever')">Authorize forever</button>&nbsp;
-  <button class="action-button" mat-flat-button (click)="authorize('no')">Cancel</button>
-</div>
+<p>
+  Account: <strong>{{ walletManager.activeAccount?.name }}</strong
+  ><br />
+  Permission: <strong>"Read your public key"</strong>
+  <br />
+  Domain: <strong>{{ action.app }}</strong>
+</p>

@@ -89,6 +89,7 @@ import { PermissionStore } from 'src/shared/store/permission-store';
 import { ActionPublicKeyComponent } from './action/publickey/publickey.component';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
+import { ActionComponent } from './action/action.component';
 
 // required for AOT compilation
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
@@ -144,7 +145,8 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     QrScanDialog,
     IdentityComponent,
     PermissionsComponent,
-    ActionPublicKeyComponent
+    ActionPublicKeyComponent,
+    ActionComponent
   ],
   imports: [
     BrowserModule,

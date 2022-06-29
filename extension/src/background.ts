@@ -93,15 +93,15 @@ async function handleContentScriptMessage(message: ActionMessageResponse) {
   try {
     switch (message.action) {
       case 'publicKey': {
-        return watchManager!.performTask(true);
+        return 'Your Public Key!';
         // return getPublicKey(sk);
       }
       case 'sign': {
+        return 'Signature!';
         // let { event } = params;
         // if (!event.pubkey) event.pubkey = getPublicKey(sk);
         // if (!event.id) event.id = getEventHash(event);
         // if (!validateEvent(event)) return { error: 'invalid event' };
-        return watchManager!.performTask(false);
         // return await signEvent(event, sk);
       }
       case 'encrypt': {

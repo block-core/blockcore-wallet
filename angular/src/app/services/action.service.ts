@@ -9,6 +9,9 @@ export class ActionService {
 
     }
 
+    app: string;
+    content: string;
+
     async clearAction() {
         this.store.set(undefined);
         await this.store.save();
