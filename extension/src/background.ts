@@ -88,6 +88,16 @@ async function handleContentScriptMessage(message: ActionMessageResponse) {
         error: { message: `Insufficient permissions, required "${message.action}".` },
       };
     }
+  } else {
+    // TODO: This logic can be put into the query into permission set, because permissions
+    // must be stored with more keys than just "action", it must contain wallet/account and potentially keyId.
+
+    // If there exists an permission, verify that the permission applies to the specified (or active) wallet and account.
+    // If the caller has supplied walletId and accountId, use that.
+    if (message.walletId && message.accountId) {
+    } else {
+      // If nothing is supplied, verify against the current active wallet/account.
+    }
   }
 
   try {
