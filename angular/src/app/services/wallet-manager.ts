@@ -145,8 +145,40 @@ export class WalletManager {
     }
   }
 
-  async getPrimaryAddress(account: Account)
-  {
+  public getIdentityNode(wallet: Wallet, account: Account) {
+    const network = this.getNetwork(account.networkType);
+
+    // Get the secret seed.
+    const masterSeedBase64 = this.secure.get(wallet.id);
+    const masterSeed = Buffer.from(masterSeedBase64, 'base64');
+
+    // Create the master node.
+    const masterNode = HDKey.fromMasterSeed(masterSeed, network.bip32);
+
+    let addressNode = masterNode.derive(
+      `m/${account.purpose}'/${account.network}'/${account.index}'/0'/0'` // Only use hardened keys for identity.
+    );
+
+    return addressNode;
+  }
+
+  async signDataSchnorr(wallet: Wallet, account: Account, address: string, content: string): Promise<string> {
+    const addressNode = this.getIdentityNode(wallet, account);
+
+    const accountState = this.accountStateStore.get(account.identifier);
+    let identity = accountState.receive[0].address;
+
+    const messageArray = new Uint8Array(Buffer.from(content));
+    const messageHash = await secp.utils.sha256(messageArray);
+    const identifier = this.crypto.getIdentifier(addressNode.publicKey);
+
+    const signatureArray = await secp.schnorr.sign(messageHash, addressNode.privateKey!);
+
+    const signature = secp.utils.bytesToHex(signatureArray);
+    return signature;
+  }
+
+  async getPrimaryAddress(account: Account) {
     const accountState = this.accountStateStore.get(account.identifier);
     return accountState.receive[0].address;
   }
