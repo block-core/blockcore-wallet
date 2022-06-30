@@ -19,10 +19,5 @@ export class ActionComponent {
     this.action.app = this.uiState.action?.app;
   }
 
-  @HostListener('window:beforeunload')
-  rejectDialog() {
-    this.action.authorize('no');
-  }
-
 
 }

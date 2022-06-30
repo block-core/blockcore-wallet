@@ -1,39 +1,35 @@
-import { Component, Inject, HostBinding, ChangeDetectorRef, ApplicationRef, NgZone } from '@angular/core';
+import { Component, Inject, HostBinding, ChangeDetectorRef, ApplicationRef, NgZone, HostListener } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { CryptoService, UIState, NetworksService, AppManager, WalletManager } from '../../services';
 import { Router } from '@angular/router';
 import { ActionService } from 'src/app/services/action.service';
 
 @Component({
-    selector: 'app-login',
-    templateUrl: './login.component.html',
-    styleUrls: ['./login.component.css']
+  selector: 'app-login',
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.css'],
 })
 export class ActionLoginComponent {
-    content?: string;
+  content?: string;
 
-    constructor(
-        public uiState: UIState,
-        private crypto: CryptoService,
-        private router: Router,
-        private app: ApplicationRef,
-        private ngZone: NgZone,
-        private action: ActionService,
-        public networkService: NetworksService,
-        public walletManager: WalletManager,
-        private manager: AppManager,
-        private cd: ChangeDetectorRef) {
-        this.uiState.title = 'Action: Login';
+  constructor(public uiState: UIState, private crypto: CryptoService, private router: Router, private app: ApplicationRef, private ngZone: NgZone, private action: ActionService, public networkService: NetworksService, public walletManager: WalletManager, private manager: AppManager, private cd: ChangeDetectorRef) {
+    this.uiState.title = 'Action: Login';
 
-        this.content = this.uiState.action?.document;
-    }
+    this.content = this.uiState.action?.document;
+  }
 
-    sign() {
-        // this.manager.sign(this.content, this.uiState.action?.tabId);
-        window.close();
-    }
+  // This attribute must be added to all individual components, important for closing with X to register 'no' reply.
+  @HostListener('window:beforeunload')
+  rejectDialog() {
+    this.action.authorize('no');
+  }
 
-    exit() {
-        this.action.clearAction();
-    }
+  sign() {
+    // this.manager.sign(this.content, this.uiState.action?.tabId);
+    window.close();
+  }
+
+  exit() {
+    this.action.clearAction();
+  }
 }
