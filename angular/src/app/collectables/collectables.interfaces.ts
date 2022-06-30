@@ -11,6 +11,7 @@ export interface NonFungibleToken {
 
 export interface attribute {
   trait_type: string;
+  traitType: string;
   value: number;
   display_type: string;
 }

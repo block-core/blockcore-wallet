@@ -1,177 +1,188 @@
 <mat-tab-group class="tabs" mat-stretch-tabs *ngIf="walletManager.activeWallet && walletManager.activeWalletUnlocked">
-    <mat-tab>
-        <ng-template mat-tab-label>
-            <mat-icon class="example-tab-icon">manage_accounts</mat-icon>&nbsp;
-            <span>{{ 'Dashboard.Accounts' | translate }}</span>
-        </ng-template>
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <mat-icon class="example-tab-icon">manage_accounts</mat-icon>&nbsp;
+      <span>{{ 'Dashboard.Accounts' | translate }}</span>
+    </ng-template>
 
-        <div>
-            <mat-nav-list>
-                <div mat-subheader>{{ 'Dashboard.Accounts' | translate }}</div>
+    <div>
+      <mat-nav-list>
+        <div mat-subheader>{{ 'Dashboard.Accounts' | translate }}</div>
 
-                <div class="centered" *ngIf="walletManager.activeWallet.accounts.length == 0">
-                    Your wallet has zero accounts.<br><br>
-                </div>
+        <div class="centered" *ngIf="walletManager.activeWallet.accounts.length == 0">
+          Your wallet has zero accounts.<br><br>
+        </div>
 
-                <a mat-list-item *ngFor="let account of walletManager.activeWallet.accounts; let i = index" routerLinkActive="active-link" [routerLink]="getLink(account)">
-                    <mat-icon mat-list-icon>{{account.icon}}</mat-icon>
-                    <div mat-line>{{account.name}}<span *ngIf="hasAccountHistory(account.identifier)" class="account-balance">{{balance(account.identifier) |
-                            amount}}</span>
-                        <span *ngIf="!hasAccountHistory(account.identifier)" class="account-balance">
+        <a mat-list-item *ngFor="let account of walletManager.activeWallet.accounts; let i = index" routerLinkActive="active-link" [routerLink]="getLink(account)">
+          <mat-icon mat-list-icon>{{account.icon}}</mat-icon>
+          <div mat-line>{{account.name}}<span *ngIf="hasAccountHistory(account.identifier)" class="account-balance">{{balance(account.identifier) |
+            amount}}</span>
+            <span *ngIf="!hasAccountHistory(account.identifier)" class="account-balance">
                             <mat-spinner [diameter]="16"></mat-spinner>
                         </span>
-                        <span *ngIf="hasAccountHistory(account.identifier) && !accountState(account).completedScan" class="account-balance account-scanning">
+            <span *ngIf="hasAccountHistory(account.identifier) && !accountState(account).completedScan" class="account-balance account-scanning">
                             <mat-spinner [color]="'accent'" [diameter]="16"></mat-spinner>
                         </span>
-                    </div>
-                    <div mat-line>{{account | network}}</div>
-                    <div class="network-status-widget">
-                        <app-network-status [status]="networkStatus.get(account.networkType)"></app-network-status>
-                    </div>
-                </a>
+          </div>
+          <div mat-line>{{account | network}}</div>
+          <div class="network-status-widget">
+            <app-network-status [status]="networkStatus.get(account.networkType)"></app-network-status>
+          </div>
+        </a>
 
-                <!-- TODO: Hidden until fully implemented -->
-                <!-- <mat-divider></mat-divider>
-                <div mat-subheader>Activity</div>
+        <!-- TODO: Hidden until fully implemented -->
+        <!-- <mat-divider></mat-divider>
+        <div mat-subheader>Activity</div>
 
-                <mat-list-item *ngIf="history.length == 0">No activity yet</mat-list-item>
+        <mat-list-item *ngIf="history.length == 0">No activity yet</mat-list-item>
 
-                <a mat-list-item *ngFor="let item of history" routerLinkActive="active-link">
-                    <mat-icon mat-list-icon>note</mat-icon>
-                    <div mat-line>{{item.name}}</div>
-                    <div mat-line> {{item.updated | date}} </div>
-                </a> -->
+        <a mat-list-item *ngFor="let item of history" routerLinkActive="active-link">
+            <mat-icon mat-list-icon>note</mat-icon>
+            <div mat-line>{{item.name}}</div>
+            <div mat-line> {{item.updated | date}} </div>
+        </a> -->
 
-                <mat-divider></mat-divider>
-                <div mat-subheader>{{ 'Dashboard.Actions' | translate }}</div>
+        <mat-divider></mat-divider>
+        <div mat-subheader>{{ 'Dashboard.Actions' | translate }}</div>
 
-                <a mat-list-item *ngIf="walletManager.activeWallet && walletManager.unlocked" [routerLink]="['/account/create']" routerLinkActive="active-link">
-                    <mat-icon mat-list-icon>add_circle_outline</mat-icon>
-                    <div mat-line>Add Account</div>
-                </a>
+        <a mat-list-item *ngIf="walletManager.activeWallet && walletManager.unlocked" [routerLink]="['/account/create']" routerLinkActive="active-link">
+          <mat-icon mat-list-icon>add_circle_outline</mat-icon>
+          <div mat-line>Add Account</div>
+        </a>
 
-                <a mat-list-item *ngIf="walletManager.activeWallet && walletManager.unlocked" [routerLink]="['/wallet/create']" routerLinkActive="active-link">
-                    <mat-icon mat-list-icon>account_balance_wallet</mat-icon>
-                    <div mat-line>Add Wallet</div>
-                </a>
+        <a mat-list-item *ngIf="walletManager.activeWallet && walletManager.unlocked" [routerLink]="['/wallet/create']" routerLinkActive="active-link">
+          <mat-icon mat-list-icon>account_balance_wallet</mat-icon>
+          <div mat-line>Add Wallet</div>
+        </a>
 
-                <mat-divider></mat-divider>
-                <div mat-subheader>{{ 'Dashboard.Tools' | translate }}</div>
+        <mat-divider></mat-divider>
+        <div mat-subheader>{{ 'Dashboard.Tools' | translate }}</div>
 
-                <a mat-list-item (click)="copyErrorLogs()">
-                    <mat-icon mat-list-icon>report_problem</mat-icon>
-                    <div mat-line>Copy Error Logs</div>
-                </a>
+        <a mat-list-item (click)="copyErrorLogs()">
+          <mat-icon mat-list-icon>report_problem</mat-icon>
+          <div mat-line>Copy Error Logs</div>
+        </a>
 
-                <a mat-list-item (click)="copyDebugLogs()">
-                    <mat-icon mat-list-icon>bug_report</mat-icon>
-                    <div mat-line>Copy Debug Logs</div>
-                </a>
+        <a mat-list-item (click)="copyDebugLogs()">
+          <mat-icon mat-list-icon>bug_report</mat-icon>
+          <div mat-line>Copy Debug Logs</div>
+        </a>
 
-                <!-- <a mat-list-item (click)="runIndexer()">
-                    <mat-icon mat-list-icon>bug_report</mat-icon>
-                    <div mat-line>Run Indexer</div>
-                </a>
+        <!-- <a mat-list-item (click)="runIndexer()">
+            <mat-icon mat-list-icon>bug_report</mat-icon>
+            <div mat-line>Run Indexer</div>
+        </a>
 
-                <a mat-list-item (click)="logWatcher()">
-                    <mat-icon mat-list-icon>bug_report</mat-icon>
-                    <div mat-line>Log Watcher State</div>
-                </a> -->
+        <a mat-list-item (click)="logWatcher()">
+            <mat-icon mat-list-icon>bug_report</mat-icon>
+            <div mat-line>Log Watcher State</div>
+        </a> -->
 
-            </mat-nav-list>
-        </div>
+      </mat-nav-list>
+    </div>
 
-    </mat-tab>
+  </mat-tab>
 
-    <!-- <mat-tab *ngIf="feature.enabled('vault')">
-        <ng-template mat-tab-label>
-            <mat-icon class="example-tab-icon">folder_shared</mat-icon>
-            &nbsp;
-            <span>{{ 'Dashboard.Vaults' | translate }}</span>
-        </ng-template>
+  <!-- <mat-tab *ngIf="feature.enabled('vault')">
+      <ng-template mat-tab-label>
+          <mat-icon class="example-tab-icon">folder_shared</mat-icon>
+          &nbsp;
+          <span>{{ 'Dashboard.Vaults' | translate }}</span>
+      </ng-template>
 
-        <div>
-            <mat-nav-list>
+      <div>
+          <mat-nav-list>
 
-                <div mat-subheader>{{ 'Dashboard.Vaults' | translate }}</div>
+              <div mat-subheader>{{ 'Dashboard.Vaults' | translate }}</div>
 
-                <mat-list-item>
-                    <mat-icon mat-list-icon>folder_shared</mat-icon>
-                    <div mat-line>bf83b2d9-cd9e-48f6-a6cc-bcd9c9b48050</div>
-                    <div mat-line class="dimmed">Public</div>
-                </mat-list-item>
+              <mat-list-item>
+                  <mat-icon mat-list-icon>folder_shared</mat-icon>
+                  <div mat-line>bf83b2d9-cd9e-48f6-a6cc-bcd9c9b48050</div>
+                  <div mat-line class="dimmed">Public</div>
+              </mat-list-item>
 
-                <mat-list-item>
-                    <mat-icon mat-list-icon>folder_shared</mat-icon>
-                    <div mat-line>af83b2d9-cd9e-48f6-a6cc-bcd9c9b48050</div>
-                    <div mat-line class="dimmed">Encrypted</div>
-                </mat-list-item>
-                <mat-list-item>
-                    <mat-icon mat-list-icon>folder_shared</mat-icon>
-                    <div mat-line>cf83b2d9-cd9e-48f6-a6cc-bcd9c9b48050</div>
-                    <div mat-line class="dimmed">Shared</div>
-                </mat-list-item>
+              <mat-list-item>
+                  <mat-icon mat-list-icon>folder_shared</mat-icon>
+                  <div mat-line>af83b2d9-cd9e-48f6-a6cc-bcd9c9b48050</div>
+                  <div mat-line class="dimmed">Encrypted</div>
+              </mat-list-item>
+              <mat-list-item>
+                  <mat-icon mat-list-icon>folder_shared</mat-icon>
+                  <div mat-line>cf83b2d9-cd9e-48f6-a6cc-bcd9c9b48050</div>
+                  <div mat-line class="dimmed">Shared</div>
+              </mat-list-item>
 
-                <mat-divider></mat-divider>
-                <div mat-subheader>Activity</div>
+              <mat-divider></mat-divider>
+              <div mat-subheader>Activity</div>
 
-                <mat-list-item *ngIf="history.length == 0">No activity yet</mat-list-item>
+              <mat-list-item *ngIf="history.length == 0">No activity yet</mat-list-item>
 
-                <a mat-list-item *ngFor="let item of history" routerLinkActive="active-link">
-                    <mat-icon mat-list-icon>note</mat-icon>
-                    <div mat-line>{{item.name}}</div>
-                    <div mat-line> {{item.updated | date}} </div>
-                </a>
+              <a mat-list-item *ngFor="let item of history" routerLinkActive="active-link">
+                  <mat-icon mat-list-icon>note</mat-icon>
+                  <div mat-line>{{item.name}}</div>
+                  <div mat-line> {{item.updated | date}} </div>
+              </a>
 
-                <mat-divider></mat-divider>
-                <div mat-subheader>Actions</div>
+              <mat-divider></mat-divider>
+              <div mat-subheader>Actions</div>
 
-                <a mat-list-item *ngIf="walletManager.activeWallet && walletManager.unlocked" [routerLink]="['/vault/create']"
-                    routerLinkActive="active-link">
-                    <mat-icon mat-list-icon>add_circle_outline</mat-icon>
-                    <div mat-line>Add Vault</div>
-                </a>
+              <a mat-list-item *ngIf="walletManager.activeWallet && walletManager.unlocked" [routerLink]="['/vault/create']"
+                  routerLinkActive="active-link">
+                  <mat-icon mat-list-icon>add_circle_outline</mat-icon>
+                  <div mat-line>Add Vault</div>
+              </a>
 
-            </mat-nav-list>
-        </div>
+          </mat-nav-list>
+      </div>
 
-    </mat-tab> -->
+  </mat-tab> -->
 
-    <mat-tab *ngIf="feature.enabled('collectible:preview')">
-        <ng-template mat-tab-label>
-            <mat-icon class="example-tab-icon">category</mat-icon>
-            &nbsp;
-            <span>{{ 'Dashboard.Collectibles' | translate }}</span>
-        </ng-template>
+  <mat-tab *ngIf="feature.enabled('collectible:preview')">
+    <ng-template mat-tab-label>
+      <mat-icon class="example-tab-icon">category</mat-icon>
+      &nbsp;
+      <span>{{ 'Dashboard.Collectibles' | translate }}</span>
+    </ng-template>
 
-        <div class="centered nft-view">
-            <img src="assets/nfts.png" class="nft-preview"><br>
-            Coming soon!
-        </div>
-    </mat-tab>
+    <div class="centered nft-view">
+      <img src="assets/nfts.png" class="nft-preview"><br>
+      Coming soon!
+    </div>
+  </mat-tab>
 
-    <mat-tab *ngIf="feature.enabled('collectible')">
-        <ng-template mat-tab-label>
-            <mat-icon class="example-tab-icon">category</mat-icon>
-            &nbsp;
-            <span>{{ 'Dashboard.Collectibles' | translate }}</span>
-        </ng-template>
+  <mat-tab *ngIf="feature.enabled('collectible')">
+    <ng-template mat-tab-label>
+      <mat-icon class="example-tab-icon">category</mat-icon>
+      &nbsp;
+      <span>{{ 'Dashboard.Collectibles' | translate }}</span>
+    </ng-template>
 
-        <ng-container class="centered">
-            <div class="centered nft-view" *ngIf="totalCollectablesCount == 0">
-                <img src="assets/nfts.png" class="nft-preview"><br>
-                No collectables found
-                <a [href]="this.stratisphereUrl" target="_blank">Open marketplace</a>
-            </div>
-            <app-collectable *ngFor="let account of smartContractAccounts" (totalItemsOnAccount)="addToTotalItems($event)" [account]="account">
-            </app-collectable>
-        </ng-container>
-    </mat-tab>
-    <mat-tab *ngIf="feature.enabled('inbox')">
-        <ng-template mat-tab-label>
-            <mat-icon class="example-tab-icon">mail</mat-icon>
-            &nbsp;
-            <span matBadge="2" matBadgeOverlap="false">{{ 'Dashboard.Inbox' | translate }}</span>
-        </ng-template>
-    </mat-tab>
+    <ng-container class="centered">
+      <div class="centered nft-view" *ngIf="totalCollectablesCount == 0">
+        <img src="assets/nfts.png" class="nft-preview"><br>
+        No collectables found
+        <a [href]="this.stratisphereUrl" target="_blank">Open marketplace</a>
+      </div>
+      <app-collectable *ngFor="let account of smartContractAccounts" (totalItemsOnAccount)="addToTotalItems($event)" [account]="account">
+      </app-collectable>
+    </ng-container>
+  </mat-tab>
+
+    <ng-container class="centered">
+      <div class="centered nft-view" *ngIf="totalCollectablesCount == 0">
+        <img src="assets/nfts.png" class="nft-preview"><br>
+        No collectables found
+        <a [href]="this.stratisphereUrl" target="_blank">Open marketplace</a>
+      </div>
+      <app-collectable *ngFor="let account of smartContractAccounts" (totalItemsOnAccount)="addToTotalItems($event)" [account]="account">
+      </app-collectable>
+    </ng-container>
+  </mat-tab>
+  <mat-tab *ngIf="feature.enabled('inbox')">
+    <ng-template mat-tab-label>
+      <mat-icon class="example-tab-icon">mail</mat-icon>
+      &nbsp;
+      <span matBadge="2" matBadgeOverlap="false">{{ 'Dashboard.Inbox' | translate }}</span>
+    </ng-template>
+  </mat-tab>
 </mat-tab-group>

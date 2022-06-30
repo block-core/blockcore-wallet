@@ -1,5 +1,5 @@
 .resize {
-  width: 150px;
+  width: 225px;
   height: auto;
 }
 
@@ -8,10 +8,15 @@ img {
   padding: 5px;
 }
 
-fullWidth{
+fullWidth {
   width: 100%;
 }
 
-.cardContainer{
+.cardContainer {
   margin: 20px;
+  text-align: center;
+}
+
+.maxWidth {
+  width: 100%;
 }
