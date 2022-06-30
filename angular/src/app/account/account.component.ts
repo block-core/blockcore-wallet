@@ -167,12 +167,10 @@ export class AccountComponent implements OnInit, OnDestroy {
 
     try
     {     
-      // todo check expiration
       var expIndex = this.loginurl.indexOf('exp=')
       var expirationStr: any;
       if(expIndex != -1)
       {
-        // todo check date 
         // Wallet should verify that the expiry datetime has not passed, if it is present
         // https://github.com/Opdex/SSAS/blob/main/README.md#wallet-compatibility
 
