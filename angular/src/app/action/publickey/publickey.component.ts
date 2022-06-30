@@ -16,4 +16,9 @@ const { v4: uuidv4 } = require('uuid');
 })
 export class ActionPublicKeyComponent {
   constructor(public uiState: UIState, private permissionStore: PermissionStore, public action: ActionService, public networkService: NetworksService, public walletManager: WalletManager, private manager: AppManager, private cd: ChangeDetectorRef) {}
+
+  @HostListener('window:beforeunload')
+  rejectDialog() {
+    this.action.authorize('no');
+  }
 }
