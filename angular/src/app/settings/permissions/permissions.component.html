@@ -14,8 +14,8 @@
       <div>
         <strong>{{ permission.action }}</strong>
         <br />
-        <span class="dimmed">{{ permission.type }} | Created: {{ permission.created }}</span><br>
-        <span class="dimmed">{{ getWalletName(permission.walletId) }} | {{ getAccountName(permission.walletId, permission.accountId) }}</span>
+        <span class="dimmed">Type: {{ permission.type }} - Created: {{ permission.created * 1000 | date }}</span><br>
+        <span class="dimmed">{{ getWalletName(permission.walletId) }} / {{ getAccountName(permission.walletId, permission.accountId) }}</span>
       </div>
       <div>
         <button mat-icon-button (click)="remove(permission, permissionSet)">
