@@ -7,6 +7,9 @@ import { Account, AccountHistory, NetworkStatus, TransactionHistory } from '../.
 import { Subscription } from 'rxjs';
 import { AccountHistoryStore, AddressStore } from 'src/shared';
 import { AccountStateStore } from 'src/shared/store/account-state-store';
+import axiosRetry from 'axios-retry';
+const axios = require('axios').default;
+axiosRetry(axios, { retries: 3, retryDelay: axiosRetry.exponentialDelay });
 
 @Component({
   selector: 'app-account',
@@ -35,6 +38,9 @@ export class AccountComponent implements OnInit, OnDestroy {
   addresses: string[];
   currentNetworkStatus: NetworkStatus;
   public accountHistory: AccountHistory;
+
+  loginurl: string;
+  loginurlMessage: string;
 
   constructor(
     public uiState: UIState,
@@ -151,6 +157,51 @@ export class AccountComponent implements OnInit, OnDestroy {
       }
     } else {
       this.networkStatus = null;
+    }
+  }
+
+  async callLogin() {
+
+    // sid:auth-api.opdex.com/v1/ssas/callback?uid=aDxrmQ8wDKUruKEzD17HJqPZSinveFEQaS1MbjMnXhG4_qtd92-Jjs_7sh3ajuo0peelx87-MvQV4MzvxafCpg&exp=1656544738
+    console.info(this.loginurl);
+
+    try
+    {     
+      // todo check expiration
+      var expIndex = this.loginurl.indexOf('exp=')
+      var expirationStr;
+      if(expIndex != -1)
+      {
+        // todo check date 
+        // Wallet should verify that the expiry datetime has not passed, if it is present
+        // https://github.com/Opdex/SSAS/blob/main/README.md#wallet-compatibility
+
+        expirationStr = this.loginurl.substring(expIndex + 4); 
+      }
+
+      var parsedUrl = this.loginurl.substring(4);
+
+      var activeAccount = this.walletManager.activeAccount;
+      var activeWallet = this.walletManager.activeWallet;
+
+      var address = await this.walletManager.getPrimaryAddress(activeAccount);
+      var signature = await this.walletManager.signData(activeWallet, activeAccount, address, parsedUrl);
+
+      const payload = {
+        "signature": signature,
+        "publicKey": address
+      };
+
+      var calback = "https://" + parsedUrl;
+      const authRequest = await axios.post(calback, payload);
+      console.log(authRequest);
+
+      this.loginurlMessage = "";
+      this.loginurl = "";
+    }
+    catch(error)
+    {
+      this.loginurlMessage = error.toString();
     }
   }
 

@@ -145,6 +145,12 @@ export class WalletManager {
     }
   }
 
+  async getPrimaryAddress(account: Account)
+  {
+    const accountState = this.accountStateStore.get(account.identifier);
+    return accountState.receive[0].address;
+  }
+
   // TODO: This method is duplicate of Indexer due to circular dependency after refactoring away from background process.
   async getTransactionHex(account: Account, txid: string) {
     const network = this.getNetwork(account.networkType);

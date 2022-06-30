@@ -184,6 +184,48 @@
 
         </mat-tab>
 
+        <mat-tab>
+            <ng-template mat-tab-label>
+                <mat-icon class="example-tab-icon">login_rounded </mat-icon>
+            </ng-template>
+
+            <br>
+
+            <mat-nav-list>
+                <!-- <a mat-list-item (click)="scan()">
+                    <mat-icon mat-list-icon>history</mat-icon>
+                    <div mat-line>Resync All History</div>
+                </a> -->
+                <a mat-list-item>
+                    <mat-icon mat-list-icon>login_rounded</mat-icon>
+                    <div mat-line>Login</div>
+                </a>
+            </mat-nav-list>
+
+            <mat-card >
+               <!--  <img class="mat-card-avatar network-status-image" [src]="" />
+                <mat-card-title>Login method</mat-card-title>
+                <mat-card-subtitle></mat-card-subtitle> -->
+                <mat-card-content>
+                    <p>Paste the login url</p>
+                    <p> 
+                        <mat-form-field class="input-full-width" appearance="outline">
+                    <input matInput [(ngModel)]="loginurl">
+                </mat-form-field>
+                </p>
+                    <!-- <p><input [(ngModel)]="loginurl" type="text" ></p> -->
+                    <p>
+                        <button class="full-width" (click)="callLogin()" mat-raised-button  color="primary">Login</button>
+
+                    </p>
+                    <p>
+                        {{loginurlMessage}}
+                    </p>
+                </mat-card-content>
+            </mat-card>
+
+        </mat-tab>
+
         <mat-tab *ngIf="settings.values.developer">
             <ng-template mat-tab-label>
                 <mat-icon class="example-tab-icon">bug_report</mat-icon>
