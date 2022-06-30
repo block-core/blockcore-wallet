@@ -161,15 +161,12 @@ export class AccountComponent implements OnInit, OnDestroy {
   }
 
   async callLogin() {
-    debugger;
 
     // sid:auth-api.opdex.com/v1/ssas/callback?uid=aDxrmQ8wDKUruKEzD17HJqPZSinveFEQaS1MbjMnXhG4_qtd92-Jjs_7sh3ajuo0peelx87-MvQV4MzvxafCpg&exp=1656544738
     console.info(this.loginurl);
 
     try
-    {
-
-      
+    {     
       // todo check expiration
       var expIndex = this.loginurl.indexOf('exp=')
       var expirationStr;
@@ -199,6 +196,8 @@ export class AccountComponent implements OnInit, OnDestroy {
       const authRequest = await axios.post(calback, payload);
       console.log(authRequest);
 
+      this.loginurlMessage = "";
+      this.loginurl = "";
     }
     catch(error)
     {
