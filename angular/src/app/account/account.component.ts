@@ -169,7 +169,7 @@ export class AccountComponent implements OnInit, OnDestroy {
     {     
       // todo check expiration
       var expIndex = this.loginurl.indexOf('exp=')
-      var expirationStr;
+      var expirationStr: any;
       if(expIndex != -1)
       {
         // todo check date 
@@ -177,6 +177,13 @@ export class AccountComponent implements OnInit, OnDestroy {
         // https://github.com/Opdex/SSAS/blob/main/README.md#wallet-compatibility
 
         expirationStr = this.loginurl.substring(expIndex + 4); 
+        var currentDate = new Date();
+        var expiryDate = new Date(expirationStr * 1000);
+
+        if(expiryDate < currentDate) {
+          this.loginurlMessage = "Login link expired";
+          return;
+        }
       }
 
       var parsedUrl = this.loginurl.substring(4);
