@@ -24,9 +24,6 @@ export class CommunicationService {
 
     }
 
-
-
-
     initialize() {
         // TODO: Handle these messages internally when running outside of extension context.
         if (this.runtime.isExtension) {
