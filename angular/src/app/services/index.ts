@@ -1,6 +1,5 @@
 export * from './application-manager';
 export * from './communication.service';
-export * from './communication.external';
 export * from './crypto-utility';
 export * from './crypto.service';
 export * from './data-sync';
