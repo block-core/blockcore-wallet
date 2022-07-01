@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Action, ActionMessageResponse, ActionStore } from 'src/shared';
+import { CommunicationService } from './communication.service';
 import { UIState } from './ui-state.service';
 import { WalletManager } from './wallet-manager';
 
@@ -7,7 +8,7 @@ import { WalletManager } from './wallet-manager';
   providedIn: 'root',
 })
 export class ActionService {
-  constructor(private store: ActionStore, public uiState: UIState, public walletManager: WalletManager) {}
+  constructor(private communication: CommunicationService, private store: ActionStore, public uiState: UIState, public walletManager: WalletManager) {}
 
   app: string;
   content: string;
@@ -58,8 +59,8 @@ export class ActionService {
       accountId: this.walletManager.activeAccountId,
     };
 
-    // TODO: Move this to a communication service.
     // Inform the provider script that user has signed the data.
-    chrome.runtime.sendMessage(reply);
+    this.communication.send(reply);
+    // chrome.runtime.sendMessage(reply);
   }
 }
