@@ -197,10 +197,13 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     MatProgressBarModule,
     MatDialogModule,
     ServiceWorkerModule.register('ngsw-worker.js', {
-      enabled: environment.production,
+      //enabled: environment.production,
+      enabled: true,
+      
       // Register the ServiceWorker as soon as the application is stable
       // or after 30 seconds (whichever comes first).
-      registrationStrategy: 'registerWhenStable:30000'
+      registrationStrategy: 'registerWithDelay:5000'
+      //registrationStrategy: 'registerWhenStable:10000'
     })
   ],
   exports: [NetworkPipe, TruncatePipe, NetworkStatusPipe],
