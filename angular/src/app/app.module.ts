@@ -90,7 +90,7 @@ import { ActionPublicKeyComponent } from './action/publickey/publickey.component
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import { ActionComponent } from './action/action.component';
-import { AppUpdateService } from './services/AppUpdateService';
+import { AppUpdateService } from './services/app-update.service';
 
 // required for AOT compilation
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
