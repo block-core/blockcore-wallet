@@ -6,6 +6,7 @@ import { UIState, CommunicationService, NetworksService, EnvironmentService, App
 import { Location } from '@angular/common';
 import { TranslateService } from '@ngx-translate/core';
 import { RuntimeService } from './services/runtime.service';
+import { FrontendService } from './services/frontend.service';
 
 @Component({
   selector: 'app-root',
@@ -21,6 +22,7 @@ export class AppComponent implements OnInit {
   instanceName: string;
 
   constructor(
+    private frontendService: FrontendService,
     public uiState: UIState,
     private router: Router,
     private renderer: Renderer2,
@@ -108,6 +110,8 @@ export class AppComponent implements OnInit {
         this.translate.use(this.settings.values.language);
       }
     });
+
+    console.log('CALLING ACTIVATED!!!');
 
     // Send event every time the UI has been activated.
     this.communication.send(this.communication.createMessage('activated'));

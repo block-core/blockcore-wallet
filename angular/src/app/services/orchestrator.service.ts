@@ -41,6 +41,7 @@ export class OrchestratorService {
             await this.handleMessage(message.data);
         });
 
+        // This is the interval that checks lock timeout in the UI. There is additionally a similar call in background.ts.
         setInterval(async () => {
             this.logger.debug('periodic interval called.');
             const becameUnlocked = await this.shared.checkLockTimeout();
