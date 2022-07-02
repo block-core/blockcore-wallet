@@ -39,7 +39,7 @@ export class AppComponent implements OnInit {
     private env: EnvironmentService,
     private runtime: RuntimeService,
     public networkService: NetworksService,
-    public  appUpdateService :AppUpdateService,
+    public  appUpdateService: AppUpdateService,
     @Inject(DOCUMENT) private document: Document
   ) {
     this.instanceName = this.env.instanceName;
