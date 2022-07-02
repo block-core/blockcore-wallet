@@ -260,19 +260,19 @@ const networkStatusWatcher = async () => {
     // are default on CoinVault.
     await networkManager.updateNetworkStatus('blockcore');
 
-    // chrome.runtime.sendMessage(
-    //   {
-    //     type: 'network-updated',
-    //     data: { source: 'network-status-watcher' },
-    //     ext: 'blockcore',
-    //     source: 'background',
-    //     target: 'tabs',
-    //     host: location.host,
-    //   },
-    //   function (response) {
-    //     // console.log('Extension:sendMessage:response:indexed:', response);
-    //   }
-    // );
+    chrome.runtime.sendMessage(
+      {
+        type: 'network-updated',
+        data: { source: 'network-status-watcher' },
+        ext: 'blockcore',
+        source: 'background',
+        target: 'tabs',
+        host: location.host,
+      },
+      function (response) {
+        // console.log('Extension:sendMessage:response:indexed:', response);
+      }
+    );
 
     // Continue running the watcher if it has not been cancelled.
     networkWatcherRef = globalThis.setTimeout(interval, networkUpdateInterval);
@@ -315,35 +315,35 @@ const runIndexer = async () => {
     if (status.changes) {
       console.log('Indexer found changes. Send message!');
 
-      //   chrome.runtime.sendMessage(
-      //     {
-      //       type: 'indexed',
-      //       data: { source: 'indexer-on-schedule' },
-      //       ext: 'blockcore',
-      //       source: 'background',
-      //       target: 'tabs',
-      //       host: location.host,
-      //     },
-      //     function (response) {
-      //       // console.log('Extension:sendMessage:response:indexed:', response);
-      //     }
-      //   );
+      chrome.runtime.sendMessage(
+        {
+          type: 'indexed',
+          data: { source: 'indexer-on-schedule' },
+          ext: 'blockcore',
+          source: 'background',
+          target: 'tabs',
+          host: location.host,
+        },
+        function (response) {
+          // console.log('Extension:sendMessage:response:indexed:', response);
+        }
+      );
     } else {
       console.log('Indexer found zero changes. We will still inform the UI to refresh wallet to get latest scan state.');
 
-      //   chrome.runtime.sendMessage(
-      //     {
-      //       type: 'updated',
-      //       data: { source: 'indexer-on-schedule' },
-      //       ext: 'blockcore',
-      //       source: 'background',
-      //       target: 'tabs',
-      //       host: location.host,
-      //     },
-      //     function (response) {
-      //       // console.log('Extension:sendMessage:response:updated:', response);
-      //     }
-      //   );
+      chrome.runtime.sendMessage(
+        {
+          type: 'updated',
+          data: { source: 'indexer-on-schedule' },
+          ext: 'blockcore',
+          source: 'background',
+          target: 'tabs',
+          host: location.host,
+        },
+        function (response) {
+          // console.log('Extension:sendMessage:response:updated:', response);
+        }
+      );
     }
   };
 
@@ -380,35 +380,35 @@ const runWatcher = async () => {
       if (status.changes) {
         console.log('Watcher found changes. Sending message to UI!');
 
-        // chrome.runtime.sendMessage(
-        //   {
-        //     type: 'indexed',
-        //     data: { source: 'watcher' },
-        //     ext: 'blockcore',
-        //     source: 'background',
-        //     target: 'tabs',
-        //     host: location.host,
-        //   },
-        //   function (response) {
-        //     // console.log('Extension:sendMessage:response:indexed:', response);
-        //   }
-        // );
+        chrome.runtime.sendMessage(
+          {
+            type: 'indexed',
+            data: { source: 'watcher' },
+            ext: 'blockcore',
+            source: 'background',
+            target: 'tabs',
+            host: location.host,
+          },
+          function (response) {
+            // console.log('Extension:sendMessage:response:indexed:', response);
+          }
+        );
       } else {
         console.debug('Watcher found zero changes. We will still inform the UI to refresh wallet to get latest scan state.');
 
-        // chrome.runtime.sendMessage(
-        //   {
-        //     type: 'updated',
-        //     data: { source: 'watcher' },
-        //     ext: 'blockcore',
-        //     source: 'background',
-        //     target: 'tabs',
-        //     host: location.host,
-        //   },
-        //   function (response) {
-        //     // console.log('Extension:sendMessage:response:updated:', response);
-        //   }
-        // );
+        chrome.runtime.sendMessage(
+          {
+            type: 'updated',
+            data: { source: 'watcher' },
+            ext: 'blockcore',
+            source: 'background',
+            target: 'tabs',
+            host: location.host,
+          },
+          function (response) {
+            // console.log('Extension:sendMessage:response:updated:', response);
+          }
+        );
       }
     };
 

@@ -348,6 +348,8 @@ export class BackgroundManager {
     const networkLoader = new NetworkLoader(networkStatusStore);
     const addressManager = new AddressManager(networkLoader);
 
+    console.log('ALL STORES CREATED!');
+
     // Get what addresses to watch from local storage.
     // globalThis.chrome.storage.local.get('')
     const indexer = new IndexerBackgroundService(settingStore, walletStore, addressStore, addressIndexedStore, transactionStore, addressManager, accountStateStore, accountHistoryStore);
