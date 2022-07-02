@@ -90,6 +90,7 @@ import { ActionPublicKeyComponent } from './action/publickey/publickey.component
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import { ActionComponent } from './action/action.component';
+import { AppUpdateService } from './services/AppUpdateService';
 
 // required for AOT compilation
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
@@ -199,7 +200,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     ServiceWorkerModule.register('ngsw-worker.js', {
       //enabled: environment.production,
       enabled: true,
-      
+
       // Register the ServiceWorker as soon as the application is stable
       // or after 30 seconds (whichever comes first).
       registrationStrategy: 'registerWithDelay:5000'
@@ -221,7 +222,8 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     networkLoaderServiceProvider,
     AddressIndexedStore,
     AccountStateStore,
-    PermissionStore
+    PermissionStore,
+    AppUpdateService
   ],
   bootstrap: [AppComponent]
 })

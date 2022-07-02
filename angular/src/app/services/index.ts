@@ -19,4 +19,5 @@ export * from './settings.service';
 export * from './state.service';
 export * from './ui-state.service';
 export * from './wallet-manager';
+export * from './AppUpdateService';
 // export * from './permission.service';
