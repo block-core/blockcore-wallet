@@ -181,35 +181,42 @@ export class FrontendService implements OnInit {
         if (status.changes) {
           console.log('Watcher found changes. Sending message to UI!');
   
-          chrome.runtime.sendMessage(
-            {
-              type: 'indexed',
-              data: { source: 'watcher' },
-              ext: 'blockcore',
-              source: 'background',
-              target: 'tabs',
-              host: location.host,
-            },
-            function (response) {
-              // console.log('Extension:sendMessage:response:indexed:', response);
-            }
-          );
+          const msg = {
+            type: 'indexed',
+            data: { source: 'watcher' },
+            ext: 'blockcore',
+            source: 'background',
+            target: 'tabs',
+            host: location.host,
+          };
+
+          this.communication.send(msg);
+
+          // chrome.runtime.sendMessage(msg,
+          //   function (response) {
+          //     // console.log('Extension:sendMessage:response:indexed:', response);
+          //   }
+          // );
         } else {
           console.debug('Watcher found zero changes. We will still inform the UI to refresh wallet to get latest scan state.');
+
+          const msg = {
+            type: 'updated',
+            data: { source: 'watcher' },
+            ext: 'blockcore',
+            source: 'background',
+            target: 'tabs',
+            host: location.host,
+          };
+
+          this.communication.send(msg);
   
-          chrome.runtime.sendMessage(
-            {
-              type: 'updated',
-              data: { source: 'watcher' },
-              ext: 'blockcore',
-              source: 'background',
-              target: 'tabs',
-              host: location.host,
-            },
-            function (response) {
-              // console.log('Extension:sendMessage:response:updated:', response);
-            }
-          );
+          // chrome.runtime.sendMessage(
+          //   msg,
+          //   function (response) {
+          //     // console.log('Extension:sendMessage:response:updated:', response);
+          //   }
+          // );
         }
       };
   
