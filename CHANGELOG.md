@@ -1,3 +1,13 @@
+## <small>0.0.42 (2022-07-03)</small>
+
+* Add "npm run web" to host watcher and wallet in web-mode ([0282f3c](https://github.com/block-core/blockcore-wallet/commit/0282f3c))
+* Add AppUpdateService for PWA (#184) ([1799dde](https://github.com/block-core/blockcore-wallet/commit/1799dde)), closes [#184](https://github.com/block-core/blockcore-wallet/issues/184)
+* Changed the collectables presentation (#182) ([3cf3442](https://github.com/block-core/blockcore-wallet/commit/3cf3442)), closes [#182](https://github.com/block-core/blockcore-wallet/issues/182)
+* Make the watcher function correct in web-mode ([0046559](https://github.com/block-core/blockcore-wallet/commit/0046559))
+* Update version and changelog ([e125273](https://github.com/block-core/blockcore-wallet/commit/e125273))
+
+
+
 ## <small>0.0.41 (2022-07-02)</small>
 
 * @HostListener added to individual components to execute on window close ([1a25b80](https://github.com/block-core/blockcore-wallet/commit/1a25b80))

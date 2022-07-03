@@ -4,7 +4,7 @@
     "start_url": "./",
     "name": "Smart City Platform",
     "short_name": "SmartCityPlatform",
-    "version": "0.0.42",
+    "version": "0.0.43",
     "author": "City Chain Foundation",
     "display": "standalone",
     "theme_color": "#DFAB3C",
