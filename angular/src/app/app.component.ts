@@ -7,6 +7,7 @@ import { Location } from '@angular/common';
 import { TranslateService } from '@ngx-translate/core';
 import { RuntimeService } from './services/runtime.service';
 import { FrontendService } from './services/frontend.service';
+import { AppUpdateService } from './services/app-update.service';
 
 @Component({
   selector: 'app-root',
@@ -39,6 +40,7 @@ export class AppComponent implements OnInit {
     private env: EnvironmentService,
     private runtime: RuntimeService,
     public networkService: NetworksService,
+    public appUpdateService: AppUpdateService,
     @Inject(DOCUMENT) private document: Document
   ) {
     this.instanceName = this.env.instanceName;
