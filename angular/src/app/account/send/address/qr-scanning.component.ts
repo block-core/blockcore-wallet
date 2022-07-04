@@ -61,8 +61,8 @@ export class QrScanDialog implements OnInit {
       .start(
         cameraId,
         {
-          fps: 10, // Optional, frame per seconds for qr code scanning
-          qrbox: { width: 250, height: 250 }, // Optional, if you want bounded box UI
+          fps: 10,
+        //   qrbox: { width: 250, height: 250 }, // Optional, if you want bounded box UI
         },
         (decodedText, decodedResult) => {
           this.onScanSuccess(decodedText, decodedResult);
