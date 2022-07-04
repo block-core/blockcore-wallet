@@ -16,7 +16,9 @@
             </p>
 
             <p *ngIf="!transaction.unconfirmed"><span class="label">Confirmations</span><br>
-                {{currentNetworkStatus.blockSyncHeight - transaction.details.blockIndex + 1}}</p>
+                <!-- {{currentNetworkStatus.blockSyncHeight - transaction.details.blockIndex + 1}} -->
+                Confirmed
+            </p>
             <p *ngIf="transaction.unconfirmed"><span class="label">Confirmations</span><br>Unconfirmed (mempool)
             </p>
 

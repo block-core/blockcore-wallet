@@ -11,7 +11,7 @@ export class AppUpdateService {
     });
   }
   showAppUpdateAlert() {
-    let sb = this.snackBar.open('App Update available!', 'update', {
+    let sb = this.snackBar.open('App Update available!', 'Update', {
       horizontalPosition: 'center',
       verticalPosition: 'bottom',
     });
