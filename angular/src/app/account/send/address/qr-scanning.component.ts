@@ -15,11 +15,19 @@ export interface DialogData {
 })
 export class QrScanDialog implements OnInit {
   private html5QrcodeScanner: Html5QrcodeScanner;
+  private html5QrCode: Html5Qrcode;
   public error: string;
   private cameras: Array<CameraDevice>;
   public label: string;
 
-  constructor(public dialogRef: MatDialogRef<QrScanDialog>, @Inject(MAT_DIALOG_DATA) public data: DialogData) {}
+  constructor(public dialogRef: MatDialogRef<QrScanDialog>, @Inject(MAT_DIALOG_DATA) public data: DialogData) {
+    this.dialogRef.afterClosed().subscribe(() => {
+      // Make sure we call stop when dialog is closed.
+      if (this.html5QrCode) {
+        this.html5QrCode.stop();
+      }
+    });
+  }
 
   async ngOnInit() {
     let config: any = {
@@ -56,13 +64,13 @@ export class QrScanDialog implements OnInit {
   }
 
   async startCamera(cameraId: string) {
-    const html5QrCode = new Html5Qrcode('reader');
-    html5QrCode
+    this.html5QrCode = new Html5Qrcode('reader');
+    this.html5QrCode
       .start(
         cameraId,
         {
           fps: 10,
-        //   qrbox: { width: 250, height: 250 }, // Optional, if you want bounded box UI
+          //   qrbox: { width: 250, height: 250 }, // Optional, if you want bounded box UI
         },
         (decodedText, decodedResult) => {
           this.onScanSuccess(decodedText, decodedResult);
