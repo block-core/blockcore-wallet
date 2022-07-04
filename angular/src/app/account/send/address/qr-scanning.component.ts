@@ -35,6 +35,7 @@ export class QrScanDialog implements OnInit {
     this.config = {
       fps: 10,
       qrbox: 400,
+      rememberLastUsedCamera: true,
       formatsToSupport: [Html5QrcodeSupportedFormats.QR_CODE],
     };
 
