@@ -17,9 +17,10 @@ export class QrScanDialog implements OnInit {
   private html5QrCode: Html5Qrcode;
   public error: string;
   private cameras: Array<CameraDevice>;
+  public camera: CameraDevice;
   public label: string;
   public cameraIndex = -1;
-  public camera: CameraDevice;
+  private config: any;
 
   constructor(public dialogRef: MatDialogRef<QrScanDialog>, @Inject(MAT_DIALOG_DATA) public data: DialogData) {
     this.dialogRef.afterClosed().subscribe(() => {
@@ -30,23 +31,17 @@ export class QrScanDialog implements OnInit {
     });
   }
 
-  private config: any;
-
   async ngOnInit() {
     this.config = {
       fps: 10,
-      qrbox: {
-        width: 400,
-        height: 400,
-        aspectRatio: 1.0,
-      },
+      qrbox: 400,
       formatsToSupport: [Html5QrcodeSupportedFormats.QR_CODE],
     };
 
     this.html5QrCode = new Html5Qrcode('reader', this.config);
 
+    await this.startCamera(null);
     await this.requestCameras();
-    this.changeCamera();
   }
 
   toggleFlash() {
@@ -69,15 +64,27 @@ export class QrScanDialog implements OnInit {
 
   async startCamera(cameraId: string) {
     try {
-      // Always stop before starting a new instance.
-      try {
-        await this.html5QrCode.stop();
-      } catch (err) {
-        console.error('Failed to stop:', err);
+      let cameraConfig: any;
+
+      if (!cameraId) {
+        cameraConfig = {
+          facingMode: 'environment',
+        };
+      } else {
+        cameraConfig = {
+          deviceId: { exact: cameraId },
+        };
+
+        // Perform stop only when there is camera ID, meaning user have changed away from default.
+        try {
+          await this.html5QrCode.stop();
+        } catch (err) {
+          console.error('Failed to stop:', err);
+        }
       }
 
       this.html5QrCode.start(
-        cameraId,
+        cameraConfig,
         this.config,
         (decodedText, decodedResult) => {
           this.onScanSuccess(decodedText, decodedResult);
@@ -119,6 +126,7 @@ export class QrScanDialog implements OnInit {
 
   onScanFailure(error: any) {
     console.warn(`Code scan error = ${error}`);
+    this.error = error;
   }
 
   onNoClick(): void {
