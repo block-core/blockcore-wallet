@@ -1,7 +1,7 @@
 import { ThisReceiver } from '@angular/compiler';
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { Html5Qrcode, Html5QrcodeScanner, Html5QrcodeSupportedFormats } from 'html5-qrcode';
+import { Html5Qrcode, Html5QrcodeSupportedFormats } from 'html5-qrcode';
 import { CameraDevice } from 'html5-qrcode/esm/core';
 
 export interface DialogData {
@@ -14,11 +14,12 @@ export interface DialogData {
   styleUrls: ['./qr-scanning.component.css'],
 })
 export class QrScanDialog implements OnInit {
-  private html5QrcodeScanner: Html5QrcodeScanner;
   private html5QrCode: Html5Qrcode;
   public error: string;
   private cameras: Array<CameraDevice>;
   public label: string;
+  public cameraIndex = -1;
+  public camera: CameraDevice;
 
   constructor(public dialogRef: MatDialogRef<QrScanDialog>, @Inject(MAT_DIALOG_DATA) public data: DialogData) {
     this.dialogRef.afterClosed().subscribe(() => {
@@ -29,29 +30,32 @@ export class QrScanDialog implements OnInit {
     });
   }
 
+  private config: any;
+
   async ngOnInit() {
-    let config: any = {
+    this.config = {
       fps: 10,
       qrbox: {
-        width: 250,
-        height: 250,
+        width: 400,
+        height: 400,
+        aspectRatio: 1.0,
       },
       formatsToSupport: [Html5QrcodeSupportedFormats.QR_CODE],
     };
 
-    this.html5QrcodeScanner = new Html5QrcodeScanner('reader', config, /* verbose= */ false);
-
-    this.html5QrcodeScanner.render(
-      (decodedText: any, decodedResult: any) => {
-        this.onScanSuccess(decodedText, decodedResult);
-      },
-      (error) => {
-        this.onScanFailure(error);
-      }
-    );
+    this.html5QrCode = new Html5Qrcode('reader', this.config);
 
     await this.requestCameras();
     this.changeCamera();
+  }
+
+  toggleFlash() {
+    // TODO: https://github.com/mebjas/html5-qrcode/issues/129
+  }
+
+  openFile() {
+    // TODO: Add support for picking a file UI and provide that to the library like below:
+    // this.html5QrCode.scanFileV2()
   }
 
   async requestCameras() {
@@ -64,28 +68,28 @@ export class QrScanDialog implements OnInit {
   }
 
   async startCamera(cameraId: string) {
-    this.html5QrCode = new Html5Qrcode('reader');
-    this.html5QrCode
-      .start(
+    try {
+      // Always stop before starting a new instance.
+      try {
+        await this.html5QrCode.stop();
+      } catch (err) {
+        console.error('Failed to stop:', err);
+      }
+
+      this.html5QrCode.start(
         cameraId,
-        {
-          fps: 10,
-          //   qrbox: { width: 250, height: 250 }, // Optional, if you want bounded box UI
-        },
+        this.config,
         (decodedText, decodedResult) => {
           this.onScanSuccess(decodedText, decodedResult);
         },
         (errorMessage) => {
           //   this.onScanFailure(errorMessage);
         }
-      )
-      .catch((err) => {
-        this.onScanFailure(err);
-      });
+      );
+    } catch (err) {
+      this.onScanFailure(err);
+    }
   }
-
-  public cameraIndex = -1;
-  public camera: CameraDevice;
 
   async changeCamera() {
     // Perform an request cameras every time user clicks the change camera button, if there are no cameras.
@@ -103,35 +107,14 @@ export class QrScanDialog implements OnInit {
       this.cameraIndex = 0;
     }
 
-    console.log(this.cameraIndex);
-
     this.camera = this.cameras[this.cameraIndex];
-
-    console.log('camera:', this.camera);
-
     this.startCamera(this.camera.id);
-
-    // This method will trigger user permissions
-    // this.html5QrcodeScanner
-    //   .getCameras()
-    //   .then((devices) => {
-    //     /**
-    //      * devices would be an array of objects of type:
-    //      * { id: "id", label: "label" }
-    //      */
-    //     if (devices && devices.length) {
-    //       var cameraId = devices[0].id;
-    //       // .. use this to start scanning.
-    //     }
-    //   })
-    //   .catch((err) => {
-    //     // handle err
-    //   });
   }
 
   onScanSuccess(decodedText: any, decodedResult: any) {
     console.log(`Code matched = ${decodedText}`, decodedResult);
     this.data.address = decodedText;
+    this.dialogRef.close(this.data.address);
   }
 
   onScanFailure(error: any) {

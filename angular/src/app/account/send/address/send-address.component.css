@@ -8,3 +8,7 @@
   float: right;
   margin-top: 0.5em;
 }
+
+.mat-dialog-container {
+  padding: 0 !important;
+}

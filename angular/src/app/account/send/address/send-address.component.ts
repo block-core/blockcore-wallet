@@ -76,6 +76,7 @@ export class AccountSendAddressComponent implements OnInit, OnDestroy {
         });
 
         dialogRef.afterClosed().subscribe(result => {
+            console.log('RESULT', result);
             this.sendService.address = result;
         });
     }
