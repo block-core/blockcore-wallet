@@ -1,3 +1,15 @@
+## <small>0.0.43 (2022-07-04)</small>
+
+* Auto-close the dialog for QR scanning ([4d0060d](https://github.com/block-core/blockcore-wallet/commit/4d0060d))
+* Call stop on camera when dialog is closed ([39280b7](https://github.com/block-core/blockcore-wallet/commit/39280b7))
+* Improve the visual UI for QR code scanning ([c0612a7](https://github.com/block-core/blockcore-wallet/commit/c0612a7))
+* Update packages ([8527deb](https://github.com/block-core/blockcore-wallet/commit/8527deb))
+* Update version and changelog ([34182c8](https://github.com/block-core/blockcore-wallet/commit/34182c8))
+* WIP: Add custom UI for camera scanning ([0ed0e65](https://github.com/block-core/blockcore-wallet/commit/0ed0e65))
+* WIP: Add custom UI for camera scanning ([c63f430](https://github.com/block-core/blockcore-wallet/commit/c63f430))
+
+
+
 ## <small>0.0.42 (2022-07-03)</small>
 
 * Add "npm run web" to host watcher and wallet in web-mode ([0282f3c](https://github.com/block-core/blockcore-wallet/commit/0282f3c))
