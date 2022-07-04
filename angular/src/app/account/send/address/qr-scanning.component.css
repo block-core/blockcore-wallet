@@ -1,19 +1,14 @@
 .qr-scan {
   position: absolute !important;
-  /* z-index: 0; */
   left: 0;
   right: 0;
   top: 0;
   bottom: 0;
   width: 100%;
   height: 100%;
-  border: 2px solid blue;
 }
 
 .full-screen-modal .mat-dialog-container {
-  /* padding: 1em;
-  width: 100%;
-  height: 100%; */
 }
 
 .camera-button {
@@ -38,6 +33,6 @@
   color: red;
 }
 
-.mat-dialog-container {
+/* .mat-dialog-container {
   padding: 0 !important;
-}
+} */
