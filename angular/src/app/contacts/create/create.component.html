@@ -1,0 +1,63 @@
+<div class="page">
+  <h1>Create contact</h1>
+
+  <form [formGroup]="form">
+    <mat-form-field class="input-full-width" appearance="outline">
+      <mat-label>Name</mat-label>
+      <input matInput formControlName="name" required />
+      <!-- <mat-error
+            *ngIf="form.controls['addressInput'].hasError('required') && form.controls['addressInput'].dirty || form.controls['addressInput'].touched">
+            Address is required.</mat-error> -->
+      <mat-error *ngIf="form.controls['name'].invalid">Address is required.</mat-error>
+    </mat-form-field>
+
+    <div class="input-actions">
+      <button mat-icon-button matTooltip="Scan QR code">
+        <mat-icon>qr_code_scanner</mat-icon>
+      </button>
+      <button mat-icon-button matTooltip="Paste address from clipboard">
+        <mat-icon>content_paste</mat-icon>
+      </button>
+    </div>
+
+    <mat-form-field class="input-full-width" appearance="outline">
+      <mat-label>Address</mat-label>
+      <input matInput formControlName="address" required />
+      <!-- <mat-error *ngIf="form.controls['amountInput'].invalid">Amount is required and must be correctly entered.</mat-error> -->
+      <mat-error *ngIf="form.controls['address'].errors?.['min']">Amount cannot be negative.</mat-error>
+      <mat-error *ngIf="form.controls['address'].errors?.['required']">Amount is required and must be correctly entered.</mat-error>
+      <mat-error *ngIf="form.controls['address'].errors?.['tooManyDecimals']">The value of amount cannot have more than 8 decimals.</mat-error>
+      <mat-error *ngIf="form.controls['address'].errors?.['tooHighValue']">The value of amount must be below 100000000000.</mat-error>
+      <mat-error *ngIf="form.controls['address'].errors?.['tooHighAmount']">Insufficient funds available.</mat-error>
+      <!-- *ngIf="(myForm.get('phone').touched || myForm.get('phone').dirty) && myForm.get('phone').invalid" -->
+    </mat-form-field>
+
+    <!-- <div>{{form.controls['amountInput'].errors | json}}</div> -->
+
+    <!-- <mat-form-field class="input-full-width" appearance="outline">
+        <mat-label>Fee</mat-label>
+        <input matInput formControlName="feeInput" [(ngModel)]="sendService.fee" required>
+        <mat-error *ngIf="form.controls['feeInput'].invalid">Fee is required and must be correctly entered.</mat-error>
+        <mat-hint *ngIf="sendService.feeError" align="start"><strong>{{sendService.feeError}}</strong> </mat-hint>
+        <mat-hint align="end">Minimum fee rate: {{sendService.feeRate}} sat/byte</mat-hint>
+    </mat-form-field> -->
+
+    <!-- <div *ngIf="optionsOpen">
+        <mat-form-field class="input-full-width" appearance="outline">
+            <mat-label>Custom change address</mat-label>
+            <input matInput formControlName="changeAddressInput" [(ngModel)]="sendService.changeAddress">
+        </mat-form-field>
+    </div> -->
+
+    <!-- <button class="full-width" (click)="toggleOptions()" mat-raised-button>Options...</button>
+    <br><br>
+    <h3>
+        Total: {{sendService.total | amount}} {{sendService.network.symbol}}
+    </h3> -->
+  </form>
+
+  <!-- <button class="full-width" [disabled]="!form.valid" mat-raised-button routerLink="../confirm" color="primary">Continue</button> -->
+
+  <button class="contacts-button" [disabled]="!form.valid" mat-raised-button [routerLink]="['/', 'contacts', 'create']" color="primary">Create</button>
+  <button class="contacts-button" mat-raised-button [routerLink]="['/', 'contacts']">Cancel</button>
+</div>

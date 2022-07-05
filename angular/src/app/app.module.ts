@@ -91,6 +91,8 @@ import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import { ActionComponent } from './action/action.component';
 import { AppUpdateService } from './services/app-update.service';
+import { ContactsComponent } from './contacts/contacts.component';
+import { ContactsCreateComponent } from './contacts/create/create.component';
 
 // required for AOT compilation
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
@@ -147,7 +149,9 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     IdentityComponent,
     PermissionsComponent,
     ActionPublicKeyComponent,
-    ActionComponent
+    ActionComponent,
+    ContactsComponent,
+    ContactsCreateComponent
   ],
   imports: [
     BrowserModule,
