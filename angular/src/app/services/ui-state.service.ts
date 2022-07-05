@@ -83,6 +83,8 @@ export class UIState {
 
     title!: string;
 
+    cameraId: string;
+
     /** Indicates that the UIState has been initilized. */
     initialized = false;
 
