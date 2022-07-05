@@ -1,3 +1,12 @@
+## <small>0.0.44 (2022-07-05)</small>
+
+* Change initial camera to prefer "environment" camera ([09d118b](https://github.com/block-core/blockcore-wallet/commit/09d118b))
+* Fix bug on transaction details ([6561d4e](https://github.com/block-core/blockcore-wallet/commit/6561d4e))
+* Remember last used camera ([e577d4a](https://github.com/block-core/blockcore-wallet/commit/e577d4a))
+* Update version and changelog ([84316c2](https://github.com/block-core/blockcore-wallet/commit/84316c2))
+
+
+
 ## <small>0.0.43 (2022-07-04)</small>
 
 * Auto-close the dialog for QR scanning ([4d0060d](https://github.com/block-core/blockcore-wallet/commit/4d0060d))
