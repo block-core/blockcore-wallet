@@ -18,7 +18,6 @@ export class QrScanDialog implements OnInit {
   private html5QrCode: Html5Qrcode;
   public error: string;
   private cameras: Array<CameraDevice>;
-  public camera: CameraDevice;
   public label: string;
   public cameraIndex = -1;
   private config: any;
@@ -51,7 +50,7 @@ export class QrScanDialog implements OnInit {
         this.cameraIndex = this.cameras.length - 1;
       }
 
-      await this.startCamera(this.cameras[this.cameraIndex].id, true);
+      await this.startCamera(this.cameras[this.cameraIndex].id);
     }
   }
 
@@ -73,18 +72,16 @@ export class QrScanDialog implements OnInit {
     }
   }
 
-  async startCamera(cameraId: string, firstCamera: boolean) {
+  async startCamera(cameraId: string) {
     try {
-      if (!firstCamera) {
-        // Attempt to stop when not initial load
-        try {
-          await this.html5QrCode.stop();
-        } catch (err) {
-          console.error('Failed to stop:', err);
-        }
+      // Attempt to stop when not initial load
+      try {
+        await this.html5QrCode.stop();
+      } catch (err) {
+        console.error('Failed to stop:', err);
       }
 
-      this.html5QrCode.start(
+      await this.html5QrCode.start(
         cameraId,
         this.config,
         (decodedText, decodedResult) => {
@@ -118,8 +115,7 @@ export class QrScanDialog implements OnInit {
       this.cameraIndex = 0;
     }
 
-    this.camera = this.cameras[this.cameraIndex];
-    this.startCamera(this.camera.id, false);
+    this.startCamera(this.cameras[this.cameraIndex].id);
   }
 
   onScanSuccess(decodedText: any, decodedResult: any) {
