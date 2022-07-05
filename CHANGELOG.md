@@ -1,4 +1,11 @@
-## <small>0.0.44 (2022-07-05)</small>
+## <small>0.0.45 (2022-07-05)</small>
+
+* Remember the previous camera ID ([6e6a375](https://github.com/block-core/blockcore-wallet/commit/6e6a375)), closes [#185](https://github.com/block-core/blockcore-wallet/issues/185)
+* Update version and changelog ([d010c96](https://github.com/block-core/blockcore-wallet/commit/d010c96))
+
+
+
+## <small>0.0.44 (2022-07-04)</small>
 
 * Change initial camera to prefer "environment" camera ([09d118b](https://github.com/block-core/blockcore-wallet/commit/09d118b))
 * Fix bug on transaction details ([6561d4e](https://github.com/block-core/blockcore-wallet/commit/6561d4e))
