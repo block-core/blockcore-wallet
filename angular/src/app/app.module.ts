@@ -93,6 +93,7 @@ import { ActionComponent } from './action/action.component';
 import { AppUpdateService } from './services/app-update.service';
 import { ContactsComponent } from './contacts/contacts.component';
 import { ContactsCreateComponent } from './contacts/create/create.component';
+import { ContactStore } from 'src/shared/store/contacts-store';
 
 // required for AOT compilation
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
@@ -227,7 +228,8 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     AddressIndexedStore,
     AccountStateStore,
     PermissionStore,
-    AppUpdateService
+    AppUpdateService,
+    ContactStore
   ],
   bootstrap: [AppComponent]
 })

@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Contact } from 'src/shared';
+import { ContactStore } from 'src/shared/store/contacts-store';
 import { UIState } from '../services';
 
 @Component({
@@ -6,15 +8,15 @@ import { UIState } from '../services';
   templateUrl: './contacts.component.html',
 })
 export class ContactsComponent implements OnInit {
-  public contacts: any;
+  public contacts: Contact[];
 
-  constructor(private uiState: UIState) {
+  constructor(private uiState: UIState, private contactStore: ContactStore) {
     this.uiState.title = 'Address Book';
     this.uiState.showBackButton = true;
     this.uiState.goBackHome = true;
   }
 
   async ngOnInit(): Promise<void> {
-    // this.contacts = [{ name: 'John Doe' }];
+    this.contacts = this.contactStore.all();
   }
 }

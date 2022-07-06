@@ -3,6 +3,7 @@ import { BehaviorSubject, Observable } from "rxjs";
 import { ActionStore, AddressStore, NetworkStatusStore, SettingStore, TransactionStore, UIStore, WalletStore, AccountHistoryStore, AddressIndexedStore } from "src/shared";
 import { AccountStateStore } from "src/shared/store/account-state-store";
 import { AddressWatchStore } from "src/shared/store/address-watch-store";
+import { ContactStore } from "src/shared/store/contacts-store";
 import { PermissionStore } from "src/shared/store/permission-store";
 import { StoreBase, StoreListBase } from "src/shared/store/store-base";
 import { LoggerService } from "./logger.service";
@@ -32,7 +33,8 @@ export class StateService {
         private addressWatchStore: AddressWatchStore,
         private addressIndexedStore: AddressIndexedStore,
         private accountStateStore: AccountStateStore,
-        private permissionStore: PermissionStore
+        private permissionStore: PermissionStore,
+        private contactStore: ContactStore,
 
     ) {
         this.changedSubject = new BehaviorSubject<StateService>(this);
@@ -49,6 +51,7 @@ export class StateService {
         this.stores.push(addressIndexedStore);
         this.stores.push(accountStateStore);
         this.stores.push(permissionStore);
+        this.stores.push(contactStore);
     }
 
     async wipe() {
@@ -79,6 +82,7 @@ export class StateService {
         this.changedSubject.next(this);
     }
 
+    /** RELOAD: TODO: Figure out if reload or refresh is run when data is updated across extension instances. */
     async reload() {
         this.ngZone.run(async () => {
             // this.logger.debug('RELOAD ON STATE SERVICE (in zone):');
@@ -99,6 +103,7 @@ export class StateService {
         });
     }
 
+    /** REFRESH: TODO: Figure out if reload or refresh is run when data is updated across extension instances. */
     async refresh() {
         this.ngZone.run(async () => {
             // this.logger.debug('REFRESH ON STATE SERVICE (in zone):');

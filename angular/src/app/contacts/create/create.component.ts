@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { ContactStore } from 'src/shared/store/contacts-store';
 import { UIState } from '../../services';
 
 @Component({
@@ -11,7 +12,7 @@ export class ContactsCreateComponent implements OnInit {
   public contacts: any;
   public form: FormGroup;
 
-  constructor(private uiState: UIState, private fb: FormBuilder) {
+  constructor(private uiState: UIState, private fb: FormBuilder, private contactStore: ContactStore) {
     this.uiState.title = 'Create contact';
     this.uiState.showBackButton = true;
     this.uiState.goBackHome = false;
