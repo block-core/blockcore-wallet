@@ -2,14 +2,6 @@
   <h1>Create contact</h1>
 
   <form [formGroup]="form">
-    <mat-form-field class="input-full-width" appearance="outline">
-      <mat-label>Name</mat-label>
-      <input matInput formControlName="name" required />
-      <!-- <mat-error
-            *ngIf="form.controls['addressInput'].hasError('required') && form.controls['addressInput'].dirty || form.controls['addressInput'].touched">
-            Address is required.</mat-error> -->
-      <mat-error *ngIf="form.controls['name'].invalid">Address is required.</mat-error>
-    </mat-form-field>
 
     <div class="input-actions">
       <button mat-icon-button matTooltip="Scan QR code">
@@ -31,6 +23,36 @@
       <mat-error *ngIf="form.controls['address'].errors?.['tooHighAmount']">Insufficient funds available.</mat-error>
       <!-- *ngIf="(myForm.get('phone').touched || myForm.get('phone').dirty) && myForm.get('phone').invalid" -->
     </mat-form-field>
+
+    <mat-form-field appearance="outline" class="input-full-width">
+      <mat-label>Network</mat-label>
+
+      <mat-select (selectionChange)="onNetworkChanged()" [(value)]="network">
+        <mat-option *ngFor="let net of this.networkService.networks" [value]="net.id">{{ net.name }} </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field class="input-full-width" appearance="outline">
+      <mat-label>Name</mat-label>
+      <input matInput formControlName="name" required />
+      <!-- <mat-error
+            *ngIf="form.controls['addressInput'].hasError('required') && form.controls['addressInput'].dirty || form.controls['addressInput'].touched">
+            Address is required.</mat-error> -->
+      <mat-error *ngIf="form.controls['name'].invalid">Address is required.</mat-error>
+    </mat-form-field>
+
+    <mat-form-field class="input-full-width" appearance="outline">
+      <mat-label>E-mail</mat-label>
+      <input matInput formControlName="email" />
+      <!-- <mat-error
+            *ngIf="form.controls['addressInput'].hasError('required') && form.controls['addressInput'].dirty || form.controls['addressInput'].touched">
+            Address is required.</mat-error> -->
+      <!-- <mat-error *ngIf="form.controls['email'].invalid">Address is required.</mat-error> -->
+    </mat-form-field>
+
+
+
+
 
     <!-- <div>{{form.controls['amountInput'].errors | json}}</div> -->
 
