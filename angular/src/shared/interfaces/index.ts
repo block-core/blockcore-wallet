@@ -520,7 +520,13 @@ interface ActionUrlParameters
   params: string;
 }
 
-
+export interface Token {
+  name: string;
+  symbol: string;
+  totalSupply: number;
+  address: string;
+  amount: number;
+}
 
 interface RequestArguments {
   method: string;

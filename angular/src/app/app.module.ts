@@ -101,6 +101,7 @@ import { ContactStore } from 'src/shared/store/contacts-store';
 import { ContactsViewComponent } from './contacts/view/view.component';
 import { ExchangeComponent } from './exchange/exchange.component';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import {StandardTokenStore} from "../shared/store/standard-token-store";
 import { ActionSignMessageComponent } from './action/sign-message/sign.component';
 import { ActionSignVerifiableCredentialComponent } from './action/sign-credential/sign.component';
 import { RuntimeService } from 'src/shared/runtime.service';
@@ -265,6 +266,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     PermissionStore,
     AppUpdateService,
     ContactStore,
+    StandardTokenStore,
     StateStore,
     RuntimeService,
     CryptoService,

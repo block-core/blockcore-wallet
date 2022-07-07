@@ -9,6 +9,7 @@ import { AccountHistoryStore, AddressStore } from 'src/shared';
 import { AccountStateStore } from 'src/shared/store/account-state-store';
 import axiosRetry from 'axios-retry';
 const axios = require('axios').default;
+import {StandardTokenStore} from "../../shared/store/standard-token-store";
 axiosRetry(axios, { retries: 3, retryDelay: axiosRetry.exponentialDelay });
 
 @Component({
@@ -42,6 +43,8 @@ export class AccountComponent implements OnInit, OnDestroy {
   loginurl: string;
   loginurlMessage: string;
 
+  standardTokens: Token[];
+
   constructor(
     public uiState: UIState,
     public settings: SettingsService,
@@ -59,7 +62,8 @@ export class AccountComponent implements OnInit, OnDestroy {
     public walletManager: WalletManager,
     private accountStateStore: AccountStateStore,
     private networkLoader: NetworkLoader,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private standardTokenStore: StandardTokenStore
   ) {
     this.uiState.title = '';
     this.uiState.showBackButton = true;
@@ -256,5 +260,17 @@ export class AccountComponent implements OnInit, OnDestroy {
         this.updateAccountHistory();
       })
     );
+
+    const network = this.network.getNetwork(this.walletManager.activeAccount.networkType);
+    if (network.smartContractSupport) {
+      const indexerUrl = this.networkLoader.getServer(network.id, this.settings.values.server, this.settings.values.indexer);
+
+      //const tokens = await axios.get(`${indexerUrl}/api/query/${network.name}/tokens/${this.getAddressByIndex(account, 0, 0)}`);
+      const tokens = await axios.get(`${indexerUrl}/api/query/${network.name}/tokens/CM2EMRrT4AsUdksoWZxCYtCpYPhpWkgD9p`);
+      for (let token of tokens.data.items)
+        this.standardTokenStore.set(token.name, token);
+
+      this.standardTokens = tokens.data.items;
+    }
   }
 }
