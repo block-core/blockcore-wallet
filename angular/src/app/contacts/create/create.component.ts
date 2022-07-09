@@ -11,7 +11,7 @@ import { NetworksService, UIState } from '../../services';
 })
 export class ContactsCreateComponent implements OnInit {
   public contacts: any;
-  public form: FormGroup;
+  public form;
   selectedNetwork: Network;
   network = '';
 
@@ -20,7 +20,14 @@ export class ContactsCreateComponent implements OnInit {
     this.uiState.showBackButton = true;
     this.uiState.goBackHome = false;
 
-    this.form = fb.group({
+    this.form = fb.nonNullable.group({
+      name: new FormControl('', [Validators.required, Validators.minLength(6)]),
+      email: new FormControl('', []),
+      address: new FormControl('', []),
+      amountInput: new FormControl('', [Validators.required, Validators.min(0), Validators.pattern(/^-?(0|[0-9]+[.]?[0-9]*)?$/)]),
+    });
+
+    this.form = new FormGroup({
       name: new FormControl('', [Validators.required, Validators.minLength(6)]),
       email: new FormControl('', []),
       address: new FormControl('', []),
@@ -41,5 +48,24 @@ export class ContactsCreateComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     // this.contacts = [{ name: 'John Doe' }];
+  }
+
+  async paste() {
+    try {
+      const options: any = { name: 'clipboard-read' };
+      const permission = await navigator.permissions.query(options);
+
+      if (permission.state === 'denied') {
+        throw new Error('Not allowed to read clipboard.');
+      }
+
+      const clipboardContents = await navigator.clipboard.readText();
+
+      if (clipboardContents) {
+        this.form.controls.address.setValue(clipboardContents);
+      }
+    } catch (error) {
+      console.error(error);
+    }
   }
 }
