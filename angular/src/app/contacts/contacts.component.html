@@ -1,14 +1,14 @@
 <div class="page">
-  <h1>Address Book</h1>
+  <h1>{{ "AddressBook.AddressBook" | translate }}</h1>
 
   <div *ngIf="!contacts || contacts.length == 0">
-    <h2>No contacts yet</h2>
-    <p>Get started by adding contacts.</p>
+    <h2>{{ "AddressBook.NoContacts" | translate }}</h2>
+    <p>{{ "AddressBook.GetStarted" | translate }}</p>
 
-    <button mat-raised-button [routerLink]="['/', 'contacts', 'create']" color="primary">Create contact</button>
+    <button mat-raised-button [routerLink]="['/', 'contacts', 'create']" color="primary">{{ "AddressBook.CreateContact" | translate }}</button>
   </div>
 
   <div *ngIf="contacts && contacts.length > 0"></div>
   <br /><br />
-  <p class="dimmed">Contacts are stored locally on your device. They are not synced with any servers. If you reset your wallet on this device or another device, your contacts will not be restored.</p>
+  <p class="dimmed">{{ "AddressBook.AddressBookHint" | translate }}</p>
 </div>

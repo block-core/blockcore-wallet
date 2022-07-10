@@ -26,7 +26,8 @@
 		"Vaults": "Hvelv",
 		"Collectibles": "Samleobjekter",
 		"Inbox": "Innboks",
-		"Tools": "Verktøy"
+		"Tools": "Verktøy",
+		"AddressBook": "Adressebok"
 	},
 	"Settings": {
 		"Save": "Lagre",
@@ -57,5 +58,12 @@
 		"CreateNew": "Lag ny lommebok",
 		"Recover": "Bruk eksisterende Hemmelig gjenopprettingsfrase",
 		"SecretRecoveryPhrase": "Hemmelig gjenopprettingsfrase"
+	},
+	"AddressBook": {
+		"AddressBook": "Addressebok",
+		"NoContacts": "Ingen kontakter enda",
+		"GetStarted": "Kom igang med å legge til nye kontakter.",
+		"CreateContact": "Opprett kontakt",
+		"AddressBookHint": "Kontakter er kun lagret lokalt på denne enheten. Kontakter blir ikke synkronisert. Hvis du sletter lommeboken, vil ikke kontaktene kommer tilbake."
 	}
 }

@@ -42,8 +42,6 @@ export class ContactsCreateComponent implements OnInit {
 
   onNetworkChanged() {
     this.selectedNetwork = this.networkService.getNetwork(this.network);
-    // this.derivationPath = this.getDerivationPath();
-    // this.purposeAddress = this.selectedNetwork.purposeAddress ?? 44;
   }
 
   async ngOnInit(): Promise<void> {

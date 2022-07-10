@@ -26,7 +26,8 @@
 		"Vaults": "Vaults",
 		"Collectibles": "Collectibles",
 		"Inbox": "Inbox",
-		"Tools": "Tools"
+		"Tools": "Tools",
+		"AddressBook": "Address Book"
 	},
 	"Settings": {
 		"Save": "Save",
@@ -57,6 +58,13 @@
 		"CreateNew": "Create New Wallet",
 		"Recover": "Use Existing Secret Recovery Phrase",
 		"SecretRecoveryPhrase": "Secret Recovery Phrase"
+	},
+	"AddressBook": {
+		"AddressBook": "Address Book",
+		"NoContacts": "No contacts yet",
+		"GetStarted": "Get started by adding contacts.",
+		"CreateContact": "Create contact",
+		"AddressBookHint": "Contacts are stored locally on your device. They are not synced with any servers. If you reset your wallet on this device or another device, your contacts will not be restored."
 	},
 	"english": "English",
 	"chinese_simplified": "Chinese (Simplified)",
