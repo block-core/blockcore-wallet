@@ -27,7 +27,9 @@
 		"Collectibles": "Samleobjekter",
 		"Inbox": "Innboks",
 		"Tools": "Verktøy",
-		"AddressBook": "Adressebok"
+		"AddressBook": "Adressebok",
+		"AddAccount": "Opprett konto",
+		"AddWallet": "Opprett lommebok"
 	},
 	"Settings": {
 		"Save": "Lagre",

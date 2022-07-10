@@ -45,12 +45,12 @@
 
         <a mat-list-item *ngIf="walletManager.activeWallet && walletManager.unlocked" [routerLink]="['/account/create']" routerLinkActive="active-link">
           <mat-icon mat-list-icon>add_circle_outline</mat-icon>
-          <div mat-line>Add Account</div>
+          <div mat-line>{{ "Dashboard.AddAccount" | translate }}</div>
         </a>
 
         <a mat-list-item *ngIf="walletManager.activeWallet && walletManager.unlocked" [routerLink]="['/wallet/create']" routerLinkActive="active-link">
           <mat-icon mat-list-icon>account_balance_wallet</mat-icon>
-          <div mat-line>Add Wallet</div>
+          <div mat-line>{{ "Dashboard.AddWallet" | translate }}</div>
         </a>
 
         <mat-divider></mat-divider>

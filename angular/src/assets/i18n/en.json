@@ -27,7 +27,9 @@
 		"Collectibles": "Collectibles",
 		"Inbox": "Inbox",
 		"Tools": "Tools",
-		"AddressBook": "Address Book"
+		"AddressBook": "Address Book",
+		"AddAccount": "Add Account",
+		"AddWallet": "Add Wallet"
 	},
 	"Settings": {
 		"Save": "Save",
