@@ -21,18 +21,18 @@ export class ContactsCreateComponent implements OnInit {
     this.uiState.goBackHome = false;
 
     this.form = fb.nonNullable.group({
-      name: new FormControl('', [Validators.required, Validators.minLength(6)]),
+      name: new FormControl('', [Validators.required]),
       email: new FormControl('', []),
       address: new FormControl('', []),
-      amountInput: new FormControl('', [Validators.required, Validators.min(0), Validators.pattern(/^-?(0|[0-9]+[.]?[0-9]*)?$/)]),
+      // amountInput: new FormControl('', [Validators.required, Validators.min(0), Validators.pattern(/^-?(0|[0-9]+[.]?[0-9]*)?$/)]),
     });
 
-    this.form = new FormGroup({
-      name: new FormControl('', [Validators.required, Validators.minLength(6)]),
-      email: new FormControl('', []),
-      address: new FormControl('', []),
-      amountInput: new FormControl('', [Validators.required, Validators.min(0), Validators.pattern(/^-?(0|[0-9]+[.]?[0-9]*)?$/)]),
-    });
+    // this.form = new FormGroup({
+    //   name: new FormControl('', [Validators.required, Validators.minLength(6)]),
+    //   email: new FormControl('', []),
+    //   address: new FormControl('', []),
+    //   amountInput: new FormControl('', [Validators.required, Validators.min(0), Validators.pattern(/^-?(0|[0-9]+[.]?[0-9]*)?$/)]),
+    // });
 
     // Default to the first available network.
     this.network = this.networkService.networks[0].id;
@@ -46,6 +46,17 @@ export class ContactsCreateComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     // this.contacts = [{ name: 'John Doe' }];
+  }
+
+  save() {
+    const contact = {
+      name: this.form.controls.name.value,
+      network: this.network,
+      email: this.form.controls.email.value,
+      address: this.form.controls.address.value
+    };
+
+    console.log(contact);
   }
 
   async paste() {

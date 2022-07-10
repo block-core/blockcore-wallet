@@ -14,7 +14,7 @@
 
     <mat-form-field class="input-full-width" appearance="outline">
       <mat-label>Address</mat-label>
-      <input matInput formControlName="address" required />
+      <input matInput formControlName="address" />
       <!-- <mat-error *ngIf="form.controls['amountInput'].invalid">Amount is required and must be correctly entered.</mat-error> -->
       <mat-error *ngIf="form.controls['address'].errors?.['min']">Amount cannot be negative.</mat-error>
       <mat-error *ngIf="form.controls['address'].errors?.['required']">Amount is required and must be correctly entered.</mat-error>
@@ -34,7 +34,7 @@
 
     <mat-form-field class="input-full-width" appearance="outline">
       <mat-label>Name</mat-label>
-      <input matInput formControlName="name" required />
+      <input matInput formControlName="name" />
       <!-- <mat-error
             *ngIf="form.controls['addressInput'].hasError('required') && form.controls['addressInput'].dirty || form.controls['addressInput'].touched">
             Address is required.</mat-error> -->
@@ -80,6 +80,6 @@
 
   <!-- <button class="full-width" [disabled]="!form.valid" mat-raised-button routerLink="../confirm" color="primary">Continue</button> -->
 
-  <button class="contacts-button" [disabled]="!form.valid" mat-raised-button [routerLink]="['/', 'contacts', 'create']" color="primary">Create</button>
+  <button class="contacts-button" [disabled]="!form.valid" mat-raised-button (click)="save()" color="primary">Create</button>
   <button class="contacts-button" mat-raised-button [routerLink]="['/', 'contacts']">Cancel</button>
 </div>
