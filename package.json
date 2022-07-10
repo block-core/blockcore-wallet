@@ -67,7 +67,7 @@
     "@scure/bip39": "^1.1.0",
     "axios": "0.27.2",
     "axios-retry": "^3.3.1",
-    "big.js": "^6.2.0",
+    "big.js": "^6.2.1",
     "bip32": "^3.0.1",
     "bitcoinjs-message": "^2.2.0",
     "bs58": "^5.0.0",
