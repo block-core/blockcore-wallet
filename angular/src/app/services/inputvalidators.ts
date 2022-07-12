@@ -1,45 +1,73 @@
 import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 import Big from 'big.js';
+import { Network } from 'src/shared/networks';
+import { AddressValidationService } from './address-validation.service';
 import { SendService } from './send.service';
 
 export class InputValidators {
-    static maximumBitcoin(sendService: SendService): ValidatorFn {
-        return maxBitcoinValidator(sendService);
-    }
+  static maximumBitcoin(sendService: SendService): ValidatorFn {
+    return maxBitcoinValidator(sendService);
+  }
+
+  static address(sendService: SendService, addressValidation: AddressValidationService): ValidatorFn {
+    return addressValidator(sendService, addressValidation);
+  }
 }
 
 export function maxBitcoinValidator(sendService: SendService): ValidatorFn {
-    return (control: AbstractControl): ValidationErrors | null => {
+  return (control: AbstractControl): ValidationErrors | null => {
+    let max = sendService.accountHistory.balance;
 
-        let max = sendService.accountHistory.balance;
+    if (isEmpty(control.value) || isEmpty(max)) {
+      return null;
+    }
 
-        if (isEmpty(control.value) || isEmpty(max)) {
-            return null;
-        }
+    let maxNumber = Big(max);
+    let maxNumberPlusFee = maxNumber.minus(Big(sendService.feeAsSatoshi));
+    const number = new Big(control.value);
 
-        let maxNumber = Big(max);
-        let maxNumberPlusFee = maxNumber.minus(Big(sendService.feeAsSatoshi));
-        const number = new Big(control.value);
+    if (number.e < -8) {
+      return { tooManyDecimals: true };
+    }
 
-        if (number.e < -8) {
-            return { 'tooManyDecimals': true };
-        }
+    if (number.e > 10) {
+      return { tooHighValue: true };
+    }
 
-        if (number.e > 10) {
-            return { 'tooHighValue': true };
-        }
+    const amountValue = number.times(Math.pow(10, 8));
 
-        const amountValue = number.times(Math.pow(10, 8));
+    if (amountValue.gt(maxNumberPlusFee)) {
+      return { tooHighAmount: true };
+    }
 
-        if (amountValue.gt(maxNumberPlusFee)) {
-            return { 'tooHighAmount': true };
-        }
+    return null;
+  };
+}
 
+export function addressValidator(sendService: SendService, addressValidation: AddressValidationService): ValidatorFn {
+  return (control: AbstractControl): ValidationErrors | null => {
+    try {
+      // If there are no value, we'll skip validation and allow this input.
+      if (!control.value) {
         return null;
-    };
+      }
+
+      const result = addressValidation.validateByNetwork(control.value, sendService.network);
+
+      console.log('VALIDATION RESULT:', result);
+      console.log('NETWORK:', sendService.network);
+
+      if (result) {
+        return null;
+      } else {
+        return { invalid: true };
+      }
+    } catch (err) {
+      return { invalid: true, error: err };
+    }
+  };
 }
 
 function isEmpty(value: any): boolean {
-    return value == null ||
-        ((typeof value === 'string' || Array.isArray(value)) && value.length === 0);
+  return value == null || ((typeof value === 'string' || Array.isArray(value)) && value.length === 0);
 }

@@ -7,6 +7,7 @@ import { WalletManager, UIState, SendService, NetworkStatusService } from '../..
 import { Html5QrcodeScanner, Html5QrcodeSupportedFormats } from "html5-qrcode";
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { QrScanDialog } from './qr-scanning.component';
+import { AddressValidationService } from 'src/app/services/address-validation.service';
 
 @Component({
     selector: 'app-account-send-address',
@@ -31,13 +32,14 @@ export class AccountSendAddressComponent implements OnInit, OnDestroy {
         public sendService: SendService,
         public walletManager: WalletManager,
         public networkStatusService: NetworkStatusService,
+        private addressValidation: AddressValidationService,
         private ngZone: NgZone,
         public dialog: MatDialog,
         private fb: UntypedFormBuilder) {
 
         this.form = fb.group({
-            addressInput: new UntypedFormControl('', [Validators.required, Validators.minLength(6)]),
-            changeAddressInput: new UntypedFormControl('', []),
+            addressInput: new UntypedFormControl('', [Validators.required, Validators.minLength(6), InputValidators.address(this.sendService, this.addressValidation)]),
+            changeAddressInput: new UntypedFormControl('', [InputValidators.address(this.sendService, this.addressValidation)]),
             amountInput: new UntypedFormControl('', [Validators.required, Validators.min(0), Validators.pattern(/^-?(0|[0-9]+[.]?[0-9]*)?$/), InputValidators.maximumBitcoin(sendService)]),
             // TODO: Make an custom validator that sets form error when fee input is too low.
             feeInput: new UntypedFormControl(this.sendService.getNetworkFee(), [Validators.required, Validators.min(0), Validators.pattern(/^-?(0|[0-9]+[.]?[0-9]*)?$/)])
