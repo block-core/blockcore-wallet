@@ -1,8 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { Contact } from 'src/shared';
 import { Network } from 'src/shared/networks';
 import { ContactStore } from 'src/shared/store/contacts-store';
 import { NetworksService, UIState } from '../../services';
+const { v4: uuidv4 } = require('uuid');
 
 @Component({
   selector: 'app-contacts-create',
@@ -15,7 +18,7 @@ export class ContactsCreateComponent implements OnInit {
   selectedNetwork: Network;
   network = '';
 
-  constructor(private uiState: UIState, public networkService: NetworksService, private fb: FormBuilder, private contactStore: ContactStore) {
+  constructor(private router: Router, private uiState: UIState, public networkService: NetworksService, private fb: FormBuilder, private contactStore: ContactStore) {
     this.uiState.title = 'Create contact';
     this.uiState.showBackButton = true;
     this.uiState.goBackHome = false;
@@ -48,15 +51,20 @@ export class ContactsCreateComponent implements OnInit {
     // this.contacts = [{ name: 'John Doe' }];
   }
 
-  save() {
-    const contact = {
+  async save() {
+    const contact: Contact = {
+      id: uuidv4(),
       name: this.form.controls.name.value,
       network: this.network,
       email: this.form.controls.email.value,
-      address: this.form.controls.address.value
+      address: this.form.controls.address.value,
     };
 
     console.log(contact);
+    this.contactStore.set(contact.id, contact);
+    await this.contactStore.save();
+
+    this.router.navigateByUrl('/contacts');
   }
 
   async paste() {

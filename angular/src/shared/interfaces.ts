@@ -297,9 +297,12 @@ interface TransactionOutput {
 }
 
 interface Contact {
+  id: string;
   name: string;
   email: string;
-  addresses: ContactAddress[];
+  address: string;
+  network: string;
+  // addresses: ContactAddress[];
 }
 
 interface ContactAddress {

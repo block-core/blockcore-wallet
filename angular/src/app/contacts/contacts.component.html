@@ -4,11 +4,21 @@
   <div *ngIf="!contacts || contacts.length == 0">
     <h2>{{ "AddressBook.NoContacts" | translate }}</h2>
     <p>{{ "AddressBook.GetStarted" | translate }}</p>
-
-    <button mat-raised-button [routerLink]="['/', 'contacts', 'create']" color="primary">{{ "AddressBook.CreateContact" | translate }}</button>
   </div>
 
-  <div *ngIf="contacts && contacts.length > 0"></div>
+  <button mat-raised-button [routerLink]="['/', 'contacts', 'create']" color="primary">{{ "AddressBook.CreateContact" | translate }}</button>
+
+  <div *ngIf="contacts && contacts.length > 0">
+    <mat-nav-list>
+      <mat-list>
+        <a mat-list-item *ngFor="let contact of contacts" [routerLink]="['/', 'contacts', 'view', contact.id]">
+          <mat-icon mat-list-icon>account_circle</mat-icon>
+          <div mat-line>{{ contact.name }}</div>
+          <div mat-line>{{ contact.address }}</div>
+        </a>
+      </mat-list>
+    </mat-nav-list>
+  </div>
   <br /><br />
   <p class="dimmed">{{ "AddressBook.AddressBookHint" | translate }}</p>
 </div>
