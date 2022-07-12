@@ -22,6 +22,13 @@ describe('AddressValidationService', () => {
     expect(service.validate('CSHCUaVbzNEjn2svthgCfvv6uvsVgopvAZ', network)).toBeTrue();
     expect(service.validate('CJPFKjqjNW6LU8G4eNeSQgV8FAWYSLZmHp', network)).toBeTrue();
     expect(service.validate('CPuzGKnZQBkFqPWThDh6F8Qb3YgPX1DeTr', network)).toBeTrue();
+
+    // This will produce invalid prefix.
+    expect(service.validate('CPuzGKnZQBkFqPWThDh6F8Qb3YgPX1DeT', network)).toBeFalse();
+
+    expect(service.validate('CPuzGKnZQBkFqPWTh', network)).toBeFalse();
+    expect(service.validate('CPuzGKnZQBkFqPWThDh6F8Qb3YgPX1DeTrss', network)).toBeFalse();
+    expect(service.validate('CPuzGKnZQBkFqPWThDh6F8Qb3YgPX1De', network)).toBeFalse();
   });
 
   it('Validate Cirrus Base58 address', () => {
