@@ -25,7 +25,7 @@ export class ContactsCreateComponent implements OnInit {
     this.form = fb.nonNullable.group({
       name: new FormControl('', [Validators.required]),
       email: new FormControl('', []),
-      address: new FormControl('', []),
+      address: new FormControl('', [Validators.required]),
     });
 
     // Default to the first available network.
