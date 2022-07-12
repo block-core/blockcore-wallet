@@ -36,7 +36,7 @@ export class NetworkLoader {
   }
 
   createNetworks() {
-    return Defaults.getNetworks();
+    this.networks = Defaults.getNetworks();
   }
 
   private generateRandomNumber(min: number, max: number) {
