@@ -1,3 +1,24 @@
+## <small>0.0.46 (2022-07-12)</small>
+
+* Add contact view and delete ([46d5888](https://github.com/block-core/blockcore-wallet/commit/46d5888))
+* Add ContactStore for persisting the address book ([57e64a9](https://github.com/block-core/blockcore-wallet/commit/57e64a9))
+* Add network list for contact creation ([81f4cc3](https://github.com/block-core/blockcore-wallet/commit/81f4cc3))
+* Add support for saving contacts in the address book ([fda66c7](https://github.com/block-core/blockcore-wallet/commit/fda66c7))
+* Add translations for AddressBook ([b4f822a](https://github.com/block-core/blockcore-wallet/commit/b4f822a))
+* Attempt to fix camera issue when switching cameras ([aa3c613](https://github.com/block-core/blockcore-wallet/commit/aa3c613))
+* Implement paste from clipboard to address on contact (Address Book) ([ef65f6b](https://github.com/block-core/blockcore-wallet/commit/ef65f6b))
+* Minor null check for no contacts ([3950f0d](https://github.com/block-core/blockcore-wallet/commit/3950f0d))
+* Sort contacts in the contact list ([ad64d00](https://github.com/block-core/blockcore-wallet/commit/ad64d00)), closes [#186](https://github.com/block-core/blockcore-wallet/issues/186)
+* Translate Add Account and Add Wallet on dashboard ([7f3f414](https://github.com/block-core/blockcore-wallet/commit/7f3f414))
+* Update no.json ([4bb49e5](https://github.com/block-core/blockcore-wallet/commit/4bb49e5))
+* Update packages ([695e71d](https://github.com/block-core/blockcore-wallet/commit/695e71d))
+* Update packages ([0d45d46](https://github.com/block-core/blockcore-wallet/commit/0d45d46))
+* Update version and changelog ([884308f](https://github.com/block-core/blockcore-wallet/commit/884308f))
+* WIP: Add Address Book and Create contact ([2060b7a](https://github.com/block-core/blockcore-wallet/commit/2060b7a))
+* WIP: Address Book ([a75db2e](https://github.com/block-core/blockcore-wallet/commit/a75db2e))
+
+
+
 ## <small>0.0.45 (2022-07-05)</small>
 
 * Remember the previous camera ID ([6e6a375](https://github.com/block-core/blockcore-wallet/commit/6e6a375)), closes [#185](https://github.com/block-core/blockcore-wallet/issues/185)
