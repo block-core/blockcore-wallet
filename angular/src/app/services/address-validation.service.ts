@@ -39,16 +39,18 @@ export class AddressValidationService {
       return { valid: false };
     }
 
-    var network = null;
+    var networks = null;
 
     if (result.base58) {
-      network = this.networks.find((n) => n.pubKeyHash == result.prefix);
+      networks = this.networks.filter((n) => n.pubKeyHash == result.prefix);
     } else {
-      network = this.networks.find((n) => n.bech32 == result.prefix);
+      networks = this.networks.filter((n) => n.bech32 == result.prefix);
     }
 
+    console.log(networks);
+
     return {
-      network,
+      networks,
       valid: true,
     };
   }
