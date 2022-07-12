@@ -1,0 +1,37 @@
+import { EnvironmentService } from './environment.service';
+import { AddressValidationService } from './address-validation.service';
+import { BTC44, BTC84, CITY, CRS, STRAX } from 'src/shared/networks';
+
+describe('AddressValidationService', () => {
+  let service: AddressValidationService;
+  beforeEach(() => {
+    service = new AddressValidationService();
+  });
+
+  it('Validate Bitcoin Bech32 address', () => {
+    // expect(service.validate('bc1qa29jrfkt42d7w3zluh27x8ry0fra678928q4d5', new BTC84())).toBeTrue();
+  });
+
+  it('Validate Bitcoin Base58 address', () => {
+    expect(service.validate('1N9faSzFCHvQNdNtrqxMKzYdzE2WYNJ6DT', new BTC44())).toBeTrue();
+  });
+
+  it('Validate City Chain Base58 address', () => {
+    expect(service.validate('CPuzGKnZQBkFqPWThDh6F8Qb3YgPX1DeTr', new CITY())).toBeTrue();
+    expect(service.validate('CSHCUaVbzNEjn2svthgCfvv6uvsVgopvAZ', new CITY())).toBeTrue();
+    expect(service.validate('CJPFKjqjNW6LU8G4eNeSQgV8FAWYSLZmHp', new CITY())).toBeTrue();
+    expect(service.validate('CPuzGKnZQBkFqPWThDh6F8Qb3YgPX1DeTr', new CITY())).toBeTrue();
+  });
+
+  it('Validate Cirrus Base58 address', () => {
+    expect(service.validate('CdA4YkbYvrWEQyptXdgqzR51RacpWnw5nc', new CRS())).toBeTrue();
+    expect(service.validate('CaQpsUJHZSM8N6hZmnpT5k7vFyMeYdbW5q', new CRS())).toBeTrue();
+  });
+
+  it('Validate Stratis Base58 address', () => {
+    expect(service.validate('XReyTxFTRQKomq8x74aNNHmR6ZKE3Uquwg', new STRAX())).toBeTrue();
+    expect(service.validate('XDKw31DouKqZ2LnMnm7XbgzmTQNSFxnrMM', new STRAX())).toBeTrue();
+    expect(service.validate('XXzS9SU1BukHX4FDsU7doR63Qhbk2LSsQM', new STRAX())).toBeTrue();
+    expect(service.validate('XLjEnTqaroDqWdXeBt5cPP79pvYd48y1R7', new STRAX())).toBeTrue();
+  });
+});
