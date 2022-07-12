@@ -17,21 +17,24 @@ describe('AddressValidationService', () => {
   });
 
   it('Validate City Chain Base58 address', () => {
-    expect(service.validate('CPuzGKnZQBkFqPWThDh6F8Qb3YgPX1DeTr', new CITY())).toBeTrue();
-    expect(service.validate('CSHCUaVbzNEjn2svthgCfvv6uvsVgopvAZ', new CITY())).toBeTrue();
-    expect(service.validate('CJPFKjqjNW6LU8G4eNeSQgV8FAWYSLZmHp', new CITY())).toBeTrue();
-    expect(service.validate('CPuzGKnZQBkFqPWThDh6F8Qb3YgPX1DeTr', new CITY())).toBeTrue();
+    const network = new CITY();
+    expect(service.validate('CPuzGKnZQBkFqPWThDh6F8Qb3YgPX1DeTr', network)).toBeTrue();
+    expect(service.validate('CSHCUaVbzNEjn2svthgCfvv6uvsVgopvAZ', network)).toBeTrue();
+    expect(service.validate('CJPFKjqjNW6LU8G4eNeSQgV8FAWYSLZmHp', network)).toBeTrue();
+    expect(service.validate('CPuzGKnZQBkFqPWThDh6F8Qb3YgPX1DeTr', network)).toBeTrue();
   });
 
   it('Validate Cirrus Base58 address', () => {
-    expect(service.validate('CdA4YkbYvrWEQyptXdgqzR51RacpWnw5nc', new CRS())).toBeTrue();
-    expect(service.validate('CaQpsUJHZSM8N6hZmnpT5k7vFyMeYdbW5q', new CRS())).toBeTrue();
+    const network = new CRS();
+    expect(service.validate('CdA4YkbYvrWEQyptXdgqzR51RacpWnw5nc', network)).toBeTrue();
+    expect(service.validate('CaQpsUJHZSM8N6hZmnpT5k7vFyMeYdbW5q', network)).toBeTrue();
   });
 
   it('Validate Stratis Base58 address', () => {
-    expect(service.validate('XReyTxFTRQKomq8x74aNNHmR6ZKE3Uquwg', new STRAX())).toBeTrue();
-    expect(service.validate('XDKw31DouKqZ2LnMnm7XbgzmTQNSFxnrMM', new STRAX())).toBeTrue();
-    expect(service.validate('XXzS9SU1BukHX4FDsU7doR63Qhbk2LSsQM', new STRAX())).toBeTrue();
-    expect(service.validate('XLjEnTqaroDqWdXeBt5cPP79pvYd48y1R7', new STRAX())).toBeTrue();
+    const network = new STRAX();
+    expect(service.validate('XReyTxFTRQKomq8x74aNNHmR6ZKE3Uquwg', network)).toBeTrue();
+    expect(service.validate('XDKw31DouKqZ2LnMnm7XbgzmTQNSFxnrMM', network)).toBeTrue();
+    expect(service.validate('XXzS9SU1BukHX4FDsU7doR63Qhbk2LSsQM', network)).toBeTrue();
+    expect(service.validate('XLjEnTqaroDqWdXeBt5cPP79pvYd48y1R7', network)).toBeTrue();
   });
 });
