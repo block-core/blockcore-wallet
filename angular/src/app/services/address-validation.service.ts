@@ -1,14 +1,24 @@
 import { Injectable } from '@angular/core';
 import { Network } from 'src/shared/networks';
 import { base58, base58check } from '@scure/base';
+import { NetworkLoader } from '.';
+import { Defaults } from '../../shared/defaults';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AddressValidationService {
-  constructor() {}
+  private networks: Network[];
 
-  validate(address: string, network: Network) {
+  constructor(networkLoader: NetworkLoader) {
+    if (!networkLoader) {
+      this.networks = Defaults.getNetworks();
+    } else {
+      this.networks = networkLoader.getAllNetworks();
+    }
+  }
+
+  validateByNetwork(address: string, network: Network) {
     const result = this.parse(address);
 
     if (!result.valid) {
@@ -20,6 +30,27 @@ export class AddressValidationService {
     } else {
       return false;
     }
+  }
+
+  validate(address: string) {
+    const result = this.parse(address);
+
+    if (!result.valid) {
+      return { valid: false };
+    }
+
+    var network = null;
+
+    if (result.base58) {
+      network = this.networks.find((n) => n.pubKeyHash == result.prefix);
+    } else {
+      network = this.networks.find((n) => n.bech32 == result.prefix);
+    }
+
+    return {
+      network,
+      valid: true,
+    };
   }
 
   parse(address: string): any {
@@ -42,12 +73,12 @@ export class AddressValidationService {
   }
 
   parseBech32(address: string) {
-    return { valid: false };
+    return { valid: false, bech32: true };
   }
 
   parseBase58(address: string) {
     // const array = base58check(sha256).decode(address);
     const array = base58.decode(address);
-    return { prefix: array[0], array, valid: true };
+    return { prefix: array[0], array, valid: true, base58: true };
   }
 }
