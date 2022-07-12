@@ -42,6 +42,7 @@ import { ActionPublicKeyComponent } from './action/publickey/publickey.component
 import { ActionComponent } from './action/action.component';
 import { ContactsComponent } from './contacts/contacts.component';
 import { ContactsCreateComponent } from './contacts/create/create.component';
+import { ContactsViewComponent } from './contacts/view/view.component';
 
 const routes: Routes = [
   {
@@ -148,6 +149,13 @@ const routes: Routes = [
   {
     path: 'contacts/create',
     component: ContactsCreateComponent,
+    resolve: {
+      data: LoadingResolverService,
+    },
+  },
+  {
+    path: 'contacts/view/:id',
+    component: ContactsViewComponent,
     resolve: {
       data: LoadingResolverService,
     },

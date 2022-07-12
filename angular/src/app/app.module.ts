@@ -94,6 +94,7 @@ import { AppUpdateService } from './services/app-update.service';
 import { ContactsComponent } from './contacts/contacts.component';
 import { ContactsCreateComponent } from './contacts/create/create.component';
 import { ContactStore } from 'src/shared/store/contacts-store';
+import { ContactsViewComponent } from './contacts/view/view.component';
 
 // required for AOT compilation
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
@@ -152,7 +153,8 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     ActionPublicKeyComponent,
     ActionComponent,
     ContactsComponent,
-    ContactsCreateComponent
+    ContactsCreateComponent,
+    ContactsViewComponent
   ],
   imports: [
     BrowserModule,

@@ -13,7 +13,6 @@ const { v4: uuidv4 } = require('uuid');
   styleUrls: ['../contacts.component.css'],
 })
 export class ContactsCreateComponent implements OnInit {
-  public contacts: any;
   public form;
   selectedNetwork: Network;
   network = '';
@@ -27,15 +26,7 @@ export class ContactsCreateComponent implements OnInit {
       name: new FormControl('', [Validators.required]),
       email: new FormControl('', []),
       address: new FormControl('', []),
-      // amountInput: new FormControl('', [Validators.required, Validators.min(0), Validators.pattern(/^-?(0|[0-9]+[.]?[0-9]*)?$/)]),
     });
-
-    // this.form = new FormGroup({
-    //   name: new FormControl('', [Validators.required, Validators.minLength(6)]),
-    //   email: new FormControl('', []),
-    //   address: new FormControl('', []),
-    //   amountInput: new FormControl('', [Validators.required, Validators.min(0), Validators.pattern(/^-?(0|[0-9]+[.]?[0-9]*)?$/)]),
-    // });
 
     // Default to the first available network.
     this.network = this.networkService.networks[0].id;
@@ -47,9 +38,7 @@ export class ContactsCreateComponent implements OnInit {
     this.selectedNetwork = this.networkService.getNetwork(this.network);
   }
 
-  async ngOnInit(): Promise<void> {
-    // this.contacts = [{ name: 'John Doe' }];
-  }
+  async ngOnInit(): Promise<void> {}
 
   async save() {
     const contact: Contact = {
@@ -60,10 +49,8 @@ export class ContactsCreateComponent implements OnInit {
       address: this.form.controls.address.value,
     };
 
-    console.log(contact);
     this.contactStore.set(contact.id, contact);
     await this.contactStore.save();
-
     this.router.navigateByUrl('/contacts');
   }
 
