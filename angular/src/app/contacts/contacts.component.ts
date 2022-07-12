@@ -17,6 +17,6 @@ export class ContactsComponent implements OnInit {
   }
 
   async ngOnInit(): Promise<void> {
-    this.contacts = this.contactStore.all();
+    this.contacts = this.contactStore.all().sort((a, b) => (a.name > b.name ? 1 : -1));
   }
 }
