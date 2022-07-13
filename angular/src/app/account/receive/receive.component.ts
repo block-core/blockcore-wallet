@@ -44,7 +44,7 @@ export class AccountReceiveComponent implements OnInit, OnDestroy {
   }
 
   openExolix(address: string, network: Network) {
-    const url = `https://exolix.com/exchange/btc:btc-strax?a=0.01&ra=${address}&re=Blockcore`;
+    const url = `https://exolix.com/exchange/btc:btc-strax?a=0.01&ra=${address}&re=Blockcore&ref=BcG9dcJcQqLeXPf5`;
     // window.open(url,'exolixPopup','height=600,width=600,resizable=yes,channelmode=yes,scrollbars=yes,toolbar=yes,menubar=no,location=yes,directories=no, status=yes');
     window.open(url,'exolixPopup','height=800,width=600,left=200,top=200,resizable=yes,channelmode=yes,scrollbars=yes,toolbar=yes,menubar=no,location=yes,directories=no,status=yes');
   }
