@@ -1,3 +1,16 @@
+## <small>0.0.48 (2022-07-13)</small>
+
+* Add "Buy with Exolix" button on receive view for STRAX ([158c13c](https://github.com/block-core/blockcore-wallet/commit/158c13c))
+* Add "Exchange" feature with links to purchase and sell using Exolix ([31a8cc1](https://github.com/block-core/blockcore-wallet/commit/31a8cc1))
+* Add affiliate code for Exolix integration ([d8a92fe](https://github.com/block-core/blockcore-wallet/commit/d8a92fe))
+* Code cleanup ([2d882ea](https://github.com/block-core/blockcore-wallet/commit/2d882ea))
+* Improvements on initial load and sync of wallets and accounts ([97de0c6](https://github.com/block-core/blockcore-wallet/commit/97de0c6))
+* Only register Service Worker in web-mode ([51fb037](https://github.com/block-core/blockcore-wallet/commit/51fb037))
+* Set the credentials to false on http requests ([778cfc3](https://github.com/block-core/blockcore-wallet/commit/778cfc3))
+* Update version and changelog ([292d554](https://github.com/block-core/blockcore-wallet/commit/292d554))
+
+
+
 ## <small>0.0.47 (2022-07-13)</small>
 
 * Add address validation on send input ([4a7ee81](https://github.com/block-core/blockcore-wallet/commit/4a7ee81)), closes [#161](https://github.com/block-core/blockcore-wallet/issues/161)
