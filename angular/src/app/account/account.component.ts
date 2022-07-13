@@ -197,8 +197,8 @@ export class AccountComponent implements OnInit, OnDestroy {
         "publicKey": address
       };
 
-      var calback = "https://" + parsedUrl;
-      const authRequest = await axios.post(calback, payload);
+      var callback = "https://" + parsedUrl;
+      const authRequest = await axios.post(callback, payload);
       console.log(authRequest);
 
       this.loginurlMessage = "";

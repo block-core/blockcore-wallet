@@ -27,6 +27,7 @@ export class NonFungibleTokenComponent implements OnInit, OnDestroy {
 
   async ngOnInit(): Promise<void> {
     const response = await axios.get(this.nonFungibleToken.uri, {
+      withCredentials: false,
       'axios-retry': { retries: 0 }
     });
 

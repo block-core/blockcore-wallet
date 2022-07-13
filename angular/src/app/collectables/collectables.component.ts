@@ -42,6 +42,7 @@ export class CollectablesComponent implements OnInit {
         let queryNetwork = network.name.toLowerCase();
 
         const response = await axios.get(`${this.indexerUrl}/api/query/${queryNetwork}/collectables/${receiveAddress}`, {
+          withCredentials: false,
           'axios-retry': {
             retries: 0,
           },

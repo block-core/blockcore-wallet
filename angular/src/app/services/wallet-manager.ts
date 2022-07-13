@@ -189,7 +189,9 @@ export class WalletManager {
     // const indexerUrl = this.settings.values.indexer.replace('{id}', network.id.toLowerCase());
     const indexerUrl = this.networkLoader.getServer(network.id, this.settings.values.server, this.settings.values.indexer);
 
-    const responseTransactionHex = await axios.get(`${indexerUrl}/api/query/transaction/${txid}/hex`);
+    const responseTransactionHex = await axios.get(`${indexerUrl}/api/query/transaction/${txid}/hex`, {
+      withCredentials: false,
+    });
     return responseTransactionHex.data;
   }
 
@@ -201,6 +203,7 @@ export class WalletManager {
     const indexerUrl = this.networkLoader.getServer(network.id, this.settings.values.server, this.settings.values.indexer);
 
     const response = await axios.post(`${indexerUrl}/api/command/send`, txhex, {
+      withCredentials: false,
       headers: {
         'Content-Type': 'application/json-patch+json',
       },
