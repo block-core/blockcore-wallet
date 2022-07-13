@@ -17,7 +17,7 @@ export class ExchangeService {
   }
 
   popup(address: string, pair: string, amount: number) {
-    const url = `https://exolix.com/exchange/${pair}?a=${amount}&ra=${address}&re=Blockcore&ref=BcG9dcJcQqLeXPf5`;
+    const url = `https://exolix.com/exchange/${pair}?a=${amount}&ra=${address}&ref=BcG9dcJcQqLeXPf5`;
     window.open(url, 'exolixPopup', 'height=800,width=600,left=200,top=200,resizable=yes,channelmode=yes,scrollbars=yes,toolbar=yes,menubar=no,location=yes,directories=no,status=yes');
   }
 }
