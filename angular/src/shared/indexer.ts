@@ -247,6 +247,11 @@ export class IndexerBackgroundService {
         // TODO: There is a lot of duplicate code in this method, refactor when possible.
         let changes = false;
         const settings = this.settingStore.get();
+
+        // Make sure we reload wallets at this point every single process.
+        await this.walletStore.load();
+        await this.accountStateStore.load();
+        
         const wallets = this.walletStore.getWallets();
         let anyAddressNotCompleteInAnyWallet = false;
 
@@ -351,6 +356,8 @@ export class IndexerBackgroundService {
                         const processState = await this.processAddressIndexed(indexerUrl, addressState);
 
                         if (!processState.completed) {
+                            console.log('anyAddressNotComplete!!!');
+                            debugger;
                             anyAddressNotComplete = true;
                         }
 
@@ -391,6 +398,8 @@ export class IndexerBackgroundService {
                         const processState = await this.processAddressIndexed(indexerUrl, addressState);
 
                         if (!processState.completed) {
+                            console.log('anyAddressNotComplete!!!');
+                            debugger;
                             anyAddressNotComplete = true;
                         }
 
@@ -449,6 +458,8 @@ export class IndexerBackgroundService {
                             const processState = await this.processAddress(indexerUrl, addressState);
 
                             if (!processState.completed) {
+                                console.log('anyAddressNotComplete!!!');
+                                debugger;
                                 anyAddressNotComplete = true;
                             }
 
@@ -503,6 +514,8 @@ export class IndexerBackgroundService {
                             const processState = await this.processAddress(indexerUrl, addressState);
 
                             if (!processState.completed) {
+                                console.log('anyAddressNotComplete!!!');
+                                debugger;
                                 anyAddressNotComplete = true;
                             }
 
@@ -533,6 +546,8 @@ export class IndexerBackgroundService {
                         const processState = await this.processAddress(indexerUrl, addressState);
 
                         if (!processState.completed) {
+                            console.log('anyAddressNotComplete!!!');
+                            debugger;
                             anyAddressNotComplete = true;
                         }
 
@@ -585,6 +600,8 @@ export class IndexerBackgroundService {
                         const processAddressState = await this.processAddress(indexerUrl, addressStateChange);
 
                         if (!processAddressState.completed) {
+                            console.log('anyAddressNotComplete!!!');
+                            debugger;
                             anyAddressNotComplete = true;
                         }
 
@@ -639,6 +656,8 @@ export class IndexerBackgroundService {
                             // console.debug('Completed processing:', processState);
 
                             if (!processState.completed) {
+                                console.log('anyAddressNotComplete!!!');
+                                debugger;
                                 anyAddressNotComplete = true;
                             }
 
@@ -680,6 +699,8 @@ export class IndexerBackgroundService {
                             const processState = await this.processAddress(indexerUrl, addressState);
 
                             if (!processState.completed) {
+                                console.log('anyAddressNotComplete!!!');
+                                debugger;
                                 anyAddressNotComplete = true;
                             }
 
@@ -711,6 +732,9 @@ export class IndexerBackgroundService {
 
                 // If any addresses on this account is not fully indexed, make sure we mark it.
                 accountState.completedScan = !anyAddressNotComplete;
+
+                console.log('accountState.completedScan!!!', accountState.completedScan);
+                debugger;
 
                 if (!anyAddressNotComplete) {
                     anyAddressNotCompleteInAnyWallet = true;

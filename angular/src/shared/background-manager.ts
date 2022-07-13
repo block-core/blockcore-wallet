@@ -298,6 +298,7 @@ export class BackgroundManager {
       }
 
       if (this.onUpdates) {
+        console.log('ON UPDATES!', processResult);
         this.onUpdates.call(null, processResult);
       }
 
