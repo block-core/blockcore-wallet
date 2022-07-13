@@ -1,15 +1,16 @@
 <div class="page centered">
-    <h2>Receive {{network.symbol}}</h2>
+  <h2>Receive {{ network.symbol }}</h2>
 
-    <img [src]="qrCode" class="qr-code" />
+  <img [src]="qrCode" class="qr-code" />
 
-    <mat-card class="address" [class.mat-elevation-z8]="true">{{address}}
-        <button class="copy-button" mat-icon-button (click)="copy()">
-            <mat-icon>content_copy</mat-icon>
-        </button>
-    </mat-card>
+  <mat-card class="address" [class.mat-elevation-z8]="true"
+    >{{ address }}
+    <button class="copy-button" mat-icon-button (click)="copy()">
+      <mat-icon>content_copy</mat-icon>
+    </button>
+  </mat-card>
 
-    <p class="mat-caption network-info">
-        This address can only be used to receive {{network.symbol}} on the {{network.name}} network.
-    </p>
+  <button class="purchase-button" *ngIf="network.id === 'STRAX'" mat-raised-button (click)="openExolix(address, network)">Buy with Exolix</button>
+
+  <p class="mat-caption network-info">This address can only be used to receive {{ network.symbol }} on the {{ network.name }} network.</p>
 </div>
