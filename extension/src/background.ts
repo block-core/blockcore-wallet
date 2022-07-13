@@ -37,25 +37,30 @@ browser.runtime.onMessage.addListener(async (msg: ActionMessageResponse, sender)
   //   }
   // }
 
+  console.log('Receive message in background (is source tabs?):', msg);
+
   if (msg.prompt) {
     return handlePromptMessage(msg, sender);
-  } else if (msg.src == 'provider') {
+  } else if (msg.source == 'provider') {
     return handleContentScriptMessage(msg);
-  } else if (msg.src == 'tabs') {
+  } else if (msg.source == 'tabs') {
     // Handle messages coming from the UI.
-    if (msg.action === 'keep-alive') {
+    if (msg.type === 'keep-alive') {
       // console.debug('Received keep-alive message.');
-    } else if (msg.action === 'index') {
+    } else if (msg.type === 'index') {
+      console.log();
       await executeIndexer();
-    } else if (msg.action === 'watch') {
+    } else if (msg.type === 'watch') {
       await runWatcher();
-    } else if (msg.action === 'network') {
+    } else if (msg.type === 'network') {
       await networkStatusWatcher();
-    } else if (msg.action === 'activated') {
+    } else if (msg.type === 'activated') {
       // console.log('THE UI WAS ACTIVATED!!');
       // When UI is triggered, we'll also trigger network watcher.
       await networkStatusWatcher();
     }
+  } else {
+    console.log('Unhandled message:', msg);
   }
 });
 
@@ -74,18 +79,18 @@ async function handleContentScriptMessage(message: ActionMessageResponse) {
   let permissionSet = permissionService.get(message.app);
 
   if (permissionSet) {
-    permission = permissionSet.permissions[message.action];
+    permission = permissionSet.permissions[message.type];
   }
 
   // Check if user have already approved this kind of access on this domain/host.
   if (!permission) {
     try {
-      await promptPermission(message.app, message.action, message.args);
+      await promptPermission(message.app, message.type, message.args);
       // authorized, proceed
     } catch (_) {
       // not authorized, stop here
       return {
-        error: { message: `Insufficient permissions, required "${message.action}".` },
+        error: { message: `Insufficient permissions, required "${message.type}".` },
       };
     }
   } else {
@@ -101,7 +106,7 @@ async function handleContentScriptMessage(message: ActionMessageResponse) {
   }
 
   try {
-    switch (message.action) {
+    switch (message.type) {
       case 'publicKey': {
         return 'Your Public Key!';
         // return getPublicKey(sk);
@@ -135,7 +140,7 @@ function handlePromptMessage(message: ActionMessageResponse, sender) {
     case 'forever':
     case 'expirable':
       prompts[message.id]?.resolve?.();
-      permissionService.updatePermission(message.app, message.action, message.permission, message.walletId, message.accountId, message.keyId);
+      permissionService.updatePermission(message.app, message.type, message.permission, message.walletId, message.accountId, message.keyId);
       break;
     case 'once':
       prompts[message.id]?.resolve?.();
@@ -204,8 +209,10 @@ chrome.runtime.onInstalled.addListener(async ({ reason }) => {
   });
 
   if (reason === 'install') {
-    // Open a new tab for initial setup.
+    // Open a new tab for initial setup, before we wait for network status watcher.
     chrome.tabs.create({ url: 'index.html' });
+    await networkStatusWatcher();
+    await executeIndexer();
   } else if (reason === 'update') {
     // Run a full indexing when the extension has been updated/reloaded.
     await networkStatusWatcher();
@@ -297,6 +304,8 @@ const executeIndexer = async () => {
   await runIndexer();
   indexing = false;
 
+  console.log('runIndexer completed...now doing runWatcher..');
+
   // When the indexer has finished, run watcher automatically.
   await runWatcher();
 };
@@ -356,6 +365,7 @@ const runIndexer = async () => {
 const runWatcher = async () => {
   // If we are indexing, simply ignore all calls to runWatcher.
   if (indexing) {
+    console.log('INDEXING IS TRUE, SKIPPING WATCHER!!');
     return;
   }
 

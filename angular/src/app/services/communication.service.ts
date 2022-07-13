@@ -18,7 +18,7 @@ export class CommunicationService {
     // TODO: Handle these messages internally when running outside of extension context.
     if (this.runtime.isExtension) {
       chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
-        console.log('chrome.runtime.onMessage within ANGULAR!');
+        console.log('chrome.runtime.onMessage within ANGULAR!', message);
         this.ngZone.run(async () => {
           const result = await this.handleInternalMessage(message, sender);
           // this.logger.debug(`Process messaged ${message.type} and returning this response: `, result);

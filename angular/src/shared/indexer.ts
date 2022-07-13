@@ -356,8 +356,6 @@ export class IndexerBackgroundService {
                         const processState = await this.processAddressIndexed(indexerUrl, addressState);
 
                         if (!processState.completed) {
-                            console.log('anyAddressNotComplete!!!');
-                            debugger;
                             anyAddressNotComplete = true;
                         }
 
@@ -398,8 +396,6 @@ export class IndexerBackgroundService {
                         const processState = await this.processAddressIndexed(indexerUrl, addressState);
 
                         if (!processState.completed) {
-                            console.log('anyAddressNotComplete!!!');
-                            debugger;
                             anyAddressNotComplete = true;
                         }
 
@@ -458,8 +454,6 @@ export class IndexerBackgroundService {
                             const processState = await this.processAddress(indexerUrl, addressState);
 
                             if (!processState.completed) {
-                                console.log('anyAddressNotComplete!!!');
-                                debugger;
                                 anyAddressNotComplete = true;
                             }
 
@@ -514,8 +508,6 @@ export class IndexerBackgroundService {
                             const processState = await this.processAddress(indexerUrl, addressState);
 
                             if (!processState.completed) {
-                                console.log('anyAddressNotComplete!!!');
-                                debugger;
                                 anyAddressNotComplete = true;
                             }
 
@@ -546,8 +538,6 @@ export class IndexerBackgroundService {
                         const processState = await this.processAddress(indexerUrl, addressState);
 
                         if (!processState.completed) {
-                            console.log('anyAddressNotComplete!!!');
-                            debugger;
                             anyAddressNotComplete = true;
                         }
 
@@ -600,8 +590,6 @@ export class IndexerBackgroundService {
                         const processAddressState = await this.processAddress(indexerUrl, addressStateChange);
 
                         if (!processAddressState.completed) {
-                            console.log('anyAddressNotComplete!!!');
-                            debugger;
                             anyAddressNotComplete = true;
                         }
 
@@ -656,8 +644,6 @@ export class IndexerBackgroundService {
                             // console.debug('Completed processing:', processState);
 
                             if (!processState.completed) {
-                                console.log('anyAddressNotComplete!!!');
-                                debugger;
                                 anyAddressNotComplete = true;
                             }
 
@@ -699,8 +685,6 @@ export class IndexerBackgroundService {
                             const processState = await this.processAddress(indexerUrl, addressState);
 
                             if (!processState.completed) {
-                                console.log('anyAddressNotComplete!!!');
-                                debugger;
                                 anyAddressNotComplete = true;
                             }
 
@@ -733,10 +717,7 @@ export class IndexerBackgroundService {
                 // If any addresses on this account is not fully indexed, make sure we mark it.
                 accountState.completedScan = !anyAddressNotComplete;
 
-                console.log('accountState.completedScan!!!', accountState.completedScan);
-                debugger;
-
-                if (!anyAddressNotComplete) {
+                if (anyAddressNotComplete) {
                     anyAddressNotCompleteInAnyWallet = true;
                 }
             }
@@ -749,7 +730,7 @@ export class IndexerBackgroundService {
 
         // console.debug('Indexer finished:', changes);
 
-        return { changes, completed: anyAddressNotCompleteInAnyWallet, cancelled: false };
+        return { changes, completed: !anyAddressNotCompleteInAnyWallet, cancelled: false };
     }
 
     parseLinkHeader(linkHeader: string) {

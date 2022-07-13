@@ -360,6 +360,9 @@ export class BackgroundManager {
 
     // TODO: https://github.com/block-core/blockcore-wallet/issues/148
     while (!processResult.completed) {
+
+      console.log('processResult.completed:', processResult.completed);
+
       try {
         processResult = await indexer.process(null);
       } catch (err) {
@@ -380,6 +383,9 @@ export class BackgroundManager {
       } catch (err) {
         console.error('Failure during calculate balance.', err);
       }
+
+      console.log('ONUPDATED', processResult);
+      console.log('this.onUpdates', this.onUpdates);
 
       if (this.onUpdates) {
         this.onUpdates.call(null, processResult);

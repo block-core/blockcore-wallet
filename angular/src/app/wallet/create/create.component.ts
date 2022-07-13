@@ -84,7 +84,6 @@ export class WalletCreateComponent implements OnInit {
     }
 
     create() {
-        debugger;
         this.next(1);
         this.recover = false;
         this.generate();

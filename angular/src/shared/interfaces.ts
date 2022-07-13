@@ -494,12 +494,12 @@ interface ActionMessage {}
 interface ActionMessageResponse {
   prompt: boolean;
   target: string;
-  src: string;
+  source: string;
   ext: string;
   permission: string;
   args: any;
   id: string;
-  action: string;
+  type: string;
   app: string;
   walletId: string;
   accountId: string;

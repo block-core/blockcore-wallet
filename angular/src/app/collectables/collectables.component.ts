@@ -27,6 +27,8 @@ export class CollectablesComponent implements OnInit {
       const network = addressManager.getNetwork(this.account.networkType);
       this.indexerUrl = this.networkLoader.getServer(network.id, this.settings.values.server, this.settings.values.indexer);
 
+      console.log('COLLECTIBLES INDEXER URL', this.indexerUrl);
+
       // If there are no indexers online, we'll try again in 30 seconds.
       if (!this.indexerUrl) {
         setTimeout(async () => {
@@ -36,6 +38,7 @@ export class CollectablesComponent implements OnInit {
       }
 
       const accountStore = this.accountStateStore.get(this.account.identifier);
+
       if (accountStore != null) {
         let receiveAddress = accountStore.receive[0].address;
         let queryNetwork = network.name.toLowerCase();

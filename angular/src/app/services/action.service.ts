@@ -48,12 +48,12 @@ export class ActionService {
     const reply: ActionMessageResponse = {
       prompt: true, // This indicates that message comes from the popup promt.
       target: 'provider',
-      src: 'tabs',
+      source: 'tabs',
       ext: 'blockcore',
       permission: permission,
       args: ['cipher'],
       id: this.uiState.action.id,
-      action: this.uiState.action.action,
+      type: this.uiState.action.action,
       app: this.uiState.action.app,
       walletId: this.walletManager.activeWalletId,
       accountId: this.walletManager.activeAccountId,
