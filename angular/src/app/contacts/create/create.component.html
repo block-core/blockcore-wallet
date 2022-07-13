@@ -14,7 +14,7 @@
 
     <mat-form-field class="input-full-width" appearance="outline">
       <mat-label>Address</mat-label>
-      <input matInput formControlName="address" />
+      <input matInput formControlName="address" (change)="updateNetwork()" />
       <!-- <mat-error *ngIf="form.controls['amountInput'].invalid">Amount is required and must be correctly entered.</mat-error> -->
       <mat-error *ngIf="form.controls['address'].errors?.['min']">Amount cannot be negative.</mat-error>
       <mat-error *ngIf="form.controls['address'].errors?.['required']">Amount is required and must be correctly entered.</mat-error>

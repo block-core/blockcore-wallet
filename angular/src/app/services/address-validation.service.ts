@@ -25,10 +25,19 @@ export class AddressValidationService {
       return false;
     }
 
-    if (result.prefix == network.pubKeyHash) {
-      return true;
+    if (result.base58) {
+      if (result.prefix == network.pubKeyHash) {
+        return true;
+      } else {
+        return false;
+      }
     } else {
-      return false;
+      // We currently only support a unique set of bech32 prefixes, could potentially implement checks of all networks here.
+      if (result.networks[0].bech32 == network.bech32) {
+        return true;
+      } else {
+        return false;
+      }
     }
   }
 
@@ -44,10 +53,8 @@ export class AddressValidationService {
     if (result.base58) {
       networks = this.networks.filter((n) => n.pubKeyHash == result.prefix);
     } else {
-      networks = this.networks.filter((n) => n.bech32 == result.prefix);
+      networks = result.networks;
     }
-
-    console.log(networks);
 
     return {
       networks,
@@ -55,7 +62,7 @@ export class AddressValidationService {
     };
   }
 
-  parse(address: string): any {
+  private parse(address: string): any {
     if (!address) {
       return {
         valid: false,
@@ -74,11 +81,17 @@ export class AddressValidationService {
     }
   }
 
-  parseBech32(address: string) {
-    return { valid: false, bech32: true };
+  private parseBech32(address: string) {
+    const networks = this.networks.filter((n) => address.startsWith(n.bech32));
+
+    if (networks.length == 0) {
+      return { valid: false, bech32: true };
+    } else {
+      return { valid: true, bech32: true, networks: networks };
+    }
   }
 
-  parseBase58(address: string) {
+  private parseBase58(address: string) {
     // const array = base58check(sha256).decode(address);
     const array = base58.decode(address);
     return { prefix: array[0], array, valid: true, base58: true };

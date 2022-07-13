@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { AddressValidationService } from 'src/app/services/address-validation.service';
 import { Contact } from 'src/shared';
 import { Network } from 'src/shared/networks';
 import { ContactStore } from 'src/shared/store/contacts-store';
@@ -17,7 +18,7 @@ export class ContactsCreateComponent implements OnInit {
   selectedNetwork: Network;
   network = '';
 
-  constructor(private router: Router, private uiState: UIState, public networkService: NetworksService, private fb: FormBuilder, private contactStore: ContactStore) {
+  constructor(private addressValidation: AddressValidationService, private router: Router, private uiState: UIState, public networkService: NetworksService, private fb: FormBuilder, private contactStore: ContactStore) {
     this.uiState.title = 'Create contact';
     this.uiState.showBackButton = true;
     this.uiState.goBackHome = false;
@@ -30,8 +31,15 @@ export class ContactsCreateComponent implements OnInit {
 
     // Default to the first available network.
     this.network = this.networkService.networks[0].id;
-
     this.onNetworkChanged();
+  }
+
+  updateNetwork() {
+    const result = this.addressValidation.validate(this.form.controls.address.value);
+
+    if (result.valid) {
+      this.network = result.networks[0].id;
+    }
   }
 
   onNetworkChanged() {
@@ -67,6 +75,7 @@ export class ContactsCreateComponent implements OnInit {
 
       if (clipboardContents) {
         this.form.controls.address.setValue(clipboardContents);
+        this.updateNetwork();
       }
     } catch (error) {
       console.error(error);
