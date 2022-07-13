@@ -29,7 +29,8 @@
 		"Tools": "Tools",
 		"AddressBook": "Address Book",
 		"AddAccount": "Add Account",
-		"AddWallet": "Add Wallet"
+		"AddWallet": "Add Wallet",
+		"Exchange": "Exchange (buy/sell)"
 	},
 	"Settings": {
 		"Save": "Save",

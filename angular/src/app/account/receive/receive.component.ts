@@ -9,6 +9,7 @@ import * as QRCode from 'qrcode';
 import { Address } from '../../../shared/interfaces';
 import { Network } from '../../../shared/networks';
 import { AccountStateStore } from 'src/shared/store/account-state-store';
+import { ExchangeService } from 'src/app/services/exchange.service';
 var QRCode2 = require('qrcode');
 
 @Component({
@@ -22,7 +23,7 @@ export class AccountReceiveComponent implements OnInit, OnDestroy {
   qrCode: string;
   network: Network;
 
-  constructor(public uiState: UIState, private renderer: Renderer2, private networks: NetworksService, public walletManager: WalletManager, private accountStateStore: AccountStateStore, private snackBar: MatSnackBar) {
+  constructor(private exchange: ExchangeService, public uiState: UIState, private renderer: Renderer2, private networks: NetworksService, public walletManager: WalletManager, private accountStateStore: AccountStateStore, private snackBar: MatSnackBar) {
     // this.uiState.title = 'Receive Address';
     this.uiState.goBackHome = false;
     this.uiState.backUrl = null;
@@ -44,9 +45,7 @@ export class AccountReceiveComponent implements OnInit, OnDestroy {
   }
 
   openExolix(address: string, network: Network) {
-    const url = `https://exolix.com/exchange/btc:btc-strax?a=0.01&ra=${address}&re=Blockcore&ref=BcG9dcJcQqLeXPf5`;
-    // window.open(url,'exolixPopup','height=600,width=600,resizable=yes,channelmode=yes,scrollbars=yes,toolbar=yes,menubar=no,location=yes,directories=no, status=yes');
-    window.open(url,'exolixPopup','height=800,width=600,left=200,top=200,resizable=yes,channelmode=yes,scrollbars=yes,toolbar=yes,menubar=no,location=yes,directories=no,status=yes');
+    this.exchange.buyPopup(address, network, 0.01);
   }
 
   async ngOnInit() {

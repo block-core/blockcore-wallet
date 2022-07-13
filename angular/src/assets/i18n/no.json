@@ -29,7 +29,8 @@
 		"Tools": "Verktøy",
 		"AddressBook": "Adressebok",
 		"AddAccount": "Lag konto",
-		"AddWallet": "Lag lommebok"
+		"AddWallet": "Lag lommebok",
+		"Exchange": "Exchange (kjøp/selg)"
 	},
 	"Settings": {
 		"Save": "Lagre",

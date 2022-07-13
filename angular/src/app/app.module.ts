@@ -95,6 +95,7 @@ import { ContactsComponent } from './contacts/contacts.component';
 import { ContactsCreateComponent } from './contacts/create/create.component';
 import { ContactStore } from 'src/shared/store/contacts-store';
 import { ContactsViewComponent } from './contacts/view/view.component';
+import { ExchangeComponent } from './exchange/exchange.component';
 
 // required for AOT compilation
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
@@ -154,7 +155,8 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     ActionComponent,
     ContactsComponent,
     ContactsCreateComponent,
-    ContactsViewComponent
+    ContactsViewComponent,
+    ExchangeComponent
   ],
   imports: [
     BrowserModule,

@@ -43,6 +43,7 @@ import { ActionComponent } from './action/action.component';
 import { ContactsComponent } from './contacts/contacts.component';
 import { ContactsCreateComponent } from './contacts/create/create.component';
 import { ContactsViewComponent } from './contacts/view/view.component';
+import { ExchangeComponent } from './exchange/exchange.component';
 
 const routes: Routes = [
   {
@@ -65,6 +66,13 @@ const routes: Routes = [
   {
     path: 'wipe',
     component: WipeComponent,
+    resolve: {
+      data: LoadingResolverService,
+    },
+  },
+  {
+    path: 'exchange',
+    component: ExchangeComponent,
     resolve: {
       data: LoadingResolverService,
     },
