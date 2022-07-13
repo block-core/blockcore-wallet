@@ -1,6 +1,6 @@
 import { Component, Renderer2 } from '@angular/core';
 import { UIState, FeatureService, EnvironmentService, SettingsService, WalletManager, CommunicationService, LoggerService } from '../services';
-import { Location } from '@angular/common'
+import { Location } from '@angular/common';
 import { Settings } from '../../shared/interfaces';
 import { INDEXER_URL } from '../shared/constants';
 import { TranslateService } from '@ngx-translate/core';
@@ -9,7 +9,7 @@ import { RuntimeService } from '../services/runtime.service';
 
 @Component({
   selector: 'app-settings',
-  templateUrl: './settings.component.html'
+  templateUrl: './settings.component.html',
 })
 export class SettingsComponent {
   settings: Settings;
@@ -29,10 +29,13 @@ export class SettingsComponent {
     private settingsService: SettingsService,
     private settingStore: SettingStore,
     private runtime: RuntimeService,
-    private location: Location) {
-
+    private location: Location
+  ) {
     // The Settings UI can be opened from the "Extension options" link and then settings won't be loaded yet.
     if (!settingsService.values) {
+      if (env.instance === 'coinvault') {
+        this.settingStore.serverGroup = 'group2';
+      }
       this.settings = JSON.parse(JSON.stringify(this.settingStore.defaultItem()));
     } else {
       // Clone the settings on load:
