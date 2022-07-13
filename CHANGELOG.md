@@ -1,3 +1,9 @@
+## <small>0.0.50 (2022-07-13)</small>
+
+* Update version, changelog and manifest ([f7e58b6](https://github.com/block-core/blockcore-wallet/commit/f7e58b6))
+
+
+
 ## <small>0.0.49 (2022-07-13)</small>
 
 * Change the default server group depending on instance ([d50bc95](https://github.com/block-core/blockcore-wallet/commit/d50bc95))
