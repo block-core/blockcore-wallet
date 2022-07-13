@@ -1,3 +1,20 @@
+## <small>0.0.47 (2022-07-13)</small>
+
+* Add address validation on send input ([4a7ee81](https://github.com/block-core/blockcore-wallet/commit/4a7ee81)), closes [#161](https://github.com/block-core/blockcore-wallet/issues/161)
+* Add Address Validation Service and unit tests ([159b795](https://github.com/block-core/blockcore-wallet/commit/159b795)), closes [#161](https://github.com/block-core/blockcore-wallet/issues/161)
+* Add support for bech32 validation ([5716036](https://github.com/block-core/blockcore-wallet/commit/5716036)), closes [#161](https://github.com/block-core/blockcore-wallet/issues/161)
+* Address Validation: Derive network from address prefix ([c45eef6](https://github.com/block-core/blockcore-wallet/commit/c45eef6))
+* Change the style on delete/wipe buttons ([7fb689e](https://github.com/block-core/blockcore-wallet/commit/7fb689e))
+* Fix issue with network loading ([f0d5d1d](https://github.com/block-core/blockcore-wallet/commit/f0d5d1d))
+* Hide QR option until it's working ([dae7965](https://github.com/block-core/blockcore-wallet/commit/dae7965))
+* Improve the quality of address validation ([a0eeec8](https://github.com/block-core/blockcore-wallet/commit/a0eeec8))
+* Make the address required ([90d80f1](https://github.com/block-core/blockcore-wallet/commit/90d80f1))
+* Networks needs to be array ([ac26489](https://github.com/block-core/blockcore-wallet/commit/ac26489))
+* Optimize memory use on unit tests ([c8cd8d9](https://github.com/block-core/blockcore-wallet/commit/c8cd8d9))
+* Update version and changelog ([5fcafc1](https://github.com/block-core/blockcore-wallet/commit/5fcafc1))
+
+
+
 ## <small>0.0.46 (2022-07-12)</small>
 
 * Add contact view and delete ([46d5888](https://github.com/block-core/blockcore-wallet/commit/46d5888))
