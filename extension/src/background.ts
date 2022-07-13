@@ -19,25 +19,7 @@ let walletStore: WalletStore;
 
 // Don't mark this method async, it will result in caller not being called in "sendResponse".
 browser.runtime.onMessage.addListener(async (msg: ActionMessageResponse, sender) => {
-  // else if (msg.action === 'getpublickey') {
-  //   if (walletStore == null) {
-  //     walletStore = new WalletStore();
-  //     await walletStore.load();
-  //   }
-
-  //   var wallets = walletStore.getWallets();
-
-  //   var res: any;
-  //   for (let i = 0; i < wallets.length; i++) {
-  //     const wallet = wallets[i];
-  //     for (let j = 0; j < wallet.accounts.length; j++) {
-  //       const account = wallet.accounts[j];
-  //       res = account.xpub;
-  //     }
-  //   }
-  // }
-
-  console.log('Receive message in background (is source tabs?):', msg);
+  console.log('Receive message in background:', msg);
 
   if (msg.prompt) {
     return handlePromptMessage(msg, sender);
@@ -48,7 +30,6 @@ browser.runtime.onMessage.addListener(async (msg: ActionMessageResponse, sender)
     if (msg.type === 'keep-alive') {
       // console.debug('Received keep-alive message.');
     } else if (msg.type === 'index') {
-      console.log();
       await executeIndexer();
     } else if (msg.type === 'watch') {
       await runWatcher();
@@ -296,15 +277,12 @@ const networkStatusWatcher = async () => {
 const executeIndexer = async () => {
   // If we are already indexing, simply ignore this request.
   if (indexing) {
-    console.log('Already indexing, skipping this indexing request.');
     return;
   }
 
   indexing = true;
   await runIndexer();
   indexing = false;
-
-  console.log('runIndexer completed...now doing runWatcher..');
 
   // When the indexer has finished, run watcher automatically.
   await runWatcher();
@@ -365,7 +343,6 @@ const runIndexer = async () => {
 const runWatcher = async () => {
   // If we are indexing, simply ignore all calls to runWatcher.
   if (indexing) {
-    console.log('INDEXING IS TRUE, SKIPPING WATCHER!!');
     return;
   }
 
