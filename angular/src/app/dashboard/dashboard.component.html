@@ -143,19 +143,6 @@
 
   </mat-tab> -->
 
-  <mat-tab *ngIf="feature.enabled('collectible:preview')">
-    <ng-template mat-tab-label>
-      <mat-icon class="example-tab-icon">category</mat-icon>
-      &nbsp;
-      <span>{{ "Dashboard.Collectibles" | translate }}</span>
-    </ng-template>
-
-    <div class="centered nft-view">
-      <img src="assets/nfts.png" class="nft-preview" /><br />
-      Coming soon!
-    </div>
-  </mat-tab>
-
   <mat-tab *ngIf="feature.enabled('collectible')">
     <ng-template mat-tab-label>
       <mat-icon class="example-tab-icon">category</mat-icon>
