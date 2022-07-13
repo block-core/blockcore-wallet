@@ -1,3 +1,11 @@
+## <small>0.0.49 (2022-07-13)</small>
+
+* Change the default server group depending on instance ([d50bc95](https://github.com/block-core/blockcore-wallet/commit/d50bc95))
+* Set server group based upon instance ([bbf2310](https://github.com/block-core/blockcore-wallet/commit/bbf2310))
+* Update version and changelog ([8647d21](https://github.com/block-core/blockcore-wallet/commit/8647d21))
+
+
+
 ## <small>0.0.48 (2022-07-13)</small>
 
 * Add "Buy with Exolix" button on receive view for STRAX ([158c13c](https://github.com/block-core/blockcore-wallet/commit/158c13c))
