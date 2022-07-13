@@ -1,3 +1,11 @@
+## <small>0.0.51 (2022-07-13)</small>
+
+* Enable the full Collectible feature for CoinVault instance ([54cda9d](https://github.com/block-core/blockcore-wallet/commit/54cda9d))
+* Remove the "collectible:preview" feature UI ([024e059](https://github.com/block-core/blockcore-wallet/commit/024e059))
+* Update version and changelog ([77f6c04](https://github.com/block-core/blockcore-wallet/commit/77f6c04))
+
+
+
 ## <small>0.0.50 (2022-07-13)</small>
 
 * Update version, changelog and manifest ([f7e58b6](https://github.com/block-core/blockcore-wallet/commit/f7e58b6))
