@@ -25,6 +25,13 @@ export class IdentityComponent implements OnInit, OnDestroy {
   previousIndex!: number;
   identity: Identity | undefined;
   identifier: string;
+  readableId: string;
+  readableId2: string;
+  readableId3: string;
+  readableId4: string;
+  readableId5: string;
+  readableId6: string;
+  readableId7: string;
   network: Network;
   verifiableDataRegistryUrl = '';
   prefix = '';
@@ -99,7 +106,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
       const address = accountState.receive[0];
 
       this.identifier = `${this.network.symbol}:${address.address}`;
-
+      this.readableId = `${this.network.symbol}:${address.address.substring(0, 4)}...${address.address.substring(address.address.length - 4)}`;
       console.log(this.identifier);
 
       // this.uiState.persisted.activeAccountIndex = Number(index);
@@ -124,7 +131,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
     copyToClipboard(this.identifier);
 
     this.snackBar.open('Identifier copied to clipboard', 'Hide', {
-      duration: 1500,
+      duration: 2500,
       horizontalPosition: 'center',
       verticalPosition: 'bottom',
     });
@@ -205,9 +212,14 @@ export class IdentityComponent implements OnInit, OnDestroy {
 
     copyToClipboard(JSON.stringify(doc));
 
+    this.snackBar.open('DID Document copied to clipboard', 'Hide', {
+      duration: 2500,
+      horizontalPosition: 'center',
+      verticalPosition: 'bottom',
+    });
+
     // const document = await this.identityService.createIdentityDocument(privateKey);
     // console.log(JSON.stringify(document));
-
   }
 
   copyProfileDocument() {
