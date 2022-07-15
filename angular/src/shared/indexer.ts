@@ -492,7 +492,7 @@ export class IndexerBackgroundService {
                             }
                         }
 
-                        if (network.singleAddress === true) {
+                        if (network.singleAddress === true || account.singleAddress === true) {
                             // Get the first receive addresses.
                             const address = accountState.receive[0];
                             // console.debug('Running Watch on primary receive address', address);

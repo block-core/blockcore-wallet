@@ -104,6 +104,9 @@ interface Account {
   /** Account mode indicates if this is a full (normal) or quick (basic) type of account. */
   mode: string;
 
+  /** Indicates if this account should only use the primary key pair. */
+  singleAddress?: boolean;
+
   /** Temporary property used for UI-selections. */
   selected?: boolean;
 }

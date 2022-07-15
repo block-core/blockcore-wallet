@@ -29,6 +29,7 @@ export class AccountCreateComponent implements OnInit, OnDestroy {
   icon: string | undefined;
   selectedNetwork: Network;
   mode: string = 'normal';
+  addressMode: string = 'normal';
   purposeAddress: number = 44;
 
   get passwordValidated(): boolean {
@@ -157,6 +158,7 @@ export class AccountCreateComponent implements OnInit, OnDestroy {
       identifier: uuidv4(),
       type: accountType,
       mode: this.mode,
+      singleAddress: this.addressMode === 'single',
       networkType: this.selectedNetwork.id,
       name: this.name,
       index: parsedIndex,

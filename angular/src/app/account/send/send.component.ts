@@ -45,7 +45,7 @@ export class AccountSendComponent implements OnInit, OnDestroy {
         sendService.accountHistory = accountHistoryStore.get(account.identifier);
 
         // When using CRS/TCRS, the change address should always be the primary address.
-        if (network.singleAddress === true) {
+        if (network.singleAddress === true || account.singleAddress === true) {
             const accountState = this.accountStateStore.get(account.identifier);
             const primaryReceiveAddress = accountState.receive[0];
             sendService.changeAddress = primaryReceiveAddress.address;

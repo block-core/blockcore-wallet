@@ -52,7 +52,7 @@ export class AccountReceiveComponent implements OnInit, OnDestroy {
     const accountState = this.accountStateStore.get(this.walletManager.activeAccount.identifier);
 
     // When using CRS/TCRS, the change address should always be the primary address.
-    if (this.network.singleAddress === true) {
+    if (this.network.singleAddress === true || this.walletManager.activeAccount.singleAddress === true) {
       this.addressEntry = accountState.receive[0];
     } else {
       // TODO: When can we start using .lastItem and similar functions on arrays?
