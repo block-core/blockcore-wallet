@@ -146,11 +146,11 @@ export class AccountCreateComponent implements OnInit, OnDestroy {
     const parsedIndex = Number(splittedPathReplaced[3]);
     const accountType = this.selectedNetwork.purpose == 302 ? 'identity' : 'coin';
 
-    // Until we have UI for selecting override, simply replicate the purpose from input.
-    let purposeAddress = parsedPurpose;
+    // Read the purpose address from UI selection:
+    let selectedPurposeAddress = this.purposeAddress;
 
     if (accountType == 'identity') {
-      purposeAddress = 340;
+      selectedPurposeAddress = 340;
     }
 
     // TODO: Get the account index from the derivation path if user customizes it.
@@ -164,7 +164,7 @@ export class AccountCreateComponent implements OnInit, OnDestroy {
       index: parsedIndex,
       network: parsedNetwork,
       purpose: parsedPurpose,
-      purposeAddress: purposeAddress,
+      purposeAddress: selectedPurposeAddress,
       icon: this.icon,
     };
 
