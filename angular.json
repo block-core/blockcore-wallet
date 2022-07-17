@@ -22,7 +22,9 @@
           "options": {
             "allowedCommonJsDependencies": [
               "@scure/bip32",
-              "@blockcore/blockcore-js"
+              "@blockcore/blockcore-js",
+              "buffer",
+              "is-retry-allowed"
             ],
             "aot": true,
             "outputPath": "dist/extension",
