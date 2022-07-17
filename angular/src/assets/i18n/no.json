@@ -68,5 +68,16 @@
 		"GetStarted": "Kom igang med å legge til nye kontakter.",
 		"CreateContact": "Opprett kontakt",
 		"AddressBookHint": "Kontakter er kun lagret lokalt på denne enheten. Kontakter blir ikke synkronisert. Hvis du sletter lommeboken, vil ikke kontaktene kommer tilbake."
+	},
+	"Account": {
+		"Name": "Navn",
+		"Icon": "Ikon",
+		"Network": "Nettverk",
+		"AccountIndex": "Konto indeks",
+		"AccountMode": "Kontomodus",
+		"AddressMode": "Addressemodus",
+		"AddressFormat": "Adresseformat",
+		"AccountDerivationPath": "Konto derivasjon sti",
+		"CreateAccount": "Opprett konto"
 	}
 }

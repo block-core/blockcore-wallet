@@ -1,16 +1,14 @@
 <div class="page centered">
 
-
     <mat-form-field class="input-full-width" appearance="outline">
-        <mat-label>Name</mat-label>
+        <mat-label>{{ "Account.Name" | translate }}</mat-label>
         <input matInput [(ngModel)]="name" required>
     </mat-form-field>
-
 
     <br>
 
     <mat-form-field appearance="outline" class="input-full-width">
-        <mat-label>Icon</mat-label>
+        <mat-label>{{ "Account.Icon" | translate }}</mat-label>
         <mat-select [(value)]="icon">
             <mat-option *ngFor="let icon of icons.icons" [value]="icon">
                 <mat-icon>{{icon}}</mat-icon>
@@ -24,7 +22,7 @@
     <br>
 
     <mat-form-field appearance="outline" class="input-full-width">
-        <mat-label>Network</mat-label>
+        <mat-label>{{ "Account.Network" | translate }}</mat-label>
 
         <mat-select (selectionChange)="onNetworkChanged()" [(value)]="network">
             <mat-option *ngFor="let net of this.networkService.networks;" [value]="net.id">{{net.name}}
@@ -36,7 +34,7 @@
     <br>
 
     <mat-form-field appearance="outline" class="input-full-width">
-        <mat-label>Account Index</mat-label>
+        <mat-label>{{ "Account.AccountIndex" | translate }}</mat-label>
         <mat-select (selectionChange)="onAccountIndexChanged($event)" [(value)]="index">
             <mat-option *ngFor="let accountindex of indexes;" [value]="accountindex">{{accountindex}}</mat-option>
         </mat-select>
@@ -45,7 +43,7 @@
     <br *ngIf="selectedNetwork.purpose != 302">
 
     <mat-form-field *ngIf="selectedNetwork.purpose != 302" appearance="outline" class="input-full-width">
-        <mat-label>Account Mode</mat-label>
+        <mat-label>{{ "Account.AccountMode" | translate }}</mat-label>
         <mat-select [(value)]="mode">
             <mat-option [value]="'normal'">Normal</mat-option>
             <mat-option [value]="'quick'">Quick</mat-option>
@@ -55,7 +53,7 @@
     <br *ngIf="selectedNetwork.purpose != 302">
 
     <mat-form-field *ngIf="selectedNetwork.purpose != 302" appearance="outline" class="input-full-width">
-        <mat-label>Address Mode</mat-label>
+        <mat-label>{{ "Account.AddressMode" | translate }}</mat-label>
         <mat-select [(value)]="addressMode">
             <mat-option [value]="'normal'">Normal</mat-option>
             <mat-option [value]="'single'">Single Address</mat-option>
@@ -65,7 +63,7 @@
     <br *ngIf="selectedNetwork.purpose != 302">
 
     <mat-form-field *ngIf="selectedNetwork.purpose != 302" appearance="outline" class="input-full-width">
-        <mat-label>Address Format</mat-label>
+        <mat-label>{{ "Account.AddressFormat" | translate }}</mat-label>
         <mat-select [(value)]="purposeAddress">
             <mat-option [value]="44">Legacy</mat-option>
             <mat-option [value]="84">Segwit</mat-option>
@@ -76,11 +74,11 @@
     <br>
 
     <mat-form-field class=" input-full-width" appearance="outline">
-        <mat-label>Account Derivation Path</mat-label>
+        <mat-label>{{ "Account.AccountDerivationPath" | translate }}</mat-label>
         <input matInput [(ngModel)]="derivationPath" required>
     </mat-form-field>
 
     <br>
-    <button class="signup-button" mat-flat-button color="primary" (click)="create()">Create Account</button>
+    <button class="signup-button" mat-flat-button color="primary" (click)="create()">{{ "Account.CreateAccount" | translate }}</button>
 
 </div>
