@@ -18,7 +18,9 @@
 		"Unlock": "Unlock",
 		"ExpandView": "Expand the view",
 		"Cancel": "Cancel",
-		"By": "By"
+		"By": "By",
+		"Save": "Save",
+		"Remove": "Remove"
 	},
 	"Dashboard": {
 		"Accounts": "Accounts",
@@ -78,7 +80,9 @@
 		"AddressMode": "Address Mode",
 		"AddressFormat": "Address Format",
 		"AccountDerivationPath": "Account Derivation Path",
-		"CreateAccount": "Create Account"
+		"CreateAccount": "Create Account",
+		"AccountName": "Account name",
+		"Index": "Indeks"
 	},
 	"english": "English",
 	"chinese_simplified": "Chinese (Simplified)",

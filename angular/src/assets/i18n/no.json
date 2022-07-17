@@ -18,7 +18,9 @@
 		"Unlock": "Lås opp",
 		"ExpandView": "Ekspandér vinduet",
 		"Cancel": "Avbryt",
-		"By": "Av"
+		"By": "Av",
+		"Save": "Lagre",
+		"Remove": "Fjern"
 	},
 	"Dashboard": {
 		"Accounts": "Kontoer",
@@ -78,6 +80,8 @@
 		"AddressMode": "Addressemodus",
 		"AddressFormat": "Adresseformat",
 		"AccountDerivationPath": "Konto derivasjon sti",
-		"CreateAccount": "Opprett konto"
+		"CreateAccount": "Opprett konto",
+		"AccountName": "Kontonavn",
+		"Index": "Indeks"
 	}
 }
