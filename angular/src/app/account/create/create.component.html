@@ -45,8 +45,8 @@
     <mat-form-field *ngIf="selectedNetwork.purpose != 302" appearance="outline" class="input-full-width">
         <mat-label>{{ "Account.AccountMode" | translate }}</mat-label>
         <mat-select [(value)]="mode">
-            <mat-option [value]="'normal'">Normal</mat-option>
-            <mat-option [value]="'quick'">Quick</mat-option>
+            <mat-option [value]="'normal'">{{ "Account.Normal" | translate }}</mat-option>
+            <mat-option [value]="'quick'">{{ "Account.Quick" | translate }}</mat-option>
         </mat-select>
     </mat-form-field>
     
@@ -55,8 +55,8 @@
     <mat-form-field *ngIf="selectedNetwork.purpose != 302" appearance="outline" class="input-full-width">
         <mat-label>{{ "Account.AddressMode" | translate }}</mat-label>
         <mat-select [(value)]="addressMode">
-            <mat-option [value]="'normal'">Normal</mat-option>
-            <mat-option [value]="'single'">Single Address</mat-option>
+            <mat-option [value]="'normal'">{{ "Account.Normal" | translate }}</mat-option>
+            <mat-option [value]="'single'">{{ "Account.SingleAddress" | translate }}</mat-option>
         </mat-select>
     </mat-form-field>
 
@@ -65,8 +65,8 @@
     <mat-form-field *ngIf="selectedNetwork.purpose != 302" appearance="outline" class="input-full-width">
         <mat-label>{{ "Account.AddressFormat" | translate }}</mat-label>
         <mat-select [(value)]="purposeAddress">
-            <mat-option [value]="44">Legacy</mat-option>
-            <mat-option [value]="84">Segwit</mat-option>
+            <mat-option [value]="44">{{ "Account.Legacy" | translate }}</mat-option>
+            <mat-option [value]="84">{{ "Account.Segwit" | translate }}</mat-option>
         </mat-select>
     </mat-form-field>
 

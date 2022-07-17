@@ -82,6 +82,11 @@
 		"AccountDerivationPath": "Konto derivasjon sti",
 		"CreateAccount": "Opprett konto",
 		"AccountName": "Kontonavn",
-		"Index": "Indeks"
+		"Index": "Indeks",
+		"Normal": "Normal",
+		"Quick": "Rask",
+		"SingleAddress": "Gjenbruk adresse",
+		"Legacy": "Legacy",
+		"Segwit": "Segwit"
 	}
 }

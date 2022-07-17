@@ -82,7 +82,12 @@
 		"AccountDerivationPath": "Account Derivation Path",
 		"CreateAccount": "Create Account",
 		"AccountName": "Account name",
-		"Index": "Indeks"
+		"Index": "Indeks",
+		"Normal": "Normal",
+		"Quick": "Quick",
+		"SingleAddress": "Single Address",
+		"Legacy": "Legacy",
+		"Segwit": "Segwit"
 	},
 	"english": "English",
 	"chinese_simplified": "Chinese (Simplified)",
