@@ -2,7 +2,7 @@
 
   <mat-icon class="large-icon">delete</mat-icon>
   <br>
-  <h1>Remove account from wallet</h1>
+  <h1>{{ "Account.RemoveAccountFromWallet" | translate}}</h1>
 
   <p>
     This will remove the "{{walletManager.activeAccount.name}}" account from your "{{walletManager.activeWallet?.name}}" wallet.
@@ -10,7 +10,7 @@
   </p>
 
   <br>
-  <button class="signup-button" mat-flat-button (click)="cancel()">Cancel</button>
+  <button class="signup-button" mat-flat-button (click)="cancel()">{{ "App.Cancel" | translate }}</button>
   <br>
-  <button class="signup-button" mat-flat-button color="warn" (click)="wipe()">Yes, remove this account</button>
+  <button class="signup-button" mat-flat-button color="warn" (click)="wipe()">{{ "Account.RemoveConfirm" | translate }}</button>
 </div>

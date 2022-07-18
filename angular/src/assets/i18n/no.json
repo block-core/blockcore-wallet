@@ -87,6 +87,8 @@
 		"Quick": "Rask",
 		"SingleAddress": "Gjenbruk adresse",
 		"Legacy": "Legacy",
-		"Segwit": "Segwit"
+		"Segwit": "Segwit",
+		"RemoveAccountFromWallet": "Fjern konto fra lommebok",
+		"RemoveConfirm": "Ja, fjern denne kontoen"
 	}
 }

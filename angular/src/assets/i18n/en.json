@@ -87,7 +87,9 @@
 		"Quick": "Quick",
 		"SingleAddress": "Single Address",
 		"Legacy": "Legacy",
-		"Segwit": "Segwit"
+		"Segwit": "Segwit",
+		"RemoveAccountFromWallet": "Remove account from wallet",
+		"RemoveConfirm": "Yes, remove this account"
 	},
 	"english": "English",
 	"chinese_simplified": "Chinese (Simplified)",
