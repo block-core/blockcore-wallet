@@ -7,7 +7,15 @@
   <br />
   <p>After that, you can authenticate using the registered credential.</p>
   <br />
-  <button class="signup-button" mat-flat-button (click)="signup()">
+  <button class="signup-button" mat-flat-button color="primary" (click)="registerCredential()">
     Register credential
+  </button>
+  <br />
+  <button class="signup-button" mat-flat-button color="primary" (click)="verifyCredential()">
+    Verify credential
+  </button>
+  <br />
+  <button class="signup-button" mat-flat-button color="warn" (click)="removeCredential()">
+    Remove credential
   </button>
 </div>
