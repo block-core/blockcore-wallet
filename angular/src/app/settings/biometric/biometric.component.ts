@@ -13,7 +13,7 @@ export class BiometricComponent implements OnDestroy {
     // @HostBinding('class.changes') hostClass = true;
     title = 'angular-web-authn';
     users: User[];
-    email = 'a@a.com';
+    username = 'aaa';
     password = 'aaa';
     useFingerprint = true;
     webAuthnAvailable = !!navigator.credentials && !!navigator.credentials.create;
@@ -26,13 +26,8 @@ export class BiometricComponent implements OnDestroy {
 
     }
 
-    registerCredential()
-    {
-      this.signup();
-    }
-
-    removeUser(email: string) {
-      this.serverMockService.removeUser(email);
+    removeUser(username: string) {
+      this.serverMockService.removeUser(username);
       this.users = this.serverMockService.getUsers();
     }
 
@@ -40,12 +35,12 @@ export class BiometricComponent implements OnDestroy {
       console.log('SIGNUP');
 
       // Save into the 'DB'
-      const prevUser = this.serverMockService.getUser(this.email);
+      const prevUser = this.serverMockService.getUser(this.username);
       if (prevUser) {
-        alert('🚫 User already exists with this email address');
+        alert('🚫 User already exists');
         return;
       }
-      const user: User = this.serverMockService.addUser({ email: this.email, password: this.password, credentials: [] });
+      const user: User = this.serverMockService.addUser({ username: this.username, password: this.password, credentials: [] });
       this.users = this.serverMockService.getUsers();
 
       // Ask for WebAuthn Auth method
@@ -61,18 +56,8 @@ export class BiometricComponent implements OnDestroy {
       }
     }
 
-    signin() {
-      console.log('[signin]');
-      const user = this.serverMockService.getUsers().find(u => u.email === this.email && u.password === this.password );
-      if (user) {
-        alert('✅ Congrats! Authentication went fine!');
-      } else {
-        alert('🚫 Sorry :( Invalid credentials!');
-      }
-    }
-
     webAuthSignin() {
-      const user = this.serverMockService.getUser(this.email);
+      const user = this.serverMockService.getUser(this.username);
       this.webAuthnService.webAuthnSignin(user).then((response) => {
         // TODO: validate attestion
         alert('✅ Congrats! Authentication went fine!');
@@ -83,6 +68,8 @@ export class BiometricComponent implements OnDestroy {
         console.log('FAIL', error);
       });
     }
+
+
     ngOnDestroy() {
     }
 }

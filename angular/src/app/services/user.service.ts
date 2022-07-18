@@ -8,8 +8,8 @@ export class UserService {
 
   constructor() { }
 
-  getUser(email: string): User {
-    return this.getUsers().find(u => u.email === email);
+  getUser(username: string): User {
+    return this.getUsers().find(u => u.username === username);
   }
 
   getUsers(): User[] {
@@ -26,8 +26,8 @@ export class UserService {
     this.saveUsers(users);
   }
 
-  removeUser(email: string) {
-    const filteredUsers = this.getUsers().filter(user => user.email !== email);
+  removeUser(username: string) {
+    const filteredUsers = this.getUsers().filter(user => user.username !== username);
     this.saveUsers(filteredUsers);
   }
 }

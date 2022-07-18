@@ -63,7 +63,7 @@ export class ServerMockService {
   }
 
   updateUser(user: User) {
-    this.removeUser(user.email);
+    this.removeUser(user.username);
     this.addUser(user);
   }
 
@@ -73,12 +73,12 @@ export class ServerMockService {
     return user;
   }
 
-  getUser(email: string) {
-    return this.userService.getUser(email);
+  getUser(username: string) {
+    return this.userService.getUser(username);
   }
 
-  removeUser(email: string) {
-    return this.userService.removeUser(email);
+  removeUser(username: string) {
+    return this.userService.removeUser(username);
   }
 
   getChallenge() {

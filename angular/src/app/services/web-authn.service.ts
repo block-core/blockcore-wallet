@@ -21,8 +21,8 @@ export class WebAuthnService {
       user: {
         // Some user id coming from the server
         id: Uint8Array.from(user.id, c => c.charCodeAt(0)),
-        name: user.email,
-        displayName: user.email,
+        name: user.username,
+        displayName: user.username,
       },
       pubKeyCredParams: [{ alg: -7, type: 'public-key' }],
       authenticatorSelection: {

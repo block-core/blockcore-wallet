@@ -5,7 +5,7 @@ export interface Credential {
 
 export interface User {
   id?: string;
-  email: string;
+  username: string;
   password: string;
   // TODO
   credentials: Credential[];
