@@ -19,5 +19,7 @@ export * from './settings.service';
 export * from './state.service';
 export * from './ui-state.service';
 export * from './wallet-manager';
-export * from './app-update.service';
+export * from './server-mock.service';
+export * from './user.service';
+export * from './web-authn.service';
 // export * from './permission.service';
