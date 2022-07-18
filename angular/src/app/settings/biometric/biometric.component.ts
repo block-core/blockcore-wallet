@@ -28,7 +28,7 @@ export class BiometricComponent implements OnDestroy {
 
     registerCredential()
     {
-
+      this.signup();
     }
 
     removeUser(email: string) {
@@ -50,7 +50,7 @@ export class BiometricComponent implements OnDestroy {
 
       // Ask for WebAuthn Auth method
       if (this.webAuthnAvailable && this.useFingerprint) {
-        this.webAuthnService.webAuthnSignup({ user })
+        this.webAuthnService.webAuthnSignup(user)
           .then((credential: PublicKeyCredential) => {
             console.log('credentials.create RESPONSE', credential);
             const valid = this.serverMockService.registerCredential(user, credential);

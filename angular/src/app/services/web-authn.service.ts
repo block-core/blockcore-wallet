@@ -9,7 +9,7 @@ export class WebAuthnService {
 
   constructor(private serverMockService: ServerMockService) { }
 
-  webAuthnSignup({ user }: { user: User; }): Promise<CredentialType> {
+  webAuthnSignup(user: User): Promise<any> {
     console.log('[webAuthnSignup]');
     const publicKeyCredentialCreationOptions: PublicKeyCredentialCreationOptions = {
       // Challenge shoulda come from the server
@@ -39,7 +39,7 @@ export class WebAuthnService {
 
   }
 
-  async webAuthnSignin(user: User): Promise<CredentialType> {
+  webAuthnSignin(user: User): Promise<any> {
     const allowCredentials: PublicKeyCredentialDescriptor[] = user.credentials.map(c => {
       console.log(c.credentialId);
       return { type: 'public-key', id: Uint8Array.from(Object.values(c.credentialId)) };
