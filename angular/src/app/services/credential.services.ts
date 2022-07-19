@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { ClientData} from '../shared/interfaces/client-data-obj';
 import { DecodedAttestionObj } from '../shared/interfaces/decoded-attestion-obj';
 import { User } from '../shared/interfaces/user';
-import * as CBOR from '../utils/cbor';
+import * as CBOR from 'cbor';
 import { UserService } from './user.service';
 
 @Injectable({
