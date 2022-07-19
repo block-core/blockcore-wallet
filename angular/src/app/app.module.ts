@@ -61,7 +61,7 @@ import { AccountSendAddressComponent } from './account/send/address/send-address
 import { AccountSendConfirmComponent } from './account/send/confirm/send-confirm.component';
 import { AccountSendSuccessComponent } from './account/send/success/send-success.component';
 import { AccountSendSendingComponent } from './account/send/sending/send-sending.component';
-import { LoggerModule, NgxLoggerLevel, TOKEN_LOGGER_WRITER_SERVICE } from "ngx-logger";
+import { LoggerModule, NgxLoggerLevel, TOKEN_LOGGER_WRITER_SERVICE } from 'ngx-logger';
 import { LogWriterService } from './services/log-writer.service';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
@@ -77,8 +77,8 @@ import { SettingStore } from 'src/shared/store/setting-store';
 import { AddressWatchStore } from 'src/shared/store/address-watch-store';
 import { SizePipe } from './shared/size.pipe';
 import { AccountStateStore } from 'src/shared/store/account-state-store';
-import { NonFungibleTokenComponent } from "./collectables/non-fungible-token.component";
-import { CollectablesComponent } from "./collectables/collectables.component";
+import { NonFungibleTokenComponent } from './collectables/non-fungible-token.component';
+import { CollectablesComponent } from './collectables/collectables.component';
 import { NetworkComponent } from './settings/network/network.component';
 import { NetworkStatusPipe } from './shared/network-status.pipe';
 import { networkLoaderServiceProvider } from './services/network-loader.provider';
@@ -97,6 +97,7 @@ import { ContactsCreateComponent } from './contacts/create/create.component';
 import { ContactStore } from 'src/shared/store/contacts-store';
 import { ContactsViewComponent } from './contacts/view/view.component';
 import { ExchangeComponent } from './exchange/exchange.component';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 // required for AOT compilation
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
@@ -158,7 +159,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     ContactsComponent,
     ContactsCreateComponent,
     ContactsViewComponent,
-    ExchangeComponent
+    ExchangeComponent,
   ],
   imports: [
     BrowserModule,
@@ -168,8 +169,8 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
       loader: {
         provide: TranslateLoader,
         useFactory: HttpLoaderFactory,
-        deps: [HttpClient]
-      }
+        deps: [HttpClient],
+      },
     }),
     FormsModule,
     HttpClientModule,
@@ -177,9 +178,11 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
       { level: NgxLoggerLevel.DEBUG, enableSourceMaps: true, serverLogLevel: NgxLoggerLevel.OFF }, // Don't send logs anywhere!
       {
         writerProvider: {
-          provide: TOKEN_LOGGER_WRITER_SERVICE, useClass: LogWriterService
-        }
-      }),
+          provide: TOKEN_LOGGER_WRITER_SERVICE,
+          useClass: LogWriterService,
+        },
+      }
+    ),
     AppRoutingModule,
     BrowserAnimationsModule,
     ReactiveFormsModule,
@@ -208,6 +211,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     MatSnackBarModule,
     MatProgressBarModule,
     MatDialogModule,
+    MatSlideToggleModule,
     ServiceWorkerModule.register('ngsw-worker.js', {
       //enabled: environment.production,
       // Do not register the service worker, if running in extension mode.
@@ -215,9 +219,9 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
 
       // Register the ServiceWorker as soon as the application is stable
       // or after 30 seconds (whichever comes first).
-      registrationStrategy: 'registerWithDelay:5000'
+      registrationStrategy: 'registerWithDelay:5000',
       //registrationStrategy: 'registerWhenStable:10000'
-    })
+    }),
   ],
   exports: [NetworkPipe, TruncatePipe, NetworkStatusPipe],
   providers: [
@@ -236,10 +240,8 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     AccountStateStore,
     PermissionStore,
     AppUpdateService,
-    ContactStore
+    ContactStore,
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule {
-
-}
+export class AppModule {}

@@ -1,139 +1,140 @@
 <div class="page centered">
+  <div *ngIf="step == 0">
+    <img class="logo" src="assets/icon-light-128x128.png" />
 
-    <div *ngIf="step == 0">
-        <img class="logo" src="assets/icon-light-128x128.png">
+    <h1>{{ uiState.manifest?.name }}</h1>
+    <div class="sub-title">by {{ uiState.manifest?.author }}</div>
+    <div class="sub-title">Version {{ uiState.manifest?.version }}</div>
 
-        <h1>{{uiState.manifest?.name}}</h1>
-        <div class="sub-title">by {{uiState.manifest?.author}}</div>
-        <div class="sub-title">Version {{uiState.manifest?.version}}</div>
+    <p>{{ uiState.manifest?.description }}</p>
 
-        <p>{{uiState.manifest?.description}}</p>
+    <br />
+    <button class="signup-button" mat-flat-button color="primary" (click)="create()">{{ "Wallet.CreateNew" | translate }}</button>
+    <br />
+    <button class="signup-button" mat-flat-button (click)="restore()">{{ "Wallet.Recover" | translate }}</button>
+    <br /><br />
 
-        <br>
-        <button class="signup-button" mat-flat-button color="primary" (click)="create()">{{ 'Wallet.CreateNew' | translate }}</button>
-        <br>
-        <button class="signup-button" mat-flat-button (click)="restore()">{{ 'Wallet.Recover' | translate }}</button>
-        <br><br>
-
-        <div *ngIf="uiState.showInstallButton" id="install" class="left">
-            <mat-card>
-                <mat-card-header>
-                    <mat-icon class="card-icon" mat-card-avatar>get_app</mat-icon>
-                    <mat-card-title>Install App</mat-card-title>
-                    <mat-card-subtitle>Improve the app experience</mat-card-subtitle>
-                </mat-card-header>
-                <mat-card-content>
-                    <p *ngIf="!uiState.iOS">By installing the app, you'll get a dedicated icon to launch and dedicated window on your device.</p>
-                    <p *ngIf="uiState.iOS">On Apple devices, you must use the "Share" button and choose the "Add to Home Screen" action.</p>
-                </mat-card-content>
-                <mat-card-actions *ngIf="!uiState.iOS" class="centered">
-                    <button mat-flat-button color="primary" (click)="uiState.install()">Install App</button>
-                </mat-card-actions>
-            </mat-card>
-        </div>
-
+    <div *ngIf="uiState.showInstallButton" id="install" class="left">
+      <mat-card>
+        <mat-card-header>
+          <mat-icon class="card-icon" mat-card-avatar>get_app</mat-icon>
+          <mat-card-title>Install App</mat-card-title>
+          <mat-card-subtitle>Improve the app experience</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <p *ngIf="!uiState.iOS">By installing the app, you'll get a dedicated icon to launch and dedicated window on your device.</p>
+          <p *ngIf="uiState.iOS">On Apple devices, you must use the "Share" button and choose the "Add to Home Screen" action.</p>
+        </mat-card-content>
+        <mat-card-actions *ngIf="!uiState.iOS" class="centered">
+          <button mat-flat-button color="primary" (click)="uiState.install()">Install App</button>
+        </mat-card-actions>
+      </mat-card>
     </div>
+  </div>
 
-    <div *ngIf="step == 1">
-
-        <!-- <mat-stepper [linear]="true" #stepper>
+  <div *ngIf="step == 1">
+    <!-- <mat-stepper [linear]="true" #stepper>
             <mat-step [stepControl]="firstFormGroup" [editable]="false"> -->
-        <form [formGroup]="firstFormGroup">
+    <form [formGroup]="firstFormGroup">
+      <h1>{{ "Wallet.SecretRecoveryPhrase" | translate }}</h1>
 
-            <h1>{{ 'Wallet.SecretRecoveryPhrase' | translate }}</h1>
+      <p *ngIf="!recover">This is your private and secret sentence that is your account. You must store it safely, if you lose it, you will lose all your assets. Nobody can recover it for you. <strong>Never share it.</strong></p>
 
-            <p *ngIf="!recover">This is your private and secret sentence that is your account. You must store it
-                safely, if you
-                lose it, you will lose all your assets. Nobody can recover it for you. <strong>Never share it.</strong></p>
+      <p *ngIf="recover">Restore your existing wallet with your 12 or 24-word secret recovery phrase.</p>
 
-            <p *ngIf="recover">Restore your existing wallet with your 12 or 24-word secret recovery phrase.</p>
+      <mat-card *ngIf="!recover" class="recovery-phrase" [class.mat-elevation-z8]="true"
+        >{{ mnemonic }}
+        <button class="copy-button" mat-icon-button (click)="copy()">
+          <mat-icon>content_copy</mat-icon>
+        </button>
+      </mat-card>
 
-            <mat-card *ngIf="!recover" class="recovery-phrase" [class.mat-elevation-z8]="true">{{mnemonic}}
-                <button class="copy-button" mat-icon-button (click)="copy()">
-                    <mat-icon>content_copy</mat-icon>
-                </button>
-            </mat-card>
+      <mat-form-field *ngIf="recover" class="input-full-width" appearance="outline">
+        <mat-label>Secret Recovery Phrase</mat-label>
+        <textarea matInput [(ngModel)]="mnemonic" formControlName="firstCtrl" required></textarea>
+      </mat-form-field>
 
-            <mat-form-field *ngIf="recover" class="input-full-width" appearance="outline">
-                <mat-label>Secret Recovery Phrase</mat-label>
-                <textarea matInput [(ngModel)]="mnemonic" formControlName="firstCtrl" required></textarea>
-            </mat-form-field>
+      <br />
 
-            <br>
+      <button class="full-width" (click)="toggleOptions()" mat-raised-button>Options...</button>
+      <br />
 
-            <button class="full-width" (click)="toggleOptions()" mat-raised-button>Options...</button>
-            <br>
+      <div *ngIf="optionsOpen">
+        <mat-form-field class="input-full-width" appearance="outline">
+          <mat-label>Language</mat-label>
+          <mat-select (selectionChange)="onLanguageChanged($event)" [(value)]="wordlist">
+            <mat-option *ngFor="let list of wordlists" [value]="list">{{ list | translate }}</mat-option>
+          </mat-select>
+        </mat-form-field>
 
-            <div *ngIf="optionsOpen">
-
-                <mat-form-field class="input-full-width" appearance="outline">
-                    <mat-label>Language</mat-label>
-                    <mat-select (selectionChange)="onLanguageChanged($event)" [(value)]="wordlist">
-                        <mat-option *ngFor="let list of wordlists" [value]="list">{{ list | translate }}</mat-option>
-                    </mat-select>
-                </mat-form-field>
-
-                <mat-form-field class="input-full-width" appearance="outline">
-                    <mat-label>Personal extension words</mat-label>
-                    <input matInput [(ngModel)]="extensionWords" formControlName="extensionWordsCtrl" >
-                    <mat-hint>Your personal extension words, this is optional.</mat-hint>
-                    <mat-hint align="end"><span class="material-icons hint-icon" matTooltip="If you want to increase the security of your wallet, you can enter your personal extension words. This adds a two-factor security
+        <mat-form-field class="input-full-width" appearance="outline">
+          <mat-label>Personal extension words</mat-label>
+          <input matInput [(ngModel)]="extensionWords" formControlName="extensionWordsCtrl" />
+          <mat-hint>Your personal extension words, this is optional.</mat-hint>
+          <mat-hint align="end"
+            ><span
+              class="material-icons hint-icon"
+              matTooltip="If you want to increase the security of your wallet, you can enter your personal extension words. This adds a two-factor security
                                 to your wallet, meaning that you will need both the recovery phrase of 12 words, which you
                                 have written down for backup, and the extension word you enter below. Make sure you can easily remember these extension words. If you lose it, then you will not be able
                                     to restore your wallet, even if you have a backup of the recovery phrase. Do not overestimate
-                                    your ability to remember this word.">info</span></mat-hint>
-                </mat-form-field>
+                                    your ability to remember this word."
+              >info</span
+            ></mat-hint
+          >
+        </mat-form-field>
+      </div>
 
-            </div>
-
-            <div>
-                <br>
-                <button *ngIf="!recover" class="signup-button" mat-flat-button color="primary" (click)="next(2)">OK, I have saved it</button>
-                <button *ngIf="recover" class="signup-button" mat-flat-button color="primary" (click)="next(2)" [disabled]="!firstFormGroup.valid">Import secret recovery phrase</button>
-                <button class="signup-button" mat-stroked-button (click)="cancel()">{{ 'App.Cancel' | translate }}</button>
-            </div>
-        </form>
-        <!-- </mat-step>
+      <div>
+        <br />
+        <button *ngIf="!recover" class="signup-button" mat-flat-button color="primary" (click)="next(2)">OK, I have saved it</button>
+        <button *ngIf="recover" class="signup-button" mat-flat-button color="primary" (click)="next(2)" [disabled]="!firstFormGroup.valid">Import secret recovery phrase</button>
+        <button class="signup-button" mat-stroked-button (click)="cancel()">{{ "App.Cancel" | translate }}</button>
+      </div>
+    </form>
+    <!-- </mat-step>
             <mat-step [stepControl]="secondFormGroup" [editable]="false"> -->
 
-        <!-- </mat-step>
+    <!-- </mat-step>
             <mat-step [editable]="false"> -->
 
-        <!-- </mat-step>
+    <!-- </mat-step>
         </mat-stepper> -->
+  </div>
+
+  <div *ngIf="step == 2">
+    <form [formGroup]="secondFormGroup">
+      <h1>Create a password</h1>
+
+      <p>You use this to unlock your wallet and keep your wallet secure. Use a strong password.</p>
+
+      <mat-form-field class="input-full-width" appearance="outline">
+        <mat-label>Password</mat-label>
+        <input matInput type="password" [(ngModel)]="password" formControlName="passwordCtrl" placeholder="Password" required />
+      </mat-form-field>
+
+      <mat-form-field class="input-full-width" appearance="outline">
+        <mat-label>Confirm Password</mat-label>
+        <input matInput type="password" [(ngModel)]="password2" formControlName="password2Ctrl" placeholder="Confirm Password" required />
+      </mat-form-field>
+
+      <p><mat-slide-toggle><span *ngIf="!uiState.iOS">Use Biometrics</span><span *ngIf="uiState.iOS">Use Face ID</span></mat-slide-toggle></p>
+
+      <div>
+        <button class="signup-button" (click)="save()" [disabled]="!passwordValidated" mat-button mat-flat-button color="primary">Save</button>
+        <button class="signup-button" mat-stroked-button (click)="cancel()">{{ "App.Cancel" | translate }}</button>
+      </div>
+
+      <p class="dimmed">Nobody can recover your password if you forget it.</p>
+    </form>
+  </div>
+
+  <div *ngIf="step == 3">
+    <h1>All done!</h1>
+    <p>You can now begin to manage your wallet.</p>
+    <div>
+      <br /><br /><br /><br />
+      <button class="signup-button" mat-flat-button color="primary" routerLink="/">Finish</button>
     </div>
-
-    <div *ngIf="step == 2">
-        <form [formGroup]="secondFormGroup">
-
-            <h1>Create a password</h1>
-
-            <p>You use this to unlock your wallet and keep your wallet secure. Use a strong password.</p>
-
-            <mat-form-field class="input-full-width" appearance="outline">
-                <mat-label>Password</mat-label>
-                <input matInput type="password" [(ngModel)]="password" formControlName="passwordCtrl" placeholder="Password" required>
-            </mat-form-field>
-
-            <mat-form-field class="input-full-width" appearance="outline">
-                <mat-label>Confirm Password</mat-label>
-                <input matInput type="password" [(ngModel)]="password2" formControlName="password2Ctrl" placeholder="Confirm Password" required>
-            </mat-form-field>
-
-            <div>
-                <button class="signup-button" (click)="save()" [disabled]="!passwordValidated" mat-button mat-flat-button color="primary">Save</button>
-                <button class="signup-button" mat-stroked-button (click)="cancel()">{{ 'App.Cancel' | translate }}</button>
-            </div>
-        </form>
-    </div>
-
-    <div *ngIf="step == 3">
-        <h1>All done!</h1>
-        <p>You can now begin to manage your wallet.</p>
-        <div>
-            <br><br><br><br>
-            <button class="signup-button" mat-flat-button color="primary" routerLink="/">Finish</button>
-        </div>
-    </div>
-
+  </div>
 </div>
