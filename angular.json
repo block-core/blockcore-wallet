@@ -24,7 +24,11 @@
               "@scure/bip32",
               "@blockcore/blockcore-js",
               "buffer",
-              "is-retry-allowed"
+              "is-retry-allowed",
+              "@stablelib/ed25519",
+              "@stablelib/random",
+              "elliptic",
+              "s-sha3"
             ],
             "aot": true,
             "outputPath": "dist/extension",

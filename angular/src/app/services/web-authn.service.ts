@@ -1,19 +1,19 @@
 import { Injectable } from '@angular/core';
-import { User } from '../interfaces/user';
-import { ServerMockService } from './server-mock.service';
+import { User } from '../shared/interfaces/user';
+import { CredentialServices } from './credential.services';
 
 @Injectable({
   providedIn: 'root'
 })
 export class WebAuthnService {
 
-  constructor(private serverMockService: ServerMockService) { }
+  constructor(private credentialServices: CredentialServices) { }
 
   webAuthnSignup(user: User): Promise<any> {
     console.log('[webAuthnSignup]');
     const publicKeyCredentialCreationOptions: PublicKeyCredentialCreationOptions = {
       // Challenge shoulda come from the server
-      challenge: this.serverMockService.getChallenge(),
+      challenge: this.credentialServices.getChallenge(),
       rp: {
         name: 'WebAuthn Test',
         // id: 'localhost:4200',
@@ -48,7 +48,7 @@ export class WebAuthnService {
     console.log('allowCredentials', allowCredentials);
 
     const credentialRequestOptions: PublicKeyCredentialRequestOptions = {
-      challenge: this.serverMockService.getChallenge(),
+      challenge: this.credentialServices.getChallenge(),
       allowCredentials,
     };
 

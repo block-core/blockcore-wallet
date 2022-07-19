@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
-import { ClientDataObj } from '../interfaces/client-data-obj';
-import { DecodedAttestionObj } from '../interfaces/decoded-attestion-obj';
-import { User } from '../interfaces/user';
+import { ClientData} from '../shared/interfaces/client-data-obj';
+import { DecodedAttestionObj } from '../shared/interfaces/decoded-attestion-obj';
+import { User } from '../shared/interfaces/user';
 import * as CBOR from '../utils/cbor';
 import { UserService } from './user.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ServerMockService {
+export class CredentialServices {
 
   constructor(private userService: UserService) { }
 
@@ -46,8 +46,8 @@ export class ServerMockService {
     const utf8Decoder = new TextDecoder('utf-8');
     const decodedClientData = utf8Decoder.decode(credential.response.clientDataJSON);
 
-    const clientDataObj: ClientDataObj = JSON.parse(decodedClientData);
-    console.log('clientDataObj', clientDataObj);
+    const clientData: ClientData= JSON.parse(decodedClientData);
+    console.log('clientData', clientData);
 
     const decodedAttestationObj: DecodedAttestionObj = CBOR.decode((credential.response as any).attestationObject);
     console.log('decodedAttestationObj', decodedAttestationObj);
