@@ -2,6 +2,7 @@
     "compileOnSave": false,
     "compilerOptions": {
         "strictNullChecks": false,
+        "allowJs": true,
         "baseUrl": "./",
         "outDir": "./dist/out-tsc",
         "forceConsistentCasingInFileNames": true,

@@ -1,0 +1,21 @@
+<div class="page centered">
+  <mat-icon class="large-icon">fingerprint</mat-icon>
+  <br />
+  <h1>Biometric</h1>
+  <br />
+  <p>Register a credential using the button below and choose if you would like to authenticate using FaceID, your fingerprint or USB Security Key.</p>
+  <br />
+  <p>After that, you can authenticate using the registered credential.</p>
+  <br />
+  <button class="signup-button" mat-flat-button color="primary" (click)="registerCredential()">
+    Register credential
+  </button>
+  <br />
+  <button class="signup-button" mat-flat-button color="primary" (click)="verifyCredential()">
+    Verify credential
+  </button>
+  <br />
+  <button class="signup-button" mat-flat-button color="warn" (click)="removeCredential()">
+    Remove credential
+  </button>
+</div>

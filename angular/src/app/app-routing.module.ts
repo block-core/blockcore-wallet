@@ -44,7 +44,7 @@ import { ContactsComponent } from './contacts/contacts.component';
 import { ContactsCreateComponent } from './contacts/create/create.component';
 import { ContactsViewComponent } from './contacts/view/view.component';
 import { ExchangeComponent } from './exchange/exchange.component';
-
+import { BiometricComponent } from './settings/biometric/biometric.component';
 const routes: Routes = [
   {
     path: '',
@@ -108,6 +108,13 @@ const routes: Routes = [
   {
     path: 'settings/password',
     component: PasswordComponent,
+    resolve: {
+      data: LoadingResolverService,
+    },
+  },
+  {
+    path: 'settings/biometric',
+    component: BiometricComponent,
     resolve: {
       data: LoadingResolverService,
     },

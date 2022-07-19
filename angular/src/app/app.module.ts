@@ -50,6 +50,7 @@ import { LicensesComponent } from './settings/licenses/licenses.component';
 import { ChangesComponent } from './settings/changes/changes.component';
 import { HttpClientModule } from '@angular/common/http';
 import { PasswordComponent } from './settings/password/password.component';
+import { BiometricComponent } from './settings/biometric/biometric.component';
 import { RecoveryComponent } from './settings/recovery/recovery.component';
 import { AccountReceiveComponent } from './account/receive/receive.component';
 import { AccountSelectComponent } from './account/select/select.component';
@@ -121,6 +122,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     SettingsComponent,
     ActionSignComponent,
     NetworkPipe,
+    BiometricComponent,
     NetworkStatusPipe,
     TruncatePipe,
     SizePipe,
