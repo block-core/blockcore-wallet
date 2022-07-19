@@ -1,4 +1,7 @@
 import { DIDDocument, DIDDocumentMetadata, DIDResolutionMetadata, ServiceEndpoint } from 'did-resolver';
+import { ClientData } from './client-data';
+import { DecodedAttestion } from './decoded-attestion';
+import { User, Credential } from './user';
 
 // interfaces.ts
 interface IWords {
@@ -603,4 +606,8 @@ export {
   ActionMessageResponse,
   Contact,
   ContactAddress,
+  ClientData,
+  DecodedAttestion,
+  Credential,
+  User
 };

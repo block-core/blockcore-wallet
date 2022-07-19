@@ -1,4 +1,4 @@
-export interface DecodedAttestionObj {
+export interface DecodedAttestion {
   attStmt: {
     alg: number;
     sig: Uint8Array;

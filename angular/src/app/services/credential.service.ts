@@ -1,16 +1,13 @@
 import { Injectable } from '@angular/core';
-import { ClientData} from '../shared/interfaces/client-data-obj';
-import { DecodedAttestionObj } from '../shared/interfaces/decoded-attestion-obj';
-import { User } from '../shared/interfaces/user';
+import { ClientData, User, DecodedAttestion } from '../../shared/interfaces';
 import * as CBOR from 'cbor';
 import { UserService } from './user.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
-export class CredentialServices {
-
-  constructor(private userService: UserService) { }
+export class CredentialService {
+  constructor(private userService: UserService) {}
 
   // Validate and Store credential
   registerCredential(user: User, credential: PublicKeyCredential): boolean {
@@ -26,7 +23,7 @@ export class CredentialServices {
     const valid = true;
 
     if (valid) {
-      user.credentials.push( { credentialId, publicKey: publicKeyBytes } );
+      user.credentials.push({ credentialId, publicKey: publicKeyBytes });
       this.updateUser(user);
     }
 
@@ -46,10 +43,10 @@ export class CredentialServices {
     const utf8Decoder = new TextDecoder('utf-8');
     const decodedClientData = utf8Decoder.decode(credential.response.clientDataJSON);
 
-    const clientData: ClientData= JSON.parse(decodedClientData);
+    const clientData: ClientData = JSON.parse(decodedClientData);
     console.log('clientData', clientData);
 
-    const decodedAttestationObj: DecodedAttestionObj = CBOR.decode((credential.response as any).attestationObject);
+    const decodedAttestationObj: DecodedAttestion = CBOR.decode((credential.response as any).attestationObject);
     console.log('decodedAttestationObj', decodedAttestationObj);
 
     const { authData } = decodedAttestationObj;
@@ -82,6 +79,6 @@ export class CredentialServices {
   }
 
   getChallenge() {
-    return Uint8Array.from('someChallengeIsHereComOn', c => c.charCodeAt(0));
+    return Uint8Array.from('someChallengeIsHereComOn', (c) => c.charCodeAt(0));
   }
 }

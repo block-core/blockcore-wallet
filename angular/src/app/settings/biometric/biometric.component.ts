@@ -1,6 +1,6 @@
-import { Component, HostBinding, OnDestroy, ViewEncapsulation } from '@angular/core';
-import { User } from 'src/app/shared/interfaces/user';
-import { EnvironmentService, CredentialServices, WebAuthnService } from '../../services';
+import { Component, OnDestroy, ViewEncapsulation } from '@angular/core';
+import { User } from 'src/shared/interfaces/user';
+import { EnvironmentService, CredentialService, WebAuthnService } from '../../services';
 import { UIState } from '../../services/ui-state.service';
 
 @Component({
@@ -10,7 +10,6 @@ import { UIState } from '../../services/ui-state.service';
   encapsulation: ViewEncapsulation.None
 })
 export class BiometricComponent implements OnDestroy {
-  // @HostBinding('class.changes') hostClass = true;
   title = 'angular-web-authn';
   users: User[];
   username = 'aaa';
@@ -18,38 +17,38 @@ export class BiometricComponent implements OnDestroy {
   useFingerprint = true;
   webAuthnAvailable = !!navigator.credentials && !!navigator.credentials.create;
   constructor(public uiState: UIState,
-    public env: EnvironmentService, private CredentialServices: CredentialServices, private webAuthnService: WebAuthnService) {
+    public env: EnvironmentService, private credentialService: CredentialService, private webAuthnService: WebAuthnService) {
     this.uiState.title = 'Biometric';
     this.uiState.showBackButton = true;
     this.uiState.goBackHome = false;
-    this.users = CredentialServices.getUsers();
+    this.users = credentialService.getUsers();
 
   }
 
   removeCredential() {
-    this.CredentialServices.removeUser(this.username);
-    this.users = this.CredentialServices.getUsers();
+    this.credentialService.removeUser(this.username);
+    this.users = this.credentialService.getUsers();
   }
 
   registerCredential() {
     console.log('SIGNUP');
 
     // Save into the 'DB'
-    const prevUser = this.CredentialServices.getUser(this.username);
+    const prevUser = this.credentialService.getUser(this.username);
     if (prevUser) {
       alert('🚫 credentials already exists');
       return;
     }
-    const user: User = this.CredentialServices.addUser({ username: this.username, password: this.password, credentials: [] });
-    this.users = this.CredentialServices.getUsers();
+    const user: User = this.credentialService.addUser({ username: this.username, password: this.password, credentials: [] });
+    this.users = this.credentialService.getUsers();
 
     // Ask for WebAuthn Auth method
     if (this.webAuthnAvailable && this.useFingerprint) {
       this.webAuthnService.webAuthnSignup(user)
         .then((credential: PublicKeyCredential) => {
           console.log('credentials.create RESPONSE', credential);
-          const valid = this.CredentialServices.registerCredential(user, credential);
-          this.users = this.CredentialServices.getUsers();
+          const valid = this.credentialService.registerCredential(user, credential);
+          this.users = this.credentialService.getUsers();
         }).catch((error) => {
           console.log('credentials.create ERROR', error);
         });
@@ -57,7 +56,7 @@ export class BiometricComponent implements OnDestroy {
   }
 
   verifyCredential() {
-    const user = this.CredentialServices.getUser(this.username);
+    const user = this.credentialService.getUser(this.username);
     this.webAuthnService.webAuthnSignin(user).then((response) => {
       // TODO: validate attestion
       alert('✅ Congrats! Authentication went fine!');
