@@ -118,7 +118,7 @@
         <input matInput type="password" [(ngModel)]="password2" formControlName="password2Ctrl" placeholder="Confirm Password" required />
       </mat-form-field>
 
-      <p><mat-slide-toggle><span *ngIf="!uiState.iOS">Use Biometrics</span><span *ngIf="uiState.iOS">Use Face ID</span></mat-slide-toggle></p>
+      <p><mat-slide-toggle color="primary" formControlName="biometricsCtrl"><span *ngIf="!uiState.iOS">Use Biometrics</span><span *ngIf="uiState.iOS">Use Face ID</span></mat-slide-toggle></p>
 
       <div>
         <button class="signup-button" (click)="save()" [disabled]="!passwordValidated" mat-button mat-flat-button color="primary">Save</button>

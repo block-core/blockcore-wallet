@@ -332,6 +332,8 @@ interface Wallet {
   /** This is the encrypted cipher of the personal extension words (passphrase). */
   extensionWords: string;
 
+  biometrics: boolean;
+
   // activeAccountIndex: number;
   // activeAccountId: string;
 }
