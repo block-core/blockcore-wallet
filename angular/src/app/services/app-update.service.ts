@@ -1,15 +1,49 @@
-import { Injectable } from '@angular/core';
+import { ApplicationRef, Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { SwUpdate } from '@angular/service-worker';
+import { SwUpdate, VersionReadyEvent } from '@angular/service-worker';
+import { filter, interval, map } from 'rxjs';
+import { RuntimeService } from "./runtime.service";
 @Injectable({
   providedIn: 'root'
 })
 export class AppUpdateService {
-  constructor(private readonly updates: SwUpdate, private snackBar: MatSnackBar) {
-    this.updates.available.subscribe(event => {
-      this.showAppUpdateAlert();
+  constructor(private readonly update: SwUpdate, private snackBar: MatSnackBar, private appRef: ApplicationRef, private runtime: RuntimeService) {
+    if (!this.runtime.isExtension) {
+      this.updateClient();
+      this.checkUpdate();
+    }
+  }
+
+  updateClient() {
+    if (!this.update.isEnabled) {
+      console.log('Not Enabled');
+      return;
+    }
+
+    if (this.update.isEnabled) {
+      this.update.versionUpdates.pipe(
+        filter((evt: any): evt is VersionReadyEvent => evt.type === 'VERSION_READY' || evt.type === 'UPDATE_AVAILABLE'),
+        map((evt: any) => {
+          console.info(`currentVersion=[${evt.currentVersion} | latestVersion=[${evt.latestVersion}]`);
+          this.showAppUpdateAlert();
+        }),
+      );
+    }
+  }
+
+  checkUpdate() {
+    this.appRef.isStable.subscribe((isStable) => {
+      if (isStable) {
+        const timeInterval = interval(8 * 60 * 60 * 1000);
+
+        timeInterval.subscribe(() => {
+          this.update.checkForUpdate().then(() => console.log('checked'));
+          console.log('update checked');
+        });
+      }
     });
   }
+
   showAppUpdateAlert() {
     let sb = this.snackBar.open('App Update available!', 'Update', {
       horizontalPosition: 'center',
@@ -19,7 +53,8 @@ export class AppUpdateService {
       this.doAppUpdate();
     });
   }
+
   doAppUpdate() {
-    this.updates.activateUpdate().then(() => document.location.reload());
+    this.update.activateUpdate().then(() => document.location.reload());
   }
 }
