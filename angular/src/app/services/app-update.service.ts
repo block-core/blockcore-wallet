@@ -2,13 +2,16 @@ import { ApplicationRef, Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SwUpdate, VersionReadyEvent } from '@angular/service-worker';
 import { filter, interval, map } from 'rxjs';
+import { RuntimeService } from "./runtime.service";
 @Injectable({
   providedIn: 'root'
 })
 export class AppUpdateService {
-  constructor(private readonly update: SwUpdate, private snackBar: MatSnackBar, private appRef: ApplicationRef) {
-    this.updateClient();
-    this.checkUpdate();
+  constructor(private readonly update: SwUpdate, private snackBar: MatSnackBar, private appRef: ApplicationRef, private runtime: RuntimeService) {
+    if (!this.runtime.isExtension) {
+      this.updateClient();
+      this.checkUpdate();
+    }
   }
 
   updateClient() {
@@ -19,7 +22,7 @@ export class AppUpdateService {
 
     if (this.update.isEnabled) {
       this.update.versionUpdates.pipe(
-        filter((evt: any): evt is VersionReadyEvent => evt.type === 'VERSION_READY' || evt.type ==='UPDATE_AVAILABLE'),
+        filter((evt: any): evt is VersionReadyEvent => evt.type === 'VERSION_READY' || evt.type === 'UPDATE_AVAILABLE'),
         map((evt: any) => {
           console.info(`currentVersion=[${evt.currentVersion} | latestVersion=[${evt.latestVersion}]`);
           this.showAppUpdateAlert();
@@ -50,6 +53,7 @@ export class AppUpdateService {
       this.doAppUpdate();
     });
   }
+
   doAppUpdate() {
     this.update.activateUpdate().then(() => document.location.reload());
   }
