@@ -811,15 +811,19 @@ export class WalletManager {
     if (wallet.restored && runIndexIfRestored == true) {
       this.communication.send(this.communication.createMessage('index', { force: true }, 'background'));
     }
-    
-    if (network.smartContractSupport) {
-      const indexerUrl = this.networkLoader.getServer(network.id, this.settings.values.server, this.settings.values.indexer);
 
-      const tokens = await axios.get(`${indexerUrl}/api/query/${network.name}/tokens/${this.getAddressByIndex(account, 0, 0)}`);
-      for (let token of tokens.data.items)
-        this.tokensStore.set(token.name, token);
-      await this.tokensStore.save();
+    if (network.smartContractSupport) {
+      await this.LoadStandardTokensForAccountAsync(network, this.getAddressByIndex(account, 0, 0));
     }
+  }
+
+  async LoadStandardTokensForAccountAsync(network: Network, address: string) {
+    const indexerUrl = this.networkLoader.getServer(network.id, this.settings.values.server, this.settings.values.indexer);
+
+    const tokens = await axios.get(`${indexerUrl}/api/query/${network.name}/tokens/${address}`);
+    for (let token of tokens.data.items)
+      this.tokensStore.set(token.name, token);
+    await this.tokensStore.save();
   }
 
   async getChangeAddress(account: Account) {
