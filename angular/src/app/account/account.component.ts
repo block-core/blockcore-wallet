@@ -122,7 +122,7 @@ export class AccountComponent implements OnInit, OnDestroy {
     // Reset the account state when performing a re-scan.
     accountState.balance = 0;
     this.accountStateStore.set(account.identifier, accountState);
-    this.accountStateStore.save();
+    await this.accountStateStore.save();
 
     // Send a message to run indexing on all wallets, send accountId for future optimization of running index only on this account.
     this.communication.send(this.communication.createMessage('index', { accountId: this.walletManager.activeAccount.identifier }));

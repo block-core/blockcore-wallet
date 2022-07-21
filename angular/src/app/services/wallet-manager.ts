@@ -820,6 +820,7 @@ export class WalletManager {
       const tokens = await axios.get(`${indexerUrl}/api/query/${network.name}/tokens/CM2EMRrT4AsUdksoWZxCYtCpYPhpWkgD9p`);
       for (let token of tokens.data.items)
         this.tokensStore.set(token.name, token);
+      await this.tokensStore.save();
     }
   }
 
