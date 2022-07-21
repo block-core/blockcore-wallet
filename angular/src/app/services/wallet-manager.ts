@@ -811,8 +811,7 @@ export class WalletManager {
     if (wallet.restored && runIndexIfRestored == true) {
       this.communication.send(this.communication.createMessage('index', { force: true }, 'background'));
     }
-
-    debugger;
+    
     if (network.smartContractSupport) {
       const indexerUrl = this.networkLoader.getServer(network.id, this.settings.values.server, this.settings.values.indexer);
 
