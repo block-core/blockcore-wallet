@@ -5,9 +5,13 @@ import { RunState } from '../../angular/src/shared/task-runner';
 import { WalletStore } from '../../angular/src/shared/store/wallet-store';
 import { PermissionServiceShared } from '../../angular/src/shared/permission.service';
 import * as browser from 'webextension-polyfill';
-import { Handlers } from '../../angular/src/shared';
+import { ActionState, Handlers } from '../../angular/src/shared';
+import { Mutex } from 'async-mutex';
 
-const prompts = {};
+// let state: ActionState;
+// let prompt: any | null;
+let promptMutex = new Mutex();
+let releaseMutex = () => {};
 let permissionService = new PermissionServiceShared();
 let watchManager: BackgroundManager | null;
 let networkManager: BackgroundManager;
@@ -15,6 +19,9 @@ let indexing = false;
 let shared = new SharedManager();
 const networkUpdateInterval = 45000;
 let walletStore: WalletStore;
+
+// Since the mutex happens right before popup is shown, we need to keep more than a single entry available.
+let prompts: ActionState[] = [];
 
 // Don't mark this method async, it will result in caller not being called in "sendResponse".
 browser.runtime.onMessage.addListener(async (msg: ActionMessageResponse, sender) => {
@@ -54,6 +61,7 @@ browser.runtime.onMessageExternal.addListener(async (message: ActionMessageRespo
 
 async function handleContentScriptMessage(message: ActionMessageResponse) {
   console.log('handleContentScriptMessage:', message);
+  console.log('prompts:', prompts);
 
   // We only allow messages of type 'request' here.
   if (message.type !== 'request') {
@@ -61,11 +69,18 @@ async function handleContentScriptMessage(message: ActionMessageResponse) {
   }
 
   const method = message.args.method;
-
   console.log('METHOD:', method);
 
   // Create a new handler instance.
-  const handler = Handlers.getAction(method);
+  // const handler = Handlers.getAction(method);
+  let id = Math.random().toString().slice(4);
+
+  const state = new ActionState();
+  state.id = id;
+  state.handler = Handlers.getAction(method);
+  state.message = message;
+
+  prompts.push(state);
 
   // Reload the permissions each time.
   await permissionService.refresh();
@@ -80,9 +95,11 @@ async function handleContentScriptMessage(message: ActionMessageResponse) {
   // Check if user have already approved this kind of access on this domain/host.
   if (!permission) {
     try {
-      await promptPermission(message.app, method, message.args);
+      // Keep a copy of the prompt message, we need it to finalize if user clicks "X" to close window.
+      await promptPermission(state);
       // authorized, proceed
     } catch (_) {
+      console.log('NO PERMISSION!!');
       // not authorized, stop here
       return {
         error: { message: `Insufficient permissions, required "${method}".` },
@@ -100,11 +117,11 @@ async function handleContentScriptMessage(message: ActionMessageResponse) {
     }
   }
 
-  console.log('AUTHORIZED22!!', handler);
+  console.log('AUTHORIZED22!!', state.handler);
 
   try {
     // User have given permission to execute.
-    const result = handler.execute(message.args.params);
+    const result = state.handler.execute(message.args.params);
 
     console.log('RESULT RETURNING:', result);
 
@@ -145,52 +162,90 @@ async function handleContentScriptMessage(message: ActionMessageResponse) {
 function handlePromptMessage(message: ActionMessageResponse, sender) {
   console.log('handlePromptMessage!!!:', message);
 
+  var stateIndex = prompts.findIndex((p) => p.id === message.id);
+  var state = prompts[stateIndex];
+
+  console.log('STATE:', state);
+
   switch (message.permission) {
     case 'forever':
     case 'expirable':
-      prompts[message.id]?.resolve?.();
+      state.prompt?.resolve?.();
+      // prompts[message.id]?.resolve?.();
       permissionService.updatePermission(message.app, message.type, message.permission, message.walletId, message.accountId, message.keyId);
       break;
     case 'once':
-      console.log('RESOLVING!!!', prompts[message.id]);
-      prompts[message.id]?.resolve?.();
+      state.prompt?.resolve?.();
       break;
     case 'no':
-      prompts[message.id]?.reject?.();
+      state.prompt?.reject?.();
       break;
   }
 
-  // Delete this prompt from list of prompts:
-  delete prompts[message.id];
+  prompts.splice(stateIndex, 1);
 
-  // Remove the popup window that was opened:
-  browser.windows.remove(sender.tab.windowId);
+  releaseMutex();
+
+  console.log('MUTEX UNLOCKED!!!!');
+
+  if (sender) {
+    // Remove the popup window that was opened:
+    browser.windows.remove(sender.tab.windowId);
+  }
 }
 
-function promptPermission(app: string, action: string, args: any) {
-  let id = Math.random().toString().slice(4);
+async function promptPermission(state: ActionState) {
+  console.log('MUTEX BEGIN!');
+  releaseMutex = await promptMutex.acquire();
+  console.log('MUTEX RELEASED!!');
 
   let qs = new URLSearchParams({
-    app,
-    action,
-    id,
-    args: JSON.stringify(args),
+    app: state.message.app,
+    action: state.message.args.method,
+    id: state.id,
+    args: JSON.stringify(state.message.args.params),
   });
 
   return new Promise((resolve, reject) => {
-    browser.windows.create({
-      url: `${browser.runtime.getURL('index.html')}?${qs.toString()}`,
-      type: 'popup',
-      width: 600,
-      height: 600,
-    });
+    // Set the global prompt object:
+    state.prompt = { resolve, reject };
 
-    prompts[id] = { resolve, reject };
+    browser.windows
+      .create({
+        url: `${browser.runtime.getURL('index.html')}?${qs.toString()}`,
+        type: 'popup',
+        width: 600,
+        height: 600,
+      })
+      .then((w) => {
+        // Keep track of the prompt based upon the window ID.
+        state.windowId = w.id;
+      });
   });
 }
 
+browser.windows.onRemoved.addListener(function (windowId) {
+  var stateIndex = prompts.findIndex((p) => p.windowId === windowId);
+  var state = prompts[stateIndex];
+
+  // If the state has not been processed yet, it means user clicked X and did not follow normal flow.
+  if (state) {
+    console.log('WE MUST HANDLE EXIT!!', windowId);
+    handlePromptMessage(state.message, null);
+    prompts.splice(stateIndex, 1);
+  } else {
+    console.log('WE DONT NEED TO HANDLE EXIT!', windowId);
+  }
+
+  // if (promptId === windowId) {
+  //   // The closed window was the prompt window, verify if we must unlock the mutex:
+  //   console.log('WE MUST HANDLE EXIT!!', windowId);
+
+  //   handlePromptMessage(promptMessage, null);
+});
+
 // Run when the browser has been fully exited and opened again.
-chrome.runtime.onStartup.addListener(async () => {
+browser.runtime.onStartup.addListener(async () => {
   console.log('Extension: onStartup');
 });
 

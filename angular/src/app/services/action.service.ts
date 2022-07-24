@@ -61,6 +61,5 @@ export class ActionService {
 
     // Inform the provider script that user has signed the data.
     this.communication.send(reply);
-    // chrome.runtime.sendMessage(reply);
   }
 }

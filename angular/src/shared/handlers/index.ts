@@ -4,7 +4,7 @@ import { SignHandler } from './sign-handler';
 
 // TODO: Make this more generic where the handlers are registered as form of factory.
 export class Handlers {
-  static getAction(action: string) : ActionHandler {
+  static getAction(action: string): ActionHandler {
     if (action == 'sign') {
       return new SignHandler();
     } else if (action === 'publicKey') {
@@ -17,3 +17,5 @@ export class Handlers {
 
 // export * from './publicKey-handler';
 // export * from './sign-handler';
+
+export * from './action-handler';

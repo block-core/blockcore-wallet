@@ -18,12 +18,6 @@ export class ActionLoginComponent {
     this.content = this.uiState.action?.document;
   }
 
-  // This attribute must be added to all individual components, important for closing with X to register 'no' reply.
-  @HostListener('window:beforeunload')
-  rejectDialog() {
-    this.action.authorize('no');
-  }
-
   sign() {
     // this.manager.sign(this.content, this.uiState.action?.tabId);
     window.close();

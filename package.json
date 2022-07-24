@@ -66,6 +66,7 @@
     "@scure/base": "^1.1.1",
     "@scure/bip32": "^1.1.0",
     "@scure/bip39": "^1.1.0",
+    "async-mutex": "^0.3.2",
     "axios": "0.27.2",
     "axios-retry": "^3.3.1",
     "big.js": "^6.2.1",

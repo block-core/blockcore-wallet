@@ -21,10 +21,4 @@ export class ActionSignComponent {
   constructor(public uiState: UIState, private permissionStore: PermissionStore, public action: ActionService, public networkService: NetworksService, public walletManager: WalletManager, private manager: AppManager, private cd: ChangeDetectorRef) {
     this.contentToSign = uiState.action.args;
   }
-
-  // This attribute must be added to all individual components, important for closing with X to register 'no' reply.
-  @HostListener('window:beforeunload')
-  rejectDialog() {
-    this.action.authorize('no');
-  }
 }
