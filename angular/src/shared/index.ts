@@ -8,3 +8,4 @@ export * from './persistence';
 export * from './store';
 export * from './servers';
 export * from './defaults';
+export * from './events';

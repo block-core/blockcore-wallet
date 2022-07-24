@@ -561,6 +561,17 @@ interface Logger {
   fatal(message?: any | (() => any), ...additional: any[]): void;
 }
 
+interface RequestArguments {
+  readonly method: string;
+  readonly params?: readonly unknown[] | object;
+}
+
+type Listener = (...args: any[]) => void;
+
+interface IEvents {
+  [event: string]: Listener[];
+}
+
 export {
   // not exporting IWords | INumbers
   IBooleans,
@@ -611,5 +622,8 @@ export {
   ClientData,
   DecodedAttestion,
   Credential,
-  User
+  User,
+  RequestArguments,
+  Listener,
+  IEvents
 };

@@ -1,6 +1,12 @@
-// Register global provider for Blockcore:
+import { EventEmitter, Listener, RequestArguments } from '../../angular/src/shared';
+
+/*
+Register global provider for Blockcore, only supports EIP1193Provider (request) function for interaction. 
+This is to simplify this code and logic, and Web Providers can make developer-friendly wrappers.
+*/
 globalThis.blockcore = {
   _requests: {},
+  _events: new EventEmitter(),
 
   _call(type, args) {
     return new Promise((resolve, reject) => {
@@ -8,50 +14,38 @@ globalThis.blockcore = {
       this._requests[id] = { resolve, reject };
 
       const msg = { type, id, args, source: 'provider', target: 'tabs', ext: 'blockcore' };
-
       console.log('Provider:postMessage:', msg);
 
       globalThis.postMessage(msg, '*');
     });
   },
 
-  connect: (callback) => {},
+  // connect: (callback) => {},
 
-  async sign(event) {
-    console.log('Sign was called...');
-    return this._call('sign', event);
+  // async sign(event) {
+  //   console.log('Sign was called...');
+  //   return this._call('sign', event);
+  // },
+
+  request(args: RequestArguments): Promise<unknown> {
+    return this._call('request', args);
   },
 
-  open: () => {
-    return;
-
-    console.log('OPEN WAS CALLED!');
-    console.log('chrome.runtime:', chrome.runtime);
-
-    // chrome.runtime.sendMessage({ greeting: 'hello from provider' }, function (response) {
-    //     console.log('runtime.sendMessage!');
-    //   // console.log(response.farewell);
-    // });
-
-    // chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-    //   console.log('onMessage (PROVIDER): ' + JSON.stringify(request));
-    //   sendResponse({ fromcontent: 'This message is from provider.js' });
-    // });
+  on(event: string, listener: Listener) {
+    return this._events.on(event, listener);
   },
 
-  getAccounts: () => {
-    console.log('Getting accounts!');
+  removeListener(event: string, listener: Listener) {
+    this._events.removeListener(event, listener);
   },
 
-  on: (event, callback) => {},
+  // async publicKey() {
+  //   return this._call('publicKey', null);
+  // },
 
-  async publicKey() {
-    return this._call('publicKey', null);
-  },
-
-  async login() {
-    return this._call('login', { ok: false });
-  },
+  // async login() {
+  //   return this._call('login', { ok: false });
+  // },
   // loadScript: (url) => {
   //     var script = document.createElement("script");
   //     script.src = url;
@@ -145,19 +139,6 @@ globalThis.addEventListener('message', (message) => {
 //     });
 //   },
 // };
-
-/** Taken from here to avoid dependency on UUID package in the provider.ts: https://github.com/decentralized-identity/web-extension/blob/master/extension/js/modules/uuid.js */
-function randomBytes(length = 16, format) {
-  let bytes = crypto.getRandomValues(new Uint8Array(length));
-  switch (format) {
-    case 'raw':
-      return bytes;
-    case 'base64Url':
-      return;
-    default:
-      return bytes.join('');
-  }
-}
 
 function v4() {
   function getRandomSymbol(symbol) {
