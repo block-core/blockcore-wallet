@@ -105,6 +105,8 @@
           pubKey = "Error: " + err.message;
         }
 
+        console.log("BLOCKCORE REQUEST EXECUTED:", pubKey);
+
         document.getElementById("blockcore-extension-output").innerText = pubKey;
       }
 

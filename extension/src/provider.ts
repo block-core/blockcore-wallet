@@ -20,7 +20,7 @@ globalThis.blockcore = {
     });
   },
 
-  request(args: RequestArguments): Promise<unknown> {
+  async request(args: RequestArguments): Promise<unknown> {
     return this._call('request', args);
   },
 
@@ -36,7 +36,7 @@ globalThis.blockcore = {
 // This will receive various messages that are posted to the window. Make sure we filter out anything that
 // is not related to the extension.
 globalThis.addEventListener('message', (message) => {
-  console.log('PROVIDER:MSG:', message);
+  console.log('PROVIDER:MSG!!!!!!!!!!!:', message);
   // Make sure there is response in the data, extension is setup and it belongs to the existing promises in this web app.
   if (!message.data || !message.data.response || message.data.ext !== 'blockcore' || !globalThis.blockcore._requests[message.data.id]) {
     return;

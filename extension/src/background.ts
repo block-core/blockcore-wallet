@@ -1,12 +1,10 @@
-import { ActionMessageResponse, Message, Permission } from '../../angular/src/shared/interfaces';
+import { ActionMessageResponse, Permission } from '../../angular/src/shared/interfaces';
 import { BackgroundManager, ProcessResult } from '../../angular/src/shared/background-manager';
 import { SharedManager } from '../../angular/src/shared/shared-manager';
 import { RunState } from '../../angular/src/shared/task-runner';
 import { WalletStore } from '../../angular/src/shared/store/wallet-store';
-import { PermissionStore } from '../../angular/src/shared/store/permission-store';
 import { PermissionServiceShared } from '../../angular/src/shared/permission.service';
 import * as browser from 'webextension-polyfill';
-import { Actions, PERMISSIONS } from '../../angular/src/app/shared/constants';
 import { Handlers } from '../../angular/src/shared';
 
 const prompts = {};
@@ -22,6 +20,7 @@ let walletStore: WalletStore;
 browser.runtime.onMessage.addListener(async (msg: ActionMessageResponse, sender) => {
   console.log('Receive message in background:', msg);
 
+  // When messages are coming from popups, the prompt will be set.
   if (msg.prompt) {
     return handlePromptMessage(msg, sender);
   } else if (msg.source == 'provider') {
@@ -50,10 +49,12 @@ browser.runtime.onMessageExternal.addListener(async (message: ActionMessageRespo
   console.log('BACKGROUND:EXTERNAL:MSG:', message);
   let extensionId = new URL(sender.url!).host;
   message.app = extensionId;
-  handleContentScriptMessage(message);
+  return handleContentScriptMessage(message);
 });
 
 async function handleContentScriptMessage(message: ActionMessageResponse) {
+  console.log('handleContentScriptMessage:', message);
+
   // We only allow messages of type 'request' here.
   if (message.type !== 'request') {
     return null;
@@ -61,10 +62,10 @@ async function handleContentScriptMessage(message: ActionMessageResponse) {
 
   const method = message.args.method;
 
+  console.log('METHOD:', method);
+
   // Create a new handler instance.
   const handler = Handlers.getAction(method);
-
-  // handler?.execute(message.args.params);
 
   // Reload the permissions each time.
   await permissionService.refresh();
@@ -99,41 +100,51 @@ async function handleContentScriptMessage(message: ActionMessageResponse) {
     }
   }
 
+  console.log('AUTHORIZED22!!', handler);
+
   try {
-    switch (method) {
-      case 'request': {
-        return 'Your REQUEST!';
-        // return getPublicKey(sk);
-      }
-      case 'publicKey': {
-        return 'Your Public Key!';
-        // return getPublicKey(sk);
-      }
-      case 'sign': {
-        return 'Signature!';
-        // let { event } = params;
-        // if (!event.pubkey) event.pubkey = getPublicKey(sk);
-        // if (!event.id) event.id = getEventHash(event);
-        // if (!validateEvent(event)) return { error: 'invalid event' };
-        // return await signEvent(event, sk);
-      }
-      case 'encrypt': {
-        // let { peer, plaintext } = params;
-        // return encrypt(sk, peer, plaintext);
-        return 'encrypt';
-      }
-      case 'decrypt': {
-        // let { peer, ciphertext } = params;
-        // return decrypt(sk, peer, ciphertext);
-        return 'decrypt';
-      }
-    }
+    // User have given permission to execute.
+    const result = handler.execute(message.args.params);
+
+    console.log('RESULT RETURNING:', result);
+
+    return result;
+    // switch (method) {
+    //   case 'request': {
+    //     return 'Your REQUEST!';
+    //     // return getPublicKey(sk);
+    //   }
+    //   case 'publicKey': {
+    //     return 'Your Public Key!';
+    //     // return getPublicKey(sk);
+    //   }
+    //   case 'sign': {
+    //     return 'Signature!';
+    //     // let { event } = params;
+    //     // if (!event.pubkey) event.pubkey = getPublicKey(sk);
+    //     // if (!event.id) event.id = getEventHash(event);
+    //     // if (!validateEvent(event)) return { error: 'invalid event' };
+    //     // return await signEvent(event, sk);
+    //   }
+    //   case 'encrypt': {
+    //     // let { peer, plaintext } = params;
+    //     // return encrypt(sk, peer, plaintext);
+    //     return 'encrypt';
+    //   }
+    //   case 'decrypt': {
+    //     // let { peer, ciphertext } = params;
+    //     // return decrypt(sk, peer, ciphertext);
+    //     return 'decrypt';
+    //   }
+    // }
   } catch (error) {
     return { error: { message: error.message, stack: error.stack } };
   }
 }
 
 function handlePromptMessage(message: ActionMessageResponse, sender) {
+  console.log('handlePromptMessage!!!:', message);
+
   switch (message.permission) {
     case 'forever':
     case 'expirable':
@@ -141,6 +152,7 @@ function handlePromptMessage(message: ActionMessageResponse, sender) {
       permissionService.updatePermission(message.app, message.type, message.permission, message.walletId, message.accountId, message.keyId);
       break;
     case 'once':
+      console.log('RESOLVING!!!', prompts[message.id]);
       prompts[message.id]?.resolve?.();
       break;
     case 'no':
@@ -148,7 +160,10 @@ function handlePromptMessage(message: ActionMessageResponse, sender) {
       break;
   }
 
+  // Delete this prompt from list of prompts:
   delete prompts[message.id];
+
+  // Remove the popup window that was opened:
   browser.windows.remove(sender.tab.windowId);
 }
 
