@@ -561,6 +561,14 @@ interface Logger {
   fatal(message?: any | (() => any), ...additional: any[]): void;
 }
 
+enum Actions {
+  'publicKey',
+  'identity',
+  'sign',
+  'encrypt',
+  'decrypt',
+};
+
 interface RequestArguments {
   readonly method: string;
   readonly params?: readonly unknown[] | object;
@@ -625,5 +633,6 @@ export {
   User,
   RequestArguments,
   Listener,
-  IEvents
+  IEvents,
+  Actions
 };

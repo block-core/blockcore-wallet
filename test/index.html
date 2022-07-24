@@ -99,7 +99,7 @@
         let pubKey;
 
         try {
-          pubKey = await window.blockcore.publicKey();
+          pubKey = await blockcore.request({ method: "publicKey" });
         } catch (err) {
           console.error(err);
           pubKey = "Error: " + err.message;
@@ -121,7 +121,7 @@
         let signature;
 
         try {
-          signature = await window.blockcore.sign("data");
+          signature = await blockcore.request({ method: "sign", params: ["data"] });
         } catch (err) {
           console.error(err);
           signature = "Error: " + err.message;

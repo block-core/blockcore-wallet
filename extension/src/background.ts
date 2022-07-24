@@ -6,7 +6,8 @@ import { WalletStore } from '../../angular/src/shared/store/wallet-store';
 import { PermissionStore } from '../../angular/src/shared/store/permission-store';
 import { PermissionServiceShared } from '../../angular/src/shared/permission.service';
 import * as browser from 'webextension-polyfill';
-import { PERMISSIONS } from '../../angular/src/app/shared/constants';
+import { Actions, PERMISSIONS } from '../../angular/src/app/shared/constants';
+import { Handlers } from '../../angular/src/shared';
 
 const prompts = {};
 let permissionService = new PermissionServiceShared();
@@ -53,6 +54,18 @@ browser.runtime.onMessageExternal.addListener(async (message: ActionMessageRespo
 });
 
 async function handleContentScriptMessage(message: ActionMessageResponse) {
+  // We only allow messages of type 'request' here.
+  if (message.type !== 'request') {
+    return null;
+  }
+
+  const method = message.args.method;
+
+  // Create a new handler instance.
+  const handler = Handlers.getAction(method);
+
+  // handler?.execute(message.args.params);
+
   // Reload the permissions each time.
   await permissionService.refresh();
 
@@ -60,18 +73,18 @@ async function handleContentScriptMessage(message: ActionMessageResponse) {
   let permissionSet = permissionService.get(message.app);
 
   if (permissionSet) {
-    permission = permissionSet.permissions[message.type];
+    permission = permissionSet.permissions[method];
   }
 
   // Check if user have already approved this kind of access on this domain/host.
   if (!permission) {
     try {
-      await promptPermission(message.app, message.type, message.args);
+      await promptPermission(message.app, method, message.args);
       // authorized, proceed
     } catch (_) {
       // not authorized, stop here
       return {
-        error: { message: `Insufficient permissions, required "${message.type}".` },
+        error: { message: `Insufficient permissions, required "${method}".` },
       };
     }
   } else {
@@ -87,7 +100,11 @@ async function handleContentScriptMessage(message: ActionMessageResponse) {
   }
 
   try {
-    switch (message.type) {
+    switch (method) {
+      case 'request': {
+        return 'Your REQUEST!';
+        // return getPublicKey(sk);
+      }
       case 'publicKey': {
         return 'Your Public Key!';
         // return getPublicKey(sk);
