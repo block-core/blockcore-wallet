@@ -195,6 +195,7 @@ chrome.runtime.onInstalled.addListener(async ({ reason }) => {
     await networkStatusWatcher();
     await executeIndexer();
   } else if (reason === 'update') {
+    chrome.tabs.create({ url: 'index.html' });
     // Run a full indexing when the extension has been updated/reloaded.
     await networkStatusWatcher();
     await executeIndexer();
