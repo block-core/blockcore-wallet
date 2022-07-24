@@ -7,11 +7,17 @@ export interface ActionHandler {
   execute(args: RequestArguments): unknown;
 }
 
+export class ActionStateHolder {
+  static prompts: ActionState[] = [];
+}
+
 export class ActionState {
   handler: ActionHandler;
   id: string;
+  id2: string;
   method: string;
   prompt: any;
+  promptPermission: any;
   windowId: number | undefined;
   message: ActionMessageResponse;
 }
