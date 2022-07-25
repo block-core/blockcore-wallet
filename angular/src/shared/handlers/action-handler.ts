@@ -7,9 +7,9 @@ export interface ActionHandler {
   execute(args: RequestArguments): unknown;
 }
 
-export class ActionStateHolder {
-  static prompts: ActionState[] = [];
-}
+// export class ActionStateHolder {
+//   static prompts: ActionState[] = [];
+// }
 
 export class ActionState {
   handler: ActionHandler;

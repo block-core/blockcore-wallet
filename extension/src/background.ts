@@ -5,11 +5,11 @@ import { RunState } from '../../angular/src/shared/task-runner';
 import { WalletStore } from '../../angular/src/shared/store/wallet-store';
 import { PermissionServiceShared } from '../../angular/src/shared/permission.service';
 import * as browser from 'webextension-polyfill';
-import { ActionState, ActionStateHolder, Handlers } from '../../angular/src/shared';
+import { ActionState, Handlers } from '../../angular/src/shared';
 import { Mutex } from 'async-mutex';
 
 // let state: ActionState;
-// let prompt: any | null;
+let prompt: any | null;
 let promptMutex = new Mutex();
 let releaseMutex = () => {};
 let permissionService = new PermissionServiceShared();
@@ -61,8 +61,8 @@ browser.runtime.onMessageExternal.addListener(async (message: ActionMessageRespo
 
 async function handleContentScriptMessage(message: ActionMessageResponse) {
   console.log('handleContentScriptMessage:', message);
-  console.log('prompts:', JSON.stringify(ActionStateHolder.prompts));
-  console.log('prompts (length):', ActionStateHolder.prompts.length);
+  // console.log('prompts:', JSON.stringify(ActionStateHolder.prompts));
+  // console.log('prompts (length):', ActionStateHolder.prompts.length);
 
   // We only allow messages of type 'request' here.
   if (message.type !== 'request') {
@@ -82,10 +82,10 @@ async function handleContentScriptMessage(message: ActionMessageResponse) {
   state.handler = Handlers.getAction(method);
   state.message = message;
 
-  ActionStateHolder.prompts.push(state);
+  // ActionStateHolder.prompts.push(state);
 
-  console.log('prompts:', JSON.stringify(ActionStateHolder.prompts));
-  console.log('prompts (length):', ActionStateHolder.prompts.length);
+  // console.log('prompts:', JSON.stringify(ActionStateHolder.prompts));
+  // console.log('prompts (length):', ActionStateHolder.prompts.length);
 
   // Reload the permissions each time.
   await permissionService.refresh();
@@ -100,10 +100,14 @@ async function handleContentScriptMessage(message: ActionMessageResponse) {
   // Check if user have already approved this kind of access on this domain/host.
   if (!permission) {
     try {
+      console.log(JSON.stringify(state));
       // Keep a copy of the prompt message, we need it to finalize if user clicks "X" to close window.
-      state.promptPermission = await promptPermission(state);
+      // state.promptPermission = await promptPermission({ app: message.app, id: message.id, method: method, params: message.args.params });
+      await promptPermission(state);
+      console.log(JSON.stringify(state));
       // authorized, proceed
     } catch (_) {
+      console.log(JSON.stringify(state));
       console.log('NO PERMISSION!!');
       // not authorized, stop here
       return {
@@ -122,7 +126,7 @@ async function handleContentScriptMessage(message: ActionMessageResponse) {
     }
   }
 
-  console.log('AUTHORIZED22!!', state.handler);
+  // console.log('AUTHORIZED22!!', state.handler);
 
   try {
     // User have given permission to execute.
@@ -165,40 +169,41 @@ async function handleContentScriptMessage(message: ActionMessageResponse) {
 }
 
 function handlePromptMessage(message: ActionMessageResponse, sender) {
-  console.log('handlePromptMessage!!!:', message);
-  console.log('prompts:', JSON.stringify(ActionStateHolder.prompts));
-  console.log('prompts (length):', ActionStateHolder.prompts.length);
+  // console.log('handlePromptMessage!!!:', message);
+  // console.log('prompts:', JSON.stringify(ActionStateHolder.prompts));
+  // console.log('prompts (length):', ActionStateHolder.prompts.length);
 
-  var stateIndex = ActionStateHolder.prompts.findIndex((p) => p.id === message.id);
-  console.log('STATE INDEX:', stateIndex);
+  // var stateIndex = ActionStateHolder.prompts.findIndex((p) => p.id === message.id);
+  // console.log('STATE INDEX:', stateIndex);
 
-  var state = ActionStateHolder.prompts[stateIndex];
+  // var state = ActionStateHolder.prompts[stateIndex];
 
-  console.log('MESSAGE ID:', message.id);
-  console.log('STATE:', state);
+  // console.log('MESSAGE ID:', message.id);
+  // console.log('STATE:', state);
 
-  console.log('MESSAGE .PERMISSION', message.permission);
+  // console.log('MESSAGE .PERMISSION', message.permission);
 
   switch (message.permission) {
     case 'forever':
     case 'expirable':
-      state.prompt?.resolve?.();
+      prompt?.resolve?.();
       // prompts[message.id]?.resolve?.();
       permissionService.updatePermission(message.app, message.type, message.permission, message.walletId, message.accountId, message.keyId);
       break;
     case 'once':
-      state.prompt?.resolve?.();
+      prompt?.resolve?.();
       break;
     case 'no':
-      state.prompt?.reject?.();
+      prompt?.reject?.();
       break;
   }
 
+  prompt = null;
   releaseMutex();
-  console.log('MUTEX UNLOCKED!!!!');
-  
-  console.log('REMOVING PROMPT FROM ARRAY!!!!', stateIndex);
-  ActionStateHolder.prompts.splice(stateIndex, 1);
+  // console.log('MUTEX UNLOCKED!!!!');
+
+  // console.log('REMOVING PROMPT FROM ARRAY!!!!', stateIndex);
+  // ActionStateHolder.prompts.splice(stateIndex, 1);
 
   if (sender) {
     // Remove the popup window that was opened:
@@ -211,65 +216,80 @@ async function promptPermission(state: ActionState) {
   releaseMutex = await promptMutex.acquire();
   console.log('MUTEX RELEASED!!');
 
+  // let qs = new URLSearchParams({
+  //   app: state.message.app,
+  //   action: state.message.args.method,
+  //   id: state.id,
+  //   args: JSON.stringify(state.message.args.params),
+  // });
+
   let qs = new URLSearchParams({
     app: state.message.app,
     action: state.message.args.method,
-    id: state.id,
+    id: state.message.id,
     args: JSON.stringify(state.message.args.params),
   });
 
-  const p = new Promise((resolve, reject) => {
+  return new Promise((resolve, reject) => {
     // Set the global prompt object:
-    state.prompt = { resolve, reject };
+    prompt = { resolve, reject };
 
-    browser.windows
-      .create({
-        url: `${browser.runtime.getURL('index.html')}?${qs.toString()}`,
-        type: 'popup',
-        width: 600,
-        height: 600,
-      })
-      .then((w) => {
-        console.log('POPUP CREATE CALLBACK STATE:', state);
-        // Keep track of the prompt based upon the window ID.
-        state.windowId = w.id;
-      });
+    browser.windows.create({
+      url: `${browser.runtime.getURL('index.html')}?${qs.toString()}`,
+      type: 'popup',
+      width: 600,
+      height: 600,
+    });
+    // .then((w) => {
+    //   console.log('POPUP CREATE CALLBACK STATE:', state);
+    //   // Keep track of the prompt based upon the window ID.
+    //   state.windowId = w.id;
+    // });
   });
 
-  console.log('Setting the promptPermission!!');
-  state.promptPermission = p;
+  // console.log('Setting the promptPermission!!');
+  // state.promptPermission = p;
 
-  return p;
+  // return p;
 }
 
 browser.windows.onRemoved.addListener(function (windowId) {
-  console.log('prompts:', JSON.stringify(ActionStateHolder.prompts));
-  console.log('prompts (length):', ActionStateHolder.prompts.length);
-
-  var stateIndex = ActionStateHolder.prompts.findIndex((p) => p.windowId === windowId);
-  console.log('STATE INDEX ON REMOVED WINDOW:', stateIndex);
-
-  if (stateIndex > -1) {
-    var state = ActionStateHolder.prompts[stateIndex];
-    // If the state has not been processed yet, it means user clicked X and did not follow normal flow.
-    console.log('WE MUST HANDLE EXIT!!', windowId);
-
-    console.log('STATE IN WINDOW CLOSE', state);
-
-    // Important that we set the permission so the promise is rejected.
-    state.message.permission = 'no';
-
-    // Handle the prompt message.
-    handlePromptMessage(state.message, null);
-
-    // We should reject the prompt permission and allow that logic to continue where it is halting:
-    // state.prompt.reject();
-    // state.promptPermission.reject();
-    // 
-    // ActionStateHolder.prompts.splice(stateIndex, 1);
+  if (prompt) {
+    prompt?.reject?.();
+    prompt = null;
+    releaseMutex();
+    console.log('PROMPT EMPTY, PROMPT REJECT, RELEASE MUTEX!');
   } else {
-    console.log('WE DONT NEED TO HANDLE EXIT!', windowId);
+    console.log('ALREADY FINISHED!');
   }
+
+  // console.log('prompts:', JSON.stringify(ActionStateHolder.prompts));
+  // console.log('prompts (length):', ActionStateHolder.prompts.length);
+
+  // var stateIndex = ActionStateHolder.prompts.findIndex((p) => p.windowId === windowId);
+  // console.log('STATE INDEX ON REMOVED WINDOW:', stateIndex);
+
+  // if (stateIndex > -1) {
+  //   var state = ActionStateHolder.prompts[stateIndex];
+  //   // If the state has not been processed yet, it means user clicked X and did not follow normal flow.
+  //   console.log('WE MUST HANDLE EXIT!!', windowId);
+
+  //   console.log('STATE IN WINDOW CLOSE', state);
+
+  //   // Important that we set the permission so the promise is rejected.
+  //   state.message.permission = 'no';
+
+  //   // Handle the prompt message.
+  //   handlePromptMessage(state.message, null);
+
+  //   // We should reject the prompt permission and allow that logic to continue where it is halting:
+  //   // state.prompt.reject();
+  //   // state.promptPermission.reject();
+  //   //
+  //   // ActionStateHolder.prompts.splice(stateIndex, 1);
+  // } else {
+  //   console.log('WE DONT NEED TO HANDLE EXIT!', windowId);
+  // }
 
   // if (promptId === windowId) {
   //   // The closed window was the prompt window, verify if we must unlock the mutex:
