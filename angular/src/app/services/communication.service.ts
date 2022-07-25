@@ -22,7 +22,11 @@ export class CommunicationService {
         this.ngZone.run(async () => {
           const result = await this.handleInternalMessage(message, sender);
           // this.logger.debug(`Process messaged ${message.type} and returning this response: `, result);
-          sendResponse(result);
+
+          // Only return a response if the result is other than null. Null means we did not handle the message.
+          if (result !== null) {
+            sendResponse(result);
+          }
         });
       });
       chrome.runtime.onMessageExternal.addListener(async (message, sender, sendResponse) => {
@@ -30,7 +34,11 @@ export class CommunicationService {
         this.ngZone.run(async () => {
           const result = await this.handleExternalMessage(message, sender);
           // this.logger.debug(`Process (external) messaged ${message.type} and returning this response: `, result);
-          sendResponse(result);
+
+          // Only return a response if the result is other than null. Null means we did not handle the message.
+          if (result !== null) {
+            sendResponse(result);
+          }
         });
       });
     } else {
