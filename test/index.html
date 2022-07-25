@@ -39,7 +39,9 @@
 
     <br />
     <button id="connectButton">Ask for Public Key</button>
-    <button id="connectButton2">Ask for Signing</button>
+    <button id="connectButton2">Ask for Signing (Bytes)</button>
+    <button id="connectButton3">Ask for Signing (Message)</button>
+    <button id="connectButton4">Ask for Signing (Verifiable Credential)</button>
 
     <br />
     <div id="blockcore-extension-output"></div>
@@ -122,8 +124,78 @@
 
         let signature;
 
+        const msgParams = JSON.stringify({
+          types: {
+            EIP712Domain: [
+              { name: "name", type: "string" },
+              { name: "version", type: "string" },
+              { name: "chainId", type: "uint256" },
+              { name: "verifyingContract", type: "address" },
+            ],
+            // Not an EIP712Domain definition
+            Bid: [{ name: "name", type: "string" }],
+            // Refer to PrimaryType
+            Mail: [
+              { name: "from", type: "Person" },
+              { name: "to", type: "Person[]" },
+              { name: "contents", type: "string" },
+            ],
+            // Not an EIP712Domain definition
+            Person: [
+              { name: "name", type: "string" },
+              { name: "wallets", type: "address[]" },
+            ],
+          },
+        });
+
         try {
-          signature = await blockcore.request({ method: "sign", params: ["data"] });
+          signature = await blockcore.request({ method: "sign", params: [msgParams] });
+        } catch (err) {
+          console.error(err);
+          signature = "Error: " + err.message;
+        }
+
+        document.getElementById("blockcore-extension-output").innerText = signature;
+      }
+
+      async function connect3() {
+        document.getElementById("blockcore-extension-output").innerText = "";
+
+        const blockcore = globalThis.blockcore;
+
+        if (!blockcore) {
+          alert("The Blockcore provider is not available. Unable to continue.");
+          return;
+        }
+
+        let signature;
+
+        try {
+          signature = await blockcore.request({ method: "signMessage", params: [{ scheme: "schnorr", message: "I approve this message." }] });
+        } catch (err) {
+          console.error(err);
+          signature = "Error: " + err.message;
+        }
+
+        document.getElementById("blockcore-extension-output").innerText = signature;
+      }
+
+      async function connect4() {
+        document.getElementById("blockcore-extension-output").innerText = "";
+
+        const blockcore = globalThis.blockcore;
+
+        if (!blockcore) {
+          alert("The Blockcore provider is not available. Unable to continue.");
+          return;
+        }
+
+        let signature;
+        const msgParams = "{ name: 'John Doe' }";
+        const signatureScheme = "schnorr";
+
+        try {
+          signature = await blockcore.request({ method: "signVerifiableCredential", params: [signatureScheme, msgParams] });
         } catch (err) {
           console.error(err);
           signature = "Error: " + err.message;
@@ -137,6 +209,8 @@
         // document.getElementById("connectButton").onclick = connect;
         document.getElementById("connectButton").addEventListener("click", connect);
         document.getElementById("connectButton2").addEventListener("click", connect2);
+        document.getElementById("connectButton3").addEventListener("click", connect3);
+        document.getElementById("connectButton4").addEventListener("click", connect4);
       })();
     </script>
   </body>

@@ -45,6 +45,8 @@ import { ContactsCreateComponent } from './contacts/create/create.component';
 import { ContactsViewComponent } from './contacts/view/view.component';
 import { ExchangeComponent } from './exchange/exchange.component';
 import { BiometricComponent } from './settings/biometric/biometric.component';
+import { ActionSignVerifiableCredentialComponent } from './action/sign-credential/sign.component';
+import { ActionSignMessageComponent } from './action/sign-message/sign.component';
 const routes: Routes = [
   {
     path: '',
@@ -337,6 +339,20 @@ const routes: Routes = [
       {
         path: 'sign',
         component: ActionSignComponent,
+        resolve: {
+          data: LoadingResolverService,
+        },
+      },
+      {
+        path: 'signMessage',
+        component: ActionSignMessageComponent,
+        resolve: {
+          data: LoadingResolverService,
+        },
+      },
+      {
+        path: 'signVerifiableCredential',
+        component: ActionSignVerifiableCredentialComponent,
         resolve: {
           data: LoadingResolverService,
         },

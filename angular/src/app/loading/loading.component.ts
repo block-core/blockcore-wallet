@@ -184,6 +184,12 @@ export class LoadingComponent implements OnInit, OnDestroy {
     if (this.uiState.action?.action && this.walletManager.activeWallet && this.secure.unlocked(this.walletManager.activeWallet.id)) {
       console.log('REDIRECT TO ACTION!!!!', this.uiState.action?.action);
       // TODO: Add support for more actions.
+
+      // TODO: Add improved verification of action. We don't want messages to be able to route users anywhere other than known actions.
+      if (this.uiState.action?.action.indexOf('/') > -1 || this.uiState.action?.action.indexOf('\\') > -1) {
+        throw new TypeError('Illegal characters in action');
+      }
+
       this.router.navigate(['action', this.uiState.action?.action]);
     } else {
       // If the state was changed and there is no wallets, send user to create wallet UI.

@@ -98,6 +98,8 @@ import { ContactStore } from 'src/shared/store/contacts-store';
 import { ContactsViewComponent } from './contacts/view/view.component';
 import { ExchangeComponent } from './exchange/exchange.component';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { ActionSignMessageComponent } from './action/sign-message/sign.component';
+import { ActionSignVerifiableCredentialComponent } from './action/sign-credential/sign.component';
 
 // required for AOT compilation
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
@@ -160,6 +162,8 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     ContactsCreateComponent,
     ContactsViewComponent,
     ExchangeComponent,
+    ActionSignMessageComponent,
+    ActionSignVerifiableCredentialComponent
   ],
   imports: [
     BrowserModule,
