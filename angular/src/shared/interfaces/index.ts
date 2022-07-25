@@ -413,7 +413,7 @@ interface Permission {
   created: number;
   walletId: string;
   accountId: string;
-  keyId?: string;
+  keyId: string;
 }
 
 interface State {

@@ -3,8 +3,27 @@
 <!-- <p>IMPORTANT: Verify all details below before you accept the permission request.</p> -->
 
 <p>
-  Account: <strong>{{ walletManager.activeAccount?.name }}</strong
-  ><br />
+  <!-- Account: <strong>{{ walletManager.activeAccount?.name }}</strong
+  ><br /> -->
+
+  <mat-form-field appearance="outline" class="input-full-width">
+    <mat-label>Account</mat-label>
+
+    <mat-select (selectionChange)="onAccountChanged()" [(value)]="selectedAccountId">
+      <mat-option *ngFor="let account of accounts" [value]="account.identifier">{{ account.name }} </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <br />
+
+  <mat-form-field appearance="outline" class="input-full-width">
+    <mat-label>Key</mat-label>
+
+    <mat-select (selectionChange)="onKeyChanged()" [(value)]="selectedKeyId">
+      <mat-option *ngFor="let address of addresses" [value]="address.keyId">{{ address.address }} </mat-option>
+    </mat-select>
+  </mat-form-field>
+
   Permission: <strong>"Sign data using your private key"</strong>
   <br />
   Domain: <strong>{{ action.app }}</strong>
