@@ -74,8 +74,7 @@ mat-tab-group {
   overflow: hidden !important;
 }
 
-.sidenav-left {
-}
+.sidenav-left {}
 
 .sidenav-right {
   min-width: 200px;
@@ -436,4 +435,21 @@ select {
 .dark-mode .dimmed {
   color: silver;
   // color: rgba(0, 0, 0, 0.87);
+}
+
+*,
+*::after,
+*::before {
+  -webkit-app-region: no-drag;
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  user-drag: none;
 }
