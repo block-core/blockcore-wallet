@@ -9,6 +9,7 @@ import { RuntimeService } from './services/runtime.service';
 import { FrontendService } from './services/frontend.service';
 import { AppUpdateService } from './services/app-update.service';
 import { ActionService } from './services/action.service';
+import { DisableRightClickService } from './services/disable-right-click.service';
 
 @Component({
   selector: 'app-root',
@@ -43,9 +44,11 @@ export class AppComponent implements OnInit {
     public networkService: NetworksService,
     public appUpdateService: AppUpdateService,
     public action: ActionService,
+    private rightClickDisable: DisableRightClickService,
     @Inject(DOCUMENT) private document: Document
   ) {
     this.instanceName = this.env.instanceName;
+    this.rightClickDisable.disableRightClick()
   }
 
   maximize() {
