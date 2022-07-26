@@ -237,7 +237,7 @@ async function promptPermission(state: ActionState) {
     browser.windows.create({
       url: `${browser.runtime.getURL('index.html')}?${qs.toString()}`,
       type: 'popup',
-      width: 610,
+      width: 614,
       height: 600,
     });
     // .then((w) => {

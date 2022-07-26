@@ -45,7 +45,7 @@ export class ActionSignMessageComponent implements OnInit, OnDestroy {
     const account = this.walletManager.activeAccount;
     this.accountState = this.accountStateStore.get(account.identifier);
 
-    if (account.singleAddress) {
+    if (account.singleAddress || account.type === 'identity') {
       const address = this.accountState.receive[0];
       this.addresses = [{ address: address.address, keyId: '0/0' }];
     } else {
