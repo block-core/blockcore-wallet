@@ -1,14 +1,17 @@
 import { DOCUMENT } from '@angular/common';
-import { Inject, Injectable } from '@angular/core';
+import { Inject, Injectable, Input } from '@angular/core';
 
 @Injectable({
   providedIn: 'root',
 })
 export class DisableRightClickService {
-  constructor(@Inject(DOCUMENT) private document: Document) {}
+  constructor(@Inject(DOCUMENT) private document: Document) { }
   disableRightClick() {
-    this.document.addEventListener('contextmenu', (event) =>
-      event.preventDefault()
-    );
+      this.document.addEventListener("contextmenu", (event) => {
+          var element = event.target as HTMLElement;
+          if (element.tagName != "INPUT") {
+            event.preventDefault();
+          }
+      }, false);
   }
 }
