@@ -48,7 +48,10 @@ export class AppComponent implements OnInit {
     @Inject(DOCUMENT) private document: Document
   ) {
     this.instanceName = this.env.instanceName;
-    this.rightClickDisable.disableRightClick()
+
+    if (this.env.production) {
+      this.rightClickDisable.disableRightClick();
+    }
   }
 
   maximize() {

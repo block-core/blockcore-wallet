@@ -26,7 +26,32 @@
 
   Permission: <strong>"Sign data using your private key"</strong>
   <br />
-  Domain: <strong>{{ action.app }}</strong>
+
+  <mat-card>
+    <mat-card-header>
+      <!-- <div mat-card-avatar class="example-header-image"></div> -->
+      <mat-icon class="card-icon" mat-card-avatar>verified</mat-icon>
+      <mat-card-title>App: {{ action.app }} </mat-card-title>
+      <mat-card-subtitle>Verification Status Unavailable</mat-card-subtitle>
+    </mat-card-header>
+    <!-- <mat-card-content>
+
+      <button mat-icon-button aria-label="Example icon button with a vertical three dot icon">
+        <mat-icon>verified</mat-icon>
+      </button>
+
+      <button mat-icon-button aria-label="Example icon button with a vertical three dot icon">
+        <mat-icon>report_gmailerrorred</mat-icon>
+      </button>
+
+      <button mat-icon-button aria-label="Example icon button with a vertical three dot icon">
+        <mat-icon>dangerous</mat-icon>
+      </button>
+
+    </mat-card-content> -->
+  </mat-card>
+
+  <!-- Domain: <strong>{{ action.app }}</strong> -->
 </p>
 
 <!-- Derivation path: {{networkService.getDerivationPathForAccount(walletManager.activeAccount)}}<br><br> -->
