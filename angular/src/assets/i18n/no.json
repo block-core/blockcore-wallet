@@ -20,7 +20,8 @@
 		"Cancel": "Avbryt",
 		"By": "Av",
 		"Save": "Lagre",
-		"Remove": "Fjern"
+		"Remove": "Fjern",
+		"UnlockTitle": "Lås opp {{value}}"
 	},
 	"Dashboard": {
 		"Accounts": "Kontoer",

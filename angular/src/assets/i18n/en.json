@@ -20,7 +20,8 @@
 		"Cancel": "Cancel",
 		"By": "By",
 		"Save": "Save",
-		"Remove": "Remove"
+		"Remove": "Remove",
+		"UnlockTitle": "Unlock {{value}}"
 	},
 	"Dashboard": {
 		"Accounts": "Accounts",

@@ -2,6 +2,7 @@ import { Component, ChangeDetectorRef, OnInit, OnDestroy } from '@angular/core';
 import { CryptoService, UIState } from '../services';
 import { Router } from '@angular/router';
 import { CommunicationService, SecureStateService, WalletManager } from '../services';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-home',
@@ -18,18 +19,26 @@ export class HomeComponent implements OnInit, OnDestroy {
   error = '';
   sub2: any;
 
-  constructor(public uiState: UIState, private crypto: CryptoService, private router: Router, private communication: CommunicationService, private secure: SecureStateService, public walletManager: WalletManager, private cd: ChangeDetectorRef) {
+  constructor(public uiState: UIState, private translate: TranslateService, private crypto: CryptoService, private router: Router, private communication: CommunicationService, private secure: SecureStateService, public walletManager: WalletManager, private cd: ChangeDetectorRef) {
     console.log('HOME COMPONENT!');
 
     this.uiState.showBackButton = false;
     this.activateAlarm();
+  }
 
+  ngOnDestroy(): void {
+    if (this.sub2) {
+      this.sub2.unsubscribe();
+    }
+  }
+
+  async ngOnInit() {
     // Verify if the wallet is already unlocked.
     if (this.walletManager.activeWallet) {
-      this.uiState.title = `Unlock ${this.walletManager.activeWallet.name}`;
+      // this.uiState.title = `Unlock ${this.walletManager.activeWallet.name}`;
+      this.uiState.title = await this.translate.get('App.UnlockTitle', { value: this.walletManager.activeWallet.name }).toPromise();
 
       if (this.secure.unlocked(this.walletManager.activeWallet?.id)) {
-
         console.log('Wallet already unlocked!!');
 
         if (this.uiState.action?.action) {
@@ -42,14 +51,6 @@ export class HomeComponent implements OnInit, OnDestroy {
       }
     }
   }
-
-  ngOnDestroy(): void {
-    if (this.sub2) {
-      this.sub2.unsubscribe();
-    }
-  }
-
-  async ngOnInit() {}
 
   removeError(): void {
     this.error = '';
