@@ -74,7 +74,8 @@ mat-tab-group {
   overflow: hidden !important;
 }
 
-.sidenav-left {}
+.sidenav-left {
+}
 
 .sidenav-right {
   min-width: 200px;
@@ -460,4 +461,14 @@ select {
   -ms-user-select: none;
   user-select: none;
   user-drag: none;
+}
+
+textarea,
+input {
+  -webkit-touch-callout: default;
+  -webkit-user-select: default;
+  -khtml-user-select: default;
+  -moz-user-select: default;
+  -ms-user-select: default;
+  user-select: default;
 }
