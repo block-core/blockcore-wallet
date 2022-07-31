@@ -1,3 +1,10 @@
+## <small>0.0.54 (2022-07-31)</small>
+
+* Enable user select for textarea and input ([045fbae](https://github.com/block-core/blockcore-wallet/commit/045fbae))
+* Update version and changelog ([4d136a6](https://github.com/block-core/blockcore-wallet/commit/4d136a6))
+
+
+
 ## <small>0.0.53 (2022-07-31)</small>
 
 * Add code analysis workflow ([f2db60c](https://github.com/block-core/blockcore-wallet/commit/f2db60c))
