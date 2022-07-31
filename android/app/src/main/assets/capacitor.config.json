@@ -1,6 +1,0 @@
-{
-	"appId": "net.blockcore.wallet",
-	"appName": "blockcore-wallet",
-	"webDir": "dist/extension",
-	"bundledWebRuntime": false
-}

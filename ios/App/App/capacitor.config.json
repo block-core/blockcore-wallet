@@ -1,6 +1,0 @@
-{
-	"appId": "net.blockcore.coinvault",
-	"appName": "blockcore-wallet",
-	"webDir": "dist/extension",
-	"bundledWebRuntime": false
-}

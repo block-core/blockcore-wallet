@@ -31,12 +31,7 @@
     "test": "ng test --source-map=false --plugin ~angular/sourcemaps-plugin.js --extra-webpack-config ./angular/webpack.config.js",
     "test:headless": "ng test --no-watch --no-progress --browsers=ChromeHeadless --plugin ~angular/sourcemaps-plugin.js --extra-webpack-config ./angular/webpack.config.js",
     "i18n:init": "ngx-translate-extract --input ./src --output ./src/assets/i18n/template.json --key-as-default-value --replace --format json",
-    "i18n:extract": "ngx-translate-extract --input ./src --output ./src/assets/i18n/{en,da,de,fi,nb,nl,sv}.json --clean --format json",
-    "android": "npx cap run android",
-    "desktop": "npm run desktop:install && npm run desktop:build && npm run desktop:open",
-    "desktop:install": "cd electron && npm install && cd..",
-    "desktop:build": "npm run build:angular-production",
-    "desktop:open": "npx cap open @capacitor-community/electron"
+    "i18n:extract": "ngx-translate-extract --input ./src --output ./src/assets/i18n/{en,da,de,fi,nb,nl,sv}.json --clean --format json"
   },
   "private": true,
   "dependencies": {
@@ -53,11 +48,6 @@
     "@angular/service-worker": "14.1.0",
     "@blockcore/blockcore-js": "^7.0.2",
     "@blockcore/identity": "0.0.1",
-    "@capacitor-community/electron": "^4.1.2",
-    "@capacitor/android": "^4.0.1",
-    "@capacitor/angular": "^2.0.3",
-    "@capacitor/core": "latest",
-    "@capacitor/ios": "^4.0.1",
     "@fontsource/material-icons": "^4.5.4",
     "@fontsource/roboto": "^4.5.7",
     "@ngx-translate/core": "^14.0.0",
@@ -100,7 +90,6 @@
     "@angular/cli": "^14.1.0",
     "@angular/compiler-cli": "^14.1.0",
     "@bartholomej/ngx-translate-extract": "^8.0.2",
-    "@capacitor/cli": "latest",
     "@types/big.js": "^6.1.5",
     "@types/bs58": "^4.0.1",
     "@types/chrome": "0.0.193",
