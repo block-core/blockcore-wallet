@@ -1,3 +1,11 @@
+## <small>0.0.53 (2022-07-31)</small>
+
+* Add code analysis workflow ([f2db60c](https://github.com/block-core/blockcore-wallet/commit/f2db60c))
+* Enable right-click on TEXTAREA inputs ([27f9c7a](https://github.com/block-core/blockcore-wallet/commit/27f9c7a))
+* Update version and changelog ([a29f03b](https://github.com/block-core/blockcore-wallet/commit/a29f03b))
+
+
+
 ## <small>0.0.52 (2022-07-31)</small>
 
 * Add a basic event emitter to be used in the new interface between provider and extension ([a36b608](https://github.com/block-core/blockcore-wallet/commit/a36b608))
