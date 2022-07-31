@@ -9,7 +9,7 @@ export class DisableRightClickService {
   disableRightClick() {
       this.document.addEventListener("contextmenu", (event) => {
           var element = event.target as HTMLElement;
-          if (element.tagName != "INPUT") {
+          if (element.tagName != "INPUT" && element.tagName != "TEXTAREA") {
             event.preventDefault();
           }
       }, false);
