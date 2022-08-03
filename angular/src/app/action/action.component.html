@@ -1,4 +1,42 @@
 <div class="page">
+
+  <mat-card>
+    <mat-card-header>
+      <mat-icon class="card-icon {{ verifyStatus.color }}" mat-card-avatar>{{ verifyStatus.icon }}</mat-icon>
+      <mat-card-title>{{ action.app }} </mat-card-title>
+      <mat-card-subtitle class="no-bottom-margin">{{ verifyStatus.status }}</mat-card-subtitle>
+    </mat-card-header>
+  </mat-card>
+  <br />
+
+  <!-- <mat-card>
+    <mat-card-header>
+      <mat-icon class="card-icon other-color" mat-card-avatar>new_releases</mat-icon>
+      <mat-card-title>{{ action.app }} </mat-card-title>
+      <mat-card-subtitle class="no-bottom-margin">Verification Status Unavailable</mat-card-subtitle>
+    </mat-card-header>
+  </mat-card>
+  <br />
+
+  <mat-card>
+    <mat-card-header>
+      <mat-icon class="card-icon negative-color" mat-card-avatar>report_gmailerrorred</mat-icon>
+      <mat-card-title>{{ action.app }} </mat-card-title>
+      <mat-card-subtitle class="no-bottom-margin">Reported and suspected app</mat-card-subtitle>
+    </mat-card-header>
+  </mat-card>
+  <br />
+
+  <mat-card>
+    <mat-card-header>
+      <mat-icon class="card-icon negative-color" mat-card-avatar>dangerous</mat-icon>
+      <mat-card-title>{{ action.app }} </mat-card-title>
+      <mat-card-subtitle class="no-bottom-margin">Dangerous app. Proceed with extreme caution.</mat-card-subtitle>
+    </mat-card-header>
+  </mat-card>
+  <br /> -->
+
+
   <router-outlet></router-outlet>
   <div>
     <button class="action-button" mat-flat-button color="primary" (click)="action.authorize('once')">Authorize once</button>&nbsp; <button class="action-button" mat-flat-button (click)="action.authorize('expirable')">Authorize for 5 minutes</button>&nbsp; <button class="action-button" mat-flat-button (click)="action.authorize('forever')">Authorize forever</button>&nbsp;

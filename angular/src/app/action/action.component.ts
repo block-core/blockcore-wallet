@@ -19,5 +19,11 @@ export class ActionComponent {
     this.action.app = this.uiState.action?.app;
   }
 
+  verifyStatus = {
+    icon: 'new_releases', // verified, new_releases, report_gmailerrorred, dangerous
+    status: 'Verification Status Unavailable',  // Verified App, Verification Status Unavailable, Reported and suspected app, Dangerous app. Proceed with extreme caution.
+    color: 'other-color' // negative-color, positive-color, other-color
+  }
+
 
 }
