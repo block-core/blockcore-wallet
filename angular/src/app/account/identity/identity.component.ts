@@ -119,11 +119,11 @@ export class IdentityComponent implements OnInit, OnDestroy {
       // var did = this.walletManager.activeAccount?.identifier;
       // this.identity = this.uiState.store.identities.find(i => i.id == did);
 
-      let service = this.identity?.services.find((s) => s.type == 'VerifiableDataRegistry');
+      // let service = this.identity?.services.find((s) => s.type == 'VerifiableDataRegistry');
 
-      if (service) {
-        this.verifiableDataRegistryUrl = service.serviceEndpoint;
-      }
+      // if (service) {
+      //   this.verifiableDataRegistryUrl = service.serviceEndpoint;
+      // }
     });
   }
 
@@ -154,36 +154,36 @@ export class IdentityComponent implements OnInit, OnDestroy {
       };
     }
 
-    if (this.verifiableDataRegistryUrl && this.verifiableDataRegistryUrl.length > 0) {
-      // Attempt to find existing VerifiableDataRegistry service. We do not want to replace any third party
-      // services the user might have added to their DID Document through other means.
-      if (this.identity.services.length > 0) {
-        var existingIndex = this.identity.services.findIndex((s) => s.type == 'VerifiableDataRegistry');
+    // if (this.verifiableDataRegistryUrl && this.verifiableDataRegistryUrl.length > 0) {
+    //   // Attempt to find existing VerifiableDataRegistry service. We do not want to replace any third party
+    //   // services the user might have added to their DID Document through other means.
+    //   if (this.identity.services.length > 0) {
+    //     var existingIndex = this.identity.services.findIndex((s) => s.type == 'VerifiableDataRegistry');
 
-        if (existingIndex > -1) {
-          if (vdr) {
-            // Replace existing.
-            this.identity.services.splice(existingIndex, 1);
-            this.identity.services.push(vdr);
-            // this.identity.services[existingIndex] = vdr;
-          } else {
-            // Remove it if the user has emptied the input field.
-            this.identity.services.splice(existingIndex, 1);
-          }
-        } else {
-          if (vdr) {
-            this.identity.services.push(vdr);
-          }
-        }
-      } else {
-        if (vdr) {
-          this.identity.services = [vdr];
-        }
-      }
-    } else {
-      // If there is no URL, we'll reset the services list.
-      this.identity.services = [];
-    }
+    //     if (existingIndex > -1) {
+    //       if (vdr) {
+    //         // Replace existing.
+    //         this.identity.services.splice(existingIndex, 1);
+    //         this.identity.services.push(vdr);
+    //         // this.identity.services[existingIndex] = vdr;
+    //       } else {
+    //         // Remove it if the user has emptied the input field.
+    //         this.identity.services.splice(existingIndex, 1);
+    //       }
+    //     } else {
+    //       if (vdr) {
+    //         this.identity.services.push(vdr);
+    //       }
+    //     }
+    //   } else {
+    //     if (vdr) {
+    //       this.identity.services = [vdr];
+    //     }
+    //   }
+    // } else {
+    //   // If there is no URL, we'll reset the services list.
+    //   this.identity.services = [];
+    // }
 
     console.log(this.identity);
     // this.manager.updateIdentity(this.identity);
