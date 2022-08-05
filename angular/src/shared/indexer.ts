@@ -321,6 +321,11 @@ export class IndexerBackgroundService {
                 accountState.lastScan = date;
                 let anyAddressNotComplete = false;
 
+                if (network.type == 'identity') {
+                    console.log('identity .. ignore!');
+                    continue;
+                }
+
                 // If the account type is quick, we'll rely fully on indexer APIs and not perform local historical processing.
                 if (account.mode === 'quick') {
                     // We'll only run when indexing is running, not on watch. If we run it on watch, we'll keep getting the full balance
@@ -878,6 +883,12 @@ export class IndexerBackgroundService {
         } catch (error) {
             console.log('Failed to query indexer!!');
             console.error(error);
+
+            // Whenever an exception happen, just mark as processed = true. This can happen if for example, there is an invalid certificate on the indexer.
+            // TODO: We need much better error handling, but this helps avoid looping attempting to sync when it's not really possible to complete.
+            completed = true;
+
+            // debugger;
             // this.status.update({ networkType: account.networkType, status: 'Error', availability: IndexerApiStatus.Error });
             // this.logger.error(error);
 
@@ -921,8 +932,9 @@ export class IndexerBackgroundService {
             return { changes: true, completed: true };
 
         } catch (error) {
-            console.log('Failed to query indexer!!');
+            console.log('Failed to query indexer!!22');
             console.error(error);
+            debugger;
             // this.status.update({ networkType: account.networkType, status: 'Error', availability: IndexerApiStatus.Error });
             // this.logger.error(error);
 

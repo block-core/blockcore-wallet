@@ -48,8 +48,8 @@ export class ActionComponent {
   actionStatus = {
     icon: 'verified_user',
     title: 'Permission Request',
-    description: '"Sign data using your private key"'
-  }
+    description: '"Sign data using your private key"',
+  };
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
@@ -60,8 +60,16 @@ export class ActionComponent {
     this.accountState = this.accountStateStore.get(account.identifier);
 
     if (account.singleAddress || account.type === 'identity') {
-      const address = this.accountState.receive[0];
-      this.addresses = [{ address: address.address, keyId: '0/0' }];
+      const addressEntry = this.accountState.receive[0];
+      let address = '';
+
+      if (account.type === 'identity') {
+        address = `${this.networkService.getNetwork(account.networkType).symbol}:${addressEntry.address}`;
+      } else {
+        address = addressEntry.address;
+      }
+
+      this.addresses = [{ address: address, keyId: '0/0' }];
     } else {
       const array1 = this.accountState.receive.map((r) => {
         return { address: `${r.address} / Receive / ${r.index}`, keyId: '0/' + r.index };
