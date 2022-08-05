@@ -64,7 +64,8 @@ export class ActionComponent {
       let address = '';
 
       if (account.type === 'identity') {
-        address = `${this.networkService.getNetwork(account.networkType).symbol}:${addressEntry.address}`;
+        const network = this.networkService.getNetwork(account.networkType);
+        address = `${network.symbol}:${addressEntry.address.substring(0, 4)}...${addressEntry.address.substring(addressEntry.address.length - 4)}`;
       } else {
         address = addressEntry.address;
       }
