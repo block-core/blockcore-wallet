@@ -55,6 +55,34 @@ body {
   // scrollbar-gutter: stable both-edges;
 }
 
+// Attempt to ensure that textarea does not go below 16px.
+// input[type="color"],
+// input[type="date"],
+// input[type="datetime"],
+// input[type="datetime-local"],
+// input[type="email"],
+// input[type="month"],
+// input[type="number"],
+// input[type="password"],
+// input[type="search"],
+// input[type="tel"],
+// input[type="text"],
+// input[type="time"],
+// input[type="url"],
+// input[type="week"],
+// select:focus,
+// textarea {
+//   font-size: 16px !important;
+// }
+
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+  select,
+  textarea,
+  input {
+    font-size: 16px !important;
+  }
+}
+
 .mat-tab-body-content {
   // scrollbar-gutter: stable both-edges;
   overflow: overlay !important;
@@ -74,7 +102,8 @@ mat-tab-group {
   overflow: hidden !important;
 }
 
-.sidenav-left {}
+.sidenav-left {
+}
 
 .sidenav-right {
   min-width: 200px;
