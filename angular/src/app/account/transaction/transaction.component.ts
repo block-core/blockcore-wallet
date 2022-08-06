@@ -10,6 +10,7 @@ import { Address, NetworkStatus, Transaction, TransactionView } from '../../../s
 import { Network } from '../../../shared/networks';
 import { TransactionStore } from 'src/shared';
 import { AccountStateStore } from 'src/shared/store/account-state-store';
+import { RuntimeService } from 'src/app/services/runtime.service';
 var QRCode2 = require('qrcode');
 
 @Component({
@@ -36,7 +37,8 @@ export class AccountTransactionComponent implements OnInit, OnDestroy {
         public walletManager: WalletManager,
         private transactionStore: TransactionStore,
         private logger: LoggerService,
-        private snackBar: MatSnackBar) {
+        private snackBar: MatSnackBar,
+        private runtime: RuntimeService) {
         this.uiState.goBackHome = false;
         this.uiState.backUrl = null;
 
@@ -65,15 +67,34 @@ export class AccountTransactionComponent implements OnInit, OnDestroy {
     }
 
     openExplorer(txid: string) {
+      if (!this.runtime.isExtension) {
+        window.open(`${this.env.instanceExplorerUrl}/${this.network.id}/explorer/transaction/${txid}`, '_blank').focus();
+      }
+      else
+      {
         chrome.tabs.create({ url: `${this.env.instanceExplorerUrl}/${this.network.id}/explorer/transaction/${txid}`, active: false });
+      }
     }
 
     openExplorerBlock(blockhash: string) {
-        if (blockhash) {
-            chrome.tabs.create({ url: `${this.env.instanceExplorerUrl}/${this.network.id}/explorer/block/${blockhash}`, active: false });
-        } else {
-            chrome.tabs.create({ url: `${this.env.instanceExplorerUrl}/${this.network.id}/explorer/mempool`, active: false });
+      if (blockhash) {
+        if (!this.runtime.isExtension) {
+          window.open(`${this.env.instanceExplorerUrl}/${this.network.id}/explorer/block/${blockhash}`, '_blank').focus();
+         }
+        else
+        {
+          chrome.tabs.create({ url: `${this.env.instanceExplorerUrl}/${this.network.id}/explorer/mempool`, active: false });
         }
+        }
+      else {
+        if (!this.runtime.isExtension) {
+          window.open(`${this.env.instanceExplorerUrl}/${this.network.id}/explorer/block/${blockhash}`, '_blank').focus();
+        }
+        else
+        {
+          chrome.tabs.create({ url: `${this.env.instanceExplorerUrl}/${this.network.id}/explorer/mempool`, active: false });
+        }
+      }
     }
 
     ngOnDestroy(): void {
