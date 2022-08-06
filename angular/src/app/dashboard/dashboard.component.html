@@ -15,7 +15,7 @@
           <mat-icon mat-list-icon>{{ account.icon }}</mat-icon>
           <div mat-line>
             {{ account.name }}<span *ngIf="hasAccountHistory(account.identifier)" class="account-balance">{{ balance(account.identifier) | amount }}</span>
-            <span *ngIf="!hasAccountHistory(account.identifier)" class="account-balance">
+            <span *ngIf="!hasAccountHistory(account.identifier) && account.type != 'identity'" class="account-balance">
               <mat-spinner [diameter]="16"></mat-spinner>
             </span>
             <span *ngIf="hasAccountHistory(account.identifier) && !accountState(account).completedScan" class="account-balance account-scanning">
@@ -23,7 +23,7 @@
             </span>
           </div>
           <div mat-line>{{ account | network }}</div>
-          <div class="network-status-widget">
+          <div class="network-status-widget" *ngIf="account.type != 'identity'">
             <app-network-status [status]="networkStatus.get(account.networkType)"></app-network-status>
           </div>
         </a>

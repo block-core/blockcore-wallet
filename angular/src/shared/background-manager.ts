@@ -99,9 +99,9 @@ export class BackgroundManager {
     for (let i = 0; i < uniqueAccounts.length; i++) {
       const account = accounts[i];
       const network = networkLoader.getNetwork(account.networkType);
-      const indexerUrls = networkLoader.getServers(network.id, settings.server, settings.indexer);
+      const indexerUrls = networkLoader.getServers(network.id, settings.server, settings.indexer) || [];
 
-      if (indexerUrls == null) {
+      if (indexerUrls == null && account.type!='identity') {
         console.warn(`Invalid configuration of servers. There are no servers registered for network of type ${network.id}.`);
         continue;
       }
