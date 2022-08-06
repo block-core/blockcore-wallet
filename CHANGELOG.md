@@ -1,14 +1,27 @@
+## <small>0.0.55 (2022-08-06)</small>
+
+*  Fix issue with touch-hold for pasting in app (#202) ([c0fb72a](https://github.com/block-core/blockcore-wallet/commit/c0fb72a)), closes [#202](https://github.com/block-core/blockcore-wallet/issues/202)
+* Add display of address type and index to dropdown ([3ea0500](https://github.com/block-core/blockcore-wallet/commit/3ea0500))
+* Display human readable identifier on signing action request ([4de871d](https://github.com/block-core/blockcore-wallet/commit/4de871d))
+* Fix opening explorer in web mode (#205) ([03e753b](https://github.com/block-core/blockcore-wallet/commit/03e753b)), closes [#205](https://github.com/block-core/blockcore-wallet/issues/205)
+* Fix problem with crashing due to invalid certificate ([054f523](https://github.com/block-core/blockcore-wallet/commit/054f523))
+* Hide "Use Biometrics" until functional ([2eb72e5](https://github.com/block-core/blockcore-wallet/commit/2eb72e5))
+* Hide heading from child action page ([91604d8](https://github.com/block-core/blockcore-wallet/commit/91604d8))
+* Make the copy button flow with content ([f0787f6](https://github.com/block-core/blockcore-wallet/commit/f0787f6)), closes [#203](https://github.com/block-core/blockcore-wallet/issues/203)
+* Migrate action app status badge to root of actions ([7fc551f](https://github.com/block-core/blockcore-wallet/commit/7fc551f))
+* Remove status and loading in networks whose type is identity (#204) ([270e056](https://github.com/block-core/blockcore-wallet/commit/270e056)), closes [#204](https://github.com/block-core/blockcore-wallet/issues/204)
+* Update identity component from new schema on did-resolver ([87426af](https://github.com/block-core/blockcore-wallet/commit/87426af))
+* Update packages ([d0178be](https://github.com/block-core/blockcore-wallet/commit/d0178be))
+* Update version and changelog ([e7b5aed](https://github.com/block-core/blockcore-wallet/commit/e7b5aed))
+
+
+
 ## <small>0.0.54 (2022-07-31)</small>
-
-* Enable user select for textarea and input ([045fbae](https://github.com/block-core/blockcore-wallet/commit/045fbae))
-* Update version and changelog ([4d136a6](https://github.com/block-core/blockcore-wallet/commit/4d136a6))
-
-
-
-## <small>0.0.53 (2022-07-31)</small>
 
 * Add code analysis workflow ([f2db60c](https://github.com/block-core/blockcore-wallet/commit/f2db60c))
 * Enable right-click on TEXTAREA inputs ([27f9c7a](https://github.com/block-core/blockcore-wallet/commit/27f9c7a))
+* Enable user select for textarea and input ([045fbae](https://github.com/block-core/blockcore-wallet/commit/045fbae))
+* Update version and changelog ([4d136a6](https://github.com/block-core/blockcore-wallet/commit/4d136a6))
 * Update version and changelog ([a29f03b](https://github.com/block-core/blockcore-wallet/commit/a29f03b))
 
 
