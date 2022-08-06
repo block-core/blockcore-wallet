@@ -66,7 +66,7 @@ export class BackgroundManager {
 
     const networkLoader = new NetworkLoader(store);
 
-     console.debug('All networks:', networkLoader.getAllNetworks());
+    // console.debug('All networks:', networkLoader.getAllNetworks());
 
     try {
       await this.updateAll(accounts, networkLoader, settingStore);
