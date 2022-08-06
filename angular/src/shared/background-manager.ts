@@ -66,7 +66,7 @@ export class BackgroundManager {
 
     const networkLoader = new NetworkLoader(store);
 
-    // console.debug('All networks:', networkLoader.getAllNetworks());
+     console.debug('All networks:', networkLoader.getAllNetworks());
 
     try {
       await this.updateAll(accounts, networkLoader, settingStore);
@@ -101,7 +101,7 @@ export class BackgroundManager {
       const network = networkLoader.getNetwork(account.networkType);
       const indexerUrls = networkLoader.getServers(network.id, settings.server, settings.indexer);
 
-      if (indexerUrls == null) {
+      if (indexerUrls == null && account.type!='identity') {
         console.warn(`Invalid configuration of servers. There are no servers registered for network of type ${network.id}.`);
         continue;
       }

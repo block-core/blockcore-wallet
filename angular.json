@@ -28,7 +28,8 @@
               "@stablelib/ed25519",
               "@stablelib/random",
               "elliptic",
-              "s-sha3"
+              "s-sha3",
+              "satcomma"
             ],
             "aot": true,
             "outputPath": "dist/extension",

@@ -56,7 +56,7 @@ export class NetworkLoader {
       const serverStatuses = this.store.get(networkType);
       // console.log(serverStatuses);
 
-      if (!serverStatuses) {
+      if (!serverStatuses && this.getNetwork(networkType).type != 'identity') {
         console.warn(`No indexers for ${networkType} available. Returning empty URL!`);
         return null;
         // console.log('NO STATUSES!!! - get URL from list of servers:');
