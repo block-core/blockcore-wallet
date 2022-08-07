@@ -76,6 +76,7 @@ body {
 // }
 
 @media screen and (-webkit-min-device-pixel-ratio: 0) {
+
   select,
   textarea,
   input {
@@ -102,8 +103,7 @@ mat-tab-group {
   overflow: hidden !important;
 }
 
-.sidenav-left {
-}
+.sidenav-left {}
 
 .sidenav-right {
   min-width: 200px;
@@ -498,4 +498,20 @@ input {
   -moz-user-select: text;
   -ms-user-select: text;
   user-select: text;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-text-fill-color: black;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+.dark-theme input:-webkit-autofill,
+.dark-theme input:-webkit-autofill:hover,
+.dark-theme input:-webkit-autofill:focus,
+.dark-theme input:-webkit-autofill:active {
+  -webkit-text-fill-color: white;
+  transition: background-color 5000s ease-in-out 0s;
 }
