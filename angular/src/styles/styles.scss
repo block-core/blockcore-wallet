@@ -53,6 +53,7 @@ body {
   color: white;
   overscroll-behavior-y: contain;
   // scrollbar-gutter: stable both-edges;
+  touch-action: pan-x pan-y;
 }
 
 // Attempt to ensure that textarea does not go below 16px.
@@ -499,3 +500,30 @@ input {
   -ms-user-select: text;
   user-select: text;
 }
+<<<<<<< Updated upstream
+=======
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-text-fill-color: black;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+.dark-theme input:-webkit-autofill,
+.dark-theme input:-webkit-autofill:hover,
+.dark-theme input:-webkit-autofill:focus,
+.dark-theme input:-webkit-autofill:active {
+  -webkit-text-fill-color: white;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+.dark-theme .logo {
+  filter: invert(1%);
+}
+
+.logo {
+  filter: invert(100%);
+}
+>>>>>>> Stashed changes
