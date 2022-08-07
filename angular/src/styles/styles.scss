@@ -53,6 +53,7 @@ body {
   color: white;
   overscroll-behavior-y: contain;
   // scrollbar-gutter: stable both-edges;
+  touch-action: pan-x pan-y;
 }
 
 // Attempt to ensure that textarea does not go below 16px.
