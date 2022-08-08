@@ -1,27 +1,34 @@
 <div class="page centered">
 
-    <img class="logo" src="assets/icon-light-128x128.png">
+  <img class="logo" src="assets/icon-light-128x128.png">
 
-    <h1>{{uiState.manifest?.name}}</h1>
-    <div class="sub-title">{{ 'App.By' | translate }} {{uiState.manifest?.author}}</div>
-    <!-- <div class="sub-title">Version {{uiState.manifest.version}}</div> -->
+  <h1>{{uiState.manifest?.name}}</h1>
+  <div class="sub-title">{{ 'App.By' | translate }} {{uiState.manifest?.author}}</div>
+  <!-- <div class="sub-title">Version {{uiState.manifest.version}}</div> -->
 
-    <h2>{{ 'App.EnterPassordToUnlock' | translate }}</h2>
+  <h2>{{ 'App.EnterPassordToUnlock' | translate }}</h2>
+
+  <p>
+    <mat-slide-toggle [(ngModel)]="biometrics" color="primary"><span *ngIf="!uiState.iOS">Use Biometrics</span><span *ngIf="uiState.iOS">Use Face ID</span></mat-slide-toggle>
+  </p>
+  
+  <div *ngIf="!biometrics">
 
     <mat-form-field appearance="outline" class="input-full-width">
-        <mat-label>{{ 'App.Password' | translate }}</mat-label>
-        <input matInput type="password" [(ngModel)]="unlockPassword" (keydown.enter)="unlock()">
+      <mat-label>{{ 'App.Password' | translate }}</mat-label>
+      <input matInput type="password" [(ngModel)]="unlockPassword" (keydown.enter)="unlock()">
     </mat-form-field>
 
     <div class="error-list">
-        <mat-chip-list *ngIf="error">
+      <mat-chip-list *ngIf="error">
 
-            <mat-chip *ngIf="error" color="warn" selected (removed)="removeError()">{{error}}
-                <mat-icon matChipRemove>cancel</mat-icon>
-            </mat-chip>
-        </mat-chip-list>
+        <mat-chip *ngIf="error" color="warn" selected (removed)="removeError()">{{error}}
+          <mat-icon matChipRemove>cancel</mat-icon>
+        </mat-chip>
+      </mat-chip-list>
     </div>
 
     <button class="wide-button" mat-flat-button color="primary" (click)="unlock()">{{ 'App.Unlock' | translate }}</button>
 
+  </div>
 </div>
