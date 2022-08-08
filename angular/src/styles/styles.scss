@@ -515,3 +515,11 @@ input:-webkit-autofill:active {
   -webkit-text-fill-color: white;
   transition: background-color 5000s ease-in-out 0s;
 }
+
+.dark-theme .logo {
+  filter: invert(1%);
+}
+
+.logo {
+  filter: invert(100%);
+}
