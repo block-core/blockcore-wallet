@@ -42,7 +42,7 @@
 
       <p *ngIf="recover">Restore your existing wallet with your 12 or 24-word secret recovery phrase.</p>
 
-      <mat-card *ngIf="!recover" class="recovery-phrase" [class.mat-elevation-z8]="true"
+      <mat-card *ngIf="!recover" class="recovery-phrase selectable" [class.mat-elevation-z8]="true"
         >{{ mnemonic }}
         <button class="copy-button" mat-icon-button (click)="copy()">
           <mat-icon>content_copy</mat-icon>
