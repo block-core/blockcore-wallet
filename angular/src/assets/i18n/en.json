@@ -64,7 +64,9 @@
 	"Wallet": {
 		"CreateNew": "Create New Wallet",
 		"Recover": "Use Existing Secret Recovery Phrase",
-		"SecretRecoveryPhrase": "Secret Recovery Phrase"
+		"SecretRecoveryPhrase": "Secret Recovery Phrase",
+		"Confirm": "OK, I have saved it",
+		"Import": "Import secret recovery phrase"
 	},
 	"AddressBook": {
 		"AddressBook": "Address Book",

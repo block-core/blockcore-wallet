@@ -64,7 +64,9 @@
 	"Wallet": {
 		"CreateNew": "Lag ny lommebok",
 		"Recover": "Bruk eksisterende Hemmelig gjenopprettingsfrase",
-		"SecretRecoveryPhrase": "Hemmelig gjenopprettingsfrase"
+		"SecretRecoveryPhrase": "Hemmelig gjenopprettingsfrase",
+		"Confirm": "OK, jeg har lagret",
+		"Import": "Importer hemmelig gjenopprettingsfrase"
 	},
 	"AddressBook": {
 		"AddressBook": "Addressebok",

@@ -87,8 +87,8 @@
 
       <div>
         <br />
-        <button *ngIf="!recover" class="signup-button" mat-flat-button color="primary" (click)="next(2)">OK, I have saved it</button>
-        <button *ngIf="recover" class="signup-button" mat-flat-button color="primary" (click)="next(2)" [disabled]="!firstFormGroup.valid">Import secret recovery phrase</button>
+        <button *ngIf="!recover" class="signup-button" mat-flat-button color="primary" (click)="next(2)">{{ 'Wallet.Confirm' | translate }}</button>
+        <button *ngIf="recover" class="signup-button" mat-flat-button color="primary" (click)="next(2)" [disabled]="!firstFormGroup.valid">{{ 'Wallet.Import' | translate }}</button>
         <button class="signup-button" mat-stroked-button (click)="cancel()">{{ "App.Cancel" | translate }}</button>
       </div>
     </form>
