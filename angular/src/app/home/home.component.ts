@@ -18,6 +18,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   wallet: any;
   error = '';
   sub2: any;
+  biometrics: boolean;
 
   constructor(public uiState: UIState, private translate: TranslateService, private crypto: CryptoService, private router: Router, private communication: CommunicationService, private secure: SecureStateService, public walletManager: WalletManager, private cd: ChangeDetectorRef) {
     console.log('HOME COMPONENT!');
@@ -37,6 +38,8 @@ export class HomeComponent implements OnInit, OnDestroy {
     if (this.walletManager.activeWallet) {
       // this.uiState.title = `Unlock ${this.walletManager.activeWallet.name}`;
       this.uiState.title = await this.translate.get('App.UnlockTitle', { value: this.walletManager.activeWallet.name }).toPromise();
+
+      this.biometrics = this.walletManager.activeWallet.biometrics
 
       if (this.secure.unlocked(this.walletManager.activeWallet?.id)) {
         console.log('Wallet already unlocked!!');
@@ -66,6 +69,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.error = null;
 
     if (this.walletManager.activeWallet) {
+
       const unlocked = await this.walletManager.unlockWallet(this.walletManager.activeWallet.id, this.unlockPassword);
       // this.manager.unlock(this.uiState.activeWallet.id, this.unlockPassword);
 
