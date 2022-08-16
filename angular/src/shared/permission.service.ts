@@ -23,10 +23,24 @@ export class PermissionServiceShared {
       const permissionSet = permissions[i];
 
       for (let permission in permissionSet.permissions) {
-        if (permissionSet.permissions[permission].type === 'expirable' && permissionSet.permissions[permission].created < Date.now() / 1000 - 5 * 60) {
-          delete permissionSet.permissions[permission];
-          updated = true;
+
+        const perms = permissionSet.permissions[permission];
+
+        for(let j = 0; j < perms.length; j++)
+        {
+          const perm = perms[j];
+
+          console.log('PERM', perm);
+
+          if (perm.type === 'expirable' && perm.created < Date.now() / 1000 - 1 * 60) {
+            perms.splice(j, 1);
+            // delete permissionSet.permissions[permission];
+            updated = true;
+          }
         }
+
+        // for (let perm in permission as Permission[]) {
+        // }
       }
 
       if (updated) {
