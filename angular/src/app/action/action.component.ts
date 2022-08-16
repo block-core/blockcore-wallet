@@ -18,16 +18,28 @@ export class ActionComponent {
   addresses: any[];
   accounts: any[];
   subscription: any;
+  requestedKey: string;
+  keySelectionDisabled = false;
 
   constructor(public uiState: UIState, private accountStateStore: AccountStateStore, private permissionStore: PermissionStore, public action: ActionService, public networkService: NetworksService, public walletManager: WalletManager, private manager: AppManager, private cd: ChangeDetectorRef) {
     this.uiState.title = 'Action: ' + this.uiState.action?.action;
-    this.action.content = this.uiState.action?.document;
-    this.action.app = this.uiState.action?.app;
 
     this.contentToSign = uiState.action.args;
-    
+
+    // this.action.content = this.uiState.action?.document;
+    this.action.content = this.contentToSign;
+    this.action.app = this.uiState.action?.app;
     this.accounts = this.walletManager.activeWallet.accounts;
     this.action.accountId = this.walletManager.activeAccountId;
+
+    // Improve this logic, just quickly select the key:
+    const parsedContent = JSON.parse(this.contentToSign);
+    console.log('PARSED CONTENT:', parsedContent);
+    const requestedKey = parsedContent[0].key;
+
+    if (requestedKey) {
+      this.requestedKey = requestedKey;
+    }
 
     // Make sure we listen to active account changes to perform updated list of keys.
     // TODO: Figure out why subscribing to this on the prompt makes it trigger twice. Perhaps there is some code elsewhere that
@@ -79,8 +91,27 @@ export class ActionComponent {
       this.addresses = [...array1, ...array2];
     }
 
-    this.action.keyId = this.addresses[0].keyId;
-    this.action.key = this.addresses[0].key;
+    console.log('REQUESTED KEY', this.requestedKey);
+
+    let keyIndex = 0;
+
+    if (this.requestedKey) {
+      keyIndex = this.addresses.findIndex((a) => a.key == this.requestedKey);
+
+      console.log('REQUESTED KEY INDEX:', keyIndex);
+
+      if (keyIndex == -1) {
+        keyIndex = 0;
+      }
+
+      this.keySelectionDisabled = true;
+    }
+
+    this.action.keyId = this.addresses[keyIndex].keyId;
+    this.action.key = this.addresses[keyIndex].key;
+
+    console.log('ACTION.KEYID', this.action.keyId);
+    console.log('ACTION.KEY', this.action.key);
   }
 
   async onAccountChanged() {
@@ -93,7 +124,7 @@ export class ActionComponent {
 
   onKeyChanged() {
     console.log('ON KEY CHANGED:', this.action.keyId);
-    const address = this.addresses.find(a => a.keyId == this.action.keyId);
+    const address = this.addresses.find((a) => a.keyId == this.action.keyId);
     this.action.key = address.key;
   }
 }
