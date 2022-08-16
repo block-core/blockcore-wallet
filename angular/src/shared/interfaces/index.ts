@@ -408,12 +408,13 @@ interface PermissionDomain {
 
 interface Permission {
   action: string;
-  //   app: string;
+  app: string;
   type: string;
   created: number;
   walletId: string;
   accountId: string;
   keyId: string;
+  key: string;
 }
 
 interface State {

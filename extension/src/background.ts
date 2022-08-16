@@ -90,12 +90,25 @@ async function handleContentScriptMessage(message: ActionMessageResponse) {
   // Reload the permissions each time.
   await permissionService.refresh();
 
-  let permission: Permission | null = null;
-  let permissionSet = permissionService.get(message.app);
+  let permission: Permission | unknown | null = null;
 
-  if (permissionSet) {
-    permission = permissionSet.permissions[method];
+  // Get all existing permissions that exists for this app and method:
+  let permissions = permissionService.findPermissions(message.app, method);
+
+  console.log('PERMISSIONS!!', permissions);
+
+  // If there are no specific key specified in the signing request, just grab the first permission that is approved for this
+  // website and use that. Normally there will only be a single one if the web app does not request specific key.
+  if (permissions.length > 0) {
+    permission = permissions[0];
   }
+
+  // permissionService.findPermission(message.app, method, message.walletId, message.accountId, message.keyId);
+  // let permissionSet = permissionService.get(message.app);
+
+  // if (permissionSet) {
+  //   permission = permissionSet.permissions[method];
+  // }
 
   // Check if user have already approved this kind of access on this domain/host.
   if (!permission) {
@@ -103,7 +116,8 @@ async function handleContentScriptMessage(message: ActionMessageResponse) {
       console.log(JSON.stringify(state));
       // Keep a copy of the prompt message, we need it to finalize if user clicks "X" to close window.
       // state.promptPermission = await promptPermission({ app: message.app, id: message.id, method: method, params: message.args.params });
-      await promptPermission(state);
+      permission = await promptPermission(state);
+      console.log('PERMISSION:', permission);
       console.log(JSON.stringify(state));
       // authorized, proceed
     } catch (_) {
@@ -130,6 +144,9 @@ async function handleContentScriptMessage(message: ActionMessageResponse) {
 
   try {
     // User have given permission to execute.
+    console.log('VERIFY:', message);
+    console.log('VERIFY2:', state);
+    console.log('VERIFY3:', permission);
     const result = state.handler.execute(message.args.params);
 
     console.log('RESULT RETURNING:', result);
@@ -183,15 +200,19 @@ function handlePromptMessage(message: ActionMessageResponse, sender) {
 
   // console.log('MESSAGE .PERMISSION', message.permission);
 
+  // Create an permission instance from the message received from prompt dialog:
+  const permission = permissionService.createPermission(message);
+
   switch (message.permission) {
     case 'forever':
     case 'expirable':
-      prompt?.resolve?.();
+      // const permission = permissionService.persistPermission(permission); // .updatePermission(message.app, message.type, message.permission, message.walletId, message.accountId, message.keyId, message.key);
+      permissionService.persistPermission(permission);
+      prompt?.resolve?.(permission);
       // prompts[message.id]?.resolve?.();
-      permissionService.updatePermission(message.app, message.type, message.permission, message.walletId, message.accountId, message.keyId);
       break;
     case 'once':
-      prompt?.resolve?.();
+      prompt?.resolve?.(permission);
       break;
     case 'no':
       prompt?.reject?.();
