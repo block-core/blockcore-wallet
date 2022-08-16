@@ -1,3 +1,22 @@
+## <small>0.0.56 (2022-08-16)</small>
+
+* Add more Norwegian translations ([f681013](https://github.com/block-core/blockcore-wallet/commit/f681013))
+* Attempts to fix issue with iOS and zooming on input focus ([bdfe271](https://github.com/block-core/blockcore-wallet/commit/bdfe271)), closes [#206](https://github.com/block-core/blockcore-wallet/issues/206)
+* Change logo color when changing theme (#210) ([3702e22](https://github.com/block-core/blockcore-wallet/commit/3702e22)), closes [#210](https://github.com/block-core/blockcore-wallet/issues/210)
+* Disable the code quality build ([e749b15](https://github.com/block-core/blockcore-wallet/commit/e749b15))
+* Disable viewport zooming on Mobile Safari (#207) ([0aec865](https://github.com/block-core/blockcore-wallet/commit/0aec865)), closes [#207](https://github.com/block-core/blockcore-wallet/issues/207)
+* Make the recovery phrase selectable ([0d17f09](https://github.com/block-core/blockcore-wallet/commit/0d17f09))
+* Remove the "copy log" buttons ([5bae7d1](https://github.com/block-core/blockcore-wallet/commit/5bae7d1))
+* Removing input background color for Chrome autocomplete (#208) ([576ed6a](https://github.com/block-core/blockcore-wallet/commit/576ed6a)), closes [#208](https://github.com/block-core/blockcore-wallet/issues/208)
+* Update package-lock.json ([2ba85fb](https://github.com/block-core/blockcore-wallet/commit/2ba85fb))
+* Update package.json ([cbac488](https://github.com/block-core/blockcore-wallet/commit/cbac488))
+* Update packages ([c7dff96](https://github.com/block-core/blockcore-wallet/commit/c7dff96))
+* Update packages ([3dbbb6c](https://github.com/block-core/blockcore-wallet/commit/3dbbb6c))
+* Update version and changelog ([cea1600](https://github.com/block-core/blockcore-wallet/commit/cea1600))
+* Use system font ([8454090](https://github.com/block-core/blockcore-wallet/commit/8454090)), closes [#212](https://github.com/block-core/blockcore-wallet/issues/212)
+
+
+
 ## <small>0.0.55 (2022-08-06)</small>
 
 *  Fix issue with touch-hold for pasting in app (#202) ([c0fb72a](https://github.com/block-core/blockcore-wallet/commit/c0fb72a)), closes [#202](https://github.com/block-core/blockcore-wallet/issues/202)
