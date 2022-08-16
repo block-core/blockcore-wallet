@@ -91,27 +91,20 @@ export class ActionComponent {
       this.addresses = [...array1, ...array2];
     }
 
-    console.log('REQUESTED KEY', this.requestedKey);
-
     let keyIndex = 0;
 
     if (this.requestedKey) {
       keyIndex = this.addresses.findIndex((a) => a.key == this.requestedKey);
 
-      console.log('REQUESTED KEY INDEX:', keyIndex);
-
       if (keyIndex == -1) {
         keyIndex = 0;
+      } else {
+        this.keySelectionDisabled = true;
       }
-
-      this.keySelectionDisabled = true;
     }
 
     this.action.keyId = this.addresses[keyIndex].keyId;
     this.action.key = this.addresses[keyIndex].key;
-
-    console.log('ACTION.KEYID', this.action.keyId);
-    console.log('ACTION.KEY', this.action.key);
   }
 
   async onAccountChanged() {
