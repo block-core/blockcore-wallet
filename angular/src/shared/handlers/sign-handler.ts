@@ -1,10 +1,10 @@
-import { RequestArguments, Actions } from '../interfaces';
+import { RequestArguments, Actions, Permission } from '../interfaces';
 import { ActionHandler } from './action-handler';
 
 export class SignHandler implements ActionHandler {
   action = ['sign'];
 
-  execute(args: RequestArguments) {
+  execute(permission: Permission, args: RequestArguments) {
     console.log('Executing SignHandler!');
     return 'chiper!!';
   }

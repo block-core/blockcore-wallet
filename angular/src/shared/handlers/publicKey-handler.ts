@@ -1,10 +1,10 @@
-import { RequestArguments, Actions } from '../interfaces';
+import { RequestArguments, Actions, Permission } from '../interfaces';
 import { ActionHandler } from './action-handler';
 
 export class PublicKeyHandler implements ActionHandler {
   action = ['publicKey'];
 
-  execute(args: RequestArguments) {
+  execute(permission: Permission, args: RequestArguments) {
     console.log('Executing Public Key Handler!');
     return 'your public key!!';
   }

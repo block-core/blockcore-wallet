@@ -92,10 +92,8 @@ export class ActionComponent {
   }
 
   onKeyChanged() {
-    console.log(this.action);
-
-    // this.selectedNetwork = this.networkService.getNetwork(this.network);
-    // this.derivationPath = this.getDerivationPath();
-    // this.purposeAddress = this.selectedNetwork.purposeAddress ?? 44;
+    console.log('ON KEY CHANGED:', this.action.keyId);
+    const address = this.addresses.find(a => a.keyId == this.action.keyId);
+    this.action.key = address.key;
   }
 }

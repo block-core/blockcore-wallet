@@ -212,7 +212,7 @@
         let signature;
 
         try {
-          signature = await blockcore.request({ method: "signMessage", params: [{ key: 'XTEyvZUSgYYtbsmFHZsogsePxtQMK1jDys', scheme: "schnorr", message: "I approve this message." }] });
+          signature = await blockcore.request({ method: "signMessage", params: [{ key: 'CdnpNqSeqaXBMVnY1e13Ksijgr6FyWPM9J', scheme: "schnorr", message: "I approve this message." }] });
         } catch (err) {
           console.error(err);
           signature = "Error: " + err.message;

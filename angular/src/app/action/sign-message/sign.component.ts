@@ -19,7 +19,7 @@ export class ActionSignMessageComponent implements OnInit, OnDestroy {
   accountState: AccountState;
   selectedKeyId: any;
   addresses: any[];
-  selectedAccountId: string;
+  // selectedAccountId: string;
   accounts: any[];
   subscription: any;
 
@@ -27,53 +27,53 @@ export class ActionSignMessageComponent implements OnInit, OnDestroy {
     this.contentToSign = uiState.action.args;
 
     this.accounts = this.walletManager.activeWallet.accounts;
-    this.selectedAccountId = this.walletManager.activeAccountId;
+    // this.selectedAccountId = this.walletManager.activeAccountId;
 
     // Make sure we listen to active account changes to perform updated list of keys.
     // TODO: Figure out why subscribing to this on the prompt makes it trigger twice. Perhaps there is some code elsewhere that
     // needs fixing to avoid running the operation twice.
-    this.subscription = this.walletManager.activeAccount$.subscribe((a) => {
-      this.update();
-    });
+    // this.subscription = this.walletManager.activeAccount$.subscribe((a) => {
+    //   this.update();
+    // });
   }
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
   }
 
-  update() {
-    const account = this.walletManager.activeAccount;
-    this.accountState = this.accountStateStore.get(account.identifier);
+  // update() {
+  //   const account = this.walletManager.activeAccount;
+  //   this.accountState = this.accountStateStore.get(account.identifier);
 
-    if (account.singleAddress || account.type === 'identity') {
-      const address = this.accountState.receive[0];
-      this.addresses = [{ address: address.address, keyId: '0/0' }];
-    } else {
-      const array1 = this.accountState.receive.map((r) => {
-        return { address: r.address, keyId: '0/' + r.index };
-      });
-      const array2 = this.accountState.change.map((r) => {
-        return { address: r.address, keyId: '1/' + r.index };
-      });
-      this.addresses = [...array1, ...array2];
-    }
+  //   if (account.singleAddress || account.type === 'identity') {
+  //     const address = this.accountState.receive[0];
+  //     this.addresses = [{ address: address.address, keyId: '0/0' }];
+  //   } else {
+  //     const array1 = this.accountState.receive.map((r) => {
+  //       return { address: r.address, keyId: '0/' + r.index };
+  //     });
+  //     const array2 = this.accountState.change.map((r) => {
+  //       return { address: r.address, keyId: '1/' + r.index };
+  //     });
+  //     this.addresses = [...array1, ...array2];
+  //   }
 
-    this.selectedKeyId = this.addresses[0].keyId;
-  }
+  //   this.selectedKeyId = this.addresses[0].keyId;
+  // }
 
   ngOnInit(): void {}
 
-  async onAccountChanged() {
-    await this.walletManager.setActiveAccount(this.selectedAccountId);
+  // async onAccountChanged() {
+  //   await this.walletManager.setActiveAccount(this.selectedAccountId);
 
-    // this.selectedNetwork = this.networkService.getNetwork(this.network);
-    // this.derivationPath = this.getDerivationPath();
-    // this.purposeAddress = this.selectedNetwork.purposeAddress ?? 44;
-  }
+  //   // this.selectedNetwork = this.networkService.getNetwork(this.network);
+  //   // this.derivationPath = this.getDerivationPath();
+  //   // this.purposeAddress = this.selectedNetwork.purposeAddress ?? 44;
+  // }
 
-  onKeyChanged() {
-    // this.selectedNetwork = this.networkService.getNetwork(this.network);
-    // this.derivationPath = this.getDerivationPath();
-    // this.purposeAddress = this.selectedNetwork.purposeAddress ?? 44;
-  }
+  // onKeyChanged() {
+  //   // this.selectedNetwork = this.networkService.getNetwork(this.network);
+  //   // this.derivationPath = this.getDerivationPath();
+  //   // this.purposeAddress = this.selectedNetwork.purposeAddress ?? 44;
+  // }
 }
