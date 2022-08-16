@@ -7,24 +7,25 @@
   </div>
 
   <div class="list-action-table" *ngFor="let permissionSet of permissions">
-
     <h2>{{ permissionSet.app }}</h2>
 
-    <div class="list-action-row" *ngFor="let permission of toArray(permissionSet.permissions)">
-      <div>
-        <strong>{{ permission.action }}</strong>
-        <br />
-        <span class="dimmed">Type: {{ permission.type }} - Created: {{ permission.created * 1000 | date }}</span><br>
-        <span class="dimmed">{{ getWalletName(permission.walletId) }} / {{ getAccountName(permission.walletId, permission.accountId) }}</span>
-      </div>
-      <div>
-        <button mat-icon-button (click)="remove(permission, permissionSet)">
-          <mat-icon>delete</mat-icon>
-        </button>
+    <div *ngFor="let permission of toArray(permissionSet.permissions)">
+      <div class="list-action-row" *ngFor="let perm of permission">
+        <div>
+          <strong>{{ perm.action }}</strong>
+          <br />
+          <span class="dimmed">Type: {{ perm.type }} - Created: {{ perm.created * 1000 | date }}</span
+          ><br />
+          <span class="dimmed">{{ getWalletName(perm.walletId) }} / {{ getAccountName(perm.walletId, perm.accountId) }} / {{ perm.key }}</span>
+        </div>
+        <div>
+          <button mat-icon-button (click)="remove(perm, permissionSet)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
       </div>
     </div>
   </div>
 
   <button *ngIf="permissions?.length > 0" class="signup-button" mat-flat-button color="primary" (click)="removeAllPermissions()">Remove all permissions</button>
-
 </div>

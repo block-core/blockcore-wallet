@@ -95,6 +95,7 @@ async function handleContentScriptMessage(message: ActionMessageResponse) {
   let permission: Permission | unknown | null = null;
 
   if (params.key) {
+    console.log('FIND PERMISSION BY KEY', message.app, method, params.key);
     permission = permissionService.findPermissionByKey(message.app, method, params.key);
     console.log('FOUND PERMISSION BY KEY!!!', permission);
   } else {

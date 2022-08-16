@@ -35,7 +35,18 @@ export class PermissionsComponent implements OnDestroy, OnInit {
   }
 
   async remove(permission: Permission, permissionSet: PermissionDomain) {
-    delete permissionSet.permissions[permission.action];
+
+    const permissions = permissionSet.permissions[permission.action] as Permission[];
+
+    debugger;
+    const index = permissions.findIndex((p) => p.key == permission.key);
+
+    if (index > -1) {
+      permissions.splice(index, 1);
+    }
+
+    // delete permissionSet.permissions[permission.action];
+
     await this.permissionStore.save();
     await this.refresh();
   }
@@ -46,7 +57,7 @@ export class PermissionsComponent implements OnDestroy, OnInit {
     console.log(this.permissions);
   }
 
-  toArray(items: any): Permission[] {
+  toArray(items: any): Permission[][] {
     return Object.values(items);
   }
 

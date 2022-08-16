@@ -78,6 +78,11 @@ export class PermissionServiceShared {
 
   findPermissionByKey(app: string, action: string, key: string) {
     let permissionSet = this.store.get(app);
+
+    if (!permissionSet) {
+      return null;
+    }
+
     const permissionIndex = this.findPermissionIndexInSetByKey(permissionSet, action, key);
 
     if (permissionIndex == -1) {
