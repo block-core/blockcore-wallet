@@ -59,9 +59,26 @@ export class PermissionServiceShared {
     return permissionIndex;
   }
 
+  findPermissionIndexInSetByKey(permissionSet: PermissionDomain, action: string, key: string) {
+    const permissions = permissionSet.permissions[action] as Permission[];
+    const permissionIndex = permissions.findIndex((p) => p.key == key);
+    return permissionIndex;
+  }
+
   findPermission(app: string, action: string, walletId: string, accountId: string, keyId: string) {
     let permissionSet = this.store.get(app);
     const permissionIndex = this.findPermissionIndexInSet(permissionSet, action, walletId, accountId, keyId);
+
+    if (permissionIndex == -1) {
+      return null;
+    }
+
+    return permissionSet.permissions[action][permissionIndex];
+  }
+
+  findPermissionByKey(app: string, action: string, key: string) {
+    let permissionSet = this.store.get(app);
+    const permissionIndex = this.findPermissionIndexInSetByKey(permissionSet, action, key);
 
     if (permissionIndex == -1) {
       return null;

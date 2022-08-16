@@ -70,7 +70,9 @@ async function handleContentScriptMessage(message: ActionMessageResponse) {
   }
 
   const method = message.args.method;
+  const params = message.args.params[0]; // Currently we only support a single entry in params, just be array.
   console.log('METHOD:', method);
+  console.log('PARAMS:', params);
 
   // Create a new handler instance.
   // const handler = Handlers.getAction(method);
@@ -92,15 +94,20 @@ async function handleContentScriptMessage(message: ActionMessageResponse) {
 
   let permission: Permission | unknown | null = null;
 
-  // Get all existing permissions that exists for this app and method:
-  let permissions = permissionService.findPermissions(message.app, method);
+  if (params.key) {
+    permission = permissionService.findPermissionByKey(message.app, method, params.key);
+    console.log('FOUND PERMISSION BY KEY!!!', permission);
+  } else {
+    // Get all existing permissions that exists for this app and method:
+    let permissions = permissionService.findPermissions(message.app, method);
 
-  console.log('PERMISSIONS!!', permissions);
+    console.log('PERMISSIONS!!', permissions);
 
-  // If there are no specific key specified in the signing request, just grab the first permission that is approved for this
-  // website and use that. Normally there will only be a single one if the web app does not request specific key.
-  if (permissions.length > 0) {
-    permission = permissions[0];
+    // If there are no specific key specified in the signing request, just grab the first permission that is approved for this
+    // website and use that. Normally there will only be a single one if the web app does not request specific key.
+    if (permissions.length > 0) {
+      permission = permissions[0];
+    }
   }
 
   // permissionService.findPermission(message.app, method, message.walletId, message.accountId, message.keyId);

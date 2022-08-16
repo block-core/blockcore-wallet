@@ -41,6 +41,7 @@
     <!-- <button id="connectButton">Ask for Public Key</button>
     <button id="connectButton2">Ask for Signing (Bytes)</button> -->
     <button id="connectButton3">Ask for Signing (Message)</button>
+    <button id="connectButton5">Ask for Signing (Custom Key)</button>
     <!-- <button id="connectButton4">Ask for Signing (Verifiable Credential)</button> -->
 
     <br />
@@ -204,6 +205,22 @@
         document.getElementById("blockcore-extension-output").innerText = signature;
       }
 
+      async function connect5() {
+        document.getElementById("blockcore-extension-output").innerText = "";
+
+        const blockcore = globalThis.blockcore;
+        let signature;
+
+        try {
+          signature = await blockcore.request({ method: "signMessage", params: [{ key: 'CTEyvZUSgYYtbsmFHZsogsePxtQMK1jDys', scheme: "schnorr", message: "I approve this message." }] });
+        } catch (err) {
+          console.error(err);
+          signature = "Error: " + err.message;
+        }
+
+        document.getElementById("blockcore-extension-output").innerText = signature;
+      }
+
       (function () {
         // Examples of wiring up click handler:
         // document.getElementById("connectButton").onclick = connect;
@@ -211,6 +228,7 @@
         // document.getElementById("connectButton2").addEventListener("click", connect2);
         document.getElementById("connectButton3").addEventListener("click", connect3);
         // document.getElementById("connectButton4").addEventListener("click", connect4);
+        document.getElementById("connectButton5").addEventListener("click", connect5);
       })();
     </script>
   </body>
