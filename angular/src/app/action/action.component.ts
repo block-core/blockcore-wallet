@@ -73,10 +73,10 @@ export class ActionComponent {
       this.addresses = [{ address: address, keyId: '0/0' }];
     } else {
       const array1 = this.accountState.receive.map((r) => {
-        return { address: `${r.address} / Receive / ${r.index}`, keyId: '0/' + r.index };
+        return { address: `${r.address} (Receive: ${r.index})`, keyId: '0/' + r.index };
       });
       const array2 = this.accountState.change.map((r) => {
-        return { address: `${r.address} / Change / ${r.index}`, keyId: '1/' + r.index };
+        return { address: `${r.address} (Change: ${r.index})`, keyId: '1/' + r.index };
       });
       this.addresses = [...array1, ...array2];
     }
