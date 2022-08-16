@@ -511,7 +511,12 @@ interface ActionMessageResponse {
   app: string;
   walletId: string;
   accountId: string;
-  keyId?: string;
+
+  /** The internal key ID used to persist permission. */
+  keyId: string;
+
+  /** The public key used to identity the signature returned. */
+  key: string
 }
 
 interface Message {

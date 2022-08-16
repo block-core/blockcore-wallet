@@ -15,9 +15,7 @@ const { v4: uuidv4 } = require('uuid');
 export class ActionComponent {
   contentToSign: string;
   accountState: AccountState;
-  selectedKeyId: any;
   addresses: any[];
-  selectedAccountId: string;
   accounts: any[];
   subscription: any;
 
@@ -27,9 +25,9 @@ export class ActionComponent {
     this.action.app = this.uiState.action?.app;
 
     this.contentToSign = uiState.action.args;
-
+    
     this.accounts = this.walletManager.activeWallet.accounts;
-    this.selectedAccountId = this.walletManager.activeAccountId;
+    this.action.accountId = this.walletManager.activeAccountId;
 
     // Make sure we listen to active account changes to perform updated list of keys.
     // TODO: Figure out why subscribing to this on the prompt makes it trigger twice. Perhaps there is some code elsewhere that
@@ -73,19 +71,20 @@ export class ActionComponent {
       this.addresses = [{ address: address, keyId: '0/0' }];
     } else {
       const array1 = this.accountState.receive.map((r) => {
-        return { address: `${r.address} (Receive: ${r.index})`, keyId: '0/' + r.index };
+        return { address: `${r.address} (Receive: ${r.index})`, keyId: '0/' + r.index, key: r.address };
       });
       const array2 = this.accountState.change.map((r) => {
-        return { address: `${r.address} (Change: ${r.index})`, keyId: '1/' + r.index };
+        return { address: `${r.address} (Change: ${r.index})`, keyId: '1/' + r.index, key: r.address };
       });
       this.addresses = [...array1, ...array2];
     }
 
-    this.selectedKeyId = this.addresses[0].keyId;
+    this.action.keyId = this.addresses[0].keyId;
+    this.action.key = this.addresses[0].key;
   }
 
   async onAccountChanged() {
-    await this.walletManager.setActiveAccount(this.selectedAccountId);
+    await this.walletManager.setActiveAccount(this.action.accountId);
 
     // this.selectedNetwork = this.networkService.getNetwork(this.network);
     // this.derivationPath = this.getDerivationPath();
@@ -93,6 +92,8 @@ export class ActionComponent {
   }
 
   onKeyChanged() {
+    console.log(this.action);
+
     // this.selectedNetwork = this.networkService.getNetwork(this.network);
     // this.derivationPath = this.getDerivationPath();
     // this.purposeAddress = this.selectedNetwork.purposeAddress ?? 44;

@@ -12,6 +12,9 @@ export class ActionService {
 
   app: string;
   content: string;
+  accountId: string;
+  keyId: string;
+  key: string;
 
   async clearAction() {
     this.store.set(undefined);
@@ -56,7 +59,9 @@ export class ActionService {
       type: this.uiState.action.action,
       app: this.uiState.action.app,
       walletId: this.walletManager.activeWalletId,
-      accountId: this.walletManager.activeAccountId,
+      accountId: this.accountId,
+      keyId: this.keyId,
+      key: this.key
     };
 
     // Inform the provider script that user has signed the data.
