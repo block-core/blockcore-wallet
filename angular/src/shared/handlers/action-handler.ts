@@ -1,10 +1,10 @@
-import { ActionMessageResponse, RequestArguments } from '../interfaces';
+import { ActionMessageResponse, Permission, RequestArguments } from '../interfaces';
 
 export interface ActionHandler {
   action: string[];
 
   // execute(args: RequestArguments): Promise<unknown>;
-  execute(args: RequestArguments): unknown;
+  execute(permission: Permission, args: RequestArguments): unknown;
 }
 
 // export class ActionStateHolder {

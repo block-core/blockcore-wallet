@@ -1,11 +1,11 @@
-import { RequestArguments, Actions } from '../interfaces';
+import { RequestArguments, Actions, Permission } from '../interfaces';
 import { ActionHandler } from './action-handler';
 
 export class SignMessageHandler implements ActionHandler {
   action = ['signMessage'];
 
-  execute(args: RequestArguments) {
+  execute(permission: Permission, args: RequestArguments) {
     console.log('Executing Sign;MessageHandler!', args);
-    return 'prefixed signature!';
+    return { key: permission.key, signature: 'prefixed signature!' };
   }
 }

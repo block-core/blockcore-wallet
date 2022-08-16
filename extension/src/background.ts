@@ -154,7 +154,7 @@ async function handleContentScriptMessage(message: ActionMessageResponse) {
     console.log('VERIFY:', message);
     console.log('VERIFY2:', state);
     console.log('VERIFY3:', permission);
-    const result = state.handler.execute(message.args.params);
+    const result = state.handler.execute(permission, message.args.params);
 
     console.log('RESULT RETURNING:', result);
 

@@ -178,7 +178,7 @@
           signature = "Error: " + err.message;
         }
 
-        document.getElementById("blockcore-extension-output").innerText = signature;
+        document.getElementById("blockcore-extension-output").innerText = JSON.stringify(signature);
       }
 
       async function connect4() {
@@ -212,13 +212,13 @@
         let signature;
 
         try {
-          signature = await blockcore.request({ method: "signMessage", params: [{ key: 'CTEyvZUSgYYtbsmFHZsogsePxtQMK1jDys', scheme: "schnorr", message: "I approve this message." }] });
+          signature = await blockcore.request({ method: "signMessage", params: [{ key: 'XTEyvZUSgYYtbsmFHZsogsePxtQMK1jDys', scheme: "schnorr", message: "I approve this message." }] });
         } catch (err) {
           console.error(err);
           signature = "Error: " + err.message;
         }
 
-        document.getElementById("blockcore-extension-output").innerText = signature;
+        document.getElementById("blockcore-extension-output").innerText = JSON.stringify(signature);
       }
 
       (function () {
