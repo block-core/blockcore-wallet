@@ -1,3 +1,22 @@
+## <small>0.0.57 (2022-08-17)</small>
+
+* Add support for getting permission based upon key (public key) ([f6061cb](https://github.com/block-core/blockcore-wallet/commit/f6061cb))
+* Add updated accent color and app icons ([13ec58f](https://github.com/block-core/blockcore-wallet/commit/13ec58f))
+* Cleanup some logging ([6cea116](https://github.com/block-core/blockcore-wallet/commit/6cea116))
+* Disable all actions other than 'signMessage' ([2dde08c](https://github.com/block-core/blockcore-wallet/commit/2dde08c))
+* Display key for signing in a different style ([d4fe3aa](https://github.com/block-core/blockcore-wallet/commit/d4fe3aa))
+* Fix a minor type issue ([beef8fe](https://github.com/block-core/blockcore-wallet/commit/beef8fe))
+* Fix issue where public key was not updated when changing signing key ([57f0693](https://github.com/block-core/blockcore-wallet/commit/57f0693))
+* Fix issue with permission not expiring ([315fdd7](https://github.com/block-core/blockcore-wallet/commit/315fdd7))
+* Persist the permissions based upon wallet, account and key id ([e215824](https://github.com/block-core/blockcore-wallet/commit/e215824))
+* Return a structured result from the action handler that includes public key ([5a1de7e](https://github.com/block-core/blockcore-wallet/commit/5a1de7e))
+* Select key when provided in request and disable user selection ([9e2eddb](https://github.com/block-core/blockcore-wallet/commit/9e2eddb))
+* Set the key id when performing a signing operation ([1ecba99](https://github.com/block-core/blockcore-wallet/commit/1ecba99))
+* Update permissions administration with support for array on permissions ([8865631](https://github.com/block-core/blockcore-wallet/commit/8865631))
+* Update version and changelog ([b78009c](https://github.com/block-core/blockcore-wallet/commit/b78009c))
+
+
+
 ## <small>0.0.56 (2022-08-16)</small>
 
 * Add more Norwegian translations ([f681013](https://github.com/block-core/blockcore-wallet/commit/f681013))
