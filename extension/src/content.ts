@@ -15,7 +15,7 @@ if (!globalThis.blockcore) {
 
   // listen for messages from the provider script
   window.addEventListener('message', async (message) => {
-    console.log('CONTENT:MSG:', message);
+    // console.log('CONTENT:MSG:', message);
     if (!message.data) return;
     if (message.source !== window) return;
     if (message.data.ext !== 'blockcore') return; // We'll only handle messages marked with extension 'blockcore'.

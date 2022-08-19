@@ -16,8 +16,6 @@ export class FrontendService implements OnInit {
   private indexing: boolean;
 
   constructor(private events: EventBus, private communication: CommunicationService) {
-    console.log('FRONTEND SERVICE CONSTRUCTOR!');
-
     this.events.subscribeAll().subscribe(async (message) => {
       console.log('ALL EVENTS', message);
       //   this.ngZone.run(async () => {
@@ -33,8 +31,6 @@ export class FrontendService implements OnInit {
 
     events.subscribe('activated').subscribe(async () => {
       console.log('ACTIVATED!!!');
-      //   await this.executeIndexer();
-
       await this.networkStatusWatcher();
       await this.executeIndexer();
     });
@@ -120,8 +116,6 @@ export class FrontendService implements OnInit {
 
     manager.onUpdates = (status: ProcessResult) => {
       if (status.changes) {
-        console.log('Indexer found changes. Send message!');
-
         const msg = {
           type: 'indexed',
           data: { source: 'indexer-on-schedule' },
@@ -133,8 +127,6 @@ export class FrontendService implements OnInit {
 
         this.communication.send(msg);
       } else {
-        console.log('Indexer found zero changes. We will still inform the UI to refresh wallet to get latest scan state.');
-
         const msg = {
           type: 'updated',
           data: { source: 'indexer-on-schedule' },
@@ -179,8 +171,6 @@ export class FrontendService implements OnInit {
   
       this.watchManager.onUpdates = (status: ProcessResult) => {
         if (status.changes) {
-          console.log('Watcher found changes. Sending message to UI!');
-  
           const msg = {
             type: 'indexed',
             data: { source: 'watcher' },
@@ -191,15 +181,7 @@ export class FrontendService implements OnInit {
           };
 
           this.communication.send(msg);
-
-          // chrome.runtime.sendMessage(msg,
-          //   function (response) {
-          //     // console.log('Extension:sendMessage:response:indexed:', response);
-          //   }
-          // );
         } else {
-          console.debug('Watcher found zero changes. We will still inform the UI to refresh wallet to get latest scan state.');
-
           const msg = {
             type: 'updated',
             data: { source: 'watcher' },
@@ -210,13 +192,6 @@ export class FrontendService implements OnInit {
           };
 
           this.communication.send(msg);
-  
-          // chrome.runtime.sendMessage(
-          //   msg,
-          //   function (response) {
-          //     // console.log('Extension:sendMessage:response:updated:', response);
-          //   }
-          // );
         }
       };
   
@@ -225,11 +200,4 @@ export class FrontendService implements OnInit {
       await this.watchManager.runWatcher(runState);
     }
   };
-
-//   exeuctedIndexing() {
-//     this.backgroundManager = new BackgroundManager();
-//     this.backgroundManager.runIndexer().then(() => {
-//       console.log('BACKGROUND MANAGER INDEXING COMPLETED IN FRONTEND SERVICE!!');
-//     });
-//   }
 }

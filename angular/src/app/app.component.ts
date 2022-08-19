@@ -81,7 +81,6 @@ export class AppComponent implements OnInit {
     // FIX THIS ... attempted to check previous, but that does not work...
     if (queryParam) {
       const param = Object.fromEntries(new URLSearchParams(queryParam)) as any;
-      console.log('THERE ARE PARAMS', param);
       // Only when the param is different than before, will we re-trigger the action.
       if (JSON.stringify(param) != JSON.stringify(this.uiState.params)) {
         this.uiState.params = param;
@@ -89,8 +88,6 @@ export class AppComponent implements OnInit {
         console.debug('PARAMS IS NOT DIFFERENT!! CONTINUE AS BEFORE!');
       }
     }
-
-    console.log('uiState.params:', this.uiState.params);
 
     // let qs = new URLSearchParams(location.search);
     // let id = qs.get('id');
@@ -120,8 +117,6 @@ export class AppComponent implements OnInit {
         this.translate.use(this.settings.values.language);
       }
     });
-
-    console.log('CALLING ACTIVATED!!!');
 
     // Send event every time the UI has been activated.
     this.communication.send(this.communication.createMessage('activated'));

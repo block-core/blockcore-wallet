@@ -109,7 +109,7 @@ export class PermissionServiceShared {
   findPermissions(app: string, action: string) {
     let permissionSet = this.store.get(app);
 
-    console.log(`PERMISSION SET FOR ${app}`, permissionSet);
+    // console.log(`PERMISSION SET FOR ${app}`, permissionSet);
 
     if (!permissionSet) {
       return [];
@@ -120,9 +120,6 @@ export class PermissionServiceShared {
 
   async persistPermission(permission: Permission) {
     let permissionSet = this.store.get(permission.app);
-
-    console.log('PERMISSION SET BEFORE:');
-    console.log(JSON.stringify(permissionSet));
 
     if (!permissionSet) {
       permissionSet = {
@@ -159,9 +156,6 @@ export class PermissionServiceShared {
 
     this.store.set(permission.app, permissionSet);
     await this.store.save();
-
-    console.log('PERMISSION SET AFTER:');
-    console.log(JSON.stringify(permissionSet));
   }
 
   // async updatePermission(app: string, action: string, type: string, walletId: string, accountId: string, keyId: string, key: string) {

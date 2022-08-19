@@ -20,8 +20,6 @@ export class HomeComponent implements OnInit, OnDestroy {
   sub2: any;
 
   constructor(public uiState: UIState, private translate: TranslateService, private crypto: CryptoService, private router: Router, private communication: CommunicationService, private secure: SecureStateService, public walletManager: WalletManager, private cd: ChangeDetectorRef) {
-    console.log('HOME COMPONENT!');
-
     this.uiState.showBackButton = false;
     this.activateAlarm();
   }

@@ -298,7 +298,6 @@ export class BackgroundManager {
       }
 
       if (this.onUpdates) {
-        console.log('ON UPDATES!', processResult);
         this.onUpdates.call(null, processResult);
       }
 
@@ -311,8 +310,6 @@ export class BackgroundManager {
 
       // Continue running the watcher if it has not been cancelled.
       this.intervalRef = globalThis.setTimeout(interval, executionState.wait);
-
-      console.log('WATCHER: Interval executed completely.');
     };
 
     this.intervalRef = globalThis.setTimeout(async () => {
@@ -349,8 +346,6 @@ export class BackgroundManager {
     const networkLoader = new NetworkLoader(networkStatusStore);
     const addressManager = new AddressManager(networkLoader);
 
-    console.log('ALL STORES CREATED!');
-
     // Get what addresses to watch from local storage.
     // globalThis.chrome.storage.local.get('')
     const indexer = new IndexerBackgroundService(settingStore, walletStore, addressStore, addressIndexedStore, transactionStore, addressManager, accountStateStore, accountHistoryStore);
@@ -360,9 +355,6 @@ export class BackgroundManager {
 
     // TODO: https://github.com/block-core/blockcore-wallet/issues/148
     while (!processResult.completed) {
-
-      console.log('processResult.completed:', processResult.completed);
-
       try {
         processResult = await indexer.process(null);
       } catch (err) {
@@ -384,14 +376,9 @@ export class BackgroundManager {
         console.error('Failure during calculate balance.', err);
       }
 
-      console.log('ONUPDATED', processResult);
-      console.log('this.onUpdates', this.onUpdates);
-
       if (this.onUpdates) {
         this.onUpdates.call(null, processResult);
       }
-
-      console.log('INDEXER: Interval executed completely.');
     }
   }
 }

@@ -588,7 +588,6 @@ export class WalletManager {
 
   async setActiveWallet(id: string) {
     this.logger.debug(`Changing the active wallet to ${id}.`);
-    console.log(`Changing the active wallet to ${id}.`);
 
     if (this.activeWalletId != id) {
       this._activeWalletId = id;

@@ -18,7 +18,7 @@ export class CommunicationService {
     // TODO: Handle these messages internally when running outside of extension context.
     if (this.runtime.isExtension) {
       chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
-        console.log('chrome.runtime.onMessage within ANGULAR!', message);
+        // console.log('chrome.runtime.onMessage within ANGULAR!', message);
         this.ngZone.run(async () => {
           const result = await this.handleInternalMessage(message, sender);
           // this.logger.debug(`Process messaged ${message.type} and returning this response: `, result);
@@ -30,7 +30,7 @@ export class CommunicationService {
         });
       });
       chrome.runtime.onMessageExternal.addListener(async (message, sender, sendResponse) => {
-        console.log('chrome.runtime.onMessageExternal 2222 within ANGULAR!');
+        // console.log('chrome.runtime.onMessageExternal 2222 within ANGULAR!');
         this.ngZone.run(async () => {
           const result = await this.handleExternalMessage(message, sender);
           // this.logger.debug(`Process (external) messaged ${message.type} and returning this response: `, result);
@@ -222,8 +222,8 @@ export class CommunicationService {
   }
 
   async handleExternalMessage(message: any, sender: chrome.runtime.MessageSender) {
-    this.logger.info('CommunicationService:onMessageExternal: ', message);
-    this.logger.info('CommunicationService:onMessageExternal:sender: ', sender);
+    // this.logger.info('CommunicationService:onMessageExternal: ', message);
+    // this.logger.info('CommunicationService:onMessageExternal:sender: ', sender);
 
     switch (message.event) {
       case 'index:done':

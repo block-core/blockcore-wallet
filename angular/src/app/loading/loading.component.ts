@@ -40,7 +40,6 @@ export class LoadingComponent implements OnInit, OnDestroy {
     @Inject(DOCUMENT) private document: Document
   ) {
     this.uiState.title = 'Loading...';
-    console.log('LOADING CONSTRUCTOR');
   }
 
   ngOnDestroy(): void {
@@ -56,8 +55,6 @@ export class LoadingComponent implements OnInit, OnDestroy {
   instanceName: string;
 
   async ngOnInit() {
-    console.log('LOADING ngOnInit');
-
     this.sub = combineLatest([this.route.params, this.route.data], (params: Params, data: Data) => ({
       params,
       data,
@@ -167,12 +164,7 @@ export class LoadingComponent implements OnInit, OnDestroy {
       }
     }
 
-    console.log('WHAT IS THE ACTION:', this.uiState.action);
     this.logger.debug('LOADING ACTION:', this.uiState.action);
-
-    console.log(this.uiState.action?.action);
-    console.log(this.walletManager.activeWallet);
-    // console.log(this.secure.unlocked(this.walletManager.activeWallet.id));
 
     // Activate a wallet if not active.
     if (this.walletManager.hasWallets && !this.walletManager.activeWallet && this.uiState.persisted.previousWalletId) {

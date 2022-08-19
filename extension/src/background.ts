@@ -25,7 +25,7 @@ let walletStore: WalletStore;
 
 // Don't mark this method async, it will result in caller not being called in "sendResponse".
 browser.runtime.onMessage.addListener(async (msg: ActionMessageResponse, sender) => {
-  console.log('Receive message in background:', msg);
+  // console.log('Receive message in background:', msg);
 
   // When messages are coming from popups, the prompt will be set.
   if (msg.prompt) {
@@ -60,10 +60,7 @@ browser.runtime.onMessageExternal.addListener(async (message: ActionMessageRespo
 });
 
 async function handleContentScriptMessage(message: ActionMessageResponse) {
-  console.log('handleContentScriptMessage:', message);
-  // console.log('prompts:', JSON.stringify(ActionStateHolder.prompts));
-  // console.log('prompts (length):', ActionStateHolder.prompts.length);
-
+  // console.log('handleContentScriptMessage:', message);
   // We only allow messages of type 'request' here.
   if (message.type !== 'request') {
     return null;
@@ -71,8 +68,6 @@ async function handleContentScriptMessage(message: ActionMessageResponse) {
 
   const method = message.args.method;
   const params = message.args.params[0]; // Currently we only support a single entry in params, just be array.
-  console.log('METHOD:', method);
-  console.log('PARAMS:', params);
 
   // Create a new handler instance.
   // const handler = Handlers.getAction(method);
@@ -95,14 +90,10 @@ async function handleContentScriptMessage(message: ActionMessageResponse) {
   let permission: Permission | unknown | null = null;
 
   if (params.key) {
-    console.log('FIND PERMISSION BY KEY', message.app, method, params.key);
     permission = permissionService.findPermissionByKey(message.app, method, params.key);
-    console.log('FOUND PERMISSION BY KEY!!!', permission);
   } else {
     // Get all existing permissions that exists for this app and method:
     let permissions = permissionService.findPermissions(message.app, method);
-
-    console.log('PERMISSIONS!!', permissions);
 
     // If there are no specific key specified in the signing request, just grab the first permission that is approved for this
     // website and use that. Normally there will only be a single one if the web app does not request specific key.
@@ -121,15 +112,11 @@ async function handleContentScriptMessage(message: ActionMessageResponse) {
   // Check if user have already approved this kind of access on this domain/host.
   if (!permission) {
     try {
-      console.log(JSON.stringify(state));
       // Keep a copy of the prompt message, we need it to finalize if user clicks "X" to close window.
       // state.promptPermission = await promptPermission({ app: message.app, id: message.id, method: method, params: message.args.params });
       permission = await promptPermission(state);
-      console.log('PERMISSION:', permission);
-      console.log(JSON.stringify(state));
       // authorized, proceed
     } catch (_) {
-      console.log(JSON.stringify(state));
       console.log('NO PERMISSION!!');
       // not authorized, stop here
       return {
@@ -148,46 +135,10 @@ async function handleContentScriptMessage(message: ActionMessageResponse) {
     }
   }
 
-  // console.log('AUTHORIZED22!!', state.handler);
-
   try {
     // User have given permission to execute.
-    console.log('VERIFY:', message);
-    console.log('VERIFY2:', state);
-    console.log('VERIFY3:', permission);
     const result = state.handler.execute(<Permission>permission, message.args.params);
-
-    console.log('RESULT RETURNING:', result);
-
     return result;
-    // switch (method) {
-    //   case 'request': {
-    //     return 'Your REQUEST!';
-    //     // return getPublicKey(sk);
-    //   }
-    //   case 'publicKey': {
-    //     return 'Your Public Key!';
-    //     // return getPublicKey(sk);
-    //   }
-    //   case 'sign': {
-    //     return 'Signature!';
-    //     // let { event } = params;
-    //     // if (!event.pubkey) event.pubkey = getPublicKey(sk);
-    //     // if (!event.id) event.id = getEventHash(event);
-    //     // if (!validateEvent(event)) return { error: 'invalid event' };
-    //     // return await signEvent(event, sk);
-    //   }
-    //   case 'encrypt': {
-    //     // let { peer, plaintext } = params;
-    //     // return encrypt(sk, peer, plaintext);
-    //     return 'encrypt';
-    //   }
-    //   case 'decrypt': {
-    //     // let { peer, ciphertext } = params;
-    //     // return decrypt(sk, peer, ciphertext);
-    //     return 'decrypt';
-    //   }
-    // }
   } catch (error) {
     return { error: { message: error.message, stack: error.stack } };
   }
@@ -195,19 +146,6 @@ async function handleContentScriptMessage(message: ActionMessageResponse) {
 
 function handlePromptMessage(message: ActionMessageResponse, sender) {
   // console.log('handlePromptMessage!!!:', message);
-  // console.log('prompts:', JSON.stringify(ActionStateHolder.prompts));
-  // console.log('prompts (length):', ActionStateHolder.prompts.length);
-
-  // var stateIndex = ActionStateHolder.prompts.findIndex((p) => p.id === message.id);
-  // console.log('STATE INDEX:', stateIndex);
-
-  // var state = ActionStateHolder.prompts[stateIndex];
-
-  // console.log('MESSAGE ID:', message.id);
-  // console.log('STATE:', state);
-
-  // console.log('MESSAGE .PERMISSION', message.permission);
-
   // Create an permission instance from the message received from prompt dialog:
   const permission = permissionService.createPermission(message);
 
@@ -217,7 +155,6 @@ function handlePromptMessage(message: ActionMessageResponse, sender) {
       // const permission = permissionService.persistPermission(permission); // .updatePermission(message.app, message.type, message.permission, message.walletId, message.accountId, message.keyId, message.key);
       permissionService.persistPermission(permission);
       prompt?.resolve?.(permission);
-      // prompts[message.id]?.resolve?.();
       break;
     case 'once':
       prompt?.resolve?.(permission);
@@ -229,10 +166,6 @@ function handlePromptMessage(message: ActionMessageResponse, sender) {
 
   prompt = null;
   releaseMutex();
-  // console.log('MUTEX UNLOCKED!!!!');
-
-  // console.log('REMOVING PROMPT FROM ARRAY!!!!', stateIndex);
-  // ActionStateHolder.prompts.splice(stateIndex, 1);
 
   if (sender) {
     // Remove the popup window that was opened:
@@ -241,16 +174,7 @@ function handlePromptMessage(message: ActionMessageResponse, sender) {
 }
 
 async function promptPermission(state: ActionState) {
-  console.log('MUTEX BEGIN!');
   releaseMutex = await promptMutex.acquire();
-  console.log('MUTEX RELEASED!!');
-
-  // let qs = new URLSearchParams({
-  //   app: state.message.app,
-  //   action: state.message.args.method,
-  //   id: state.id,
-  //   args: JSON.stringify(state.message.args.params),
-  // });
 
   let qs = new URLSearchParams({
     app: state.message.app,
@@ -269,17 +193,7 @@ async function promptPermission(state: ActionState) {
       width: 628,
       height: 800,
     });
-    // .then((w) => {
-    //   console.log('POPUP CREATE CALLBACK STATE:', state);
-    //   // Keep track of the prompt based upon the window ID.
-    //   state.windowId = w.id;
-    // });
   });
-
-  // console.log('Setting the promptPermission!!');
-  // state.promptPermission = p;
-
-  // return p;
 }
 
 browser.windows.onRemoved.addListener(function (windowId) {
@@ -287,44 +201,9 @@ browser.windows.onRemoved.addListener(function (windowId) {
     prompt?.reject?.();
     prompt = null;
     releaseMutex();
-    console.log('PROMPT EMPTY, PROMPT REJECT, RELEASE MUTEX!');
   } else {
     console.log('ALREADY FINISHED!');
   }
-
-  // console.log('prompts:', JSON.stringify(ActionStateHolder.prompts));
-  // console.log('prompts (length):', ActionStateHolder.prompts.length);
-
-  // var stateIndex = ActionStateHolder.prompts.findIndex((p) => p.windowId === windowId);
-  // console.log('STATE INDEX ON REMOVED WINDOW:', stateIndex);
-
-  // if (stateIndex > -1) {
-  //   var state = ActionStateHolder.prompts[stateIndex];
-  //   // If the state has not been processed yet, it means user clicked X and did not follow normal flow.
-  //   console.log('WE MUST HANDLE EXIT!!', windowId);
-
-  //   console.log('STATE IN WINDOW CLOSE', state);
-
-  //   // Important that we set the permission so the promise is rejected.
-  //   state.message.permission = 'no';
-
-  //   // Handle the prompt message.
-  //   handlePromptMessage(state.message, null);
-
-  //   // We should reject the prompt permission and allow that logic to continue where it is halting:
-  //   // state.prompt.reject();
-  //   // state.promptPermission.reject();
-  //   //
-  //   // ActionStateHolder.prompts.splice(stateIndex, 1);
-  // } else {
-  //   console.log('WE DONT NEED TO HANDLE EXIT!', windowId);
-  // }
-
-  // if (promptId === windowId) {
-  //   // The closed window was the prompt window, verify if we must unlock the mutex:
-  //   console.log('WE MUST HANDLE EXIT!!', windowId);
-
-  //   handlePromptMessage(promptMessage, null);
 });
 
 // Run when the browser has been fully exited and opened again.
@@ -342,7 +221,7 @@ async function getTabId() {
 }
 
 chrome.runtime.onInstalled.addListener(async ({ reason }) => {
-  console.debug('onInstalled', reason);
+  // console.debug('onInstalled', reason);
 
   // Periodic alarm that will check if wallet should be locked.
   chrome.alarms.get('periodic', (a) => {
@@ -471,8 +350,6 @@ const runIndexer = async () => {
   let manager: any = new BackgroundManager();
   manager.onUpdates = (status: ProcessResult) => {
     if (status.changes) {
-      console.log('Indexer found changes. Send message!');
-
       chrome.runtime.sendMessage(
         {
           type: 'indexed',
@@ -487,8 +364,6 @@ const runIndexer = async () => {
         }
       );
     } else {
-      console.log('Indexer found zero changes. We will still inform the UI to refresh wallet to get latest scan state.');
-
       chrome.runtime.sendMessage(
         {
           type: 'updated',
@@ -536,8 +411,6 @@ const runWatcher = async () => {
 
     watchManager.onUpdates = (status: ProcessResult) => {
       if (status.changes) {
-        console.log('Watcher found changes. Sending message to UI!');
-
         chrome.runtime.sendMessage(
           {
             type: 'indexed',
@@ -552,8 +425,6 @@ const runWatcher = async () => {
           }
         );
       } else {
-        console.debug('Watcher found zero changes. We will still inform the UI to refresh wallet to get latest scan state.');
-
         chrome.runtime.sendMessage(
           {
             type: 'updated',
