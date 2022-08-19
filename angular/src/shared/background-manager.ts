@@ -158,41 +158,57 @@ export class BackgroundManager {
 
           // const data = response.data;
 
-          if (data.error) {
+          if (response.ok)
+          {
+            if (data.error) {
+              networkStatus = {
+                domain,
+                url: indexerUrl,
+                blockSyncHeight: -1,
+                networkType: account.networkType,
+                availability: IndexerApiStatus.Error,
+                status: 'Error: ' + data.error,
+                relayFee: 0.0001 * FEE_FACTOR,
+              };
+            } else {
+              const blocksBehind = data.blockchain.blocks - data.syncBlockIndex;
+  
+              if (blocksBehind > 10) {
+                networkStatus = {
+                  domain,
+                  url: indexerUrl,
+                  blockSyncHeight: data.syncBlockIndex,
+                  networkType: account.networkType,
+                  availability: IndexerApiStatus.Syncing,
+                  status: 'Syncing / Progress: ' + data.progress,
+                  relayFee: data.network?.relayFee * FEE_FACTOR,
+                };
+              } else {
+                networkStatus = {
+                  domain,
+                  url: indexerUrl,
+                  blockSyncHeight: data.syncBlockIndex,
+                  networkType: account.networkType,
+                  availability: IndexerApiStatus.Online,
+                  status: 'Online / Progress: ' + data.progress,
+                  relayFee: data.network?.relayFee * FEE_FACTOR,
+                };
+              }
+            }
+          }
+          else {
             networkStatus = {
               domain,
               url: indexerUrl,
               blockSyncHeight: -1,
               networkType: account.networkType,
               availability: IndexerApiStatus.Error,
-              status: 'Error: ' + data.error,
-              relayFee: 0.0001 * FEE_FACTOR,
+              status: 'Error: ' + response.status,
+              relayFee: data.network?.relayFee * FEE_FACTOR,
             };
-          } else {
-            const blocksBehind = data.blockchain.blocks - data.syncBlockIndex;
-
-            if (blocksBehind > 10) {
-              networkStatus = {
-                domain,
-                url: indexerUrl,
-                blockSyncHeight: data.syncBlockIndex,
-                networkType: account.networkType,
-                availability: IndexerApiStatus.Syncing,
-                status: 'Syncing / Progress: ' + data.progress,
-                relayFee: data.network?.relayFee * FEE_FACTOR,
-              };
-            } else {
-              networkStatus = {
-                domain,
-                url: indexerUrl,
-                blockSyncHeight: data.syncBlockIndex,
-                networkType: account.networkType,
-                availability: IndexerApiStatus.Online,
-                status: 'Online / Progress: ' + data.progress,
-                relayFee: data.network?.relayFee * FEE_FACTOR,
-              };
-            }
           }
+
+
         } catch (error: any) {
           console.log('Error on Network Status Service:', error);
 
@@ -239,7 +255,7 @@ export class BackgroundManager {
               blockSyncHeight: -1,
               networkType: account.networkType,
               availability: IndexerApiStatus.Unknown,
-              status: error.message,
+              status: 'Error:' + error.message,
               relayFee: 0.0001 * FEE_FACTOR,
             };
           }
