@@ -103,6 +103,7 @@ import { ActionSignVerifiableCredentialComponent } from './action/sign-credentia
 import { RuntimeService } from 'src/shared/runtime.service';
 import { StorageService } from 'src/shared/storage.service';
 import { SharedManager } from 'src/shared/shared-manager';
+import { NetworkLoader } from './services';
 
 // required for AOT compilation
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
@@ -251,8 +252,8 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     RuntimeService,
     {
       provide: SharedManager,
-      useFactory: (storage: StorageService) => new SharedManager(storage),
-      deps: [StorageService],
+      useFactory: (storage: StorageService, store: WalletStore, networkLoader: NetworkLoader) => new SharedManager(storage, store, networkLoader),
+      deps: [StorageService, WalletStore, NetworkLoader],
     },
     {
       provide: StorageService,

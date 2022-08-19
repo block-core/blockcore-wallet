@@ -9,6 +9,7 @@ import { ActionState, Handlers } from '../../angular/src/shared';
 import { Mutex } from 'async-mutex';
 import { StorageService } from '../../angular/src/shared/storage.service';
 import { RuntimeService } from '../../angular/src/shared/runtime.service';
+import { NetworkLoader } from '../../angular/src/shared/network-loader';
 
 // let state: ActionState;
 let prompt: any | null;
@@ -18,7 +19,7 @@ let permissionService = new PermissionServiceShared();
 let watchManager: BackgroundManager | null;
 let networkManager: BackgroundManager;
 let indexing = false;
-let shared = new SharedManager(new StorageService(new RuntimeService()));
+let shared = new SharedManager(new StorageService(new RuntimeService()), new WalletStore(), new NetworkLoader());
 const networkUpdateInterval = 45000;
 let walletStore: WalletStore;
 
@@ -145,7 +146,7 @@ async function handleContentScriptMessage(message: ActionMessageResponse) {
 
   try {
     // User have given permission to execute.
-    const result = await state.handler.execute(<Permission>permission, message.args.params);
+    const result = await state.handler.execute(<Permission>permission, message.args);
     return result;
   } catch (error) {
     return { error: { message: error.message, stack: error.stack } };

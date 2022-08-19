@@ -577,7 +577,7 @@ enum Actions {
 
 interface RequestArguments {
   readonly method: string;
-  readonly params?: readonly unknown[] | object;
+  readonly params: readonly any[];
 }
 
 type Listener = (...args: any[]) => void;

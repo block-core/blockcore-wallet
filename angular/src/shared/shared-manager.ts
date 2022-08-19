@@ -1,12 +1,17 @@
-import { RuntimeService } from "./runtime.service";
-import { StorageService } from "./storage.service";
+import { Wallet } from './interfaces';
+import { NetworkLoader } from './network-loader';
+import { Network } from './networks';
+import { RuntimeService } from './runtime.service';
+import { StorageService } from './storage.service';
+import { WalletStore } from './store';
 
 export class SharedManager {
   /** Contains the master seed for unlocked wallets. This object should never be persisted and only exists in memory. */
   private keys: Map<string, string> = new Map<string, string>();
+  private allNetworks: Network[];
 
-  constructor(private storage: StorageService) {
-    
+  constructor(private storage: StorageService, private store: WalletStore, private networkLoader: NetworkLoader) {
+    this.allNetworks = this.networkLoader.getAllNetworks();
   }
 
   getPrivateKey(key: string) {
@@ -17,17 +22,32 @@ export class SharedManager {
     return this.keys.get(key) != null;
   }
 
+  async getWallet(walletId: string) {
+    /** Always reload the store when getting a wallet in the SharedManager */
+    await this.store.load();
+
+    return this.store.get(walletId);
+  }
+
+  getAccount(wallet: Wallet, accountId: string) {
+    return wallet.accounts.find((a) => a.identifier == accountId);
+  }
+
+  getNetwork(networkType: string) {
+    return this.allNetworks.find((w) => w.id == networkType);
+  }
+
   async loadPrivateKeys() {
     let keys = await this.storage.get('keys', false);
 
     if (keys != null && Object.keys(keys).length > 0) {
-        this.keys = new Map<string, string>(Object.entries(keys))
+      this.keys = new Map<string, string>(Object.entries(keys));
     } else {
-        this.keys = new Map<string, string>();
+      this.keys = new Map<string, string>();
     }
 
     // this.unlockedWalletsSubject.next(<string[]>Array.from(this.keys.keys()));
-}
+  }
 
   async checkLockTimeout() {
     // console.log('SharedManager:checkLockTimeout');
