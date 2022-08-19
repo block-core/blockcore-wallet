@@ -14,15 +14,15 @@ import { WalletManager } from './wallet-manager';
 })
 export class OrchestratorService {
     private _initialized = false;
-    private shared;
 
     constructor(
         private logger: LoggerService,
         private events: EventBus,
         private walletManager: WalletManager,
         private router: Router,
+        private shared: SharedManager
     ) {
-        this.shared = new SharedManager();
+        
     }
 
     /** Initializes the Orchestrator Service responsible for events and processing in browser/mobile mode. Should only be called when running outside of extension context. */

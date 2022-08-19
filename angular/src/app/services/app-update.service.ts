@@ -2,7 +2,7 @@ import { ApplicationRef, Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SwUpdate, VersionReadyEvent } from '@angular/service-worker';
 import { filter, interval, map } from 'rxjs';
-import { RuntimeService } from "./runtime.service";
+import { RuntimeService } from "../../shared/runtime.service";
 @Injectable({
   providedIn: 'root'
 })

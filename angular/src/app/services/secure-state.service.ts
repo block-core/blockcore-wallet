@@ -1,8 +1,8 @@
 import { Injectable, NgZone } from "@angular/core";
 import { Router } from "@angular/router";
 import { BehaviorSubject, Observable } from "rxjs";
-import { RuntimeService } from "./runtime.service";
-import { StorageService } from "./storage.service";
+import { RuntimeService } from "../../shared/runtime.service";
+import { StorageService } from "../../shared/storage.service";
 
 @Injectable({
     providedIn: 'root'
@@ -20,7 +20,7 @@ export class SecureStateService {
         return this.unlockedWalletsSubject.asObservable();
     }
 
-    constructor(private router: Router, private ngZone: NgZone, private runtime: RuntimeService, private storage: StorageService) {
+    constructor(private ngZone: NgZone, private runtime: RuntimeService, private storage: StorageService) {
         // TODO: Add support for fallback on storage.
         if (runtime.isExtension) {
             const storage = globalThis.chrome.storage as any;
@@ -83,27 +83,6 @@ export class SecureStateService {
     }
 
     async load() {
-        // if (this.runtime.isExtension) {
-        //     const storage = globalThis.chrome.storage;
-        //     // let { keys } = await (<any>storage).session.get(['keys']);
-        //     const keys = await this.storage.get('keys', false);
-
-        //     if (keys != null && Object.keys(keys).length > 0) {
-        //         this.keys = new Map<string, string>(Object.entries(keys))
-        //     } else {
-        //         this.keys = new Map<string, string>();
-        //     }
-        // } else {
-        //     // TODO: Verify fallback for storage.
-        //     let keys = await this.storage.get('keys', false);
-
-        //     if (keys != null && Object.keys(keys).length > 0) {
-        //         this.keys = new Map<string, string>(Object.entries(keys))
-        //     } else {
-        //         this.keys = new Map<string, string>();
-        //     }
-        // }
-
         let keys = await this.storage.get('keys', false);
 
         if (keys != null && Object.keys(keys).length > 0) {

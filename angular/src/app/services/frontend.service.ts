@@ -1,5 +1,6 @@
 import { Injectable, OnInit } from '@angular/core';
 import { BackgroundManager, ProcessResult } from 'src/shared/background-manager';
+import { SharedManager } from 'src/shared/shared-manager';
 import { RunState } from 'src/shared/task-runner';
 import { CommunicationService } from './communication.service';
 import { EventBus } from './event-bus';
@@ -15,7 +16,7 @@ export class FrontendService implements OnInit {
   private networkWatcherRef: any;
   private indexing: boolean;
 
-  constructor(private events: EventBus, private communication: CommunicationService) {
+  constructor(private events: EventBus, private communication: CommunicationService, private sharedManager: SharedManager) {
     this.events.subscribeAll().subscribe(async (message) => {
       console.log('ALL EVENTS', message);
       //   this.ngZone.run(async () => {
@@ -50,7 +51,7 @@ export class FrontendService implements OnInit {
     }
 
     if (this.networkManager == null) {
-      this.networkManager = new BackgroundManager();
+      this.networkManager = new BackgroundManager(this.sharedManager);
     }
 
     var interval = async () => {
@@ -110,7 +111,7 @@ export class FrontendService implements OnInit {
     }
 
     // Whenever indexer is executed, we'll create a new manager.
-    let manager: any = new BackgroundManager();
+    let manager: any = new BackgroundManager(this.sharedManager);
 
     console.log('Created new manager object!!');
 
@@ -160,7 +161,7 @@ export class FrontendService implements OnInit {
       this.watchManager.stop();
       // console.log('Calling to stop watch manager...');
     } else {
-        this.watchManager = new BackgroundManager();
+        this.watchManager = new BackgroundManager(this.sharedManager);
   
       // Whenever the manager has successfully stopped, restart the watcher process.
       this.watchManager.onStopped = () => {

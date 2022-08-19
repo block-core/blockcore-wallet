@@ -100,6 +100,9 @@ import { ExchangeComponent } from './exchange/exchange.component';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { ActionSignMessageComponent } from './action/sign-message/sign.component';
 import { ActionSignVerifiableCredentialComponent } from './action/sign-credential/sign.component';
+import { RuntimeService } from 'src/shared/runtime.service';
+import { StorageService } from 'src/shared/storage.service';
+import { SharedManager } from 'src/shared/shared-manager';
 
 // required for AOT compilation
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
@@ -163,7 +166,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     ContactsViewComponent,
     ExchangeComponent,
     ActionSignMessageComponent,
-    ActionSignVerifiableCredentialComponent
+    ActionSignVerifiableCredentialComponent,
   ],
   imports: [
     BrowserModule,
@@ -245,6 +248,17 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     PermissionStore,
     AppUpdateService,
     ContactStore,
+    RuntimeService,
+    {
+      provide: SharedManager,
+      useFactory: (storage: StorageService) => new SharedManager(storage),
+      deps: [StorageService],
+    },
+    {
+      provide: StorageService,
+      useFactory: (runtimeService: RuntimeService) => new StorageService(runtimeService),
+      deps: [RuntimeService],
+    },
   ],
   bootstrap: [AppComponent],
 })

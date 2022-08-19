@@ -5,7 +5,7 @@ import { Settings } from '../../shared/interfaces';
 import { INDEXER_URL } from '../shared/constants';
 import { TranslateService } from '@ngx-translate/core';
 import { SettingStore } from '../../shared';
-import { RuntimeService } from '../services/runtime.service';
+import { RuntimeService } from '../../shared/runtime.service';
 
 @Component({
   selector: 'app-settings',

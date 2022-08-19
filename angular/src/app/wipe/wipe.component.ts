@@ -2,7 +2,7 @@ import { Component, Inject, HostBinding } from '@angular/core';
 import { Location } from '@angular/common'
 import { UIState } from '../services/ui-state.service';
 import { StateService } from '../services';
-import { RuntimeService } from '../services/runtime.service';
+import { RuntimeService } from '../../shared/runtime.service';
 
 @Component({
     selector: 'app-wipe',

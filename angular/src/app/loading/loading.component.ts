@@ -5,7 +5,7 @@ import { Action } from '../../shared/interfaces';
 import { TranslateService } from '@ngx-translate/core';
 import { DOCUMENT, Location } from '@angular/common';
 import { combineLatest } from 'rxjs';
-import { RuntimeService } from '../services/runtime.service';
+import { RuntimeService } from '../../shared/runtime.service';
 import { OrchestratorService } from '../services/orchestrator.service';
 
 @Component({

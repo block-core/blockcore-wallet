@@ -10,7 +10,7 @@ import { Address, NetworkStatus, Transaction, TransactionView } from '../../../s
 import { Network } from '../../../shared/networks';
 import { TransactionStore } from 'src/shared';
 import { AccountStateStore } from 'src/shared/store/account-state-store';
-import { RuntimeService } from 'src/app/services/runtime.service';
+import { RuntimeService } from 'src/shared/runtime.service';
 var QRCode2 = require('qrcode');
 
 @Component({

@@ -72,7 +72,6 @@
     "hammerjs": "^2.0.8",
     "html5-qrcode": "^2.2.1",
     "js-base64": "3.7.2",
-    "micro-bip32": "^0.1.0",
     "ngx-logger": "^5.0.11",
     "nostr-tools": "0.24.0",
     "qrcode": "^1.5.1",

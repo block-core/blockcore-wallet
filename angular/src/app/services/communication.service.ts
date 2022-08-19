@@ -4,7 +4,7 @@ import { EnvironmentService, SettingsService } from '.';
 import { ActionMessageResponse, Message, MessageResponse } from '../../shared/interfaces';
 import { EventBus } from './event-bus';
 import { LoggerService } from './logger.service';
-import { RuntimeService } from './runtime.service';
+import { RuntimeService } from '../../shared/runtime.service';
 import { StateService } from './state.service';
 const { v4: uuidv4 } = require('uuid');
 

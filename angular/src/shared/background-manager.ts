@@ -8,6 +8,8 @@ import { AddressWatchStore } from './store/address-watch-store';
 import { RunState } from './task-runner';
 import { Defaults } from './defaults';
 import { Account, IndexerApiStatus, NetworkStatus } from './interfaces';
+import { SharedManager } from './shared-manager';
+import { HDKey } from '@scure/bip32';
 const axios = require('axios').default;
 
 const FEE_FACTOR = 100000;
@@ -24,7 +26,7 @@ export class BackgroundManager {
   onUpdates: Function;
   onStopped: Function;
 
-  constructor() {}
+  constructor(private sharedManager: SharedManager) {}
 
   stop() {
     if (this.watcherState) {
@@ -44,6 +46,69 @@ export class BackgroundManager {
   }
 
   intervalRef: any;
+
+  async getKey(walletId: string, accountId: string, keyId: string) {
+
+    await this.sharedManager.loadPrivateKeys();
+
+    // Get the secret seed.
+    const masterSeedBase64 = this.sharedManager.getPrivateKey(walletId);
+    const masterSeed = Buffer.from(masterSeedBase64, 'base64');
+
+    // TODO: We need network and continue the logic below:
+
+        // const secret = this.walletSecrets.get(wallet.id);
+
+    // Create the master node.
+    // const masterNode = HDKey.fromMasterSeed(masterSeed, network.bip32);
+
+    // for (let i = 0; i < inputs.length; i++) {
+    //   const input = inputs[i];
+
+    //   // Get the index of the address, we need that to get the private key for signing.
+    //   let signingAddress = accountState.receive.find((item) => item.address == input.address);
+
+    //   let addressNode: HDKey;
+
+    //   if (!signingAddress) {
+    //     signingAddress = accountState.change.find((item) => item.address == input.address);
+    //     addressNode = masterNode.derive(`m/${account.purpose}'/${account.network}'/${account.index}'/1/${signingAddress.index}`);
+    //   } else {
+    //     addressNode = masterNode.derive(`m/${account.purpose}'/${account.network}'/${account.index}'/0/${signingAddress.index}`);
+    //   }
+
+    //   if (!signingAddress) {
+    //     throw Error('Unable to find the signing address for the selected transaction input. Unable to continue.');
+    //   }
+
+    //   try {
+    //     const ecPair = ECPair.fromPrivateKey(Buffer.from(addressNode.privateKey), { network: network });
+    //     tx.signInput(i, ecPair);
+    //   } catch (error) {
+    //     this.logger.error(error);
+    //     throw Error('Unable to sign the transaction. Unable to continue.');
+    //   }
+    // }
+
+    // const walletStore = new WalletStore();
+    // await walletStore.load();
+  
+    // const wallet = walletStore.get(walletId);
+    
+    // if (wallet) {
+    //   throw new TypeError('Could not find wallet.');
+    // }
+
+    // const account = wallet.accounts.find((a) => a.identifier == accountId);
+
+    // if (account) {
+    //   throw new TypeError('Could not find account.');
+    // }
+
+    
+
+    
+  }
 
   async updateNetworkStatus(instance: string) {
     const walletStore = new WalletStore();
@@ -101,7 +166,7 @@ export class BackgroundManager {
       const network = networkLoader.getNetwork(account.networkType);
       const indexerUrls = networkLoader.getServers(network.id, settings.server, settings.indexer) || [];
 
-      if (indexerUrls == null && account.type!='identity') {
+      if (indexerUrls == null && account.type != 'identity') {
         console.warn(`Invalid configuration of servers. There are no servers registered for network of type ${network.id}.`);
         continue;
       }

@@ -1,12 +1,8 @@
-import { Injectable } from "@angular/core";
 import { RuntimeService } from "./runtime.service";
 
-@Injectable({
-    providedIn: 'root'
-})
 export class StorageService {
 
-    constructor(private runtime: RuntimeService) {
+    constructor(public runtime: RuntimeService) {
     }
 
     async set(key: string, value: any, persisted: boolean) {

@@ -7,6 +7,8 @@ import { PermissionServiceShared } from '../../angular/src/shared/permission.ser
 import * as browser from 'webextension-polyfill';
 import { ActionState, Handlers } from '../../angular/src/shared';
 import { Mutex } from 'async-mutex';
+import { StorageService } from '../../angular/src/shared/storage.service';
+import { RuntimeService } from '../../angular/src/shared/runtime.service';
 
 // let state: ActionState;
 let prompt: any | null;
@@ -16,7 +18,7 @@ let permissionService = new PermissionServiceShared();
 let watchManager: BackgroundManager | null;
 let networkManager: BackgroundManager;
 let indexing = false;
-let shared = new SharedManager();
+let shared = new SharedManager(new StorageService(new RuntimeService()));
 const networkUpdateInterval = 45000;
 let walletStore: WalletStore;
 
@@ -76,8 +78,14 @@ async function handleContentScriptMessage(message: ActionMessageResponse) {
   const state = new ActionState();
   state.id = message.id;
   state.id2 = id;
-  state.handler = Handlers.getAction(method);
+  state.handler = Handlers.getAction(method, watchManager!);
   state.message = message;
+
+          // Make sure we reload wallets at this point every single process.
+          // await this.walletStore.load();
+          // await this.accountStateStore.load();
+          
+          // const wallets = this.walletStore.getWallets();
 
   // ActionStateHolder.prompts.push(state);
 
@@ -137,7 +145,7 @@ async function handleContentScriptMessage(message: ActionMessageResponse) {
 
   try {
     // User have given permission to execute.
-    const result = state.handler.execute(<Permission>permission, message.args.params);
+    const result = await state.handler.execute(<Permission>permission, message.args.params);
     return result;
   } catch (error) {
     return { error: { message: error.message, stack: error.stack } };
@@ -289,7 +297,7 @@ const networkStatusWatcher = async () => {
   }
 
   if (networkManager == null) {
-    networkManager = new BackgroundManager();
+    networkManager = new BackgroundManager(shared);
   }
 
   var interval = async () => {
@@ -347,7 +355,7 @@ const runIndexer = async () => {
   }
 
   // Whenever indexer is executed, we'll create a new manager.
-  let manager: any = new BackgroundManager();
+  let manager: any = new BackgroundManager(shared);
   manager.onUpdates = (status: ProcessResult) => {
     if (status.changes) {
       chrome.runtime.sendMessage(
@@ -400,7 +408,7 @@ const runWatcher = async () => {
     watchManager.stop();
     // console.log('Calling to stop watch manager...');
   } else {
-    watchManager = new BackgroundManager();
+    watchManager = new BackgroundManager(shared);
 
     // Whenever the manager has successfully stopped, restart the watcher process.
     watchManager.onStopped = () => {
