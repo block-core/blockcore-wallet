@@ -61,7 +61,7 @@ export class BackgroundManager {
     // Create the master node.
     const masterNode = HDKey.fromMasterSeed(masterSeed, network.bip32);
     var node = masterNode.derive(`m/${account.purpose}'/${account.network}'/${account.index}'/${keyId}`);
-    return node;
+    return { network, node };
   }
 
   async updateNetworkStatus(instance: string) {

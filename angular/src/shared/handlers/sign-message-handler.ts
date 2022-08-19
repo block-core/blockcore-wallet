@@ -1,33 +1,31 @@
 import { BackgroundManager } from '../background-manager';
 import { RequestArguments, Actions, Permission } from '../interfaces';
 import { ActionHandler } from './action-handler';
-import { sha256 } from '@noble/hashes/sha256';
-import * as secp from '@noble/secp256k1';
-import { bytesToHex, utf8ToBytes } from '@noble/hashes/utils';
+import * as bitcoinMessage from 'bitcoinjs-message';
+import { HDKey } from '@scure/bip32';
+import { Network } from '../networks';
 
 export class SignMessageHandler implements ActionHandler {
   action = ['signMessage'];
 
   constructor(private backgroundManager: BackgroundManager) {}
 
+  async signData(network: Network, node: HDKey, content: string): Promise<string> {
+    // TODO: Investigate if Paul Miller or someone else implements an message signing library relying on noble packages.
+    var signature = bitcoinMessage.sign(content, Buffer.from(node.privateKey), true, network.messagePrefix);
+    return signature.toString('base64');
+  }
+
   async execute(permission: Permission, args: RequestArguments) {
     // Get the private key
-    const privateKey = await this.backgroundManager.getKey(permission.walletId, permission.accountId, permission.keyId);
-    console.log('ARGS:', args);
+    const { network, node } = await this.backgroundManager.getKey(permission.walletId, permission.accountId, permission.keyId);
 
     if (args.params && args.params[0]) {
-      // var parsedParams = JSON.parse(args.params);
       const content = args.params[0].message;
-      const msgHash = sha256(content);
-      const sigHash = await secp.sign(msgHash, privateKey.privateKey, { canonical: true });
-      const sig = secp.Signature.fromDER(sigHash);
-      const signature = sig.toCompactHex();
-
-      console.log('sigHash:', sigHash);
-      console.log('sigHash hex:', sig.toCompactHex());
+      let signedData = await this.signData(network, node, content);
 
       console.log('Executing Sign;MessageHandler!', args);
-      return { key: permission.key, signature: signature, hash: bytesToHex(msgHash) };
+      return { key: permission.key, signature: signedData };
     } else {
       return { key: '', signature: '' };
     }
