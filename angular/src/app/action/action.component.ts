@@ -13,7 +13,7 @@ const { v4: uuidv4 } = require('uuid');
   styleUrls: ['./action.component.css'],
 })
 export class ActionComponent {
-  contentToSign: string;
+  // contentToSign: string;
   accountState: AccountState;
   addresses: any[];
   accounts: any[];
@@ -24,18 +24,24 @@ export class ActionComponent {
   constructor(public uiState: UIState, private accountStateStore: AccountStateStore, private permissionStore: PermissionStore, public action: ActionService, public networkService: NetworksService, public walletManager: WalletManager, private manager: AppManager, private cd: ChangeDetectorRef) {
     this.uiState.title = 'Action: ' + this.uiState.action?.action;
 
-    this.contentToSign = uiState.action.args;
-
+    // this.contentToSign = uiState.action.args;
     // this.action.content = this.uiState.action?.document;
-    this.action.content = this.contentToSign;
+    // this.action.content = this.contentToSign;
+
+    // Improve this logic, just quickly select the key:
+    const parsedContent = JSON.parse(this.uiState.action.args);
+    const firstArgument = parsedContent[0];
+
+    const requestedKey = firstArgument.key;
+
+    // Only display the message part of the argument, which is what user should sign:
+    this.action.content = firstArgument.message;
+
+    console.log('ACTION:', this.action);
+
     this.action.app = this.uiState.action?.app;
     this.accounts = this.walletManager.activeWallet.accounts;
     this.action.accountId = this.walletManager.activeAccountId;
-
-    // Improve this logic, just quickly select the key:
-    const parsedContent = JSON.parse(this.contentToSign);
-    console.log('PARSED CONTENT:', parsedContent);
-    const requestedKey = parsedContent[0].key;
 
     if (requestedKey) {
       this.requestedKey = requestedKey;

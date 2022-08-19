@@ -15,7 +15,6 @@ const { v4: uuidv4 } = require('uuid');
   styleUrls: ['./sign.component.css'],
 })
 export class ActionSignMessageComponent implements OnInit, OnDestroy {
-  contentToSign: string;
   accountState: AccountState;
   selectedKeyId: any;
   addresses: any[];
@@ -24,8 +23,6 @@ export class ActionSignMessageComponent implements OnInit, OnDestroy {
   subscription: any;
 
   constructor(public uiState: UIState, private accountStateStore: AccountStateStore, private permissionStore: PermissionStore, public action: ActionService, public networkService: NetworksService, public walletManager: WalletManager, private manager: AppManager, private cd: ChangeDetectorRef) {
-    this.contentToSign = uiState.action.args;
-
     this.accounts = this.walletManager.activeWallet.accounts;
     // this.selectedAccountId = this.walletManager.activeAccountId;
 

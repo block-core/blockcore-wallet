@@ -21,11 +21,7 @@ if (!globalThis.blockcore) {
     if (message.data.ext !== 'blockcore') return; // We'll only handle messages marked with extension 'blockcore'.
     if (message.data.target !== 'tabs') return; // We'll only forward messages that has target tabs.
 
-    console.log('Content:MessageReceived', message);
-    console.log('Content: Message will be processed, passed the filters...');
     const msg = { ...message.data, app: location.host };
-
-    console.log('Content:SendMessageToBackground', msg);
     msg.isFromContent = true;
     let response: any | null = null;
 
@@ -36,13 +32,8 @@ if (!globalThis.blockcore) {
       response = { error };
     }
 
-    console.log('RESPONSE:', response);
     const responseMsg = { ...message.data, response: response };
-
-    console.log('Setting manual provider as target');
     responseMsg.target = 'provider';
-
-    console.log('RESPONSE:postMessage', responseMsg);
 
     // Return the response to the provider/caller.
     window.postMessage(responseMsg, message.origin);
