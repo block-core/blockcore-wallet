@@ -27,11 +27,11 @@ export class StorageService {
     async get(key: string, persisted: boolean) {
         if (this.runtime.isExtension) {
             if (persisted) {
-                let { keys } = await globalThis.chrome.storage.local.get(['keys']);
+                let { keys } = await globalThis.chrome.storage.local.get([key]);
                 return keys;
             } else {
                 const storage = globalThis.chrome.storage;
-                let { keys } = await (<any>storage).session.get(['keys']);
+                let { keys } = await (<any>storage).session.get([key]);
                 return keys;
             }
         } else {
