@@ -1,3 +1,17 @@
+## <small>0.0.58 (2022-08-20)</small>
+
+* Fix issue with hardwired key for storage get ([f584333](https://github.com/block-core/blockcore-wallet/commit/f584333))
+* Handle indexer issues when response is not OK ([8cce796](https://github.com/block-core/blockcore-wallet/commit/8cce796))
+* Hide the biometric option from settings ([fca4681](https://github.com/block-core/blockcore-wallet/commit/fca4681))
+* Implements the full end-to-end logic for signing messages ([c2b68c7](https://github.com/block-core/blockcore-wallet/commit/c2b68c7))
+* Parse the message to be signed and display correct in prompt ([c1cb6aa](https://github.com/block-core/blockcore-wallet/commit/c1cb6aa))
+* Refactor services to be generic and independent of Angular ([95e3d5b](https://github.com/block-core/blockcore-wallet/commit/95e3d5b))
+* Remove debug logging and update CoinVault icons ([a55367c](https://github.com/block-core/blockcore-wallet/commit/a55367c))
+* Update version and changelog ([d9f11d8](https://github.com/block-core/blockcore-wallet/commit/d9f11d8))
+* Use the existing Bitcoin Message library for signing ([534dd5d](https://github.com/block-core/blockcore-wallet/commit/534dd5d))
+
+
+
 ## <small>0.0.57 (2022-08-17)</small>
 
 * Add support for getting permission based upon key (public key) ([f6061cb](https://github.com/block-core/blockcore-wallet/commit/f6061cb))
