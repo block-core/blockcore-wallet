@@ -210,8 +210,6 @@ browser.windows.onRemoved.addListener(function (windowId) {
     prompt?.reject?.();
     prompt = null;
     releaseMutex();
-  } else {
-    console.log('ALREADY FINISHED!');
   }
 });
 

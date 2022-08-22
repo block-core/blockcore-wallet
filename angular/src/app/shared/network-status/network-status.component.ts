@@ -4,7 +4,7 @@ import { IndexerApiStatus, NetworkStatus } from '../../../shared/interfaces';
 @Component({
     selector: 'app-network-status',
     template: '<span class="material-icons network-status" [ngClass]="class">circle</span>',
-    styles: ['.network-status { font-size: 0.6em;} .network-status-syncing { color: orange; } .network-status-online { color: green; }  .network-status-error { color: red; } .network-status-offline { color: red; } .network-status-unknown { color: gray; }']
+    styles: ['']
 })
 export class NetworkStatusComponent {
     @Input() status: NetworkStatus[];
