@@ -99,15 +99,8 @@ export class NetworkLoader {
         } else {
           // If the server is not online, get another one:
           const availableServersUrl = availableServers.map((s) => s.url);
-
-          console.log('availableServersUrl:', availableServersUrl);
-
           const serverIndex = this.generateRandomNumber(0, availableServersUrl.length - 1);
           const server = availableServersUrl[serverIndex];
-
-          console.log('serverIndex:', serverIndex);
-
-          console.log('SERVER:', server);
 
           // Since we only have the server URL right here and instead of querying the servers with that, we'll just grab domain from URL:
           existingState.domain = server.substring(server.indexOf('//') + 2);
