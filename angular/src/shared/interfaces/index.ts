@@ -62,6 +62,8 @@ interface NetworkStatus {
 
 interface NetworkStatusEntry {
   type: string;
+  selected: NetworkStatus;
+  selectedDomain: string;
   networks: NetworkStatus[];
 }
 

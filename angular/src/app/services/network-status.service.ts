@@ -77,6 +77,8 @@ export class NetworkStatusService {
 
             items.push({
                 type,
+                selected: null,
+                selectedDomain: 'strax.indexer.blockcore.net',
                 networks: this.store.get(type)
             });
         }

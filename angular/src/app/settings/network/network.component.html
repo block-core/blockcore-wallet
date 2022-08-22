@@ -1,20 +1,18 @@
 <div class="page">
-    <div class="centered">
-        <mat-icon class="large-icon">travel_explore</mat-icon>
-        <br>
-        <h1>{{ 'Settings.NetworkStatus' | translate }}</h1>
-        <p>
-            Based upon your selection of server groups.
-        </p>
-    </div>
+  <div class="centered">
+    <mat-icon class="large-icon">travel_explore</mat-icon>
+    <br />
+    <h1>{{ "Settings.NetworkStatus" | translate }}</h1>
+    <p>Based upon your selection of server groups.</p>
+  </div>
 
-    <div *ngFor="let status of networkStatus.getActive(); let i = index">
-        <strong class="network-type">{{status.type}}</strong><br>
-        <span *ngIf="status.networks?.length == 0">No servers online for this network.<br></span>
-        <div mat-line *ngFor="let network of status.networks">
-            <app-network-status [value]="network.availability"></app-network-status>
-            {{network.domain}}<br><span class="dimmed">{{network.status}}</span><br><br>
-        </div>
-    </div>
-
+  <mat-radio-group class="network-items" *ngFor="let status of networks; let i = index">
+    <!--  [(ngModel)]="status.selectedDomain" -->
+    <strong class="network-type">{{ status.type }}</strong
+    ><br />
+    <span *ngIf="status.networks?.length == 0">No servers online for this network.<br /></span>
+    <mat-radio-button *ngFor="let network of status.networks" class="network-line" [value]="network.domain">
+      <app-network-status [value]="network.availability"></app-network-status> {{ network.domain }}<br /><span class="dimmed">{{ network.status }}</span>
+    </mat-radio-button>
+  </mat-radio-group>
 </div>
