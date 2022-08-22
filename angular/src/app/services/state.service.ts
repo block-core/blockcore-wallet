@@ -5,6 +5,7 @@ import { AccountStateStore } from 'src/shared/store/account-state-store';
 import { AddressWatchStore } from 'src/shared/store/address-watch-store';
 import { ContactStore } from 'src/shared/store/contacts-store';
 import { PermissionStore } from 'src/shared/store/permission-store';
+import { StateStore } from 'src/shared/store/state-store';
 import { StoreBase, StoreListBase } from 'src/shared/store/store-base';
 import { EnvironmentService } from './environment.service';
 import { LoggerService } from './logger.service';
@@ -35,6 +36,7 @@ export class StateService {
     private addressIndexedStore: AddressIndexedStore,
     private accountStateStore: AccountStateStore,
     private permissionStore: PermissionStore,
+    private stateStore: StateStore,
     private contactStore: ContactStore,
     private env: EnvironmentService
   ) {
@@ -44,6 +46,7 @@ export class StateService {
       settingStore.serverGroup = 'group2';
     }
 
+    this.stores.push(stateStore);
     this.stores.push(addressStore);
     this.stores.push(actionStore);
     this.stores.push(networkStatusStore);
@@ -92,6 +95,7 @@ export class StateService {
     this.ngZone.run(async () => {
       // this.logger.debug('RELOAD ON STATE SERVICE (in zone):');
 
+      await this.stateStore.load();
       await this.addressStore.load();
       await this.transactionStore.load();
       await this.walletStore.load();
@@ -113,6 +117,7 @@ export class StateService {
     this.ngZone.run(async () => {
       // this.logger.debug('REFRESH ON STATE SERVICE (in zone):');
 
+      await this.stateStore.load();
       await this.addressStore.load();
       await this.transactionStore.load();
       await this.walletStore.load();

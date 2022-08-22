@@ -19,7 +19,9 @@ let permissionService = new PermissionServiceShared();
 let watchManager: BackgroundManager | null;
 let networkManager: BackgroundManager;
 let indexing = false;
-let shared = new SharedManager(new StorageService(new RuntimeService()), new WalletStore(), new NetworkLoader());
+
+let networkLoader = new NetworkLoader();
+let shared = new SharedManager(new StorageService(new RuntimeService()), new WalletStore(), networkLoader);
 const networkUpdateInterval = 45000;
 let walletStore: WalletStore;
 

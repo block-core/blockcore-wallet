@@ -10,7 +10,7 @@ export class SharedManager {
   private keys: Map<string, string> = new Map<string, string>();
   private allNetworks: Network[];
 
-  constructor(private storage: StorageService, private store: WalletStore, private networkLoader: NetworkLoader) {
+  constructor(private storage: StorageService, private store: WalletStore, public networkLoader: NetworkLoader) {
     this.allNetworks = this.networkLoader.getAllNetworks();
   }
 

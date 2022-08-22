@@ -1,8 +1,9 @@
 import { Defaults } from './defaults';
 import { IndexerApiStatus, NetworkStatus } from './interfaces';
-import { Network, BTC44, BTC84, CITY, CRS, IDENTITY, NOSTR, STRAX, TSTRAX, TCRS, SBC, RSC, CY, X42 } from './networks';
+import { Network } from './networks';
 import { Servers } from './servers';
 import { NetworkStatusStore } from './store';
+import { StateStore } from './store/state-store';
 
 /** Holds a list of networks that is available. */
 export class NetworkLoader {
@@ -10,7 +11,7 @@ export class NetworkLoader {
   // private store: NetworkStatusStore = new NetworkStatusStore();
   private loaded = false;
 
-  constructor(private store?: NetworkStatusStore) {
+  constructor(public store?: NetworkStatusStore, public stateStore?: StateStore) {
     this.createNetworks();
   }
 
@@ -45,9 +46,23 @@ export class NetworkLoader {
 
   getServer(networkType: string, networkGroup: string, customServer?: string) {
     // console.debug(`getServer: ${networkType} | ${networkGroup} | ${customServer}`);
+    const stateEntry = this.stateStore.get();
+
+    if (!stateEntry.activeNetworks) {
+      stateEntry.activeNetworks = [];
+    }
+
+    let existingState = stateEntry.activeNetworks.find((a) => a.networkType == networkType);
+
+    if (!existingState) {
+      existingState = { networkType, domain: '', url: '' };
+      stateEntry.activeNetworks.push(existingState);
+    }
 
     if (networkGroup == 'custom') {
       const server = customServer.replace('{id}', networkType.toLowerCase());
+      existingState.domain = server.substring(server.indexOf('//') + 2);
+      existingState.url = server;
       return server;
     } else {
       const serversGroup = Servers[networkGroup];
@@ -57,6 +72,8 @@ export class NetworkLoader {
       // console.log(serverStatuses);
 
       if (!serverStatuses && this.getNetwork(networkType).type != 'identity') {
+        existingState.domain = '';
+        existingState.url = '';
         console.warn(`No indexers for ${networkType} available. Returning empty URL!`);
         return null;
         // console.log('NO STATUSES!!! - get URL from list of servers:');
@@ -65,14 +82,39 @@ export class NetworkLoader {
         // return server;
       } else {
         const availableServers = serverStatuses.filter((s) => s.availability === IndexerApiStatus.Online);
-        const availableServersUrl = availableServers.map((s) => s.url);
 
-        const serverIndex = this.generateRandomNumber(0, availableServersUrl.length - 1);
-        const server = availableServersUrl[serverIndex];
+        if (availableServers.length == 0) {
+          console.warn(`No indexers for ${networkType} is online. Returning empty URL!`);
+          existingState.domain = '';
+          existingState.url = '';
+          return null;
+        }
 
-        // console.debug(`server:`, server);
+        // Verify if the current selected indexer is still online and return it, if it is online:
+        const existingServer = availableServers.find((s) => s.domain == existingState.domain);
 
-        return server;
+        // If the server that is selected is online, continue to use it.
+        if (existingServer) {
+          return existingServer.url;
+        } else {
+          // If the server is not online, get another one:
+          const availableServersUrl = availableServers.map((s) => s.url);
+
+          console.log('availableServersUrl:', availableServersUrl);
+
+          const serverIndex = this.generateRandomNumber(0, availableServersUrl.length - 1);
+          const server = availableServersUrl[serverIndex];
+
+          console.log('serverIndex:', serverIndex);
+
+          console.log('SERVER:', server);
+
+          // Since we only have the server URL right here and instead of querying the servers with that, we'll just grab domain from URL:
+          existingState.domain = server.substring(server.indexOf('//') + 2);
+          existingState.url = server;
+
+          return server;
+        }
       }
     }
   }
@@ -100,5 +142,22 @@ export class NetworkLoader {
     this.store.set(networkType, networkStatuses);
 
     await this.store.save();
+
+    // This method is called by the "updateAll", and when that happens, we'll also make sure we reload the StateStore,
+    // because the user might have changed their server group in settings.
+    await this.stateStore.load();
+
+    // First load the latest:
+    // await this.stateStore.load();
+
+    // const stateEntry = this.stateStore.get();
+
+    // if (!stateEntry.activeNetworks)
+    // {
+    //   stateEntry.activeNetworks =
+    // }
+
+    // Whenever the network statuses are updated, we will verify if the current active indexer is still available, if not
+    // we will auto-select another online indexer.
   }
 }

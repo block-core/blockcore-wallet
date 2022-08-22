@@ -62,7 +62,6 @@ interface NetworkStatus {
 
 interface NetworkStatusEntry {
   type: string;
-  selected: NetworkStatus;
   selectedDomain: string;
   networks: NetworkStatus[];
 }
@@ -426,6 +425,11 @@ interface State {
   unlocked: string[];
 }
 
+interface StateEntry
+{
+  activeNetworks: { networkType: string, domain: string, url: string }[]
+}
+
 interface Store {
   identities: Identity[]; // Contains the users own identities and queries/cached identities.
   cache: {
@@ -642,5 +646,6 @@ export {
   RequestArguments,
   Listener,
   IEvents,
-  Actions
+  Actions,
+  StateEntry
 };

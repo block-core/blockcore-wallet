@@ -104,6 +104,7 @@ import { RuntimeService } from 'src/shared/runtime.service';
 import { StorageService } from 'src/shared/storage.service';
 import { SharedManager } from 'src/shared/shared-manager';
 import { NetworkLoader } from './services';
+import { StateStore } from 'src/shared/store/state-store';
 
 // required for AOT compilation
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
@@ -253,6 +254,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     PermissionStore,
     AppUpdateService,
     ContactStore,
+    StateStore,
     RuntimeService,
     {
       provide: SharedManager,

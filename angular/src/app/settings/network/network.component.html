@@ -6,7 +6,7 @@
     <p>Based upon your selection of server groups.</p>
   </div>
 
-  <mat-radio-group class="network-items" *ngFor="let status of networks; let i = index" [(ngModel)]="status.selectedDomain">
+  <mat-radio-group (change)="updatedSelectedNetwork()" class="network-items" *ngFor="let status of networks; let i = index" [(ngModel)]="status.selectedDomain">
     <strong class="network-type">{{ status.type }}</strong
     ><br />
     <span *ngIf="status.networks?.length == 0">No servers online for this network.<br /></span>

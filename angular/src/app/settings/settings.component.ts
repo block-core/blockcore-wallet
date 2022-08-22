@@ -6,6 +6,7 @@ import { INDEXER_URL } from '../shared/constants';
 import { TranslateService } from '@ngx-translate/core';
 import { SettingStore } from '../../shared';
 import { RuntimeService } from '../../shared/runtime.service';
+import { StateStore } from 'src/shared/store/state-store';
 
 @Component({
   selector: 'app-settings',
@@ -23,6 +24,7 @@ export class SettingsComponent {
     public feature: FeatureService,
     public env: EnvironmentService,
     private renderer: Renderer2,
+    private stateStore: StateStore,
     private logger: LoggerService,
     private walletManager: WalletManager,
     private communication: CommunicationService,
@@ -78,6 +80,11 @@ export class SettingsComponent {
     this.logger.debug('Theme is now after save in replace: ', this.settingsService.values.theme);
 
     // this.communication.send(this.communication.createMessage('settings:saved', this.settingsService.values));
+
+    // Whenever settings are saved, we must make sure we wipe the StateStore, which keeps the active indexer, since user
+    // might have changed that in their settings.
+    await this.stateStore.wipe();
+    await this.stateStore.load(); // Also load after wipe, so the default object is added.
 
     this.updateAllInstances();
 

@@ -1,6 +1,7 @@
 import { Location } from '@angular/common';
-import { Component, OnDestroy, ViewEncapsulation } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { NetworkStatus, NetworkStatusEntry } from 'src/shared';
+import { StateStore } from 'src/shared/store/state-store';
 import { UIState, FeatureService, NetworkStatusService } from '../../services';
 
 @Component({
@@ -9,15 +10,22 @@ import { UIState, FeatureService, NetworkStatusService } from '../../services';
   styleUrls: ['./network.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class NetworkComponent implements OnDestroy {
+export class NetworkComponent implements OnDestroy, OnInit {
   networks: NetworkStatusEntry[];
 
-  constructor(public uiState: UIState, public location: Location, public networkStatus: NetworkStatusService, public feature: FeatureService) {
+  constructor(public uiState: UIState, public location: Location, private stateStore: StateStore, public networkStatus: NetworkStatusService, public feature: FeatureService) {
     this.uiState.title = 'Network Status';
     this.uiState.showBackButton = true;
     this.uiState.goBackHome = false;
+  }
 
-    this.networks = networkStatus.getActive();
+  async ngOnInit() {
+    // Make sure we load latest state store, which has information about which indexer is currently selected.
+    await this.stateStore.load();
+
+    this.networks = this.networkStatus.getActive();
+
+    console.log('stateStore:', this.stateStore.get());
   }
 
   ngOnDestroy() {}
@@ -26,7 +34,7 @@ export class NetworkComponent implements OnDestroy {
     this.location.back();
   }
 
-  select(network: NetworkStatus) {
-    console.log('Activate: ', network);
+  updatedSelectedNetwork() {
+    console.log('Networks:', this.networks);
   }
 }

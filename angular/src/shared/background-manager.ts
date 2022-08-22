@@ -10,6 +10,7 @@ import { Defaults } from './defaults';
 import { Account, IndexerApiStatus, NetworkStatus } from './interfaces';
 import { SharedManager } from './shared-manager';
 import { HDKey } from '@scure/bip32';
+import { StateStore } from './store/state-store';
 const axios = require('axios').default;
 
 const FEE_FACTOR = 100000;
@@ -80,15 +81,21 @@ export class BackgroundManager {
     // const networkTypes = accounts.filter((value, index, self) => self.map(x => x.networkType).indexOf(value.networkType) == index).map(m => m.networkType);
     // console.debug('networkTypes:', networkTypes);
 
+    const stateStore = new StateStore();
+    await stateStore.load();
+
     const store = new NetworkStatusStore();
     await store.load();
 
-    const networkLoader = new NetworkLoader(store);
+    // Make sure we have a reference to the latest stores:
+    this.sharedManager.networkLoader.store = store;
+    this.sharedManager.networkLoader.stateStore = stateStore;
 
+    // const networkLoader = new NetworkLoader(store);
     // console.debug('All networks:', networkLoader.getAllNetworks());
 
     try {
-      await this.updateAll(accounts, networkLoader, settingStore);
+      await this.updateAll(accounts, this.sharedManager.networkLoader, settingStore);
     } catch (err) {
       console.error('Failure during update all network status:', err);
     }
@@ -158,8 +165,7 @@ export class BackgroundManager {
 
           // const data = response.data;
 
-          if (response.ok)
-          {
+          if (response.ok) {
             if (data.error) {
               networkStatus = {
                 domain,
@@ -172,7 +178,7 @@ export class BackgroundManager {
               };
             } else {
               const blocksBehind = data.blockchain.blocks - data.syncBlockIndex;
-  
+
               if (blocksBehind > 10) {
                 networkStatus = {
                   domain,
@@ -195,8 +201,7 @@ export class BackgroundManager {
                 };
               }
             }
-          }
-          else {
+          } else {
             networkStatus = {
               domain,
               url: indexerUrl,
@@ -207,8 +212,6 @@ export class BackgroundManager {
               relayFee: data.network?.relayFee * FEE_FACTOR,
             };
           }
-
-
         } catch (error: any) {
           console.log('Error on Network Status Service:', error);
 
@@ -300,9 +303,16 @@ export class BackgroundManager {
     const networkStatusStore = new NetworkStatusStore();
     await networkStatusStore.load();
 
-    const networkLoader = new NetworkLoader(networkStatusStore);
+    const stateStore = new StateStore();
+    await stateStore.load();
 
-    const addressManager = new AddressManager(networkLoader);
+    // Make sure we have a reference to the latest stores:
+    this.sharedManager.networkLoader.store = networkStatusStore;
+    this.sharedManager.networkLoader.stateStore = stateStore;
+
+    // const networkLoader = new NetworkLoader(networkStatusStore);
+
+    const addressManager = new AddressManager(this.sharedManager.networkLoader);
     const indexer = new IndexerBackgroundService(settingStore, walletStore, addressStore, addressIndexedStore, transactionStore, addressManager, accountStateStore, accountHistoryStore);
     indexer.runState = this.watcherState;
 
@@ -320,6 +330,9 @@ export class BackgroundManager {
       }
 
       const processResult = await indexer.process(addressWatchStore);
+
+      // Whenever indexer processing is completed, make sure we persist the state store used by network loader.
+      await this.sharedManager.networkLoader.stateStore.save();
 
       // If the process was cancelled mid-process, return immeidately.
       if (processResult.cancelled) {
@@ -378,8 +391,15 @@ export class BackgroundManager {
     const networkStatusStore = new NetworkStatusStore();
     await networkStatusStore.load();
 
-    const networkLoader = new NetworkLoader(networkStatusStore);
-    const addressManager = new AddressManager(networkLoader);
+    const stateStore = new StateStore();
+    await stateStore.load();
+
+    // Make sure we have a reference to the latest stores:
+    this.sharedManager.networkLoader.store = networkStatusStore;
+    this.sharedManager.networkLoader.stateStore = stateStore;
+
+    // const networkLoader = new NetworkLoader(networkStatusStore);
+    const addressManager = new AddressManager(this.sharedManager.networkLoader);
 
     // Get what addresses to watch from local storage.
     // globalThis.chrome.storage.local.get('')
@@ -392,6 +412,9 @@ export class BackgroundManager {
     while (!processResult.completed) {
       try {
         processResult = await indexer.process(null);
+
+        // Whenever indexer processing is completed, make sure we persist the state store used by network loader.
+        await this.sharedManager.networkLoader.stateStore.save();
       } catch (err) {
         console.error('Failure during indexer processing.', err);
         throw err;
