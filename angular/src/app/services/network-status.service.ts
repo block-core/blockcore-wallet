@@ -1,12 +1,11 @@
 import { Injectable } from '@angular/core';
 import { NetworkStatusStore } from 'src/shared';
-import { Account, IndexerApiStatus, NetworkStatus, NetworkStatusEntry } from '../../shared/interfaces';
+import { NetworkStatusEntry } from '../../shared/interfaces';
 import { EnvironmentService } from './environment.service';
 import { NetworkLoader } from '../../shared/network-loader';
 import { Network } from '../../shared/networks';
 import { SettingsService } from './settings.service';
 import { WalletManager } from './wallet-manager';
-import { FEE_FACTOR, SATOSHI_FACTOR, STATUS_INTERVAL } from '../shared/constants';
 import { LoggerService } from './logger.service';
 import { NetworksService } from './networks.service';
 const axios = require('axios').default;
@@ -39,17 +38,6 @@ export class NetworkStatusService {
 
         // Get an instance of the Network object for all activated networks on this instance.
         this.availableNetworks = this.networkLoader.getNetworks(this.env.networks);
-
-        // Go through all available networks and get the status, if available.
-        // this.availableNetworks.forEach(n => {
-        //     const existingState = existingNetworkState.find(e => e.networkType == n.id);
-
-        //     if (existingState) {
-        //         this.store.set(n.id, existingState);
-        //     } else {
-        //         this.store.set(n.id, <NetworkStatus>{ networkType: n.id, availability: IndexerApiStatus.Unknown });
-        //     }
-        // });
     }
 
     /** Get the network definition based upon the network identifier. */
