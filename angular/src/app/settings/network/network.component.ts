@@ -24,8 +24,6 @@ export class NetworkComponent implements OnDestroy, OnInit {
     await this.stateStore.load();
 
     this.networks = this.networkStatus.getActive();
-
-    console.log('stateStore:', this.stateStore.get());
   }
 
   ngOnDestroy() {}
@@ -34,7 +32,18 @@ export class NetworkComponent implements OnDestroy, OnInit {
     this.location.back();
   }
 
-  updatedSelectedNetwork() {
-    console.log('Networks:', this.networks);
+  async updatedSelectedNetwork() {
+    const stateEntry = this.stateStore.get();
+
+    for (var i = 0; i < this.networks.length; i++) {
+      const network = this.networks[i];
+      const networkEntry = stateEntry.activeNetworks.find((a) => a.networkType == network.type);
+
+      if (networkEntry) {
+        networkEntry.domain = network.selectedDomain;
+      }
+    }
+
+    await this.stateStore.save();
   }
 }

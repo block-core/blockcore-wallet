@@ -329,6 +329,9 @@ export class BackgroundManager {
         return;
       }
 
+      // Make sure we reload the state store before processing.
+      await this.sharedManager.networkLoader.stateStore.load();
+
       const processResult = await indexer.process(addressWatchStore);
 
       // Whenever indexer processing is completed, make sure we persist the state store used by network loader.
@@ -411,10 +414,14 @@ export class BackgroundManager {
     // TODO: https://github.com/block-core/blockcore-wallet/issues/148
     while (!processResult.completed) {
       try {
+        // Make sure we reload the state store before processing.
+        await this.sharedManager.networkLoader.stateStore.load();
+
         processResult = await indexer.process(null);
 
         // Whenever indexer processing is completed, make sure we persist the state store used by network loader.
         await this.sharedManager.networkLoader.stateStore.save();
+
       } catch (err) {
         console.error('Failure during indexer processing.', err);
         throw err;
