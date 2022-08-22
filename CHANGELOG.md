@@ -1,4 +1,18 @@
-## <small>0.0.58 (2022-08-20)</small>
+## <small>0.0.59 (2022-08-22)</small>
+
+* Add automatic selection of active indexer ([e737f4d](https://github.com/block-core/blockcore-wallet/commit/e737f4d))
+* Add radio-button to selection of active indexer ([f585e68](https://github.com/block-core/blockcore-wallet/commit/f585e68))
+* Allow selection binding for network status indexer selection ([6250e16](https://github.com/block-core/blockcore-wallet/commit/6250e16))
+* Allow users to manually select indexers from network list ([4de0387](https://github.com/block-core/blockcore-wallet/commit/4de0387))
+* Code cleanup ([822666e](https://github.com/block-core/blockcore-wallet/commit/822666e))
+* Remove debug logging ([3111b29](https://github.com/block-core/blockcore-wallet/commit/3111b29))
+* Set the global default color for radio buttons ([6e8b7dc](https://github.com/block-core/blockcore-wallet/commit/6e8b7dc))
+* Tune the network status icon colors ([6eece51](https://github.com/block-core/blockcore-wallet/commit/6eece51))
+* Update version and changelog ([9e2a1cd](https://github.com/block-core/blockcore-wallet/commit/9e2a1cd))
+
+
+
+## <small>0.0.58 (2022-08-19)</small>
 
 * Fix issue with hardwired key for storage get ([f584333](https://github.com/block-core/blockcore-wallet/commit/f584333))
 * Handle indexer issues when response is not OK ([8cce796](https://github.com/block-core/blockcore-wallet/commit/8cce796))
