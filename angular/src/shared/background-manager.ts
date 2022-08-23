@@ -179,7 +179,7 @@ export class BackgroundManager {
             } else {
               const blocksBehind = data.blockchain.blocks - data.syncBlockIndex;
 
-              if (blocksBehind > 10) {
+              if (blocksBehind > 5) {
                 networkStatus = {
                   domain,
                   url: indexerUrl,
