@@ -81,7 +81,6 @@ import { NonFungibleTokenComponent } from './collectables/non-fungible-token.com
 import { CollectablesComponent } from './collectables/collectables.component';
 import { NetworkComponent } from './settings/network/network.component';
 import { NetworkStatusPipe } from './shared/network-status.pipe';
-import { networkLoaderServiceProvider } from './services/network-loader.provider';
 import { MatDialogModule } from '@angular/material/dialog';
 import { QrScanDialog } from './account/send/address/qr-scanning.component';
 import { IdentityComponent } from './account/identity/identity.component';
@@ -248,7 +247,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     AccountHistoryStore,
     AddressWatchStore,
     // NetworkLoader,
-    networkLoaderServiceProvider,
+    // networkLoaderServiceProvider,
     AddressIndexedStore,
     AccountStateStore,
     PermissionStore,
@@ -265,6 +264,11 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
       provide: StorageService,
       useFactory: (runtimeService: RuntimeService) => new StorageService(runtimeService),
       deps: [RuntimeService],
+    },
+    {
+      provide: NetworkLoader,
+      useFactory: (store: NetworkStatusStore, stateStore: StateStore) => new NetworkLoader(store, stateStore),
+      deps: [NetworkStatusStore, StateStore],
     },
   ],
   bootstrap: [AppComponent],
