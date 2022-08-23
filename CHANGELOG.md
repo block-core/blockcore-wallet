@@ -1,3 +1,10 @@
+## <small>0.0.60 (2022-08-23)</small>
+
+* Fix object loader for NetworkLoader ([019f51d](https://github.com/block-core/blockcore-wallet/commit/019f51d))
+* Update version and changelog ([192d2eb](https://github.com/block-core/blockcore-wallet/commit/192d2eb))
+
+
+
 ## <small>0.0.59 (2022-08-22)</small>
 
 * Add automatic selection of active indexer ([e737f4d](https://github.com/block-core/blockcore-wallet/commit/e737f4d))
