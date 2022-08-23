@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <script>
+            window.simplexAsyncFunction = function () {
+                Simplex.init({public_key: '<partner_public_key>'})
+            };
+        </script>
+        <script src="https://cdn.test-simplexcc.com/sdk/v1/js/sdk.js" async></script>
+    </head>
+    
+    <body>
+        <form id="simplex-form">
+            <div id="checkout-element">
+            </div>
+        </form>
+        <script src='https://iframe.sandbox.test-simplexcc.com/form-sdk.js' type="text/javascript"></script>
+        <script>
+            window.simplex.createForm();
+        </script>
+    </body>
+</html>
