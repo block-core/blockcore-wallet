@@ -15,6 +15,7 @@ export class ActionService {
   accountId: string;
   keyId: string;
   key: string;
+  args: any[];
 
   async clearAction() {
     this.store.set(undefined);
@@ -54,7 +55,7 @@ export class ActionService {
       source: 'tabs',
       ext: 'blockcore',
       permission: permission,
-      args: ['cipher'],
+      args: this.args,
       id: this.uiState.action.id,
       type: this.uiState.action.action,
       app: this.uiState.action.app,
