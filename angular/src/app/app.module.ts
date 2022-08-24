@@ -104,6 +104,7 @@ import { StorageService } from 'src/shared/storage.service';
 import { SharedManager } from 'src/shared/shared-manager';
 import { NetworkLoader } from './services';
 import { StateStore } from 'src/shared/store/state-store';
+import { ActionVaultSetupComponent } from './action/vault-setup/vault-setup.component';
 
 // required for AOT compilation
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
@@ -168,6 +169,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     ExchangeComponent,
     ActionSignMessageComponent,
     ActionSignVerifiableCredentialComponent,
+    ActionVaultSetupComponent
   ],
   imports: [
     BrowserModule,

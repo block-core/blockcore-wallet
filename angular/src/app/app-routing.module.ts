@@ -47,6 +47,7 @@ import { ExchangeComponent } from './exchange/exchange.component';
 import { BiometricComponent } from './settings/biometric/biometric.component';
 import { ActionSignVerifiableCredentialComponent } from './action/sign-credential/sign.component';
 import { ActionSignMessageComponent } from './action/sign-message/sign.component';
+import { ActionVaultSetupComponent } from './action/vault-setup/vault-setup.component';
 const routes: Routes = [
   {
     path: '',
@@ -336,13 +337,13 @@ const routes: Routes = [
     component: ActionComponent,
     children: [
       // { path: '', redirectTo: 'sign', pathMatch: 'full' },
-      {
-        path: 'sign',
-        component: ActionSignComponent,
-        resolve: {
-          data: LoadingResolverService,
-        },
-      },
+      // {
+      //   path: 'sign',
+      //   component: ActionSignComponent,
+      //   resolve: {
+      //     data: LoadingResolverService,
+      //   },
+      // },
       {
         path: 'signMessage',
         component: ActionSignMessageComponent,
@@ -351,47 +352,54 @@ const routes: Routes = [
         },
       },
       {
-        path: 'signVerifiableCredential',
-        component: ActionSignVerifiableCredentialComponent,
+        path: 'vaultSetup',
+        component: ActionVaultSetupComponent,
         resolve: {
           data: LoadingResolverService,
         },
       },
-      {
-        path: 'publicKey',
-        component: ActionPublicKeyComponent,
-        resolve: {
-          data: LoadingResolverService,
-        },
-      },
-      {
-        path: 'identity',
-        component: ActionIdentityComponent,
-        resolve: {
-          data: LoadingResolverService,
-        },
-      },
-      {
-        path: 'login',
-        component: ActionLoginComponent,
-        resolve: {
-          data: LoadingResolverService,
-        },
-      },
-      {
-        path: 'sid',
-        component: ActionStratisIdentityComponent,
-        resolve: {
-          data: LoadingResolverService,
-        },
-      },
-      {
-        path: 'nostr',
-        component: ActionNostrIdentityComponent,
-        resolve: {
-          data: LoadingResolverService,
-        },
-      },
+      // {
+      //   path: 'signVerifiableCredential',
+      //   component: ActionSignVerifiableCredentialComponent,
+      //   resolve: {
+      //     data: LoadingResolverService,
+      //   },
+      // },
+      // {
+      //   path: 'publicKey',
+      //   component: ActionPublicKeyComponent,
+      //   resolve: {
+      //     data: LoadingResolverService,
+      //   },
+      // },
+      // {
+      //   path: 'identity',
+      //   component: ActionIdentityComponent,
+      //   resolve: {
+      //     data: LoadingResolverService,
+      //   },
+      // },
+      // {
+      //   path: 'login',
+      //   component: ActionLoginComponent,
+      //   resolve: {
+      //     data: LoadingResolverService,
+      //   },
+      // },
+      // {
+      //   path: 'sid',
+      //   component: ActionStratisIdentityComponent,
+      //   resolve: {
+      //     data: LoadingResolverService,
+      //   },
+      // },
+      // {
+      //   path: 'nostr',
+      //   component: ActionNostrIdentityComponent,
+      //   resolve: {
+      //     data: LoadingResolverService,
+      //   },
+      // },
     ],
     resolve: {
       data: LoadingResolverService,
