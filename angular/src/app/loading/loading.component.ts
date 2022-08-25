@@ -1,7 +1,7 @@
 import { Component, ChangeDetectorRef, OnInit, OnDestroy, Renderer2, Inject } from '@angular/core';
 import { UIState, CommunicationService, AppManager, SecureStateService, WalletManager, EnvironmentService, NetworksService, SettingsService, NetworkStatusService, LoggerService } from '../services';
 import { ActivatedRoute, Data, Params, Router } from '@angular/router';
-import { Action } from '../../shared/interfaces';
+import { Action, ActionUrlParameters } from '../../shared/interfaces';
 import { TranslateService } from '@ngx-translate/core';
 import { DOCUMENT, Location } from '@angular/common';
 import { combineLatest } from 'rxjs';
@@ -136,30 +136,17 @@ export class LoadingComponent implements OnInit, OnDestroy {
     //   }
     // }
 
-    // If there is any params, it means there might be an action triggered by protocol handlers. Parse the params and set action.
+    // If there is any query parameters, it means there might be an action triggered by protocol handlers. Parse the params and set action.
     if (this.uiState.params) {
-      if (this.uiState.params.sid) {
+      const parameters: ActionUrlParameters = this.uiState.params;
+
+      if (parameters.action) {
         this.uiState.action = {
-          action: 'sid',
-          document: this.uiState.params.sid,
-          app: this.uiState.params.app,
-          id: this.uiState.params.id,
-          args: this.uiState.params.args,
-        };
-      } else if (this.uiState.params.nostr) {
-        this.uiState.action = {
-          action: 'nostr',
-          document: this.uiState.params.nostr,
-          app: this.uiState.params.app,
-          id: this.uiState.params.id,
-          args: this.uiState.params.args,
-        };
-      } else if (this.uiState.params.action) {
-        this.uiState.action = {
-          action: this.uiState.params.action,
-          id: this.uiState.params.id,
-          args: this.uiState.params.args,
-          app: this.uiState.params.app,
+          action: parameters.action,
+          id: parameters.id,
+          content: JSON.parse(parameters.content), // Transform the content to be displayed to user.
+          params: JSON.parse(parameters.params), // Transform the params from string to object here after we've received it through the query string.
+          app: parameters.app,
         };
       }
     }
@@ -178,11 +165,11 @@ export class LoadingComponent implements OnInit, OnDestroy {
       // TODO: Add support for more actions.
 
       // TODO: Add improved verification of action. We don't want messages to be able to route users anywhere other than known actions.
-      if (this.uiState.action?.action.indexOf('/') > -1 || this.uiState.action?.action.indexOf('\\') > -1) {
+      if (this.uiState.action.action.indexOf('/') > -1 || this.uiState.action.action.indexOf('\\') > -1) {
         throw new TypeError('Illegal characters in action');
       }
 
-      this.router.navigate(['action', this.uiState.action?.action]);
+      this.router.navigate(['action', this.uiState.action.action]);
     } else {
       // If the state was changed and there is no wallets, send user to create wallet UI.
       if (!this.walletManager.hasWallets) {

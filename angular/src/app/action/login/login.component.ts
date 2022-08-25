@@ -15,7 +15,7 @@ export class ActionLoginComponent {
   constructor(public uiState: UIState, private crypto: CryptoService, private router: Router, private app: ApplicationRef, private ngZone: NgZone, private action: ActionService, public networkService: NetworksService, public walletManager: WalletManager, private manager: AppManager, private cd: ChangeDetectorRef) {
     this.uiState.title = 'Action: Login';
 
-    this.content = this.uiState.action?.document;
+    this.content = this.uiState.action?.content;
   }
 
   sign() {

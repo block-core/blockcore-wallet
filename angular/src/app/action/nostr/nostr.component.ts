@@ -38,7 +38,7 @@ export class ActionNostrIdentityComponent implements OnInit {
     }
 
     ngOnInit() {
-        const payload = this.uiState.action?.document;
+        const payload = this.uiState.action?.content;
         const parts = payload.split('?');
         this.parameters = Object.fromEntries(new URLSearchParams(parts[1])) as any;
 

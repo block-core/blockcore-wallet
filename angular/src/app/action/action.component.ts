@@ -29,8 +29,7 @@ export class ActionComponent {
     // this.action.content = this.contentToSign;
 
     // Improve this logic, just quickly select the key:
-    const parsedContent = JSON.parse(this.uiState.action.args);
-    const firstArgument = parsedContent[0];
+    const firstArgument = this.uiState.action.params[0];
 
     const requestedKey = firstArgument.key;
 

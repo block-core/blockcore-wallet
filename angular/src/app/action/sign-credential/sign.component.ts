@@ -15,10 +15,9 @@ const { v4: uuidv4 } = require('uuid');
   styleUrls: ['./sign.component.css'],
 })
 export class ActionSignVerifiableCredentialComponent {
-
   contentToSign: string;
 
   constructor(public uiState: UIState, private permissionStore: PermissionStore, public action: ActionService, public networkService: NetworksService, public walletManager: WalletManager, private manager: AppManager, private cd: ChangeDetectorRef) {
-    this.contentToSign = uiState.action.args;
+    this.contentToSign = uiState.action.content;
   }
 }

@@ -77,8 +77,10 @@ export class UIState {
 
     backUrl: string;
 
+    /** Parameters that comes from query string during activation of the extension. */
     params: any;
 
+    /** Parsed action entry from the query string parameters. */
     action?: Action;
 
     title!: string;

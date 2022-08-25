@@ -15,7 +15,7 @@ export class ActionService {
   accountId: string;
   keyId: string;
   key: string;
-  args: any[];
+  // args: any[];
 
   async clearAction() {
     this.store.set(undefined);
@@ -23,12 +23,15 @@ export class ActionService {
   }
 
   async setAction(data: Action, broadcast: boolean) {
+    debugger;
+    console.log('IS THIS CALLED?!');
+
     if (typeof data.action !== 'string') {
       console.error('Only objects that are string are allowed as actions.');
       return;
     }
 
-    if (data.document != null && typeof data.document !== 'string') {
+    if (data.content != null && typeof data.content !== 'string') {
       console.error('Only objects that are string are allowed as actions.');
       return;
     }
@@ -49,20 +52,23 @@ export class ActionService {
     // Reset params so the action can be re-triggered.
     this.uiState.params = null;
 
+    const action = this.uiState.action;
+
     const reply: ActionMessage = {
       prompt: true, // This indicates that message comes from the popup promt.
       target: 'provider',
       source: 'tabs',
       ext: 'blockcore',
       permission: permission,
-      args: { method: this.uiState.action.action, params: this.args },
+      request: { method: action.action, params: action.params }, // Re-create the request object.
+      // response: { content: action.content },
       id: this.uiState.action.id,
       type: this.uiState.action.action,
       app: this.uiState.action.app,
       walletId: this.walletManager.activeWalletId,
       accountId: this.accountId,
       keyId: this.keyId,
-      key: this.key
+      key: this.key,
     };
 
     // Inform the provider script that user has signed the data.

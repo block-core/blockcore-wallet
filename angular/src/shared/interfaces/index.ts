@@ -386,21 +386,24 @@ interface Settings {
 }
 
 interface Action {
-  args?: string[] | PermissionArguments | any;
-  action?: string;
-  document?: string;
-  tabId?: string;
-  id?: string;
+  // args?: string[] | PermissionArguments | any;
+  id: string;
   app: string;
+  params: any[];
+  action: string;
+
+  content: string;
+  // document?: string;
+  tabId?: string;
   // level?: number;
   // condition?: string
 }
 
-interface PermissionArguments {
-  host: string;
-  level: number;
-  condition: string;
-}
+// interface PermissionArguments {
+//   host: string;
+//   level: number;
+//   condition: string;
+// }
 
 interface PermissionDomain {
   app: string;
@@ -501,6 +504,19 @@ interface DIDResolutionResult {
   didDocument: any | DIDDocument;
   didDocumentMetadata: DIDDocumentMetadata;
   didResolutionMetadata: DIDResolutionMetadataEx;
+}
+
+interface ActionUrlParameters
+{
+  id: string;
+  app: string;
+  action: string;
+
+  /** This is the content prepared by the action handler to be displayed for the user. */
+  content: string;
+
+  /** The original parameters, can be used by the action UI to display structured content. */
+  params: string;
 }
 
 interface RequestArguments {
@@ -657,7 +673,8 @@ export {
   AddressWatchState,
   AddressIndexedState,
   NetworkStatusEntry,
-  PermissionArguments,
+  // PermissionArguments,
+  ActionUrlParameters,
   Permission,
   PermissionDomain,
   RequestArguments,

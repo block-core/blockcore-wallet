@@ -1,4 +1,4 @@
-import { ActionMessage, Permission } from '../../angular/src/shared/interfaces';
+import { ActionMessage, ActionUrlParameters, Permission } from '../../angular/src/shared/interfaces';
 import { BackgroundManager, ProcessResult } from '../../angular/src/shared/background-manager';
 import { SharedManager } from '../../angular/src/shared/shared-manager';
 import { RunState } from '../../angular/src/shared/task-runner';
@@ -84,18 +84,19 @@ async function handleContentScriptMessage(message: ActionMessage) {
   state.handler = Handlers.getAction(method, watchManager!);
   state.message = message;
 
-          // Make sure we reload wallets at this point every single process.
-          // await this.walletStore.load();
-          // await this.accountStateStore.load();
-          
-          // const wallets = this.walletStore.getWallets();
+  // Make sure we reload wallets at this point every single process.
+  // await this.walletStore.load();
+  // await this.accountStateStore.load();
+
+  // const wallets = this.walletStore.getWallets();
 
   // ActionStateHolder.prompts.push(state);
 
   // console.log('prompts:', JSON.stringify(ActionStateHolder.prompts));
   // console.log('prompts (length):', ActionStateHolder.prompts.length);
 
-   state.handler.prepare(message);
+  // Use the handler to prepare the content to be displayed for signing.
+  state.content = state.handler.prepare(message);
 
   // Reload the permissions each time.
   await permissionService.refresh();
@@ -189,16 +190,15 @@ function handlePromptMessage(message: ActionMessage, sender) {
 async function promptPermission(state: ActionState) {
   releaseMutex = await promptMutex.acquire();
 
-  // TODO: Investigate data santisation here, for example the .method
-  // is not verified and could have a large length or contain content
-  // that attempts to exploit.
-
-  let qs = new URLSearchParams({
+  var parameters: ActionUrlParameters | any = {
     id: state.message.id,
     app: state.message.app!,
     action: state.message.request.method,
-    params: JSON.stringify(state.message.request.params),
-  });
+    content: JSON.stringify(state.content), // Content prepared by the handler to be displayed for user.
+    params: JSON.stringify(state.message.request.params), // Params is used to display structured information for signing.
+  };
+
+  let qs = new URLSearchParams(parameters);
 
   return new Promise((resolve, reject) => {
     // Set the global prompt object:
