@@ -30,6 +30,8 @@ that is being applied in the watcher:
 
 Web Apps auto-load the `provider.ts` when user have the extension installed. This makes "blockcore" available globally through globalThis.blockcore.
 
+`content.ts` is responsible for injecting the `provider.ts` into the web app.
+
 Calls are sent through the `provider.ts` using the generic "request" function:
 
 `const result = await blockcore.request({ method: "signMessage", params: [{ message: msg }] });`
@@ -38,5 +40,37 @@ The "method" is "action". params can either be a single object, or array.
 
 The API is based upon the latest generic interface on MetaMask: https://docs.metamask.io/guide/ethereum-provider.html#ethereum-request-args
 
+Messages from `provider.ts` (using `globalThis.postMessage(msg, '*');`) is initially picked up by `content.ts`, where it is filtered for messages that is coming from the extension.
 
+The handler will take the .data, which is the request object coming from web site, and wrap that together with the `location.host` which will 
+be the app identifier.
 
+The message is forwarded to `background.ts` using the API: `browser.runtime.sendMessage`.
+
+When the async call is completed, it will return response to the `provider.ts` using: `window.postMessage(responseMsg, message.origin)`.
+
+The `provider.ts` will then return response to the web app in the handler: `globalThis.addEventListener('message'`, which will filter out messages that is not 
+relevant for the extension.
+
+### Action Processing
+
+The processing of action requests happens in `background.ts`, as described in the section above.
+
+There is an handler for `browser.runtime.onMessage.addListener` which handles messages that arrives both from the `content.ts`, but also from the extension (Angular) 
+itself. If the message contains the field `prompt`, it will be handled as response from the popup-prompt that extension has rendered.
+
+`handlePromptMessage` handles messages from extension.
+
+`handleContentScriptMessage` handles messages from `content.ts`.
+
+When handling action messages, the first thing created is an instance of `ActionState`, which is an object that holds all relevant state information about the action.
+
+Then an action handler is created, which is an object that is responsible for doing the actual work of signing, encryption, decryption, etc.
+
+First the `prepare` method is called on the handler. This results in an object that will be displayed to the user, if permission is not available. Prepare should be used 
+to construct dynamic content to be signed by the user.
+
+Then permission is attempted to be retrieved, which might result in a prompt. The permission object has information about wallet, account and key ID that user want to 
+assign to the action.
+
+If permission is given, then `execute` is called on the handler. The result from execute is returned as described in the previous section above.
