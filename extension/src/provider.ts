@@ -1,4 +1,4 @@
-import { EventEmitter, Listener, RequestArguments } from '../../angular/src/shared';
+import { ActionRequest, EventEmitter, Listener } from '../../angular/src/shared';
 
 /*
 Register global provider for Blockcore, only supports EIP1193Provider (request) function for interaction. 
@@ -20,7 +20,7 @@ globalThis.blockcore = {
     });
   },
 
-  async request(args: RequestArguments): Promise<unknown> {
+  async request(args: ActionRequest): Promise<unknown> {
     return this._call('request', args);
   },
 

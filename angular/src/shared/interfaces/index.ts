@@ -509,6 +509,11 @@ interface ActionRequest {
   params: any[];
 }
 
+// interface RequestArguments {
+//   readonly method: string;
+//   readonly params: readonly any[];
+// }
+
 interface ActionMessage {
   prompt: boolean;
   target: string;
@@ -584,11 +589,6 @@ enum Actions {
   'decrypt',
 };
 
-interface RequestArguments {
-  readonly method: string;
-  readonly params: readonly any[];
-}
-
 type Listener = (...args: any[]) => void;
 
 interface IEvents {
@@ -646,7 +646,6 @@ export {
   DecodedAttestion,
   Credential,
   User,
-  RequestArguments,
   Listener,
   IEvents,
   Actions,

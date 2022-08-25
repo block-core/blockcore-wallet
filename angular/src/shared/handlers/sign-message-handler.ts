@@ -1,5 +1,5 @@
 import { BackgroundManager } from '../background-manager';
-import { RequestArguments, Actions, Permission } from '../interfaces';
+import { ActionRequest, Actions, Permission } from '../interfaces';
 import { ActionHandler } from './action-handler';
 import * as bitcoinMessage from 'bitcoinjs-message';
 import { HDKey } from '@scure/bip32';
@@ -16,11 +16,11 @@ export class SignMessageHandler implements ActionHandler {
     return signature.toString('base64');
   }
 
-  async prepare(args: RequestArguments) {
+  async prepare(args: ActionRequest) {
     return {};
   }
 
-  async execute(permission: Permission, args: RequestArguments) {
+  async execute(permission: Permission, args: ActionRequest) {
     // Get the private key
     const { network, node } = await this.backgroundManager.getKey(permission.walletId, permission.accountId, permission.keyId);
 
