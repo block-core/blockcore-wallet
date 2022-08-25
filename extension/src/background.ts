@@ -71,8 +71,8 @@ async function handleContentScriptMessage(message: ActionMessage) {
     return null;
   }
 
-  const method = message.args.method;
-  const params = message.args.params[0]; // Currently we only support a single entry in params, just be array.
+  const method = message.request.method;
+  const params = message.request.params[0];
 
   // Create a new handler instance.
   // const handler = Handlers.getAction(method);
@@ -95,7 +95,7 @@ async function handleContentScriptMessage(message: ActionMessage) {
   // console.log('prompts:', JSON.stringify(ActionStateHolder.prompts));
   // console.log('prompts (length):', ActionStateHolder.prompts.length);
 
-   state.handler.prepare(message.args);
+   state.handler.prepare(message);
 
   // Reload the permissions each time.
   await permissionService.refresh();
@@ -103,10 +103,10 @@ async function handleContentScriptMessage(message: ActionMessage) {
   let permission: Permission | unknown | null = null;
 
   if (params.key) {
-    permission = permissionService.findPermissionByKey(message.app, method, params.key);
+    permission = permissionService.findPermissionByKey(message.app!, method, params.key);
   } else {
     // Get all existing permissions that exists for this app and method:
-    let permissions = permissionService.findPermissions(message.app, method);
+    let permissions = permissionService.findPermissions(message.app!, method);
 
     // If there are no specific key specified in the signing request, just grab the first permission that is approved for this
     // website and use that. Normally there will only be a single one if the web app does not request specific key.
@@ -150,7 +150,7 @@ async function handleContentScriptMessage(message: ActionMessage) {
 
   try {
     // User have given permission to execute.
-    const result = await state.handler.execute(<Permission>permission, message.args);
+    const result = await state.handler.execute(message, <Permission>permission);
     return result;
   } catch (error) {
     return { error: { message: error.message, stack: error.stack } };
@@ -189,11 +189,15 @@ function handlePromptMessage(message: ActionMessage, sender) {
 async function promptPermission(state: ActionState) {
   releaseMutex = await promptMutex.acquire();
 
+  // TODO: Investigate data santisation here, for example the .method
+  // is not verified and could have a large length or contain content
+  // that attempts to exploit.
+
   let qs = new URLSearchParams({
-    app: state.message.app,
-    action: state.message.args.method,
     id: state.message.id,
-    args: JSON.stringify(state.message.args.params),
+    app: state.message.app!,
+    action: state.message.request.method,
+    params: JSON.stringify(state.message.request.params),
   });
 
   return new Promise((resolve, reject) => {

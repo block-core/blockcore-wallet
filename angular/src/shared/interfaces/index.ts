@@ -425,9 +425,8 @@ interface State {
   unlocked: string[];
 }
 
-interface StateEntry
-{
-  activeNetworks: { networkType: string, domain: string, url: string }[]
+interface StateEntry {
+  activeNetworks: { networkType: string; domain: string; url: string }[];
 }
 
 interface Store {
@@ -504,9 +503,14 @@ interface DIDResolutionResult {
   didResolutionMetadata: DIDResolutionMetadataEx;
 }
 
-interface ActionRequest {
+interface RequestArguments {
   method: string;
   params?: unknown[] | object;
+}
+
+interface ActionRequest {
+  method: string;
+  params: any[];
 }
 
 interface ActionResponse {
@@ -521,33 +525,35 @@ interface ActionResponse {
 
   /** A copy of the actual content string that was signed. */
   content: string;
+
+  error: unknown | any | { message?: string, stack?: any };
 }
 
-// interface RequestArguments {
-//   readonly method: string;
-//   readonly params: readonly any[];
-// }
-
 interface ActionMessage {
-  prompt: boolean;
+  /** The type of action, this is currently limited to `request` */
+  type: string;
+
+  /** Data sent from web app. */
+  request: ActionRequest;
+
+  /** The response returned from action handler. */
+  response?: ActionResponse;
+
   target: string;
   source: string;
   ext: string;
-  permission: string;
-
-  /** Data sent from web app. */
-  args: ActionRequest;
   id: string;
-  type: string;
-  app: string;
-  walletId: string;
-  accountId: string;
+  permission?: string;
+  app?: string;
+  walletId?: string;
+  accountId?: string;
+  prompt?: boolean;
 
   /** The internal key ID used to persist permission. */
-  keyId: string;
+  keyId?: string;
 
   /** The public key used to identity the signature returned. */
-  key: string
+  key?: string;
 }
 
 interface Message {
@@ -603,7 +609,7 @@ enum Actions {
   'sign',
   'encrypt',
   'decrypt',
-};
+}
 
 type Listener = (...args: any[]) => void;
 
@@ -654,6 +660,7 @@ export {
   PermissionArguments,
   Permission,
   PermissionDomain,
+  RequestArguments,
   ActionRequest,
   ActionResponse,
   ActionMessage,
@@ -666,5 +673,5 @@ export {
   Listener,
   IEvents,
   Actions,
-  StateEntry
+  StateEntry,
 };

@@ -1,4 +1,4 @@
-import { ActionRequest, EventEmitter, Listener } from '../../angular/src/shared';
+import { ActionMessage, ActionRequest, EventEmitter, Listener, RequestArguments } from '../../angular/src/shared';
 
 /*
 Register global provider for Blockcore, only supports EIP1193Provider (request) function for interaction. 
@@ -8,20 +8,41 @@ globalThis.blockcore = {
   _requests: {},
   _events: new EventEmitter(),
 
-  _call(type, args) {
+  _call(type, request: RequestArguments) {
     return new Promise((resolve, reject) => {
       const id = v4();
       this._requests[id] = { resolve, reject };
 
-      const msg = { type, id, args, source: 'provider', target: 'tabs', ext: 'blockcore' };
+      if (!request.method) {
+        throw TypeError('Method is missing.');
+      }
+
+      if (typeof request.method !== 'string') {
+        throw TypeError('Method must be string.');
+      }
+
+      if (request.method.length > 30) {
+        throw TypeError('Method cannot be longer than 30 characters.');
+      }
+
+      // If there are no params, construct an empty array to simplify null-checks in the extension.
+      if (!request.params) {
+        request.params = [];
+      } else if (!Array.isArray(request.params)) {
+        // If the request has parameters and that parameter is not array, encapsulate the params into
+        // an array so we'll always work with arrays.
+        request.params = [request.params];
+      }
+
+      const msg: ActionMessage = { type, id, request: <ActionRequest>request, source: 'provider', target: 'tabs', ext: 'blockcore' };
       console.log('Provider:postMessage:', msg);
 
       globalThis.postMessage(msg, '*');
     });
   },
 
-  async request(args: ActionRequest): Promise<unknown> {
-    return this._call('request', args);
+  async request(request: RequestArguments): Promise<unknown> {
+    return this._call('request', request);
   },
 
   on(event: string, listener: Listener) {
@@ -42,19 +63,20 @@ globalThis.addEventListener('message', (message) => {
   }
 
   console.log('MESSAGE RECEIVED IN PROVIDER:', message);
+  const data = message.data as ActionMessage;
 
   // It is possible that calls to the extension is returned without handled by an instance of the extension,
   // if that happens, then response will be undefined.
 
-  if (message.data.response?.error) {
-    let error = new Error(message.data.response.error?.message);
-    error.stack = message.data.response.error?.stack;
-    globalThis.blockcore._requests[message.data.id].reject(error);
+  if (data.response?.error) {
+    let error = new Error(data.response.error.message);
+    error.stack = data.response.error?.stack;
+    globalThis.blockcore._requests[data.id].reject(error);
   } else {
-    globalThis.blockcore._requests[message.data.id].resolve(message.data.response);
+    globalThis.blockcore._requests[data.id].resolve(data.response);
   }
 
-  delete globalThis.blockcore._requests[message.data.id];
+  delete globalThis.blockcore._requests[data.id];
 });
 
 function v4() {

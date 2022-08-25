@@ -1,14 +1,14 @@
-import { ActionRequest, Actions, Permission } from '../interfaces';
+import { ActionMessage, ActionRequest, Actions, Permission } from '../interfaces';
 import { ActionHandler } from './action-handler';
 
 export class SignHandler implements ActionHandler {
   action = ['sign'];
 
-  async prepare(args: ActionRequest) {
+  async prepare(args: ActionMessage) {
     return {};
   }
 
-  execute(permission: Permission, args: ActionRequest) {
+  execute(args: ActionMessage, permission: Permission) {
     console.log('Executing SignHandler!');
     return 'chiper!!';
   }

@@ -1,4 +1,5 @@
 import * as browser from 'webextension-polyfill';
+import { ActionMessage } from '../../angular/src/shared';
 
 // If the blockcore is not registered yet, load the provider now.
 if (!globalThis.blockcore) {
@@ -18,11 +19,13 @@ if (!globalThis.blockcore) {
     // console.log('CONTENT:MSG:', message);
     if (!message.data) return;
     if (message.source !== window) return;
-    if (message.data.ext !== 'blockcore') return; // We'll only handle messages marked with extension 'blockcore'.
-    if (message.data.target !== 'tabs') return; // We'll only forward messages that has target tabs.
 
-    const msg = { ...message.data, app: location.host };
-    msg.isFromContent = true;
+    const data = message.data as ActionMessage;
+
+    if (data.ext !== 'blockcore') return; // We'll only handle messages marked with extension 'blockcore'.
+    if (data.target !== 'tabs') return; // We'll only forward messages that has target tabs.
+
+    const msg = { ...data, app: location.host };
     let response: any | null = null;
 
     try {
@@ -32,7 +35,7 @@ if (!globalThis.blockcore) {
       response = { error };
     }
 
-    const responseMsg = { ...message.data, response: response };
+    const responseMsg: ActionMessage = { ...data, response: response };
     responseMsg.target = 'provider';
 
     // Return the response to the provider/caller.
