@@ -14,11 +14,10 @@
         <a mat-list-item *ngFor="let account of walletManager.activeWallet.accounts; let i = index" routerLinkActive="active-link" [routerLink]="getLink(account)">
           <mat-icon mat-list-icon>{{ account.icon }}</mat-icon>
           <div mat-line>
-            {{ account.name }}<span *ngIf="hasAccountHistory(account.identifier)" class="account-balance">{{ balance(account.identifier) | amount }}</span>
-            <span *ngIf="!hasAccountHistory(account.identifier) && account.type != 'identity'" class="account-balance">
-              <mat-spinner [diameter]="16"></mat-spinner>
-            </span>
-            <span *ngIf="hasAccountHistory(account.identifier) && !accountState(account).completedScan" class="account-balance account-scanning">
+            {{ account.name }}
+            <span *ngIf="hasAccountHistory(account.identifier) && account.type != 'identity'" class="account-balance">{{ balance(account.identifier) | amount }}</span>
+            <span *ngIf="!hasAccountHistory(account.identifier) && account.type != 'identity'" class="account-balance"><mat-spinner [diameter]="16"></mat-spinner> </span>
+            <span *ngIf="hasAccountHistory(account.identifier) && !accountState(account).completedScan && account.type != 'identity'" class="account-balance account-scanning">
               <mat-spinner [color]="'accent'" [diameter]="16"></mat-spinner>
             </span>
           </div>
