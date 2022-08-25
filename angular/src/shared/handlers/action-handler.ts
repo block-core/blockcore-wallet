@@ -4,9 +4,9 @@ export interface ActionHandler {
   action: string[];
 
   /** Called to prepare the data provided to user for approval, or automatic processing if permission given. */
-  prepare(args: ActionMessage): Promise<ActionPrepareResult>;
+  prepare(state: ActionState): Promise<ActionPrepareResult>;
 
-  execute(args: ActionMessage, permission: Permission): Promise<ActionResponse>;
+  execute(state: ActionState, permission: Permission): Promise<ActionResponse>;
 }
 
 // export class ActionStateHolder {

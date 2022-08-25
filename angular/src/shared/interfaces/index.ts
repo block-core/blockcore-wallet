@@ -542,7 +542,7 @@ interface ActionResponse {
   signature?: string;
 
   /** A copy of the actual content string that was signed. */
-  content?: string;
+  content?: object;
 
   error?: unknown | any | { message?: string, stack?: any };
 }

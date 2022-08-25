@@ -1,6 +1,6 @@
 import { BackgroundManager } from '../background-manager';
 import { ActionMessage, ActionPrepareResult, ActionRequest, ActionResponse, Actions, Permission } from '../interfaces';
-import { ActionHandler } from './action-handler';
+import { ActionHandler, ActionState } from './action-handler';
 import * as bitcoinMessage from 'bitcoinjs-message';
 import { HDKey } from '@scure/bip32';
 import { Network } from '../networks';
@@ -16,9 +16,8 @@ export class VaultSetupHandler implements ActionHandler {
     return signature.toString('base64');
   }
 
-  async prepare(args: ActionMessage): Promise<ActionPrepareResult> {
-    console.log('VaultSetupHandler:prepare:', args);
-    const domain = args.request.params[0].domain;
+  async prepare(state: ActionState): Promise<ActionPrepareResult> {
+    const domain = state.message.request.params[0].domain;
 
     // Override the content
     // this.action.content =
@@ -36,17 +35,16 @@ export class VaultSetupHandler implements ActionHandler {
     return result;
   }
 
-  async execute(args: ActionMessage, permission: Permission): Promise<ActionResponse> {
+  async execute(state: ActionState, permission: Permission): Promise<ActionResponse> {
     // Get the private key
     const { network, node } = await this.backgroundManager.getKey(permission.walletId, permission.accountId, permission.keyId);
 
-    if (args.request.params[0]) {
-      const content = args.request.params[0].message;
-      let signedData = await this.signData(network, node, content);
-      console.log('Executing Sign;MessageHandler!', args);
-      return { key: permission.key, signature: signedData, content: content, request: args.request };
+    if (state.content) {
+      const contentText = JSON.stringify(state.content);
+      let signedData = await this.signData(network, node, contentText);
+      return { key: permission.key, signature: signedData, content: state.content, request: state.message.request };
     } else {
-      return { key: '', signature: '', content: '', request: args.request };
+      return { key: '', signature: '', content: null, request: state.message.request };
     }
   }
 

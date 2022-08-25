@@ -1,4 +1,4 @@
-import { Component, ChangeDetectorRef, HostListener } from '@angular/core';
+import { Component, ChangeDetectorRef, HostListener, OnInit } from '@angular/core';
 import { ActionService } from 'src/app/services/action.service';
 // import * as browser from 'webextension-polyfill';
 import { AccountState, AccountStateStore, ActionMessage, Permission } from 'src/shared';
@@ -13,7 +13,7 @@ const { v4: uuidv4 } = require('uuid');
   templateUrl: './action.component.html',
   styleUrls: ['./action.component.css'],
 })
-export class ActionComponent {
+export class ActionComponent implements OnInit {
   // contentToSign: string;
   accountState: AccountState;
   addresses: any[];
@@ -23,9 +23,6 @@ export class ActionComponent {
   keySelectionDisabled = false;
 
   constructor(public translate: TranslateService, public uiState: UIState, private accountStateStore: AccountStateStore, private permissionStore: PermissionStore, public action: ActionService, public networkService: NetworksService, public walletManager: WalletManager, private manager: AppManager, private cd: ChangeDetectorRef) {
-    
-    this.uiState.title = 'Action: ' + translate.get('Action.' + this.uiState.action?.action);
-
     // this.contentToSign = uiState.action.args;
     // this.action.content = this.uiState.action?.document;
     // this.action.content = this.contentToSign;
@@ -53,6 +50,11 @@ export class ActionComponent {
     this.subscription = this.walletManager.activeAccount$.subscribe((a) => {
       this.update();
     });
+  }
+
+  async ngOnInit() {
+    const actionName = await this.translate.get('Action.' + this.uiState.action?.action).toPromise();
+    this.uiState.title = 'Action: ' + actionName;
   }
 
   verifyStatus = {

@@ -96,7 +96,7 @@ async function handleContentScriptMessage(message: ActionMessage) {
   // console.log('prompts (length):', ActionStateHolder.prompts.length);
 
   // Use the handler to prepare the content to be displayed for signing.
-  const prepare = await state.handler.prepare(message);
+  const prepare = await state.handler.prepare(state);
   state.content = prepare.content;
 
   console.log('PREPARED:', state.content);
@@ -154,7 +154,8 @@ async function handleContentScriptMessage(message: ActionMessage) {
 
   try {
     // User have given permission to execute.
-    const result = await state.handler.execute(message, <Permission>permission);
+    const result = await state.handler.execute(state, <Permission>permission);
+    console.log('ACTION RESPONSE: ', result);
     return result;
   } catch (error) {
     return { error: { message: error.message, stack: error.stack } };
