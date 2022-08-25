@@ -95,6 +95,10 @@
 		"RemoveAccountFromWallet": "Remove account from wallet",
 		"RemoveConfirm": "Yes, remove this account"
 	},
+	"Action": {
+		"vaultSetup": "Vault Setup",
+		"signMessage": "Sign Message"
+	},
 	"english": "English",
 	"chinese_simplified": "Chinese (Simplified)",
 	"chinese_traditional": "Chinese (Traditional)",

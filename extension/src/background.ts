@@ -96,7 +96,10 @@ async function handleContentScriptMessage(message: ActionMessage) {
   // console.log('prompts (length):', ActionStateHolder.prompts.length);
 
   // Use the handler to prepare the content to be displayed for signing.
-  state.content = state.handler.prepare(message);
+  const prepare = await state.handler.prepare(message);
+  state.content = prepare.content;
+
+  console.log('PREPARED:', state.content);
 
   // Reload the permissions each time.
   await permissionService.refresh();
@@ -189,6 +192,8 @@ function handlePromptMessage(message: ActionMessage, sender) {
 
 async function promptPermission(state: ActionState) {
   releaseMutex = await promptMutex.acquire();
+
+  console.log('ActionState:', state);
 
   var parameters: ActionUrlParameters | any = {
     id: state.message.id,

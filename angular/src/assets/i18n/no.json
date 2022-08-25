@@ -46,7 +46,7 @@
 		"OtherActions": "Flere handlinger",
 		"NetworkStatus": "Nettverkstatus",
 		"ChangePassword": "Endre passord",
-    "Biometric": "Biometrisk",
+		"Biometric": "Biometrisk",
 		"WipeData": "Slett data",
 		"Information": "Informasjon",
 		"About": "Om",
@@ -94,5 +94,9 @@
 		"Segwit": "Segwit",
 		"RemoveAccountFromWallet": "Fjern konto fra lommebok",
 		"RemoveConfirm": "Ja, fjern denne kontoen"
+	},
+	"Action": {
+		"vaultSetup": "Vault installasjon",
+		"signMessage": "Signér melding"
 	}
 }

@@ -519,6 +519,8 @@ interface ActionUrlParameters
   params: string;
 }
 
+
+
 interface RequestArguments {
   method: string;
   params?: unknown[] | object;
@@ -534,15 +536,19 @@ interface ActionResponse {
   request: ActionRequest;
 
   /** The public key user picked for the action. */
-  key: string;
+  key?: string;
 
   /** The signature for the signed content in base64 encoding. */
-  signature: string;
+  signature?: string;
 
   /** A copy of the actual content string that was signed. */
-  content: string;
+  content?: string;
 
-  error: unknown | any | { message?: string, stack?: any };
+  error?: unknown | any | { message?: string, stack?: any };
+}
+
+interface ActionPrepareResult {
+  content: object;
 }
 
 interface ActionMessage {
@@ -675,6 +681,7 @@ export {
   NetworkStatusEntry,
   // PermissionArguments,
   ActionUrlParameters,
+  ActionPrepareResult,
   Permission,
   PermissionDomain,
   RequestArguments,

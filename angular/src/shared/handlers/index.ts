@@ -1,8 +1,8 @@
 import { BackgroundManager } from '../background-manager';
 import { ActionHandler } from './action-handler';
-import { PublicKeyHandler } from './publicKey-handler';
-import { SignVerifiableCredentialHandler } from './sign-credential-handler';
-import { SignHandler } from './sign-handler';
+// import { PublicKeyHandler } from './publicKey-handler';
+// import { SignVerifiableCredentialHandler } from './sign-credential-handler';
+// import { SignHandler } from './sign-handler';
 import { SignMessageHandler } from './sign-message-handler';
 import { VaultSetupHandler } from './vault-setup-handler';
 

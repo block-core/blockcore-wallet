@@ -1,12 +1,12 @@
-import { ActionMessage, ActionRequest, Permission } from '../interfaces';
+import { ActionMessage, ActionPrepareResult, ActionRequest, ActionResponse, Permission } from '../interfaces';
 
 export interface ActionHandler {
   action: string[];
 
   /** Called to prepare the data provided to user for approval, or automatic processing if permission given. */
-  prepare(args: ActionMessage): object;
+  prepare(args: ActionMessage): Promise<ActionPrepareResult>;
 
-  execute(args: ActionMessage, permission: Permission): unknown;
+  execute(args: ActionMessage, permission: Permission): Promise<ActionResponse>;
 }
 
 // export class ActionStateHolder {

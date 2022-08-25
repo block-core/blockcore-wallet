@@ -1,5 +1,5 @@
 import { BackgroundManager } from '../background-manager';
-import { ActionMessage, ActionRequest, Actions, Permission } from '../interfaces';
+import { ActionMessage, ActionPrepareResult, ActionRequest, ActionResponse, Actions, Permission } from '../interfaces';
 import { ActionHandler } from './action-handler';
 import * as bitcoinMessage from 'bitcoinjs-message';
 import { HDKey } from '@scure/bip32';
@@ -16,7 +16,7 @@ export class VaultSetupHandler implements ActionHandler {
     return signature.toString('base64');
   }
 
-  async prepare(args: ActionMessage) {
+  async prepare(args: ActionMessage): Promise<ActionPrepareResult> {
     console.log('VaultSetupHandler:prepare:', args);
     const domain = args.request.params[0].domain;
 
@@ -27,28 +27,26 @@ export class VaultSetupHandler implements ActionHandler {
     let setupDocument = this.generateDIDDocument(domain);
 
     // Content will be overridden by the handler after user closes window.
-    const content = JSON.stringify(setupDocument, null, 2);
+    // const content = JSON.stringify(setupDocument, null, 2);
 
     // Therefore we must make sure the updated content for signing is setup as args.
     // this.action.args = [this.action.content];
 
-    return {
-      content: content,
-    };
+    const result: ActionPrepareResult = { content: setupDocument };
+    return result;
   }
 
-  async execute(args: ActionMessage, permission: Permission) {
+  async execute(args: ActionMessage, permission: Permission): Promise<ActionResponse> {
     // Get the private key
     const { network, node } = await this.backgroundManager.getKey(permission.walletId, permission.accountId, permission.keyId);
 
     if (args.request.params[0]) {
       const content = args.request.params[0].message;
       let signedData = await this.signData(network, node, content);
-
       console.log('Executing Sign;MessageHandler!', args);
-      return { key: permission.key, signature: signedData, document: content };
+      return { key: permission.key, signature: signedData, content: content, request: args.request };
     } else {
-      return { key: '', signature: '', document: '' };
+      return { key: '', signature: '', content: '', request: args.request };
     }
   }
 

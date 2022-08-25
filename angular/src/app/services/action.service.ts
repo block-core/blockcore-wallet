@@ -10,11 +10,11 @@ import { WalletManager } from './wallet-manager';
 export class ActionService {
   constructor(private communication: CommunicationService, private store: ActionStore, public uiState: UIState, public walletManager: WalletManager) {}
 
-  app: string;
-  content: string;
   accountId: string;
   keyId: string;
   key: string;
+  // app: string;
+  // content: string;
   // args: any[];
 
   async clearAction() {

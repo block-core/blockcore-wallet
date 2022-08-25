@@ -5,6 +5,7 @@ import { AccountState, AccountStateStore, ActionMessage, Permission } from 'src/
 import { PermissionStore } from 'src/shared/store/permission-store';
 import { Actions, PERMISSIONS } from 'src/app/shared/constants';
 import { AppManager, NetworksService, UIState, WalletManager } from '../services';
+import { TranslateService } from '@ngx-translate/core';
 const { v4: uuidv4 } = require('uuid');
 
 @Component({
@@ -21,8 +22,9 @@ export class ActionComponent {
   requestedKey: string;
   keySelectionDisabled = false;
 
-  constructor(public uiState: UIState, private accountStateStore: AccountStateStore, private permissionStore: PermissionStore, public action: ActionService, public networkService: NetworksService, public walletManager: WalletManager, private manager: AppManager, private cd: ChangeDetectorRef) {
-    this.uiState.title = 'Action: ' + this.uiState.action?.action;
+  constructor(public translate: TranslateService, public uiState: UIState, private accountStateStore: AccountStateStore, private permissionStore: PermissionStore, public action: ActionService, public networkService: NetworksService, public walletManager: WalletManager, private manager: AppManager, private cd: ChangeDetectorRef) {
+    
+    this.uiState.title = 'Action: ' + translate.get('Action.' + this.uiState.action?.action);
 
     // this.contentToSign = uiState.action.args;
     // this.action.content = this.uiState.action?.document;
@@ -34,11 +36,10 @@ export class ActionComponent {
     const requestedKey = firstArgument.key;
 
     // Only display the message part of the argument, which is what user should sign:
-    this.action.content = firstArgument.message;
-
+    // this.action.content = firstArgument.message;
     console.log('ACTION:', this.action);
 
-    this.action.app = this.uiState.action?.app;
+    // this.action.app = this.uiState.action?.app;
     this.accounts = this.walletManager.activeWallet.accounts;
     this.action.accountId = this.walletManager.activeAccountId;
 
