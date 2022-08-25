@@ -36,13 +36,25 @@ export class VaultSetupHandler implements ActionHandler {
   }
 
   async execute(state: ActionState, permission: Permission): Promise<ActionResponse> {
+
+    console.log('permission!!', permission);
+
     // Get the private key
     const { network, node } = await this.backgroundManager.getKey(permission.walletId, permission.accountId, permission.keyId);
 
     if (state.content) {
-      const contentText = JSON.stringify(state.content);
+      const did = 'did:is:' + permission.key;
+      const parsedContent: any = state.content;
+      parsedContent.verificationMethod[0].id = did + '#key-1';
+      parsedContent.verificationMethod[0].controller = did;
+
+      const contentText = JSON.stringify(parsedContent);
+
+      console.log('parsedContent:', parsedContent);
+
       let signedData = await this.signData(network, node, contentText);
-      return { key: permission.key, signature: signedData, content: state.content, request: state.message.request };
+
+      return { key: permission.key, signature: signedData, request: state.message.request, content: parsedContent };
     } else {
       return { key: '', signature: '', content: null, request: state.message.request };
     }
@@ -103,10 +115,10 @@ export class VaultSetupHandler implements ActionHandler {
     data.id = '';
     data.verificationMethod = [
       {
-        id: '',
+        id: '$$key$$#key-1',
         type: '',
-        controller: '',
-        publicKeyBase58: '',
+        controller: '$$key$$',
+        publicKeyJwk: '',
       },
     ];
 

@@ -88,7 +88,7 @@ export class ActionComponent implements OnInit {
         address = addressEntry.address;
       }
 
-      this.addresses = [{ address: address, keyId: '0/0' }];
+      this.addresses = [{ address: address, keyId: '0/0', key: addressEntry.address }];
     } else {
       const array1 = this.accountState.receive.map((r) => {
         return { address: `${r.address} (Receive: ${r.index})`, keyId: '0/' + r.index, key: r.address };
@@ -113,6 +113,9 @@ export class ActionComponent implements OnInit {
 
     this.action.keyId = this.addresses[keyIndex].keyId;
     this.action.key = this.addresses[keyIndex].key;
+
+    console.log('ACTION IN UI:', this.action);
+    console.log('ADDRESS IN UI:', this.addresses);
   }
 
   async onAccountChanged() {
