@@ -4,6 +4,8 @@ import { ActionHandler, ActionState } from './action-handler';
 import * as bitcoinMessage from 'bitcoinjs-message';
 import { HDKey } from '@scure/bip32';
 import { Network } from '../networks';
+import { createJWT, ES256KSigner } from 'did-jwt';
+import { BlockcoreIdentity, BlockcoreIdentityTools } from '../identity';
 
 export class VaultSetupHandler implements ActionHandler {
   action = ['vaultSetup'];
@@ -36,11 +38,56 @@ export class VaultSetupHandler implements ActionHandler {
   }
 
   async execute(state: ActionState, permission: Permission): Promise<ActionResponse> {
-
     console.log('permission!!', permission);
 
     // Get the private key
     const { network, node } = await this.backgroundManager.getKey(permission.walletId, permission.accountId, permission.keyId);
+
+    const crypto = this.backgroundManager.crypto;
+
+    const signer = crypto.getSigner(node);
+
+    const tools = new BlockcoreIdentityTools();
+    const schnorrPubKey = tools.getPublicKeyFromPrivateKey(node.privateKey);
+    const identifier = crypto.schnorrPublicKeyToHex(crypto.convertEdcsaPublicKeyToSchnorr(node.publicKey));
+    const identifier2 = crypto.schnorrPublicKeyToHex(schnorrPubKey);
+    console.log('identifier:', identifier);
+    console.log('identifier2:', identifier2);
+    
+    const verificationMethod = tools.getVerificationMethod(node.privateKey);
+    console.log('verificationMethod:', verificationMethod);
+
+    // const keyPair = tools.generateKeyPair();
+
+    // const identityNode = this.identityService.getIdentityNode(this.walletManager.activeWallet, this.walletManager.activeAccount);
+    // const privateKey = identityNode.privateKey;
+
+    const identity = new BlockcoreIdentity(verificationMethod);
+    const doc = identity.document();
+    console.log(JSON.stringify(doc));
+
+    // let jwt = await createJWT({
+
+    // }, { issuer: 'did:is:' + identifier, signer });
+
+    // let jwt = await createJWT(
+    //   {
+    //     aud: did,
+    //     exp: 1957463421,
+    //     name: 'Blockcore Developer',
+    //   },
+    //   { issuer: did, signer },
+    //   { alg: 'ES256K' }
+    // );
+
+    // createJWT(payload, )
+
+    // let jwt = await createJWT(
+    //   { aud: 'did:ethr:0xf3beac30c498d9e26865f34fcaa57dbb935b0d74', iat: undefined, name: 'uPort Developer' },
+    //   { issuer: 'did:ethr:0xf3beac30c498d9e26865f34fcaa57dbb935b0d74', signer },
+    //   { alg: 'ES256K' }
+    // )
+    // console.log(jwt)
 
     if (state.content) {
       const did = 'did:is:' + permission.key;

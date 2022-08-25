@@ -1,7 +1,6 @@
 /* Source based on example by Brady Joslin - https://github.com/bradyjoslin */
 
 import { BehaviorSubject, delay, Observable, of } from "rxjs";
-import { Injectable } from '@angular/core';
 import { Base64 } from 'js-base64';
 
 // import * as bip39 from 'bip39';
@@ -19,9 +18,6 @@ import { wordlist as spanish } from '@scure/bip39/wordlists/spanish';
 const enc = new TextEncoder();
 const dec = new TextDecoder();
 
-@Injectable({
-    providedIn: 'root'
-})
 export class CryptoService {
 
     /** The list of all wordlists */

@@ -11,6 +11,7 @@ import { Account, IndexerApiStatus, NetworkStatus } from './interfaces';
 import { SharedManager } from './shared-manager';
 import { HDKey } from '@scure/bip32';
 import { StateStore } from './store/state-store';
+import { CryptoUtility } from '../app/services/crypto-utility';
 const axios = require('axios').default;
 
 const FEE_FACTOR = 100000;
@@ -26,8 +27,11 @@ export class BackgroundManager {
   watcherState: RunState;
   onUpdates: Function;
   onStopped: Function;
+  crypto: CryptoUtility;
 
-  constructor(private sharedManager: SharedManager) {}
+  constructor(private sharedManager: SharedManager) {
+    this.crypto = new CryptoUtility();
+  }
 
   stop() {
     if (this.watcherState) {

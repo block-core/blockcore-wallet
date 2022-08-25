@@ -4,7 +4,6 @@ import { payments } from '@blockcore/blockcore-js';
 import { BlockcoreIdentity, BlockcoreIdentityTools } from '@blockcore/identity';
 import * as bs58 from 'bs58';
 import { Secp256k1KeyPair } from '@transmute/did-key-secp256k1';
-import { Injectable } from '@angular/core';
 import { CryptoService } from './crypto.service';
 import * as secp from '@noble/secp256k1';
 import { Network } from 'src/shared/networks';
@@ -15,11 +14,9 @@ import { SS256KSigner } from 'src/shared/identity';
 const enc = new TextEncoder();
 const dec = new TextDecoder();
 
-@Injectable({
-  providedIn: 'root',
-})
 export class CryptoUtility {
-  constructor(private cryptoService: CryptoService) {}
+  // constructor(private cryptoService: CryptoService) {}
+  constructor() {}
 
   getProfileNetwork() {
     var tools = new BlockcoreIdentityTools();
@@ -176,7 +173,7 @@ export class CryptoUtility {
     }
   }
 
-  async getSigner(node: HDKey) {
+  getSigner(node: HDKey) {
     //const signer = SS256KSigner(node.privateKey);
     const signer = ES256KSigner(node.privateKey);
     return signer;
@@ -201,7 +198,7 @@ export class CryptoUtility {
     // return keyPair;
   }
 
-  async decryptData(encryptedData: string, password: string) {
-    return this.cryptoService.decryptData(encryptedData, password);
-  }
+  // async decryptData(encryptedData: string, password: string) {
+  //   return this.cryptoService.decryptData(encryptedData, password);
+  // }
 }

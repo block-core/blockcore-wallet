@@ -102,7 +102,7 @@ import { ActionSignVerifiableCredentialComponent } from './action/sign-credentia
 import { RuntimeService } from 'src/shared/runtime.service';
 import { StorageService } from 'src/shared/storage.service';
 import { SharedManager } from 'src/shared/shared-manager';
-import { NetworkLoader } from './services';
+import { CryptoService, CryptoUtility, NetworkLoader } from './services';
 import { StateStore } from 'src/shared/store/state-store';
 import { ActionVaultSetupComponent } from './action/vault-setup/vault-setup.component';
 
@@ -257,6 +257,8 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     ContactStore,
     StateStore,
     RuntimeService,
+    CryptoService,
+    CryptoUtility,
     {
       provide: SharedManager,
       useFactory: (storage: StorageService, store: WalletStore, networkLoader: NetworkLoader) => new SharedManager(storage, store, networkLoader),

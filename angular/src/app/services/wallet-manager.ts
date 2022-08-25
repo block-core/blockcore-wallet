@@ -25,6 +25,8 @@ import { StorageService } from '../../shared/storage.service';
 import { RuntimeService } from '../../shared/runtime.service';
 import { UnspentOutputService } from './unspent-output.service';
 import { AccountStateStore } from 'src/shared/store/account-state-store';
+import { CryptoService } from './';
+
 const ECPair = ECPairFactory(ecc);
 var bitcoinMessage = require('bitcoinjs-message');
 const axios = require('axios').default;
@@ -52,6 +54,7 @@ export class WalletManager {
     private networkLoader: NetworkLoader,
     private state: UIState,
     private crypto: CryptoUtility,
+    private cryptoService: CryptoService,
     private secure: SecureStateService,
     private store: WalletStore,
     private addressStore: AddressStore,
@@ -405,7 +408,7 @@ export class WalletManager {
     }
 
     try {
-      unlockedMnemonic = await this.crypto.decryptData(wallet.mnemonic, password);
+      unlockedMnemonic = await this.cryptoService.decryptData(wallet.mnemonic, password);
     } catch (error) {
       this.logger.error(error);
     }
@@ -431,12 +434,12 @@ export class WalletManager {
       return unlockedMnemonic;
     }
 
-    unlockedMnemonic = await this.crypto.decryptData(wallet.mnemonic, password);
+    unlockedMnemonic = await this.cryptoService.decryptData(wallet.mnemonic, password);
 
     let unlockedExtensionWords = undefined;
 
     if (wallet.extensionWords != null && wallet.extensionWords != '') {
-      unlockedExtensionWords = await this.crypto.decryptData(wallet.extensionWords, password);
+      unlockedExtensionWords = await this.cryptoService.decryptData(wallet.extensionWords, password);
     }
 
     if (unlockedMnemonic) {
@@ -465,17 +468,17 @@ export class WalletManager {
       return unlockedMnemonic;
     }
 
-    unlockedMnemonic = await this.crypto.decryptData(wallet.mnemonic, oldpassword);
+    unlockedMnemonic = await this.cryptoService.decryptData(wallet.mnemonic, oldpassword);
 
     let unlockedExtensionWords = undefined;
 
     if (wallet.extensionWords != null && wallet.extensionWords != '') {
-      unlockedExtensionWords = await this.crypto.decryptData(wallet.extensionWords, oldpassword);
+      unlockedExtensionWords = await this.cryptoService.decryptData(wallet.extensionWords, oldpassword);
     }
 
     if (unlockedMnemonic) {
       // Encrypt the recovery phrase with new password and persist.
-      let encryptedRecoveryPhrase = await this.crypto.encryptData(unlockedMnemonic, newpassword);
+      let encryptedRecoveryPhrase = await this.cryptoService.encryptData(unlockedMnemonic, newpassword);
       wallet.mnemonic = encryptedRecoveryPhrase;
 
       // Make sure we persist the newly encrypted recovery phrase.
