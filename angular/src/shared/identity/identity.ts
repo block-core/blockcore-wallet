@@ -2,7 +2,7 @@
 // W3C Working Draft 26 January 2021 / W3C Working Draft 09 March 2021
 // https://w3c.github.io/did-core/
 
-import { createJWS, createJWT, decodeJWT, ES256KSigner } from 'did-jwt';
+import { createJWS, createJWT, decodeJWT, ES256KSigner, Signer } from 'did-jwt';
 import {
   DIDDocument,
   ParsedDID,
@@ -221,7 +221,15 @@ export class BlockcoreIdentity {
   }
 
   /** Generates an issuer based on the identity */
-  public issuer(options: { privateKey: Uint8Array | string | any }): Issuer {
+  public issuer(signer: Signer): Issuer {
+    return {
+      did: this.id,
+      signer: signer,
+      alg: 'ES256K',
+    };
+  }
+
+  public issuer2(options: { privateKey: Uint8Array | string | any }): Issuer {
     return {
       did: this.id,
       signer: ES256KSigner(options.privateKey),

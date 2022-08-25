@@ -548,7 +548,7 @@ interface ActionResponse {
 }
 
 interface ActionPrepareResult {
-  content: object;
+  content: object | string;
 }
 
 interface ActionMessage {

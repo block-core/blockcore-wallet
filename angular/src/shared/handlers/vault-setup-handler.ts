@@ -25,7 +25,10 @@ export class VaultSetupHandler implements ActionHandler {
     // this.action.content =
 
     console.log('parsedContent:', domain);
-    let setupDocument = this.generateDIDDocument(domain);
+    
+    // let setupDocument = this.generateDIDDocument(domain);
+
+    let setupDocument = `You approve giving the app your DID Document and .well-known configuration document linked to the domain: ${domain}.`;
 
     // Content will be overridden by the handler after user closes window.
     // const content = JSON.stringify(setupDocument, null, 2);
@@ -38,34 +41,6 @@ export class VaultSetupHandler implements ActionHandler {
   }
 
   async execute(state: ActionState, permission: Permission): Promise<ActionResponse> {
-    console.log('permission!!', permission);
-
-    // Get the private key
-    const { network, node } = await this.backgroundManager.getKey(permission.walletId, permission.accountId, permission.keyId);
-
-    const crypto = this.backgroundManager.crypto;
-
-    const signer = crypto.getSigner(node);
-
-    const tools = new BlockcoreIdentityTools();
-    const schnorrPubKey = tools.getPublicKeyFromPrivateKey(node.privateKey);
-    const identifier = crypto.schnorrPublicKeyToHex(crypto.convertEdcsaPublicKeyToSchnorr(node.publicKey));
-    const identifier2 = crypto.schnorrPublicKeyToHex(schnorrPubKey);
-    console.log('identifier:', identifier);
-    console.log('identifier2:', identifier2);
-    
-    const verificationMethod = tools.getVerificationMethod(node.privateKey);
-    console.log('verificationMethod:', verificationMethod);
-
-    // const keyPair = tools.generateKeyPair();
-
-    // const identityNode = this.identityService.getIdentityNode(this.walletManager.activeWallet, this.walletManager.activeAccount);
-    // const privateKey = identityNode.privateKey;
-
-    const identity = new BlockcoreIdentity(verificationMethod);
-    const doc = identity.document();
-    console.log(JSON.stringify(doc));
-
     // let jwt = await createJWT({
 
     // }, { issuer: 'did:is:' + identifier, signer });
@@ -90,18 +65,76 @@ export class VaultSetupHandler implements ActionHandler {
     // console.log(jwt)
 
     if (state.content) {
-      const did = 'did:is:' + permission.key;
-      const parsedContent: any = state.content;
-      parsedContent.verificationMethod[0].id = did + '#key-1';
-      parsedContent.verificationMethod[0].controller = did;
+      // const did = 'did:is:' + permission.key;
+      // const parsedContent: any = state.content;
+      // parsedContent.verificationMethod[0].id = did + '#key-1';
+      // parsedContent.verificationMethod[0].controller = did;
 
-      const contentText = JSON.stringify(parsedContent);
+      // const contentText = JSON.stringify(parsedContent);
 
-      console.log('parsedContent:', parsedContent);
+      // console.log('parsedContent:', parsedContent);
 
-      let signedData = await this.signData(network, node, contentText);
+      // let signedData = await this.signData(network, node, contentText);
 
-      return { key: permission.key, signature: signedData, request: state.message.request, content: parsedContent };
+      console.log('permission!!', permission);
+
+      // Get the private key
+      const { network, node } = await this.backgroundManager.getKey(permission.walletId, permission.accountId, permission.keyId);
+
+      const crypto = this.backgroundManager.crypto;
+
+      const signer = crypto.getSigner(node);
+
+      const tools = new BlockcoreIdentityTools();
+      // const schnorrPubKey = tools.getPublicKeyFromPrivateKey(node.privateKey);
+      // const identifier = crypto.schnorrPublicKeyToHex(crypto.convertEdcsaPublicKeyToSchnorr(node.publicKey));
+      // const identifier2 = crypto.schnorrPublicKeyToHex(schnorrPubKey);
+      // console.log('identifier:', identifier);
+      // console.log('identifier2:', identifier2);
+
+      const verificationMethod = tools.getVerificationMethod(node.privateKey);
+      console.log('verificationMethod:', verificationMethod);
+      const identifier = verificationMethod.controller;
+
+      // const keyPair = tools.generateKeyPair();
+
+      // const identityNode = this.identityService.getIdentityNode(this.walletManager.activeWallet, this.walletManager.activeAccount);
+      // const privateKey = identityNode.privateKey;
+
+      const domain = state.message.request.params[0].domain;
+      // const parsedContent: any = state.content;
+      // const domain = parsedContent.service[0].serviceEndpoint.nodes[0];
+
+      const identity = new BlockcoreIdentity(verificationMethod);
+      const doc = identity.document({
+        service: [
+          {
+            id: '#dwn',
+            type: 'DecentralizedWebNode',
+            serviceEndpoint: {
+              nodes: [domain],
+            },
+          },
+        ],
+      });
+
+      console.log(JSON.stringify(doc));
+
+      let jwt = await createJWT(doc, { issuer: identity.id, signer: signer, canonicalize: true });
+      console.log(jwt);
+
+      const issuer = identity.issuer(signer);
+
+      let configuration = await identity.configuration(domain, issuer);
+      console.log(configuration);
+
+      //
+      const result = {
+        didDocument: jwt,
+        wellKnownConfiguration: configuration,
+      };
+
+      return { key: permission.key, signature: '', request: state.message.request, content: result };
     } else {
       return { key: '', signature: '', content: null, request: state.message.request };
     }

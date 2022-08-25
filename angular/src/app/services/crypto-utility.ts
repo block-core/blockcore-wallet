@@ -6,10 +6,10 @@ import * as bs58 from 'bs58';
 import { Secp256k1KeyPair } from '@transmute/did-key-secp256k1';
 import { CryptoService } from './crypto.service';
 import * as secp from '@noble/secp256k1';
-import { Network } from 'src/shared/networks';
 import { createJWT, ES256KSigner } from 'did-jwt';
 import { HDKey } from '@scure/bip32';
 import { SS256KSigner } from 'src/shared/identity';
+import { Network } from '../../shared/networks';
 
 const enc = new TextEncoder();
 const dec = new TextDecoder();
