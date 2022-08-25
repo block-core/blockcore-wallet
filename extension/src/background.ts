@@ -1,4 +1,4 @@
-import { ActionMessageResponse, Permission } from '../../angular/src/shared/interfaces';
+import { ActionMessage, Permission } from '../../angular/src/shared/interfaces';
 import { BackgroundManager, ProcessResult } from '../../angular/src/shared/background-manager';
 import { SharedManager } from '../../angular/src/shared/shared-manager';
 import { RunState } from '../../angular/src/shared/task-runner';
@@ -29,7 +29,7 @@ let walletStore: WalletStore;
 // let prompts: ActionState[] = [];
 
 // Don't mark this method async, it will result in caller not being called in "sendResponse".
-browser.runtime.onMessage.addListener(async (msg: ActionMessageResponse, sender) => {
+browser.runtime.onMessage.addListener(async (msg: ActionMessage, sender) => {
   // console.log('Receive message in background:', msg);
 
   // When messages are coming from popups, the prompt will be set.
@@ -57,14 +57,14 @@ browser.runtime.onMessage.addListener(async (msg: ActionMessageResponse, sender)
   }
 });
 
-browser.runtime.onMessageExternal.addListener(async (message: ActionMessageResponse, sender) => {
+browser.runtime.onMessageExternal.addListener(async (message: ActionMessage, sender) => {
   console.log('BACKGROUND:EXTERNAL:MSG:', message);
   let extensionId = new URL(sender.url!).host;
   message.app = extensionId;
   return handleContentScriptMessage(message);
 });
 
-async function handleContentScriptMessage(message: ActionMessageResponse) {
+async function handleContentScriptMessage(message: ActionMessage) {
   // console.log('handleContentScriptMessage:', message);
   // We only allow messages of type 'request' here.
   if (message.type !== 'request') {
@@ -94,6 +94,8 @@ async function handleContentScriptMessage(message: ActionMessageResponse) {
 
   // console.log('prompts:', JSON.stringify(ActionStateHolder.prompts));
   // console.log('prompts (length):', ActionStateHolder.prompts.length);
+
+   state.handler.prepare(message.args);
 
   // Reload the permissions each time.
   await permissionService.refresh();
@@ -155,7 +157,7 @@ async function handleContentScriptMessage(message: ActionMessageResponse) {
   }
 }
 
-function handlePromptMessage(message: ActionMessageResponse, sender) {
+function handlePromptMessage(message: ActionMessage, sender) {
   // console.log('handlePromptMessage!!!:', message);
   // Create an permission instance from the message received from prompt dialog:
   const permission = permissionService.createPermission(message);

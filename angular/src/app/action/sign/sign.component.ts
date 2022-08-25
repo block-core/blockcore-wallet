@@ -4,7 +4,7 @@ import { CryptoService, UIState, NetworksService, AppManager, WalletManager } fr
 import { Router } from '@angular/router';
 import { ActionService } from 'src/app/services/action.service';
 // import * as browser from 'webextension-polyfill';
-import { ActionMessageResponse, Permission } from 'src/shared';
+import { ActionMessage, Permission } from 'src/shared';
 import { PermissionStore } from 'src/shared/store/permission-store';
 import { Actions, PERMISSIONS } from 'src/app/shared/constants';
 const { v4: uuidv4 } = require('uuid');

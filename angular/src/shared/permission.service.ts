@@ -1,4 +1,4 @@
-import { ActionMessageResponse, Permission, PermissionDomain } from './interfaces';
+import { ActionMessage, Permission, PermissionDomain } from './interfaces';
 import { PermissionStore } from './store/permission-store';
 
 export class PermissionServiceShared {
@@ -52,7 +52,7 @@ export class PermissionServiceShared {
     return permissions;
   }
 
-  createPermission(message: ActionMessageResponse) {
+  createPermission(message: ActionMessage) {
     let permission: Permission = {
       app: message.app,
       action: message.type,

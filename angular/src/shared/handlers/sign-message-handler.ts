@@ -16,6 +16,10 @@ export class SignMessageHandler implements ActionHandler {
     return signature.toString('base64');
   }
 
+  async prepare(args: RequestArguments) {
+    return {};
+  }
+
   async execute(permission: Permission, args: RequestArguments) {
     // Get the private key
     const { network, node } = await this.backgroundManager.getKey(permission.walletId, permission.accountId, permission.keyId);

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Action, ActionMessageResponse, ActionStore } from 'src/shared';
+import { Action, ActionMessage, ActionStore } from 'src/shared';
 import { CommunicationService } from './communication.service';
 import { UIState } from './ui-state.service';
 import { WalletManager } from './wallet-manager';
@@ -49,13 +49,13 @@ export class ActionService {
     // Reset params so the action can be re-triggered.
     this.uiState.params = null;
 
-    const reply: ActionMessageResponse = {
+    const reply: ActionMessage = {
       prompt: true, // This indicates that message comes from the popup promt.
       target: 'provider',
       source: 'tabs',
       ext: 'blockcore',
       permission: permission,
-      args: this.args,
+      args: { method: this.uiState.action.action, params: this.args },
       id: this.uiState.action.id,
       type: this.uiState.action.action,
       app: this.uiState.action.app,

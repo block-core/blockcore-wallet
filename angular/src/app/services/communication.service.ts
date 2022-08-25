@@ -1,7 +1,7 @@
 import { Injectable, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
 import { EnvironmentService, SettingsService } from '.';
-import { ActionMessageResponse, Message, MessageResponse } from '../../shared/interfaces';
+import { ActionMessage, Message, MessageResponse } from '../../shared/interfaces';
 import { EventBus } from './event-bus';
 import { LoggerService } from './logger.service';
 import { RuntimeService } from '../../shared/runtime.service';
@@ -73,7 +73,7 @@ export class CommunicationService {
   }
 
   /** Send message to the background service. */
-  send(message: Message | ActionMessageResponse | any) {
+  send(message: Message | ActionMessage | any) {
     if (this.runtime.isExtension) {
       // TODO: Move this to a communication service.
       // Inform the provider script that user has signed the data.

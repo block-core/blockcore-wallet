@@ -1,7 +1,7 @@
 import { Component, ChangeDetectorRef, HostListener } from '@angular/core';
 import { ActionService } from 'src/app/services/action.service';
 // import * as browser from 'webextension-polyfill';
-import { AccountState, AccountStateStore, ActionMessageResponse, Permission } from 'src/shared';
+import { AccountState, AccountStateStore, ActionMessage, Permission } from 'src/shared';
 import { PermissionStore } from 'src/shared/store/permission-store';
 import { Actions, PERMISSIONS } from 'src/app/shared/constants';
 import { AppManager, NetworksService, UIState, WalletManager } from '../services';

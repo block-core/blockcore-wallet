@@ -504,15 +504,18 @@ interface DIDResolutionResult {
   didResolutionMetadata: DIDResolutionMetadataEx;
 }
 
-interface ActionMessage {}
+interface ActionRequest {
+  method: string;
+  params: any[];
+}
 
-interface ActionMessageResponse {
+interface ActionMessage {
   prompt: boolean;
   target: string;
   source: string;
   ext: string;
   permission: string;
-  args: any;
+  args: ActionRequest;
   id: string;
   type: string;
   app: string;
@@ -635,8 +638,8 @@ export {
   PermissionArguments,
   Permission,
   PermissionDomain,
+  ActionRequest,
   ActionMessage,
-  ActionMessageResponse,
   Contact,
   ContactAddress,
   ClientData,

@@ -18,21 +18,21 @@ export class ActionVaultSetupComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
 
-    const parsedContent = JSON.parse(this.uiState.action.args);
-    const firstArgument = parsedContent[0];
+    // const parsedContent = JSON.parse(this.uiState.action.args);
+    // const firstArgument = parsedContent[0];
 
-    // Override the content
-    // this.action.content = 
+    // // Override the content
+    // // this.action.content = 
 
-    console.log('parsedContent:', firstArgument.domain);
+    // console.log('parsedContent:', firstArgument.domain);
 
-    let setupDocument = this.generateDIDDocument(firstArgument.domain);
+    // let setupDocument = this.generateDIDDocument(firstArgument.domain);
 
-    // Content will be overridden by the handler after user closes window.
-    this.action.content = JSON.stringify(setupDocument, null, 2);
+    // // Content will be overridden by the handler after user closes window.
+    // this.action.content = JSON.stringify(setupDocument, null, 2);
 
-    // Therefore we must make sure the updated content for signing is setup as args.
-    this.action.args = [this.action.content];
+    // // Therefore we must make sure the updated content for signing is setup as args.
+    // this.action.args = [this.action.content];
 
     // this.action.content = JSON.stringify(setupDocument);
   }
