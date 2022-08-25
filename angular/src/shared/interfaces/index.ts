@@ -506,7 +506,7 @@ interface DIDResolutionResult {
 
 interface ActionRequest {
   method: string;
-  params: any[];
+  params?: unknown[] | object;
 }
 
 // interface RequestArguments {

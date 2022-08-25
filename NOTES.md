@@ -26,3 +26,17 @@ that is being applied in the watcher:
 - All API requests against the indexers are performed with a maximum of 3 retries with exponential delay. This will help mitigate various network
   and service issues. This is handled by the axios-retry plugin.
 
+## Action Process
+
+Web Apps auto-load the `provider.ts` when user have the extension installed. This makes "blockcore" available globally through globalThis.blockcore.
+
+Calls are sent through the `provider.ts` using the generic "request" function:
+
+`const result = await blockcore.request({ method: "signMessage", params: [{ message: msg }] });`
+
+The "method" is "action". params can either be a single object, or array.
+
+The API is based upon the latest generic interface on MetaMask: https://docs.metamask.io/guide/ethereum-provider.html#ethereum-request-args
+
+
+
