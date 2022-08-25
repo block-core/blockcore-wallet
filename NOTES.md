@@ -28,7 +28,7 @@ that is being applied in the watcher:
 
 ## Action Process
 
-Web Apps auto-load the `provider.ts` when user have the extension installed. This makes "blockcore" available globally through globalThis.blockcore.
+Web Apps auto-load the `provider.ts` when user have the extension installed. This makes "blockcore" available globally through `globalThis.blockcore`.
 
 `content.ts` is responsible for injecting the `provider.ts` into the web app.
 
@@ -47,7 +47,7 @@ be the app identifier.
 
 The message is forwarded to `background.ts` using the API: `browser.runtime.sendMessage`.
 
-When the async call is completed, it will return response to the `provider.ts` using: `window.postMessage(responseMsg, message.origin)`.
+When the async call (as described in "Action Processing" below) is completed, it will return response to the `provider.ts` using: `window.postMessage(responseMsg, message.origin)`.
 
 The `provider.ts` will then return response to the web app in the handler: `globalThis.addEventListener('message'`, which will filter out messages that is not 
 relevant for the extension.
@@ -74,3 +74,58 @@ Then permission is attempted to be retrieved, which might result in a prompt. Th
 assign to the action.
 
 If permission is given, then `execute` is called on the handler. The result from execute is returned as described in the previous section above.
+
+### Action Types
+
+`ActionRequest`: Same as RequestArguments in MetaMask.
+
+```ts
+interface ActionRequest {
+  method: string;
+  params?: unknown[] | object;
+}
+```
+
+`ActionMessage`: Envelope for the request, used internally.
+
+```ts
+interface ActionMessage {
+  prompt: boolean;
+  target: string;
+  source: string;
+  ext: string;
+  permission: string;
+
+  /** Data sent from web app. */
+  args: ActionRequest;
+  id: string;
+  type: string;
+  app: string;
+  walletId: string;
+  accountId: string;
+
+  /** The internal key ID used to persist permission. */
+  keyId: string;
+
+  /** The public key used to identity the signature returned. */
+  key: string
+}
+```
+
+`ActionResponse`: Result provided to the web app.
+
+```ts
+interface ActionResponse {
+  /** The original request for this response. */
+  request: ActionRequest;
+
+  /** The public key user picked for the action. */
+  key: string;
+
+  /** The signature for the signed content in base64 encoding. */
+  signature: string;
+
+  /** A copy of the actual content string that was signed. */
+  content: string;
+}
+```

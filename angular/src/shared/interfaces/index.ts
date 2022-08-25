@@ -509,6 +509,20 @@ interface ActionRequest {
   params?: unknown[] | object;
 }
 
+interface ActionResponse {
+  /** The original request for this response. */
+  request: ActionRequest;
+
+  /** The public key user picked for the action. */
+  key: string;
+
+  /** The signature for the signed content in base64 encoding. */
+  signature: string;
+
+  /** A copy of the actual content string that was signed. */
+  content: string;
+}
+
 // interface RequestArguments {
 //   readonly method: string;
 //   readonly params: readonly any[];
@@ -520,6 +534,8 @@ interface ActionMessage {
   source: string;
   ext: string;
   permission: string;
+
+  /** Data sent from web app. */
   args: ActionRequest;
   id: string;
   type: string;
@@ -639,6 +655,7 @@ export {
   Permission,
   PermissionDomain,
   ActionRequest,
+  ActionResponse,
   ActionMessage,
   Contact,
   ContactAddress,
