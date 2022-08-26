@@ -8,7 +8,6 @@ import { CryptoService } from './crypto.service';
 import * as secp from '@noble/secp256k1';
 import { createJWT, ES256KSigner } from 'did-jwt';
 import { HDKey } from '@scure/bip32';
-import { SS256KSigner } from 'src/shared/identity';
 import { Network } from '../../shared/networks';
 
 const enc = new TextEncoder();

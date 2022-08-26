@@ -18,7 +18,7 @@ export class ActionState {
   id: string;
   id2: string;
   method: string;
-  content: object;
+  content: object | string;
   prompt: any;
   promptPermission: any;
   windowId: number | undefined;
