@@ -104,7 +104,9 @@ export class BlockcoreIdentityTools {
     return {
       id: `${did}#keys-${keyIndex}`,
       // We must use this type while we wait for "did-jwt" support Schnorr:
-      type: 'EcdsaSecp256k1VerificationKey2019', // Reference: 'SchnorrSecp256k1Signature2019' / 'JsonWebKey2020'
+      type: 'JsonWebKey2020', // Reference: 'SchnorrSecp256k1Signature2019' / 'EcdsaSecp256k1VerificationKey2019'
+      // https://w3c.github.io/vc-jws-2020/
+      // https://w3c-ccg.github.io/lds-ecdsa-secp256k1-2019/
       controller: did,
       publicKeyJwk: this.getJsonWebKey(publicKeyHex),
       // Reconsider relying on multibase if the industry prefer that.
