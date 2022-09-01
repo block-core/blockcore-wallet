@@ -4,10 +4,10 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { copyToClipboard } from 'src/app/shared/utilities';
-import { Contact } from 'src/shared';
+import { Account, Contact } from 'src/shared';
 import { Network } from 'src/shared/networks';
 import { ContactStore } from 'src/shared/store/contacts-store';
-import { NetworksService, UIState } from '../../services';
+import { NetworksService, UIState, WalletManager } from '../../services';
 
 @Component({
   selector: 'app-contacts-view',
@@ -18,8 +18,9 @@ export class ContactsViewComponent implements OnInit, OnDestroy {
   network: Network;
   public contact: Contact;
   subscriptions: Subscription[] = [];
+  filteredAccounts: Account[];
 
-  constructor(private snackBar: MatSnackBar, private activatedRoute: ActivatedRoute, private router: Router, private uiState: UIState, public networkService: NetworksService, private fb: FormBuilder, private contactStore: ContactStore) {
+  constructor(private walletManager: WalletManager, private snackBar: MatSnackBar, private activatedRoute: ActivatedRoute, private router: Router, private uiState: UIState, public networkService: NetworksService, private fb: FormBuilder, private contactStore: ContactStore) {
     this.uiState.showBackButton = true;
     this.uiState.goBackHome = false;
 
@@ -29,6 +30,9 @@ export class ContactsViewComponent implements OnInit, OnDestroy {
         this.contact = this.contactStore.get(accountId);
         this.uiState.title = this.contact.name;
         this.network = this.networkService.getNetwork(this.contact.network);
+
+        var accounts = this.walletManager.activeWallet.accounts;
+        this.filteredAccounts = accounts.filter((a) => a.networkType == this.network.id);
       })
     );
   }
