@@ -19,7 +19,7 @@
   <mat-list>
     <mat-list-item *ngFor="let account of filteredAccounts; let i = index" routerLinkActive="active-link">
       <mat-icon mat-list-icon>{{ account.icon }}</mat-icon>
-      <div mat-line class="name-field"><button class="half-width" [routerLink]="['/', 'account', 'send']" mat-raised-button>Send using this account</button>&nbsp;&nbsp;&nbsp;{{ account.name | truncate }}</div>
+      <div mat-line class="name-field"><button class="half-width" (click)="sendToUsing(contact.address, account.identifier)" mat-raised-button>Send using this account</button>&nbsp;&nbsp;&nbsp;{{ account.name | truncate }}</div>
     </mat-list-item>
   </mat-list>
 

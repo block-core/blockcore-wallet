@@ -7,7 +7,7 @@ import { copyToClipboard } from 'src/app/shared/utilities';
 import { Account, Contact } from 'src/shared';
 import { Network } from 'src/shared/networks';
 import { ContactStore } from 'src/shared/store/contacts-store';
-import { NetworksService, UIState, WalletManager } from '../../services';
+import { NetworksService, SendService, UIState, WalletManager } from '../../services';
 
 @Component({
   selector: 'app-contacts-view',
@@ -20,7 +20,7 @@ export class ContactsViewComponent implements OnInit, OnDestroy {
   subscriptions: Subscription[] = [];
   filteredAccounts: Account[];
 
-  constructor(private walletManager: WalletManager, private snackBar: MatSnackBar, private activatedRoute: ActivatedRoute, private router: Router, private uiState: UIState, public networkService: NetworksService, private fb: FormBuilder, private contactStore: ContactStore) {
+  constructor(private walletManager: WalletManager, public sendService: SendService, private snackBar: MatSnackBar, private activatedRoute: ActivatedRoute, private router: Router, private uiState: UIState, public networkService: NetworksService, private fb: FormBuilder, private contactStore: ContactStore) {
     this.uiState.showBackButton = true;
     this.uiState.goBackHome = false;
 
@@ -61,5 +61,11 @@ export class ContactsViewComponent implements OnInit, OnDestroy {
     this.contactStore.remove(this.contact.id);
     await this.contactStore.save();
     this.router.navigateByUrl('/contacts');
+  }
+
+  async sendToUsing(address: string, accountId: string) {
+    await this.walletManager.setActiveAccount(accountId);
+    this.sendService.sendToAddress = address;
+    this.router.navigate(['/', 'account', 'send']);
   }
 }
