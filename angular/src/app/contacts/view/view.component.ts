@@ -37,16 +37,6 @@ export class ContactsViewComponent implements OnInit, OnDestroy {
     );
   }
 
-  copy(content: string) {
-    copyToClipboard(content);
-
-    this.snackBar.open('Copied to clipboard', 'Hide', {
-      duration: 1500,
-      horizontalPosition: 'center',
-      verticalPosition: 'bottom',
-    });
-  }
-
   ngOnDestroy(): void {
     this.subscriptions.forEach((sub) => {
       sub.unsubscribe();
@@ -56,6 +46,16 @@ export class ContactsViewComponent implements OnInit, OnDestroy {
   }
 
   async ngOnInit(): Promise<void> {}
+  
+  copy(content: string) {
+    copyToClipboard(content);
+
+    this.snackBar.open('Copied to clipboard', 'Hide', {
+      duration: 1500,
+      horizontalPosition: 'center',
+      verticalPosition: 'bottom',
+    });
+  }
 
   async remove() {
     this.contactStore.remove(this.contact.id);
