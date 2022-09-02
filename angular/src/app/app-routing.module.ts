@@ -29,6 +29,11 @@ import { AccountSendAddressComponent } from './account/send/address/send-address
 import { AccountSendConfirmComponent } from './account/send/confirm/send-confirm.component';
 import { AccountSendSuccessComponent } from './account/send/success/send-success.component';
 import { AccountSendSendingComponent } from './account/send/sending/send-sending.component';
+import { AccountSendSidechainComponent } from './account/send-sidechain/send.component';
+import { AccountSendSidechainAddressComponent } from './account/send-sidechain/address/send-address.component';
+import { AccountSendSidechainConfirmComponent } from './account/send-sidechain/confirm/send-confirm.component';
+import { AccountSendSidechainSuccessComponent } from './account/send-sidechain/success/send-success.component';
+import { AccountSendSidechainSendingComponent } from './account/send-sidechain/sending/send-sending.component';
 import { HandlerComponent } from './settings/handler/handler.component';
 import { ActionStratisIdentityComponent } from './action/sid/sid.component';
 import { ActionNostrIdentityComponent } from './action/nostr/nostr.component';
@@ -221,6 +226,44 @@ const routes: Routes = [
       {
         path: 'success',
         component: AccountSendSuccessComponent,
+        resolve: {
+          data: LoadingResolverService,
+        },
+      },
+    ],
+    resolve: {
+      data: LoadingResolverService,
+    },
+  },
+  {
+    path: 'account/send-sidechain',
+    component: AccountSendSidechainComponent,
+    children: [
+      { path: '', redirectTo: 'address', pathMatch: 'full' },
+      {
+        path: 'address',
+        component: AccountSendSidechainAddressComponent,
+        resolve: {
+          data: LoadingResolverService,
+        },
+      },
+      {
+        path: 'confirm',
+        component: AccountSendSidechainConfirmComponent,
+        resolve: {
+          data: LoadingResolverService,
+        },
+      },
+      {
+        path: 'sending',
+        component: AccountSendSidechainSendingComponent,
+        resolve: {
+          data: LoadingResolverService,
+        },
+      },
+      {
+        path: 'success',
+        component: AccountSendSidechainSuccessComponent,
         resolve: {
           data: LoadingResolverService,
         },

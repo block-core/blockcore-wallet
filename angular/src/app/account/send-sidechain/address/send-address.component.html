@@ -1,9 +1,5 @@
 <h2>Send {{ sendService.network.symbol }}</h2>
 
-<mat-card-actions class="full-action-buttons">
-  <button [disabled]="0" class="half-width" [routerLink]="['/', 'account', 'send-sidechain']" mat-raised-button>Send To Sidechain</button>
-</mat-card-actions>
-
 <form [formGroup]="form">
   <div class="input-actions">
     <button mat-icon-button (click)="scanQrCode()" matTooltip="Scan QR code">
