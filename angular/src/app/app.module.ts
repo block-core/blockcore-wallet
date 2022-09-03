@@ -57,7 +57,6 @@ import { AccountSelectComponent } from './account/select/select.component';
 import { AmountPipe } from './shared/amount.pipe';
 import { AccountTransactionComponent } from './account/transaction/transaction.component';
 import { AccountSendComponent } from './account/send/send.component';
-import { AccountSendAddressComponent } from './account/send/address/send-address.component';
 import { AccountSendConfirmComponent } from './account/send/confirm/send-confirm.component';
 import { AccountSendSuccessComponent } from './account/send/success/send-success.component';
 import { AccountSendSendingComponent } from './account/send/sending/send-sending.component';
@@ -110,6 +109,7 @@ import { SharedManager } from 'src/shared/shared-manager';
 import { CryptoService, CryptoUtility, NetworkLoader } from './services';
 import { StateStore } from 'src/shared/store/state-store';
 import { ActionVaultSetupComponent } from './action/vault-setup/vault-setup.component';
+import { AccountSendAddressComponent } from './account/send/address/send-address.component';
 
 // required for AOT compilation
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
@@ -149,16 +149,16 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     AccountSelectComponent,
     AmountPipe,
     AccountTransactionComponent,
-    AccountSendComponent,
     AccountSendAddressComponent,
+    AccountSendComponent,
     AccountSendConfirmComponent,
     AccountSendSuccessComponent,
     AccountSendSendingComponent,
     AccountSendSidechainComponent,
     AccountSendSidechainAddressComponent,
-    AccountSendSidechainAConfirmComponent,
-    AccountSendSidechainASuccessComponent,
-    AccountSendSidechainASendingComponent,
+    AccountSendSidechainConfirmComponent,
+    AccountSendSidechainSuccessComponent,
+    AccountSendSidechainSendingComponent,
     NetworkStatusComponent,
     HandlerComponent,
     ActionStratisIdentityComponent,

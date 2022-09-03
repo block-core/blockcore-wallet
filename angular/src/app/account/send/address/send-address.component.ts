@@ -14,7 +14,7 @@ import { AddressValidationService } from 'src/app/services/address-validation.se
   templateUrl: './send-address.component.html',
   styleUrls: ['./send-address.component.css'],
 })
-export class AccountSendSidechainAddressComponent implements OnInit, OnDestroy {
+export class AccountSendAddressComponent implements OnInit, OnDestroy {
   form: UntypedFormGroup;
   optionsOpen = false;
   amountTooLarge = false;

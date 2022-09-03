@@ -6,8 +6,8 @@ import { SATOSHI_FACTOR } from 'src/app/shared/constants';
 import { WalletManager, UIState, SendService, NetworkStatusService } from '../../../services';
 import { Html5QrcodeScanner, Html5QrcodeSupportedFormats } from 'html5-qrcode';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { QrScanDialog } from './qr-scanning.component';
 import { AddressValidationService } from 'src/app/services/address-validation.service';
+import { QrScanDialog } from '../../send/address/qr-scanning.component';
 
 @Component({
   selector: 'app-account-send-address',
