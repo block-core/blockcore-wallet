@@ -3,7 +3,7 @@ import { AbstractControl, UntypedFormBuilder, UntypedFormControl, UntypedFormGro
 import Big from 'big.js';
 import { InputValidators } from 'src/app/services/inputvalidators';
 import { SATOSHI_FACTOR } from 'src/app/shared/constants';
-import { WalletManager, UIState, SendService, NetworkStatusService } from '../../../services';
+import { WalletManager, UIState, SendSidechainService, SendService, NetworkStatusService } from '../../../services';
 import { Html5QrcodeScanner, Html5QrcodeSupportedFormats } from 'html5-qrcode';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AddressValidationService } from 'src/app/services/address-validation.service';
@@ -14,6 +14,7 @@ import { QrScanDialog } from '../../send/address/qr-scanning.component';
   templateUrl: './send-address.component.html',
   styleUrls: ['./send-address.component.css'],
 })
+
 export class AccountSendSidechainAddressComponent implements OnInit, OnDestroy {
   form: UntypedFormGroup;
   optionsOpen = false;
@@ -27,13 +28,16 @@ export class AccountSendSidechainAddressComponent implements OnInit, OnDestroy {
     return this.form.get('feeInput') as UntypedFormControl;
   }
 
-  constructor(public uiState: UIState, public sendService: SendService, public walletManager: WalletManager, public networkStatusService: NetworkStatusService, private addressValidation: AddressValidationService, private ngZone: NgZone, public dialog: MatDialog, private fb: UntypedFormBuilder) {
+  constructor(public uiState: UIState, public sendService: SendService, public sendSidechainService: SendSidechainService, public walletManager: WalletManager, public networkStatusService: NetworkStatusService, private addressValidation: AddressValidationService, private ngZone: NgZone, public dialog: MatDialog, private fb: UntypedFormBuilder) {
     this.form = fb.group({
-      addressInput: new UntypedFormControl('', [Validators.required, Validators.minLength(6), InputValidators.address(this.sendService, this.addressValidation)]),
+     // addressInput: new UntypedFormControl('', [Validators.required, Validators.minLength(6), InputValidators.address(this.sendService, this.addressValidation)]),
       changeAddressInput: new UntypedFormControl('', [InputValidators.address(this.sendService, this.addressValidation)]),
       amountInput: new UntypedFormControl('', [Validators.required, Validators.min(0), Validators.pattern(/^-?(0|[0-9]+[.]?[0-9]*)?$/), InputValidators.maximumBitcoin(sendService)]),
       // TODO: Make an custom validator that sets form error when fee input is too low.
       feeInput: new UntypedFormControl(this.sendService.getNetworkFee(), [Validators.required, Validators.min(0), Validators.pattern(/^-?(0|[0-9]+[.]?[0-9]*)?$/)]),
+     
+      // TODO: validate the sidechain target address using the sidechain network
+      sidechainAddressInput: new UntypedFormControl('', ),
     });
 
     this.optionFeeInput.valueChanges.subscribe((value) => {
@@ -69,6 +73,12 @@ export class AccountSendSidechainAddressComponent implements OnInit, OnDestroy {
       console.log('RESULT', result);
       this.sendService.address = result;
     });
+  }
+
+  async onSidechainSelectChanged(event: any) {
+    // this.index = event.value;
+
+    this.sendService.address = "yU2jNwiac7XF8rQvSk2bgibmwsNLkkhsHV";
   }
 
   async paste() {

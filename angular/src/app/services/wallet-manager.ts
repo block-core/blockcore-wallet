@@ -5,7 +5,7 @@ import * as secp from '@noble/secp256k1';
 
 import { Account, AccountUnspentTransactionOutput, Address, Logger, Wallet } from '../../shared/interfaces';
 import { MINUTE } from '../shared/constants';
-import { Psbt } from '@blockcore/blockcore-js';
+import { payments, Psbt, script } from '@blockcore/blockcore-js';
 import * as ecc from 'tiny-secp256k1';
 import ECPairFactory from 'ecpair';
 import { Injectable } from '@angular/core';
@@ -26,6 +26,8 @@ import { RuntimeService } from '../../shared/runtime.service';
 import { UnspentOutputService } from './unspent-output.service';
 import { AccountStateStore } from 'src/shared/store/account-state-store';
 import { CryptoService } from './';
+
+import { Payment } from '@blockcore/blockcore-js/src/payments';
 
 const ECPair = ECPairFactory(ecc);
 var bitcoinMessage = require('bitcoinjs-message');
@@ -226,7 +228,8 @@ export class WalletManager {
     changeAddress: string,
     amount: Big,
     fee: Big,
-    unspent: AccountUnspentTransactionOutput[]
+    unspent: AccountUnspentTransactionOutput[],
+    nullData?: string // opreturn data
   ): Promise<{
     changeAddress: string;
     changeAmount: Big;
@@ -329,6 +332,13 @@ export class WalletManager {
 
       // // Send the rest to change address.
       tx.addOutput({ address: changeAddress, value: changeAmount.toNumber() });
+    }
+
+    if (nullData != null)
+    {
+      var data = Buffer.from(nullData)
+      const dataScript = payments.embed({ data: [data] });
+      tx.addOutput({ script: dataScript.output, value: 0 }); // OP_RETURN always with 0 value unless you want to burn coins
     }
 
     // Get the secret seed.

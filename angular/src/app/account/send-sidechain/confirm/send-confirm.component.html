@@ -1,7 +1,8 @@
-<h2>Confirm Payment</h2>
+<h2>Confirm {{sendSidechainService.selectedSidechain}} Swap</h2>
 
 <div class="grid-row-label-value">
-    <div><span>To</span><span>{{sendService.address}}</span></div>
+    <div><span>Federation Address</span><span>{{sendService.address}}</span></div>
+    <div><span>Target address on {{sendSidechainService.selectedSidechain}}</span><span>{{sendSidechainService.sidechainAddress}}</span></div>
     <div><span>From</span><span>{{sendService.account.name}}</span></div>
     <div *ngIf="sendService.changeAddress"><span>Change (override)</span><span>{{sendService.changeAddress}}</span></div>
     <div><span>Amount</span><span>{{sendService.amountAsSatoshi | amount}} {{sendService.network.symbol}}</span></div>

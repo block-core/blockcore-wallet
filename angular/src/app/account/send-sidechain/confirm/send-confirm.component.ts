@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { SendService, WalletManager } from '../../../services';
+import { SendService, SendSidechainService, WalletManager } from '../../../services';
 
 @Component({
     selector: 'app-account-send-confirm',
@@ -17,8 +17,8 @@ export class AccountSendSidechainConfirmComponent implements OnInit, OnDestroy {
 
     constructor(
         public sendService: SendService,
+        public sendSidechainService: SendSidechainService,
         public walletManager: WalletManager) {
-
     }
 
     ngOnDestroy() {
@@ -38,7 +38,8 @@ export class AccountSendSidechainConfirmComponent implements OnInit, OnDestroy {
                 this.sendService.changeAddress,
                 this.sendService.amountAsSatoshi,
                 this.sendService.feeAsSatoshi,
-                this.sendService.accountHistory.unspent);
+                this.sendService.accountHistory.unspent,
+                this.sendSidechainService.sidechainAddress ?? null);
 
             this.transaction = tx;
             this.sendService.transactionHex = tx.transactionHex;

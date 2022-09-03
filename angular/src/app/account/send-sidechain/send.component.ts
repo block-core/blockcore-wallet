@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit, Renderer2 } from '@angular/core';
-import { UIState, CommunicationService, NetworksService, SendService, WalletManager } from '../../services';
+import { UIState, CommunicationService, NetworksService, SendService, SendSidechainService, WalletManager } from '../../services';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AccountHistory, Address, UnspentTransactionOutput } from '../../../shared/interfaces';
 import { Network } from '../../../shared/networks';
@@ -23,6 +23,7 @@ export class AccountSendSidechainComponent implements OnInit, OnDestroy {
 
     constructor(public uiState: UIState,
         public sendService: SendService,
+        public sendSidechainService: SendSidechainService,
         private renderer: Renderer2,
         private networks: NetworksService,
         private communication: CommunicationService,
@@ -35,7 +36,8 @@ export class AccountSendSidechainComponent implements OnInit, OnDestroy {
         this.uiState.backUrl = null;
 
         sendService.reset();
-
+        sendSidechainService.reset();
+        
         const account = this.walletManager.activeAccount;
         const network = this.networks.getNetwork(account.networkType);
 

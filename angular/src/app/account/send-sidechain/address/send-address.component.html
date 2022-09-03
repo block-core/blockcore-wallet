@@ -1,6 +1,32 @@
-<h2>Send {{ sendService.network.symbol }}</h2>
+<h2>Sidechain Swap</h2>
 
 <form [formGroup]="form">
+
+  <mat-form-field class="input-full-width" appearance="outline">
+    <mat-label>Target Sidechain</mat-label>
+    <mat-select (selectionChange)="onSidechainSelectChanged($event)" [(value)]="sendSidechainService.selectedSidechain">
+      <mat-option [value]="'CRS'">Cirrus (CRS)</mat-option>
+      <mat-option [value]="'custom'">Custom</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <div *ngIf="sendSidechainService.selectedSidechain == 'custom'">
+    <br>
+    <mat-form-field class="input-full-width" appearance="outline">
+      <mat-label>Custom Sidechain</mat-label>
+      <input matInput [(ngModel)]="sendService.address">
+      <mat-hint>Specify the swap address of the target sidechain.
+      </mat-hint>
+    </mat-form-field>
+    <br>
+  </div>
+
+  <div *ngIf="sendSidechainService.selectedSidechain != 'custom'">
+    <br>
+    <h3>Federation Swap Address: {{sendService.address}}</h3>
+    <br>
+  </div>
+
   <div class="input-actions">
     <button mat-icon-button (click)="scanQrCode()" matTooltip="Scan QR code">
       <mat-icon>qr_code_scanner</mat-icon>
@@ -11,10 +37,10 @@
   </div>
 
   <mat-form-field class="input-full-width" appearance="outline">
-    <mat-label>Address</mat-label>
-    <input matInput formControlName="addressInput" [(ngModel)]="sendService.address" required />
-    <mat-error *ngIf="form.controls['addressInput'].errors?.['invalid']">Address is invalid format.</mat-error>
-    <mat-error *ngIf="form.controls['addressInput'].errors?.['required']">Address is required.</mat-error>
+    <mat-label>{{sendSidechainService.selectedSidechain}} sidechain address</mat-label>
+   <input matInput formControlName="sidechainAddressInput" [(ngModel)]="sendSidechainService.sidechainAddress" required />
+     <mat-error *ngIf="form.controls['sidechainAddressInput'].errors?.['invalid']">Address is invalid format.</mat-error>
+    <mat-error *ngIf="form.controls['sidechainAddressInput'].errors?.['required']">Address is required.</mat-error>
   </mat-form-field>
 
   <div class="available-balance" matTooltip="Click to fill out maximum (minus fee)" (click)="fillMax(sendService.accountHistory.balance)">Available: {{ sendService.accountHistory.balance || 0 | amount }}</div>
