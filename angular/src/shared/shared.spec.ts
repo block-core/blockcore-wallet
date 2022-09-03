@@ -404,9 +404,9 @@ describe('SharedTests', () => {
     expect(account.networkType).toBe(network.id);
 
     const cryptoService = new CryptoService();
-    const crypto = new CryptoUtility(cryptoService);
+    const crypto = new CryptoUtility();
 
-    let unlockedMnemonic = await crypto.decryptData(wallet.mnemonic, password);
+    let unlockedMnemonic = await cryptoService.decryptData(wallet.mnemonic, password);
 
     expect(unlockedMnemonic).toBeTruthy();
 

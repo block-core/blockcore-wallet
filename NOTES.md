@@ -144,9 +144,6 @@ interface ActionResponse {
 
 ## Payment Request
 
-Available options: https://bitcoin.design/guide/how-it-works/payment-request-formats/
-
-BIP21: https://github.com/bitcoin/bips/blob/master/bip-0021.mediawiki
 
 Blockcore Wallet implements BIP21 in a manner that relies on custom HTTP handler in the extension. This means the prefix is different,
 and the "bitcoin" prefix (from BIP21) is used to differentiate between networks.
@@ -166,3 +163,11 @@ The other parameter is "id", which is for most use-cases, the same value as "dat
 of the invoice ID (or other type of identifier the payment requester is giving).
 
 ```web+pay://tcrs:tSXDbedw3o79gjijk29dZLNMtcYmymYtoX?amount=2&label=Your Local Info&message=Invoice Number 5&data=MzExMzUzNDIzNDY=&id=4324```
+
+### References:
+
+https://bitcoinqr.dev/
+
+BIP21: https://github.com/bitcoin/bips/blob/master/bip-0021.mediawiki
+
+Payment requiest formats: https://bitcoin.design/guide/how-it-works/payment-request-formats/
