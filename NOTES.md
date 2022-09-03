@@ -141,3 +141,28 @@ interface ActionResponse {
   content: string;
 }
 ```
+
+## Payment Request
+
+Available options: https://bitcoin.design/guide/how-it-works/payment-request-formats/
+
+BIP21: https://github.com/bitcoin/bips/blob/master/bip-0021.mediawiki
+
+Blockcore Wallet implements BIP21 in a manner that relies on custom HTTP handler in the extension. This means the prefix is different,
+and the "bitcoin" prefix (from BIP21) is used to differentiate between networks.
+
+Examples:
+
+```web+pay://bitcoin:175tWpb8K1S7NmH4Zx6rewF9WQrcZv245W?amount=50&label=Luke-Jr&message=Donation%20for%20project%20xyz```
+
+```web+pay://tcrs:tSXDbedw3o79gjijk29dZLNMtcYmymYtoX?amount=2&label=Your Local Info&message=Invoice Number 5```
+
+Extensions to BIP21:
+
+We are adding "data" parameter which will be included in the OP_RETURN data on the transaction. This can in some instances, be the hash 
+of the invoice ID or other type of data to be able to track the payment on the merchant end.
+
+The other parameter is "id", which is for most use-cases, the same value as "data", except not hashed. This is for local storage and persistence 
+of the invoice ID (or other type of identifier the payment requester is giving).
+
+```web+pay://tcrs:tSXDbedw3o79gjijk29dZLNMtcYmymYtoX?amount=2&label=Your Local Info&message=Invoice Number 5&data=MzExMzUzNDIzNDY=&id=4324```
