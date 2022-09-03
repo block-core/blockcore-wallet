@@ -160,7 +160,7 @@ Examples:
 Extensions to BIP21:
 
 We are adding "data" parameter which will be included in the OP_RETURN data on the transaction. This can in some instances, be the hash 
-of the invoice ID or other type of data to be able to track the payment on the merchant end.
+of the invoice ID or other type of data to be able to track the payment on the merchant end. Data must be base64 encoded byte array.
 
 The other parameter is "id", which is for most use-cases, the same value as "data", except not hashed. This is for local storage and persistence 
 of the invoice ID (or other type of identifier the payment requester is giving).
