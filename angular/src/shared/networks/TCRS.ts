@@ -21,4 +21,15 @@ export class TCRS implements Network {
     singleAddress = true;
     smartContractSupport = true;
     type = 'coin';
+    sidechains: [
+        {
+          name: "Stratis Test",
+          symbol: "TSTRAX",
+          targetType: "mainchain",
+          peg:{
+            type:"Federation",
+            address:"--"
+         }
+        }
+      ];
 }

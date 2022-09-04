@@ -20,4 +20,15 @@ export class STRAX implements Network {
     testnet = false;
     smartContractSupport = false;
     type = 'coin';
+    sidechains = [
+        {
+          name : "Cirrus",
+          symbol : "CRS",
+          targetType : "sidechain",
+          peg : {
+            type : "Federation",
+            address : "yU2jNwiac7XF8rQvSk2bgibmwsNLkkhsHV"
+         }
+        }
+      ];
 }

@@ -1,7 +1,7 @@
 <h2>Send {{ sendService.network.symbol }}</h2>
 
 <mat-card-actions class="full-action-buttons">
-  <button [disabled]="false" class="half-width" [routerLink]="['/', 'account', 'send-sidechain']" mat-raised-button>Sidechain Swap</button>
+  <button [disabled]="sendService.network.sidechains != null" class="half-width" [routerLink]="['/', 'account', 'send-sidechain']" mat-raised-button>Sidechain Swap</button>
 </mat-card-actions>
 
 <form [formGroup]="form">

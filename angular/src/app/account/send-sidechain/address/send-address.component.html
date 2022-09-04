@@ -3,25 +3,13 @@
 <form [formGroup]="form">
 
   <mat-form-field class="input-full-width" appearance="outline">
-    <mat-label>Target Sidechain</mat-label>
+    <mat-label>Select A Sidechain</mat-label>
     <mat-select (selectionChange)="onSidechainSelectChanged($event)" [(value)]="sendSidechainService.selectedSidechain">
-      <mat-option [value]="'CRS'">Cirrus (CRS)</mat-option>
-      <mat-option [value]="'custom'">Custom</mat-option>
+      <mat-option *ngFor="let sidechain of sendService.network.sidechains" [value]="sidechain.symbol">{{sidechain.name}}</mat-option>
     </mat-select>
   </mat-form-field>
 
-  <div *ngIf="sendSidechainService.selectedSidechain == 'custom'">
-    <br>
-    <mat-form-field class="input-full-width" appearance="outline">
-      <mat-label>Custom Sidechain</mat-label>
-      <input matInput [(ngModel)]="sendService.address">
-      <mat-hint>Specify the swap address of the target sidechain.
-      </mat-hint>
-    </mat-form-field>
-    <br>
-  </div>
-
-  <div *ngIf="sendSidechainService.selectedSidechain != 'custom'">
+  <div *ngIf="sendSidechainService.selectedSidechain != null">
     <br>
     <h3>Federation Swap Address: {{sendService.address}}</h3>
     <br>

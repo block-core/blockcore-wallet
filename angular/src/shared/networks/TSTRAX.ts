@@ -20,4 +20,15 @@ export class TSTRAX implements Network {
     testnet = true;
     smartContractSupport = false;
     type = 'coin';
+    sidechains: [
+        {
+          name: "Cirrus Test",
+          symbol: "TCRS",
+          targetType: "sidechain",
+          peg:{
+            type:"Federation",
+            address:"--"
+         }
+        }
+      ];
 }
