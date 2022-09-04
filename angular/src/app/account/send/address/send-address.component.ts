@@ -18,6 +18,7 @@ export class AccountSendAddressComponent implements OnInit, OnDestroy {
   form: UntypedFormGroup;
   optionsOpen = false;
   amountTooLarge = false;
+  hasSidechain  = false;
 
   get optionAmountInput() {
     return this.form.get('amountInput') as UntypedFormControl;
@@ -49,6 +50,8 @@ export class AccountSendAddressComponent implements OnInit, OnDestroy {
     } else {
       this.sendService.feeRate = networkStatus[0].relayFee;
     }
+
+    this.hasSidechain = this.sendService.network.sidechains != null;
   }
 
   ngOnDestroy() {}

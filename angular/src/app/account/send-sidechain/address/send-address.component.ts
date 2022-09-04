@@ -77,7 +77,7 @@ export class AccountSendSidechainAddressComponent implements OnInit, OnDestroy {
 
   async onSidechainSelectChanged(event: any) {
     this.sendService.network.sidechains.forEach(sidechain => {
-      if (sidechain.symbol == event) {
+      if (sidechain.symbol == event.value) {
         this.sendService.address = sidechain.peg.address;
       }
     });
