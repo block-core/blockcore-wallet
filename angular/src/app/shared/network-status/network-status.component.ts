@@ -3,7 +3,7 @@ import { IndexerApiStatus, NetworkStatus } from '../../../shared/interfaces';
 
 @Component({
   selector: 'app-network-status',
-  templateUrl: './network.status.component.html',
+  templateUrl: './network-status.component.html',
 })
 export class NetworkStatusComponent {
   @Input() status: NetworkStatus[];
