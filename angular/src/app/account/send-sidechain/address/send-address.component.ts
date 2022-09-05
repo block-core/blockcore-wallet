@@ -127,7 +127,7 @@ export class AccountSendSidechainAddressComponent implements OnInit, OnDestroy {
       const clipboardContents = await navigator.clipboard.readText();
 
       if (clipboardContents) {
-        this.sendService.address = clipboardContents;
+        this.sendSidechainService.sidechainAddress = clipboardContents;
       }
     } catch (error) {
       console.log('Unable to get clipboard permissions!');
