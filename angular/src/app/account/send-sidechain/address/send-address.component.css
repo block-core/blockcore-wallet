@@ -12,3 +12,15 @@
 .mat-dialog-container {
   padding: 0 !important;
 } */
+
+.send-header {
+  display: flex;
+}
+
+.send-header-title {
+  flex-grow: 2;
+}
+
+.send-header-actions {
+
+}
