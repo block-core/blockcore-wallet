@@ -44,6 +44,8 @@
     <mat-error *ngIf="form.controls['amountInput'].errors?.['tooHighAmount']">Insufficient funds available.</mat-error>
   </mat-form-field>
 
+  <div class="confirmation-label" *ngIf="confirmationMessage">{{ confirmationMessage }}</div>
+
   <mat-form-field class="input-full-width" appearance="outline">
     <mat-label>Fee</mat-label>
     <input matInput formControlName="feeInput" [(ngModel)]="sendService.fee" required />

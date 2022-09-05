@@ -24,3 +24,10 @@
 .send-header-actions {
 
 }
+
+.confirmation-label {
+  padding: 1em;
+  background-color: rgba(255, 166, 0, 0.429);
+  border-radius: 5px;
+  margin-bottom: 1em;
+}

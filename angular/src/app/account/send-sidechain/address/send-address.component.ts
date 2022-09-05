@@ -14,7 +14,6 @@ import { QrScanDialog } from '../../send/address/qr-scanning.component';
   templateUrl: './send-address.component.html',
   styleUrls: ['./send-address.component.css'],
 })
-
 export class AccountSendSidechainAddressComponent implements OnInit, OnDestroy {
   form: UntypedFormGroup;
   optionsOpen = false;
@@ -28,22 +27,55 @@ export class AccountSendSidechainAddressComponent implements OnInit, OnDestroy {
     return this.form.get('feeInput') as UntypedFormControl;
   }
 
+  confirmationMessage = '';
+
   constructor(public uiState: UIState, public sendService: SendService, public sendSidechainService: SendSidechainService, public walletManager: WalletManager, public networkStatusService: NetworkStatusService, private addressValidation: AddressValidationService, private ngZone: NgZone, public dialog: MatDialog, private fb: UntypedFormBuilder) {
     this.form = fb.group({
-     // addressInput: new UntypedFormControl('', [Validators.required, Validators.minLength(6), InputValidators.address(this.sendService, this.addressValidation)]),
+      // addressInput: new UntypedFormControl('', [Validators.required, Validators.minLength(6), InputValidators.address(this.sendService, this.addressValidation)]),
       changeAddressInput: new UntypedFormControl('', [InputValidators.address(this.sendService, this.addressValidation)]),
       amountInput: new UntypedFormControl('', [Validators.required, Validators.min(0), Validators.pattern(/^-?(0|[0-9]+[.]?[0-9]*)?$/), InputValidators.maximumBitcoin(sendService)]),
       // TODO: Make an custom validator that sets form error when fee input is too low.
       feeInput: new UntypedFormControl(this.sendService.getNetworkFee(), [Validators.required, Validators.min(0), Validators.pattern(/^-?(0|[0-9]+[.]?[0-9]*)?$/)]),
-     
+
       // TODO: validate the sidechain target address using the sidechain network
-      sidechainAddressInput: new UntypedFormControl('', ),
+      sidechainAddressInput: new UntypedFormControl(''),
     });
 
     this.optionFeeInput.valueChanges.subscribe((value) => {
       this.sendService.fee = value;
       this.optionAmountInput.updateValueAndValidity();
       this.optionAmountInput.markAsTouched();
+    });
+
+    this.optionAmountInput.valueChanges.subscribe((value) => {
+      // Calculate the confirmation text when amount changes.
+      if (!this.sendSidechainService.selectedSidechain || value == null || value == '') {
+        this.confirmationMessage = '';
+        return;
+      }
+
+      const sidechain = this.sendService.network.sidechains.find((s) => s.symbol == this.sendSidechainService.selectedSidechain);
+
+      console.log(this.sendService.network);
+      console.log(this.sendSidechainService.selectedSidechain);
+      console.log(sidechain);
+      console.log(value);
+
+      const amount = Big(value);
+
+      console.log(amount);
+
+      // const confirmation = sidechain.confirmations.find((c) => amount.gt(c.low) && amount.lte(c.high));
+      const confirmation = sidechain.confirmations.find((c) => ((c.high && amount.lt(c.high)) || !c.high) && amount.gte(c.low));
+
+      console.log(confirmation);
+      if (confirmation && confirmation.high) {
+        this.confirmationMessage = `Amounts less than ${confirmation.high} clear in ${confirmation.count} confirmations`;
+      } else if (confirmation) {
+        this.confirmationMessage = `Amounts higher than ${confirmation.low} clear in ${confirmation.count} confirmations`;
+      } else {
+        this.confirmationMessage = '';
+      }
     });
 
     const networkStatus = this.networkStatusService.get(this.sendService.network.id);
@@ -76,7 +108,7 @@ export class AccountSendSidechainAddressComponent implements OnInit, OnDestroy {
   }
 
   async onSidechainSelectChanged(event: any) {
-    this.sendService.network.sidechains.forEach(sidechain => {
+    this.sendService.network.sidechains.forEach((sidechain) => {
       if (sidechain.symbol == event.value) {
         this.sendService.address = sidechain.peg.address;
       }

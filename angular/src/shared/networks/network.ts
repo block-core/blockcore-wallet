@@ -51,5 +51,13 @@ export interface Network {
   /** Should be either 'coin' or 'identity' */
   type: string;
 
-  sidechains?:  { name: string; symbol: string; targetType: string; peg: {type: string; address: string } }[];
+  sidechains?: NetworkSidechain[];
+}
+
+export interface NetworkSidechain {
+  name: string;
+  symbol: string;
+  targetType: string;
+  peg: { type: string; address: string };
+  confirmations?: { low: number; high?: number; count: number }[];
 }

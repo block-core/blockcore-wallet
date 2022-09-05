@@ -31,6 +31,11 @@ export class SendService {
 
   /** Sets the fee, the value is expected to be of format "0.0001" */
   set fee(value: string) {
+    if (value == null || value == '') {
+      this.feeValue = Big(0);
+      return;
+    }
+
     const number = new Big(value);
 
     if (number.e < -8) {
@@ -56,6 +61,11 @@ export class SendService {
 
   /** Sets the fee, the value is expected to be of format "2.5" */
   set amount(value: string) {
+    if (value == null || value == '') {
+      this.amountValue = Big(0);
+      return;
+    }
+
     const number = new Big(value);
 
     if (number.e < -8) {
