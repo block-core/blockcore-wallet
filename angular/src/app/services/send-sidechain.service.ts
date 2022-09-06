@@ -10,9 +10,11 @@ export class SendSidechainService {
  
   sidechainAddress: string;
   selectedSidechain: string;
+  network : Network;
 
   reset() {
     this.sidechainAddress = null;
     this.selectedSidechain = null;
+    this.network = null;
   }
 }

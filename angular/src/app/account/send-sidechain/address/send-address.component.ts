@@ -38,7 +38,7 @@ export class AccountSendSidechainAddressComponent implements OnInit, OnDestroy {
       feeInput: new UntypedFormControl(this.sendService.getNetworkFee(), [Validators.required, Validators.min(0), Validators.pattern(/^-?(0|[0-9]+[.]?[0-9]*)?$/)]),
 
       // TODO: validate the sidechain target address using the sidechain network
-      sidechainAddressInput: new UntypedFormControl(''),
+      sidechainAddressInput: new UntypedFormControl('', [InputValidators.addressSidechain(this.sendSidechainService, this.addressValidation)]),
     });
 
     this.optionFeeInput.valueChanges.subscribe((value) => {
@@ -111,6 +111,7 @@ export class AccountSendSidechainAddressComponent implements OnInit, OnDestroy {
     this.sendService.network.sidechains.forEach((sidechain) => {
       if (sidechain.symbol == event.value) {
         this.sendService.address = sidechain.peg.address;
+        this.sendSidechainService.network = this.networkStatusService.getNetwork(sidechain.symbol);
       }
     });
   }

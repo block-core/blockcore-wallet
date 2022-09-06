@@ -3,6 +3,7 @@ import Big from 'big.js';
 import { Network } from 'src/shared/networks';
 import { AddressValidationService } from './address-validation.service';
 import { SendService } from './send.service';
+import { SendSidechainService } from './send-sidechain.service';
 
 export class InputValidators {
   static maximumBitcoin(sendService: SendService): ValidatorFn {
@@ -11,6 +12,10 @@ export class InputValidators {
 
   static address(sendService: SendService, addressValidation: AddressValidationService): ValidatorFn {
     return addressValidator(sendService, addressValidation);
+  }
+
+  static addressSidechain(sendSidechainService: SendSidechainService, addressValidation: AddressValidationService): ValidatorFn {
+    return addressSidechainValidator(sendSidechainService, addressValidation);
   }
 }
 
@@ -56,6 +61,30 @@ export function addressValidator(sendService: SendService, addressValidation: Ad
 
       console.log('VALIDATION RESULT:', result);
       console.log('NETWORK:', sendService.network);
+
+      if (result) {
+        return null;
+      } else {
+        return { invalid: true };
+      }
+    } catch (err) {
+      return { invalid: true, error: err };
+    }
+  };
+}
+
+export function addressSidechainValidator(sendSidechainService: SendSidechainService, addressValidation: AddressValidationService): ValidatorFn {
+  return (control: AbstractControl): ValidationErrors | null => {
+    try {
+      // If there are no value, we'll skip validation and allow this input.
+      if (!control.value) {
+        return null;
+      }
+
+      const result = addressValidation.validateByNetwork(control.value, sendSidechainService.network);
+
+      console.log('VALIDATION RESULT:', result);
+      console.log('NETWORK:', sendSidechainService.network);
 
       if (result) {
         return null;
