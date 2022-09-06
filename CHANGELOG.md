@@ -1,3 +1,43 @@
+## <small>0.0.61 (2022-09-06)</small>
+
+* Add basic input sanitation for action requests. ([7412367](https://github.com/block-core/blockcore-wallet/commit/7412367))
+* Add handler for VaultSetup ([22d1222](https://github.com/block-core/blockcore-wallet/commit/22d1222))
+* Add logic to send users from contacts directly to send screen ([f646198](https://github.com/block-core/blockcore-wallet/commit/f646198))
+* Add PaymentRequest and unit test for it ([3d6b615](https://github.com/block-core/blockcore-wallet/commit/3d6b615))
+* Add prepared content to the query string parameters for actions ([ef9e4ec](https://github.com/block-core/blockcore-wallet/commit/ef9e4ec))
+* Add test page for Simplex integration ([0b0d516](https://github.com/block-core/blockcore-wallet/commit/0b0d516))
+* Add transaction for action titles ([4f1595e](https://github.com/block-core/blockcore-wallet/commit/4f1595e))
+* Add type format for "data" parameter ([b7e1286](https://github.com/block-core/blockcore-wallet/commit/b7e1286))
+* Add types to the documentation for actions ([8975cf8](https://github.com/block-core/blockcore-wallet/commit/8975cf8))
+* Add UI to send directly from contact ([73c18e6](https://github.com/block-core/blockcore-wallet/commit/73c18e6))
+* Add Vault Setup action ([63bfef1](https://github.com/block-core/blockcore-wallet/commit/63bfef1))
+* Code cleanup for message signing action ([99632d7](https://github.com/block-core/blockcore-wallet/commit/99632d7))
+* Decrease the height behind in sync before setting state to syncing ([ebc12fc](https://github.com/block-core/blockcore-wallet/commit/ebc12fc))
+* Fix issue with key not being set in permission ([a1133d7](https://github.com/block-core/blockcore-wallet/commit/a1133d7))
+* Fix link to network status template ([7daef07](https://github.com/block-core/blockcore-wallet/commit/7daef07))
+* Fix the confirmation threshold count ([f5a205e](https://github.com/block-core/blockcore-wallet/commit/f5a205e))
+* Fix title on the pull request workflow ([7374105](https://github.com/block-core/blockcore-wallet/commit/7374105))
+* Fix typo in test specs ([62ed1f2](https://github.com/block-core/blockcore-wallet/commit/62ed1f2))
+* Generate the correct response from Vault Setup ([564dbe7](https://github.com/block-core/blockcore-wallet/commit/564dbe7))
+* Improve the documentation notes on action process ([433450f](https://github.com/block-core/blockcore-wallet/commit/433450f))
+* Make CryptoUtility and CryptoService independent of Angular ([ee4bb6b](https://github.com/block-core/blockcore-wallet/commit/ee4bb6b))
+* Make sure that default amount is not reset when navigating back ([31f2c48](https://github.com/block-core/blockcore-wallet/commit/31f2c48))
+* Merge RequestArguments and ActionRequest ([e74b860](https://github.com/block-core/blockcore-wallet/commit/e74b860))
+* Minor cleanup ([ad3f73b](https://github.com/block-core/blockcore-wallet/commit/ad3f73b)), closes [#217](https://github.com/block-core/blockcore-wallet/issues/217)
+* Refactor action handlers to return prepare content ([96227df](https://github.com/block-core/blockcore-wallet/commit/96227df))
+* Remove duplicate QR-scanning component ([3cb7b03](https://github.com/block-core/blockcore-wallet/commit/3cb7b03))
+* Remove status and loading in networks whose type is identity (#216) ([0521b15](https://github.com/block-core/blockcore-wallet/commit/0521b15)), closes [#216](https://github.com/block-core/blockcore-wallet/issues/216)
+* Send to and from sidechain (STRAX/CRS) (#218) ([9e5c478](https://github.com/block-core/blockcore-wallet/commit/9e5c478)), closes [#218](https://github.com/block-core/blockcore-wallet/issues/218)
+* Update notes on how action process is implemented ([3d4a0cd](https://github.com/block-core/blockcore-wallet/commit/3d4a0cd))
+* Update NOTES with payment request section ([d3afbdc](https://github.com/block-core/blockcore-wallet/commit/d3afbdc))
+* Update packages ([36edaba](https://github.com/block-core/blockcore-wallet/commit/36edaba))
+* Update the content to allow either object or string ([cd18cd8](https://github.com/block-core/blockcore-wallet/commit/cd18cd8))
+* Update version and changelog ([a6b9ed6](https://github.com/block-core/blockcore-wallet/commit/a6b9ed6))
+* Use JsonWebKey2020 Signature Suite as oppose to EcdsaSecp256k1VerificationKey2019 ([c0083f2](https://github.com/block-core/blockcore-wallet/commit/c0083f2))
+* Action: Refactor and clarify types for action message handling ([694b686](https://github.com/block-core/blockcore-wallet/commit/694b686))
+
+
+
 ## <small>0.0.60 (2022-08-23)</small>
 
 * Fix object loader for NetworkLoader ([019f51d](https://github.com/block-core/blockcore-wallet/commit/019f51d))
