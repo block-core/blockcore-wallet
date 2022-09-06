@@ -29,7 +29,7 @@ export class STRAX implements Network {
             type : "Federation",
             address : "yU2jNwiac7XF8rQvSk2bgibmwsNLkkhsHV"
          },
-         confirmations: [{ low: 0, high: 50, count: 25 }, { low: 50, high: 1000, count: 80 }, { low: 1000, count: 80 }]
+         confirmations: [{ low: 0, high: 50, count: 25 }, { low: 50, high: 1000, count: 80 }, { low: 1000, count: 500 }]
         }
       ];
 }

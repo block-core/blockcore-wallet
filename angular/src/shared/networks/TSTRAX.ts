@@ -29,7 +29,7 @@ export class TSTRAX implements Network {
             type:"Federation",
             address:"tGWegFbA6e6QKZP7Pe3g16kFVXMghbSfY8"
          },
-         confirmations: [{ low: 0, high: 50, count: 25 }, { low: 50, high: 1000, count: 80 }, { low: 1000, count: 80 }]
+         confirmations: [{ low: 0, high: 50, count: 25 }, { low: 50, high: 1000, count: 80 }, { low: 1000, count: 500 }]
         }
       ];
 }
