@@ -33,13 +33,15 @@ export class AccountSendSidechainAddressComponent implements OnInit, OnDestroy {
     this.form = fb.group({
       // addressInput: new UntypedFormControl('', [Validators.required, Validators.minLength(6), InputValidators.address(this.sendService, this.addressValidation)]),
       changeAddressInput: new UntypedFormControl('', [InputValidators.address(this.sendService, this.addressValidation)]),
-      amountInput: new UntypedFormControl('', [Validators.required, Validators.min(0), Validators.pattern(/^-?(0|[0-9]+[.]?[0-9]*)?$/), InputValidators.maximumBitcoin(sendService)]),
+      amountInput: new UntypedFormControl('', [Validators.required, Validators.min(1), Validators.pattern(/^-?(0|[0-9]+[.]?[0-9]*)?$/), InputValidators.maximumBitcoin(sendService)]),
       // TODO: Make an custom validator that sets form error when fee input is too low.
       feeInput: new UntypedFormControl(this.sendService.getNetworkFee(), [Validators.required, Validators.min(0), Validators.pattern(/^-?(0|[0-9]+[.]?[0-9]*)?$/)]),
 
       // TODO: validate the sidechain target address using the sidechain network
       sidechainAddressInput: new UntypedFormControl('', [InputValidators.addressSidechain(this.sendSidechainService, this.addressValidation)]),
     });
+
+    this.sendService.amount = '1';
 
     this.optionFeeInput.valueChanges.subscribe((value) => {
       this.sendService.fee = value;
@@ -55,20 +57,9 @@ export class AccountSendSidechainAddressComponent implements OnInit, OnDestroy {
       }
 
       const sidechain = this.sendService.network.sidechains.find((s) => s.symbol == this.sendSidechainService.selectedSidechain);
-
-      console.log(this.sendService.network);
-      console.log(this.sendSidechainService.selectedSidechain);
-      console.log(sidechain);
-      console.log(value);
-
       const amount = Big(value);
-
-      console.log(amount);
-
-      // const confirmation = sidechain.confirmations.find((c) => amount.gt(c.low) && amount.lte(c.high));
       const confirmation = sidechain.confirmations.find((c) => ((c.high && amount.lt(c.high)) || !c.high) && amount.gte(c.low));
 
-      console.log(confirmation);
       if (confirmation && confirmation.high) {
         this.confirmationMessage = `Amounts less than ${confirmation.high} clear in ${confirmation.count} confirmations`;
       } else if (confirmation) {

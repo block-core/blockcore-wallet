@@ -26,13 +26,17 @@ export class SendService {
   feeError: string;
 
   get fee(): string {
+    if (this.feeValue == null) {
+      return '';
+    }
+
     return this.feeValue.div(this.factor).toString();
   }
 
   /** Sets the fee, the value is expected to be of format "0.0001" */
   set fee(value: string) {
     if (value == null || value == '') {
-      this.feeValue = Big(0);
+      this.feeValue = null;
       return;
     }
 
@@ -56,13 +60,17 @@ export class SendService {
   }
 
   get amount(): string {
+    if (this.amountValue == null) {
+      return '';
+    }
+
     return this.amountValue.div(this.factor).toString();
   }
 
   /** Sets the fee, the value is expected to be of format "2.5" */
   set amount(value: string) {
     if (value == null || value == '') {
-      this.amountValue = Big(0);
+      this.amountValue = null;
       return;
     }
 
@@ -84,7 +92,20 @@ export class SendService {
 
   /** Returns the amount and fee added together in satoshis. */
   get total(): Big {
-    return this.amountValue.add(this.feeValue);
+    let amount = this.amountValue;
+
+    if (amount == null) {
+      amount = Big(0);
+    }
+
+    let fee = this.feeValue;
+
+    if (fee == null)
+    {
+      fee = Big(0);
+    }
+
+    return amount.add(fee);
   }
 
   get amountAsSatoshi(): Big {
