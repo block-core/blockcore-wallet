@@ -185,9 +185,9 @@ describe('AppComponent', () => {
         AccountSendSendingComponent,
         AccountSendSidechainComponent,
         AccountSendSidechainAddressComponent,
-        AccountSendSidechainAConfirmComponent,
-        AccountSendSidechainASuccessComponent,
-        AccountSendSidechainASendingComponent,
+        AccountSendSidechainConfirmComponent,
+        AccountSendSidechainSuccessComponent,
+        AccountSendSidechainSendingComponent,
         NetworkStatusComponent
       ],
       providers: [{ provide: EnvironmentService, useValue: mockEnvironment },
