@@ -80,7 +80,10 @@ export class AccountSendSidechainAddressComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {}
 
-  async ngOnInit() {}
+  async ngOnInit() {
+    // Select the first defined sidechain:
+    this.sendSidechainService.selectedSidechain = this.sendService.network.sidechains[0].symbol;
+  }
 
   scanQrCode() {
     const dialogRef = this.dialog.open(QrScanDialog, {
