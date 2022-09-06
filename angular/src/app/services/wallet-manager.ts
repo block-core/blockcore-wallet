@@ -821,9 +821,11 @@ export class WalletManager {
     const indexerUrl = this.networkLoader.getServer(network.id, this.settings.values.server, this.settings.values.indexer);
 
     const tokens = await axios.get(`${indexerUrl}/api/query/${network.name}/tokens/${address}`);
-    for (let token of tokens.data.items)
-      this.tokensStore.set(token.name, token);
-    await this.tokensStore.save();
+    if (tokens.data.items) {
+      for (let token of tokens.data.items)
+        this.tokensStore.set(token.name, token);
+      await this.tokensStore.save();
+    }
   }
 
   async getChangeAddress(account: Account) {

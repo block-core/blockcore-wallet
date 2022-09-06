@@ -265,12 +265,12 @@ export class AccountComponent implements OnInit, OnDestroy {
     if (network.smartContractSupport) {
       const indexerUrl = this.networkLoader.getServer(network.id, this.settings.values.server, this.settings.values.indexer);
 
-      //const tokens = await axios.get(`${indexerUrl}/api/query/${network.name}/tokens/${this.getAddressByIndex(account, 0, 0)}`);
-      const tokens = await axios.get(`${indexerUrl}/api/query/${network.name}/tokens/CM2EMRrT4AsUdksoWZxCYtCpYPhpWkgD9p`);
-      for (let token of tokens.data.items)
-        this.standardTokenStore.set(token.name, token);
+    // TODO need to find the right place to update store in the manager so it gets refreshed properly every time
+    // await this.standardTokenStore.load();
+    const network = this.network.getNetwork(this.walletManager.activeAccount.networkType);
+    const address = await this.walletManager.getPrimaryAddress(this.walletManager.activeAccount);
+    await this.walletManager.LoadStandardTokensForAccountAsync(network, address);
 
-      this.standardTokens = tokens.data.items;
-    }
+    this.standardTokens = this.standardTokenStore.all();
   }
 }
