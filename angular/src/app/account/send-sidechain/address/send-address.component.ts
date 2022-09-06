@@ -81,8 +81,9 @@ export class AccountSendSidechainAddressComponent implements OnInit, OnDestroy {
   ngOnDestroy() {}
 
   async ngOnInit() {
-    // Select the first defined sidechain:
+    // Select the first defined sidechain and trigger the changed event:
     this.sendSidechainService.selectedSidechain = this.sendService.network.sidechains[0].symbol;
+    await this.onSidechainSelectChanged({ value: this.sendService.network.sidechains[0].symbol });
   }
 
   scanQrCode() {
