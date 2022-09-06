@@ -14,7 +14,7 @@ axiosRetry(axios, { retries: 3, retryDelay: axiosRetry.exponentialDelay });
 @Component({
   selector: 'app-account',
   templateUrl: './account.component.html',
-  styleUrls: ['./account.component.css']
+  styleUrls: ['./account.component.css'],
 })
 export class AccountComponent implements OnInit, OnDestroy {
   mnemonic = '';
@@ -59,8 +59,8 @@ export class AccountComponent implements OnInit, OnDestroy {
     public walletManager: WalletManager,
     private accountStateStore: AccountStateStore,
     private networkLoader: NetworkLoader,
-    private snackBar: MatSnackBar) {
-
+    private snackBar: MatSnackBar
+  ) {
     this.uiState.title = '';
     this.uiState.showBackButton = true;
     this.uiState.backUrl = '/dashboard';
@@ -69,19 +69,21 @@ export class AccountComponent implements OnInit, OnDestroy {
       this.router.navigateByUrl('/account/create');
     }
 
-    this.subscriptions.push(this.activatedRoute.paramMap.subscribe(async params => {
-      const accountIdentifier: any = params.get('index');
+    this.subscriptions.push(
+      this.activatedRoute.paramMap.subscribe(async (params) => {
+        const accountIdentifier: any = params.get('index');
 
-      if (!this.walletManager.activeWallet) {
-        return;
-      }
+        if (!this.walletManager.activeWallet) {
+          return;
+        }
 
-      await this.walletManager.setActiveAccount(accountIdentifier);
-    }));
+        await this.walletManager.setActiveAccount(accountIdentifier);
+      })
+    );
   }
 
   ngOnDestroy(): void {
-    this.subscriptions.forEach(sub => {
+    this.subscriptions.forEach((sub) => {
       sub.unsubscribe();
     });
 
@@ -137,8 +139,7 @@ export class AccountComponent implements OnInit, OnDestroy {
 
         let result: any = await this.http.get(`${indexerUrl}/api/stats/info`).toPromise();
         this.networkStatus = result;
-      }
-      catch (error: any) {
+      } catch (error: any) {
         console.error(error);
 
         if (error.error?.title) {
@@ -164,21 +165,19 @@ export class AccountComponent implements OnInit, OnDestroy {
     // sid:auth-api.opdex.com/v1/ssas/callback?uid=aDxrmQ8wDKUruKEzD17HJqPZSinveFEQaS1MbjMnXhG4_qtd92-Jjs_7sh3ajuo0peelx87-MvQV4MzvxafCpg&exp=1656544738
     console.info(this.loginurl);
 
-    try
-    {     
-      var expIndex = this.loginurl.indexOf('exp=')
+    try {
+      var expIndex = this.loginurl.indexOf('exp=');
       var expirationStr: any;
-      if(expIndex != -1)
-      {
+      if (expIndex != -1) {
         // Wallet should verify that the expiry datetime has not passed, if it is present
         // https://github.com/Opdex/SSAS/blob/main/README.md#wallet-compatibility
 
-        expirationStr = this.loginurl.substring(expIndex + 4); 
+        expirationStr = this.loginurl.substring(expIndex + 4);
         var currentDate = new Date();
         var expiryDate = new Date(expirationStr * 1000);
 
-        if(expiryDate < currentDate) {
-          this.loginurlMessage = "Login link expired";
+        if (expiryDate < currentDate) {
+          this.loginurlMessage = 'Login link expired';
           return;
         }
       }
@@ -192,19 +191,17 @@ export class AccountComponent implements OnInit, OnDestroy {
       var signature = await this.walletManager.signData(activeWallet, activeAccount, address, parsedUrl);
 
       const payload = {
-        "signature": signature,
-        "publicKey": address
+        signature: signature,
+        publicKey: address,
       };
 
-      var callback = "https://" + parsedUrl;
+      var callback = 'https://' + parsedUrl;
       const authRequest = await axios.post(callback, payload);
       console.log(authRequest);
 
-      this.loginurlMessage = "";
-      this.loginurl = "";
-    }
-    catch(error)
-    {
+      this.loginurlMessage = '';
+      this.loginurl = '';
+    } catch (error) {
       this.loginurlMessage = error.toString();
     }
   }
@@ -232,27 +229,32 @@ export class AccountComponent implements OnInit, OnDestroy {
         balance: 0,
         history: [],
         unconfirmed: 0,
-        unspent: []
+        unspent: [],
       };
     }
 
     this.history = this.accountHistory.history;
+
     this.cd.detectChanges();
   }
 
   async ngOnInit() {
-    this.subscriptions.push(this.state.changed$.subscribe((state) => {
-      this.ngZone.run(() => {
-        this.updateAccountHistory();
-      });
-    }));
+    this.subscriptions.push(
+      this.state.changed$.subscribe((state) => {
+        this.ngZone.run(() => {
+          this.updateAccountHistory();
+        });
+      })
+    );
 
     // this.updateNetworkStatus();
 
-    this.subscriptions.push(this.walletManager.activeAccount$.subscribe((account) => {
-      // this.updateNetworkStatus();
-      this.uiState.title = this.walletManager.activeAccount?.name || '';
-      this.updateAccountHistory();
-    }));
+    this.subscriptions.push(
+      this.walletManager.activeAccount$.subscribe((account) => {
+        // this.updateNetworkStatus();
+        this.uiState.title = this.walletManager.activeAccount?.name || '';
+        this.updateAccountHistory();
+      })
+    );
   }
 }

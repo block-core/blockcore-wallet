@@ -3,6 +3,7 @@ import { AddressState, Transaction } from '.';
 import { AddressManager } from './address-manager';
 import { ProcessResult } from './background-manager';
 import { AccountUnspentTransactionOutput, AddressIndexedState, TransactionHistory } from './interfaces';
+import { NetworkLoader } from './network-loader';
 import { AccountHistoryStore, AddressStore, SettingStore, TransactionStore, WalletStore } from './store';
 import { AccountStateStore } from './store/account-state-store';
 import { AddressIndexedStore } from './store/address-indexed-store';
@@ -66,6 +67,7 @@ export class IndexerBackgroundService {
             for (let j = 0; j < accounts.length; j++) {
                 const account = accounts[j];
                 const accountState = this.accountStateStore.get(account.identifier);
+                const network = this.addressManager.getNetwork(account.networkType);
 
                 if (account.mode === 'quick') {
 
@@ -121,6 +123,18 @@ export class IndexerBackgroundService {
                         const internalOutputs = t.details.outputs.filter(o => addresses.indexOf(o.address) > -1);
                         const externalInputs = t.details.inputs.filter(o => addresses.indexOf(o.inputAddress) === -1);
                         const internalInputs = t.details.inputs.filter(o => addresses.indexOf(o.inputAddress) > -1);
+
+                        // TODO: Here we could actually store which sidechain the address match belongs to, and could
+                        // display this in the UI for the user. It's an easy thing to do, but will do if requested.
+                        if (network.sidechains) {
+                            const outputsinputs = [...t.details.outputs.map(o => o.address), ...t.details.inputs.map(o => o.inputAddress)];
+                            const sidechainaddresses = network.sidechains.map(s => s.peg.address);
+                            const exists = outputsinputs.some(r=> sidechainaddresses.indexOf(r) >= 0);
+
+                            if (exists) {
+                                tx.isSidechain = true;
+                            }
+                        }
 
                         // Check if there is any external outputs or inputs. If not, user is sending to themselves:
                         if (externalOutputs.length == 0 && externalInputs.length == 0) {
