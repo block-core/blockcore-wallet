@@ -100,6 +100,6 @@ export class AccountSendSidechainSendingComponent implements OnInit, OnDestroy {
         //     }
         // });
 
-        this.router.navigateByUrl('/account/send/success');
+        this.router.navigateByUrl('/account/send-sidechain/success');
     }
 }

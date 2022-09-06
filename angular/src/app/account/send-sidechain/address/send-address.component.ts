@@ -41,7 +41,9 @@ export class AccountSendSidechainAddressComponent implements OnInit, OnDestroy {
       sidechainAddressInput: new UntypedFormControl('', [InputValidators.addressSidechain(this.sendSidechainService, this.addressValidation)]),
     });
 
-    this.sendService.amount = '1';
+    if (this.sendService.amount == '0') {
+      this.sendService.amount = '1';
+    }
 
     this.optionFeeInput.valueChanges.subscribe((value) => {
       this.sendService.fee = value;
