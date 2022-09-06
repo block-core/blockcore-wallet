@@ -240,6 +240,7 @@ interface TransactionHistory {
   transactionHash: string;
   isCoinbase: boolean;
   isCoinstake: boolean;
+  isSidechain: boolean;
   timestamp: number;
   blockIndex: number;
   hasContract?: boolean;

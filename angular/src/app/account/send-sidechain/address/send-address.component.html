@@ -1,9 +1,21 @@
 <div class="send-header">
-  <div class="send-header-title"><h2>Send {{ sendService.network.symbol }}</h2></div>
-  <div class="send-header-actions"><button [disabled]="hasSidechain == false" class="half-width" [routerLink]="['/', 'account', 'send-sidechain']" mat-raised-button>Sidechain Swap</button></div>
+  <div class="send-header-title"><h2>Sidechain Swap {{ sendService.network.symbol }}</h2></div>
+  <div class="send-header-actions"><button class="half-width" [routerLink]="['/', 'account', 'send']" mat-raised-button>Back...</button></div>
 </div>
 
 <form [formGroup]="form">
+
+  <mat-form-field class="input-full-width" appearance="outline">
+    <mat-label>Select a sidechain</mat-label>
+    <mat-select (selectionChange)="onSidechainSelectChanged($event)" [(value)]="sendSidechainService.selectedSidechain">
+      <mat-option *ngFor="let sidechain of sendService.network.sidechains" [value]="sidechain.symbol">{{sidechain.name}}</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <div *ngIf="sendSidechainService.selectedSidechain != null">
+    <h3>Federation Swap Address: {{sendService.address}}</h3>
+  </div>
+
   <div class="input-actions">
     <button mat-icon-button (click)="scanQrCode()" matTooltip="Scan QR code">
       <mat-icon>qr_code_scanner</mat-icon>
@@ -14,10 +26,10 @@
   </div>
 
   <mat-form-field class="input-full-width" appearance="outline">
-    <mat-label>Address</mat-label>
-    <input matInput formControlName="addressInput" [(ngModel)]="sendService.address" required />
-    <mat-error *ngIf="form.controls['addressInput'].errors?.['invalid']">Address is invalid format.</mat-error>
-    <mat-error *ngIf="form.controls['addressInput'].errors?.['required']">Address is required.</mat-error>
+    <mat-label>{{sendSidechainService.selectedSidechain}} Sidechain address</mat-label>
+   <input matInput formControlName="sidechainAddressInput" [(ngModel)]="sendSidechainService.sidechainAddress" required />
+     <mat-error *ngIf="form.controls['sidechainAddressInput'].errors?.['invalid']">Address is invalid format.</mat-error>
+    <mat-error *ngIf="form.controls['sidechainAddressInput'].errors?.['required']">Address is required.</mat-error>
   </mat-form-field>
 
   <div class="available-balance" matTooltip="Click to fill out maximum (minus fee)" (click)="fillMax(sendService.accountHistory.balance)">Available: {{ sendService.accountHistory.balance || 0 | amount }}</div>
@@ -25,12 +37,14 @@
   <mat-form-field class="input-full-width" appearance="outline">
     <mat-label>Amount</mat-label>
     <input matInput formControlName="amountInput" [(ngModel)]="sendService.amount" required />
-    <mat-error *ngIf="form.controls['amountInput'].errors?.['min']">Amount cannot be negative.</mat-error>
+    <mat-error *ngIf="form.controls['amountInput'].errors?.['min']">Amount must be more than 1.</mat-error>
     <mat-error *ngIf="form.controls['amountInput'].errors?.['required']">Amount is required and must be correctly entered.</mat-error>
     <mat-error *ngIf="form.controls['amountInput'].errors?.['tooManyDecimals']">The value of amount cannot have more than 8 decimals.</mat-error>
     <mat-error *ngIf="form.controls['amountInput'].errors?.['tooHighValue']">The value of amount must be below 100000000000.</mat-error>
     <mat-error *ngIf="form.controls['amountInput'].errors?.['tooHighAmount']">Insufficient funds available.</mat-error>
   </mat-form-field>
+
+  <div class="confirmation-label" *ngIf="confirmationMessage">{{ confirmationMessage }}</div>
 
   <mat-form-field class="input-full-width" appearance="outline">
     <mat-label>Fee</mat-label>

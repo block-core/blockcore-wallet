@@ -57,10 +57,14 @@ import { AccountSelectComponent } from './account/select/select.component';
 import { AmountPipe } from './shared/amount.pipe';
 import { AccountTransactionComponent } from './account/transaction/transaction.component';
 import { AccountSendComponent } from './account/send/send.component';
-import { AccountSendAddressComponent } from './account/send/address/send-address.component';
 import { AccountSendConfirmComponent } from './account/send/confirm/send-confirm.component';
 import { AccountSendSuccessComponent } from './account/send/success/send-success.component';
 import { AccountSendSendingComponent } from './account/send/sending/send-sending.component';
+import { AccountSendSidechainComponent } from './account/send-sidechain/send.component';
+import { AccountSendSidechainAddressComponent } from './account/send-sidechain/address/send-address.component';
+import { AccountSendSidechainConfirmComponent } from './account/send-sidechain/confirm/send-confirm.component';
+import { AccountSendSidechainSuccessComponent } from './account/send-sidechain/success/send-success.component';
+import { AccountSendSidechainSendingComponent } from './account/send-sidechain/sending/send-sending.component';
 import { LoggerModule, NgxLoggerLevel, TOKEN_LOGGER_WRITER_SERVICE } from 'ngx-logger';
 import { LogWriterService } from './services/log-writer.service';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
@@ -105,6 +109,7 @@ import { SharedManager } from 'src/shared/shared-manager';
 import { CryptoService, CryptoUtility, NetworkLoader } from './services';
 import { StateStore } from 'src/shared/store/state-store';
 import { ActionVaultSetupComponent } from './action/vault-setup/vault-setup.component';
+import { AccountSendAddressComponent } from './account/send/address/send-address.component';
 
 // required for AOT compilation
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
@@ -144,11 +149,16 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     AccountSelectComponent,
     AmountPipe,
     AccountTransactionComponent,
-    AccountSendComponent,
     AccountSendAddressComponent,
+    AccountSendComponent,
     AccountSendConfirmComponent,
     AccountSendSuccessComponent,
     AccountSendSendingComponent,
+    AccountSendSidechainComponent,
+    AccountSendSidechainAddressComponent,
+    AccountSendSidechainConfirmComponent,
+    AccountSendSidechainSuccessComponent,
+    AccountSendSidechainSendingComponent,
     NetworkStatusComponent,
     HandlerComponent,
     ActionStratisIdentityComponent,

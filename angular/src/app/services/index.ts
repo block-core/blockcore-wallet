@@ -15,6 +15,7 @@ export * from './network-status.service';
 export * from './networks.service';
 export * from './secure-state.service';
 export * from './send.service';
+export * from './send-sidechain.service';
 export * from './settings.service';
 export * from './state.service';
 export * from './ui-state.service';

@@ -1,0 +1,86 @@
+<h2>Confirm {{sendSidechainService.selectedSidechain}} Swap</h2>
+
+<div class="grid-row-label-value">
+    <div><span>Federation Address</span><span>{{sendService.address}}</span></div>
+    <div><span>Target address on {{sendSidechainService.selectedSidechain}}</span><span>{{sendSidechainService.sidechainAddress}}</span></div>
+    <div><span>From</span><span>{{sendService.account.name}}</span></div>
+    <div *ngIf="sendService.changeAddress"><span>Change (override)</span><span>{{sendService.changeAddress}}</span></div>
+    <div><span>Amount</span><span>{{sendService.amountAsSatoshi | amount}} {{sendService.network.symbol}}</span></div>
+
+    <!-- <div><span>Fee</span><span>{{sendService.fee}} ({{sendService.feeAsSatoshi}}) {{sendService.network.symbol}}</span></div> -->
+    <div *ngIf="transaction"><span>Fee</span><span>{{transaction.fee | amount}} {{sendService.network.symbol}}</span></div>
+
+    <div *ngIf="transaction"><span>Fee Rate</span><span>{{transaction.feeRate}} sat/byte</span></div>
+    <div *ngIf="invalidFeeAmount" class="mat-error"><span>Fee rate too low, minimum required</span><span>{{sendService.feeRate}} sat/byte</span></div>
+
+    <!-- <div *ngIf="transaction"><span>virtualSize</span><span>{{transaction.virtualSize}}</span></div>
+    <div *ngIf="transaction"><span>weight</span><span>{{transaction.weight}}</span></div> -->
+
+    <div *ngIf="detailsOpen" class="grid-row-label-value">
+
+        <div *ngIf="transaction"><span>Change Amount</span><span>{{transaction.changeAmount | amount}} {{sendService.network.symbol}}</span></div>
+        <div *ngIf="transaction"><span>Change Address</span><span>{{transaction.changeAddress}}</span></div>
+
+        <div *ngIf="transaction"><span>Weight</span><span>{{transaction.weight | size }} </span></div>
+        <div *ngIf="transaction"><span>Virtual Size</span><span>{{transaction.virtualSize | size }} </span></div>
+
+        <!-- <mat-form-field class="input-full-width" appearance="outline">
+            <mat-label>Custom change address</mat-label>
+            <input matInput formControlName="changeAddressInput" [(ngModel)]="sendService.changeAddress">
+        </mat-form-field> -->
+
+    </div>
+
+    <button class="full-width" (click)="toggleDetails()" mat-raised-button>Details...</button>
+
+    <div><span>Total</span><span class="total">{{sendService.total | amount}} {{sendService.network.symbol}}</span></div>
+
+    <div *ngIf="error" class="icon-warn">
+        <h2>ERROR</h2><span>{{error}}</span>
+    </div>
+</div>
+
+<!-- <p>Sending to:</p>
+<mat-card class="address" [class.mat-elevation-z8]="true">{{sendService.address}}</mat-card>
+
+<br><br>
+<p>Sending from:</p>
+<mat-card class="address" [class.mat-elevation-z8]="true">{{sendService.account.name}}</mat-card>
+
+<br><br>
+<p>Amount:</p>
+<mat-card class="address" [class.mat-elevation-z8]="true">{{sendService.amount}}</mat-card>
+
+<br><br>
+<p>Fee:</p>
+<mat-card class="address" [class.mat-elevation-z8]="true">{{sendService.fee}}</mat-card>
+
+<br><br>
+<p>Total:</p>
+<mat-card class="address" [class.mat-elevation-z8]="true">{{sendService.total}}</mat-card> -->
+
+<!-- 
+
+<mat-form-field class="input-full-width" appearance="outline">
+    <mat-label>Address</mat-label>
+    <input matInput [(ngModel)]="sendService.address" required>
+</mat-form-field>
+
+<mat-form-field class="input-full-width" appearance="outline">
+    <mat-label>Amount</mat-label>
+    <input matInput [(ngModel)]="sendService.amount" required>
+</mat-form-field>
+
+<mat-form-field class="input-full-width" appearance="outline">
+    <mat-label>Fee</mat-label>
+    <input matInput [(ngModel)]="sendService.fee" required>
+</mat-form-field> -->
+<br>
+
+<button class="full-width" [disabled]="!valid" mat-raised-button routerLink="../sending" color="primary">Send</button>
+
+<mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
+
+<!-- <div *ngIf="transaction" class="wrap"><br>HEX: {{transaction.transactionHex}}</div> -->
+
+<!-- <button class="full-width" mat-raised-button (click)="sendService.send()" color="primary">Send</button> -->

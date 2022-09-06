@@ -63,6 +63,11 @@ import { AccountSendAddressComponent } from './account/send/address/send-address
 import { AccountSendConfirmComponent } from './account/send/confirm/send-confirm.component';
 import { AccountSendSuccessComponent } from './account/send/success/send-success.component';
 import { AccountSendSendingComponent } from './account/send/sending/send-sending.component';
+import { AccountSendSidechainComponent } from './account/send-sidechain/send.component';
+import { AccountSendSidechainAddressComponent } from './account/send-sidechain/address/send-address.component';
+import { AccountSendSidechainConfirmComponent } from './account/send-sidechain/confirm/send-confirm.component';
+import { AccountSendSidechainSuccessComponent } from './account/send-sidechain/success/send-success.component';
+import { AccountSendSidechainSendingComponent } from './account/send-sidechain/sending/send-sending.component';
 import { LoggerModule, NgxLoggerLevel, TOKEN_LOGGER_WRITER_SERVICE } from "ngx-logger";
 import { LogWriterService } from './services/log-writer.service';
 import { TranslateLoader } from '@ngx-translate/core';
@@ -163,6 +168,11 @@ describe('AppComponent', () => {
         AccountSendConfirmComponent,
         AccountSendSuccessComponent,
         AccountSendSendingComponent,
+        AccountSendSidechainComponent,
+        AccountSendSidechainAddressComponent,
+        AccountSendSidechainAConfirmComponent,
+        AccountSendSidechainASuccessComponent,
+        AccountSendSidechainASendingComponent,
         NetworkStatusComponent
       ],
       providers: [

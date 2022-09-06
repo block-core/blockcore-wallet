@@ -21,4 +21,16 @@ export class CRS implements Network {
     singleAddress = true;
     smartContractSupport = true;
     type = 'coin';
+    sidechains = [
+        {
+          name: "Stratis",
+          symbol: "STRAX",
+          targetType: "mainchain",
+          peg:{
+            type:"Federation",
+            address:"cYTNBJDbgjRgcKARAvi2UCSsDdyHkjUqJ2"
+         },
+         confirmations: [{ low: 0, high: 50, count: 25 }, { low: 50, high: 1000, count: 80 }, { low: 1000, count: 80 }]
+        }
+      ];
 }
