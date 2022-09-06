@@ -28,8 +28,9 @@ export class TCRS implements Network {
           targetType: "mainchain",
           peg:{
             type:"Federation",
-            address:"--"
-         }
+            address:"xHtgXLa3CSjAVtmydqNrrMU7nZw7qdq2w6"
+         },
+         confirmations: [{ low: 0, high: 50, count: 25 }, { low: 50, high: 1000, count: 80 }, { low: 1000, count: 80 }]
         }
       ];
 }
