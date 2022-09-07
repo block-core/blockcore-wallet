@@ -217,7 +217,7 @@
       </mat-card>
     </mat-tab>
 
-    <mat-tab>
+    <mat-tab *ngIf="standardTokens != undefined">
       <ng-template mat-tab-label>
         <mat-icon class="example-tab-icon">account_balance</mat-icon>
       </ng-template>

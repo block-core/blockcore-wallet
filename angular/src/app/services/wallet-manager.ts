@@ -819,8 +819,9 @@ export class WalletManager {
 
   async LoadStandardTokensForAccountAsync(network: Network, account: Account) {
     const indexerUrl = this.networkLoader.getServer(network.id, this.settings.values.server, this.settings.values.indexer);
+    const address = this.getReceiveAddressByIndex(account, 0);
 
-    const tokens = await axios.get(`${indexerUrl}/api/query/${network.name}/tokens/${this.getAddressByIndex(account, 0, 0)}`);
+    const tokens = await axios.get(`${indexerUrl}/api/query/${network.name}/tokens/${address.address}`);
     if (tokens.data.items) {
       this.tokensStore.remove(account.identifier);
       this.tokensStore.set(account.identifier, {tokens: tokens.data.items});

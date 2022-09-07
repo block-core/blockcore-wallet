@@ -270,6 +270,9 @@ export class AccountComponent implements OnInit, OnDestroy {
     const network = this.network.getNetwork(this.walletManager.activeAccount.networkType);
     await this.walletManager.LoadStandardTokensForAccountAsync(network, this.walletManager.activeAccount);
 
-    this.standardTokens = this.standardTokenStore.get(this.walletManager.activeAccount.identifier).tokens;
+    const accountTokens = this.standardTokenStore.get(this.walletManager.activeAccount.identifier);
+
+    if (accountTokens != undefined)
+      this.standardTokens = accountTokens.tokens;
   }
 }
