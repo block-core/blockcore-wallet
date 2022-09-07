@@ -1,7 +1,7 @@
-import { DIDDocument, DIDDocumentMetadata, DIDResolutionMetadata, ServiceEndpoint } from 'did-resolver';
-import { ClientData } from './client-data';
-import { DecodedAttestion } from './decoded-attestion';
-import { User, Credential } from './user';
+import {DIDDocument, DIDDocumentMetadata, DIDResolutionMetadata, ServiceEndpoint} from 'did-resolver';
+import {ClientData} from './client-data';
+import {DecodedAttestion} from './decoded-attestion';
+import {User, Credential} from './user';
 
 // interfaces.ts
 interface IWords {
@@ -507,8 +507,7 @@ interface DIDResolutionResult {
   didResolutionMetadata: DIDResolutionMetadataEx;
 }
 
-interface ActionUrlParameters
-{
+interface ActionUrlParameters {
   id: string;
   app: string;
   action: string;
@@ -526,6 +525,10 @@ export interface Token {
   totalSupply: number;
   address: string;
   amount: number;
+}
+
+export interface AccountTokens {
+  tokens: Token[];
 }
 
 interface RequestArguments {
@@ -624,11 +627,17 @@ interface MessageResponse {
 
 interface Logger {
   trace(message?: any | (() => any), ...additional: any[]): void;
+
   debug(message?: any | (() => any), ...additional: any[]): void;
+
   info(message?: any | (() => any), ...additional: any[]): void;
+
   log(message?: any | (() => any), ...additional: any[]): void;
+
   warn(message?: any | (() => any), ...additional: any[]): void;
+
   error(message?: any | (() => any), ...additional: any[]): void;
+
   fatal(message?: any | (() => any), ...additional: any[]): void;
 }
 

@@ -1,7 +1,7 @@
 import {StoreListBase} from "./store-base";
-import {Token} from "../interfaces";
+import {AccountTokens, Token} from "../interfaces";
 
-export class StandardTokenStore extends StoreListBase<Token> {
+export class StandardTokenStore extends StoreListBase<AccountTokens> {
   constructor() {
     super('standardToken');
   }

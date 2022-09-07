@@ -813,17 +813,18 @@ export class WalletManager {
     }
 
     if (network.smartContractSupport) {
-      await this.LoadStandardTokensForAccountAsync(network, this.getAddressByIndex(account, 0, 0));
+      await this.LoadStandardTokensForAccountAsync(network, account);
     }
   }
 
-  async LoadStandardTokensForAccountAsync(network: Network, address: string) {
+  async LoadStandardTokensForAccountAsync(network: Network, account: Account) {
     const indexerUrl = this.networkLoader.getServer(network.id, this.settings.values.server, this.settings.values.indexer);
 
-    const tokens = await axios.get(`${indexerUrl}/api/query/${network.name}/tokens/${address}`);
+    const tokens = await axios.get(`${indexerUrl}/api/query/${network.name}/tokens/${this.getAddressByIndex(account, 0, 0)}`);
     if (tokens.data.items) {
-      for (let token of tokens.data.items)
-        this.tokensStore.set(token.name, token);
+      this.tokensStore.remove(account.identifier);
+      this.tokensStore.set(account.identifier, {tokens: tokens.data.items});
+
       await this.tokensStore.save();
     }
   }

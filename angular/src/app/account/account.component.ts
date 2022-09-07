@@ -268,9 +268,8 @@ export class AccountComponent implements OnInit, OnDestroy {
     // TODO need to find the right place to update store in the manager so it gets refreshed properly every time
     // await this.standardTokenStore.load();
     const network = this.network.getNetwork(this.walletManager.activeAccount.networkType);
-    const address = await this.walletManager.getPrimaryAddress(this.walletManager.activeAccount);
-    await this.walletManager.LoadStandardTokensForAccountAsync(network, address);
+    await this.walletManager.LoadStandardTokensForAccountAsync(network, this.walletManager.activeAccount);
 
-    this.standardTokens = this.standardTokenStore.all();
+    this.standardTokens = this.standardTokenStore.get(this.walletManager.activeAccount.identifier).tokens;
   }
 }
