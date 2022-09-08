@@ -26,7 +26,7 @@ import { RuntimeService } from '../../shared/runtime.service';
 import { UnspentOutputService } from './unspent-output.service';
 import { AccountStateStore } from 'src/shared/store/account-state-store';
 import { CryptoService } from './';
-import {StandardTokenStore} from "../../shared/store/standard-token-store";
+import { StandardTokenStore } from "../../shared/store/standard-token-store";
 
 import { Payment } from '@blockcore/blockcore-js/src/payments';
 
@@ -823,7 +823,6 @@ export class WalletManager {
 
     const tokens = await axios.get(`${indexerUrl}/api/query/${network.name}/tokens/${address.address}`);
     if (tokens.data.items) {
-      this.tokensStore.remove(account.identifier);
       this.tokensStore.set(account.identifier, {tokens: tokens.data.items});
 
       await this.tokensStore.save();

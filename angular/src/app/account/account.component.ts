@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { UIState, CommunicationService, NetworksService, NetworkStatusService, SettingsService, WalletManager, StateService, NetworkLoader } from '../services';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Account, AccountHistory, NetworkStatus, TransactionHistory } from '../../shared/interfaces';
+import { Account, AccountHistory, NetworkStatus, TransactionHistory, Token } from '../../shared/interfaces';
 import { Subscription } from 'rxjs';
 import { AccountHistoryStore, AddressStore } from 'src/shared';
 import { AccountStateStore } from 'src/shared/store/account-state-store';
@@ -262,17 +262,15 @@ export class AccountComponent implements OnInit, OnDestroy {
     );
 
     const network = this.network.getNetwork(this.walletManager.activeAccount.networkType);
+
     if (network.smartContractSupport) {
-      const indexerUrl = this.networkLoader.getServer(network.id, this.settings.values.server, this.settings.values.indexer);
+      // await this.standardTokenStore.load(); TODO need to find the right place to update store in the manager so it gets refreshed properly every time
+      await this.walletManager.LoadStandardTokensForAccountAsync(network, this.walletManager.activeAccount);
 
-    // TODO need to find the right place to update store in the manager so it gets refreshed properly every time
-    // await this.standardTokenStore.load();
-    const network = this.network.getNetwork(this.walletManager.activeAccount.networkType);
-    await this.walletManager.LoadStandardTokensForAccountAsync(network, this.walletManager.activeAccount);
+      const accountTokens = this.standardTokenStore.get(this.walletManager.activeAccount.identifier);
 
-    const accountTokens = this.standardTokenStore.get(this.walletManager.activeAccount.identifier);
-
-    if (accountTokens != undefined)
-      this.standardTokens = accountTokens.tokens;
+      if (accountTokens != undefined)
+        this.standardTokens = accountTokens.tokens;
+    }
   }
 }
