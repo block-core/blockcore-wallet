@@ -32,6 +32,9 @@
     <mat-error *ngIf="form.controls['sidechainAddressInput'].errors?.['required']">Address is required.</mat-error>
   </mat-form-field>
 
+  <mat-card>Additional chain swap fee is taken from the amount entered, which is a fixed amount
+    of "0.001". If you want the receiver to get "1", enter amount "1.001".</mat-card>
+
   <div class="available-balance" matTooltip="Click to fill out maximum (minus fee)" (click)="fillMax(sendService.accountHistory.balance)">Available: {{ sendService.accountHistory.balance || 0 | amount }}</div>
 
   <mat-form-field class="input-full-width" appearance="outline">
