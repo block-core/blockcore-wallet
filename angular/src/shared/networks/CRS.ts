@@ -30,7 +30,7 @@ export class CRS implements Network {
             type:"Federation",
             address:"cYTNBJDbgjRgcKARAvi2UCSsDdyHkjUqJ2"
          },
-         confirmations: [{ low: 0, high: 50, count: 25 }, { low: 50, high: 1000, count: 80 }, { low: 1000, count: 500 }]
+         confirmations: [{ low: 0, high: 50, count: 30 }, { low: 50, high: 1000, count: 70 }, { low: 1000, count: 140 }]
         }
       ];
 }
