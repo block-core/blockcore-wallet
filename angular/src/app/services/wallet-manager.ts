@@ -813,11 +813,11 @@ export class WalletManager {
     }
 
     if (network.smartContractSupport) {
-      await this.LoadStandardTokensForAccountAsync(network, account);
+      await this.loadStandardTokensForAccountAsync(network, account);
     }
   }
 
-  async LoadStandardTokensForAccountAsync(network: Network, account: Account) {
+  async loadStandardTokensForAccountAsync(network: Network, account: Account) {
     const indexerUrl = this.networkLoader.getServer(network.id, this.settings.values.server, this.settings.values.indexer);
     const address = this.getReceiveAddressByIndex(account, 0);
 

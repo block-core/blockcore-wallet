@@ -265,7 +265,7 @@ export class AccountComponent implements OnInit, OnDestroy {
 
     if (network.smartContractSupport) {
       // await this.standardTokenStore.load(); TODO need to find the right place to update store in the manager so it gets refreshed properly every time
-      await this.walletManager.LoadStandardTokensForAccountAsync(network, this.walletManager.activeAccount);
+      await this.walletManager.loadStandardTokensForAccountAsync(network, this.walletManager.activeAccount);
 
       const accountTokens = this.standardTokenStore.get(this.walletManager.activeAccount.identifier);
 
