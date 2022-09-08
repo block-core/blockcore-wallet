@@ -68,16 +68,17 @@ body {
 
 .mat-tab-body-content {
   // scrollbar-gutter: stable both-edges;
-  overflow: overlay !important;
+  // overflow: overlay !important;
 }
 
 .mat-sidenav-content {
   overflow: overlay !important;
 }
 
-mat-tab-group {
-  height: 100%;
-}
+/* Probably not needed? */
+// mat-tab-group {
+//   height: 100%;
+// }
 
 .sidenav-container {
   // overflow: auto overlay;
@@ -172,6 +173,11 @@ header {
   max-width: 600px;
   margin-left: auto;
   margin-right: auto;
+}
+
+/* Ensures we don't get sideways scrolling right above 600px width */
+.mat-tab-label {
+  min-width: 72px !important;
 }
 
 .input-full-width {

@@ -821,7 +821,9 @@ export class WalletManager {
     const indexerUrl = this.networkLoader.getServer(network.id, this.settings.values.server, this.settings.values.indexer);
     const address = this.getReceiveAddressByIndex(account, 0);
 
-    const tokens = await axios.get(`${indexerUrl}/api/query/${network.name}/tokens/${address.address}`);
+    // const tokens = await axios.get(`${indexerUrl}/api/query/${network.name}/tokens/${address.address}`);
+    const tokens = await axios.get(`${indexerUrl}/api/query/${network.name}/tokens/CebWDpneYZMQ6F8iVtJQN2GLGHJ7ArwZAo`);
+
     if (tokens.data.items) {
       this.tokensStore.set(account.identifier, {tokens: tokens.data.items});
 
