@@ -5,6 +5,7 @@ import { AccountStateStore } from 'src/shared/store/account-state-store';
 import { AddressWatchStore } from 'src/shared/store/address-watch-store';
 import { ContactStore } from 'src/shared/store/contacts-store';
 import { PermissionStore } from 'src/shared/store/permission-store';
+import { StandardTokenStore } from 'src/shared/store/standard-token-store';
 import { StateStore } from 'src/shared/store/state-store';
 import { StoreBase, StoreListBase } from 'src/shared/store/store-base';
 import { EnvironmentService } from './environment.service';
@@ -38,6 +39,7 @@ export class StateService {
     private permissionStore: PermissionStore,
     private stateStore: StateStore,
     private contactStore: ContactStore,
+    private tokenStore: StandardTokenStore,
     private env: EnvironmentService
   ) {
     this.changedSubject = new BehaviorSubject<StateService>(this);
@@ -60,6 +62,7 @@ export class StateService {
     this.stores.push(accountStateStore);
     this.stores.push(permissionStore);
     this.stores.push(contactStore);
+    this.stores.push(tokenStore);
   }
 
   async wipe() {
