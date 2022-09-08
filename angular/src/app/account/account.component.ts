@@ -9,7 +9,7 @@ import { AccountHistoryStore, AddressStore } from 'src/shared';
 import { AccountStateStore } from 'src/shared/store/account-state-store';
 import axiosRetry from 'axios-retry';
 const axios = require('axios').default;
-import {StandardTokenStore} from "../../shared/store/standard-token-store";
+import { StandardTokenStore } from '../../shared/store/standard-token-store';
 axiosRetry(axios, { retries: 3, retryDelay: axiosRetry.exponentialDelay });
 
 @Component({
@@ -242,6 +242,11 @@ export class AccountComponent implements OnInit, OnDestroy {
     this.cd.detectChanges();
   }
 
+  loadTokens() {
+    let accountTokens = this.standardTokenStore.get(this.walletManager.activeAccount.identifier);
+    if (accountTokens != undefined) this.standardTokens = accountTokens.tokens;
+  }
+
   async ngOnInit() {
     this.subscriptions.push(
       this.state.changed$.subscribe((state) => {
@@ -264,13 +269,9 @@ export class AccountComponent implements OnInit, OnDestroy {
     const network = this.network.getNetwork(this.walletManager.activeAccount.networkType);
 
     if (network.smartContractSupport) {
-      // await this.standardTokenStore.load(); TODO need to find the right place to update store in the manager so it gets refreshed properly every time
+      this.loadTokens();
       await this.walletManager.loadStandardTokensForAccountAsync(network, this.walletManager.activeAccount);
-
-      const accountTokens = this.standardTokenStore.get(this.walletManager.activeAccount.identifier);
-
-      if (accountTokens != undefined)
-        this.standardTokens = accountTokens.tokens;
+      this.loadTokens();
     }
   }
 }
