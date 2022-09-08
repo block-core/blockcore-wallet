@@ -3,12 +3,13 @@ import { HttpClient } from '@angular/common/http';
 import { UIState, CommunicationService, NetworksService, NetworkStatusService, SettingsService, WalletManager, StateService, NetworkLoader } from '../services';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Account, AccountHistory, NetworkStatus, TransactionHistory } from '../../shared/interfaces';
+import { Account, AccountHistory, NetworkStatus, TransactionHistory, Token } from '../../shared/interfaces';
 import { Subscription } from 'rxjs';
 import { AccountHistoryStore, AddressStore } from 'src/shared';
 import { AccountStateStore } from 'src/shared/store/account-state-store';
 import axiosRetry from 'axios-retry';
 const axios = require('axios').default;
+import {StandardTokenStore} from "../../shared/store/standard-token-store";
 axiosRetry(axios, { retries: 3, retryDelay: axiosRetry.exponentialDelay });
 
 @Component({
@@ -42,6 +43,8 @@ export class AccountComponent implements OnInit, OnDestroy {
   loginurl: string;
   loginurlMessage: string;
 
+  standardTokens: Token[];
+
   constructor(
     public uiState: UIState,
     public settings: SettingsService,
@@ -59,7 +62,8 @@ export class AccountComponent implements OnInit, OnDestroy {
     public walletManager: WalletManager,
     private accountStateStore: AccountStateStore,
     private networkLoader: NetworkLoader,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private standardTokenStore: StandardTokenStore
   ) {
     this.uiState.title = '';
     this.uiState.showBackButton = true;
@@ -118,7 +122,7 @@ export class AccountComponent implements OnInit, OnDestroy {
     // Reset the account state when performing a re-scan.
     accountState.balance = 0;
     this.accountStateStore.set(account.identifier, accountState);
-    this.accountStateStore.save();
+    await this.accountStateStore.save();
 
     // Send a message to run indexing on all wallets, send accountId for future optimization of running index only on this account.
     this.communication.send(this.communication.createMessage('index', { accountId: this.walletManager.activeAccount.identifier }));
@@ -256,5 +260,17 @@ export class AccountComponent implements OnInit, OnDestroy {
         this.updateAccountHistory();
       })
     );
+
+    const network = this.network.getNetwork(this.walletManager.activeAccount.networkType);
+
+    if (network.smartContractSupport) {
+      // await this.standardTokenStore.load(); TODO need to find the right place to update store in the manager so it gets refreshed properly every time
+      await this.walletManager.LoadStandardTokensForAccountAsync(network, this.walletManager.activeAccount);
+
+      const accountTokens = this.standardTokenStore.get(this.walletManager.activeAccount.identifier);
+
+      if (accountTokens != undefined)
+        this.standardTokens = accountTokens.tokens;
+    }
   }
 }

@@ -26,6 +26,7 @@ import { RuntimeService } from '../../shared/runtime.service';
 import { UnspentOutputService } from './unspent-output.service';
 import { AccountStateStore } from 'src/shared/store/account-state-store';
 import { CryptoService } from './';
+import { StandardTokenStore } from "../../shared/store/standard-token-store";
 
 import { Payment } from '@blockcore/blockcore-js/src/payments';
 
@@ -68,7 +69,8 @@ export class WalletManager {
     private storage: StorageService,
     private accountStateStore: AccountStateStore,
     private runtime: RuntimeService,
-    private logger: LoggerService
+    private logger: LoggerService,
+    private tokensStore: StandardTokenStore,
   ) {
     this.allNetworks = this.networkLoader.getAllNetworks();
   }
@@ -808,6 +810,22 @@ export class WalletManager {
     // If the wallet type is restored, force an index process to restore the state.
     if (wallet.restored && runIndexIfRestored == true) {
       this.communication.send(this.communication.createMessage('index', { force: true }, 'background'));
+    }
+
+    if (network.smartContractSupport) {
+      await this.LoadStandardTokensForAccountAsync(network, account);
+    }
+  }
+
+  async LoadStandardTokensForAccountAsync(network: Network, account: Account) {
+    const indexerUrl = this.networkLoader.getServer(network.id, this.settings.values.server, this.settings.values.indexer);
+    const address = this.getReceiveAddressByIndex(account, 0);
+
+    const tokens = await axios.get(`${indexerUrl}/api/query/${network.name}/tokens/${address.address}`);
+    if (tokens.data.items) {
+      this.tokensStore.set(account.identifier, {tokens: tokens.data.items});
+
+      await this.tokensStore.save();
     }
   }
 
