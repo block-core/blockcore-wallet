@@ -37,7 +37,7 @@ export class NetworkComponent implements OnDestroy, OnInit {
 
     for (var i = 0; i < this.networks.length; i++) {
       const network = this.networks[i];
-      const networkEntry = stateEntry.activeNetworks.find((a) => a.networkType == network.type);
+      const networkEntry = stateEntry.activeNetworks?.find((a) => a.networkType == network.type);
 
       if (networkEntry) {
         networkEntry.domain = network.selectedDomain;

@@ -63,7 +63,7 @@ export class NetworkStatusService {
         networks: this.store.get(type),
       };
 
-      const existingNetwork = stateEntry.activeNetworks.find((n) => n.networkType == type);
+      const existingNetwork = stateEntry.activeNetworks?.find((n) => n.networkType == type);
 
       if (existingNetwork) {
         statusEntry.selectedDomain = existingNetwork.domain;
