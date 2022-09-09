@@ -825,7 +825,7 @@ export class WalletManager {
       }
 
       const address = this.getReceiveAddressByIndex(account, 0);
-      const tokens = await axios.get(`${indexerUrl}/api/query/${network.name}/tokens/${address.address}`);
+      const tokens = await axios.get(`${indexerUrl}/api/query/${network.name.toLowerCase()}/tokens/${address.address}`);
 
       if (tokens.data.items) {
         this.tokensStore.set(account.identifier, { tokens: tokens.data.items });
