@@ -22,35 +22,39 @@ export class CollectablesComponent implements OnInit {
   constructor(private network: NetworksService, private settings: SettingsService, private networkLoader: NetworkLoader, private accountStateStore: AccountStateStore) {}
 
   async reload() {
-    if (this.account !== undefined) {
-      const addressManager = new AddressManager(this.networkLoader);
-      const network = addressManager.getNetwork(this.account.networkType);
-      this.indexerUrl = this.networkLoader.getServer(network.id, this.settings.values.server, this.settings.values.indexer);
+    try {
+      if (this.account !== undefined) {
+        const addressManager = new AddressManager(this.networkLoader);
+        const network = addressManager.getNetwork(this.account.networkType);
+        this.indexerUrl = this.networkLoader.getServer(network.id, this.settings.values.server, this.settings.values.indexer);
 
-      // If there are no indexers online, we'll try again in 30 seconds.
-      if (!this.indexerUrl) {
-        setTimeout(async () => {
-          await this.reload();
-        }, 30000);
-        return;
+        // If there are no indexers online, we'll try again in 30 seconds.
+        if (!this.indexerUrl) {
+          setTimeout(async () => {
+            await this.reload();
+          }, 30000);
+          return;
+        }
+
+        const accountStore = this.accountStateStore.get(this.account.identifier);
+
+        if (accountStore != null) {
+          let receiveAddress = accountStore.receive[0].address;
+          let queryNetwork = network.name.toLowerCase();
+
+          const response = await axios.get(`${this.indexerUrl}/api/query/${queryNetwork}/collectables/${receiveAddress}`, {
+            withCredentials: false,
+            'axios-retry': {
+              retries: 0,
+            },
+          });
+
+          this.NonFungibleTokens = response.data.items;
+          this.totalItemsOnAccount.emit(response.data.total);
+        }
       }
-
-      const accountStore = this.accountStateStore.get(this.account.identifier);
-
-      if (accountStore != null) {
-        let receiveAddress = accountStore.receive[0].address;
-        let queryNetwork = network.name.toLowerCase();
-
-        const response = await axios.get(`${this.indexerUrl}/api/query/${queryNetwork}/collectables/${receiveAddress}`, {
-          withCredentials: false,
-          'axios-retry': {
-            retries: 0,
-          },
-        });
-
-        this.NonFungibleTokens = response.data.items;
-        this.totalItemsOnAccount.emit(response.data.total);
-      }
+    } catch (err) {
+      console.log('Failed to get NFTs.');
     }
   }
 
