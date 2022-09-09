@@ -93,7 +93,7 @@
                             amount}}</span> -->
           </div>
           <div mat-line class="address" *ngIf="transaction.hasContract">Interaction with contract</div>
-          <div mat-line class="address" [innerHTML]="transaction.calculatedAddress.split(';').join('<br>')"></div>
+          <div mat-line class="address" [innerHTML]="transaction.calculatedAddress.split(';').join(', ')"></div>
           <!-- <div *ngIf="currentNetworkStatus" mat-line class="address">Confirmations:
                         {{currentNetworkStatus.blockSyncHeight - transaction.blockIndex}}
                     </div> -->
