@@ -57,6 +57,9 @@ export class NetworkLoader {
     if (!existingState) {
       existingState = { networkType, domain: '', url: '' };
       stateEntry.activeNetworks.push(existingState);
+
+      // Ensure we persist after pushing to the activeNetworks collection. Don't wait around for this async method.
+      this.stateStore.save();
     }
 
     if (networkGroup == 'custom') {

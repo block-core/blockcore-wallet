@@ -26,7 +26,7 @@ import { RuntimeService } from '../../shared/runtime.service';
 import { UnspentOutputService } from './unspent-output.service';
 import { AccountStateStore } from 'src/shared/store/account-state-store';
 import { CryptoService } from './';
-import { StandardTokenStore } from "../../shared/store/standard-token-store";
+import { StandardTokenStore } from '../../shared/store/standard-token-store';
 
 import { Payment } from '@blockcore/blockcore-js/src/payments';
 
@@ -70,7 +70,7 @@ export class WalletManager {
     private accountStateStore: AccountStateStore,
     private runtime: RuntimeService,
     private logger: LoggerService,
-    private tokensStore: StandardTokenStore,
+    private tokensStore: StandardTokenStore
   ) {
     this.allNetworks = this.networkLoader.getAllNetworks();
   }
@@ -336,9 +336,8 @@ export class WalletManager {
       tx.addOutput({ address: changeAddress, value: changeAmount.toNumber() });
     }
 
-    if (nullData != null)
-    {
-      var data = Buffer.from(nullData)
+    if (nullData != null) {
+      var data = Buffer.from(nullData);
       const dataScript = payments.embed({ data: [data] });
       tx.addOutput({ script: dataScript.output, value: 0 }); // OP_RETURN always with 0 value unless you want to burn coins
     }
@@ -818,14 +817,25 @@ export class WalletManager {
   }
 
   async loadStandardTokensForAccountAsync(network: Network, account: Account) {
-    const indexerUrl = this.networkLoader.getServer(network.id, this.settings.values.server, this.settings.values.indexer);
-    const address = this.getReceiveAddressByIndex(account, 0);
-    const tokens = await axios.get(`${indexerUrl}/api/query/${network.name}/tokens/${address.address}`);
+    try {
+      const indexerUrl = this.networkLoader.getServer(network.id, this.settings.values.server, this.settings.values.indexer);
 
-    if (tokens.data.items) {
-      this.tokensStore.set(account.identifier, {tokens: tokens.data.items});
+      console.log('indexerUrl:', indexerUrl);
 
-      await this.tokensStore.save();
+      if (!indexerUrl) {
+        return;
+      }
+
+      const address = this.getReceiveAddressByIndex(account, 0);
+      const tokens = await axios.get(`${indexerUrl}/api/query/${network.name}/tokens/${address.address}`);
+
+      if (tokens.data.items) {
+        this.tokensStore.set(account.identifier, { tokens: tokens.data.items });
+
+        await this.tokensStore.save();
+      }
+    } catch (err) {
+      console.error('Failed to load standard tokens for account: ', account.name);
     }
   }
 
