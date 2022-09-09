@@ -1,3 +1,23 @@
+## <small>0.0.62 (2022-09-09)</small>
+
+* Add notification about chain swap fee ([01ee184](https://github.com/block-core/blockcore-wallet/commit/01ee184))
+* Added list of standard tokens owned by user (#220) ([49d4f1f](https://github.com/block-core/blockcore-wallet/commit/49d4f1f)), closes [#220](https://github.com/block-core/blockcore-wallet/issues/220)
+* Change title from "Sidechain Swap" to "Swap" ([7321d0e](https://github.com/block-core/blockcore-wallet/commit/7321d0e))
+* Fix issue where tokens query would fail and stop account setup ([9bce9bf](https://github.com/block-core/blockcore-wallet/commit/9bce9bf))
+* Fix issue with permanent lookup address for tokens ([151b64e](https://github.com/block-core/blockcore-wallet/commit/151b64e))
+* Fix issue with token store not loading on startup ([84ed125](https://github.com/block-core/blockcore-wallet/commit/84ed125))
+* Fix the width of tab labels to avoid horizontal scrolling ([d0c129b](https://github.com/block-core/blockcore-wallet/commit/d0c129b))
+* Improve initial load of tokens before waiting for async reload ([d6e49cb](https://github.com/block-core/blockcore-wallet/commit/d6e49cb))
+* Optimize the style of token listing ([d817819](https://github.com/block-core/blockcore-wallet/commit/d817819))
+* Remove debug logging ([0aa83d1](https://github.com/block-core/blockcore-wallet/commit/0aa83d1))
+* Render the calculated addresses on same line to avoid UI issues ([62821c1](https://github.com/block-core/blockcore-wallet/commit/62821c1))
+* stateEntry can be null if there are issues ([ae5b579](https://github.com/block-core/blockcore-wallet/commit/ae5b579))
+* Update confirmation times to align with official Stratis nodes ([ff97b3e](https://github.com/block-core/blockcore-wallet/commit/ff97b3e))
+* Update the "loadStandardTokensForAccountAsync" name ([4245629](https://github.com/block-core/blockcore-wallet/commit/4245629))
+* Update version and changelog ([dc2c09c](https://github.com/block-core/blockcore-wallet/commit/dc2c09c))
+
+
+
 ## <small>0.0.61 (2022-09-06)</small>
 
 * Add basic input sanitation for action requests. ([7412367](https://github.com/block-core/blockcore-wallet/commit/7412367))
