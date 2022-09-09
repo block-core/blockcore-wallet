@@ -820,8 +820,6 @@ export class WalletManager {
     try {
       const indexerUrl = this.networkLoader.getServer(network.id, this.settings.values.server, this.settings.values.indexer);
 
-      console.log('indexerUrl:', indexerUrl);
-
       if (!indexerUrl) {
         return;
       }
