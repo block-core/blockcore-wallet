@@ -82,3 +82,29 @@ textarea {
   float: right;
   margin-top: -2em;
 }
+
+.token-title {
+  font-size: 1.6em;
+}
+
+.token-subtitle {
+  /* text-align: right; */
+  padding-bottom: 0.1em;
+  font-size: 1.2em !important;
+  display: flex;
+}
+
+.token-subtitle-left {
+  display: inline-block;
+  flex-grow: 2;
+  color: rgba(173, 173, 173, 0.4);
+}
+
+.token-subtitle-right {
+  display: inline-block;
+  text-align: right;  
+}
+
+.token-card {
+  margin-bottom: 0.1em;
+}

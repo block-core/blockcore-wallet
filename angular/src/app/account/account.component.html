@@ -120,63 +120,24 @@
       </mat-nav-list>
     </mat-tab>
 
-    <!-- <mat-tab>
-            <ng-template mat-tab-label>
-                <mat-icon class="example-tab-icon">description</mat-icon>
-            </ng-template>
-
-            <mat-nav-list>
-                <div mat-subheader>Receive Addresses</div>
-                <a mat-list-item *ngFor="let address of this.walletManager.activeAccount.state.receive"
-                    routerLinkActive="active-link" [routerLink]="['/', 'account', 'address', address.index]">
-                    <div mat-line>{{address.address}}</div>
-                    <div mat-line>R:{{address.totalReceived | amount}} / S:{{address.totalSent | amount}} </div>
-                </a>
-                <mat-divider></mat-divider>
-                <div mat-subheader>Change Addresses</div>
-                <a mat-list-item *ngFor="let address of this.walletManager.activeAccount.state.change"
-                    routerLinkActive="active-link" [routerLink]="['/', 'account', 'address', address.index]">
-                    <div mat-line>{{address.address}}</div>
-                    <div mat-line>R:{{address.totalReceived | amount}} / S:{{address.totalSent | amount}} </div>
-                </a>
-            </mat-nav-list>
-        </mat-tab> -->
-
-        <mat-tab>
-            <ng-template mat-tab-label>
-                <mat-icon class="example-tab-icon">build_circle</mat-icon>
-            </ng-template>
+    <mat-tab *ngIf="standardTokens != undefined">
+      <ng-template mat-tab-label>
+        <mat-icon class="example-tab-icon">account_balance</mat-icon>
+      </ng-template>
 
       <br />
 
-      <mat-nav-list>
-        <!-- <a mat-list-item (click)="scan()">
-                    <mat-icon mat-list-icon>history</mat-icon>
-                    <div mat-line>Resync All History</div>
-                </a> -->
-        <a mat-list-item (click)="toggleNetwork()">
-          <mat-icon mat-list-icon>public</mat-icon>
-          <div mat-line>Network Status</div>
-        </a>
-      </mat-nav-list>
-
-      <mat-card *ngIf="networkStatus">
-        <img class="mat-card-avatar network-status-image" [src]="networkStatus.icon" />
-        <mat-card-title>{{ networkStatus.name }} ({{ networkStatus.symbol }})</mat-card-title>
-        <mat-card-subtitle>{{ networkStatus.description }}</mat-card-subtitle>
-        <mat-card-content>
-          <p>Network: {{ networkStatus.node.blockchain.chain }}</p>
-          <p>Height: {{ networkStatus.blockHeight }}</p>
-          <p>Relay Fee: {{ networkStatus.node.network.relayFee }}</p>
-          <p>Memory Pool: {{ networkStatus.node.transactionsInPool }} transactions</p>
-          <p>Connections (on the indexer): {{ networkStatus.node.network.connections }}</p>
-          <p>
-            <a [href]="networkStatus.url" target="_blank">{{ networkStatus.url }}</a>
-          </p>
-        </mat-card-content>
-      </mat-card>
+      <ng-container *ngFor="let token of standardTokens">
+        <mat-card class="token-card">
+          <mat-card-title class="token-title">{{ token.name }}</mat-card-title>
+          <mat-card-subtitle class="token-subtitle">
+            <div class="token-subtitle-left">Supply: {{ token.totalSupply }}</div>
+            <div class="token-subtitle-right">{{ token.amount | amount }} {{ token.symbol }}</div>
+          </mat-card-subtitle>
+        </mat-card>
+      </ng-container>
     </mat-tab>
-
+    
     <mat-tab>
       <ng-template mat-tab-label>
         <mat-icon class="example-tab-icon">login_rounded </mat-icon>
@@ -217,26 +178,10 @@
       </mat-card>
     </mat-tab>
 
-    <mat-tab *ngIf="standardTokens != undefined">
+    <mat-tab *ngIf="settings.values.developer">
       <ng-template mat-tab-label>
-        <mat-icon class="example-tab-icon">account_balance</mat-icon>
+        <mat-icon class="example-tab-icon">bug_report</mat-icon>
       </ng-template>
-
-      <br>
-
-      <ng-container *ngFor="let token of standardTokens">
-        <mat-card>
-          <mat-card-title>{{token.name}} - {{token.amount | amount}}</mat-card-title>
-          <mat-card-subtitle>{{token.symbol}}</mat-card-subtitle>
-        </mat-card>
-        <mat-divider></mat-divider>
-      </ng-container>
-    </mat-tab>
-
-        <mat-tab *ngIf="settings.values.developer">
-            <ng-template mat-tab-label>
-                <mat-icon class="example-tab-icon">bug_report</mat-icon>
-            </ng-template>
 
       <br />
       <p>Transactions:</p>
@@ -246,23 +191,54 @@
       </p>
     </mat-tab>
 
-        <mat-tab *ngIf="settings.values.developer">
-            <ng-template mat-tab-label>
-                <mat-icon class="example-tab-icon">bug_report</mat-icon>
-            </ng-template>
+    <mat-tab *ngIf="settings.values.developer">
+      <ng-template mat-tab-label>
+        <mat-icon class="example-tab-icon">bug_report</mat-icon>
+      </ng-template>
 
       <br />
       <p>Wallets Persisted State:</p>
 
-            <p>Contains your encrypted secret recovery phrase. Do NOT share this with anyone!</p>
+      <p>Contains your encrypted secret recovery phrase. Do NOT share this with anyone!</p>
 
       <!-- <p>
                 {{uiState.persisted.wallets | json}}
             </p> -->
     </mat-tab>
+    
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon class="example-tab-icon">build_circle</mat-icon>
+      </ng-template>
+
+      <br />
+
+      <mat-nav-list>
+        <a mat-list-item (click)="toggleNetwork()">
+          <mat-icon mat-list-icon>public</mat-icon>
+          <div mat-line>Network Status</div>
+        </a>
+      </mat-nav-list>
+
+      <mat-card *ngIf="networkStatus">
+        <img class="mat-card-avatar network-status-image" [src]="networkStatus.icon" />
+        <mat-card-title>{{ networkStatus.name }} ({{ networkStatus.symbol }})</mat-card-title>
+        <mat-card-subtitle>{{ networkStatus.description }}</mat-card-subtitle>
+        <mat-card-content>
+          <p>Network: {{ networkStatus.node.blockchain.chain }}</p>
+          <p>Height: {{ networkStatus.blockHeight }}</p>
+          <p>Relay Fee: {{ networkStatus.node.network.relayFee }}</p>
+          <p>Memory Pool: {{ networkStatus.node.transactionsInPool }} transactions</p>
+          <p>Connections (on the indexer): {{ networkStatus.node.network.connections }}</p>
+          <p>
+            <a [href]="networkStatus.url" target="_blank">{{ networkStatus.url }}</a>
+          </p>
+        </mat-card-content>
+      </mat-card>
+    </mat-tab>
   </mat-tab-group>
 
-    <!-- {{this.uiState.activeAccount.state.receive | json}} -->
+  <!-- {{this.uiState.activeAccount.state.receive | json}} -->
 
   <!-- First address (for verification):<br>
     <div *ngIf="address">
@@ -271,5 +247,5 @@
 </div>
 
 <div class="page centered" *ngIf="!walletManager.activeAccount">
-    <h3>No active account selected.</h3>
+  <h3>No active account selected.</h3>
 </div>
