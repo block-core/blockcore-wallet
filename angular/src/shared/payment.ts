@@ -29,8 +29,18 @@ export class PaymentRequest {
       options['amount'] = amount.toJSON();
     }
 
-    return { address: address, network: urnScheme, options: options }
+    return { address: address, network: urnScheme, options: options };
   }
 
-  encode(request: object) {}
+  encode(request: any) : string {
+    var address = request.address;
+    delete request.address;
+
+    var network = request.network;
+    delete request.network;
+
+    var query = qs.stringify(request);
+
+    return network + ':' + address + (query ? '?' : '') + query;
+  }
 }

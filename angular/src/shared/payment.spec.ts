@@ -6,15 +6,22 @@ describe('PaymentRequest', () => {
   it('Should encode and decode payment links correctly', async () => {
     const payment = new PaymentRequest();
 
-    payment.encode({
+    const paymentEncoded = payment.encode({
       address: 'tSXDbedw3o79gjijk29dZLNMtcYmymYtoX',
       network: 'tcrs',
       amount: 20.3,
       label: 'Headline label',
       message: 'Main content...',
-      data: 'MzExMzUzNDIzNDY=',
+      data: 'MzExMzUzNDIzNDY',
       id: 4324,
     });
+
+    expect(paymentEncoded).toBeDefined();
+
+    const paymentDecoded = payment.decode(paymentEncoded);
+    expect(paymentDecoded.address).toBe('tSXDbedw3o79gjijk29dZLNMtcYmymYtoX');
+    expect(paymentDecoded.network).toBe('tcrs');
+    expect(paymentDecoded.options.amount).toBe('20.3');
 
     // The payment should not contain HTTP handler prefix (web+pay):
 
@@ -32,5 +39,10 @@ describe('PaymentRequest', () => {
     expect(request2.options.data).toBe('MzExMzUzNDIzNDY');
     expect(request2.options.message).toBe('Invoice Number 5');
     expect(request2.options.id).toBe('4324');
+
+    const request3 = payment.decode('city:Ccoquhaae7u6ASqQ5BiYueASz8EavUXrKn?amount=10&label=Your Local Info&message=Invoice Number 5&data=MzExMzUzNDIzNDY&id=4324');
+    expect(request3.address).toBe('Ccoquhaae7u6ASqQ5BiYueASz8EavUXrKn');
+    expect(request3.network).toBe('city');
+    expect(request3.options.amount).toBe('10');
   });
 });
