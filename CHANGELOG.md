@@ -1,3 +1,13 @@
+## <small>0.0.63 (2022-09-10)</small>
+
+* Add a notification regarding lack of decimal support for tokens ([90fa39b](https://github.com/block-core/blockcore-wallet/commit/90fa39b))
+* Fix issue with links being white in light mode ([b6b2829](https://github.com/block-core/blockcore-wallet/commit/b6b2829))
+* Make sure the URL is in lower-case for tokens ([dc6c3cd](https://github.com/block-core/blockcore-wallet/commit/dc6c3cd))
+* Remove duplicate NFT component ([b48caa2](https://github.com/block-core/blockcore-wallet/commit/b48caa2))
+* Update version and changelog ([9bbbeaa](https://github.com/block-core/blockcore-wallet/commit/9bbbeaa))
+
+
+
 ## <small>0.0.62 (2022-09-09)</small>
 
 * Add notification about chain swap fee ([01ee184](https://github.com/block-core/blockcore-wallet/commit/01ee184))
