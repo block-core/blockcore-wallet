@@ -5,7 +5,7 @@ import { ActionHandler, ActionState } from './action-handler';
 export class PaymentHandler implements ActionHandler {
   action = ['payment'];
 
-  constructor() {}
+  constructor(private backgroundManager: BackgroundManager) {}
 
   async prepare(state: ActionState): Promise<ActionPrepareResult> {
     return {
