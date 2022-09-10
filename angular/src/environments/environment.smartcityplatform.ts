@@ -12,7 +12,7 @@ export const environment: IEnvironment = {
   production: true,
   enableDebugTools: false,
   logLevel: 'info',
-  features: ['wallet'],
+  features: ['wallet', 'handler:pay'],
   releaseUrl: 'https://github.com/CityChainFoundation/smart-city-platform/releases',
   sourceUrl: 'https://github.com/CityChainFoundation/smart-city-platform',
   instance: 'smartcityplatform',

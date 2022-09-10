@@ -32,7 +32,7 @@ export class PaymentRequest {
     return { address: address, network: urnScheme, options: options };
   }
 
-  encode(request: any) : string {
+  encode(request: any): string {
     var address = request.address;
     delete request.address;
 

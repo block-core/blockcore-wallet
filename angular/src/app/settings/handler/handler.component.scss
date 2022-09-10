@@ -1,0 +1,18 @@
+.handlers {
+  display: block;
+  color: red;
+  font-size: 1.2em;
+}
+
+.full-mode .handlers {
+  display: none;
+  visibility: hidden;
+}
+
+.handler-actions {
+  display: none;
+}
+
+.full-mode .handler-actions {
+  display: block;
+}
