@@ -29,13 +29,13 @@ export class PaymentRequest {
 
       // It is not allowed to use comma, must use period.
       if (optionAmount.indexOf(',') > -1) {
-        throw new Error('Invalid amount');
+        throw new Error('Invalid amount.');
       }
 
       const amount = Big(<string>options['amount']);
 
       if (amount.lt(0)) {
-        throw new Error('Invalid amount');
+        throw new Error('Invalid amount.');
       }
 
       // Parse the amount and verify it's a valid Big value.
@@ -55,5 +55,20 @@ export class PaymentRequest {
     var query = qs.stringify(request);
 
     return network + ':' + address + (query ? '?' : '') + query;
+  }
+
+  parseAmount(amount: string) {
+    const number = new Big(amount);
+
+    if (number.e < -8) {
+      throw new Error('Too many decimals.');
+    }
+
+    if (number.e > 10) {
+      throw new Error('Too high value.');
+    }
+
+    const amountValue = number.times(Math.pow(10, 8));
+    return amountValue;
   }
 }

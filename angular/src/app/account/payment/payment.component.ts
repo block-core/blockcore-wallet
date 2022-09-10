@@ -2,10 +2,12 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
+import Big from 'big.js';
 import { Subscription } from 'rxjs';
 import { copyToClipboard } from 'src/app/shared/utilities';
 import { Account, Contact } from 'src/shared';
 import { Network } from 'src/shared/networks';
+import { PaymentRequest } from 'src/shared/payment';
 import { ContactStore } from 'src/shared/store/contacts-store';
 import { NetworksService, SendService, UIState, WalletManager } from '../../services';
 
@@ -19,8 +21,9 @@ export class PaymentComponent implements OnInit, OnDestroy {
   public contact: Contact;
   subscriptions: Subscription[] = [];
   filteredAccounts: Account[];
+  amount: Big;
 
-  constructor(private walletManager: WalletManager, public sendService: SendService, private snackBar: MatSnackBar, private activatedRoute: ActivatedRoute, private router: Router, public uiState: UIState, public networkService: NetworksService, private fb: FormBuilder, private contactStore: ContactStore) {
+  constructor(private paymentRequest: PaymentRequest, private walletManager: WalletManager, public sendService: SendService, private snackBar: MatSnackBar, private activatedRoute: ActivatedRoute, private router: Router, public uiState: UIState, public networkService: NetworksService, private fb: FormBuilder, private contactStore: ContactStore) {
     this.uiState.showBackButton = true;
     this.uiState.goBackHome = false;
   }
@@ -39,6 +42,9 @@ export class PaymentComponent implements OnInit, OnDestroy {
     console.log(this.network);
     console.log(this.uiState.payment);
 
+    this.amount = this.paymentRequest.parseAmount(this.uiState.payment.options.amount);
+    console.log('AMOUNT', this.amount);
+
     var accounts = this.walletManager.activeWallet.accounts;
     this.filteredAccounts = accounts.filter((a) => a.networkType == this.network.id);
 
@@ -56,10 +62,9 @@ export class PaymentComponent implements OnInit, OnDestroy {
     });
   }
 
-  async remove() {
-    this.contactStore.remove(this.contact.id);
-    await this.contactStore.save();
-    this.router.navigateByUrl('/contacts');
+  async cancel() {
+    this.uiState.payment = null;
+    this.router.navigateByUrl('/dashboard');
   }
 
   async sendToUsing(address: string, accountId: string) {

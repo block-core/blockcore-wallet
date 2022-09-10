@@ -1,5 +1,5 @@
 <div class="page">
-  <h1>Payment Request: {{uiState.payment.options.label}}</h1>
+  <h1>Payment Request: {{ uiState.payment.options.label }}</h1>
   <!-- <div class="contact-line" *ngIf="contact.address">
     Address: <strong>{{ contact.address }}</strong>
     <button class="copy-button" mat-icon-button (click)="copy(contact.address)">
@@ -16,14 +16,15 @@
     </button>
   </div> -->
   <p class="selectable">
-  Message: {{uiState.payment.options.message}}<br>
-  <br>
-  Network: {{network.name}}<br>
-  Address: {{uiState.payment.address}}<br>
-  Amount: {{uiState.payment.options.amount | amount}} {{network.symbol}}<br>
-  <br>
-  ID: {{uiState.payment.options.id}}<br>
-  Data: {{uiState.payment.options.data}}</p>
+    Message: {{ uiState.payment.options.message }}<br />
+    <br />
+    Network: {{ network.name }}<br />
+    Address: {{ uiState.payment.address }}<br />
+    Amount: {{ this.amount | amount }} {{ network.symbol }}<br />
+    <br />
+    ID: {{ uiState.payment.options.id }}<br />
+    Data: {{ uiState.payment.options.data }}
+  </p>
 
   <mat-list *ngIf="filteredAccounts.length > 0">
     <mat-list-item *ngFor="let account of filteredAccounts; let i = index" routerLinkActive="active-link">
@@ -32,11 +33,9 @@
     </mat-list-item>
   </mat-list>
 
-  <mat-card *ngIf="filteredAccounts.length == 0">
-    You have no accounts for {{network.name}} ({{network.symbol}}).
-  </mat-card>
+  <mat-card *ngIf="filteredAccounts.length == 0"> You have no accounts for {{ network.name }} ({{ network.symbol }}). </mat-card>
 
   <br /><br />
 
-  <!-- <button class="signup-button" mat-flat-button color="warn" (click)="remove()">Remove</button> -->
+  <button class="signup-button" mat-flat-button color="warn" (click)="cancel()">Cancel</button>
 </div>

@@ -112,6 +112,7 @@ import { StateStore } from 'src/shared/store/state-store';
 import { ActionVaultSetupComponent } from './action/vault-setup/vault-setup.component';
 import { AccountSendAddressComponent } from './account/send/address/send-address.component';
 import { PaymentComponent } from './account/payment/payment.component';
+import { PaymentRequest } from 'src/shared/payment';
 
 // required for AOT compilation
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
@@ -273,6 +274,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     RuntimeService,
     CryptoService,
     CryptoUtility,
+    PaymentRequest,
     {
       provide: SharedManager,
       useFactory: (storage: StorageService, store: WalletStore, networkLoader: NetworkLoader) => new SharedManager(storage, store, networkLoader),
