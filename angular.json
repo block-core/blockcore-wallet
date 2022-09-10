@@ -280,6 +280,12 @@
         "test": {
           "builder": "@angular-builders/custom-webpack:karma",
           "options": {
+            "customWebpackConfig": {
+              "path": "./angular/webpack.config.js",
+              "mergeRules": {
+                "externals": "replace"
+              }
+            },
             "main": "angular/src/test.ts",
             "polyfills": "angular/src/polyfills.ts",
             "tsConfig": "angular/tsconfig.spec.json",
