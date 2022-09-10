@@ -45,6 +45,17 @@ export class PaymentRequest {
     return { address: address, network: urnScheme, options: options };
   }
 
+  transform(request: any) {
+    const address = request.address;
+    const network = request.network;
+
+    const options = request;
+    delete options.address;
+    delete options.network;
+
+    return { address: address, network: network, options: options };
+  }
+
   encode(request: any): string {
     var address = request.address;
     delete request.address;

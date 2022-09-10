@@ -162,7 +162,7 @@
 
       async function connect3() {
         document.getElementById("blockcore-extension-output").innerText = "";
-        const msg = document.getElementById('blockcore-extension-input').value;
+        const msg = document.getElementById("blockcore-extension-input").value;
 
         const blockcore = globalThis.blockcore;
 
@@ -209,13 +209,13 @@
 
       async function connect5() {
         document.getElementById("blockcore-extension-output").innerText = "";
-        const msg = document.getElementById('blockcore-extension-input').value;
+        const msg = document.getElementById("blockcore-extension-input").value;
 
         const blockcore = globalThis.blockcore;
         let signature;
 
         try {
-          signature = await blockcore.request({ method: "signMessage", params: [{ key: 'CdnpNqSeqaXBMVnY1e13Ksijgr6FyWPM9J', scheme: "schnorr", message: msg }] });
+          signature = await blockcore.request({ method: "signMessage", params: [{ key: "CdnpNqSeqaXBMVnY1e13Ksijgr6FyWPM9J", scheme: "schnorr", message: msg }] });
         } catch (err) {
           console.error(err);
           signature = "Error: " + err.message;
@@ -235,16 +235,44 @@
       })();
     </script>
 
-
     <h1>Blockcore Payment</h1>
 
+    Payment using Protocol Handler (web+pay):<br><br>
     <a href="web+pay://tcrs:tSXDbedw3o79gjijk29dZLNMtcYmymYtoX?amount=2&label=Your Local Info&message=Invoice Number 5&data=MzExMzUzNDIzNDY&id=4324">web+pay://tcrs:tSXDbedw3o79gjijk29dZLNMtcYmymYtoX?amount=2&label=Your Local Info&message=Invoice Number 5&data=MzExMzUzNDIzNDY&id=4324</a>
-    <br><br>
+    <br /><br />
     <a href="web+pay://city:Ccoquhaae7u6ASqQ5BiYueASz8EavUXrKn?amount=10&label=Your Local Info&message=Invoice Number 5&data=MzExMzUzNDIzNDY&id=4324">web+pay://city:Ccoquhaae7u6ASqQ5BiYueASz8EavUXrKn?amount=10&label=Your Local Info&message=Invoice Number 5&data=MzExMzUzNDIzNDY&id=4324</a>
-    <br>
+    <br /><br />
+    <button id="paymentButton">Payment using Web Provider</button>
 
+    <script>
+      async function payment() {
+        try {
+          signature = await blockcore.request({
+            method: "payment",
+            params: [
+              {
+                network: "city",
+                amount: 10.5,
+                address: "Ccoquhaae7u6ASqQ5BiYueASz8EavUXrKn",
+                label: "Your Local Info",
+                message: "Invoice Number 5",
+                data: "MzExMzUzNDIzNDY",
+                id: "4324",
+              },
+            ],
+          });
+        } catch (err) {
+          console.error(err);
+          signature = "Error: " + err.message;
+        }
 
+        // PAYMENT REQUESTS CURRENTLY DOES NOT RETURN ANY FEEDBACK!
+        document.getElementById("blockcore-extension-output").innerText = JSON.stringify(signature);
+      }
 
-
+      (function () {
+        document.getElementById("paymentButton").addEventListener("click", payment);
+      })();
+    </script>
   </body>
 </html>

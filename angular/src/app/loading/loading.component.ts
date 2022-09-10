@@ -9,6 +9,7 @@ import { RuntimeService } from '../../shared/runtime.service';
 import { OrchestratorService } from '../services/orchestrator.service';
 import { PaymentRequest } from 'src/shared/payment';
 import { payments } from '@blockcore/blockcore-js';
+import * as qs from 'qs';
 
 @Component({
   selector: 'app-loading',
@@ -23,6 +24,7 @@ export class LoadingComponent implements OnInit, OnDestroy {
     public uiState: UIState,
     // private appManager: ApplicationManagerService,
     private appManager: AppManager,
+    private paymentRequest: PaymentRequest,
     public secure: SecureStateService,
     private router: Router,
     public walletManager: WalletManager,
@@ -154,9 +156,13 @@ export class LoadingComponent implements OnInit, OnDestroy {
 
       // Parse the payment request and keep it in the state until wallet is ready:
       if (parameters.pay) {
-        // console.log('PAY IN URL: ', parameters.pay);
-        const payment = new PaymentRequest();
-        this.uiState.payment = payment.decode(payment.removeHandler(parameters.pay));
+        this.uiState.payment = this.paymentRequest.decode(this.paymentRequest.removeHandler(parameters.pay));
+      } else if (this.uiState.action?.action == 'payment') {
+        const param = this.uiState.action.params[0];
+        this.uiState.payment = this.paymentRequest.transform(param);
+        
+        // Reset the action as payment is not a normal action.
+        this.uiState.action = null;
       }
     }
 
