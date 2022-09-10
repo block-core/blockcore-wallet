@@ -70,6 +70,8 @@ export class PaymentComponent implements OnInit, OnDestroy {
   async sendToUsing(address: string, accountId: string) {
     await this.walletManager.setActiveAccount(accountId);
     this.sendService.sendToAddress = address;
+    this.sendService.sendAmount = this.uiState.payment.options.amount;
+
     this.router.navigate(['/', 'account', 'send']);
   }
 }

@@ -12,6 +12,7 @@ export class SendService {
   loading = false;
   address: string;
   sendToAddress: string;
+  sendAmount: string;
   changeAddress: string;
   transactionHex: string;
   transactionId: string;
@@ -100,8 +101,7 @@ export class SendService {
 
     let fee = this.feeValue;
 
-    if (fee == null)
-    {
+    if (fee == null) {
       fee = Big(0);
     }
 
@@ -169,6 +169,11 @@ export class SendService {
     if (this.sendToAddress) {
       this.address = this.sendToAddress;
       this.sendToAddress = '';
+    }
+
+    if (this.sendAmount) {
+      this.amount = this.sendAmount;
+      this.sendAmount = '';
     }
   }
 }
