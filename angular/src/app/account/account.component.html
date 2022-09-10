@@ -45,7 +45,7 @@
       <button [disabled]="accountHistory.balance == 0" class="half-width" [routerLink]="['/', 'account', 'send']" mat-raised-button>Send</button>
     </mat-card-actions>
     <mat-card-footer>
-      <mat-progress-bar *ngIf="!accountState(walletManager.activeAccount).completedScan" mode="indeterminate"></mat-progress-bar>
+      <mat-progress-bar *ngIf="!accountState(walletManager.activeAccount)?.completedScan" mode="indeterminate"></mat-progress-bar>
       <mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
     </mat-card-footer>
   </mat-card>
@@ -137,7 +137,7 @@
         </mat-card>
       </ng-container>
 
-      <div class="label label-version">Notice: The token API does not support decimals in the current release. Values are shown without decimals in this version.</div>
+      <div class="label label-version">Notice: 1The token API does not support decimals in the current release. Values are shown without decimals in this version.</div>
 
     </mat-tab>
     
