@@ -1,8 +1,5 @@
 import { Component, ChangeDetectorRef, OnInit, OnDestroy, NgZone } from '@angular/core';
-import {
-  CryptoService, UIState, FeatureService, LoggerService, NetworksService,
-  NetworkStatusService, DebugLogService, WalletManager, SecureStateService, CommunicationService, StateService
-} from '../services';
+import { CryptoService, UIState, FeatureService, LoggerService, NetworksService, NetworkStatusService, DebugLogService, WalletManager, SecureStateService, CommunicationService, StateService } from '../services';
 import { ActivatedRoute, Router } from '@angular/router';
 import { copyToClipboard } from '../shared/utilities';
 import { Observable } from 'rxjs';
@@ -20,7 +17,7 @@ export interface Section {
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.css']
+  styleUrls: ['./dashboard.component.css'],
 })
 export class DashboardComponent implements OnInit, OnDestroy {
   mnemonic = '';
@@ -34,7 +31,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   networkStatus$: Observable<NetworkStatus[]>;
   smartContractAccounts: Account[];
   totalCollectablesCount: number;
-  stratisphereUrl: string = "https://stratisphere.com/";
+  stratisphereUrl: string = 'https://stratisphere.com/';
 
   constructor(
     public feature: FeatureService,
@@ -54,8 +51,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
     private accountStateStore: AccountStateStore,
     private ngZone: NgZone,
     private debugLog: DebugLogService,
-    private cd: ChangeDetectorRef) {
-
+    private cd: ChangeDetectorRef
+  ) {
     this.uiState.showBackButton = false;
     this.totalCollectablesCount = 0;
 
@@ -65,13 +62,19 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    // If there is a payment request waiting, we'll do this first:
+    if (this.uiState.payment) {
+      this.router.navigateByUrl('/payment');
+      return;
+    }
+
     this.state.changed$.subscribe((state) => {
       this.ngZone.run(() => {
         this.cd.detectChanges();
       });
     });
 
-    this.activatedRoute.paramMap.subscribe(async params => {
+    this.activatedRoute.paramMap.subscribe(async (params) => {
       const walletId: any = params.get('id');
 
       // If the wallet ID is provided in the URL, use it, if not, leave the existing active wallet.
@@ -88,8 +91,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         }
       }
 
-      this.smartContractAccounts = this.walletManager.activeWallet.accounts
-        .filter((item: Account) => this.network.getNetwork(item.networkType).smartContractSupport);
+      this.smartContractAccounts = this.walletManager.activeWallet.accounts.filter((item: Account) => this.network.getNetwork(item.networkType).smartContractSupport);
     });
 
     // If anything redirected to dashboard without wallet being unlocked, go to home and unlock.
@@ -147,12 +149,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
     copyToClipboard(entries);
   }
 
-  runIndexer() {
-    // const manager = new BackgroundManager();
-    // await manager.runIndexer();
-    const msg = this.communication.createMessage('index', {}, 'background');
-    this.communication.send(msg);
-  }
+  // runIndexer() {
+  //   const msg = this.communication.createMessage('index', {}, 'background');
+  //   this.communication.send(msg);
+  // }
 
   getLink(account: Account) {
     if (account.type == 'identity') {

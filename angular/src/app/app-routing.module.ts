@@ -53,6 +53,7 @@ import { BiometricComponent } from './settings/biometric/biometric.component';
 import { ActionSignVerifiableCredentialComponent } from './action/sign-credential/sign.component';
 import { ActionSignMessageComponent } from './action/sign-message/sign.component';
 import { ActionVaultSetupComponent } from './action/vault-setup/vault-setup.component';
+import { PaymentComponent } from './account/payment/payment.component';
 const routes: Routes = [
   {
     path: '',
@@ -350,6 +351,13 @@ const routes: Routes = [
   {
     path: 'dashboard/:id',
     component: DashboardComponent,
+    resolve: {
+      data: LoadingResolverService,
+    },
+  },
+  {
+    path: 'payment',
+    component: PaymentComponent,
     resolve: {
       data: LoadingResolverService,
     },

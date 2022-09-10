@@ -7,6 +7,8 @@ import { DOCUMENT, Location } from '@angular/common';
 import { combineLatest } from 'rxjs';
 import { RuntimeService } from '../../shared/runtime.service';
 import { OrchestratorService } from '../services/orchestrator.service';
+import { PaymentRequest } from 'src/shared/payment';
+import { payments } from '@blockcore/blockcore-js';
 
 @Component({
   selector: 'app-loading',
@@ -148,6 +150,13 @@ export class LoadingComponent implements OnInit, OnDestroy {
           params: JSON.parse(parameters.params), // Transform the params from string to object here after we've received it through the query string.
           app: parameters.app,
         };
+      }
+
+      // Parse the payment request and keep it in the state until wallet is ready:
+      if (parameters.pay) {
+        // console.log('PAY IN URL: ', parameters.pay);
+        const payment = new PaymentRequest();
+        this.uiState.payment = payment.decode(payment.removeHandler(parameters.pay));
       }
     }
 

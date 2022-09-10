@@ -111,6 +111,7 @@ import { CryptoService, CryptoUtility, NetworkLoader } from './services';
 import { StateStore } from 'src/shared/store/state-store';
 import { ActionVaultSetupComponent } from './action/vault-setup/vault-setup.component';
 import { AccountSendAddressComponent } from './account/send/address/send-address.component';
+import { PaymentComponent } from './account/payment/payment.component';
 
 // required for AOT compilation
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
@@ -180,7 +181,8 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     ExchangeComponent,
     ActionSignMessageComponent,
     ActionSignVerifiableCredentialComponent,
-    ActionVaultSetupComponent
+    ActionVaultSetupComponent,
+    PaymentComponent
   ],
   imports: [
     BrowserModule,

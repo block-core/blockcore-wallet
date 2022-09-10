@@ -7,32 +7,37 @@ import { EnvironmentService } from './environment.service';
 const { v4: uuidv4 } = require('uuid');
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: 'root',
 })
 export class NetworksService {
-    networks: Network[];
-    allNetworks: Network[];
+  networks: Network[];
+  allNetworks: Network[];
 
-    constructor(private env: EnvironmentService, networkLoader: NetworkLoader) {
-        this.networks = networkLoader.getNetworks(env.networks);
-        this.allNetworks = networkLoader.getAllNetworks();
-    }
+  constructor(private env: EnvironmentService, networkLoader: NetworkLoader) {
+    this.networks = networkLoader.getNetworks(env.networks);
+    this.allNetworks = networkLoader.getAllNetworks();
+  }
 
-    getDerivationPathForNetwork(network: Network) {
-        return `m/${network.purpose}'/${network.network}'`;;
-    }
+  getDerivationPathForNetwork(network: Network) {
+    return `m/${network.purpose}'/${network.network}'`;
+  }
 
-    getDerivationPathForAccount(account: Account) {
-        return `m/${account.purpose}'/${account.network}'/${account.index}'`;;
-    }
+  getDerivationPathForAccount(account: Account) {
+    return `m/${account.purpose}'/${account.network}'/${account.index}'`;
+  }
 
-    /** Get the network definition based upon the id, e.g. BTC, STRAX, CRS, CITY. */
-    getNetwork(networkType: string) {
-        return this.networks.find(w => w.id == networkType);
-    }
+  /** Get the network definition based upon the id, e.g. BTC, STRAX, CRS, CITY. Input parameter and network is transformed uppercase for match. */
+  getNetwork(networkType: string) {
+    return this.networks.find((w) => w.id.toUpperCase() == networkType.toUpperCase());
+  }
 
-    /** Get the network definition based upon the id, e.g. BTC, STRAX, CRS, CITY. The purpose defaults to 44. */
-    getNetworkByPurpose(network: number, purpose: number = 44) {
-        return this.networks.find(w => w.network == network && w.purpose == purpose);
-    }
+  /** Get the network definition based upon the symbol, e.g. BTC, STRAX, CRS, CITY. Input parameter and network is transformed uppercase for match. */
+  getNetworkBySymbol(networkType: string) {
+    return this.networks.find((w) => w.symbol.toUpperCase() == networkType.toUpperCase());
+  }
+
+  /** Get the network definition based upon the id, e.g. BTC, STRAX, CRS, CITY. The purpose defaults to 44. */
+  getNetworkByPurpose(network: number, purpose: number = 44) {
+    return this.networks.find((w) => w.network == network && w.purpose == purpose);
+  }
 }

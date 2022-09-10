@@ -517,6 +517,8 @@ interface ActionUrlParameters {
 
   /** The original parameters, can be used by the action UI to display structured content. */
   params: string;
+
+  pay?: string;
 }
 
 export interface Token {

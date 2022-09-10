@@ -8,6 +8,10 @@ export class PaymentRequestData {
 }
 
 export class PaymentRequest {
+  removeHandler(uri: string) {
+    return uri.substring(uri.indexOf('://') + 3);
+  }
+
   decode(uri: string): PaymentRequestData {
     if (uri.indexOf('web+pay://') > -1) {
       throw new Error('Invalid BIP21 URI, should not contain :// prefix: ' + uri);

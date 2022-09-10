@@ -4,6 +4,7 @@ import { ReplaySubject, Subject } from 'rxjs';
 import { Network } from '../../shared/networks';
 import { UIStore } from 'src/shared';
 import { LoggerService } from './logger.service';
+import { PaymentRequestData } from 'src/shared/payment';
 
 @Injectable({
     providedIn: 'root'
@@ -82,6 +83,8 @@ export class UIState {
 
     /** Parsed action entry from the query string parameters. */
     action?: Action;
+
+    payment: PaymentRequestData;
 
     title!: string;
 

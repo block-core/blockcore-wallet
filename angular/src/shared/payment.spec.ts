@@ -44,5 +44,9 @@ describe('PaymentRequest', () => {
     expect(request3.address).toBe('Ccoquhaae7u6ASqQ5BiYueASz8EavUXrKn');
     expect(request3.network).toBe('city');
     expect(request3.options.amount).toBe('10');
+
+    const uri = payment.removeHandler('web+pay://city:Ccoquhaae7u6ASqQ5BiYueASz8EavUXrKn?amount=10&label=Your Local Info&message=Invoice Number 5&data=MzExMzUzNDIzNDY&id=4324');
+    console.log('URI:', uri);
+
   });
 });
