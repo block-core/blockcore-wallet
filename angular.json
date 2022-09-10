@@ -18,8 +18,14 @@
       "prefix": "app",
       "architect": {
         "build": {
-          "builder": "ngx-build-plus:browser",
+          "builder": "@angular-builders/custom-webpack:browser",
           "options": {
+            "customWebpackConfig": {
+              "path": "./angular/webpack.config.js",
+              "mergeRules": {
+                "externals": "replace"
+              }
+            },
             "allowedCommonJsDependencies": [
               "@scure/bip32",
               "@blockcore/blockcore-js",
@@ -248,7 +254,7 @@
           "options": {
             "port": 4201
           },
-          "builder": "ngx-build-plus:dev-server",
+          "builder": "@angular-builders/custom-webpack:dev-server",
           "configurations": {
             "production": {
               "browserTarget": "blockcore-wallet:build:production"
@@ -266,14 +272,20 @@
           "defaultConfiguration": "development"
         },
         "extract-i18n": {
-          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "builder": "@angular-builders/custom-webpack:extract-i18n",
           "options": {
             "browserTarget": "blockcore-wallet:build"
           }
         },
         "test": {
-          "builder": "ngx-build-plus:karma",
+          "builder": "@angular-builders/custom-webpack:karma",
           "options": {
+            "customWebpackConfig": {
+              "path": "./angular/webpack.config.js",
+              "mergeRules": {
+                "externals": "replace"
+              }
+            },
             "main": "angular/src/test.ts",
             "polyfills": "angular/src/polyfills.ts",
             "tsConfig": "angular/tsconfig.spec.json",
