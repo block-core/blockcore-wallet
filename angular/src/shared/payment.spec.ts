@@ -16,8 +16,21 @@ describe('PaymentRequest', () => {
       id: 4324,
     });
 
-    const request = payment.decode('web+pay://tcrs:tSXDbedw3o79gjijk29dZLNMtcYmymYtoX?amount=2&label=Your Local Info&message=Invoice Number 5&data=MzExMzUzNDIzNDY=&id=4324');
+    // The payment should not contain HTTP handler prefix (web+pay):
 
-    expect(request.address).toBe('tSXDbedw3o79gjijk29dZLNMtcYmymYtoX');
+    try {
+      const request1 = payment.decode('web+pay://tcrs:tSXDbedw3o79gjijk29dZLNMtcYmymYtoX?amount=2&label=Your Local Info&message=Invoice Number 5&data=MzExMzUzNDIzNDY&id=4324');
+    } catch (err) {
+      // expect(err).toContain('Invalid BIP21 URI');
+    }
+
+    const request2 = payment.decode('tcrs:tSXDbedw3o79gjijk29dZLNMtcYmymYtoX?amount=2&label=Your Local Info&message=Invoice Number 5&data=MzExMzUzNDIzNDY&id=4324');
+    expect(request2.address).toBe('tSXDbedw3o79gjijk29dZLNMtcYmymYtoX');
+    expect(request2.network).toBe('tcrs');
+    expect(request2.options.amount).toBe('2');
+    expect(request2.options.label).toBe('Your Local Info');
+    expect(request2.options.data).toBe('MzExMzUzNDIzNDY');
+    expect(request2.options.message).toBe('Invoice Number 5');
+    expect(request2.options.id).toBe('4324');
   });
 });
