@@ -20,7 +20,7 @@ export class PaymentComponent implements OnInit, OnDestroy {
   subscriptions: Subscription[] = [];
   filteredAccounts: Account[];
 
-  constructor(private walletManager: WalletManager, public sendService: SendService, private snackBar: MatSnackBar, private activatedRoute: ActivatedRoute, private router: Router, private uiState: UIState, public networkService: NetworksService, private fb: FormBuilder, private contactStore: ContactStore) {
+  constructor(private walletManager: WalletManager, public sendService: SendService, private snackBar: MatSnackBar, private activatedRoute: ActivatedRoute, private router: Router, public uiState: UIState, public networkService: NetworksService, private fb: FormBuilder, private contactStore: ContactStore) {
     this.uiState.showBackButton = true;
     this.uiState.goBackHome = false;
   }

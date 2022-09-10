@@ -1,5 +1,5 @@
 <div class="page">
-  <h1>Payment Request</h1>
+  <h1>Payment Request: {{uiState.payment.options.label}}</h1>
   <!-- <div class="contact-line" *ngIf="contact.address">
     Address: <strong>{{ contact.address }}</strong>
     <button class="copy-button" mat-icon-button (click)="copy(contact.address)">
@@ -15,11 +15,20 @@
       <mat-icon>content_copy</mat-icon>
     </button>
   </div> -->
+  <p class="selectable">
+  Message: {{uiState.payment.options.message}}<br>
+  <br>
+  Network: {{network.name}}<br>
+  Address: {{uiState.payment.address}}<br>
+  Amount: {{uiState.payment.options.amount | amount}} {{network.symbol}}<br>
+  <br>
+  ID: {{uiState.payment.options.id}}<br>
+  Data: {{uiState.payment.options.data}}</p>
 
   <mat-list *ngIf="filteredAccounts.length > 0">
     <mat-list-item *ngFor="let account of filteredAccounts; let i = index" routerLinkActive="active-link">
       <mat-icon mat-list-icon>{{ account.icon }}</mat-icon>
-      <div mat-line class="name-field"><button class="half-width" (click)="sendToUsing(contact.address, account.identifier)" mat-raised-button>Send using this account</button>&nbsp;&nbsp;&nbsp;{{ account.name | truncate }}</div>
+      <div mat-line class="name-field"><button class="half-width" (click)="sendToUsing(uiState.payment.address, account.identifier)" mat-raised-button>Select account</button>&nbsp;&nbsp;&nbsp;{{ account.name | truncate }}</div>
     </mat-list-item>
   </mat-list>
 

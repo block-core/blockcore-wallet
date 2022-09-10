@@ -7,6 +7,7 @@ export class PaymentRequestData {
   options: any;
 }
 
+/** Implements the BIP21 with some extra features. https://github.com/bitcoin/bips/blob/master/bip-0021.mediawiki */
 export class PaymentRequest {
   removeHandler(uri: string) {
     return uri.substring(uri.indexOf('://') + 3);
@@ -24,7 +25,15 @@ export class PaymentRequest {
     var options = qs.parse(query);
 
     if (options['amount']) {
+      const optionAmount = <string>options['amount'];
+
+      // It is not allowed to use comma, must use period.
+      if (optionAmount.indexOf(',') > -1) {
+        throw new Error('Invalid amount');
+      }
+
       const amount = Big(<string>options['amount']);
+
       if (amount.lt(0)) {
         throw new Error('Invalid amount');
       }
