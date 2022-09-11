@@ -1,4 +1,4 @@
-@import "~@angular/material/theming";
+@import "@angular/material/theming";
 
 @include mat-core();
 
@@ -278,11 +278,11 @@ select {
   background-color: #a3a5a7c2;
 }
 
-.network-status { font-size: 0.6em;} 
-.network-status-syncing { color: orange; } 
-.network-status-online { color: #22a848; }  
-.network-status-error { color: #a83222; } 
-.network-status-offline { color: #a83222; } 
+.network-status { font-size: 0.6em;}
+.network-status-syncing { color: orange; }
+.network-status-online { color: #22a848; }
+.network-status-error { color: #a83222; }
+.network-status-offline { color: #a83222; }
 .network-status-unknown { color: gray; }
 
 .icon-warn {
