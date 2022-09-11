@@ -1,9 +1,14 @@
-import { Injectable, OnInit } from '@angular/core';
+import { Injectable, OnInit, NgZone } from '@angular/core';
+import { Router } from '@angular/router';
+import { Message } from 'src/shared';
 import { BackgroundManager, ProcessResult } from 'src/shared/background-manager';
 import { SharedManager } from 'src/shared/shared-manager';
 import { RunState } from 'src/shared/task-runner';
 import { CommunicationService } from './communication.service';
 import { EventBus } from './event-bus';
+import { SettingsService } from './settings.service';
+import { StateService } from './state.service';
+import { WalletManager } from './wallet-manager';
 
 @Injectable({
   providedIn: 'root',
@@ -16,30 +21,90 @@ export class FrontendService implements OnInit {
   private networkWatcherRef: any;
   private indexing: boolean;
 
-  constructor(private events: EventBus, private communication: CommunicationService, private sharedManager: SharedManager) {
+  constructor(private ngZone: NgZone, private walletManager: WalletManager, private events: EventBus, private router: Router, private state: StateService, private settings: SettingsService, private communication: CommunicationService, private sharedManager: SharedManager) {
     this.events.subscribeAll().subscribe(async (message) => {
       console.log('ALL EVENTS', message);
-      //   this.ngZone.run(async () => {
-      //     // Compared to the extension based messaging, we don't have response messages.
-      //     // this.logger.debug(`Process message:`, message);
-      //     await this.handleMessage(message.data);
-      //   });
 
-      if (message.key === 'index') {
-        await this.executeIndexer();
+      this.ngZone.run(async () => {
+        // Compared to the extension based messaging, we don't have response messages.
+        // this.logger.debug(`Process message:`, message);
+        await this.handleMessage(message.data);
+      });
+    });
+
+    // events.subscribe('activated').subscribe(async () => {
+    // });
+
+    // events.subscribe('keep-alive').subscribe(async () => {
+    // });
+  }
+
+  async handleMessage(message: Message) {
+    try {
+      switch (message.type) {
+        case 'index': {
+          await this.executeIndexer();
+          return 'ok';
+        }
+        case 'activated': {
+          await this.networkStatusWatcher();
+          await this.executeIndexer();
+          return 'ok';
+        }
+        case 'keep-alive': {
+          console.log('keep-alive!!!');
+          return 'ok';
+        }
+        case 'updated': {
+          // console.log('SERVICE WORKER HAS FINISHED INDEXING, but no changes to the data, but we get updated wallet info.', message.data);
+          await this.state.update();
+          return 'ok';
+        }
+        case 'indexed': {
+          // console.log('SERVICE WORKER HAS FINISHED INDEXING!!! WE MUST RELOAD STORES!', message.data);
+          await this.state.refresh();
+          return 'ok';
+        }
+        case 'reload': {
+          // console.log('Wallet / Account might be deleted, so we must reload state.');
+          await this.state.reload();
+          return 'ok';
+        }
+        case 'network-updated': {
+          // console.log('Network status was updated, reload the networkstatus store!');
+          await this.state.reloadStore('networkstatus');
+          return 'ok';
+        }
+        case 'store-reload': {
+          console.log(`Specific store was requested to be updated: ${message.data}`);
+          await this.state.reloadStore(message.data);
+
+          if (message.data === 'setting') {
+            await this.settings.update();
+          }
+
+          return 'ok';
+        }
+        case 'timeout': {
+          // Timeout was reached in the background. There is already logic listening to the session storage
+          // that will reload state and redirect to home (unlock) if needed, so don't do that here. It will
+          // cause a race condition on loading new state if redirect is handled here.
+          console.log('Timeout was reached in the foreground service.');
+
+          if (this.walletManager.activeWallet) {
+            this.walletManager.lockWallet(this.walletManager.activeWallet.id);
+          }
+
+          this.router.navigateByUrl('/home');
+          return true;
+        }
+        default:
+          console.log(`The message type ${message.type} is not known.`);
+          return true;
       }
-    });
-
-    events.subscribe('activated').subscribe(async () => {
-      console.log('ACTIVATED!!!');
-      await this.networkStatusWatcher();
-      await this.executeIndexer();
-    });
-
-    events.subscribe('keep-alive').subscribe(async () => {
-      console.log('keep-alive!!!');
-      //   await this.executeIndexer();
-    });
+    } catch (error: any) {
+      return { error: { message: error.message, stack: error.stack } };
+    }
   }
 
   ngOnInit(): void {}
@@ -152,7 +217,7 @@ export class FrontendService implements OnInit {
     if (this.indexing) {
       return;
     }
-  
+
     // If there are multiple requests incoming to stop the watcher at the same time
     // they will all simply mark the watch manager to stop processing, which will
     // automatically start a new instance when finished.
@@ -161,15 +226,15 @@ export class FrontendService implements OnInit {
       this.watchManager.stop();
       // console.log('Calling to stop watch manager...');
     } else {
-        this.watchManager = new BackgroundManager(this.sharedManager);
-  
+      this.watchManager = new BackgroundManager(this.sharedManager);
+
       // Whenever the manager has successfully stopped, restart the watcher process.
       this.watchManager.onStopped = () => {
         // console.log('Watch Manager actually stopped, re-running!!');
         this.watchManager = null;
         this.runWatcher();
       };
-  
+
       this.watchManager.onUpdates = (status: ProcessResult) => {
         if (status.changes) {
           const msg = {
@@ -195,10 +260,10 @@ export class FrontendService implements OnInit {
           this.communication.send(msg);
         }
       };
-  
+
       let runState: RunState = {};
-  
+
       await this.watchManager.runWatcher(runState);
     }
-  };
+  }
 }

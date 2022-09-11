@@ -42,13 +42,15 @@ export class CommunicationService {
         });
       });
     } else {
-      this.events.subscribeAll().subscribe(async (message) => {
-        this.ngZone.run(async () => {
-          // Compared to the extension based messaging, we don't have response messages.
-          // this.logger.debug(`Process message:`, message);
-          await this.handleMessage(message.data);
-        });
-      });
+      console.log('Running in web mode, event handling is processes by FrontEnd Service.');
+
+      // this.events.subscribeAll().subscribe(async (message) => {
+      //   this.ngZone.run(async () => {
+      //     // Compared to the extension based messaging, we don't have response messages.
+      //     // this.logger.debug(`Process message:`, message);
+      //     await this.handleMessage(message.data);
+      //   });
+      // });
     }
   }
 
@@ -91,88 +93,9 @@ export class CommunicationService {
     // chrome.tabs.query({}, (tabs) => tabs.forEach(tab => chrome.tabs.sendMessage(tab.id, message)));
   }
 
-  async handleMessage(message: Message) {
-    // this.logger.info('CommunicationService:onMessage: ', message);
-
-    // if (message.target !== 'tabs') {
-    //     console.log('This message is not handled by the tabs (extension) logic.');
-    //     return null;
-    // }
-
-    try {
-      switch (message.type) {
-        case 'publickey': {
-          return '22222';
-        }
-        case 'login': {
-          return 'success';
-        }
-        case 'updated': {
-          // console.log('SERVICE WORKER HAS FINISHED INDEXING, but no changes to the data, but we get updated wallet info.', message.data);
-          await this.state.update();
-          return 'ok';
-        }
-        case 'indexed': {
-          // console.log('SERVICE WORKER HAS FINISHED INDEXING!!! WE MUST RELOAD STORES!', message.data);
-          await this.state.refresh();
-          return 'ok';
-        }
-        case 'reload': {
-          // console.log('Wallet / Account might be deleted, so we must reload state.');
-          await this.state.reload();
-          return 'ok';
-        }
-        case 'network-updated': {
-          // console.log('Network status was updated, reload the networkstatus store!');
-          await this.state.reloadStore('networkstatus');
-          return 'ok';
-        }
-        case 'store-reload': {
-          console.log(`Specific store was requested to be updated: ${message.data}`);
-          await this.state.reloadStore(message.data);
-
-          if (message.data === 'setting') {
-            await this.settings.update();
-          }
-
-          return 'ok';
-        }
-        case 'timeout': {
-          // Timeout was reached in the background. There is already logic listening to the session storage
-          // that will reload state and redirect to home (unlock) if needed, so don't do that here. It will
-          // cause a race condition on loading new state if redirect is handled here.
-          console.log('Timeout was reached in the background service.');
-          this.router.navigateByUrl('/home');
-          return true;
-        }
-        default:
-          console.log(`The message type ${message.type} is not known.`);
-          return true;
-      }
-    } catch (error: any) {
-      return { error: { message: error.message, stack: error.stack } };
-    }
-
-    return true;
-  }
-
   async handleInternalMessage(message: Message, sender: chrome.runtime.MessageSender) {
-    // this.logger.info('CommunicationService:onMessage: ', message);
-    // this.logger.info('CommunicationService:onMessage:sender: ', sender);
-
-    // if (message.target !== 'tabs') {
-    //     console.log('This message is not handled by the tabs (extension) logic.');
-    //     return null;
-    // }
-
     try {
       switch (message.type) {
-        case 'publickey': {
-          return '3333333';
-        }
-        case 'login': {
-          return 'success';
-        }
         case 'updated': {
           // console.log('SERVICE WORKER HAS FINISHED INDEXING, but no changes to the data, but we get updated wallet info.', message.data);
           // await this.state.update();
