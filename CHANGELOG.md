@@ -1,3 +1,14 @@
+## <small>0.0.67 (2022-09-11)</small>
+
+* Add basic UI to generate payment request ([6580bd4](https://github.com/block-core/blockcore-wallet/commit/6580bd4))
+* Add more parameters for request payment ([9c5699e](https://github.com/block-core/blockcore-wallet/commit/9c5699e))
+* Fix issue with chrome extension message handler throwing errors ([a12e615](https://github.com/block-core/blockcore-wallet/commit/a12e615))
+* Remove QR box that has created issues on some devices and sizes ([6405d9d](https://github.com/block-core/blockcore-wallet/commit/6405d9d)), closes [#201](https://github.com/block-core/blockcore-wallet/issues/201)
+* Update icons for receive tabs ([9cc51e8](https://github.com/block-core/blockcore-wallet/commit/9cc51e8))
+* Update version and changelog ([be935a9](https://github.com/block-core/blockcore-wallet/commit/be935a9))
+
+
+
 ## <small>0.0.66 (2022-09-11)</small>
 
 * Fix bug with payment requests opened in PWA mode ([db4ba48](https://github.com/block-core/blockcore-wallet/commit/db4ba48))
