@@ -6,15 +6,14 @@
 
     <br>
     <h2>{{ 'App.EnterPassordToUnlock' | translate }}</h2>
-
+    <br>
     <mat-form-field appearance="outline" class="input-full-width">
         <mat-label>{{ 'App.Password' | translate }}</mat-label>
         <input matInput type="password" [(ngModel)]="unlockPassword" (keydown.enter)="unlock()">
     </mat-form-field>
 
-    <div class="error-list">
+    <div class="error-list" *ngIf="error">
         <mat-chip-list *ngIf="error">
-
             <mat-chip *ngIf="error" color="warn" selected (removed)="removeError()">{{error}}
                 <mat-icon matChipRemove>cancel</mat-icon>
             </mat-chip>
