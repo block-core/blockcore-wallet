@@ -34,7 +34,6 @@ export class QrScanDialog implements OnInit {
   async ngOnInit() {
     this.config = {
       fps: 10,
-      qrbox: 400,
       formatsToSupport: [Html5QrcodeSupportedFormats.QR_CODE],
     };
 
