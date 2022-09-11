@@ -18,7 +18,6 @@ import { SettingsService } from './settings.service';
 import { BehaviorSubject, delay, Observable, of } from 'rxjs';
 import { NetworkLoader } from '../../shared/network-loader';
 import { Network } from '../../shared/networks';
-import { CommunicationService } from '.';
 import { AccountHistoryStore, AddressStore, AddressWatchStore, MessageService, WalletStore } from 'src/shared';
 import Big from 'big.js';
 import { StorageService } from '../../shared/storage.service';
@@ -64,7 +63,6 @@ export class WalletManager {
     private addressWatchStore: AddressWatchStore,
     private accountHistoryStore: AccountHistoryStore,
     private settings: SettingsService,
-    private communication: CommunicationService,
     private unspentService: UnspentOutputService,
     private storage: StorageService,
     private accountStateStore: AccountStateStore,

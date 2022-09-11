@@ -1,16 +1,27 @@
-<div class="page centered">
-  <h2>Receive {{ network.symbol }}</h2>
+<mat-tab-group class="tabs" mat-stretch-tabs>
+  <mat-tab>
+    <ng-template mat-tab-label> <mat-icon class="example-tab-icon">build_circle</mat-icon>&nbsp;Receive </ng-template>
 
-  <img [src]="qrCode" class="qr-code" />
+    <div class="page centered">
+      <h2>Receive {{ network.symbol }}</h2>
 
-  <mat-card class="address" [class.mat-elevation-z8]="true"
-    >{{ address }}
-    <button class="copy-button" mat-icon-button (click)="copy()">
-      <mat-icon>content_copy</mat-icon>
-    </button>
-  </mat-card>
+      <img [src]="qrCode" class="qr-code" />
 
-  <button class="purchase-button" *ngIf="network.id === 'STRAX'" mat-raised-button (click)="openExolix(address, network)">Buy with Exolix</button>
+      <mat-card class="address" [class.mat-elevation-z8]="true"
+        >{{ address }}
+        <button class="copy-button" mat-icon-button (click)="copy()">
+          <mat-icon>content_copy</mat-icon>
+        </button>
+      </mat-card>
 
-  <p class="mat-caption network-info">This address can only be used to receive {{ network.symbol }} on the {{ network.name }} network.</p>
-</div>
+      <button class="purchase-button" *ngIf="network.id === 'STRAX'" mat-raised-button (click)="openExolix(address, network)">Buy with Exolix</button>
+
+      <p class="mat-caption network-info">This address can only be used to receive {{ network.symbol }} on the {{ network.name }} network.</p>
+    </div>
+  </mat-tab>
+
+  <mat-tab>
+    <ng-template mat-tab-label> <mat-icon class="example-tab-icon">build_circle</mat-icon>&nbsp;Payment </ng-template>
+    Coming soon
+  </mat-tab>
+</mat-tab-group>
