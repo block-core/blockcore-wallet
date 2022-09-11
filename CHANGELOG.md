@@ -1,4 +1,18 @@
-## <small>0.0.64 (2022-09-11)</small>
+## <small>0.0.65 (2022-09-11)</small>
+
+* Added protocol_handlers to manifest files (#227) ([18a984b](https://github.com/block-core/blockcore-wallet/commit/18a984b)), closes [#227](https://github.com/block-core/blockcore-wallet/issues/227)
+* Fix imports for tests ([7767dcc](https://github.com/block-core/blockcore-wallet/commit/7767dcc))
+* Improve message handling and processing of query parameters ([ed83875](https://github.com/block-core/blockcore-wallet/commit/ed83875))
+* Minor UI tweaks for unlock screen ([d2a3f5b](https://github.com/block-core/blockcore-wallet/commit/d2a3f5b))
+* Remove duplicate event handlers ([b077c52](https://github.com/block-core/blockcore-wallet/commit/b077c52))
+* Rempve  '~'  from imports '~@angular/material/theming' (#225) ([052554c](https://github.com/block-core/blockcore-wallet/commit/052554c)), closes [#225](https://github.com/block-core/blockcore-wallet/issues/225)
+* Tunes the create wallet UI a little bit ([8a4e987](https://github.com/block-core/blockcore-wallet/commit/8a4e987))
+* Update path for protocol handler ([7a54be1](https://github.com/block-core/blockcore-wallet/commit/7a54be1))
+* Update version and changelog ([6bec0c1](https://github.com/block-core/blockcore-wallet/commit/6bec0c1))
+
+
+
+## <small>0.0.64 (2022-09-10)</small>
 
 * Add logic to the PaymentRequest class ([8b82421](https://github.com/block-core/blockcore-wallet/commit/8b82421))
 * Add payment request support to Web Provider ([1884f04](https://github.com/block-core/blockcore-wallet/commit/1884f04))
