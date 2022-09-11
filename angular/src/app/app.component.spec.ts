@@ -69,13 +69,13 @@ import { AccountSendSidechainConfirmComponent } from './account/send-sidechain/c
 import { AccountSendSidechainSuccessComponent } from './account/send-sidechain/success/send-success.component';
 import { AccountSendSidechainSendingComponent } from './account/send-sidechain/sending/send-sending.component';
 import { LoggerModule, NgxLoggerLevel, TOKEN_LOGGER_WRITER_SERVICE } from "ngx-logger";
-import { LogWriterService, EnvironmentService, NetworkLoader } from './services';
+import { LogWriterService, EnvironmentService } from './services';
 import { TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { HttpClient } from '@angular/common/http';
 import { NetworkStatusComponent } from './shared/network-status/network-status.component';
 import { IEnvironment } from '../shared/interfaces';
-import { AccountHistoryStore, AccountStateStore, ActionStore, AddressIndexedStore, AddressStore, AddressWatchStore, NetworkStatusStore, SettingStore, TransactionStore, UIStore, WalletStore } from 'src/shared';
+import { AccountHistoryStore, AccountStateStore, ActionStore, AddressIndexedStore, AddressStore, AddressWatchStore, NetworkLoader, NetworkStatusStore, SettingStore, TransactionStore, UIStore, WalletStore } from 'src/shared';
 
 // required for AOT compilation
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
