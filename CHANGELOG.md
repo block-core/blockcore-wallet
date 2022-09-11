@@ -1,3 +1,22 @@
+## <small>0.0.64 (2022-09-11)</small>
+
+* Add logic to the PaymentRequest class ([8b82421](https://github.com/block-core/blockcore-wallet/commit/8b82421))
+* Add payment request support to Web Provider ([1884f04](https://github.com/block-core/blockcore-wallet/commit/1884f04))
+* Attempt to no longer rely on ngx-build-plus (#222) ([c1298cb](https://github.com/block-core/blockcore-wallet/commit/c1298cb)), closes [#222](https://github.com/block-core/blockcore-wallet/issues/222)
+* Fix issue with "completedScan" error ([a8e657b](https://github.com/block-core/blockcore-wallet/commit/a8e657b)), closes [#188](https://github.com/block-core/blockcore-wallet/issues/188)
+* Fix syntax error ([9a094cb](https://github.com/block-core/blockcore-wallet/commit/9a094cb))
+* Forward the amount to send dialog ([2224858](https://github.com/block-core/blockcore-wallet/commit/2224858))
+* Handle amount in payment request ([12f30f5](https://github.com/block-core/blockcore-wallet/commit/12f30f5))
+* Handle routing of payment request ([157f182](https://github.com/block-core/blockcore-wallet/commit/157f182))
+* Hide the HTTP Protocol Handler from extension popup window ([db35b42](https://github.com/block-core/blockcore-wallet/commit/db35b42))
+* Implement payment decode ([1833757](https://github.com/block-core/blockcore-wallet/commit/1833757))
+* Implement validation according to BIP21 ([5c5c1bb](https://github.com/block-core/blockcore-wallet/commit/5c5c1bb))
+* Make the handler URL selectable ([43f3c2d](https://github.com/block-core/blockcore-wallet/commit/43f3c2d))
+* Remove duplicate warnings ([2801c98](https://github.com/block-core/blockcore-wallet/commit/2801c98))
+* Update version and changelog ([15f2242](https://github.com/block-core/blockcore-wallet/commit/15f2242))
+
+
+
 ## <small>0.0.63 (2022-09-10)</small>
 
 * Add a notification regarding lack of decimal support for tokens ([90fa39b](https://github.com/block-core/blockcore-wallet/commit/90fa39b))
