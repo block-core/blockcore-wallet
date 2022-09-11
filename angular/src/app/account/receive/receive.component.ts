@@ -49,6 +49,14 @@ export class AccountReceiveComponent implements OnInit, OnDestroy {
       addressInput: new UntypedFormControl('', [Validators.required, Validators.minLength(6)]),
       // changeAddressInput: new UntypedFormControl('', [InputValidators.address(this.sendService, this.addressValidation)]),
       amountInput: new UntypedFormControl('', [Validators.required, Validators.min(0), Validators.pattern(/^-?(0|[0-9]+[.]?[0-9]*)?$/)]),
+
+      // TODO: Tune the max lengths, for now we'll make them fairly small.
+      labelInput: new UntypedFormControl('', [Validators.maxLength(42)]),
+      messageInput: new UntypedFormControl('', [Validators.maxLength(100)]),
+
+      dataInput: new UntypedFormControl('', [Validators.maxLength(80)]), // OP_RETURN, allows for unicode input, which will become more than 80...
+      identifierInput: new UntypedFormControl('', [Validators.maxLength(100)]),
+
       // TODO: Make an custom validator that sets form error when fee input is too low.
       // feeInput: new UntypedFormControl(this.sendService.getNetworkFee(), [Validators.required, Validators.min(0), Validators.pattern(/^-?(0|[0-9]+[.]?[0-9]*)?$/)]),
     });
@@ -90,9 +98,15 @@ export class AccountReceiveComponent implements OnInit, OnDestroy {
 
       // web+pay://city:Ccoquhaae7u6ASqQ5BiYueASz8EavUXrKn?amount=10&label=Your Local Info&message=Invoice Number 5&data=MzExMzUzNDIzNDY&id=4324
       const uri = this.payment.encode({
-        address: this.paymentAddress,
+        address: this.form.controls['addressInput'].value,
         network: network,
-        options: [],
+        options: {
+          amount: this.form.controls['amountInput'].value,
+          label: this.form.controls['labelInput'].value,
+          message: this.form.controls['messageInput'].value,
+          data: this.form.controls['dataInput'].value,
+          id: this.form.controls['identifierInput'].value,
+        },
       });
 
       // Should this be prefixed with web+pay? Probably not.

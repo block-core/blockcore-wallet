@@ -39,7 +39,7 @@
 
         <mat-form-field class="input-full-width" appearance="outline">
           <mat-label>Address</mat-label>
-          <input matInput formControlName="addressInput" [(ngModel)]="paymentAddress" required />
+          <input matInput formControlName="addressInput" [(ngModel)]="paymentAddress" />
           <mat-error *ngIf="form.controls['addressInput'].errors?.['invalid']">Address is invalid format.</mat-error>
           <mat-error *ngIf="form.controls['addressInput'].errors?.['required']">Address is required.</mat-error>
         </mat-form-field>
@@ -48,12 +48,36 @@
 
         <mat-form-field class="input-full-width" appearance="outline">
           <mat-label>Amount</mat-label>
-          <input matInput formControlName="amountInput" [(ngModel)]="amount" required />
+          <input matInput formControlName="amountInput" [(ngModel)]="amount" />
           <mat-error *ngIf="form.controls['amountInput'].errors?.['min']">Amount cannot be negative.</mat-error>
           <mat-error *ngIf="form.controls['amountInput'].errors?.['required']">Amount is required and must be correctly entered.</mat-error>
           <mat-error *ngIf="form.controls['amountInput'].errors?.['tooManyDecimals']">The value of amount cannot have more than 8 decimals.</mat-error>
           <mat-error *ngIf="form.controls['amountInput'].errors?.['tooHighValue']">The value of amount must be below 100000000000.</mat-error>
           <mat-error *ngIf="form.controls['amountInput'].errors?.['tooHighAmount']">Insufficient funds available.</mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="input-full-width" appearance="outline">
+          <mat-label>Label</mat-label>
+          <input matInput formControlName="labelInput" />
+          <mat-error *ngIf="form.controls['labelInput'].errors?.['invalid']">Label is invalid format.</mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="input-full-width" appearance="outline">
+          <mat-label>Message</mat-label>
+          <input matInput formControlName="messageInput" />
+          <mat-error *ngIf="form.controls['messageInput'].errors?.['invalid']">Message is invalid format.</mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="input-full-width" appearance="outline">
+          <mat-label>ID</mat-label>
+          <input matInput formControlName="identifierInput" />
+          <mat-error *ngIf="form.controls['identifierInput'].errors?.['invalid']">Identifier is invalid format.</mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="input-full-width" appearance="outline">
+          <mat-label>Data</mat-label>
+          <input matInput formControlName="dataInput" />
+          <mat-error *ngIf="form.controls['dataInput'].errors?.['invalid']">Data is invalid format.</mat-error>
         </mat-form-field>
 
         <img [src]="qrPayment" class="qr-code" />
