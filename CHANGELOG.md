@@ -1,3 +1,10 @@
+## <small>0.0.66 (2022-09-11)</small>
+
+* Fix bug with payment requests opened in PWA mode ([db4ba48](https://github.com/block-core/blockcore-wallet/commit/db4ba48))
+* Update version and changelog ([422a955](https://github.com/block-core/blockcore-wallet/commit/422a955))
+
+
+
 ## <small>0.0.65 (2022-09-11)</small>
 
 * Added protocol_handlers to manifest files (#227) ([18a984b](https://github.com/block-core/blockcore-wallet/commit/18a984b)), closes [#227](https://github.com/block-core/blockcore-wallet/issues/227)
