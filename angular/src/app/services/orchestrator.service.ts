@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { SharedManager } from 'src/shared/shared-manager';
-import { EventBus } from './event-bus';
+import { EventBus } from '../../shared/event-bus';
 import { LoggerService } from './logger.service';
 
 @Injectable({
@@ -23,12 +23,7 @@ export class OrchestratorService {
     // This is the interval that checks lock timeout in the UI. There is additionally a similar call in background.ts.
     setInterval(async () => {
       this.logger.debug('periodic interval called.');
-      const becameUnlocked = await this.shared.checkLockTimeout();
-
-      if (becameUnlocked) {
-        const msg = this.events.createMessage('timeout');
-        this.events.publish(msg.type, msg);
-      }
+      await this.shared.checkLockTimeout();
     }, 60000); // 'periodic', 1 minute
 
     // setInterval(() => {

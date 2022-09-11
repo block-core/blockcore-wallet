@@ -1,8 +1,7 @@
 import { Injectable } from "@angular/core";
 import Big from "big.js";
-import { Account, AccountUnspentTransactionOutput, Address, SettingStore, UnspentTransactionOutput } from "src/shared";
+import { Account, AccountUnspentTransactionOutput, Address, NetworkLoader, SettingStore, UnspentTransactionOutput } from "src/shared";
 import { AccountStateStore } from "src/shared/store/account-state-store";
-import { NetworkLoader } from ".";
 import { LoggerService } from "./logger.service";
 
 @Injectable({

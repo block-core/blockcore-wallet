@@ -1,9 +1,10 @@
 import { Component, OnInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { UIState, CryptoService, CommunicationService, IconService, NetworksService, WalletManager, NetworkStatusService } from '../../services';
+import { UIState, CryptoService, IconService, NetworksService, WalletManager, NetworkStatusService } from '../../services';
 import { Account } from '../../../shared/interfaces';
 import { Router } from '@angular/router';
 import { Network } from '../../../shared/networks';
+import { MessageService } from 'src/shared';
 const { v4: uuidv4 } = require('uuid');
 
 @Component({
@@ -43,7 +44,7 @@ export class AccountCreateComponent implements OnInit, OnDestroy {
     private router: Router,
     public icons: IconService,
     public networkService: NetworksService,
-    private communication: CommunicationService,
+    private message: MessageService,
     public walletManager: WalletManager,
     private networkStatusService: NetworkStatusService,
     private cd: ChangeDetectorRef
@@ -174,7 +175,7 @@ export class AccountCreateComponent implements OnInit, OnDestroy {
 
     // Make sure we get a recent state of the network user added account on. If this is the first time the user have added
     // account from this network, this will ensure that we have a status as early as possible.
-    this.communication.send(this.communication.createMessage('network', { accounts: [account] }));
+    this.message.send(this.message.createMessage('network', { accounts: [account] }));
     // await this.networkStatusService.updateAll([account]); // TODO: This should perhaps not send single account, but all accounts.
 
     if (account.type == 'identity') {

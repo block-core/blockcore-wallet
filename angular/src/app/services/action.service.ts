@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Action, ActionMessage, ActionStore } from 'src/shared';
+import { Action, ActionMessage, ActionStore, MessageService } from 'src/shared';
 import { CommunicationService } from './communication.service';
 import { UIState } from './ui-state.service';
 import { WalletManager } from './wallet-manager';
@@ -8,7 +8,7 @@ import { WalletManager } from './wallet-manager';
   providedIn: 'root',
 })
 export class ActionService {
-  constructor(private communication: CommunicationService, private store: ActionStore, public uiState: UIState, public walletManager: WalletManager) {}
+  constructor(private communication: CommunicationService, private message: MessageService, private store: ActionStore, public uiState: UIState, public walletManager: WalletManager) {}
 
   accountId: string;
   keyId: string;
@@ -72,6 +72,6 @@ export class ActionService {
     };
 
     // Inform the provider script that user has signed the data.
-    this.communication.send(reply);
+    this.message.send(reply);
   }
 }

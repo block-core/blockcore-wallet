@@ -10,6 +10,7 @@ import { FrontendService } from './services/frontend.service';
 import { AppUpdateService } from './services/app-update.service';
 import { ActionService } from './services/action.service';
 import { DisableRightClickService } from './services/disable-right-click.service';
+import { MessageService } from 'src/shared';
 
 @Component({
   selector: 'app-root',
@@ -30,7 +31,7 @@ export class AppComponent implements OnInit {
     private router: Router,
     private renderer: Renderer2,
     public translate: TranslateService,
-    private communication: CommunicationService,
+    private message: MessageService,
     private appManager: AppManager,
     private location: Location,
     private cd: ChangeDetectorRef,
@@ -47,6 +48,15 @@ export class AppComponent implements OnInit {
     private rightClickDisable: DisableRightClickService,
     @Inject(DOCUMENT) private document: Document
   ) {
+    // This must happen in the constructor on app component, or when loading in PWA, it won't
+    // be possible to read the query parameters.
+    const queryParam = globalThis.location.search;
+
+    if (queryParam) {
+      const param = Object.fromEntries(new URLSearchParams(queryParam)) as any;
+      this.uiState.params = param;
+    }
+
     this.instanceName = this.env.instanceName;
 
     if (this.env.production) {
@@ -74,20 +84,6 @@ export class AppComponent implements OnInit {
 
   async ngOnInit() {
     this.uiState.manifest = await this.runtime.getManifest();
-
-    const queryParam = globalThis.location.search;
-
-    // TODO: IT IS NOT POSSIBLE TO "EXIT" ACTIONS THAT ARE TRIGGERED WITH QUERY PARAMS.
-    // FIX THIS ... attempted to check previous, but that does not work...
-    if (queryParam) {
-      const param = Object.fromEntries(new URLSearchParams(queryParam)) as any;
-      // Only when the param is different than before, will we re-trigger the action.
-      if (JSON.stringify(param) != JSON.stringify(this.uiState.params)) {
-        this.uiState.params = param;
-      } else {
-        console.debug('PARAMS IS NOT DIFFERENT!! CONTINUE AS BEFORE!');
-      }
-    }
 
     // let qs = new URLSearchParams(location.search);
     // let id = qs.get('id');
@@ -119,7 +115,7 @@ export class AppComponent implements OnInit {
     });
 
     // Send event every time the UI has been activated.
-    this.communication.send(this.communication.createMessage('activated'));
+    this.message.send(this.message.createMessage('activated'));
   }
 
   lock() {

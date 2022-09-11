@@ -10,6 +10,8 @@ import { Mutex } from 'async-mutex';
 import { StorageService } from '../../angular/src/shared/storage.service';
 import { RuntimeService } from '../../angular/src/shared/runtime.service';
 import { NetworkLoader } from '../../angular/src/shared/network-loader';
+import { MessageService } from '../../angular/src/shared';
+import { EventBus } from '../../angular/src/shared/event-bus';
 
 // let state: ActionState;
 let prompt: any | null;
@@ -21,7 +23,10 @@ let networkManager: BackgroundManager;
 let indexing = false;
 
 let networkLoader = new NetworkLoader();
-let shared = new SharedManager(new StorageService(new RuntimeService()), new WalletStore(), networkLoader);
+let runtimeService = new RuntimeService();
+let messageService = new MessageService(runtimeService, new EventBus());
+
+let shared = new SharedManager(new StorageService(runtimeService), new WalletStore(), networkLoader, messageService);
 const networkUpdateInterval = 45000;
 let walletStore: WalletStore;
 

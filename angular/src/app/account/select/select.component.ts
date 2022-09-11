@@ -1,7 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { WalletManager, NetworksService, UIState, CommunicationService, NetworkStatusService, EnvironmentService } from '../../services';
+import { WalletManager, NetworksService, UIState, NetworkStatusService, EnvironmentService } from '../../services';
 import { Account, Defaults } from '../../../shared';
+import { MessageService } from 'src/shared';
 
 @Component({
     selector: 'app-account-select',
@@ -20,7 +21,7 @@ export class AccountSelectComponent implements OnInit, OnDestroy {
         private uiState: UIState,
         private networkService: NetworksService,
         public walletManager: WalletManager,
-        private communication: CommunicationService,
+        private message: MessageService,
         private networkStatus: NetworkStatusService,
         private env: EnvironmentService,
         private router: Router
@@ -70,11 +71,11 @@ export class AccountSelectComponent implements OnInit, OnDestroy {
         // await this.networkStatus.updateAll(accounts);
 
         if (wallet.restored) {
-            const msg = this.communication.createMessage('index', { force: true }, 'background');
-            this.communication.send(msg);
+            const msg = this.message.createMessage('index', { force: true }, 'background');
+            this.message.send(msg);
         } else {
-            const msg = this.communication.createMessage('index', { force: false }, 'background');
-            this.communication.send(msg);
+            const msg = this.message.createMessage('index', { force: false }, 'background');
+            this.message.send(msg);
         }
 
         // this.refreshState();

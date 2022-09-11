@@ -1,11 +1,11 @@
 import { Injectable, OnInit, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
-import { Message } from 'src/shared';
+import { Message, MessageService } from 'src/shared';
 import { BackgroundManager, ProcessResult } from 'src/shared/background-manager';
 import { SharedManager } from 'src/shared/shared-manager';
 import { RunState } from 'src/shared/task-runner';
 import { CommunicationService } from './communication.service';
-import { EventBus } from './event-bus';
+import { EventBus } from '../../shared/event-bus';
 import { SettingsService } from './settings.service';
 import { StateService } from './state.service';
 import { WalletManager } from './wallet-manager';
@@ -14,14 +14,22 @@ import { WalletManager } from './wallet-manager';
   providedIn: 'root',
 })
 export class FrontendService implements OnInit {
-  private backgroundManager: BackgroundManager;
   private watchManager: BackgroundManager | null;
   private networkUpdateInterval = 45000;
   private networkManager: BackgroundManager;
   private networkWatcherRef: any;
   private indexing: boolean;
 
-  constructor(private ngZone: NgZone, private walletManager: WalletManager, private events: EventBus, private router: Router, private state: StateService, private settings: SettingsService, private communication: CommunicationService, private sharedManager: SharedManager) {
+  constructor(
+    private ngZone: NgZone,
+    private walletManager: WalletManager,
+    private events: EventBus,
+    private router: Router,
+    private state: StateService,
+    private settings: SettingsService,
+    private message: MessageService,
+    private sharedManager: SharedManager
+  ) {
     this.events.subscribeAll().subscribe(async (message) => {
       console.log('ALL EVENTS', message);
 
@@ -40,6 +48,7 @@ export class FrontendService implements OnInit {
   }
 
   async handleMessage(message: Message) {
+    console.log('FrontendService:handleMessage:', message);
     try {
       switch (message.type) {
         case 'index': {
@@ -134,7 +143,7 @@ export class FrontendService implements OnInit {
         host: location.host,
       };
 
-      this.communication.send(msg);
+      this.message.send(msg);
 
       // Continue running the watcher if it has not been cancelled.
       this.networkWatcherRef = globalThis.setTimeout(interval, this.networkUpdateInterval);
@@ -155,13 +164,13 @@ export class FrontendService implements OnInit {
       return;
     }
 
-    console.log('Starting indexing.....');
+    console.log('Starting frontend indexing.....');
 
     this.indexing = true;
     await this.runIndexer();
     this.indexing = false;
 
-    console.log('Finished! indexing.....');
+    console.log('Finished frontend indexing.');
 
     // When the indexer has finished, run watcher automatically.
     await this.runWatcher();
@@ -178,8 +187,6 @@ export class FrontendService implements OnInit {
     // Whenever indexer is executed, we'll create a new manager.
     let manager: any = new BackgroundManager(this.sharedManager);
 
-    console.log('Created new manager object!!');
-
     manager.onUpdates = (status: ProcessResult) => {
       if (status.changes) {
         const msg = {
@@ -191,7 +198,7 @@ export class FrontendService implements OnInit {
           host: location.host,
         };
 
-        this.communication.send(msg);
+        this.message.send(msg);
       } else {
         const msg = {
           type: 'updated',
@@ -202,7 +209,7 @@ export class FrontendService implements OnInit {
           host: location.host,
         };
 
-        this.communication.send(msg);
+        this.message.send(msg);
       }
     };
 
@@ -246,7 +253,7 @@ export class FrontendService implements OnInit {
             host: location.host,
           };
 
-          this.communication.send(msg);
+          this.message.send(msg);
         } else {
           const msg = {
             type: 'updated',
@@ -257,7 +264,7 @@ export class FrontendService implements OnInit {
             host: location.host,
           };
 
-          this.communication.send(msg);
+          this.message.send(msg);
         }
       };
 

@@ -1,12 +1,11 @@
 import { Injectable, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
 import { EnvironmentService, SettingsService } from '.';
-import { ActionMessage, Message, MessageResponse } from '../../shared/interfaces';
-import { EventBus } from './event-bus';
+import { Message } from '../../shared/interfaces';
+import { EventBus } from '../../shared/event-bus';
 import { LoggerService } from './logger.service';
 import { RuntimeService } from '../../shared/runtime.service';
 import { StateService } from './state.service';
-const { v4: uuidv4 } = require('uuid');
 
 @Injectable({
   providedIn: 'root',
@@ -29,6 +28,7 @@ export class CommunicationService {
           }
         });
       });
+
       chrome.runtime.onMessageExternal.addListener(async (message, sender, sendResponse) => {
         // console.log('chrome.runtime.onMessageExternal 2222 within ANGULAR!');
         this.ngZone.run(async () => {
@@ -54,46 +54,8 @@ export class CommunicationService {
     }
   }
 
-  createMessage(type: string, data?: any, target: string = 'background'): Message {
-    let key = uuidv4();
-
-    return {
-      id: key,
-      type: type,
-      data: data,
-      ext: this.env.instance,
-      source: 'tabs',
-      target: target,
-    };
-  }
-
-  createResponse(message: Message, data?: any): MessageResponse {
-    const clonedMessage = { ...message };
-    clonedMessage.data = data;
-
-    return clonedMessage;
-  }
-
-  /** Send message to the background service. */
-  send(message: Message | ActionMessage | any) {
-    if (this.runtime.isExtension) {
-      // TODO: Move this to a communication service.
-      // Inform the provider script that user has signed the data.
-      chrome.runtime.sendMessage(message);
-      // chrome.runtime.sendMessage(message, (response) => {
-      //     // this.logger.info('CommunicationService:send:response:', response);
-      // });
-    } else {
-      this.events.publish(message.type, message);
-    }
-  }
-
-  /** Send message to every single instance of the extension. */
-  sendToTabs(message: Message) {
-    // chrome.tabs.query({}, (tabs) => tabs.forEach(tab => chrome.tabs.sendMessage(tab.id, message)));
-  }
-
   async handleInternalMessage(message: Message, sender: chrome.runtime.MessageSender) {
+    console.log('CommunicationService:handleInternalMessage:', message);
     try {
       switch (message.type) {
         case 'updated': {
@@ -145,16 +107,7 @@ export class CommunicationService {
   }
 
   async handleExternalMessage(message: any, sender: chrome.runtime.MessageSender) {
-    // this.logger.info('CommunicationService:onMessageExternal: ', message);
-    // this.logger.info('CommunicationService:onMessageExternal:sender: ', sender);
-
-    switch (message.event) {
-      case 'index:done':
-        return this.createResponse(message);
-        break;
-      default:
-        return null;
-        break;
-    }
+    this.logger.info('CommunicationService:onMessageExternal: ', message);
+    this.logger.info('CommunicationService:onMessageExternal:sender: ', sender);
   }
 }

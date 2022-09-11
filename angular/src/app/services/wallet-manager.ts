@@ -19,7 +19,7 @@ import { BehaviorSubject, delay, Observable, of } from 'rxjs';
 import { NetworkLoader } from '../../shared/network-loader';
 import { Network } from '../../shared/networks';
 import { CommunicationService } from '.';
-import { AccountHistoryStore, AddressStore, AddressWatchStore, WalletStore } from 'src/shared';
+import { AccountHistoryStore, AddressStore, AddressWatchStore, MessageService, WalletStore } from 'src/shared';
 import Big from 'big.js';
 import { StorageService } from '../../shared/storage.service';
 import { RuntimeService } from '../../shared/runtime.service';
@@ -70,7 +70,8 @@ export class WalletManager {
     private accountStateStore: AccountStateStore,
     private runtime: RuntimeService,
     private logger: LoggerService,
-    private tokensStore: StandardTokenStore
+    private tokensStore: StandardTokenStore,
+    private message: MessageService
   ) {
     this.allNetworks = this.networkLoader.getAllNetworks();
   }
@@ -751,7 +752,7 @@ export class WalletManager {
 
     // After updating all UI instances, also make sure we restart the watcher
     // because it holds state while interval looping.
-    this.communication.send(this.communication.createMessage('watch', { force: true }, 'background'));
+    this.message.send(this.message.createMessage('watch', { force: true }, 'background'));
   }
 
   async addAccount(account: Account, wallet: Wallet, runIndexIfRestored = true) {
@@ -808,7 +809,7 @@ export class WalletManager {
 
     // If the wallet type is restored, force an index process to restore the state.
     if (wallet.restored && runIndexIfRestored == true) {
-      this.communication.send(this.communication.createMessage('index', { force: true }, 'background'));
+      this.message.send(this.message.createMessage('index', { force: true }, 'background'));
     }
 
     if (network.smartContractSupport) {

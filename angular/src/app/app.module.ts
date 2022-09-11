@@ -75,7 +75,7 @@ import { HandlerComponent } from './settings/handler/handler.component';
 import { ActionStratisIdentityComponent } from './action/sid/sid.component';
 import { ActionNostrIdentityComponent } from './action/nostr/nostr.component';
 import { AboutComponent } from './settings/about/about.component';
-import { AccountHistoryStore, AddressStore, NetworkStatusStore, TransactionStore, UIStore, WalletStore, AddressIndexedStore } from 'src/shared';
+import { AccountHistoryStore, AddressStore, NetworkStatusStore, TransactionStore, UIStore, WalletStore, AddressIndexedStore, EventBus, NetworkLoader } from 'src/shared';
 import { ActionStore } from 'src/shared/store/action-store';
 import { SettingStore } from 'src/shared/store/setting-store';
 import { AddressWatchStore } from 'src/shared/store/address-watch-store';
@@ -107,12 +107,13 @@ import { ActionSignVerifiableCredentialComponent } from './action/sign-credentia
 import { RuntimeService } from 'src/shared/runtime.service';
 import { StorageService } from 'src/shared/storage.service';
 import { SharedManager } from 'src/shared/shared-manager';
-import { CryptoService, CryptoUtility, NetworkLoader } from './services';
+import { CommunicationService, CryptoService, CryptoUtility } from './services';
 import { StateStore } from 'src/shared/store/state-store';
 import { ActionVaultSetupComponent } from './action/vault-setup/vault-setup.component';
 import { AccountSendAddressComponent } from './account/send/address/send-address.component';
 import { PaymentComponent } from './account/payment/payment.component';
 import { PaymentRequest } from 'src/shared/payment';
+import { MessageService } from 'src/shared';
 
 // required for AOT compilation
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
@@ -275,10 +276,16 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     CryptoService,
     CryptoUtility,
     PaymentRequest,
+    EventBus,
+    {
+      provide: MessageService,
+      useFactory: (runtime: RuntimeService, events: EventBus) => new MessageService(runtime, events),
+      deps: [RuntimeService, EventBus],
+    },
     {
       provide: SharedManager,
-      useFactory: (storage: StorageService, store: WalletStore, networkLoader: NetworkLoader) => new SharedManager(storage, store, networkLoader),
-      deps: [StorageService, WalletStore, NetworkLoader],
+      useFactory: (storage: StorageService, store: WalletStore, networkLoader: NetworkLoader, messageService: MessageService) => new SharedManager(storage, store, networkLoader, messageService),
+      deps: [StorageService, WalletStore, NetworkLoader, MessageService],
     },
     {
       provide: StorageService,

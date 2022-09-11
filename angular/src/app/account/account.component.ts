@@ -1,15 +1,16 @@
 import { Component, OnInit, OnDestroy, ChangeDetectorRef, NgZone } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { UIState, CommunicationService, NetworksService, NetworkStatusService, SettingsService, WalletManager, StateService, NetworkLoader } from '../services';
+import { UIState, CommunicationService, NetworksService, NetworkStatusService, SettingsService, WalletManager, StateService } from '../services';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Account, AccountHistory, NetworkStatus, TransactionHistory, Token } from '../../shared/interfaces';
 import { Subscription } from 'rxjs';
-import { AccountHistoryStore, AddressStore } from 'src/shared';
+import { AccountHistoryStore, AddressStore, NetworkLoader } from 'src/shared';
 import { AccountStateStore } from 'src/shared/store/account-state-store';
 import axiosRetry from 'axios-retry';
 const axios = require('axios').default;
 import { StandardTokenStore } from '../../shared/store/standard-token-store';
+import { MessageService } from 'src/shared';
 axiosRetry(axios, { retries: 3, retryDelay: axiosRetry.exponentialDelay });
 
 @Component({
@@ -53,7 +54,7 @@ export class AccountComponent implements OnInit, OnDestroy {
     private ngZone: NgZone,
     private network: NetworksService,
     private networkStatusService: NetworkStatusService,
-    private communication: CommunicationService,
+    private message: MessageService,
     private activatedRoute: ActivatedRoute,
     private readonly cd: ChangeDetectorRef,
     private state: StateService,
@@ -125,7 +126,7 @@ export class AccountComponent implements OnInit, OnDestroy {
     await this.accountStateStore.save();
 
     // Send a message to run indexing on all wallets, send accountId for future optimization of running index only on this account.
-    this.communication.send(this.communication.createMessage('index', { accountId: this.walletManager.activeAccount.identifier }));
+    this.message.send(this.message.createMessage('index', { accountId: this.walletManager.activeAccount.identifier }));
 
     this.loading = false;
   }

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { Contact } from 'src/shared';
+import { Contact, NetworkLoader } from 'src/shared';
 import { ContactStore } from 'src/shared/store/contacts-store';
-import { NetworkLoader, UIState } from '../services';
+import { UIState } from '../services';
 import { ExchangeService } from '../services/exchange.service';
 
 @Component({

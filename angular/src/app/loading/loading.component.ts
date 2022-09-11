@@ -1,15 +1,13 @@
 import { Component, ChangeDetectorRef, OnInit, OnDestroy, Renderer2, Inject } from '@angular/core';
 import { UIState, CommunicationService, AppManager, SecureStateService, WalletManager, EnvironmentService, NetworksService, SettingsService, NetworkStatusService, LoggerService } from '../services';
 import { ActivatedRoute, Data, Params, Router } from '@angular/router';
-import { Action, ActionUrlParameters } from '../../shared/interfaces';
+import { ActionUrlParameters } from '../../shared/interfaces';
 import { TranslateService } from '@ngx-translate/core';
 import { DOCUMENT, Location } from '@angular/common';
 import { combineLatest } from 'rxjs';
 import { RuntimeService } from '../../shared/runtime.service';
 import { OrchestratorService } from '../services/orchestrator.service';
 import { PaymentRequest } from 'src/shared/payment';
-import { payments } from '@blockcore/blockcore-js';
-import * as qs from 'qs';
 
 @Component({
   selector: 'app-loading',
@@ -123,23 +121,6 @@ export class LoadingComponent implements OnInit, OnDestroy {
       this.uiState.initialized = true;
     }
 
-    // const queryParam = globalThis.location.search;
-
-    // TODO: IT IS NOT POSSIBLE TO "EXIT" ACTIONS THAT ARE TRIGGERED WITH QUERY PARAMS.
-    // FIX THIS ... attempted to check previous, but that does not work...
-    // if (queryParam) {
-    //   const param = Object.fromEntries(new URLSearchParams(queryParam)) as any;
-
-    //   console.log('THERE ARE PARAMS', param);
-
-    //   // Only when the param is different than before, will we re-trigger the action.
-    //   if (JSON.stringify(param) != JSON.stringify(this.uiState.params)) {
-    //     this.uiState.params = param;
-    //   } else {
-    //     this.logger.debug('PARAMS IS NOT DIFFERENT!! CONTINUE AS BEFORE!');
-    //   }
-    // }
-
     // If there is any query parameters, it means there might be an action triggered by protocol handlers. Parse the params and set action.
     if (this.uiState.params) {
       const parameters: ActionUrlParameters = this.uiState.params;
@@ -160,13 +141,11 @@ export class LoadingComponent implements OnInit, OnDestroy {
       } else if (this.uiState.action?.action == 'payment') {
         const param = this.uiState.action.params[0];
         this.uiState.payment = this.paymentRequest.transform(param);
-        
+
         // Reset the action as payment is not a normal action.
         this.uiState.action = null;
       }
     }
-
-    this.logger.debug('LOADING ACTION:', this.uiState.action);
 
     // Activate a wallet if not active.
     if (this.walletManager.hasWallets && !this.walletManager.activeWallet && this.uiState.persisted.previousWalletId) {
@@ -176,9 +155,6 @@ export class LoadingComponent implements OnInit, OnDestroy {
 
     // If an action has been triggered, we'll always show action until user closes the action.
     if (this.uiState.action?.action && this.walletManager.activeWallet && this.secure.unlocked(this.walletManager.activeWallet.id)) {
-      console.log('REDIRECT TO ACTION!!!!', this.uiState.action?.action);
-      // TODO: Add support for more actions.
-
       // TODO: Add improved verification of action. We don't want messages to be able to route users anywhere other than known actions.
       if (this.uiState.action.action.indexOf('/') > -1 || this.uiState.action.action.indexOf('\\') > -1) {
         throw new TypeError('Illegal characters in action');
@@ -201,19 +177,6 @@ export class LoadingComponent implements OnInit, OnDestroy {
         } else {
           // When the initial state is loaded and user has not unlocked any wallets, we'll show the unlock screen on home.
           this.router.navigateByUrl('/home');
-
-          // console.log('USING PREVIOUS ACTIVE WALLET!!');
-          // // No active wallet... Set the previous active wallet.
-          // await this.walletManager.setActiveWallet(this.uiState.persisted.previousWalletId);
-
-          // // If the previous wallet ID is actually unlocked already, which can happen when a new
-          // // instance of the extension is opened, then send user directly to dashboard.
-          // if (this.secure.unlocked(this.uiState.persisted.previousWalletId)) {
-          //   this.router.navigateByUrl('/dashboard');
-          // } else {
-          //   // When the initial state is loaded and user has not unlocked any wallets, we'll show the unlock screen on home.
-          //   this.router.navigateByUrl('/home');
-          // }
         }
       }
     }

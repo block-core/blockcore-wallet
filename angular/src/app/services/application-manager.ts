@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
+import { MessageService, NetworkLoader } from 'src/shared';
 import { MINUTE } from '../shared/constants';
-import { SecureStateService, CryptoUtility, DataSyncService, NetworkLoader, CommunicationService, WalletManager } from './';
+import { SecureStateService, CryptoUtility, DataSyncService, CommunicationService, WalletManager } from './';
 import { StateService } from './state.service';
 
 @Injectable({
@@ -8,7 +9,16 @@ import { StateService } from './state.service';
 })
 /** Main logic that is responsible for orchestration of the app. */
 export class AppManager {
-  constructor(public sync: DataSyncService, public state: StateService, public walletManager: WalletManager, public communication: CommunicationService, public networkLoader: NetworkLoader, public crypto: CryptoUtility, public secure: SecureStateService) {}
+  constructor(
+    public sync: DataSyncService,
+    public state: StateService,
+    public walletManager: WalletManager,
+    public communication: CommunicationService,
+    public networkLoader: NetworkLoader,
+    public crypto: CryptoUtility,
+    public secure: SecureStateService,
+    private message: MessageService
+  ) {}
 
   async initialize() {
     await this.communication.initialize();
@@ -31,10 +41,10 @@ export class AppManager {
    * back to live. */
   scheduledWatcher() {
     setInterval(() => {
-      this.communication.send(this.communication.createMessage('keep-alive', {}, 'background'));
+      this.message.send(this.message.createMessage('keep-alive', {}, 'background'));
     }, MINUTE * 5);
 
     // Activate the watch right away.
-    this.communication.send(this.communication.createMessage('keep-alive', {}, 'background'));
+    this.message.send(this.message.createMessage('keep-alive', {}, 'background'));
   }
 }

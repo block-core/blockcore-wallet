@@ -1,7 +1,7 @@
 import { Wallet } from './interfaces';
+import { MessageService } from './message.service';
 import { NetworkLoader } from './network-loader';
 import { Network } from './networks';
-import { RuntimeService } from './runtime.service';
 import { StorageService } from './storage.service';
 import { WalletStore } from './store';
 
@@ -10,7 +10,7 @@ export class SharedManager {
   private keys: Map<string, string> = new Map<string, string>();
   private allNetworks: Network[];
 
-  constructor(private storage: StorageService, private store: WalletStore, public networkLoader: NetworkLoader) {
+  constructor(private storage: StorageService, private store: WalletStore, public networkLoader: NetworkLoader, public message: MessageService) {
     this.allNetworks = this.networkLoader.getAllNetworks();
   }
 
@@ -76,10 +76,7 @@ export class SharedManager {
           // await storage.session.clear(); // Might be dramatic to clear to whole session storage?
           console.log('Timeout has been researched, session storage is cleared.');
 
-          // TODO: #132
-          // chrome.runtime.sendMessage({ type: 'timeout' }, function (response) {
-          //     // console.log('Extension:sendMessage:response:', response);
-          // });
+          this.message.send(this.message.createMessage('timeout', {}, 'background'));
 
           return true;
         }
@@ -112,13 +109,9 @@ export class SharedManager {
           // await storage.session.clear(); // Might be dramatic to clear to whole session storage?
           console.log('Timeout has been reached, session storage is cleared.');
 
+          this.message.send(this.message.createMessage('timeout', {}, 'background'));
+
           return true;
-
-          // TODO: Send Timeout message in browser.
-
-          // chrome.runtime.sendMessage({ event: 'timeout' }, function (response) {
-          //     console.log('Extension:sendMessage:response:', response);
-          // });
         }
       }
 

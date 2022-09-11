@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Network } from 'src/shared/networks';
 import { base58, base58check } from '@scure/base';
-import { NetworkLoader } from '.';
 import { Defaults } from '../../shared/defaults';
+import { NetworkLoader } from 'src/shared';
 
 @Injectable({
   providedIn: 'root',

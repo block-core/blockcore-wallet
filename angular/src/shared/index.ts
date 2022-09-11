@@ -1,4 +1,4 @@
-/** 
+/**
  * The "shared" classes should never take dependency on Angular, and is used cross Angular and Background (service worker).
  */
 
@@ -9,4 +9,7 @@ export * from './store';
 export * from './servers';
 export * from './defaults';
 export * from './events';
-export * from './handlers'
+export * from './handlers';
+export * from './message.service';
+export * from './event-bus';
+export * from './network-loader';
