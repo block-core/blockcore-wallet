@@ -10,7 +10,7 @@
     "start": "npm run watch",
     "web": "npm-run-all --parallel watch serve:web",
     "serve": "npm-run-all --parallel angular:*",
-    "serve:web": "http-server -p 8080 -c-1 dist/extension",
+    "serve:web": "http-server -p 8081 -c-1 dist/extension",
     "angular:serve": "ng serve --configuration development",
     "build:angular": "ng build --configuration development",
     "build:angular-production": "ng build --configuration production",

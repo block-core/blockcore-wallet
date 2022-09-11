@@ -16,7 +16,7 @@
     "protocol_handlers": [
       {
         "protocol": "web+pay",
-        "url": "/index.html?$pay=%s"
+        "url": "/index.html?pay=%s"
       }
     ],
     "icons": [
