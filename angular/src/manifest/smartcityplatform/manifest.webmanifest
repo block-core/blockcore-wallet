@@ -13,6 +13,12 @@
     "orientation": "any",
     "related_applications": [],
     "prefer_related_applications": false,
+    "protocol_handlers": [
+      {
+        "protocol": "web+pay",
+        "url": "%s"
+      }
+    ],
     "icons": [
         {
             "src": "assets/icon-512x512.png",
