@@ -3,8 +3,7 @@
     <img class="logo" src="assets/icon-light-128x128.png" />
 
     <h1>{{ uiState.manifest?.name }}</h1>
-    <div class="sub-title">by {{ uiState.manifest?.author }}</div>
-    <div class="sub-title">Version {{ uiState.manifest?.version }}</div>
+
 
     <p>{{ uiState.manifest?.description }}</p>
 
@@ -13,6 +12,9 @@
     <br />
     <button class="signup-button" mat-flat-button (click)="restore()">{{ "Wallet.Recover" | translate }}</button>
     <br /><br />
+    <br>
+    <div class="sub-title">Version {{ uiState.manifest?.version }}</div>
+    <br><br>
 
     <div *ngIf="uiState.showInstallButton" id="install" class="left">
       <mat-card>
