@@ -22,6 +22,70 @@
 
   <mat-tab>
     <ng-template mat-tab-label> <mat-icon class="example-tab-icon">request_quote</mat-icon>&nbsp;Payment </ng-template>
-    Coming soon
+    <div class="page centered">
+      <h2>Create Payment Request for {{ network.symbol }}</h2>
+
+      <form [formGroup]="form">
+        <!-- <div class="input-actions">
+          <button mat-icon-button (click)="scanQrCode()" matTooltip="Scan QR code">
+            <mat-icon>qr_code_scanner</mat-icon>
+          </button>
+          <button mat-icon-button (click)="paste()" matTooltip="Paste address from clipboard">
+            <mat-icon>content_paste</mat-icon>
+          </button>
+        </div> -->
+
+        <!-- web+pay://city:Ccoquhaae7u6ASqQ5BiYueASz8EavUXrKn?amount=10&label=Your Local Info&message=Invoice Number 5&data=MzExMzUzNDIzNDY&id=4324 -->
+
+        <mat-form-field class="input-full-width" appearance="outline">
+          <mat-label>Address</mat-label>
+          <input matInput formControlName="addressInput" [(ngModel)]="paymentAddress" required />
+          <mat-error *ngIf="form.controls['addressInput'].errors?.['invalid']">Address is invalid format.</mat-error>
+          <mat-error *ngIf="form.controls['addressInput'].errors?.['required']">Address is required.</mat-error>
+        </mat-form-field>
+
+        <!-- <div class="available-balance" matTooltip="Click to fill out maximum (minus fee)" (click)="fillMax(sendService.accountHistory.balance)">Available: {{ sendService.accountHistory.balance || 0 | amount }}</div> -->
+
+        <mat-form-field class="input-full-width" appearance="outline">
+          <mat-label>Amount</mat-label>
+          <input matInput formControlName="amountInput" [(ngModel)]="amount" required />
+          <mat-error *ngIf="form.controls['amountInput'].errors?.['min']">Amount cannot be negative.</mat-error>
+          <mat-error *ngIf="form.controls['amountInput'].errors?.['required']">Amount is required and must be correctly entered.</mat-error>
+          <mat-error *ngIf="form.controls['amountInput'].errors?.['tooManyDecimals']">The value of amount cannot have more than 8 decimals.</mat-error>
+          <mat-error *ngIf="form.controls['amountInput'].errors?.['tooHighValue']">The value of amount must be below 100000000000.</mat-error>
+          <mat-error *ngIf="form.controls['amountInput'].errors?.['tooHighAmount']">Insufficient funds available.</mat-error>
+        </mat-form-field>
+
+        <img [src]="qrPayment" class="qr-code" />
+
+        <mat-card class="address" [class.mat-elevation-z8]="true"
+          >{{ paymentRequest }}
+          <button class="copy-button" mat-icon-button (click)="copyPayment()">
+            <mat-icon>content_copy</mat-icon>
+          </button>
+        </mat-card>
+
+        <!-- <mat-form-field class="input-full-width" appearance="outline">
+          <mat-label>Fee</mat-label>
+          <input matInput formControlName="feeInput" [(ngModel)]="sendService.fee" required />
+          <mat-error *ngIf="form.controls['feeInput'].invalid">Fee is required and must be correctly entered.</mat-error>
+          <mat-hint *ngIf="sendService.feeError" align="start"
+            ><strong>{{ sendService.feeError }}</strong>
+          </mat-hint>
+          <mat-hint align="end">Minimum fee rate: {{ sendService.feeRate }} sat/byte</mat-hint>
+        </mat-form-field> -->
+
+        <!-- <div *ngIf="optionsOpen">
+          <mat-form-field class="input-full-width" appearance="outline">
+            <mat-label>Custom change address</mat-label>
+            <input matInput formControlName="changeAddressInput" [(ngModel)]="sendService.changeAddress" />
+          </mat-form-field>
+        </div> -->
+
+        <!-- <button class="full-width" (click)="toggleOptions()" mat-raised-button>Options...</button>
+        <br /><br />
+        <h3>Total: {{ sendService.total | amount }} {{ sendService.network.symbol }}</h3> -->
+      </form>
+    </div>
   </mat-tab>
 </mat-tab-group>

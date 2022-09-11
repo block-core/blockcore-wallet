@@ -9,11 +9,13 @@ describe('PaymentRequest', () => {
     const paymentEncoded = payment.encode({
       address: 'tSXDbedw3o79gjijk29dZLNMtcYmymYtoX',
       network: 'tcrs',
-      amount: 20.3,
-      label: 'Headline label',
-      message: 'Main content...',
-      data: 'MzExMzUzNDIzNDY',
-      id: 4324,
+      options: {
+        amount: 20.3,
+        label: 'Headline label',
+        message: 'Main content...',
+        data: 'MzExMzUzNDIzNDY',
+        id: 4324,
+      },
     });
 
     expect(paymentEncoded).toBeDefined();
@@ -47,6 +49,5 @@ describe('PaymentRequest', () => {
 
     const uri = payment.removeHandler('web+pay://city:Ccoquhaae7u6ASqQ5BiYueASz8EavUXrKn?amount=10&label=Your Local Info&message=Invoice Number 5&data=MzExMzUzNDIzNDY&id=4324');
     console.log('URI:', uri);
-
   });
 });

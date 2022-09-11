@@ -45,27 +45,21 @@ export class PaymentRequest {
     return { address: address, network: urnScheme, options: options };
   }
 
-  transform(request: any) {
-    const address = request.address;
-    const network = request.network;
+  /** Transform all flattened values into PaymentRequestData. */
+  transform(data: any): PaymentRequestData {
+    const address = data.address;
+    const network = data.network;
 
-    const options = request;
+    const options = data;
     delete options.address;
     delete options.network;
 
     return { address: address, network: network, options: options };
   }
 
-  encode(request: any): string {
-    var address = request.address;
-    delete request.address;
-
-    var network = request.network;
-    delete request.network;
-
-    var query = qs.stringify(request);
-
-    return network + ':' + address + (query ? '?' : '') + query;
+  encode(request: PaymentRequestData): string {
+    var query = qs.stringify(request.options);
+    return request.network + ':' + request.address + (query ? '?' : '') + query;
   }
 
   parseAmount(amount: string) {
