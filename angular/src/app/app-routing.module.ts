@@ -17,7 +17,6 @@ import { ActionLoginComponent } from './action/login/login.component';
 import { WipeComponent } from './wipe/wipe.component';
 import { PrivacyComponent } from './settings/privacy/privacy.component';
 import { LicensesComponent } from './settings/licenses/licenses.component';
-import { ChangesComponent } from './settings/changes/changes.component';
 import { PasswordComponent } from './settings/password/password.component';
 import { AboutComponent } from './settings/about/about.component';
 import { RecoveryComponent } from './settings/recovery/recovery.component';
@@ -103,13 +102,6 @@ const routes: Routes = [
   {
     path: 'settings/licenses',
     component: LicensesComponent,
-    resolve: {
-      data: LoadingResolverService,
-    },
-  },
-  {
-    path: 'settings/changes',
-    component: ChangesComponent,
     resolve: {
       data: LoadingResolverService,
     },

@@ -47,7 +47,6 @@ import { WipeComponent } from './wipe/wipe.component';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { PrivacyComponent } from './settings/privacy/privacy.component';
 import { LicensesComponent } from './settings/licenses/licenses.component';
-import { ChangesComponent } from './settings/changes/changes.component';
 import { HttpClientModule } from '@angular/common/http';
 import { PasswordComponent } from './settings/password/password.component';
 import { BiometricComponent } from './settings/biometric/biometric.component';
@@ -148,7 +147,6 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     WipeComponent,
     PrivacyComponent,
     LicensesComponent,
-    ChangesComponent,
     AccountReceiveComponent,
     AccountSelectComponent,
     AmountPipe,
