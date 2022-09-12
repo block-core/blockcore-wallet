@@ -1,6 +1,6 @@
 <div class="send-header">
   <div class="send-header-title"><h2>Send {{ sendService.network.symbol }}</h2></div>
-  <div class="send-header-actions"><button [disabled]="hasSidechain == false" class="half-width" [routerLink]="['/', 'account', 'send-sidechain']" mat-raised-button>Sidechain Swap</button></div>
+  <div class="send-header-actions" *ngIf="hasSidechain"><button class="half-width" [routerLink]="['/', 'account', 'send-sidechain']" mat-raised-button>Sidechain Swap</button></div>
 </div>
 
 <form [formGroup]="form">
