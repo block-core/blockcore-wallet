@@ -21,6 +21,13 @@ export class PaymentRequest {
     var urnScheme = uri.slice(0, uri.indexOf(':')).toLowerCase();
     var split = uri.indexOf('?');
     var address = uri.slice(urnScheme.length + 1, split === -1 ? undefined : split);
+
+    // Depending on how the user interacts with the protocol handler, browsers might append / at the end of the URL,
+    // which is then included on the address value. We must ensure that this is removed.
+    if (address.indexOf('/') > -1) {
+      address = address.substring(0, address.length - 1);
+    }
+
     var query = split === -1 ? '' : uri.slice(split + 1);
     var options = qs.parse(query);
 
