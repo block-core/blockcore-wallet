@@ -20,4 +20,9 @@ export class ExchangeService {
     const url = `https://exolix.com/exchange/${pair}?a=${amount}&ra=${address}&ref=BcG9dcJcQqLeXPf5`;
     window.open(url, 'exolixPopup', 'height=820,width=600,left=200,top=200,resizable=yes,channelmode=yes,scrollbars=yes,toolbar=yes,menubar=no,location=yes,directories=no,status=yes');
   }
+
+  purchasePopup(address: string, crypto: string, fiat: string, amount: string) {
+    const url = `https://www.coinvault.io/simplex/?crypto=${crypto}&fiat=${fiat}&amount=${amount}`;
+    window.open(url, 'simplexPopup', 'height=700,width=600,left=200,top=200,resizable=yes,channelmode=yes,scrollbars=yes,toolbar=yes,menubar=no,location=yes,directories=no,status=yes');
+  }
 }

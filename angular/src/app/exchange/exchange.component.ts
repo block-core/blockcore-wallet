@@ -21,6 +21,11 @@ export class ExchangeComponent implements OnInit {
     this.contacts = this.contactStore.all().sort((a, b) => (a.name > b.name ? 1 : -1));
   }
 
+  purchase(address: string, networkType: string) {
+    const network = this.networkLoader.getNetwork(networkType);
+    this.exchange.purchasePopup(address, 'BTC', 'EUR', '200');
+  }
+
   buy(address: string, networkType: string) {
     const network = this.networkLoader.getNetwork(networkType);
     this.exchange.buyPopup(address, network, 0.01);

@@ -1,16 +1,29 @@
 <div class="page">
-  <h1>Exchange (buy/sell)</h1>
+  <!-- <h1>Purchase Crypto</h1>
+
+  <p>Purchase your first cryptocurrency using traditional payment methods such as Visa, MasterCard, Apple Pay, SWIFT, SEPA, and more.</p>
 
   <p>
-    <button class="purchase-button" mat-raised-button (click)="buy('', 'STRAX')">Buy STRAX using Exolix</button>
+    <button class="purchase-button" color="primary" mat-raised-button (click)="purchase('', 'BTC')"><mat-icon>attach_money</mat-icon>&nbsp;Buy Bitcoin using EUR/USD with Simplex</button>
+  </p>
+
+  <br> -->
+  <h1>Exchange Crypto</h1>
+
+  <p>Exchange your existing cryptocurrency for other cryptocurrency.</p>
+
+  <p>
+    <button class="purchase-button" color="primary" mat-raised-button (click)="buy('', 'STRAX')"><mat-icon>currency_bitcoin</mat-icon>&nbsp;Buy STRAX using BTC with Exolix</button>
   </p>
 
   <p>
-    <button class="purchase-button" mat-raised-button (click)="sell('', 'STRAX')">Sell STRAX using Exolix</button>
+    <button class="purchase-button" color="primary" mat-raised-button (click)="sell('', 'STRAX')"><mat-icon>currency_bitcoin</mat-icon>&nbsp;Sell STRAX to BTC with Exolix</button>
   </p>
 
+  <br>
   <h2>Partners</h2>
   <p><a href="https://exolix.com?ref=BcG9dcJcQqLeXPf5" target="_blank">Exolix</a></p>
+  <!-- <p><a href="https://www.coinvault.io/simplex/?crypto=BTC&fiat=EUR&amount=200" target="_blank">Simplex</a></p> -->
 
   <p class="mat-caption network-info">Using our links and affiliated partners, helps support the continued development of this wallet.</p>
 </div>
