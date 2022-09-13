@@ -92,6 +92,10 @@ export class AccountReceiveComponent implements OnInit, OnDestroy {
     this.exchange.buyPopup(address, network, 0.01);
   }
 
+  openSimplex(address: string, network: Network) {
+    this.exchange.purchasePopup(address, network.symbol, 'USD', '200');
+  }
+
   async updatePayment() {
     try {
       const network = this.network.symbol.toLowerCase();

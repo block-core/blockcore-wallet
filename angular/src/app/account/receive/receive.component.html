@@ -14,9 +14,11 @@
         </button>
       </mat-card>
 
-      <button class="purchase-button" *ngIf="network.id === 'STRAX'" mat-raised-button (click)="openExolix(address, network)">Buy with Exolix</button>
-
       <p class="mat-caption network-info">This address can only be used to receive {{ network.symbol }} on the {{ network.name }} network.</p>
+
+      <button class="purchase-button" color="primary" *ngIf="network.id === 'STRAX' || network.id === 'CRS' || network.id === 'BTC'" mat-raised-button (click)="openSimplex(address, network)">Buy with Simplex</button>&nbsp;
+      <button class="purchase-button" color="primary" *ngIf="network.id === 'STRAX'" mat-raised-button (click)="openExolix(address, network)">Exchange with Exolix</button>
+
     </div>
   </mat-tab>
 
