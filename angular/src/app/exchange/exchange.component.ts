@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { Contact, NetworkLoader } from 'src/shared';
+import { AccountStateStore, Contact, NetworkLoader } from 'src/shared';
 import { ContactStore } from 'src/shared/store/contacts-store';
-import { UIState } from '../services';
+import { UIState, WalletManager } from '../services';
 import { ExchangeService } from '../services/exchange.service';
 
 @Component({
@@ -11,7 +11,7 @@ import { ExchangeService } from '../services/exchange.service';
 export class ExchangeComponent implements OnInit {
   public contacts: Contact[];
 
-  constructor(private networkLoader: NetworkLoader, private exchange: ExchangeService, private uiState: UIState, private contactStore: ContactStore) {
+  constructor(private walletManager: WalletManager, private accountStateStore: AccountStateStore, private networkLoader: NetworkLoader, private exchange: ExchangeService, private uiState: UIState, private contactStore: ContactStore) {
     this.uiState.title = 'Exchange';
     this.uiState.showBackButton = true;
     this.uiState.goBackHome = true;
@@ -23,7 +23,18 @@ export class ExchangeComponent implements OnInit {
 
   purchase(address: string, networkType: string) {
     const network = this.networkLoader.getNetwork(networkType);
-    this.exchange.purchasePopup(address, 'BTC', 'EUR', '200');
+
+    if (!address) {
+      // Find account of the network type, if exists:
+      let account = this.walletManager.activeWallet.accounts.find((a) => a.networkType == networkType);
+
+      if (account) {
+        const accountState = this.accountStateStore.get(account.identifier);
+        address = accountState.receive[accountState.receive.length - 1].address;
+      }
+    }
+
+    this.exchange.purchasePopup(address, network.symbol, 'USD', '200');
   }
 
   buy(address: string, networkType: string) {
