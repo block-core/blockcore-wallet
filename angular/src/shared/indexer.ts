@@ -66,11 +66,9 @@ export class IndexerBackgroundService {
 
             for (let j = 0; j < accounts.length; j++) {
                 const account = accounts[j];
-                const accountState = this.accountStateStore.get(account.identifier);
                 const network = this.addressManager.getNetwork(account.networkType);
 
                 if (account.mode === 'quick') {
-
                     let totalBalance = 0;
 
                     const allAddresses = this.accountStateStore.getAllAddresses(account.identifier);
@@ -250,7 +248,7 @@ export class IndexerBackgroundService {
                     });
 
                     await this.accountHistoryStore.save();
-                    await this.accountStateStore.save();
+                    // await this.accountStateStore.save();
                 }
             }
         }
