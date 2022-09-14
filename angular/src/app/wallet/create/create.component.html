@@ -123,7 +123,7 @@
       <!-- <p><mat-slide-toggle color="primary" formControlName="biometricsCtrl"><span *ngIf="!uiState.iOS">Use Biometrics</span><span *ngIf="uiState.iOS">Use Face ID</span></mat-slide-toggle></p> -->
 
       <div>
-        <button class="signup-button" (click)="save()" [disabled]="!passwordValidated" mat-button mat-flat-button color="primary">Save</button>
+        <button class="signup-button" (click)="save()" [disabled]="!passwordValidated" mat-flat-button color="primary">Save</button>
         <button class="signup-button" mat-stroked-button (click)="cancel()">{{ "App.Cancel" | translate }}</button>
       </div>
 

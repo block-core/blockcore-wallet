@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { NetworkStatusStore } from 'src/shared';
+import { MessageService, NetworkStatusStore } from 'src/shared';
 import { Account, IndexerApiStatus, NetworkStatus, NetworkStatusEntry } from '../../shared/interfaces';
 import { EnvironmentService } from './environment.service';
 import { NetworkLoader } from '../../shared/network-loader';
@@ -18,7 +18,17 @@ export class NetworkStatusService {
   allNetworks: Network[];
   availableNetworks: Network[];
 
-  constructor(private networkLoader: NetworkLoader, private env: EnvironmentService, private logger: LoggerService, private store: NetworkStatusStore, private networkService: NetworksService, private stateStore: StateStore, private walletManager: WalletManager, private settings: SettingsService) {}
+  constructor(
+    private message: MessageService,
+    private networkLoader: NetworkLoader,
+    private env: EnvironmentService,
+    private logger: LoggerService,
+    private store: NetworkStatusStore,
+    private networkService: NetworksService,
+    private stateStore: StateStore,
+    private walletManager: WalletManager,
+    private settings: SettingsService
+  ) {}
 
   async initialize() {
     // This is the network status instances
@@ -44,6 +54,15 @@ export class NetworkStatusService {
 
   getAll() {
     return this.store.all();
+  }
+
+  async reset() {
+    await this.store.wipe();
+    await this.store.save();
+
+    // Send a message to the background service to perform network update immediately.
+    const msg = this.message.createMessage('network', null, 'background');
+    this.message.send(msg);
   }
 
   getActive(): NetworkStatusEntry[] {

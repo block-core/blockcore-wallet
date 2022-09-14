@@ -129,21 +129,7 @@ export class FrontendService implements OnInit {
     }
 
     var interval = async () => {
-      // We don't have the Angular environment information available in the service worker,
-      // so we'll default to the default blockcore accounts, which should include those that
-      // are default on CoinVault.
-      await this.networkManager.updateNetworkStatus('blockcore');
-
-      const msg = {
-        type: 'network-updated',
-        data: { source: 'network-status-watcher' },
-        ext: 'blockcore',
-        source: 'background',
-        target: 'tabs',
-        host: location.host,
-      };
-
-      this.message.send(msg);
+      await this.executeNetworkStatus();
 
       // Continue running the watcher if it has not been cancelled.
       this.networkWatcherRef = globalThis.setTimeout(interval, this.networkUpdateInterval);
@@ -155,6 +141,24 @@ export class FrontendService implements OnInit {
     // networkWatcherRef = globalThis.setTimeout(async () => {
     //     await interval();
     // }, 0);
+  }
+
+  async executeNetworkStatus() {
+    // We don't have the Angular environment information available in the service worker,
+    // so we'll default to the default blockcore accounts, which should include those that
+    // are default on CoinVault.
+    await this.networkManager.updateNetworkStatus('blockcore');
+
+    const msg = {
+      type: 'network-updated',
+      data: { source: 'network-status-watcher' },
+      ext: 'blockcore',
+      source: 'background',
+      target: 'tabs',
+      host: location.host,
+    };
+
+    this.message.send(msg);
   }
 
   async executeIndexer() {
