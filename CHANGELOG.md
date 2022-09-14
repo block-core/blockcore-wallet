@@ -1,3 +1,28 @@
+## <small>0.0.68 (2022-09-14)</small>
+
+* Add await on the network loader persistence ([a207eb2](https://github.com/block-core/blockcore-wallet/commit/a207eb2)), closes [#231](https://github.com/block-core/blockcore-wallet/issues/231)
+* Add critical error if account state is not available ([4fe47dd](https://github.com/block-core/blockcore-wallet/commit/4fe47dd))
+* Add logging of account state store when persisted in indexer ([bb1a3a6](https://github.com/block-core/blockcore-wallet/commit/bb1a3a6))
+* Add pre-filled receive address for simplex integration ([65c3a2f](https://github.com/block-core/blockcore-wallet/commit/65c3a2f))
+* Add purchase button for Simplex on the receive view ([83e2279](https://github.com/block-core/blockcore-wallet/commit/83e2279))
+* Add support for "Scan Payment" action ([b028ef6](https://github.com/block-core/blockcore-wallet/commit/b028ef6))
+* Add support for purchasing cryptocurrency with Simplex ([bdfe0f1](https://github.com/block-core/blockcore-wallet/commit/bdfe0f1))
+* Add try/catch for account creation with snackbar alerts ([d0645de](https://github.com/block-core/blockcore-wallet/commit/d0645de))
+* Changed standard token method to remove tokens on empty response. ([d12aab5](https://github.com/block-core/blockcore-wallet/commit/d12aab5))
+* Display version on lock-screen ([93c5928](https://github.com/block-core/blockcore-wallet/commit/93c5928))
+* Fix issue with URL handling in browser appending / to address ([02ac88b](https://github.com/block-core/blockcore-wallet/commit/02ac88b))
+* Hide the swap button ([d539394](https://github.com/block-core/blockcore-wallet/commit/d539394))
+* Make the transaction ID selectable ([4bd4c9d](https://github.com/block-core/blockcore-wallet/commit/4bd4c9d))
+* Read the data after checking status code ([965ce91](https://github.com/block-core/blockcore-wallet/commit/965ce91)), closes [#231](https://github.com/block-core/blockcore-wallet/issues/231)
+* Remove "Changes" view from Settings ([6fb754a](https://github.com/block-core/blockcore-wallet/commit/6fb754a))
+* Remove save of account state store on the calculate balance method ([64a5df9](https://github.com/block-core/blockcore-wallet/commit/64a5df9))
+* The critical code paths in updateAll already have try/catch handling ([50209a5](https://github.com/block-core/blockcore-wallet/commit/50209a5))
+* Update the Privacy Policy and Terms and Conditions ([4495961](https://github.com/block-core/blockcore-wallet/commit/4495961))
+* Update version and changelog ([2001a7b](https://github.com/block-core/blockcore-wallet/commit/2001a7b))
+* VSC code formatting ([7abc28e](https://github.com/block-core/blockcore-wallet/commit/7abc28e))
+
+
+
 ## <small>0.0.67 (2022-09-11)</small>
 
 * Add basic UI to generate payment request ([6580bd4](https://github.com/block-core/blockcore-wallet/commit/6580bd4))
