@@ -154,18 +154,8 @@ export class BackgroundManager {
             referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
           });
 
-          const data = await response.json();
-
-          // const response = await axios.get(`${indexerUrl}/api/stats`, {
-          //     timeout: 3000,
-          //     'axios-retry': {
-          //         retries: 0
-          //     }
-          // });
-
-          // const data = response.data;
-
           if (response.ok) {
+            const data = await response.json();
             if (data.error) {
               networkStatus = {
                 domain,
@@ -209,7 +199,8 @@ export class BackgroundManager {
               networkType: account.networkType,
               availability: IndexerApiStatus.Error,
               status: 'Error: ' + response.status,
-              relayFee: data.network?.relayFee * FEE_FACTOR,
+              relayFee: 0.0001 * FEE_FACTOR
+              // relayFee: network.feeRate * FEE_FACTOR, // feeRate is in satoshi, but relayFee is in Bitcoin.
             };
           }
         } catch (error: any) {
