@@ -98,11 +98,7 @@ export class BackgroundManager {
     // const networkLoader = new NetworkLoader(store);
     // console.debug('All networks:', networkLoader.getAllNetworks());
 
-    try {
-      await this.updateAll(accounts, this.sharedManager.networkLoader, settingStore);
-    } catch (err) {
-      console.error('Failure during update all network status:', err);
-    }
+    await this.updateAll(accounts, this.sharedManager.networkLoader, settingStore);
   }
 
   async fetchWithTimeout(resource: RequestInfo, options: any) {
@@ -425,7 +421,6 @@ export class BackgroundManager {
 
         // Whenever indexer processing is completed, make sure we persist the state store used by network loader.
         await this.sharedManager.networkLoader.stateStore.save();
-
       } catch (err) {
         console.error('Failure during indexer processing.', err);
         throw err;
