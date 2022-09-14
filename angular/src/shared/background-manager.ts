@@ -259,7 +259,7 @@ export class BackgroundManager {
         networkStatuses.push(networkStatus);
       }
 
-      networkLoader.update(network.id, networkStatuses);
+      await networkLoader.update(network.id, networkStatuses);
       // console.debug('networkStatuses:', networkStatuses);
     }
   }
