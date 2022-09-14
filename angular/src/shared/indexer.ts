@@ -322,6 +322,12 @@ export class IndexerBackgroundService {
                 const date = new Date().toISOString();
                 const account = wallet.accounts[j];
                 const accountState = this.accountStateStore.get(account.identifier);
+
+                if (!accountState) {
+                    console.error(`CRITICAL ERROR: There are no account state for ${account.name} (${account.identifier})`);
+                    continue;
+                }
+
                 const network = this.addressManager.getNetwork(account.networkType);
                 const indexerUrl = this.addressManager.networkLoader.getServer(network.id, settings.server, settings.indexer);
 
