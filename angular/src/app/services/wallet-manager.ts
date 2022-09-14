@@ -685,8 +685,7 @@ export class WalletManager {
         const account = wallet.accounts[i];
         await this.removeAccountHistory(account);
       }
-    } catch {
-    }
+    } catch {}
 
     this.store.remove(id);
 
@@ -718,64 +717,68 @@ export class WalletManager {
   }
 
   async addAccount(account: Account, wallet: Wallet, runIndexIfRestored = true) {
-    // First derive the xpub and store that on the account.
-    // const secret = this.walletSecrets.get(wallet.id);
-    // Get the secret seed.
-    const masterSeedBase64 = this.secure.get(wallet.id);
-    const masterSeed = Buffer.from(masterSeedBase64, 'base64');
-    const network = this.getNetwork(account.networkType);
-    const masterNode = HDKey.fromMasterSeed(masterSeed, network.bip32);
+    try {
+      // First derive the xpub and store that on the account.
+      // const secret = this.walletSecrets.get(wallet.id);
+      // Get the secret seed.
+      const masterSeedBase64 = this.secure.get(wallet.id);
+      const masterSeed = Buffer.from(masterSeedBase64, 'base64');
+      const network = this.getNetwork(account.networkType);
+      const masterNode = HDKey.fromMasterSeed(masterSeed, network.bip32);
 
-    const accountNode = masterNode.derive(`m/${account.purpose}'/${account.network}'/${account.index}'`);
+      const accountNode = masterNode.derive(`m/${account.purpose}'/${account.network}'/${account.index}'`);
 
-    account.xpub = accountNode.publicExtendedKey;
+      account.xpub = accountNode.publicExtendedKey;
 
-    // Add account to the wallet and persist.
-    wallet.accounts.push(account);
+      // Add account to the wallet and persist.
+      wallet.accounts.push(account);
 
-    // Update the active account index to new account.
-    this.state.persisted.previousAccountId = account.identifier;
-    this._activeAccountId = account.identifier;
+      // Update the active account index to new account.
+      this.state.persisted.previousAccountId = account.identifier;
+      this._activeAccountId = account.identifier;
 
-    // if (network.type === 'identity') {
-    //   const addressNode = accountNode.deriveChild(0).deriveChild(0);
+      // if (network.type === 'identity') {
+      //   const addressNode = accountNode.deriveChild(0).deriveChild(0);
 
-    // //   secp.getPublicKey()
+      // //   secp.getPublicKey()
 
-    //   const publicKey = secp.schnorr.getPublicKey(addressNode.privateKey,);
-    //   account.did = `did:is:${secp.utils.bytesToHex(publicKey)}`;
-    // } else {
-    // }
+      //   const publicKey = secp.schnorr.getPublicKey(addressNode.privateKey,);
+      //   account.did = `did:is:${secp.utils.bytesToHex(publicKey)}`;
+      // } else {
+      // }
 
-    // After new account has been added and set as active, we'll generate some addresses:
-    this.accountStateStore.set(account.identifier, {
-      id: account.identifier,
-      balance: 0,
-      receive: [
-        {
-          address: this.getAddressByIndex(account, 0, 0),
-          index: 0,
-        },
-      ],
-      change: [
-        {
-          address: this.getAddressByIndex(account, 1, 0),
-          index: 0,
-        },
-      ],
-    });
+      // After new account has been added and set as active, we'll generate some addresses:
+      this.accountStateStore.set(account.identifier, {
+        id: account.identifier,
+        balance: 0,
+        receive: [
+          {
+            address: this.getAddressByIndex(account, 0, 0),
+            index: 0,
+          },
+        ],
+        change: [
+          {
+            address: this.getAddressByIndex(account, 1, 0),
+            index: 0,
+          },
+        ],
+      });
 
-    await this.store.save();
-    await this.state.save();
-    await this.accountStateStore.save();
+      await this.store.save();
+      await this.state.save();
+      await this.accountStateStore.save();
 
-    // If the wallet type is restored, force an index process to restore the state.
-    if (wallet.restored && runIndexIfRestored == true) {
-      this.message.send(this.message.createMessage('index', { force: true }, 'background'));
-    }
+      // If the wallet type is restored, force an index process to restore the state.
+      if (wallet.restored && runIndexIfRestored == true) {
+        this.message.send(this.message.createMessage('index', { force: true }, 'background'));
+      }
 
-    if (network.smartContractSupport) {
-      await this.loadStandardTokensForAccountAsync(network, account);
+      if (network.smartContractSupport) {
+        await this.loadStandardTokensForAccountAsync(network, account);
+      }
+    } catch (err) {
+      throw new Error('Unable to add account to wallet.');
     }
   }
 

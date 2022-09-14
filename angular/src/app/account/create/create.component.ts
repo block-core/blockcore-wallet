@@ -5,6 +5,7 @@ import { Account } from '../../../shared/interfaces';
 import { Router } from '@angular/router';
 import { Network } from '../../../shared/networks';
 import { MessageService } from 'src/shared';
+import { MatSnackBar } from '@angular/material/snack-bar';
 const { v4: uuidv4 } = require('uuid');
 
 @Component({
@@ -47,7 +48,8 @@ export class AccountCreateComponent implements OnInit, OnDestroy {
     private message: MessageService,
     public walletManager: WalletManager,
     private networkStatusService: NetworkStatusService,
-    private cd: ChangeDetectorRef
+    private cd: ChangeDetectorRef,
+    private snackBar: MatSnackBar
   ) {
     this.uiState.title = 'Create new account';
     this.icon = icons.default;
@@ -171,7 +173,16 @@ export class AccountCreateComponent implements OnInit, OnDestroy {
 
     // Don't persist the selected value.
     delete account.selected;
-    await this.walletManager.addAccount(account, this.walletManager.activeWallet);
+
+    try {
+      await this.walletManager.addAccount(account, this.walletManager.activeWallet);
+    } catch (err) {
+      this.snackBar.open('Error while creating account. Critical error, please try again.', 'Hide', {
+        duration: 8000,
+        horizontalPosition: 'center',
+        verticalPosition: 'bottom',
+      });
+    }
 
     // Make sure we get a recent state of the network user added account on. If this is the first time the user have added
     // account from this network, this will ensure that we have a status as early as possible.
