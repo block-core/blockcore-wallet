@@ -266,6 +266,9 @@ interface AccountUnspentTransactionOutput {
   transactionHash: string;
   unconfirmed: boolean;
   hex: string;
+
+  /** Local state indicator if this UTXO has been used by the user and shouldn't be included in other transactions. */
+  spent?: boolean;
 }
 
 interface AccountHistory {

@@ -39,6 +39,10 @@ export class AccountSendSendingComponent implements OnInit, OnDestroy {
     this.sendService.transactionId = transactionDetails.transactionId;
     this.sendService.transactionHex = transactionDetails.transactionHex;
 
+      // After we send the transaction, we will persist the account history store because the spent
+    // utxos have been marked in the createTransaction method.
+    await this.accountHistoryStore.save();
+
     // Reload the watch store to ensure we have latest state, the watcher might have updated (and removed) some values.
     await this.addressWatchStore.load();
 

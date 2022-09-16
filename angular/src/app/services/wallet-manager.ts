@@ -207,7 +207,6 @@ export class WalletManager {
   }> {
     // TODO: Verify the address for this network!! ... Help the user avoid sending transactions on very wrong addresses.
     const network = this.getNetwork(account.networkType);
-    this.logger.debug('NETWORK:', network);
 
     const accountState = this.accountStateStore.get(account.identifier);
     const affectedAddresses = [];
@@ -215,8 +214,6 @@ export class WalletManager {
     const tx = new Psbt({ network: network, maximumFeeRate: 5000 }); // satoshi per byte, 5000 is default.
     tx.setVersion(1); // Lock-time is not used so set to 1 (defaults to 2).
     tx.setLocktime(0); // These are defaults. This line is not needed.
-
-    this.logger.debug('unspent', unspent);
 
     // Collect unspent until we have enough amount.
     const requiredAmount = amount.add(fee);
@@ -226,10 +223,16 @@ export class WalletManager {
 
     if (account.mode === 'normal') {
       for (let i = 0; i < unspent.length; i++) {
-        const tx = unspent[i];
-        aggregatedAmount = aggregatedAmount.plus(new Big(tx.balance));
+        const utxo = unspent[i];
 
-        inputs.push(tx);
+        // If the UTXO is spent, skip it.
+        if (utxo.spent) {
+          continue;
+        }
+
+        aggregatedAmount = aggregatedAmount.plus(new Big(utxo.balance));
+
+        inputs.push(utxo);
 
         if (aggregatedAmount.gte(requiredAmount)) {
           break;
@@ -241,22 +244,12 @@ export class WalletManager {
 
       aggregatedAmount = result.amount;
       inputs.push(...result.utxo);
-
-      this.logger.debug('UTXO QUERY RESULT: ', result);
-
-      // for (let i = 0; i < unspentOutputs.length; i++) {
-      //     const tx = unspentOutputs[i];
-      //     aggregatedAmount = aggregatedAmount.plus(new Big(tx.balance));
-
-      //     inputs.push(tx);
-
-      //     if (aggregatedAmount.gte(requiredAmount)) {
-      //         break;
-      //     }
-      // }
     }
 
-    this.logger.debug('SELECTED INPUTS FOR TRANSACTION: ', inputs);
+    // Mark all inputs as "dirty" to avoid them being used for secondary transactions:
+    for (let i = 0; i < inputs.length; i++) {
+      inputs[i].spent = true;
+    }
 
     for (let i = 0; i < inputs.length; i++) {
       const input = inputs[i];
@@ -278,8 +271,6 @@ export class WalletManager {
         nonWitnessUtxo: Buffer.from(hex, 'hex'),
       });
     }
-
-    this.logger.debug('affectedAddresses: ', affectedAddresses);
 
     // Add the output the user requested.
     tx.addOutput({ address, value: amount.toNumber() });
@@ -344,7 +335,6 @@ export class WalletManager {
 
     const finalTransaction = tx.finalizeAllInputs().extractTransaction();
     const transactionHex = finalTransaction.toHex();
-    this.logger.debug('TransactionHex', transactionHex);
 
     return {
       changeAddress,
