@@ -1,3 +1,11 @@
+## <small>0.0.69 (2022-09-16)</small>
+
+* Add ability to reset the network status cache ([588007a](https://github.com/block-core/blockcore-wallet/commit/588007a)), closes [#233](https://github.com/block-core/blockcore-wallet/issues/233)
+* Mark spent UTXOs ([618feb3](https://github.com/block-core/blockcore-wallet/commit/618feb3)), closes [#234](https://github.com/block-core/blockcore-wallet/issues/234)
+* Update version and changelog ([b07ebd0](https://github.com/block-core/blockcore-wallet/commit/b07ebd0))
+
+
+
 ## <small>0.0.68 (2022-09-14)</small>
 
 * Add await on the network loader persistence ([a207eb2](https://github.com/block-core/blockcore-wallet/commit/a207eb2)), closes [#231](https://github.com/block-core/blockcore-wallet/issues/231)
