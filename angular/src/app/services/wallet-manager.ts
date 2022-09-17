@@ -348,11 +348,11 @@ export class WalletManager {
     };
   }
 
-  async sendTransaction(account: Account, transactionHex: string): Promise<{ transactionId: string; transactionHex: string }> {
+  async sendTransaction(account: Account, transactionHex: string): Promise<{ transactionResult: string | any; transactionHex: string }> {
     this.logger.debug('sendTransaction:TransactionHex', transactionHex);
     const transactionId = await this.broadcastTransaction(account, transactionHex);
     this.logger.debug('TransactionId', transactionId);
-    return { transactionId, transactionHex };
+    return { transactionResult: transactionId, transactionHex };
   }
 
   getWallets() {

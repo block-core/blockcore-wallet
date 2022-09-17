@@ -32,7 +32,20 @@ export class AccountSendSidechainSendingComponent implements OnInit, OnDestroy {
     const transactionDetails = await this.walletManager.sendTransaction(this.sendService.account, this.sendService.transactionHex);
 
     this.sendService.loading = false;
-    this.sendService.transactionId = transactionDetails.transactionId;
+
+    this.sendService.transactionResult = transactionDetails.transactionResult;
+    
+    if (typeof transactionDetails.transactionResult !== 'string') {
+      this.sendService.transactionId = this.sendService.transactionResult.title;
+      
+      // Examples:
+      // {"title":"bad-txns-inputs-missingorspent","status":200,"traceId":"00-6cae22bb805a8698ffe313f5130f040c-ddbb8afdb391e115-00"}
+      // {"title":"tx-size","status":200,"traceId":"00-859d81fbef41ef9f7832aeaf0f88615b-75998b079a941280-00"}
+
+    } else {
+      this.sendService.transactionId = this.sendService.transactionResult;
+    }
+
     this.sendService.transactionHex = transactionDetails.transactionHex;
 
     // Reload the watch store to ensure we have latest state, the watcher might have updated (and removed) some values.
