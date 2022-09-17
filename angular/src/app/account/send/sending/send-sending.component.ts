@@ -39,7 +39,7 @@ export class AccountSendSendingComponent implements OnInit, OnDestroy {
     this.sendService.transactionResult = transactionDetails.transactionResult;
     
     if (typeof transactionDetails.transactionResult !== 'string') {
-      this.sendService.transactionId = this.sendService.transactionResult.title;
+      this.sendService.transactionError = this.sendService.transactionResult.title;
       
       // Examples:
       // {"title":"bad-txns-inputs-missingorspent","status":200,"traceId":"00-6cae22bb805a8698ffe313f5130f040c-ddbb8afdb391e115-00"}

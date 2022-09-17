@@ -16,6 +16,7 @@ export class SendService {
   changeAddress: string;
   transactionHex: string;
   transactionId: string;
+  transactionError: string;
   transactionResult: string | any;
   routingIndex: number;
   accountHistory: AccountHistory;
