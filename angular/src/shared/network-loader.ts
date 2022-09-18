@@ -1,8 +1,9 @@
+import { ServiceListEntry } from '@blockcore/dns';
 import { Defaults } from './defaults';
 import { IndexerApiStatus, NetworkStatus } from './interfaces';
 import { NameserverService } from './nameserver.service';
 import { Network } from './networks';
-import { Servers } from './servers';
+// import { Servers } from './servers';
 import { NetworkStatusStore } from './store';
 import { StateStore } from './store/state-store';
 
@@ -11,7 +12,7 @@ export class NetworkLoader {
   private networks: Network[] = [];
   // private store: NetworkStatusStore = new NetworkStatusStore();
   private loaded = false;
-  private nameserverService: NameserverService;
+  public nameserverService: NameserverService;
 
   constructor(public store?: NetworkStatusStore, public stateStore?: StateStore) {
     this.createNetworks();
@@ -118,15 +119,19 @@ export class NetworkLoader {
     }
   }
 
-  getServers(networkType: string, networkGroup: string, customServer?: string) {
+  getServers(networkType: string, networkGroup: string, customServer?: string): ServiceListEntry[] {
     // console.debug(`getServers: ${networkType} | ${networkGroup} | ${customServer}`);
 
     if (networkGroup == 'custom') {
       const server = customServer.replace('{id}', networkType.toLowerCase());
-      return server;
+
+      return [{ domain: server, symbol: networkType, service: 'Indexer', ttl: 20, online: true }];
     } else {
-      const serversGroup = Servers[networkGroup];
-      const servers = serversGroup[networkType];
+      // loadServices has just been called so the nameserver service should have data.
+      const serversGroup = this.nameserverService.getGroups();
+      const servers = serversGroup.get(networkType) as ServiceListEntry[];
+      // const serversGroup = Servers[networkGroup];
+      // const servers = serversGroup[networkType];
       return servers;
     }
   }

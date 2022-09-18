@@ -338,6 +338,9 @@ const networkStatusWatcher = async () => {
       }
     );
 
+    // Whenever the network status has updated, also trigger indexer.
+    await executeIndexer();
+
     // Continue running the watcher if it has not been cancelled.
     networkWatcherRef = globalThis.setTimeout(interval, networkUpdateInterval);
   };

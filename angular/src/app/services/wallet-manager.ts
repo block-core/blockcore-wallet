@@ -759,10 +759,14 @@ export class WalletManager {
       await this.state.save();
       await this.accountStateStore.save();
 
+      // TODO: Improve this to only require full updateAll for networks but only newly added account's network.
+      this.message.send(this.message.createMessage('network', null, 'background'));
+      // Whenever 'network' is finished, the indexing will also be automatically called.
+
       // If the wallet type is restored, force an index process to restore the state.
-      if (wallet.restored && runIndexIfRestored == true) {
-        this.message.send(this.message.createMessage('index', { force: true }, 'background'));
-      }
+      // if (wallet.restored && runIndexIfRestored == true) {
+      //   this.message.send(this.message.createMessage('index', { force: true }, 'background'));
+      // }
 
       if (network.smartContractSupport) {
         await this.loadStandardTokensForAccountAsync(network, account);

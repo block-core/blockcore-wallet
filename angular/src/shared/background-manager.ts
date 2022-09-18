@@ -122,6 +122,9 @@ export class BackgroundManager {
 
     const settings = settingStore.get();
 
+    // Load all services from selected nameservers:
+    await networkLoader.nameserverService.loadServices(settings.server); // networkGroup from user selection.
+
     for (let i = 0; i < uniqueAccounts.length; i++) {
       const account = accounts[i];
       const network = networkLoader.getNetwork(account.networkType);
@@ -135,7 +138,12 @@ export class BackgroundManager {
       let networkStatuses: NetworkStatus[] = [];
 
       for (let j = 0; j < indexerUrls.length; j++) {
-        let indexerUrl = indexerUrls[j];
+        let indexerUrl = 'https://' + indexerUrls[j].domain;
+
+        if (indexerUrl.indexOf('//') == -1) {
+          indexerUrl = 'https://' + indexerUrl;
+        }
+
         let domain = indexerUrl.substring(indexerUrl.indexOf('//') + 2);
         let networkStatus: NetworkStatus;
 
@@ -199,7 +207,7 @@ export class BackgroundManager {
               networkType: account.networkType,
               availability: IndexerApiStatus.Error,
               status: 'Error: ' + response.status,
-              relayFee: 0.0001 * FEE_FACTOR
+              relayFee: 0.0001 * FEE_FACTOR,
               // relayFee: network.feeRate * FEE_FACTOR, // feeRate is in satoshi, but relayFee is in Bitcoin.
             };
           }
