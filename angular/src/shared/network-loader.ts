@@ -1,5 +1,6 @@
 import { Defaults } from './defaults';
 import { IndexerApiStatus, NetworkStatus } from './interfaces';
+import { NameserverService } from './nameserver.service';
 import { Network } from './networks';
 import { Servers } from './servers';
 import { NetworkStatusStore } from './store';
@@ -10,9 +11,11 @@ export class NetworkLoader {
   private networks: Network[] = [];
   // private store: NetworkStatusStore = new NetworkStatusStore();
   private loaded = false;
+  private nameserverService: NameserverService;
 
   constructor(public store?: NetworkStatusStore, public stateStore?: StateStore) {
     this.createNetworks();
+    this.nameserverService = new NameserverService();
   }
 
   /** Returns a list of networks that correspond to the filter supplied. */
@@ -68,8 +71,8 @@ export class NetworkLoader {
       existingState.url = server;
       return server;
     } else {
-      const serversGroup = Servers[networkGroup];
-      const servers = serversGroup[networkType];
+      // const serversGroup = Servers[networkGroup];
+      // const servers = serversGroup[networkType];
 
       const serverStatuses = this.store.get(networkType);
       // console.log(serverStatuses);

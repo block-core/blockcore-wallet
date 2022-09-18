@@ -113,6 +113,7 @@ import { AccountSendAddressComponent } from './account/send/address/send-address
 import { PaymentComponent } from './account/payment/payment.component';
 import { PaymentRequest } from 'src/shared/payment';
 import { MessageService } from 'src/shared';
+import { NameserverService } from 'src/shared/nameserver.service';
 
 // required for AOT compilation
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
@@ -274,6 +275,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     CryptoService,
     CryptoUtility,
     PaymentRequest,
+    NameserverService,
     EventBus,
     {
       provide: MessageService,
