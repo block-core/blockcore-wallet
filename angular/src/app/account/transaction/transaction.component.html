@@ -29,9 +29,10 @@
                     Smart Contract invocation</a></span> -->
 
             <p *ngIf="transaction.details.data.length > 0">
-                <span class="label">Data</span><br>
-                <span class="wrap" *ngFor="let data of transaction.details.data;">{{data}}</span>
+                <span class="label">Data (OP_RETURN)</span><br>
+                <span class="wrap selectable" *ngFor="let data of transaction.details.data;">{{parseOpreturn(data)}}</span>
             </p>
+
         </mat-card-content>
         <mat-card-actions>
             <button mat-raised-button color="primary" (click)="openExplorer(transaction.transactionHash)">Open Transaction in Block
