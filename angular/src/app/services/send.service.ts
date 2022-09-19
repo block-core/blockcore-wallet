@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Account, AccountHistory } from '../../shared/interfaces';
 import { Network } from '../../shared/networks';
 import Big from 'big.js';
+import { PaymentRequestData } from 'src/shared/payment';
 
 @Injectable({
   providedIn: 'root',
@@ -21,6 +22,7 @@ export class SendService {
   routingIndex: number;
   accountHistory: AccountHistory;
   feeRate: number;
+  payment: PaymentRequestData;
 
   private feeValue: Big;
   private amountValue: Big;

@@ -71,6 +71,7 @@ export class PaymentComponent implements OnInit, OnDestroy {
     await this.walletManager.setActiveAccount(accountId);
     this.sendService.sendToAddress = address;
     this.sendService.sendAmount = this.uiState.payment.options.amount;
+    this.sendService.payment = this.uiState.payment;
 
     this.router.navigate(['/', 'account', 'send']);
   }

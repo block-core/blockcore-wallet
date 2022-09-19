@@ -10,7 +10,11 @@ export class PaymentRequestData {
 /** Implements the BIP21 with some extra features. https://github.com/bitcoin/bips/blob/master/bip-0021.mediawiki */
 export class PaymentRequest {
   removeHandler(uri: string) {
-    return uri.substring(uri.indexOf('://') + 3);
+    if (uri.indexOf('://') > -1) {
+      return uri.substring(uri.indexOf('://') + 3);
+    } else {
+      return uri;
+    }
   }
 
   decode(uri: string): PaymentRequestData {
