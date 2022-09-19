@@ -23,6 +23,15 @@
         <div *ngIf="transaction"><span>Weight</span><span>{{transaction.weight | size }} </span></div>
         <div *ngIf="transaction"><span>Virtual Size</span><span>{{transaction.virtualSize | size }} </span></div>
 
+        <div *ngIf="transaction.data"><span>Data (OP_RETURN)</span>
+            <span class="selectable">
+                {{transaction.data }}<br>
+                Size: {{ dataSize(transaction.data ) }}, Max: 80<br>
+            <!-- {{ dataFormat(transaction.data, 'binary') }} (Binary)<br>
+            {{ dataFormat(transaction.data, 'hex') }} (Hex)<br> -->
+        </span>
+        </div>
+
         <!-- <mat-form-field class="input-full-width" appearance="outline">
             <mat-label>Custom change address</mat-label>
             <input matInput formControlName="changeAddressInput" [(ngModel)]="sendService.changeAddress">

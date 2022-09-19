@@ -204,6 +204,7 @@ export class WalletManager {
     feeRate: number;
     virtualSize: number;
     weight: number;
+    data?: string;
   }> {
     // TODO: Verify the address for this network!! ... Help the user avoid sending transactions on very wrong addresses.
     const network = this.getNetwork(account.networkType);
@@ -345,6 +346,7 @@ export class WalletManager {
       feeRate: tx.getFeeRate(),
       virtualSize: finalTransaction.virtualSize(),
       weight: finalTransaction.weight(),
+      data: nullData
     };
   }
 

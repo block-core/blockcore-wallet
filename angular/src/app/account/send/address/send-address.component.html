@@ -1,5 +1,7 @@
 <div class="send-header">
-  <div class="send-header-title"><h2>Send {{ sendService.network.symbol }}</h2></div>
+  <div class="send-header-title">
+    <h2>Send {{ sendService.network.symbol }}</h2>
+  </div>
   <div class="send-header-actions" *ngIf="hasSidechain"><button class="half-width" [routerLink]="['/', 'account', 'send-sidechain']" mat-raised-button>Sidechain Swap</button></div>
 </div>
 
@@ -47,11 +49,25 @@
       <mat-label>Custom change address</mat-label>
       <input matInput formControlName="changeAddressInput" [(ngModel)]="sendService.changeAddress" />
     </mat-form-field>
+
+    <mat-form-field class="input-full-width" appearance="outline">
+      <mat-label>Private Memo</mat-label>
+      <input matInput formControlName="memoInput" [(ngModel)]="sendService.memo" />
+    </mat-form-field>
   </div>
 
   <button class="full-width" (click)="toggleOptions()" mat-raised-button>Options...</button>
   <br /><br />
   <h3>Total: {{ sendService.total | amount }} {{ sendService.network.symbol }}</h3>
+
+  <mat-card *ngIf="this.sendService.payment">
+    <strong>{{ this.sendService.payment.options.label }}</strong><br />
+    {{ this.sendService.payment.options.message }}<br /><br />
+    Payment ID: {{ this.sendService.payment.options.id }}<br />
+    Data (OP_RETURN): {{ this.sendService.payment.options.data }}<br />
+  </mat-card>
+  <br>
+
 </form>
 
 <button class="full-width" [disabled]="!form.valid" mat-raised-button routerLink="../confirm" color="primary">Continue</button>

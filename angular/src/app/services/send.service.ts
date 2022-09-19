@@ -23,6 +23,7 @@ export class SendService {
   accountHistory: AccountHistory;
   feeRate: number;
   payment: PaymentRequestData;
+  memo: string;
 
   private feeValue: Big;
   private amountValue: Big;
@@ -169,6 +170,7 @@ export class SendService {
     this.transactionId = '';
     this.addresses = [];
     this.accountHistory = null;
+    this.payment = null;
 
     if (this.sendToAddress) {
       this.address = this.sendToAddress;
