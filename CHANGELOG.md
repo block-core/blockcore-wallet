@@ -1,3 +1,18 @@
+## <small>0.0.70 (2022-09-19)</small>
+
+* Add nameservers to query for indexers ([e35c109](https://github.com/block-core/blockcore-wallet/commit/e35c109))
+* Add retrieval of indexers from nameservers ([df2f529](https://github.com/block-core/blockcore-wallet/commit/df2f529))
+* Fix title on exchange button ([041ed87](https://github.com/block-core/blockcore-wallet/commit/041ed87))
+* Handle faults while sending transaction ([7fc8380](https://github.com/block-core/blockcore-wallet/commit/7fc8380))
+* Improve the UI with error icon and error message ([102427e](https://github.com/block-core/blockcore-wallet/commit/102427e))
+* Removed the extra description (#235) ([b31145c](https://github.com/block-core/blockcore-wallet/commit/b31145c)), closes [#235](https://github.com/block-core/blockcore-wallet/issues/235)
+* Update app store screenshots ([8584198](https://github.com/block-core/blockcore-wallet/commit/8584198))
+* Update noble package ([4545472](https://github.com/block-core/blockcore-wallet/commit/4545472))
+* Update type definition packages ([122365c](https://github.com/block-core/blockcore-wallet/commit/122365c))
+* Update version and changelog ([92c7ee4](https://github.com/block-core/blockcore-wallet/commit/92c7ee4))
+
+
+
 ## <small>0.0.69 (2022-09-16)</small>
 
 * Add ability to reset the network status cache ([588007a](https://github.com/block-core/blockcore-wallet/commit/588007a)), closes [#233](https://github.com/block-core/blockcore-wallet/issues/233)
