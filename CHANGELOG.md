@@ -1,4 +1,24 @@
-## <small>0.0.70 (2022-09-19)</small>
+## <small>0.0.71 (2022-09-20)</small>
+
+* Add all nameservers to primary server group ([5aa3ebb](https://github.com/block-core/blockcore-wallet/commit/5aa3ebb))
+* Add correct parsing of OP_RETURN ([c5afeac](https://github.com/block-core/blockcore-wallet/commit/c5afeac))
+* Add persistence of transaction memo ([59c63ea](https://github.com/block-core/blockcore-wallet/commit/59c63ea))
+* Add support for basic payment request paste on clipboard paste ([2ed5df3](https://github.com/block-core/blockcore-wallet/commit/2ed5df3))
+* Add TransactionMetadataStore ([c204b25](https://github.com/block-core/blockcore-wallet/commit/c204b25))
+* Always use same server group no matter instance type ([66ce84d](https://github.com/block-core/blockcore-wallet/commit/66ce84d))
+* Always use same server group no matter instance type ([21c6bb9](https://github.com/block-core/blockcore-wallet/commit/21c6bb9))
+* Enforce a maximum 80 bytes OP_RETURN ([b4f6dec](https://github.com/block-core/blockcore-wallet/commit/b4f6dec))
+* Fix an issue with binding warning during debug run ([9825129](https://github.com/block-core/blockcore-wallet/commit/9825129))
+* Make the standardtoken key name all lowercase ([71a68fc](https://github.com/block-core/blockcore-wallet/commit/71a68fc))
+* Name the server group "Official" ([26f9c53](https://github.com/block-core/blockcore-wallet/commit/26f9c53))
+* Parse and display OP_RETURN as text ([53dd11c](https://github.com/block-core/blockcore-wallet/commit/53dd11c))
+* Remove some debug logging ([dfbe051](https://github.com/block-core/blockcore-wallet/commit/dfbe051))
+* Tune the validation errors on payment request view ([02cf043](https://github.com/block-core/blockcore-wallet/commit/02cf043))
+* Update version and changelog ([d6215eb](https://github.com/block-core/blockcore-wallet/commit/d6215eb))
+
+
+
+## <small>0.0.70 (2022-09-18)</small>
 
 * Add nameservers to query for indexers ([e35c109](https://github.com/block-core/blockcore-wallet/commit/e35c109))
 * Add retrieval of indexers from nameservers ([df2f529](https://github.com/block-core/blockcore-wallet/commit/df2f529))
