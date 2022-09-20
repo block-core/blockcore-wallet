@@ -14,9 +14,46 @@ export class InputValidators {
     return addressValidator(sendService, addressValidation);
   }
 
+  static maxBytes(maxLength: number): ValidatorFn {
+    return bytesValidator(maxLength);
+  }
+
   static addressSidechain(sendSidechainService: SendSidechainService, addressValidation: AddressValidationService): ValidatorFn {
     return addressSidechainValidator(sendSidechainService, addressValidation);
   }
+}
+
+export function bytesValidator(maxLength: number): ValidatorFn {
+  return (control: AbstractControl): ValidationErrors | null => {
+    try {
+      // If there are no value, we'll skip validation and allow this input.
+      if (!control.value) {
+        return null;
+      }
+
+      var enc = new TextEncoder();
+      var arr = enc.encode(control.value);
+
+      if (arr.length < maxLength) {
+        return null;
+      } else {
+        return {
+          maxbytes: {
+            requiredLength: 80,
+            actualLength: arr.length,
+          },
+        };
+      }
+    } catch (err) {
+      return {
+        maxbytes: {
+          requiredLength: 80,
+          actualLength: 'Error',
+        },
+        error: err,
+      };
+    }
+  };
 }
 
 export function maxBitcoinValidator(sendService: SendService): ValidatorFn {

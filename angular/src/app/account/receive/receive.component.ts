@@ -10,6 +10,7 @@ import { ExchangeService } from 'src/app/services/exchange.service';
 import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 var QRCode2 = require('qrcode');
 import { PaymentRequest } from 'src/shared/payment';
+import { InputValidators } from 'src/app/services/inputvalidators';
 
 @Component({
   selector: 'app-account-receive',
@@ -46,19 +47,15 @@ export class AccountReceiveComponent implements OnInit, OnDestroy {
     this.network = this.networks.getNetwork(account.networkType);
 
     this.form = fb.group({
-      addressInput: new UntypedFormControl('', [Validators.required, Validators.minLength(6)]),
-      // changeAddressInput: new UntypedFormControl('', [InputValidators.address(this.sendService, this.addressValidation)]),
-      amountInput: new UntypedFormControl('', [Validators.required, Validators.min(0), Validators.pattern(/^-?(0|[0-9]+[.]?[0-9]*)?$/)]),
+      addressInput: new UntypedFormControl('', [Validators.required, Validators.minLength(6), Validators.maxLength(200)]),
+      amountInput: new UntypedFormControl('', [Validators.min(0), Validators.pattern(/^-?(0|[0-9]+[.]?[0-9]*)?$/)]),
 
       // TODO: Tune the max lengths, for now we'll make them fairly small.
       labelInput: new UntypedFormControl('', [Validators.maxLength(42)]),
       messageInput: new UntypedFormControl('', [Validators.maxLength(100)]),
 
-      dataInput: new UntypedFormControl('', [Validators.maxLength(80)]), // OP_RETURN, allows for unicode input, which will become more than 80...
-      identifierInput: new UntypedFormControl('', [Validators.maxLength(100)]),
-
-      // TODO: Make an custom validator that sets form error when fee input is too low.
-      // feeInput: new UntypedFormControl(this.sendService.getNetworkFee(), [Validators.required, Validators.min(0), Validators.pattern(/^-?(0|[0-9]+[.]?[0-9]*)?$/)]),
+      dataInput: new UntypedFormControl('', [InputValidators.maxBytes(80)]),
+      identifierInput: new UntypedFormControl('', [Validators.maxLength(36)]),
     });
 
     this.form.valueChanges.subscribe(async (value) => {
@@ -76,6 +73,16 @@ export class AccountReceiveComponent implements OnInit, OnDestroy {
       horizontalPosition: 'center',
       verticalPosition: 'bottom',
     });
+  }
+
+  bytesLength(input: string) {
+    if (input == null) {
+      return 0;
+    }
+
+    var enc = new TextEncoder();
+    var arr = enc.encode(input);
+    return arr.length;
   }
 
   copyPayment() {

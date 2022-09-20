@@ -18,7 +18,6 @@
 
       <button class="purchase-button" color="primary" *ngIf="network.id === 'STRAX' || network.id === 'CRS' || network.id === 'BTC'" mat-raised-button (click)="openSimplex(address, network)">Buy with Simplex</button>&nbsp;
       <button class="purchase-button" color="primary" *ngIf="network.id === 'STRAX'" mat-raised-button (click)="openExolix(address, network)">Exchange with Exolix</button>
-
     </div>
   </mat-tab>
 
@@ -61,25 +60,26 @@
         <mat-form-field class="input-full-width" appearance="outline">
           <mat-label>Label</mat-label>
           <input matInput formControlName="labelInput" />
-          <mat-error *ngIf="form.controls['labelInput'].errors?.['invalid']">Label is invalid format.</mat-error>
+          <mat-error *ngIf="form.controls['labelInput'].errors?.['maxlength']">Label can be maximum {{form.controls['labelInput'].errors?.['maxlength'].requiredLength}} characters.</mat-error>
         </mat-form-field>
 
         <mat-form-field class="input-full-width" appearance="outline">
           <mat-label>Message</mat-label>
           <input matInput formControlName="messageInput" />
-          <mat-error *ngIf="form.controls['messageInput'].errors?.['invalid']">Message is invalid format.</mat-error>
+          <mat-error *ngIf="form.controls['messageInput'].errors?.['maxlength']">Message can be maximum {{form.controls['messageInput'].errors?.['maxlength'].requiredLength}} characters.</mat-error>
         </mat-form-field>
 
         <mat-form-field class="input-full-width" appearance="outline">
           <mat-label>ID</mat-label>
           <input matInput formControlName="identifierInput" />
-          <mat-error *ngIf="form.controls['identifierInput'].errors?.['invalid']">Identifier is invalid format.</mat-error>
+          <mat-error *ngIf="form.controls['identifierInput'].errors?.['maxlength']">ID can be maximum {{form.controls['identifierInput'].errors?.['maxlength'].requiredLength}} characters.</mat-error>
         </mat-form-field>
 
         <mat-form-field class="input-full-width" appearance="outline">
           <mat-label>Data</mat-label>
-          <input matInput formControlName="dataInput" />
-          <mat-error *ngIf="form.controls['dataInput'].errors?.['invalid']">Data is invalid format.</mat-error>
+          <input matInput #data formControlName="dataInput" />
+          <mat-error *ngIf="form.controls['dataInput'].errors?.['maxbytes']">The data input cannot be larger than {{form.controls['dataInput'].errors?.['maxbytes'].requiredLength}} bytes of data, is now {{form.controls['dataInput'].errors?.['maxbytes'].actualLength}} bytes.</mat-error>
+          <mat-hint align="end">{{ bytesLength(data.value) }} / 80 bytes</mat-hint>
         </mat-form-field>
 
         <img [src]="qrPayment" class="qr-code" />
