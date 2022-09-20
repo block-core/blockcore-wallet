@@ -1,7 +1,7 @@
 <h2>Confirm Payment</h2>
 
 <div class="grid-row-label-value">
-    <div><span>To</span><span>{{sendService.address}}</span></div>
+    <div><span>To</span><span class="selectable">{{sendService.address}}</span></div>
     <div><span>From</span><span>{{sendService.account.name}}</span></div>
     <div *ngIf="sendService.changeAddress"><span>Change (override)</span><span>{{sendService.changeAddress}}</span></div>
     <div><span>Amount</span><span>{{sendService.amountAsSatoshi | amount}} {{sendService.network.symbol}}</span></div>
@@ -18,7 +18,7 @@
     <div *ngIf="detailsOpen" class="grid-row-label-value">
 
         <div *ngIf="transaction"><span>Change Amount</span><span>{{transaction.changeAmount | amount}} {{sendService.network.symbol}}</span></div>
-        <div *ngIf="transaction"><span>Change Address</span><span>{{transaction.changeAddress}}</span></div>
+        <div *ngIf="transaction"><span>Change Address</span><span class="selectable">{{transaction.changeAddress}}</span></div>
 
         <div *ngIf="transaction"><span>Weight</span><span>{{transaction.weight | size }} </span></div>
         <div *ngIf="transaction"><span>Virtual Size</span><span>{{transaction.virtualSize | size }} </span></div>
