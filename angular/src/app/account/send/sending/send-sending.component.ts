@@ -68,7 +68,7 @@ export class AccountSendSendingComponent implements OnInit, OnDestroy {
         metadataEntry = {
           transactionHash: this.sendService.transactionId,
           memo: this.sendService.memo,
-          payment: this.sendService.payment.options,
+          payment: this.sendService.payment?.options,
         };
 
         txMetadata.transactions.push(metadataEntry);

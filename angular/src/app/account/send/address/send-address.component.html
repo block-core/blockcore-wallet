@@ -61,13 +61,16 @@
   <h3>Total: {{ sendService.total | amount }} {{ sendService.network.symbol }}</h3>
 
   <mat-card *ngIf="this.sendService.payment">
-    <strong>{{ this.sendService.payment.options.label }}</strong><br />
-    {{ this.sendService.payment.options.message }}<br /><br />
-    Payment ID: {{ this.sendService.payment.options.id }}<br />
-    Data (OP_RETURN): {{ this.sendService.payment.options.data }}<br />
-  </mat-card>
-  <br>
+    <span *ngIf="this.sendService.payment.options.label"
+      >Label: <strong>{{ this.sendService.payment.options.label }}</strong
+      ><br />
+    </span>
+    <span *ngIf="this.sendService.payment.options.message">Message: {{ this.sendService.payment.options.message }}<br /><br /> </span>
 
+    <span *ngIf="this.sendService.payment.options.id">Payment ID: {{ this.sendService.payment.options.id }}<br /> </span>
+    <span *ngIf="this.sendService.payment.options.data">Data (OP_RETURN): {{ this.sendService.payment.options.data }}<br /> </span>
+  </mat-card>
+  <br />
 </form>
 
 <button class="full-width" [disabled]="!form.valid" mat-raised-button routerLink="../confirm" color="primary">Continue</button>

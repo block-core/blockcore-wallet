@@ -6,13 +6,14 @@ import { UIState, CommunicationService, IconService, NetworksService, NetworkSta
 import { copyToClipboard } from '../../shared/utilities';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import * as QRCode from 'qrcode';
-import { Address, NetworkStatus, Transaction, TransactionView } from '../../../shared/interfaces';
+import { Address, NetworkStatus, Transaction, TransactionMetadata, TransactionMetadataEntry, TransactionView } from '../../../shared/interfaces';
 import { Network } from '../../../shared/networks';
-import { TransactionStore } from 'src/shared';
+import { TransactionMetadataStore, TransactionStore } from 'src/shared';
 import { AccountStateStore } from 'src/shared/store/account-state-store';
 import { RuntimeService } from 'src/shared/runtime.service';
 var QRCode2 = require('qrcode');
 import * as secp from '@noble/secp256k1';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-account-transaction',
@@ -27,6 +28,9 @@ export class AccountTransactionComponent implements OnInit, OnDestroy {
   public transaction: TransactionView;
   txid: string;
   currentNetworkStatus: NetworkStatus;
+  metadata: TransactionMetadata;
+  metadataEntry: TransactionMetadataEntry;
+  form: UntypedFormGroup;
 
   constructor(
     public uiState: UIState,
@@ -37,12 +41,18 @@ export class AccountTransactionComponent implements OnInit, OnDestroy {
     private networkStatusService: NetworkStatusService,
     public walletManager: WalletManager,
     private transactionStore: TransactionStore,
+    private transactionMetadataStore: TransactionMetadataStore,
     private logger: LoggerService,
     private snackBar: MatSnackBar,
-    private runtime: RuntimeService
+    private runtime: RuntimeService,
+    private fb: UntypedFormBuilder
   ) {
     this.uiState.goBackHome = false;
     this.uiState.backUrl = null;
+
+    this.form = fb.group({
+      memoInput: new UntypedFormControl(''),
+    });
 
     const account = this.walletManager.activeAccount;
     this.network = this.networks.getNetwork(account.networkType);
@@ -64,11 +74,59 @@ export class AccountTransactionComponent implements OnInit, OnDestroy {
       }, 0);
 
       this.transaction.details.data = this.transaction.details.outputs.filter((i) => i.outputType == 'TX_NULL_DATA').map((i) => i.scriptPubKey);
+      this.metadata = this.transactionMetadataStore.get(account.identifier);
+
+      if (this.metadata) {
+        const txmetadata = this.metadata.transactions.find((t) => t.transactionHash == this.txid);
+        this.metadataEntry = txmetadata;
+
+        if (txmetadata) {
+          this.form.controls['memoInput'].setValue(txmetadata.memo);
+        }
+      }
 
       // console.log('outputs:', this.transaction.details.outputs);
       // console.log('data:', this.transaction.details.data);
       // this.logger.info('Transaction:', this.transaction);
     });
+  }
+
+  async saveMemo() {
+    const memo = this.form.controls['memoInput'].value;
+
+    if (!this.metadata) {
+      const accountId = this.walletManager.activeAccount.identifier;
+
+      this.metadata = {
+        accountId: accountId,
+        transactions: [
+          {
+            memo: memo,
+            transactionHash: this.transaction.transactionHash,
+          },
+        ],
+      };
+
+      this.transactionMetadataStore.set(accountId, this.metadata);
+    } else {
+      if (!this.metadataEntry) {
+        this.metadataEntry = {
+          transactionHash: this.transaction.transactionHash,
+          memo: memo,
+        };
+
+        this.metadata.transactions.push(this.metadataEntry);
+      } else {
+        this.metadataEntry.memo = memo;
+      }
+    }
+
+    console.log(this.metadataEntry);
+    console.log(this.metadata);
+
+    await this.transactionMetadataStore.save();
+
+    this.form.markAsPristine();
   }
 
   openExplorer(txid: string) {

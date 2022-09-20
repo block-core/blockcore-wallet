@@ -187,7 +187,7 @@ interface TransactionMetadata {
 interface TransactionMetadataEntry {
   transactionHash: string;
   memo: string;
-  payment: {
+  payment?: {
     label: string;
     message: string;
     id: string;

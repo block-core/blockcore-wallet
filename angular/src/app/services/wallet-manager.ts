@@ -291,7 +291,7 @@ export class WalletManager {
       tx.addOutput({ address: changeAddress, value: changeAmount.toNumber() });
     }
 
-    if (nullData != null) {
+    if (nullData != null && nullData != '') {
       var data = Buffer.from(nullData);
       const dataScript = payments.embed({ data: [data] });
       tx.addOutput({ script: dataScript.output, value: 0 }); // OP_RETURN always with 0 value unless you want to burn coins
