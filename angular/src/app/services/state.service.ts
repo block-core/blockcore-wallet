@@ -45,10 +45,6 @@ export class StateService {
   ) {
     this.changedSubject = new BehaviorSubject<StateService>(this);
 
-    if (env.instance === 'coinvault') {
-      settingStore.serverGroup = 'group2';
-    }
-
     this.stores.push(stateStore);
     this.stores.push(addressStore);
     this.stores.push(actionStore);
