@@ -35,9 +35,6 @@ export class SettingsComponent {
   ) {
     // The Settings UI can be opened from the "Extension options" link and then settings won't be loaded yet.
     if (!settingsService.values) {
-      if (env.instance === 'coinvault') {
-        this.settingStore.serverGroup = 'group2';
-      }
       this.settings = JSON.parse(JSON.stringify(this.settingStore.defaultItem()));
     } else {
       // Clone the settings on load:
