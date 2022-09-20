@@ -41,7 +41,7 @@ export class LoadingComponent implements OnInit, OnDestroy {
     private runtime: RuntimeService,
     @Inject(DOCUMENT) private document: Document
   ) {
-    this.uiState.title = 'Loading...';
+    
   }
 
   ngOnDestroy(): void {
