@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { AccountHistoryStore, AddressStore, TransactionStore } from 'src/shared';
+import { AccountHistoryStore, AddressStore, TransactionMetadataStore, TransactionStore } from 'src/shared';
 import { MessageService } from 'src/shared';
 import { AccountStateStore } from 'src/shared/store/account-state-store';
 import { AddressWatchStore } from 'src/shared/store/address-watch-store';
@@ -22,6 +22,7 @@ export class AccountSendSendingComponent implements OnInit, OnDestroy {
     private accountStateStore: AccountStateStore,
     private addressStore: AddressStore,
     private transactionStore: TransactionStore,
+    private transactionMetadataStore: TransactionMetadataStore,
     public uiState: UIState
   ) {
     // When the transaction is done, we'll make sure the back button sends back to home.
@@ -37,16 +38,44 @@ export class AccountSendSendingComponent implements OnInit, OnDestroy {
 
     this.sendService.loading = false;
     this.sendService.transactionResult = transactionDetails.transactionResult;
-    
+
     if (typeof transactionDetails.transactionResult !== 'string') {
       this.sendService.transactionError = this.sendService.transactionResult.title;
-      
+
       // Examples:
       // {"title":"bad-txns-inputs-missingorspent","status":200,"traceId":"00-6cae22bb805a8698ffe313f5130f040c-ddbb8afdb391e115-00"}
       // {"title":"tx-size","status":200,"traceId":"00-859d81fbef41ef9f7832aeaf0f88615b-75998b079a941280-00"}
-
     } else {
       this.sendService.transactionId = this.sendService.transactionResult;
+
+      // When the transaction is successfull, we'll store the metadata for it.
+      let txMetadata = this.transactionMetadataStore.get(this.sendService.account.identifier);
+
+      if (!txMetadata) {
+        txMetadata = {
+          accountId: this.sendService.account.identifier,
+          transactions: [],
+        };
+
+        this.transactionMetadataStore.set(txMetadata.accountId, txMetadata);
+      }
+
+      let metadataEntry = txMetadata.transactions.find((t) => t.transactionHash == this.sendService.transactionId);
+
+      if (metadataEntry) {
+        // This should never happen?
+      } else {
+        metadataEntry = {
+          transactionHash: this.sendService.transactionId,
+          memo: this.sendService.memo,
+          payment: this.sendService.payment.options,
+        };
+
+        txMetadata.transactions.push(metadataEntry);
+        await this.transactionMetadataStore.save();
+      }
+
+      // this.transactionMetadataStore.set()
     }
 
     this.sendService.transactionHex = transactionDetails.transactionHex;

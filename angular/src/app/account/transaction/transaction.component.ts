@@ -65,10 +65,9 @@ export class AccountTransactionComponent implements OnInit, OnDestroy {
 
       this.transaction.details.data = this.transaction.details.outputs.filter((i) => i.outputType == 'TX_NULL_DATA').map((i) => i.scriptPubKey);
 
-      console.log('outputs:', this.transaction.details.outputs);
-      console.log('data:', this.transaction.details.data);
-
-      this.logger.info('Transaction:', this.transaction);
+      // console.log('outputs:', this.transaction.details.outputs);
+      // console.log('data:', this.transaction.details.data);
+      // this.logger.info('Transaction:', this.transaction);
     });
   }
 
@@ -98,6 +97,7 @@ export class AccountTransactionComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {}
 
+  /** Parse the hex formatted script. Ref: https://en.bitcoin.it/wiki/Script */
   parseOpreturn(data: any) {
     if (!data) {
       return null;
@@ -106,8 +106,31 @@ export class AccountTransactionComponent implements OnInit, OnDestroy {
     // First get the bytes from the complete hex value:
     const buff = secp.utils.hexToBytes(data);
 
+    if (buff[0] != 106) {
+      throw new Error('Not OP_RETURN.');
+    }
+
+    const opcode = buff[1];
+
+    let skip = 2; // 1-75: The next opcode bytes is data to be pushed onto the stack
+
+    if (opcode == 76) {
+      // The next byte contains the number of bytes to be pushed onto the stack.
+      skip = 3;
+    } else if (opcode == 77) {
+      // The next two bytes contain the number of bytes to be pushed onto the stack in little endian order.
+      skip = 5;
+    } else if (opcode == 78) {
+      // The next four bytes contain the number of bytes to be pushed onto the stack in little endian order.
+      skip = 6;
+    }
+
     // Skip the prefix for OP_RETURN:
-    const parsedBuff = buff.slice(3, buff.length);
+    const parsedBuff = buff.slice(skip, buff.length);
+
+    if (parsedBuff.length == 0) {
+      return null;
+    }
 
     // First transform back to hex, but now only the payload data:
     const dataHex = secp.utils.bytesToHex(parsedBuff);

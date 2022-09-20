@@ -181,9 +181,13 @@ interface Transaction {
 
 interface TransactionMetadata {
   accountId: string;
+  transactions: TransactionMetadataEntry[];
+}
+
+interface TransactionMetadataEntry {
   transactionHash: string;
+  memo: string;
   payment: {
-    memo: string;
     label: string;
     message: string;
     id: string;
@@ -731,4 +735,5 @@ export {
   Actions,
   StateEntry,
   TransactionMetadata,
+  TransactionMetadataEntry,
 };
