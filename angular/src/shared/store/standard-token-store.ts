@@ -3,6 +3,6 @@ import {AccountTokens, Token} from "../interfaces";
 
 export class StandardTokenStore extends StoreListBase<AccountTokens> {
   constructor() {
-    super('standardToken');
+    super('standardtoken');
   }
 }
