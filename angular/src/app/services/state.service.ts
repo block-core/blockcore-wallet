@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Injectable, NgZone } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { ActionStore, AddressStore, NetworkStatusStore, SettingStore, TransactionStore, UIStore, WalletStore, AccountHistoryStore, AddressIndexedStore } from 'src/shared';
+import { ActionStore, AddressStore, NetworkStatusStore, SettingStore, TransactionStore, UIStore, WalletStore, AccountHistoryStore, AddressIndexedStore, TransactionMetadataStore } from 'src/shared';
 import { AccountStateStore } from 'src/shared/store/account-state-store';
 import { AddressWatchStore } from 'src/shared/store/address-watch-store';
 import { ContactStore } from 'src/shared/store/contacts-store';
@@ -28,6 +28,7 @@ export class StateService {
     private networkStatusStore: NetworkStatusStore,
     private settingStore: SettingStore,
     private transactionStore: TransactionStore,
+    private transactionMetadataStore: TransactionMetadataStore,
     private uiStore: UIStore,
     private walletStore: WalletStore,
     private logger: LoggerService,
@@ -63,6 +64,7 @@ export class StateService {
     this.stores.push(permissionStore);
     this.stores.push(contactStore);
     this.stores.push(tokenStore);
+    this.stores.push(transactionMetadataStore);
   }
 
   async wipe() {

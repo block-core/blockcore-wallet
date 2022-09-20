@@ -74,7 +74,7 @@ import { HandlerComponent } from './settings/handler/handler.component';
 import { ActionStratisIdentityComponent } from './action/sid/sid.component';
 import { ActionNostrIdentityComponent } from './action/nostr/nostr.component';
 import { AboutComponent } from './settings/about/about.component';
-import { AccountHistoryStore, AddressStore, NetworkStatusStore, TransactionStore, UIStore, WalletStore, AddressIndexedStore, EventBus, NetworkLoader } from 'src/shared';
+import { AccountHistoryStore, AddressStore, NetworkStatusStore, TransactionStore, UIStore, WalletStore, AddressIndexedStore, EventBus, NetworkLoader, TransactionMetadataStore } from 'src/shared';
 import { ActionStore } from 'src/shared/store/action-store';
 import { SettingStore } from 'src/shared/store/setting-store';
 import { AddressWatchStore } from 'src/shared/store/address-watch-store';
@@ -100,7 +100,7 @@ import { ContactStore } from 'src/shared/store/contacts-store';
 import { ContactsViewComponent } from './contacts/view/view.component';
 import { ExchangeComponent } from './exchange/exchange.component';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import {StandardTokenStore} from "../shared/store/standard-token-store";
+import { StandardTokenStore } from '../shared/store/standard-token-store';
 import { ActionSignMessageComponent } from './action/sign-message/sign.component';
 import { ActionSignVerifiableCredentialComponent } from './action/sign-credential/sign.component';
 import { RuntimeService } from 'src/shared/runtime.service';
@@ -183,7 +183,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     ActionSignMessageComponent,
     ActionSignVerifiableCredentialComponent,
     ActionVaultSetupComponent,
-    PaymentComponent
+    PaymentComponent,
   ],
   imports: [
     BrowserModule,
@@ -258,6 +258,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     NetworkStatusStore,
     SettingStore,
     TransactionStore,
+    TransactionMetadataStore,
     UIStore,
     WalletStore,
     AccountHistoryStore,

@@ -1,7 +1,7 @@
-import {DIDDocument, DIDDocumentMetadata, DIDResolutionMetadata, ServiceEndpoint} from 'did-resolver';
-import {ClientData} from './client-data';
-import {DecodedAttestion} from './decoded-attestion';
-import {User, Credential} from './user';
+import { DIDDocument, DIDDocumentMetadata, DIDResolutionMetadata, ServiceEndpoint } from 'did-resolver';
+import { ClientData } from './client-data';
+import { DecodedAttestion } from './decoded-attestion';
+import { User, Credential } from './user';
 
 // interfaces.ts
 interface IWords {
@@ -177,6 +177,17 @@ interface Transaction {
   hex: string;
   unconfirmed?: boolean;
   finalized?: boolean;
+}
+
+interface TransactionMetadata {
+  accountId: string;
+  transactionHash: string;
+  payment: {
+    memo: string;
+    label: string;
+    message: string;
+    id: string;
+  };
 }
 
 interface TransactionView extends Transaction {
@@ -559,7 +570,7 @@ interface ActionResponse {
   /** A copy of the actual content string that was signed. */
   content?: object | string;
 
-  error?: unknown | any | { message?: string, stack?: any };
+  error?: unknown | any | { message?: string; stack?: any };
 }
 
 interface ActionPrepareResult {
@@ -719,4 +730,5 @@ export {
   IEvents,
   Actions,
   StateEntry,
+  TransactionMetadata,
 };
