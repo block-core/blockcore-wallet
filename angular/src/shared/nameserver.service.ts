@@ -12,7 +12,6 @@ export class NameserverService {
       await dns.load(Nameservers[networkGroup]);
 
       this.services = dns.getServices();
-      console.log('services:', this.services);
     }
   }
 

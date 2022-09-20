@@ -747,7 +747,6 @@ export class IndexerBackgroundService {
 
             // When all accounts has been processes, saved the account state.
             await this.accountStateStore.save();
-            console.debug('AccountStateStore:', this.accountStateStore.all());
         }
 
         // console.debug('Indexer finished:', changes);
