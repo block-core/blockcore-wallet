@@ -1,12 +1,11 @@
 import { Account } from './interfaces';
-import { BTC44, BTC84, CITY, CRS, CY, IDENTITY, NOSTR, RSC, SBC, STRAX, TCRS, TSTRAX, X42 } from './networks';
+import { BTC, CITY, CRS, CY, IDENTITY, NOSTR, RSC, SBC, STRAX, TCRS, TSTRAX, X42 } from './networks';
 const { v4: uuidv4 } = require('uuid');
 
 export class Defaults {
   static getNetworks() {
     const networks = [];
-    networks.push(new BTC44());
-    networks.push(new BTC84());
+    networks.push(new BTC());
     networks.push(new CITY());
     networks.push(new CRS());
     networks.push(new CY());
