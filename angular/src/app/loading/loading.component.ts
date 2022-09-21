@@ -41,7 +41,7 @@ export class LoadingComponent implements OnInit, OnDestroy {
     private runtime: RuntimeService,
     @Inject(DOCUMENT) private document: Document
   ) {
-    
+
   }
 
   ngOnDestroy(): void {
@@ -94,7 +94,7 @@ export class LoadingComponent implements OnInit, OnDestroy {
       await this.appManager.initialize();
       await this.status.initialize();
 
-      this.translate.addLangs(['en', 'no', 'fr']);
+      this.translate.addLangs(['en', 'no', 'fr','el']);
       this.translate.setDefaultLang('en');
 
       // TODO: Backwards compatible fix. Remove on release.
