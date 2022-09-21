@@ -16,7 +16,7 @@ export interface Network {
   purpose: number;
 
   /** Used to override the default purpose, which can be different than the purpose used for key derivation. */
-  purposeAddress?: number;
+  // purposeAddress?: number;
 
   messagePrefix: string;
 

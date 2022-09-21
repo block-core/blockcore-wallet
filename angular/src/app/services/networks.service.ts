@@ -18,7 +18,11 @@ export class NetworksService {
     this.allNetworks = networkLoader.getAllNetworks();
   }
 
-  getDerivationPathForNetwork(network: Network) {
+  getDerivationPath(purpose: number, network: Network) {
+    return `m/${purpose}'/${network.network}'`;
+  }
+
+  getDerivationPathForNetwork(purpose: number, network: Network) {
     return `m/${network.purpose}'/${network.network}'`;
   }
 

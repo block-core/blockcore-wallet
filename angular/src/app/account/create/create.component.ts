@@ -32,7 +32,7 @@ export class AccountCreateComponent implements OnInit, OnDestroy {
   selectedNetwork: Network;
   mode: string = 'normal';
   addressMode: string = 'normal';
-  purposeAddress: number = 44;
+  purpose: number = 44;
 
   get passwordValidated(): boolean {
     return this.password === this.password2 && this.secondFormGroup.valid;
@@ -126,14 +126,18 @@ export class AccountCreateComponent implements OnInit, OnDestroy {
   }
 
   getDerivationPath() {
-    const derivationPath = this.networkService.getDerivationPathForNetwork(this.selectedNetwork);
+    const derivationPath = this.networkService.getDerivationPath(this.purpose, this.selectedNetwork);
     return `${derivationPath}/${this.index.toString()}'`;
   }
 
   onNetworkChanged() {
     this.selectedNetwork = this.networkService.getNetwork(this.network);
     this.derivationPath = this.getDerivationPath();
-    this.purposeAddress = this.selectedNetwork.purposeAddress ?? 44;
+    this.purpose = this.selectedNetwork.purpose ?? 44;
+  }
+
+  onPurposeChanged() {
+    this.derivationPath = this.getDerivationPath();
   }
 
   async onAccountIndexChanged(event: any) {
@@ -150,7 +154,7 @@ export class AccountCreateComponent implements OnInit, OnDestroy {
     const accountType = this.selectedNetwork.purpose == 302 ? 'identity' : 'coin';
 
     // Read the purpose address from UI selection:
-    let selectedPurposeAddress = this.purposeAddress;
+    let selectedPurposeAddress = this.purpose;
 
     if (accountType == 'identity') {
       selectedPurposeAddress = 340;

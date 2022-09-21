@@ -31,6 +31,16 @@
 
     </mat-form-field>
     
+    <br *ngIf="selectedNetwork.purpose != 302">
+
+    <mat-form-field *ngIf="selectedNetwork.purpose != 302" appearance="outline" class="input-full-width">
+        <mat-label>{{ "Account.AddressFormat" | translate }}</mat-label>
+        <mat-select [(value)]="purpose" (selectionChange)="onPurposeChanged()">
+            <mat-option [value]="44">{{ "Account.Legacy" | translate }}</mat-option>
+            <mat-option [value]="84">{{ "Account.SegWit" | translate }}</mat-option>
+        </mat-select>
+    </mat-form-field>
+
     <br>
 
     <mat-form-field appearance="outline" class="input-full-width">
@@ -60,15 +70,6 @@
         </mat-select>
     </mat-form-field>
 
-    <br *ngIf="selectedNetwork.purpose != 302">
-
-    <mat-form-field *ngIf="selectedNetwork.purpose != 302" appearance="outline" class="input-full-width">
-        <mat-label>{{ "Account.AddressFormat" | translate }}</mat-label>
-        <mat-select [(value)]="purposeAddress">
-            <mat-option [value]="44">{{ "Account.Legacy" | translate }}</mat-option>
-            <mat-option [value]="84">{{ "Account.Segwit" | translate }}</mat-option>
-        </mat-select>
-    </mat-form-field>
 
 
     <br>

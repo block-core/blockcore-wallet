@@ -92,9 +92,11 @@
 		"Quick": "Quick",
 		"SingleAddress": "Single Address",
 		"Legacy": "Legacy",
-		"Segwit": "Segwit",
+		"SegWit": "SegWit",
 		"RemoveAccountFromWallet": "Remove account from wallet",
-		"RemoveConfirm": "Yes, remove this account"
+		"RemoveConfirm": "Yes, remove this account",
+		"Purpose": "Purpose",
+		"AddressType": "Address Type"
 	},
 	"Action": {
 		"vaultSetup": "Vault Setup",

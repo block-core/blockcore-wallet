@@ -22,6 +22,8 @@
   <!-- Purpose: {{walletManager.activeAccount?.purpose}}<br>
   Network: {{walletManager.activeAccount?.network}}<br> -->
   {{ "Account.Index" | translate }}: {{walletManager.activeAccount?.index}}<br>
+  {{ "Account.Purpose" | translate }}: {{walletManager.activeAccount?.purpose}}<br>
+  {{ "Account.AddressType" | translate }}: {{walletManager.activeAccount?.purposeAddress}}<br>
 
   <br>
   <button class="signup-button" mat-flat-button color="primary" (click)="save()">{{ "App.Save" | translate }}</button>
