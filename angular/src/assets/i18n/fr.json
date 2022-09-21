@@ -2,6 +2,7 @@
 	"en": "English",
 	"no": "Norsk",
 	"fr": "French",
+  "el": "Greek",
 	"App": {
 		"AddAccount": "Add Account",
 		"ChooseWallet": "Choose Wallet",

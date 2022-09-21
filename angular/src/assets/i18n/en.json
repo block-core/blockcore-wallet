@@ -2,6 +2,7 @@
 	"en": "English",
 	"no": "Norsk",
 	"fr": "French",
+  "el": "Greek",
 	"App": {
 		"AddAccount": "Add Account",
 		"ChooseWallet": "Choose Wallet",
@@ -86,7 +87,7 @@
 		"AccountDerivationPath": "Account Derivation Path",
 		"CreateAccount": "Create Account",
 		"AccountName": "Account name",
-		"Index": "Indeks",
+		"Index": "Index",
 		"Normal": "Normal",
 		"Quick": "Quick",
 		"SingleAddress": "Single Address",
