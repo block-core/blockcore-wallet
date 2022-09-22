@@ -171,6 +171,7 @@ export class SendService {
     this.addresses = [];
     this.accountHistory = null;
     this.payment = null;
+    this.memo = null;
 
     if (this.sendToAddress) {
       this.address = this.sendToAddress;
@@ -181,5 +182,6 @@ export class SendService {
       this.amount = this.sendAmount;
       this.sendAmount = '';
     }
+
   }
 }
