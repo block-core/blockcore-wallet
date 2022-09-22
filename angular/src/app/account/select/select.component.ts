@@ -63,7 +63,8 @@ export class AccountSelectComponent implements OnInit, OnDestroy {
 
     for (const account of accounts) {
       // Don't persist the selected value.
-      delete account.selected;
+      // DUE TO BINDING WARNING IN DEBUG MODE, WE'LL KEEP THE SELECTED.
+      // delete account.selected;
 
       try {
         await this.walletManager.addAccount(account, wallet, false); // Hold off indexing while we save all accounts.
