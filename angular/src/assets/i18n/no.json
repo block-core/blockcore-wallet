@@ -22,7 +22,8 @@
 		"By": "Av",
 		"Save": "Lagre",
 		"Remove": "Fjern",
-		"UnlockTitle": "Lås opp {{value}}"
+		"UnlockTitle": "Lås opp {{value}}",
+		"Version": "Versjon"
 	},
 	"Dashboard": {
 		"Accounts": "Kontoer",
@@ -99,5 +100,8 @@
 	"Action": {
 		"vaultSetup": "Vault installasjon",
 		"signMessage": "Signér melding"
+	},
+	"Manifest": {
+		"Description": "Ikke-forvaringspliktig lommebok for mynter, tokens, identiteter, NFTer og mer."
 	}
 }

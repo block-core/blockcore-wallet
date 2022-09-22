@@ -271,7 +271,6 @@ export class IndexerBackgroundService {
         const allAccounts = wallets.flatMap(w => w.accounts);
 
         if (allAccounts.length == 0) {
-            console.log('There are zero accounts in wallets.');
             return { changes: false, completed: true };
         }
 

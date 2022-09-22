@@ -4,8 +4,8 @@
 
     <h1>{{ uiState.manifest?.name }}</h1>
 
-
-    <p>{{ uiState.manifest?.description }}</p>
+    <!-- <p>{{ uiState.manifest?.description }}</p> -->
+    <p>{{ "Manifest.Description" | translate }}</p>
 
     <br />
     <button class="signup-button" mat-flat-button color="primary" (click)="create()">{{ "Wallet.CreateNew" | translate }}</button>
@@ -13,7 +13,7 @@
     <button class="signup-button" mat-flat-button (click)="restore()">{{ "Wallet.Recover" | translate }}</button>
     <br /><br />
     <br>
-    <div class="sub-title">Version {{ uiState.manifest?.version }}</div>
+    <div class="sub-title">{{ "App.Version" | translate }} {{ uiState.manifest?.version }}</div>
     <div class="right">
       <app-language-selector></app-language-selector>
     </div>

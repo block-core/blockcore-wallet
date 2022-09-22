@@ -6,6 +6,7 @@ import { copyToClipboard } from '../../shared/utilities';
 import { map, Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
+import { TranslateService } from '@ngx-translate/core';
 const { v4: uuidv4 } = require('uuid');
 
 @Component({
@@ -44,9 +45,9 @@ export class WalletCreateComponent implements OnInit {
     public env: EnvironmentService,
     private credentialService: CredentialService,
     private webAuthnService: WebAuthnService,
-    private cd: ChangeDetectorRef
+    private cd: ChangeDetectorRef,
+    public translate: TranslateService,
   ) {
-    this.uiState.title = 'Create new wallet';
 
     this.firstFormGroup = this.fb.group({
       extensionWordsCtrl: [''],
@@ -59,7 +60,9 @@ export class WalletCreateComponent implements OnInit {
     });
   }
 
-  ngOnInit() {
+  async ngOnInit() {
+    this.uiState.title = await this.translate.get('Wallet.CreateNew').toPromise();
+
     this.wordlist = this.crypto.listname;
     this.wordlists = this.crypto.languages();
 

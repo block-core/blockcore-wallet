@@ -2,7 +2,7 @@
 	"en": "English",
 	"no": "Norsk",
 	"fr": "French",
-  "el": "Greek",
+	"el": "Greek",
 	"App": {
 		"AddAccount": "Add Account",
 		"ChooseWallet": "Choose Wallet",
@@ -22,7 +22,8 @@
 		"By": "By",
 		"Save": "Save",
 		"Remove": "Remove",
-		"UnlockTitle": "Unlock {{value}}"
+		"UnlockTitle": "Unlock {{value}}",
+		"Version": "Version"
 	},
 	"Dashboard": {
 		"Accounts": "Accounts",
@@ -47,7 +48,7 @@
 		"OtherActions": "Other Actions",
 		"NetworkStatus": "Network Status",
 		"ChangePassword": "Change Password",
-    "Biometric": "Biometric",
+		"Biometric": "Biometric",
 		"WipeData": "Wipe Data",
 		"Information": "Information",
 		"About": "About",
@@ -101,6 +102,9 @@
 	"Action": {
 		"vaultSetup": "Vault Setup",
 		"signMessage": "Sign Message"
+	},
+	"Manifest": {
+		"Description": "Non-Custodial wallet for Coins, Tokens, Identities, NFTs and more."
 	},
 	"english": "English",
 	"chinese_simplified": "Chinese (Simplified)",
