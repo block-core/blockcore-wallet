@@ -114,6 +114,7 @@ import { PaymentComponent } from './account/payment/payment.component';
 import { PaymentRequest } from 'src/shared/payment';
 import { MessageService } from 'src/shared';
 import { NameserverService } from 'src/shared/nameserver.service';
+import { LanguageSelectorComponent } from './shared/language-selector/language-selector.component';
 
 // required for AOT compilation
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
@@ -184,6 +185,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     ActionSignVerifiableCredentialComponent,
     ActionVaultSetupComponent,
     PaymentComponent,
+    LanguageSelectorComponent,
   ],
   imports: [
     BrowserModule,

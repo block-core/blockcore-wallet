@@ -1,28 +1,41 @@
 <div class="page centered">
+  <img src="assets/icon-128x128.png" />
 
-    <img src="assets/icon-128x128.png">
+  <h1>{{ uiState.manifest?.name }}</h1>
 
-    <h1>{{uiState.manifest?.name}}</h1>
+  <br />
+  <h2>{{ "App.EnterPassordToUnlock" | translate }}</h2>
+  <br />
+  <mat-form-field appearance="outline" class="input-full-width">
+    <mat-label>{{ "App.Password" | translate }}</mat-label>
+    <input matInput type="password" [(ngModel)]="unlockPassword" (keydown.enter)="unlock()" />
+  </mat-form-field>
 
-    <br>
-    <h2>{{ 'App.EnterPassordToUnlock' | translate }}</h2>
-    <br>
-    <mat-form-field appearance="outline" class="input-full-width">
-        <mat-label>{{ 'App.Password' | translate }}</mat-label>
-        <input matInput type="password" [(ngModel)]="unlockPassword" (keydown.enter)="unlock()">
-    </mat-form-field>
+  <div class="error-list" *ngIf="error">
+    <mat-chip-list *ngIf="error">
+      <mat-chip *ngIf="error" color="warn" selected (removed)="removeError()"
+        >{{ error }}
+        <mat-icon matChipRemove>cancel</mat-icon>
+      </mat-chip>
+    </mat-chip-list>
+  </div>
 
-    <div class="error-list" *ngIf="error">
-        <mat-chip-list *ngIf="error">
-            <mat-chip *ngIf="error" color="warn" selected (removed)="removeError()">{{error}}
-                <mat-icon matChipRemove>cancel</mat-icon>
-            </mat-chip>
-        </mat-chip-list>
-    </div>
+  <button class="wide-button" mat-flat-button color="primary" (click)="unlock()">{{ "App.Unlock" | translate }}</button>
 
-    <button class="wide-button" mat-flat-button color="primary" (click)="unlock()">{{ 'App.Unlock' | translate }}</button>
+  <br /><br /><br />
+  <div class="sub-title">Version {{ uiState.manifest?.version }}</div>
 
-    <br><br><br>
-    <div class="sub-title">Version {{ uiState.manifest?.version }}</div>
+  <div class="right">
+    <app-language-selector></app-language-selector>
+  </div>
 
+  <!-- <mat-form-field class="input-full-width" appearance="outline">
+    <mat-label>{{ 'Settings.DisplayLanguage' | translate}}</mat-label>
+    <mat-select (selectionChange)="onLanguageChanged($event)" [(value)]="settings.language">
+      <mat-option *ngFor="let lang of translate.getLangs()" [value]="lang">
+        {{ lang | translate }}</mat-option>
+    </mat-select>
+    <mat-hint>{{ 'Settings.DisplayLanguageHint' | translate}}
+    </mat-hint>
+  </mat-form-field> -->
 </div>

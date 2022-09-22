@@ -1,0 +1,9 @@
+<button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Change language">
+  <mat-icon>translate</mat-icon>
+</button>
+<mat-menu #menu="matMenu" xPosition="before" yPosition="above">
+  <button mat-menu-item *ngFor="let lang of translate.getLangs()" (click)="onLanguageChanged(lang)">
+    <!-- <mat-icon>dialpad</mat-icon> -->
+    <span> {{ lang | translate }}</span>
+  </button>
+</mat-menu>

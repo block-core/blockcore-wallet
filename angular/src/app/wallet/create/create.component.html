@@ -14,8 +14,11 @@
     <br /><br />
     <br>
     <div class="sub-title">Version {{ uiState.manifest?.version }}</div>
-    <br><br>
+    <div class="right">
+      <app-language-selector></app-language-selector>
+    </div>
 
+    <br><br>
     <div *ngIf="uiState.showInstallButton" id="install" class="left">
       <mat-card>
         <mat-card-header>

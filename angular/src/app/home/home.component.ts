@@ -1,5 +1,5 @@
 import { Component, ChangeDetectorRef, OnInit, OnDestroy } from '@angular/core';
-import { CryptoService, UIState } from '../services';
+import { CryptoService, SettingsService, UIState } from '../services';
 import { Router } from '@angular/router';
 import { CommunicationService, SecureStateService, WalletManager } from '../services';
 import { TranslateService } from '@ngx-translate/core';
@@ -19,7 +19,17 @@ export class HomeComponent implements OnInit, OnDestroy {
   error = '';
   sub2: any;
 
-  constructor(public uiState: UIState, private translate: TranslateService, private crypto: CryptoService, private router: Router, private communication: CommunicationService, private secure: SecureStateService, public walletManager: WalletManager, private cd: ChangeDetectorRef) {
+  constructor(
+    public uiState: UIState,
+    private settingsService: SettingsService,
+    public translate: TranslateService,
+    private crypto: CryptoService,
+    private router: Router,
+    private communication: CommunicationService,
+    private secure: SecureStateService,
+    public walletManager: WalletManager,
+    private cd: ChangeDetectorRef,
+  ) {
     this.uiState.showBackButton = false;
     this.activateAlarm();
   }
