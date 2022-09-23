@@ -68,7 +68,8 @@
 		"Recover": "Bruk eksisterende Hemmelig gjenopprettingsfrase",
 		"SecretRecoveryPhrase": "Hemmelig gjenopprettingsfrase",
 		"Confirm": "OK, jeg har lagret",
-		"Import": "Importer hemmelig gjenopprettingsfrase"
+		"Import": "Importer hemmelig gjenopprettingsfrase",
+		"Receive": "Motta"
 	},
 	"AddressBook": {
 		"AddressBook": "Addressebok",

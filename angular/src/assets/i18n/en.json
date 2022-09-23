@@ -68,7 +68,8 @@
 		"Recover": "Use Existing Secret Recovery Phrase",
 		"SecretRecoveryPhrase": "Secret Recovery Phrase",
 		"Confirm": "OK, I have saved it",
-		"Import": "Import secret recovery phrase"
+		"Import": "Import secret recovery phrase",
+		"Receive": "Receive"
 	},
 	"AddressBook": {
 		"AddressBook": "Address Book",
