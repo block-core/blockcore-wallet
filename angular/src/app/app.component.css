@@ -107,6 +107,10 @@
   margin-top: -0.5em;
 }
 
+.mat-form-field {
+  text-align: left;
+}
+
 [dir=rtl] .mat-form-field {
   text-align: right;
 }
