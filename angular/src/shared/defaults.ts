@@ -10,6 +10,7 @@ export class Defaults {
     networks.push(new CRS());
     networks.push(new CY());
     networks.push(new IDENTITY());
+    networks.push(new IMPLX());
     networks.push(new NOSTR());
     networks.push(new RSC());
     networks.push(new SBC());
@@ -17,7 +18,6 @@ export class Defaults {
     networks.push(new TCRS());
     networks.push(new TSTRAX());
     networks.push(new X42());
-    networks.push(new IMPLX());
     return networks;
   }
 
@@ -27,6 +27,19 @@ export class Defaults {
     switch (instance) {
       case 'blockcore':
         accounts = [
+          {
+            identifier: uuidv4(),
+            index: 0,
+            networkType: 'CITY',
+            mode: 'normal',
+            selected: false,
+            name: 'City Coin',
+            type: 'coin',
+            network: 1926,
+            purpose: 44,
+            purposeAddress: 44,
+            icon: 'paid',
+          },
           {
             identifier: uuidv4(),
             selected: false,
@@ -43,19 +56,6 @@ export class Defaults {
           {
             identifier: uuidv4(),
             index: 0,
-            networkType: 'CITY',
-            mode: 'normal',
-            selected: false,
-            name: 'City Coin',
-            type: 'coin',
-            network: 1926,
-            purpose: 44,
-            purposeAddress: 44,
-            icon: 'paid',
-          },
-          {
-            identifier: uuidv4(),
-            index: 0,
             networkType: 'CY',
             mode: 'normal',
             selected: false,
@@ -64,19 +64,6 @@ export class Defaults {
             network: 3601,
             purpose: 44,
             purposeAddress: 84,
-            icon: 'paid',
-          },
-          {
-            identifier: uuidv4(),
-            selected: false,
-            networkType: 'STRAX',
-            mode: 'normal',
-            index: 0,
-            name: 'Stratis',
-            type: 'coin',
-            network: 105105,
-            purpose: 44,
-            purposeAddress: 44,
             icon: 'paid',
           },
           {
@@ -116,6 +103,19 @@ export class Defaults {
             network: 5006,
             purpose: 44,
             purposeAddress: 84,
+            icon: 'paid',
+          },
+          {
+            identifier: uuidv4(),
+            selected: false,
+            networkType: 'STRAX',
+            mode: 'normal',
+            index: 0,
+            name: 'Stratis',
+            type: 'coin',
+            network: 105105,
+            purpose: 44,
+            purposeAddress: 44,
             icon: 'paid',
           },
           {

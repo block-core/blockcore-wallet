@@ -1,6 +1,6 @@
 import { EnvironmentService } from './environment.service';
 import { AddressValidationService } from './address-validation.service';
-import { BTC44, BTC84, CITY, CRS, STRAX, IMPLX } from 'src/shared/networks';
+import { BTC, CITY, CRS, STRAX, IMPLX } from 'src/shared/networks';
 
 describe('AddressValidationService', () => {
   let service: AddressValidationService;

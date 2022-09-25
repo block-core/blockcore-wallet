@@ -19,5 +19,5 @@ export const environment: IEnvironment = {
   instanceName: 'Blockcore Wallet',
   instanceUrl: 'https://www.blockcore.net/',
   instanceExplorerUrl: 'https://explorer.blockcore.net',
-  networks: ['STRAX', 'CRS', 'TSTRAX', 'TCRS', 'CITY', 'CY', 'RSC', 'SBC', 'X42']
+  networks: ['STRAX', 'CRS', 'TSTRAX', 'TCRS', 'IMPLX', 'CITY', 'CY', 'RSC', 'SBC', 'X42']
 };
