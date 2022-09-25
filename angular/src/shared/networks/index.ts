@@ -11,3 +11,4 @@ export * from './SBC';
 export * from './RSC';
 export * from './CY';
 export * from './X42';
+export * from './IMPLX';
