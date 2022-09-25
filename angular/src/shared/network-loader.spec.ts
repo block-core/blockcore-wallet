@@ -1,5 +1,4 @@
 import { NetworkLoader } from "./network-loader";
-import { Servers } from "./servers";
 const axios = require('axios');
 
 describe('NetworkLoader', () => {
@@ -24,24 +23,24 @@ describe('NetworkLoader', () => {
     //     expect(unique.length > 1).toBeTrue();
     // });
 
-    it('All indexers in group1 should respond', async () => {
-        const servers = Servers.group1;
-        const entries = Object.values(servers);
+    // it('All indexers in group1 should respond', async () => {
+    //     const servers = Servers.group1;
+    //     const entries = Object.values(servers);
 
-        for (var i = 0; i < entries.length; i++) {
-            const entry = entries[i] as any;
+    //     for (var i = 0; i < entries.length; i++) {
+    //         const entry = entries[i] as any;
 
-            for (var j = 0; j < entry.length; j++) {
-                const server = entry[j];
+    //         for (var j = 0; j < entry.length; j++) {
+    //             const server = entry[j];
 
-                try {
-                    var result = await axios.get(server + '/api/stats');
-                    expect(result.status).toBe(200);
-                } catch (error) {
-                    throw new Error('Failed to verify indexer: ' + server);
-                }
-            }
-        }
-    });
+    //             try {
+    //                 var result = await axios.get(server + '/api/stats');
+    //                 expect(result.status).toBe(200);
+    //             } catch (error) {
+    //                 throw new Error('Failed to verify indexer: ' + server);
+    //             }
+    //         }
+    //     }
+    // });
 
 });

@@ -13,7 +13,7 @@ describe('AddressValidationService', () => {
   });
 
   it('Validate Bitcoin Base58 address', () => {
-    expect(service.validateByNetwork('1N9faSzFCHvQNdNtrqxMKzYdzE2WYNJ6DT', new BTC44())).toBeTrue();
+    expect(service.validateByNetwork('1N9faSzFCHvQNdNtrqxMKzYdzE2WYNJ6DT', new BTC())).toBeTrue();
 
     expect(service.validate('1N9faSzFCHvQNdNtrqxMKzYdzE2WYNJ6DT').networks.find((n: { id: string; }) => n.id == 'BTC')).toBeDefined();
   });
