@@ -31,6 +31,8 @@
 
   <span class="top-spacer">{{uiState.title | truncate}}</span>
 
+  <app-language-selector></app-language-selector>
+
   <button *ngIf="walletManager.activeWalletUnlocked" mat-icon-button (click)="draweraccount.toggle()">
     <mat-icon *ngIf="walletManager.activeAccount">{{walletManager.activeAccount?.icon}}</mat-icon>
     <mat-icon *ngIf="!walletManager.activeAccount">account_circle</mat-icon>
