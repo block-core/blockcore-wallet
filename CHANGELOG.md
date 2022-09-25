@@ -1,3 +1,24 @@
+## <small>0.0.72 (2022-09-25)</small>
+
+* Add language selection to top-menu bar ([7dfbd44](https://github.com/block-core/blockcore-wallet/commit/7dfbd44))
+* Add language selector component ([1cd1906](https://github.com/block-core/blockcore-wallet/commit/1cd1906))
+* Add more translations to wallet create view ([35e70e6](https://github.com/block-core/blockcore-wallet/commit/35e70e6))
+* Added right to left support in css files (#244) ([ae0285b](https://github.com/block-core/blockcore-wallet/commit/ae0285b)), closes [#244](https://github.com/block-core/blockcore-wallet/issues/244)
+* Automatically select the last account when one account is removed ([7729a89](https://github.com/block-core/blockcore-wallet/commit/7729a89))
+* Change resource key for "Receive" on account ([3202fd7](https://github.com/block-core/blockcore-wallet/commit/3202fd7))
+* Debug logging cleanup ([506732b](https://github.com/block-core/blockcore-wallet/commit/506732b)), closes [#245](https://github.com/block-core/blockcore-wallet/issues/245)
+* Filter production networks for Blockcore Wallet ([687f0c2](https://github.com/block-core/blockcore-wallet/commit/687f0c2))
+* Fix an issue with binding error in debug mode ([dbd5e10](https://github.com/block-core/blockcore-wallet/commit/dbd5e10))
+* Greek Language (#240) ([20c3284](https://github.com/block-core/blockcore-wallet/commit/20c3284)), closes [#240](https://github.com/block-core/blockcore-wallet/issues/240)
+* Greek Recovery phrase (#243) ([0ea75f8](https://github.com/block-core/blockcore-wallet/commit/0ea75f8)), closes [#243](https://github.com/block-core/blockcore-wallet/issues/243)
+* Reset the memo when doing a new payment ([558d1d4](https://github.com/block-core/blockcore-wallet/commit/558d1d4))
+* Translate a single entry in the app ([ae97b76](https://github.com/block-core/blockcore-wallet/commit/ae97b76))
+* Unify the Bitcoin network into a single type ([9306bb0](https://github.com/block-core/blockcore-wallet/commit/9306bb0))
+* Update version and changelog ([865f217](https://github.com/block-core/blockcore-wallet/commit/865f217))
+* Use the address format to set purpose (44 or 84) ([f0d067d](https://github.com/block-core/blockcore-wallet/commit/f0d067d))
+
+
+
 ## <small>0.0.71 (2022-09-20)</small>
 
 * Add all nameservers to primary server group ([5aa3ebb](https://github.com/block-core/blockcore-wallet/commit/5aa3ebb))
