@@ -1,5 +1,5 @@
 import { Account } from './interfaces';
-import { BTC, CITY, CRS, CY, IDENTITY, NOSTR, RSC, SBC, STRAX, TCRS, TSTRAX, X42 } from './networks';
+import { BTC, CITY, CRS, CY, IDENTITY, NOSTR, RSC, SBC, STRAX, TCRS, TSTRAX, X42 , IMPLX} from './networks';
 const { v4: uuidv4 } = require('uuid');
 
 export class Defaults {
@@ -17,6 +17,7 @@ export class Defaults {
     networks.push(new TCRS());
     networks.push(new TSTRAX());
     networks.push(new X42());
+    networks.push(new IMPLX());
     return networks;
   }
 
@@ -74,6 +75,19 @@ export class Defaults {
             name: 'Stratis',
             type: 'coin',
             network: 105105,
+            purpose: 44,
+            purposeAddress: 44,
+            icon: 'paid',
+          },
+          {
+            identifier: uuidv4(),
+            selected: false,
+            networkType: 'IMPLX',
+            mode: 'normal',
+            index: 0,
+            name: 'Impleum',
+            type: 'coin',
+            network: 701,
             purpose: 44,
             purposeAddress: 44,
             icon: 'paid',

@@ -1,6 +1,6 @@
 import { EnvironmentService } from './environment.service';
 import { AddressValidationService } from './address-validation.service';
-import { BTC44, BTC84, CITY, CRS, STRAX } from 'src/shared/networks';
+import { BTC44, BTC84, CITY, CRS, STRAX, IMPLX } from 'src/shared/networks';
 
 describe('AddressValidationService', () => {
   let service: AddressValidationService;
@@ -52,5 +52,15 @@ describe('AddressValidationService', () => {
     expect(service.validateByNetwork('XLjEnTqaroDqWdXeBt5cPP79pvYd48y1R7', network)).toBeTrue();
 
     expect(service.validate('XReyTxFTRQKomq8x74aNNHmR6ZKE3Uquwg').networks.find((n: { id: string; }) => n.id == 'STRAX')).toBeDefined();
+  });
+
+  it('Validate Impleum Base58 address', () => {
+    const network = new IMPLX();
+    expect(service.validateByNetwork('implx1q3pk7w924s72jy8amzptnwyn0509xvy3nrn2gff', network)).toBeTrue();
+    expect(service.validateByNetwork('XxKEYMx47uZY9uyam3LK3bECS9gvX9ojJF', network)).toBeTrue();
+    expect(service.validateByNetwork('implx1q6r3zyaap5dmatzcddq8363cr5hd49jy4r4vxez', network)).toBeTrue();
+    expect(service.validateByNetwork('Xhh9Cb3u8MHdEkTDsiMnQ1GVE654Hr56Wm', network)).toBeTrue();
+
+    expect(service.validate('Xr9UFDUhpz3Wq8kSV3h8kAwK31fhumDWLU').networks.find((n: { id: string; }) => n.id == 'IMPLX')).toBeDefined();
   });
 });
