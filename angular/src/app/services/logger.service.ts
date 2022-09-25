@@ -1,40 +1,47 @@
-import { NGXLogger } from "ngx-logger";
+import { NGXLogger, NgxLoggerLevel } from 'ngx-logger';
 import { Injectable } from '@angular/core';
 import { Logger } from '../../shared/interfaces';
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: 'root',
 })
 export class LoggerService implements Logger {
-    constructor(private logger: NGXLogger) {
+  constructor(private logger: NGXLogger) {}
 
-    }
+  /** Change the logging level to TRACE. This is not persisted and reset on app reloads. */
+  enableDebug() {
+    this.logger.updateConfig({ level: NgxLoggerLevel.TRACE });
+  }
 
-    trace(message?: any | (() => any), ...additional: any[]): void {
-        this.logger.trace(message, ...additional);
-    };
+  disableDebug() {
+    this.logger.updateConfig({ level: NgxLoggerLevel.INFO });
+  }
 
-    debug(message?: any | (() => any), ...additional: any[]): void {
-        this.logger.debug(message, ...additional);
-    };
+  trace(message?: any | (() => any), ...additional: any[]): void {
+    this.logger.trace(message, ...additional);
+  }
 
-    info(message?: any | (() => any), ...additional: any[]): void {
-        this.logger.info(message, ...additional);
-    };
+  debug(message?: any | (() => any), ...additional: any[]): void {
+    this.logger.debug(message, ...additional);
+  }
 
-    log(message?: any | (() => any), ...additional: any[]): void {
-        this.logger.log(message, ...additional);
-    };
+  info(message?: any | (() => any), ...additional: any[]): void {
+    this.logger.info(message, ...additional);
+  }
 
-    warn(message?: any | (() => any), ...additional: any[]): void {
-        this.logger.warn(message, ...additional);
-    };
+  log(message?: any | (() => any), ...additional: any[]): void {
+    this.logger.log(message, ...additional);
+  }
 
-    error(message?: any | (() => any), ...additional: any[]): void {
-        this.logger.error(message, ...additional);
-    };
+  warn(message?: any | (() => any), ...additional: any[]): void {
+    this.logger.warn(message, ...additional);
+  }
 
-    fatal(message?: any | (() => any), ...additional: any[]): void {
-        this.logger.fatal(message, ...additional);
-    };
+  error(message?: any | (() => any), ...additional: any[]): void {
+    this.logger.error(message, ...additional);
+  }
+
+  fatal(message?: any | (() => any), ...additional: any[]): void {
+    this.logger.fatal(message, ...additional);
+  }
 }

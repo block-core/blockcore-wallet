@@ -68,7 +68,7 @@ export class CommunicationService {
   handleInternalMessage(message: Message, sender: chrome.runtime.MessageSender) {
     // We can't do async await in this handler, because the chrome extension runtime does not support it
     // and will begin to throw channel port errors.
-    console.log('CommunicationService:handleInternalMessage:', message);
+    // console.log('CommunicationService:handleInternalMessage:', message);
     try {
       switch (message.type) {
         case 'updated': {

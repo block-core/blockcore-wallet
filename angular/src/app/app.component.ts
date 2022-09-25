@@ -48,8 +48,6 @@ export class AppComponent implements OnInit {
     private rightClickDisable: DisableRightClickService,
     @Inject(DOCUMENT) private document: Document
   ) {
-    console.log('location.search:', globalThis.location.search);
-    console.log('location:', globalThis.location);
 
     // This must happen in the constructor on app component, or when loading in PWA, it won't
     // be possible to read the query parameters.

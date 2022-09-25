@@ -573,7 +573,7 @@ export class WalletManager {
   }
 
   async setActiveAccount(id: string) {
-    this.logger.info('WalletManager:setActiveAccount:' + id);
+    this.logger.debug('WalletManager:setActiveAccount:' + id);
 
     if (this.activeAccountId != id) {
       this._activeAccountId = id;

@@ -201,7 +201,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     FormsModule,
     HttpClientModule,
     LoggerModule.forRoot(
-      { level: NgxLoggerLevel.DEBUG, enableSourceMaps: true, serverLogLevel: NgxLoggerLevel.OFF }, // Don't send logs anywhere!
+      { level: NgxLoggerLevel.INFO, enableSourceMaps: true, serverLogLevel: NgxLoggerLevel.OFF }, // Don't send logs anywhere!
       {
         writerProvider: {
           provide: TOKEN_LOGGER_WRITER_SERVICE,

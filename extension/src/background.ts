@@ -58,7 +58,7 @@ browser.runtime.onMessage.addListener(async (msg: ActionMessage, sender) => {
       await networkStatusWatcher();
     }
   } else {
-    console.log('Unhandled message:', msg);
+    // console.log('Unhandled message:', msg);
   }
 });
 
