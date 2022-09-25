@@ -69,8 +69,21 @@ textarea {
   margin-right: 1em;
 }
 
+[dir=rtl]
+.network-status-image {
+  background-size: cover;
+  float: right;
+  margin-left: 1em;
+}
+
 .transaction-timpestamp {
   float: right;
+  font-size: 0.8em;
+}
+
+[dir=rtl]
+.transaction-timpestamp {
+  float: left;
   font-size: 0.8em;
 }
 
@@ -80,6 +93,12 @@ textarea {
 
 .rescan-button {
   float: right;
+  margin-top: -2em;
+}
+
+[dir=rtl]
+.rescan-button {
+  float: left;
   margin-top: -2em;
 }
 
@@ -102,7 +121,7 @@ textarea {
 
 .token-subtitle-right {
   display: inline-block;
-  text-align: right;  
+  text-align: right;
 }
 
 .token-card {

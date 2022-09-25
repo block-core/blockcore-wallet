@@ -7,6 +7,12 @@
   margin-left: 0.4em;
 }
 
+[dir=rtl]
+.top-spacer {
+  flex: 1 1 auto;
+  margin-right: 0.4em;
+}
+
 .logo-icon {
   justify-content: center;
   cursor: pointer;
@@ -19,6 +25,12 @@
 .logo-icon div {
   font-size: 0.8em;
   margin-left: 0.8em;
+}
+
+[dir=rtl]
+.logo-icon div {
+  font-size: 0.8em;
+  margin-right: 0.8em;
 }
 
 .selectedWallet {
@@ -55,8 +67,6 @@
 
 .detail-box {
   display: flex;
-  // align-items: center;
-  // justify-content: center;
 }
 
 .account-icon {
@@ -71,6 +81,13 @@
   margin-bottom: 0.5em;
 }
 
+[dir=rtl]
+.detail-network {
+  line-height: 1.8em;
+  margin-right: 0.5em;
+  margin-bottom: 0.5em;
+}
+
 .name-field {
   white-space: nowrap;
   overflow: hidden;
@@ -81,4 +98,19 @@
   float: right;
   margin-right: -0.5em;
   margin-top: -0.5em;
+}
+
+[dir=rtl]
+.close-sidenav-icon {
+  float: left;
+  margin-left: -0.5em;
+  margin-top: -0.5em;
+}
+
+.mat-form-field {
+  text-align: left;
+}
+
+[dir=rtl] .mat-form-field {
+  text-align: right;
 }

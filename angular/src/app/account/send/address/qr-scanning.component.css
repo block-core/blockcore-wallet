@@ -13,12 +13,31 @@
 
 .camera-button {
   margin: 2em;
+  left: 2em;
+  position: absolute;
+}
+
+[dir=rtl]
+.camera-button {
+  margin: 2em;
+  right: 2em;
+  position: absolute;
+  left: auto;
 }
 
 .camera-close-button {
   margin: 2em;
   position: absolute;
   right: 2em;
+  top: 2em;
+}
+
+[dir=rtl]
+.camera-close-button {
+  margin: 2em;
+  position: absolute;
+  left: 2em;
+  right: auto;
   top: 2em;
 }
 
