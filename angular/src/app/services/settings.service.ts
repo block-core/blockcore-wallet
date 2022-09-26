@@ -60,7 +60,7 @@ export class SettingsService {
     this.values.language = language;
     this.translate.use(language);
 
-    const rtlLanguages: string[] = ['ar', 'fa', 'iw'];
+    const rtlLanguages: string[] = ['ar', 'fa', 'he'];
 
     if (rtlLanguages.includes(language)) {
       this.renderer.setAttribute(document.body, "dir", "rtl");
