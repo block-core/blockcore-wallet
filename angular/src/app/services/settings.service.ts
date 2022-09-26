@@ -1,8 +1,11 @@
-import { Injectable, Renderer2, RendererFactory2 } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
+import { Inject, Injectable, Renderer2, RendererFactory2 } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { str } from '@scure/base';
 import { SettingStore } from 'src/shared';
 import { Settings } from '../../shared/interfaces';
+import { UIState } from './ui-state.service';
+import { Direction } from '@angular/cdk/bidi';
 
 @Injectable({
   providedIn: 'root',
@@ -10,7 +13,7 @@ import { Settings } from '../../shared/interfaces';
 export class SettingsService {
   private renderer: Renderer2;
 
-  constructor(private settingStore: SettingStore, public translate: TranslateService, private rendererFactory: RendererFactory2) {
+  constructor(private settingStore: SettingStore, public translate: TranslateService, private uiState: UIState, @Inject(DOCUMENT) private document: Document, private rendererFactory: RendererFactory2) {
     this.renderer = rendererFactory.createRenderer(null, null);
   }
 
@@ -37,13 +40,7 @@ export class SettingsService {
       this.renderer.addClass(document.body, 'dark-theme');
     }
 
-    this.translate.use(this.values.language);
-
-    if (this.values.dir === 'rtl') {
-      this.renderer.setAttribute(document.body, "dir", "rtl");
-    } else {
-      this.renderer.setAttribute(document.body, "dir", "ltr");
-    }
+    this.setLanguage(this.values.language);
   }
 
   setTheme(theme: string) {
@@ -63,10 +60,10 @@ export class SettingsService {
     const rtlLanguages: string[] = ['ar', 'fa', 'he'];
 
     if (rtlLanguages.includes(language)) {
-      this.renderer.setAttribute(document.body, "dir", "rtl");
+      this.uiState.documentDirection = 'rtl';
       this.values.dir = 'rtl';
     } else {
-      this.renderer.setAttribute(document.body, "dir", "ltr");
+      this.uiState.documentDirection = 'ltr';
       this.values.dir = 'ltr';
     }
   }

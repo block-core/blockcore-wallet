@@ -115,6 +115,7 @@ import { PaymentRequest } from 'src/shared/payment';
 import { MessageService } from 'src/shared';
 import { NameserverService } from 'src/shared/nameserver.service';
 import { LanguageSelectorComponent } from './shared/language-selector/language-selector.component';
+import { BidiModule } from '@angular/cdk/bidi';
 
 // required for AOT compilation
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
@@ -189,6 +190,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
   ],
   imports: [
     BrowserModule,
+    BidiModule,
     // ngx-translate and the loader module
     HttpClientModule,
     TranslateModule.forRoot({

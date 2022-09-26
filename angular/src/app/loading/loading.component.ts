@@ -103,25 +103,19 @@ export class LoadingComponent implements OnInit, OnDestroy {
       }
 
       if (this.settings.values.language) {
-        this.translate.use(this.settings.values.language);
+        this.settings.setLanguage(this.settings.values.language);
       } else {
         // This will never happen, because the default settings always goes to english.
         // Left here because we should consider allowing user to pick language potentially
         // the first time usage, or read from browser on first usage?
         const browserLang = this.translate.getBrowserLang();
-        this.translate.use(browserLang.match(/en|no/) ? browserLang : 'en');
+        this.settings.setLanguage(browserLang.match(/en|no/) ? browserLang : 'en');
       }
 
       if (this.settings.values.theme === 'light') {
         this.renderer.removeClass(document.body, 'dark-theme');
       } else {
         this.renderer.addClass(document.body, 'dark-theme');
-      }
-
-      if (this.settings.values.dir === 'rtl') {
-        this.renderer.setAttribute(document.body, "dir", "rtl");
-      } else {
-        this.renderer.setAttribute(document.body, "dir", "ltr");
       }
 
       this.uiState.initialized = true;

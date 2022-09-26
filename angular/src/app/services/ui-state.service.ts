@@ -5,6 +5,7 @@ import { Network } from '../../shared/networks';
 import { UIStore } from 'src/shared';
 import { LoggerService } from './logger.service';
 import { PaymentRequestData } from 'src/shared/payment';
+import { Direction } from '@angular/cdk/bidi';
 
 @Injectable({
     providedIn: 'root'
@@ -77,6 +78,8 @@ export class UIState {
     goBackHome = true;
 
     backUrl: string;
+
+    documentDirection: Direction;
 
     /** Parameters that comes from query string during activation of the extension. */
     params: any;
