@@ -94,7 +94,7 @@ export class LoadingComponent implements OnInit, OnDestroy {
       await this.appManager.initialize();
       await this.status.initialize();
 
-      this.translate.addLangs(['en', 'no', 'fr','el']);
+      this.translate.addLangs(['ar', 'el', 'en', 'fa', 'fr', 'iw', 'no']);
       this.translate.setDefaultLang('en');
 
       // TODO: Backwards compatible fix. Remove on release.
@@ -116,6 +116,12 @@ export class LoadingComponent implements OnInit, OnDestroy {
         this.renderer.removeClass(document.body, 'dark-theme');
       } else {
         this.renderer.addClass(document.body, 'dark-theme');
+      }
+
+      if (this.settings.values.dir === 'rtl') {
+        this.renderer.setAttribute(document.body, "dir", "rtl");
+      } else {
+        this.renderer.setAttribute(document.body, "dir", "ltr");
       }
 
       this.uiState.initialized = true;

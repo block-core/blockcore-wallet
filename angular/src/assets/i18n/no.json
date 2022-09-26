@@ -3,6 +3,9 @@
 	"no": "Norsk",
 	"fr": "French",
   "el": "Greek",
+  "fa": "Persian",
+  "ar": "Arabic",
+  "iw": "Hebrew",
 	"App": {
 		"AddAccount": "Ny konto",
 		"ChooseWallet": "Valg lommebok",
