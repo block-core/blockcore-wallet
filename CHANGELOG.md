@@ -1,3 +1,12 @@
+## 1.0.0 (2022-09-26)
+
+* Add IMPLX Network (#246) ([1454032](https://github.com/block-core/blockcore-wallet/commit/1454032)), closes [#246](https://github.com/block-core/blockcore-wallet/issues/246)
+* Fix unit tests ([1c586c6](https://github.com/block-core/blockcore-wallet/commit/1c586c6))
+* Organize networks alphabetically ([ac5b385](https://github.com/block-core/blockcore-wallet/commit/ac5b385))
+* Update version and changelog ([7ea0887](https://github.com/block-core/blockcore-wallet/commit/7ea0887))
+
+
+
 ## <small>0.0.72 (2022-09-25)</small>
 
 * Add language selection to top-menu bar ([7dfbd44](https://github.com/block-core/blockcore-wallet/commit/7dfbd44))
