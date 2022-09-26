@@ -400,6 +400,7 @@ interface Settings {
   theme: string;
   themeColor: string;
   language: string;
+  dir: string;
   /** Allows users to change how the amounts are displayed. */
   amountFormat: string;
 }

@@ -1,5 +1,6 @@
 import { Injectable, Renderer2, RendererFactory2 } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import { str } from '@scure/base';
 import { SettingStore } from 'src/shared';
 import { Settings } from '../../shared/interfaces';
 
@@ -37,6 +38,12 @@ export class SettingsService {
     }
 
     this.translate.use(this.values.language);
+
+    if (this.values.dir === 'rtl') {
+      this.renderer.setAttribute(document.body, "dir", "rtl");
+    } else {
+      this.renderer.setAttribute(document.body, "dir", "ltr");
+    }
   }
 
   setTheme(theme: string) {
@@ -52,5 +59,15 @@ export class SettingsService {
   setLanguage(language: string) {
     this.values.language = language;
     this.translate.use(language);
+
+    const rtlLanguages: string[] = ['ar', 'fa', 'he'];
+
+    if (rtlLanguages.includes(language)) {
+      this.renderer.setAttribute(document.body, "dir", "rtl");
+      this.values.dir = 'rtl';
+    } else {
+      this.renderer.setAttribute(document.body, "dir", "ltr");
+      this.values.dir = 'ltr';
+    }
   }
 }

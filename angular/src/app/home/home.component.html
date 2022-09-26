@@ -23,7 +23,7 @@
   <button class="wide-button" mat-flat-button color="primary" (click)="unlock()">{{ "App.Unlock" | translate }}</button>
 
   <br /><br /><br />
-  <div class="sub-title">Version {{ uiState.manifest?.version }}</div>
+  <div class="sub-title">{{ "App.Version" | translate }} {{ uiState.manifest?.version }}</div>
 
   <!-- <mat-form-field class="input-full-width" appearance="outline">
     <mat-label>{{ 'Settings.DisplayLanguage' | translate}}</mat-label>

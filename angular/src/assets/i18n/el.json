@@ -3,6 +3,9 @@
 	"no": "Norsk",
 	"fr": "French",
 	"el": "Greek",
+  "fa": "Persian",
+  "ar": "Arabic",
+  "he": "Hebrew",
 	"App": {
 	  "AddAccount": "Προσθήκη Λογαριασμού",
 	  "ChooseWallet": "Επιλέξτε Πορτοφόλι",
