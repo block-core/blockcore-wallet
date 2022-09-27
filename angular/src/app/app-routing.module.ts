@@ -53,6 +53,7 @@ import { ActionSignVerifiableCredentialComponent } from './action/sign-credentia
 import { ActionSignMessageComponent } from './action/sign-message/sign.component';
 import { ActionVaultSetupComponent } from './action/vault-setup/vault-setup.component';
 import { PaymentComponent } from './account/payment/payment.component';
+import { DebuggerComponent } from './settings/debugger/debugger.component';
 const routes: Routes = [
   {
     path: '',
@@ -144,6 +145,13 @@ const routes: Routes = [
   {
     path: 'settings/network',
     component: NetworkComponent,
+    resolve: {
+      data: LoadingResolverService,
+    },
+  },
+  {
+    path: 'settings/logs',
+    component: DebuggerComponent,
     resolve: {
       data: LoadingResolverService,
     },

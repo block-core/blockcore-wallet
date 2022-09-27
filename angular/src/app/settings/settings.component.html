@@ -74,32 +74,6 @@
     </mat-hint>
   </mat-form-field> -->
 
-
-
-
-
-
-  <!-- <mat-form-field appearance="fill">
-    <mat-label>Choose accent color</mat-label>
-    <mat-select (selectionChange)="onAccentChanged($event)" [(value)]="settings.themeColor">
-      <mat-option [value]="'accent'">Accent #1</mat-option>
-      <mat-option [value]="'primary'">Accent #2</mat-option>
-      <mat-option [value]="'warn'">Accent #3</mat-option>
-    </mat-select>
-  </mat-form-field> -->
-
-  <!-- <mat-form-field appearance="fill">
-  <mat-label>Auto-Lock Timer</mat-label>
-  <mat-select [(value)]="uiState.persisted.autoTimeout">
-    <mat-option [value]="0">Zero</mat-option>
-    <mat-option [value]="5">5 minutes</mat-option>
-    <mat-option [value]="10">10 minutes</mat-option>
-    <mat-option [value]="15">15 minutes</mat-option>
-    <mat-option [value]="30">30 minutes</mat-option>
-    <mat-option [value]="60">60 minutes</mat-option>
-  </mat-select>
-</mat-form-field> -->
-
   <!-- <br><br>
 
   <mat-form-field class="input-full-width" appearance="outline">
@@ -168,6 +142,11 @@
     <a mat-list-item [routerLink]="['export-recovery-phrase']">
       <mat-icon mat-list-icon>key</mat-icon>
       <div mat-line>{{ 'Settings.ShowSecretRecoveryPhrase' | translate }}</div>
+    </a>
+
+    <a mat-list-item [routerLink]="['logs']">
+      <mat-icon mat-list-icon>feedback</mat-icon>
+      <div mat-line>Logs</div>
     </a>
 
     <!-- <a mat-list-item [routerLink]="['/permissions']">
