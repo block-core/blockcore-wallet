@@ -1,5 +1,7 @@
-<div [dir]="uiState.documentDirection" class="maximize" (click)="maximize()">
-  <mat-icon matTooltipPosition="left" matTooltip="{{ 'App.ExpandView' | translate }}">zoom_out_map</mat-icon>
+<div [dir]="uiState.documentDirection">
+  <div class="maximize" (click)="maximize()">
+    <mat-icon matTooltip="{{ 'App.ExpandView' | translate }}">zoom_out_map</mat-icon>
+  </div>
 </div>
 
 <div [dir]="uiState.documentDirection" *ngIf="uiState.loading">
@@ -26,7 +28,7 @@
   <span></span>
 
   <button *ngIf="uiState.showBackButton" mat-icon-button (click)="goBack()">
-    <mat-icon>arrow_back</mat-icon>
+    <mat-icon class="arrow-back">arrow_back</mat-icon>
   </button>
 
   <span class="top-spacer">{{uiState.title | truncate}}</span>
