@@ -162,6 +162,17 @@ a:hover {
   cursor: pointer;
 }
 
+[dir=rtl] {
+	.maximize {
+		position: fixed;
+		bottom: 0px;
+		left: 7px;
+		right: auto;
+		z-index: 10000;
+		cursor: pointer;
+	}
+}
+
 header {
   display: flex;
   padding: 2em;

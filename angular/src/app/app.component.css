@@ -115,3 +115,10 @@
 .mat-form-field {
   text-align: right;
 }
+
+[dir=rtl]
+.arrow-back{
+  transform: rotate(180deg);
+}
+
+
