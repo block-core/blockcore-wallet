@@ -84,8 +84,6 @@
             <mat-icon class="transaction-history-icon" *ngIf="transaction.entryType == 'mine'">shuffle </mat-icon>
 
             <span class="positive-color" [ngClass]="{ unconfirmed: transaction.unconfirmed }" *ngIf="transaction.entryType == 'mine'">+{{ transaction.calculatedValue | amount }}</span>
-            <span class="positive-color" [ngClass]="{ unconfirmed: transaction.unconfirmed }" *ngIf="transaction.entryType == 'stake'">+{{ transaction.calculatedValue | amount }}</span>
-
             <span class="positive-color" [ngClass]="{ unconfirmed: transaction.unconfirmed }" *ngIf="transaction.entryType == 'receive'">+{{ transaction.calculatedValue | amount }}</span>
             <span class="negative-color" [ngClass]="{ unconfirmed: transaction.unconfirmed }" *ngIf="transaction.entryType == 'send'">-{{ transaction.calculatedValue | amount }}</span>
             <span class="other-color" [ngClass]="{ unconfirmed: transaction.unconfirmed }" *ngIf="transaction.entryType == 'consolidated'">{{ transaction.entryType }}</span>
