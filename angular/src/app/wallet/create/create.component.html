@@ -12,11 +12,11 @@
     <br />
     <button class="signup-button" mat-flat-button (click)="restore()">{{ "Wallet.Recover" | translate }}</button>
     <br /><br />
-    <br>
+    <br />
     <div class="sub-title">{{ "App.Version" | translate }} {{ uiState.manifest?.version }}</div>
 
-    <br><br>
     <div *ngIf="uiState.showInstallButton" id="install" class="left">
+      <br /><br />
       <mat-card>
         <mat-card-header>
           <mat-icon class="card-icon" mat-card-avatar>get_app</mat-icon>
@@ -89,8 +89,8 @@
 
       <div>
         <br />
-        <button *ngIf="!recover" class="signup-button" mat-flat-button color="primary" (click)="next(2)">{{ 'Wallet.Confirm' | translate }}</button>
-        <button *ngIf="recover" class="signup-button" mat-flat-button color="primary" (click)="next(2)" [disabled]="!firstFormGroup.valid">{{ 'Wallet.Import' | translate }}</button>
+        <button *ngIf="!recover" class="signup-button" mat-flat-button color="primary" (click)="next(2)">{{ "Wallet.Confirm" | translate }}</button>
+        <button *ngIf="recover" class="signup-button" mat-flat-button color="primary" (click)="next(2)" [disabled]="!firstFormGroup.valid">{{ "Wallet.Import" | translate }}</button>
         <button class="signup-button" mat-stroked-button (click)="cancel()">{{ "App.Cancel" | translate }}</button>
       </div>
     </form>
@@ -134,9 +134,17 @@
   <div *ngIf="step == 3">
     <h1>All done!</h1>
     <p>You can now begin to manage your wallet.</p>
+    <br /><br />
+    <h2>Protect your wallet</h2>
+    <p>Your Secret Recovery Phrase controls all of your accounts.</p>
+    <p>Never share your Secret Recovery Phrase with anyone.</p>
+    <p>
+      We will never ask for your Secret Recovery Phrase.<br />
+      Always keep your Secret Recovery Phrase in a secure and secret place.<br />
+    </p>
     <div>
       <br /><br /><br /><br />
-      <button class="signup-button" mat-flat-button color="primary" routerLink="/">Finish</button>
+      <button class="signup-button" mat-flat-button color="primary" routerLink="/">Got it!</button>
     </div>
   </div>
 </div>
