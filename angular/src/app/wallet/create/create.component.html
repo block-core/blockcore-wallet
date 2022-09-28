@@ -13,9 +13,12 @@
     <button class="signup-button" mat-flat-button (click)="restore()">{{ "Wallet.Recover" | translate }}</button>
     <br /><br />
     <br />
-    <div class="sub-title">{{ "App.Version" | translate }} {{ uiState.manifest?.version }}</div>
+    <!-- <div class="sub-title">{{ "App.Version" | translate }} {{ uiState.manifest?.version }}</div> -->
 
-    <div class="sub-title">The software is provided "as is", without warranty of any kind. Use at your own discretion.</div>
+    <div class="sub-title">The software is provided "as is", without warranty of any kind. Use at your own discretion.
+      <br><br>
+      <a href="https://www.blockcore.net/policy" target="_blank">Privacy Policy & Terms and Conditions</a>
+    </div>
 
     <div *ngIf="uiState.showInstallButton" id="install" class="left">
       <br /><br />
@@ -144,8 +147,9 @@
       We will never ask for your Secret Recovery Phrase.<br />
       Always keep your Secret Recovery Phrase in a secure and secret place.<br />
     </p>
+    <a href="https://www.blockcore.net/policy" target="_blank">Privacy Policy & Terms and Conditions</a>
     <div>
-      <br /><br /><br /><br />
+      <br /><br /><br />
       <button class="signup-button" mat-flat-button color="primary" routerLink="/">Got it!</button>
     </div>
   </div>
