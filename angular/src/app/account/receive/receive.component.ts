@@ -11,6 +11,7 @@ import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } 
 var QRCode2 = require('qrcode');
 import { PaymentRequest } from 'src/shared/payment';
 import { InputValidators } from 'src/app/services/inputvalidators';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-account-receive',
@@ -27,6 +28,7 @@ export class AccountReceiveComponent implements OnInit, OnDestroy {
   network: Network;
   form: UntypedFormGroup;
   amount: string;
+  receiveAddressCaption: string;
 
   constructor(
     private fb: UntypedFormBuilder,
@@ -37,7 +39,8 @@ export class AccountReceiveComponent implements OnInit, OnDestroy {
     private networks: NetworksService,
     public walletManager: WalletManager,
     private accountStateStore: AccountStateStore,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    public translate: TranslateService
   ) {
     // this.uiState.title = 'Receive Address';
     this.uiState.goBackHome = false;
@@ -63,12 +66,12 @@ export class AccountReceiveComponent implements OnInit, OnDestroy {
     });
   }
 
-  ngOnDestroy(): void {}
+  ngOnDestroy(): void { }
 
-  copy() {
+  async copy() {
     copyToClipboard(this.address);
 
-    this.snackBar.open('Receive address copied to clipboard', 'Hide', {
+    this.snackBar.open(await this.translate.get('Account.ReceiveAddressCopiedToClipboard').toPromise(), await this.translate.get('Account.ReceiveAddressCopiedToClipboardAction').toPromise(), {
       duration: 1500,
       horizontalPosition: 'center',
       verticalPosition: 'bottom',
@@ -85,10 +88,10 @@ export class AccountReceiveComponent implements OnInit, OnDestroy {
     return arr.length;
   }
 
-  copyPayment() {
+  async copyPayment() {
     copyToClipboard(this.paymentRequest);
 
-    this.snackBar.open('Payment request copied to clipboard', 'Hide', {
+    this.snackBar.open(await this.translate.get('Account.PaymentRequestCopiedToClipboard').toPromise(), await this.translate.get('Account.PaymentRequestCopiedToClipboardAction').toPromise(), {
       duration: 1500,
       horizontalPosition: 'center',
       verticalPosition: 'bottom',
@@ -149,6 +152,8 @@ export class AccountReceiveComponent implements OnInit, OnDestroy {
   }
 
   async ngOnInit() {
+    this.receiveAddressCaption = await this.translate.get('Account.ReceiveAddressCaption', { symbol: this.network.symbol, name: this.network.name }).toPromise();
+
     const accountState = this.accountStateStore.get(this.walletManager.activeAccount.identifier);
 
     // When using CRS/TCRS, the change address should always be the primary address.

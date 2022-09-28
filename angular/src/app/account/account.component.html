@@ -24,12 +24,11 @@
 
   <mat-card>
     <!-- <mat-card-subtitle>{{uiState.activeAccount.name}}</mat-card-subtitle> -->
-    <mat-card-subtitle
-      >Balance <span *ngIf="accountHistory.unconfirmed"> ({{ accountHistory.unconfirmed || 0 | amount }} unconfirmed) </span></mat-card-subtitle
+    <mat-card-subtitle>{{ "Account.Balance" | translate }} <span *ngIf="accountHistory.unconfirmed"> ({{ accountHistory.unconfirmed || 0 | amount }} {{ "Account.Unconfirmed" | translate }}) </span></mat-card-subtitle
     >
     <mat-card-title
       >{{ accountHistory.balance || 0 | amount }} {{ walletManager.activeAccount | network }}
-      <button class="rescan-button" matTooltip="Reload account history" mat-icon-button (click)="scan()">
+      <button class="rescan-button" matTooltip='{{ "Account.ReloadAccountHistory" | translate }}' mat-icon-button (click)="scan()">
         <mat-icon>history</mat-icon>
       </button>
     </mat-card-title>
@@ -41,8 +40,8 @@
         </mat-card-content> -->
     <mat-divider inset></mat-divider>
     <mat-card-actions class="full-action-buttons">
-      <button class="half-width" mat-raised-button [routerLink]="['/', 'account', 'receive', walletManager.activeAccount.index]" color="primary">Receive</button>
-      <button [disabled]="accountHistory.balance == 0" class="half-width" [routerLink]="['/', 'account', 'send']" mat-raised-button>Send</button>
+      <button class="half-width" mat-raised-button [routerLink]="['/', 'account', 'receive', walletManager.activeAccount.index]" color="primary">{{ "Account.Receive" | translate }}</button>
+      <button [disabled]="accountHistory.balance == 0" class="half-width" [routerLink]="['/', 'account', 'send']" mat-raised-button>{{ "Account.Send" | translate }}</button>
     </mat-card-actions>
     <mat-card-footer>
       <mat-progress-bar *ngIf="!accountState(walletManager.activeAccount)?.completedScan" mode="indeterminate"></mat-progress-bar>
@@ -72,9 +71,9 @@
                     <div mat-line>{{activity.title}}</div>
                     <div mat-line> {{activity.address}} </div>
                 </a> -->
-        <div mat-subheader>Transactions ({{ history.length }})</div>
+        <div mat-subheader>{{ "Account.Transactions" | translate }} ({{ history.length }})</div>
 
-        <div class="centered" *ngIf="history.length == 0">Your wallet has zero transactions.<br /><br /></div>
+        <div class="centered" *ngIf="history.length == 0">{{ "Account.YourWalletHasZeroTransactions" | translate }}<br /><br /></div>
 
         <a mat-list-item *ngFor="let transaction of history" [routerLink]="['/', 'account', 'transaction', transaction.transactionHash]">
           <div mat-line>
@@ -85,6 +84,7 @@
             <mat-icon class="transaction-history-icon" *ngIf="transaction.entryType == 'mine'">shuffle </mat-icon>
 
             <span class="positive-color" [ngClass]="{ unconfirmed: transaction.unconfirmed }" *ngIf="transaction.entryType == 'mine'">+{{ transaction.calculatedValue | amount }}</span>
+            <span class="positive-color" [ngClass]="{ unconfirmed: transaction.unconfirmed }" *ngIf="transaction.entryType == 'stake'">+{{ transaction.calculatedValue | amount }}</span>
 
             <span class="positive-color" [ngClass]="{ unconfirmed: transaction.unconfirmed }" *ngIf="transaction.entryType == 'receive'">+{{ transaction.calculatedValue | amount }}</span>
             <span class="negative-color" [ngClass]="{ unconfirmed: transaction.unconfirmed }" *ngIf="transaction.entryType == 'send'">-{{ transaction.calculatedValue | amount }}</span>
@@ -140,7 +140,7 @@
       <div class="label label-version">Notice: The token API does not support decimals in the current release. Values are shown without decimals in this version.</div>
 
     </mat-tab>
-    
+
     <mat-tab>
       <ng-template mat-tab-label>
         <mat-icon class="example-tab-icon">login_rounded </mat-icon>
@@ -208,7 +208,7 @@
                 {{uiState.persisted.wallets | json}}
             </p> -->
     </mat-tab>
-    
+
     <mat-tab>
       <ng-template mat-tab-label>
         <mat-icon class="example-tab-icon">build_circle</mat-icon>

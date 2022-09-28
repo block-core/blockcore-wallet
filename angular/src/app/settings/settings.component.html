@@ -15,8 +15,8 @@
   <mat-form-field class="input-full-width" appearance="outline">
     <mat-label>{{ 'Settings.ChooseMode' | translate }}</mat-label>
     <mat-select (selectionChange)="onThemeChanged($event)" [(value)]="settings.theme">
-      <mat-option [value]="'dark'">{{ 'Dark' | translate }}</mat-option>
-      <mat-option [value]="'light'">{{ 'Light' | translate }}</mat-option>
+      <mat-option [value]="'dark'">{{ 'Settings.Dark' | translate }}</mat-option>
+      <mat-option [value]="'light'">{{ 'Settings.Light' | translate }}</mat-option>
     </mat-select>
     <mat-hint>{{ 'Settings.ChooseModeHint' | translate }}
     </mat-hint>
@@ -28,8 +28,8 @@
     <mat-label>{{ 'Settings.AmountFormat' | translate }}</mat-label>
     <mat-select [(value)]="settings.amountFormat">
       <mat-option [value]="'bitcoin'">{{ 'Settings.Default' | translate }} (0.0)</mat-option>
-      <mat-option [value]="'satcommas'">Satcommas (000,000.000,000)</mat-option>
-      <mat-option [value]="'sat'">Satoshis</mat-option>
+      <mat-option [value]="'satcommas'">{{ 'Settings.Satcommas' | translate }} (000,000.000,000)</mat-option>
+      <mat-option [value]="'sat'">{{ 'Settings.Satoshis' | translate }}</mat-option>
     </mat-select>
     <mat-hint>{{ 'Settings.AmountFormatHint' | translate}}
     </mat-hint>
@@ -48,9 +48,9 @@
   <mat-form-field class="input-full-width" appearance="outline">
     <mat-label>{{ 'Settings.Servers' | translate }}</mat-label>
     <mat-select [(value)]="settings.server">
-      <mat-option [value]="'group1'">Official</mat-option>
+      <mat-option [value]="'group1'">{{ 'Settings.Official' | translate }}</mat-option>
       <!-- <mat-option [value]="'group3'">Community</mat-option> -->
-      <mat-option [value]="'custom'">Custom</mat-option>
+      <mat-option [value]="'custom'">{{ 'Settings.Custom' | translate }}</mat-option>
     </mat-select>
   </mat-form-field>
 
@@ -58,10 +58,9 @@
     <br>
 
     <mat-form-field class="input-full-width" appearance="outline">
-      <mat-label>Custom Server</mat-label>
+      <mat-label>{{ 'Settings.CustomServer' | translate }}</mat-label>
       <input matInput [(ngModel)]="settings.indexer">
-      <mat-hint>The custom server must contain a variable (id) which is the network for each account you make.
-      </mat-hint>
+      <mat-hint>{{ 'Settings.CustomServerHint' | translate }}</mat-hint>
     </mat-form-field>
   </div>
 
@@ -106,7 +105,7 @@
 
     <a *ngIf="feature.enabledGroup('handler')" mat-list-item routerLinkActive="active-link" [routerLink]="['handler']">
       <mat-icon mat-list-icon>search</mat-icon>
-      <div mat-line>Register Protocol Handler</div>
+      <div mat-line>{{ 'Settings.RegisterProtocolHandler' | translate }}</div>
     </a>
 
     <a mat-list-item routerLinkActive="active-link" [routerLink]="['network']">
@@ -116,14 +115,14 @@
 
     <a mat-list-item [routerLink]="['permissions']">
       <mat-icon mat-list-icon>vpn_lock</mat-icon>
-      <div mat-line>Permissions</div>
+      <div mat-line>{{ 'Settings.Permissions' | translate }}</div>
     </a>
 
     <a mat-list-item routerLinkActive="active-link" [routerLink]="['password']">
       <mat-icon mat-list-icon>password</mat-icon>
       <div mat-line>{{ 'Settings.ChangePassword' | translate }}</div>
     </a>
-    
+
     <!-- <a mat-list-item routerLinkActive="active-link" [routerLink]="['biometric']">
       <mat-icon mat-list-icon>fingerprint</mat-icon>
       <div mat-line>{{ 'Settings.Biometric' | translate }}</div>
@@ -243,7 +242,7 @@
 
     <a mat-list-item [href]="env.releaseUrl" target="_blank">
       <mat-icon mat-list-icon>update</mat-icon>
-      <div mat-line>Release {{env.version}}</div>
+      <div mat-line>{{ 'Settings.Release' | translate }} {{env.version}}</div>
     </a>
 
     <a mat-list-item [routerLink]="['licenses']">
@@ -258,7 +257,7 @@
 
     <a mat-list-item [href]="env.instanceUrl" target="_blank" *ngIf="env.instanceName">
       <mat-icon mat-list-icon>public</mat-icon>
-      <div mat-line>{{env.instanceName}} website</div>
+      <div mat-line>{{env.instanceName}} {{ 'Settings.Website' | translate }}</div>
     </a>
 
     <a mat-list-item [href]="env.sourceUrl" target="_blank">

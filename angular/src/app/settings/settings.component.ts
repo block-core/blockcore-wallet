@@ -46,10 +46,14 @@ export class SettingsComponent {
       this.settings.indexer = INDEXER_URL;
     }
 
-    this.uiState.title = 'Settings';
     this.uiState.showBackButton = true;
 
     this.logger.debug('Settings:', this.settings);
+  }
+
+
+  async ngOnInit() {
+    this.uiState.title = await this.translate.get('Settings.Settings').toPromise();
   }
 
   updateAllInstances() {

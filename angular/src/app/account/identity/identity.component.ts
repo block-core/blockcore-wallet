@@ -8,6 +8,7 @@ import { copyToClipboard } from 'src/app/shared/utilities';
 import { Network } from '../../../shared/networks';
 import { IdentityService } from 'src/app/services/identity.service';
 import { BlockcoreIdentity, BlockcoreIdentityTools } from 'src/shared/identity';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-identity',
@@ -60,9 +61,9 @@ export class IdentityComponent implements OnInit, OnDestroy {
     private accountStateStore: AccountStateStore,
     private settings: SettingsService,
     private identityService: IdentityService,
-    private cd: ChangeDetectorRef
+    private cd: ChangeDetectorRef,
+    public translate: TranslateService
   ) {
-    this.uiState.title = 'Account: ';
     this.uiState.showBackButton = true;
 
     // if (!this.walletManager.hasAccounts) {
@@ -94,7 +95,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
       // // }
 
       // this.manager.setActiveAccountId(index);
-      this.uiState.title = 'Account: ' + this.walletManager.activeAccount?.name;
+      this.uiState.title = await this.translate.get('Account.Account').toPromise() + ': ' + this.walletManager.activeAccount?.name;
 
       this.network = this.walletManager.getNetwork(this.walletManager.activeAccount.networkType);
 
@@ -127,17 +128,18 @@ export class IdentityComponent implements OnInit, OnDestroy {
     });
   }
 
-  copy() {
+
+  async copy() {
     copyToClipboard(this.identifier);
 
-    this.snackBar.open('Identifier copied to clipboard', 'Hide', {
+    this.snackBar.open(await this.translate.get('Account.IdentifierCopiedToClipboard').toPromise(), await this.translate.get('Account.IdentifierCopiedToClipboardAction').toPromise(), {
       duration: 2500,
       horizontalPosition: 'center',
       verticalPosition: 'bottom',
     });
   }
 
-  ngOnDestroy(): void {}
+  ngOnDestroy(): void { }
 
   save() {
     if (!this.identity) {
@@ -212,7 +214,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
 
     copyToClipboard(JSON.stringify(doc));
 
-    this.snackBar.open('DID Document copied to clipboard', 'Hide', {
+    this.snackBar.open(await this.translate.get('Account.DIDDocumentCopiedToClipboard').toPromise(), await this.translate.get('Account.DIDDocumentCopiedToClipboardAction').toPromise(), {
       duration: 2500,
       horizontalPosition: 'center',
       verticalPosition: 'bottom',
@@ -231,7 +233,9 @@ export class IdentityComponent implements OnInit, OnDestroy {
     // this.manager.generateVaultConfiguration(domain);
   }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
+    this.uiState.title = await this.translate.get('Account.Account').toPromise() + ': ';
+
     // this.sub4 = this.communication.listen('identity-published', (data: Identity) => {
     //   this.identity = data;
     //   this.snackBar.open('Your identity has been published', 'Hide', {
