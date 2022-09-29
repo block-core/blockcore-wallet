@@ -12,6 +12,7 @@ import { SharedManager } from './shared-manager';
 import { HDKey } from '@scure/bip32';
 import { StateStore } from './store/state-store';
 import { CryptoUtility } from '../app/services/crypto-utility';
+import { WebRequestService } from './web-request';
 const axios = require('axios').default;
 
 const FEE_FACTOR = 100000;
@@ -28,9 +29,11 @@ export class BackgroundManager {
   onUpdates: Function;
   onStopped: Function;
   crypto: CryptoUtility;
+  webRequest: WebRequestService;
 
   constructor(private sharedManager: SharedManager) {
     this.crypto = new CryptoUtility();
+    this.webRequest = new WebRequestService();
   }
 
   stop() {
@@ -101,20 +104,6 @@ export class BackgroundManager {
     await this.updateAll(accounts, this.sharedManager.networkLoader, settingStore);
   }
 
-  async fetchWithTimeout(resource: RequestInfo, options: any) {
-    const { timeout = 15000 } = options;
-
-    const abortController = new AbortController();
-    const id = setTimeout(() => abortController.abort(), timeout);
-
-    const response = await fetch(resource, {
-      ...options,
-      signal: abortController.signal,
-    });
-    clearTimeout(id);
-    return response;
-  }
-
   /** Will attempt to query all the networks that are used in active wallet. */
   private async updateAll(accounts: Account[], networkLoader: NetworkLoader, settingStore: SettingStore) {
     // Make only a unique list of accounts:
@@ -149,17 +138,8 @@ export class BackgroundManager {
 
         try {
           // Default options are marked with *
-          const response = await this.fetchWithTimeout(`${indexerUrl}/api/stats`, {
+          const response = await this.webRequest.fetchWithTimeout(`${indexerUrl}/api/stats`, {
             timeout: 3000,
-            method: 'GET',
-            mode: 'cors', // no-cors, *cors, same-origin
-            cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-            credentials: 'same-origin', // include, *same-origin, omit
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            redirect: 'follow', // manual, *follow, error
-            referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
           });
 
           if (response.ok) {

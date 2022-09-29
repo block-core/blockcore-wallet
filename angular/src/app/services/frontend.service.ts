@@ -31,8 +31,6 @@ export class FrontendService implements OnInit {
     private sharedManager: SharedManager
   ) {
     this.events.subscribeAll().subscribe(async (message) => {
-      console.log('ALL EVENTS', message);
-
       this.ngZone.run(async () => {
         // Compared to the extension based messaging, we don't have response messages.
         // this.logger.debug(`Process message:`, message);
@@ -48,7 +46,7 @@ export class FrontendService implements OnInit {
   }
 
   async handleMessage(message: Message) {
-    console.log('FrontendService:handleMessage:', message);
+    // console.log('FrontendService:handleMessage:', message);
     try {
       switch (message.type) {
         case 'index': {
@@ -168,13 +166,9 @@ export class FrontendService implements OnInit {
       return;
     }
 
-    console.log('Starting frontend indexing.....');
-
     this.indexing = true;
     await this.runIndexer();
     this.indexing = false;
-
-    console.log('Finished frontend indexing.');
 
     // When the indexer has finished, run watcher automatically.
     await this.runWatcher();

@@ -1,5 +1,4 @@
-import axiosRetry from 'axios-retry';
-import { AddressState, Transaction } from '.';
+import { AddressState, Transaction, WebRequestService } from '.';
 import { AddressManager } from './address-manager';
 import { ProcessResult } from './background-manager';
 import { AccountUnspentTransactionOutput, AddressIndexedState, TransactionHistory } from './interfaces';
@@ -9,11 +8,6 @@ import { AccountStateStore } from './store/account-state-store';
 import { AddressIndexedStore } from './store/address-indexed-store';
 import { AddressWatchStore } from './store/address-watch-store';
 import { RunState } from './task-runner';
-
-//const axios = require('axios');
-// In order to gain the TypeScript typings (for intellisense / autocomplete) while using CommonJS imports with require() use the following approach:
-const axios = require('axios').default;
-axiosRetry(axios, { retries: 3, retryDelay: axiosRetry.exponentialDelay });
 
 /** Service that handles queries against the blockchain indexer to retrieve data for accounts. Runs in the background. */
 export class IndexerBackgroundService {
@@ -36,6 +30,8 @@ export class IndexerBackgroundService {
      */
     private batchSize = 50;
 
+    private webRequest: WebRequestService;
+
     constructor(
         private settingStore: SettingStore,
         private walletStore: WalletStore,
@@ -44,9 +40,10 @@ export class IndexerBackgroundService {
         private transactionStore: TransactionStore,
         private addressManager: AddressManager,
         private accountStateStore: AccountStateStore,
-        private accountHistoryStore: AccountHistoryStore
+        private accountHistoryStore: AccountHistoryStore,
+        
     ) {
-
+        this.webRequest = new WebRequestService();
     }
 
     public runState: RunState;
@@ -768,28 +765,13 @@ export class IndexerBackgroundService {
 
     async getTransactionInfo(transactionId: string, indexerUrl: string) {
         const url = `${indexerUrl}/api/query/transaction/${transactionId}`;
-        const response = await this.fetchUrl(url);
+        const response = await this.webRequest.fetch(url);
         return response.json();
-    }
-
-    async fetchUrl(url: string) {
-        // Default options are marked with *
-        return await fetch(url, {
-            method: 'GET', // *GET, POST, PUT, DELETE, etc.
-            mode: 'cors', // no-cors, *cors, same-origin
-            cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-            credentials: 'same-origin', // include, *same-origin, omit
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            redirect: 'follow', // manual, *follow, error
-            referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-        });
     }
 
     async getTransactionHex(transactionId: string, indexerUrl: string) {
         const url = `${indexerUrl}/api/query/transaction/${transactionId}/hex`;
-        const response = await this.fetchUrl(url);
+        const response = await this.webRequest.fetch(url);
         return response.text();
     }
 
@@ -811,17 +793,7 @@ export class IndexerBackgroundService {
                 // console.debug(`nextlink: ${url}`);
 
                 // Default options are marked with *
-                const response = await fetch(url, {
-                    method: 'GET', // *GET, POST, PUT, DELETE, etc.
-                    mode: 'cors', // no-cors, *cors, same-origin
-                    cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-                    credentials: 'same-origin', // include, *same-origin, omit
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    redirect: 'follow', // manual, *follow, error
-                    referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-                });
+                const response = await this.webRequest.fetch(url);
 
                 const transactions = await response.json();
                 // const responseTransactions = await axios.get(`${indexerUrl}${nextLink}`);
@@ -917,6 +889,36 @@ export class IndexerBackgroundService {
         return { changes, completed };
     }
 
+    // async fetchUrl(url)
+    // {
+    //     const response = await fetch(url, {
+    //         // method: 'GET',
+    //         // mode: 'cors',
+    //         // cache: 'no-cache',
+    //         // credentials: 'same-origin',
+    //         // headers: {
+    //         //     'Content-Type': 'application/json'
+    //         // },
+    //         // redirect: 'follow',
+    //         // referrerPolicy: 'no-referrer',
+    //     });
+    // }
+
+    // async fetchUrl(resource: RequestInfo, options: any) {
+    //     return fetch(resource);
+    //     // const { timeout = 15000 } = options;
+    
+    //     // const abortController = new AbortController();
+    //     // const id = setTimeout(() => abortController.abort(), timeout);
+    
+    //     // const response = await fetch(resource, {
+    //     //   ...options,
+    //     //   signal: abortController.signal,
+    //     // });
+    //     // clearTimeout(id);
+    //     // return response;
+    //   }
+
     async processAddressIndexed(indexerUrl: string, state: AddressIndexedState) {
         let changes = false;
         let completed = false;
@@ -927,17 +929,7 @@ export class IndexerBackgroundService {
             const url = `${clonedIndexerUrl}/api/query/address/${state.address}`;
             console.log(`address url ${url}`);
 
-            const response = await fetch(url, {
-                method: 'GET',
-                mode: 'cors',
-                cache: 'no-cache',
-                credentials: 'same-origin',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                redirect: 'follow',
-                referrerPolicy: 'no-referrer',
-            });
+            const response = await this.webRequest.fetch(url);
 
             const addressData = await response.json();
 
