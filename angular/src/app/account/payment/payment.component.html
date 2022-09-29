@@ -16,14 +16,14 @@
     </button>
   </div> -->
   <p class="selectable">
-    {{ "Account.PaymentMessage" | translate }}: {{ uiState.payment.options.message }}<br />
+    {{ "Account.Message" | translate }}: {{ uiState.payment.options.message }}<br />
     <br />
-    {{ "Account.PaymentNetwork" | translate }}: {{ network.name }}<br />
-    {{ "Account.PaymentAddress" | translate }}: {{ uiState.payment.address }}<br />
-    {{ "Account.PaymentAmount" | translate }}: {{ this.amount | amount }} {{ network.symbol }}<br />
+    {{ "Account.Network" | translate }}: {{ network.name }}<br />
+    {{ "Account.Address" | translate }}: {{ uiState.payment.address }}<br />
+    {{ "Account.Amount" | translate }}: {{ this.amount | amount }} {{ network.symbol }}<br />
     <br />
-    {{ "Account.PaymentID" | translate }}: {{ uiState.payment.options.id }}<br />
-    {{ "Account.PaymentData" | translate }}: {{ uiState.payment.options.data }}
+    {{ "Account.ID" | translate }}: {{ uiState.payment.options.id }}<br />
+    {{ "Account.Data" | translate }}: {{ uiState.payment.options.data }}
   </p>
 
   <mat-list *ngIf="filteredAccounts.length > 0">

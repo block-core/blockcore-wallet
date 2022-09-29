@@ -10,6 +10,7 @@ import { QrScanDialog } from './qr-scanning.component';
 import { AddressValidationService } from 'src/app/services/address-validation.service';
 import { PaymentRequest } from 'src/shared/payment';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-account-send-address',
@@ -40,7 +41,8 @@ export class AccountSendAddressComponent implements OnInit, OnDestroy {
     private ngZone: NgZone,
     public dialog: MatDialog,
     private fb: UntypedFormBuilder,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    public translate: TranslateService
   ) {
     this.form = fb.group({
       addressInput: new UntypedFormControl('', [Validators.required, Validators.minLength(6), InputValidators.address(this.sendService, this.addressValidation)]),
@@ -68,9 +70,9 @@ export class AccountSendAddressComponent implements OnInit, OnDestroy {
     this.hasSidechain = this.sendService.network.sidechains != null;
   }
 
-  ngOnDestroy() {}
+  ngOnDestroy() { }
 
-  async ngOnInit() {}
+  async ngOnInit() { }
 
   scanQrCode() {
     const dialogRef = this.dialog.open(QrScanDialog, {
@@ -94,7 +96,7 @@ export class AccountSendAddressComponent implements OnInit, OnDestroy {
       const permission = await navigator.permissions.query(options);
 
       if (permission.state === 'denied') {
-        throw new Error('Not allowed to read clipboard.');
+        throw new Error(await this.translate.get('Account.NotAllowedToReadClipboard').toPromise());
       }
 
       const clipboardContents = await navigator.clipboard.readText();
@@ -109,7 +111,7 @@ export class AccountSendAddressComponent implements OnInit, OnDestroy {
 
           // Alert, but continue:
           if (this.sendService.network.symbol.toUpperCase() != payment.network.toUpperCase()) {
-            this.snackBar.open(`The payment request is made for another network: ${payment.network.toUpperCase()}`, 'Hide', {
+            this.snackBar.open(`${await this.translate.get('Account.PaymentRequestIsMadeForAnotherNetwork').toPromise()} ${payment.network.toUpperCase()}`, await this.translate.get('Account.PaymentRequestIsMadeForAnotherNetworkAction').toPromise(), {
               duration: 6000,
               horizontalPosition: 'center',
               verticalPosition: 'bottom',
@@ -120,7 +122,7 @@ export class AccountSendAddressComponent implements OnInit, OnDestroy {
         }
       }
     } catch (error) {
-      console.log('Unable to get clipboard permissions!');
+      console.log(await this.translate.get('Account.UnableToGetClipboardPermissions').toPromise());
       console.error(error);
     }
   }
@@ -133,11 +135,11 @@ export class AccountSendAddressComponent implements OnInit, OnDestroy {
     this.optionsOpen = !this.optionsOpen;
   }
 
-  getErrorMessage() {
+  async getErrorMessage() {
     if (this.form.get('addressInput').hasError('required')) {
-      return 'You must enter a value';
+      return await this.translate.get('Account.YouMustEnterValue').toPromise();
     }
 
-    return this.form.get('addressInput').hasError('email') ? 'Not a valid email' : '';
+    return this.form.get('addressInput').hasError('email') ? await this.translate.get('Account.NotValidEmail').toPromise(): '';
   }
 }

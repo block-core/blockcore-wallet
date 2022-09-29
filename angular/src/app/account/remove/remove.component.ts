@@ -31,9 +31,9 @@ export class AccountRemoveComponent {
       }
     });
   }
-  
+
   async ngOnInit() {
-    this.uiState.title = await this.translate.get('Account.EditAccount').toPromise();
+    this.uiState.title = await this.translate.get('Account.RemoveAccount').toPromise();
   }
 
   async wipe() {

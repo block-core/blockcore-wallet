@@ -1,76 +1,71 @@
 <div class="send-header">
   <div class="send-header-title">
-    <h2>Send {{ sendService.network.symbol }}</h2>
+    <h2>{{ "Account.Send" | translate }} {{ sendService.network.symbol }}</h2>
   </div>
-  <div class="send-header-actions" *ngIf="hasSidechain"><button class="half-width" [routerLink]="['/', 'account', 'send-sidechain']" mat-raised-button>Sidechain Swap</button></div>
+  <div class="send-header-actions" *ngIf="hasSidechain"><button class="half-width" [routerLink]="['/', 'account', 'send-sidechain']" mat-raised-button>{{ "Account.SidechainSwap" | translate }}</button></div>
 </div>
 
 <form [formGroup]="form">
   <div class="input-actions">
-    <button mat-icon-button (click)="scanQrCode()" matTooltip="Scan QR code">
+    <button mat-icon-button (click)="scanQrCode()" matTooltip='{{ "Account.ScanQRCode" | translate }}'>
       <mat-icon>qr_code_scanner</mat-icon>
     </button>
-    <button mat-icon-button (click)="paste()" matTooltip="Paste address/payment from clipboard">
+    <button mat-icon-button (click)="paste()" matTooltip='{{ "Account.PasteAddress" | translate }}'>
       <mat-icon>content_paste</mat-icon>
     </button>
   </div>
 
   <mat-form-field class="input-full-width" appearance="outline">
-    <mat-label>Address</mat-label>
+    <mat-label>{{ "Account.Address" | translate }}</mat-label>
     <input matInput formControlName="addressInput" [(ngModel)]="sendService.address" required />
-    <mat-error *ngIf="form.controls['addressInput'].errors?.['invalid']">Address is invalid format.</mat-error>
-    <mat-error *ngIf="form.controls['addressInput'].errors?.['required']">Address is required.</mat-error>
+    <mat-error *ngIf="form.controls['addressInput'].errors?.['invalid']">{{ "Account.AddressInvalid" | translate }}</mat-error>
+    <mat-error *ngIf="form.controls['addressInput'].errors?.['required']">{{ "Account.AddressRequired" | translate }}</mat-error>
   </mat-form-field>
 
-  <div class="available-balance" matTooltip="Click to fill out maximum (minus fee)" (click)="fillMax(sendService.accountHistory.balance)">Available: {{ sendService.accountHistory.balance || 0 | amount }}</div>
+  <div class="available-balance" matTooltip='{{ "Account.ClickToFillOutMaximum" | translate }}' (click)="fillMax(sendService.accountHistory.balance)">{{ "Account.Available" | translate }}: {{ sendService.accountHistory.balance || 0 | amount }}</div>
 
   <mat-form-field class="input-full-width" appearance="outline">
-    <mat-label>Amount</mat-label>
+    <mat-label>{{ "Account.Amount" | translate }}</mat-label>
     <input matInput formControlName="amountInput" [(ngModel)]="sendService.amount" required />
-    <mat-error *ngIf="form.controls['amountInput'].errors?.['min']">Amount cannot be negative.</mat-error>
-    <mat-error *ngIf="form.controls['amountInput'].errors?.['required']">Amount is required and must be correctly entered.</mat-error>
-    <mat-error *ngIf="form.controls['amountInput'].errors?.['tooManyDecimals']">The value of amount cannot have more than 8 decimals.</mat-error>
-    <mat-error *ngIf="form.controls['amountInput'].errors?.['tooHighValue']">The value of amount must be below 100000000000.</mat-error>
-    <mat-error *ngIf="form.controls['amountInput'].errors?.['tooHighAmount']">Insufficient funds available.</mat-error>
+    <mat-error *ngIf="form.controls['amountInput'].errors?.['min']">{{ "Account.AmountMin" | translate }}</mat-error>
+    <mat-error *ngIf="form.controls['amountInput'].errors?.['required']">{{ "Account.AmountRequired" | translate }}</mat-error>
+    <mat-error *ngIf="form.controls['amountInput'].errors?.['tooManyDecimals']">{{ "Account.AmountTooManyDecimals" | translate }}</mat-error>
+    <mat-error *ngIf="form.controls['amountInput'].errors?.['tooHighValue']">{{ "Account.AmountTooHighValue" | translate }}</mat-error>
+    <mat-error *ngIf="form.controls['amountInput'].errors?.['tooHighAmount']">{{ "Account.AmountTooHighAmount" | translate }}</mat-error>
   </mat-form-field>
 
   <mat-form-field class="input-full-width" appearance="outline">
-    <mat-label>Fee</mat-label>
+    <mat-label>{{ "Account.Fee" | translate }}</mat-label>
     <input matInput formControlName="feeInput" [(ngModel)]="sendService.fee" required />
-    <mat-error *ngIf="form.controls['feeInput'].invalid">Fee is required and must be correctly entered.</mat-error>
-    <mat-hint *ngIf="sendService.feeError" align="start"
-      ><strong>{{ sendService.feeError }}</strong>
+    <mat-error *ngIf="form.controls['feeInput'].invalid">{{ "Account.FeeInvalid" | translate }}</mat-error>
+    <mat-hint *ngIf="sendService.feeError" align="start"><strong>{{ sendService.feeError }}</strong>
     </mat-hint>
-    <mat-hint align="end">Minimum fee rate: {{ sendService.feeRate }} sat/byte</mat-hint>
+    <mat-hint align="end">{{ "Account.MinimumFeeRate" | translate }}: {{ sendService.feeRate }} {{ "Account.SatByte" | translate }}</mat-hint>
   </mat-form-field>
 
   <div *ngIf="optionsOpen">
     <mat-form-field class="input-full-width" appearance="outline">
-      <mat-label>Custom change address</mat-label>
+      <mat-label>{{ "Account.CustomChangeAddress" | translate }}</mat-label>
       <input matInput formControlName="changeAddressInput" [(ngModel)]="sendService.changeAddress" />
     </mat-form-field>
 
     <mat-form-field class="input-full-width" appearance="outline">
-      <mat-label>Private Memo</mat-label>
+      <mat-label>{{ "Account.PrivateMemo" | translate }}</mat-label>
       <input matInput formControlName="memoInput" [(ngModel)]="sendService.memo" />
     </mat-form-field>
   </div>
 
-  <button class="full-width" (click)="toggleOptions()" mat-raised-button>Options...</button>
+  <button class="full-width" (click)="toggleOptions()" mat-raised-button>{{ "Account.Options" | translate }}</button>
   <br /><br />
-  <h3>Total: {{ sendService.total | amount }} {{ sendService.network.symbol }}</h3>
+  <h3>{{ "Account.Total" | translate }}: {{ sendService.total | amount }} {{ sendService.network.symbol }}</h3>
 
   <mat-card *ngIf="this.sendService.payment">
-    <span *ngIf="this.sendService.payment.options.label"
-      >Label: <strong>{{ this.sendService.payment.options.label }}</strong
-      ><br />
-    </span>
-    <span *ngIf="this.sendService.payment.options.message">Message: {{ this.sendService.payment.options.message }}<br /><br /> </span>
-
-    <span *ngIf="this.sendService.payment.options.id">Payment ID: {{ this.sendService.payment.options.id }}<br /> </span>
-    <span *ngIf="this.sendService.payment.options.data">Data (OP_RETURN): {{ this.sendService.payment.options.data }}<br /> </span>
+    <span *ngIf="this.sendService.payment.options.label">{{ "Account.Label" | translate }}: <strong>{{ this.sendService.payment.options.label }}</strong><br /> </span>
+    <span *ngIf="this.sendService.payment.options.message">{{ "Account.Message" | translate }}: {{ this.sendService.payment.options.message }}<br /><br /> </span>
+    <span *ngIf="this.sendService.payment.options.id">{{ "Account.PaymentID" | translate }}: {{ this.sendService.payment.options.id }}<br /> </span>
+    <span *ngIf="this.sendService.payment.options.data">{{ "Account.DataOPRETURN" | translate }}: {{ this.sendService.payment.options.data }}<br /> </span>
   </mat-card>
   <br />
 </form>
 
-<button class="full-width" [disabled]="!form.valid" mat-raised-button routerLink="../confirm" color="primary">Continue</button>
+<button class="full-width" [disabled]="!form.valid" mat-raised-button routerLink="../confirm" color="primary">{{ "Account.Continue" | translate }}</button>

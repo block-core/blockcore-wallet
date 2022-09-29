@@ -42,47 +42,47 @@
         <!-- web+pay://city:Ccoquhaae7u6ASqQ5BiYueASz8EavUXrKn?amount=10&label=Your Local Info&message=Invoice Number 5&data=MzExMzUzNDIzNDY&id=4324 -->
 
         <mat-form-field class="input-full-width text-align-left" appearance="outline">
-          <mat-label>{{ "Account.PaymentAddress" | translate }}</mat-label>
+          <mat-label>{{ "Account.Address" | translate }}</mat-label>
           <input matInput formControlName="addressInput" [(ngModel)]="paymentAddress" />
-          <mat-error *ngIf="form.controls['addressInput'].errors?.['invalid']">{{ "Account.PaymentAddressInvalid" | translate }}</mat-error>
-          <mat-error *ngIf="form.controls['addressInput'].errors?.['required']">{{ "Account.PaymentAddressRequired" | translate }}</mat-error>
+          <mat-error *ngIf="form.controls['addressInput'].errors?.['invalid']">{{ "Account.AddressInvalid" | translate }}</mat-error>
+          <mat-error *ngIf="form.controls['addressInput'].errors?.['required']">{{ "Account.AddressRequired" | translate }}</mat-error>
         </mat-form-field>
 
         <!-- <div class="available-balance" matTooltip="Click to fill out maximum (minus fee)" (click)="fillMax(sendService.accountHistory.balance)">Available: {{ sendService.accountHistory.balance || 0 | amount }}</div> -->
 
         <mat-form-field class="input-full-width text-align-left" appearance="outline">
-          <mat-label>{{ "Account.PaymentAmount" | translate }}</mat-label>
+          <mat-label>{{ "Account.Amount" | translate }}</mat-label>
           <input matInput formControlName="amountInput" [(ngModel)]="amount" />
-          <mat-error *ngIf="form.controls['amountInput'].errors?.['min']">{{ "Account.PaymentAmountMin" | translate }}</mat-error>
-          <mat-error *ngIf="form.controls['amountInput'].errors?.['required']">{{ "Account.PaymentAmountRequired" | translate }}</mat-error>
-          <mat-error *ngIf="form.controls['amountInput'].errors?.['tooManyDecimals']">{{ "Account.PaymentAmountTooManyDecimals" | translate }}</mat-error>
-          <mat-error *ngIf="form.controls['amountInput'].errors?.['tooHighValue']">{{ "Account.PaymentAmountTooHighValue" | translate }}</mat-error>
-          <mat-error *ngIf="form.controls['amountInput'].errors?.['tooHighAmount']">{{ "Account.PaymentAmountTooHighAmount" | translate }}</mat-error>
+          <mat-error *ngIf="form.controls['amountInput'].errors?.['min']">{{ "Account.AmountMin" | translate }}</mat-error>
+          <mat-error *ngIf="form.controls['amountInput'].errors?.['required']">{{ "Account.AmountRequired" | translate }}</mat-error>
+          <mat-error *ngIf="form.controls['amountInput'].errors?.['tooManyDecimals']">{{ "Account.AmountTooManyDecimals" | translate }}</mat-error>
+          <mat-error *ngIf="form.controls['amountInput'].errors?.['tooHighValue']">{{ "Account.AmountTooHighValue" | translate }}</mat-error>
+          <mat-error *ngIf="form.controls['amountInput'].errors?.['tooHighAmount']">{{ "Account.AmountTooHighAmount" | translate }}</mat-error>
         </mat-form-field>
 
         <mat-form-field class="input-full-width" appearance="outline">
-          <mat-label>{{ "Account.PaymentLabel" | translate }}</mat-label>
+          <mat-label>{{ "Account.Label" | translate }}</mat-label>
           <input matInput formControlName="labelInput" />
           <mat-error *ngIf="form.controls['labelInput'].errors?.['maxlength']">Label can be maximum {{form.controls['labelInput'].errors?.['maxlength'].requiredLength}} characters.</mat-error>
         </mat-form-field>
 
         <mat-form-field class="input-full-width" appearance="outline">
-          <mat-label>{{ "Account.PaymentMessage" | translate }}</mat-label>
+          <mat-label>{{ "Account.Message" | translate }}</mat-label>
           <input matInput formControlName="messageInput" />
           <mat-error *ngIf="form.controls['messageInput'].errors?.['maxlength']">Message can be maximum {{form.controls['messageInput'].errors?.['maxlength'].requiredLength}} characters.</mat-error>
         </mat-form-field>
 
         <mat-form-field class="input-full-width" appearance="outline">
-          <mat-label>{{ "Account.PaymentID" | translate }}</mat-label>
+          <mat-label>{{ "Account.ID" | translate }}</mat-label>
           <input matInput formControlName="identifierInput" />
           <mat-error *ngIf="form.controls['identifierInput'].errors?.['maxlength']">ID can be maximum {{form.controls['identifierInput'].errors?.['maxlength'].requiredLength}} characters.</mat-error>
         </mat-form-field>
 
         <mat-form-field class="input-full-width" appearance="outline">
-          <mat-label>{{ "Account.PaymentData" | translate }}</mat-label>
+          <mat-label>{{ "Account.Data" | translate }}</mat-label>
           <input matInput #data formControlName="dataInput" />
           <mat-error *ngIf="form.controls['dataInput'].errors?.['maxbytes']">The data input cannot be larger than {{form.controls['dataInput'].errors?.['maxbytes'].requiredLength}} bytes of data, is now {{form.controls['dataInput'].errors?.['maxbytes'].actualLength}} bytes.</mat-error>
-          <mat-hint align="end">{{ bytesLength(data.value) }} / 80 {{ "Account.PaymentDataHint" | translate }}</mat-hint>
+          <mat-hint align="end">{{ bytesLength(data.value) }} / 80 {{ "Account.DataHint" | translate }}</mat-hint>
         </mat-form-field>
 
         <img [src]="qrPayment" class="qr-code" />

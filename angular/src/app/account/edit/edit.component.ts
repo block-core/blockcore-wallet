@@ -47,7 +47,7 @@ export class AccountEditComponent implements OnInit, OnDestroy {
   }
 
   async ngOnInit() {
-    this.uiState.title = await this.translate.get('Account.RemoveAccount').toPromise();
+    this.uiState.title = await this.translate.get('Account.EditAccount').toPromise();
   }
 
   changeIcon(icon: string) {

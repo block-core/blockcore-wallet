@@ -90,7 +90,7 @@
             <!-- <span *ngIf="settings.values.developer"><br>Transacted total: {{transaction.value |
                             amount}}</span> -->
           </div>
-          <div mat-line class="address" *ngIf="transaction.hasContract">Interaction with contract</div>
+          <div mat-line class="address" *ngIf="transaction.hasContract">{{ "Account.InteractionWithContract" | translate }}</div>
           <div mat-line class="address" [innerHTML]="transaction.calculatedAddress.split(';').join(', ')"></div>
           <!-- <div *ngIf="currentNetworkStatus" mat-line class="address">Confirmations:
                         {{currentNetworkStatus.blockSyncHeight - transaction.blockIndex}}
@@ -129,13 +129,13 @@
         <mat-card class="token-card">
           <mat-card-title class="token-title">{{ token.name }}</mat-card-title>
           <mat-card-subtitle class="token-subtitle">
-            <div class="token-subtitle-left">Supply: {{ token.totalSupply }}</div>
+            <div class="token-subtitle-left">{{ "Account.Supply" | translate }}: {{ token.totalSupply }}</div>
             <div class="token-subtitle-right">{{ token.amount }} {{ token.symbol }}</div>
           </mat-card-subtitle>
         </mat-card>
       </ng-container>
 
-      <div class="label label-version">Notice: The token API does not support decimals in the current release. Values are shown without decimals in this version.</div>
+      <div class="label label-version">{{ "Account.StandardTokensNotice" | translate }}</div>
 
     </mat-tab>
 
@@ -153,7 +153,7 @@
                 </a> -->
         <a mat-list-item>
           <mat-icon mat-list-icon>login_rounded</mat-icon>
-          <div mat-line>Login</div>
+          <div mat-line>{{ "Account.Login" | translate }}</div>
         </a>
       </mat-nav-list>
 
@@ -162,7 +162,7 @@
                 <mat-card-title>Login method</mat-card-title>
                 <mat-card-subtitle></mat-card-subtitle> -->
         <mat-card-content>
-          <p>Paste the login url</p>
+          <p>{{ "Account.PasteTheLoginUrl" | translate }}</p>
           <p>
             <mat-form-field class="input-full-width" appearance="outline">
               <input matInput [(ngModel)]="loginurl" />
@@ -170,7 +170,7 @@
           </p>
           <!-- <p><input [(ngModel)]="loginurl" type="text" ></p> -->
           <p>
-            <button class="full-width" (click)="callLogin()" mat-raised-button color="primary">Login</button>
+            <button class="full-width" (click)="callLogin()" mat-raised-button color="primary">{{ "Account.Login" | translate }}</button>
           </p>
           <p style="color: red">
             {{ loginurlMessage }}
@@ -185,7 +185,7 @@
       </ng-template>
 
       <br />
-      <p>Transactions:</p>
+      <p>{{ "Account.Transactions" | translate }}:</p>
 
       <p>
         {{ transactions | json }}
@@ -198,9 +198,9 @@
       </ng-template>
 
       <br />
-      <p>Wallets Persisted State:</p>
+      <p>{{ "Account.WalletsPersistedState" | translate }}:</p>
 
-      <p>Contains your encrypted secret recovery phrase. Do NOT share this with anyone!</p>
+      <p>{{ "Account.WalletsPersistedStateMessage" | translate }}</p>
 
       <!-- <p>
                 {{uiState.persisted.wallets | json}}
@@ -217,7 +217,7 @@
       <mat-nav-list>
         <a mat-list-item (click)="toggleNetwork()">
           <mat-icon mat-list-icon>public</mat-icon>
-          <div mat-line>Network Status</div>
+          <div mat-line>{{ "Account.NetworkStatus" | translate }}</div>
         </a>
       </mat-nav-list>
 
@@ -226,13 +226,13 @@
         <mat-card-title>{{ networkStatus.name }} ({{ networkStatus.symbol }})</mat-card-title>
         <mat-card-subtitle>{{ networkStatus.description }}</mat-card-subtitle>
         <mat-card-content>
-          <p>Network: {{ networkStatus.node.blockchain.chain }}</p>
-          <p>Height: {{ networkStatus.blockHeight }}</p>
-          <p>Relay Fee: {{ networkStatus.node.network.relayFee }}</p>
-          <p>Memory Pool: {{ networkStatus.node.transactionsInPool }} transactions</p>
-          <p>Connections (on the indexer): {{ networkStatus.node.network.connections }}</p>
+          <p>{{ "Account.Network" | translate }}: {{ networkStatus.node.blockchain.chain }}</p>
+          <p>{{ "Account.Height" | translate }}: {{ networkStatus.blockHeight }}</p>
+          <p>{{ "Account.RelayFee" | translate }}: {{ networkStatus.node.network.relayFee }}</p>
+          <p>{{ "Account.MemoryPool" | translate }}: {{ networkStatus.node.transactionsInPool }} {{ "Account.Transaction" | translate }}</p>
+          <p>{{ "Account.Connections" | translate }}: {{ networkStatus.node.network.connections }}</p>
           <p>
-            <a [href]="networkStatus.url" target="_blank">{{ networkStatus.url }}</a>
+            <a dir="ltr" [href]="networkStatus.url" target="_blank">{{ networkStatus.url }}</a>
           </p>
         </mat-card-content>
       </mat-card>

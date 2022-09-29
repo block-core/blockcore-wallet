@@ -4,6 +4,7 @@ import { WalletManager, NetworksService, UIState, NetworkStatusService, Environm
 import { Account, Defaults } from '../../../shared';
 import { MessageService } from 'src/shared';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-account-select',
@@ -25,13 +26,14 @@ export class AccountSelectComponent implements OnInit, OnDestroy {
     private networkStatus: NetworkStatusService,
     private env: EnvironmentService,
     private router: Router,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    public translate: TranslateService
   ) {
-    uiState.title = 'Select accounts';
     uiState.showBackButton = true;
   }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
+    this.uiState.title = await this.translate.get('Account.SelectAccounts').toPromise();
     // Get the default accounts for the current wallet:
     console.log('this.env.instanceName:', this.env.instance);
     const accounts = Defaults.getDefaultAccounts(this.env.instance);
@@ -69,7 +71,7 @@ export class AccountSelectComponent implements OnInit, OnDestroy {
       try {
         await this.walletManager.addAccount(account, wallet, false); // Hold off indexing while we save all accounts.
       } catch (err) {
-        this.snackBar.open('Error while creating account. Critical error, please try again.', 'Hide', {
+        this.snackBar.open(await this.translate.get('Account.ErrorWhileCreatingAccount').toPromise(), await this.translate.get('Account.ErrorWhileCreatingAccountAction').toPromise(), {
           duration: 6000,
           horizontalPosition: 'center',
           verticalPosition: 'bottom',

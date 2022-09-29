@@ -11,6 +11,7 @@ import axiosRetry from 'axios-retry';
 const axios = require('axios').default;
 import { StandardTokenStore } from '../../shared/store/standard-token-store';
 import { MessageService } from 'src/shared';
+import { TranslateService } from '@ngx-translate/core';
 axiosRetry(axios, { retries: 3, retryDelay: axiosRetry.exponentialDelay });
 
 @Component({
@@ -64,7 +65,8 @@ export class AccountComponent implements OnInit, OnDestroy {
     private accountStateStore: AccountStateStore,
     private networkLoader: NetworkLoader,
     private snackBar: MatSnackBar,
-    private standardTokenStore: StandardTokenStore
+    private standardTokenStore: StandardTokenStore,
+    public translate: TranslateService
   ) {
     this.uiState.title = '';
     this.uiState.showBackButton = true;
@@ -182,7 +184,7 @@ export class AccountComponent implements OnInit, OnDestroy {
         var expiryDate = new Date(expirationStr * 1000);
 
         if (expiryDate < currentDate) {
-          this.loginurlMessage = 'Login link expired';
+          this.loginurlMessage = await this.translate.get('Account.LoginLinkExpired').toPromise();
           return;
         }
       }
