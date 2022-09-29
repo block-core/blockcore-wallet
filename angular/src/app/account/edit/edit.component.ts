@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common'
 import { UIState, IconService, WalletManager } from '../../services';
 import { CommunicationService } from '../../services/communication.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-account-edit',
@@ -23,8 +24,8 @@ export class AccountEditComponent implements OnInit, OnDestroy {
     private communication: CommunicationService,
     public walletManager: WalletManager,
     private activatedRoute: ActivatedRoute,
+    public translate: TranslateService,
   ) {
-    this.uiState.title = 'Edit Account'
 
     this.activatedRoute.paramMap.subscribe(async params => {
       const index: any = params.get('index');
@@ -45,8 +46,8 @@ export class AccountEditComponent implements OnInit, OnDestroy {
     });
   }
 
-  ngOnInit() {
-
+  async ngOnInit() {
+    this.uiState.title = await this.translate.get('Account.EditAccount').toPromise();
   }
 
   changeIcon(icon: string) {

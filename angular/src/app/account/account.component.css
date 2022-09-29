@@ -74,6 +74,7 @@ textarea {
   background-size: cover;
   float: right;
   margin-left: 1em;
+  margin-right: 0;
 }
 
 .transaction-timpestamp {

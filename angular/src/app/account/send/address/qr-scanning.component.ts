@@ -1,6 +1,7 @@
 import { ThisReceiver } from '@angular/compiler';
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { TranslateService } from '@ngx-translate/core';
 import { Html5Qrcode, Html5QrcodeSupportedFormats } from 'html5-qrcode';
 import { CameraDevice } from 'html5-qrcode/esm/core';
 import { UIState } from 'src/app/services';
@@ -22,7 +23,7 @@ export class QrScanDialog implements OnInit {
   public cameraIndex = -1;
   private config: any;
 
-  constructor(private uiState: UIState, public dialogRef: MatDialogRef<QrScanDialog>, @Inject(MAT_DIALOG_DATA) public data: DialogData) {
+  constructor(private uiState: UIState, public dialogRef: MatDialogRef<QrScanDialog>, @Inject(MAT_DIALOG_DATA) public data: DialogData, public translate: TranslateService) {
     this.dialogRef.afterClosed().subscribe(() => {
       // Make sure we call stop when dialog is closed.
       if (this.html5QrCode) {
@@ -67,7 +68,7 @@ export class QrScanDialog implements OnInit {
       this.cameras = await Html5Qrcode.getCameras();
       console.log(this.cameras);
     } catch (err) {
-      this.error = 'Unable to get cameras.';
+      this.error = await this.translate.get('Account.UnableToGetCameras').toPromise();
     }
   }
 

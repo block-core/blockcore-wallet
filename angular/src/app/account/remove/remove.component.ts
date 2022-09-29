@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { LoggerService, UIState, WalletManager } from '../../services';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-account-remove',
@@ -10,8 +11,7 @@ import { LoggerService, UIState, WalletManager } from '../../services';
   styleUrls: ['../account.component.css'],
 })
 export class AccountRemoveComponent {
-  constructor(private router: Router, private location: Location, public uiState: UIState, private logger: LoggerService, public walletManager: WalletManager, private activatedRoute: ActivatedRoute) {
-    this.uiState.title = 'Remove Account';
+  constructor(private router: Router, private location: Location, public uiState: UIState, private logger: LoggerService, public walletManager: WalletManager, private activatedRoute: ActivatedRoute, public translate: TranslateService) {
 
     this.activatedRoute.paramMap.subscribe(async (params) => {
       const accountId: any = params.get('index');
@@ -30,6 +30,10 @@ export class AccountRemoveComponent {
         this.router.navigateByUrl('/');
       }
     });
+  }
+
+  async ngOnInit() {
+    this.uiState.title = await this.translate.get('Account.RemoveAccount').toPromise();
   }
 
   async wipe() {

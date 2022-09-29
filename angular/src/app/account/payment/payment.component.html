@@ -1,5 +1,5 @@
 <div class="page">
-  <h1>Payment Request: {{ uiState.payment.options.label }}</h1>
+  <h1>{{ "Account.PaymentRequest" | translate }}: {{ uiState.payment.options.label }}</h1>
   <!-- <div class="contact-line" *ngIf="contact.address">
     Address: <strong>{{ contact.address }}</strong>
     <button class="copy-button" mat-icon-button (click)="copy(contact.address)">
@@ -16,26 +16,26 @@
     </button>
   </div> -->
   <p class="selectable">
-    Message: {{ uiState.payment.options.message }}<br />
+    {{ "Account.Message" | translate }}: {{ uiState.payment.options.message }}<br />
     <br />
-    Network: {{ network.name }}<br />
-    Address: {{ uiState.payment.address }}<br />
-    Amount: {{ this.amount | amount }} {{ network.symbol }}<br />
+    {{ "Account.Network" | translate }}: {{ network.name }}<br />
+    {{ "Account.Address" | translate }}: {{ uiState.payment.address }}<br />
+    {{ "Account.Amount" | translate }}: {{ this.amount | amount }} {{ network.symbol }}<br />
     <br />
-    ID: {{ uiState.payment.options.id }}<br />
-    Data: {{ uiState.payment.options.data }}
+    {{ "Account.ID" | translate }}: {{ uiState.payment.options.id }}<br />
+    {{ "Account.Data" | translate }}: {{ uiState.payment.options.data }}
   </p>
 
   <mat-list *ngIf="filteredAccounts.length > 0">
     <mat-list-item *ngFor="let account of filteredAccounts; let i = index" routerLinkActive="active-link">
       <mat-icon mat-list-icon>{{ account.icon }}</mat-icon>
-      <div mat-line class="name-field"><button class="half-width" (click)="sendToUsing(uiState.payment.address, account.identifier)" mat-raised-button>Select account</button>&nbsp;&nbsp;&nbsp;{{ account.name | truncate }}</div>
+      <div mat-line class="name-field"><button class="half-width" (click)="sendToUsing(uiState.payment.address, account.identifier)" mat-raised-button>{{ "Account.SelectAccount" | translate }}</button>&nbsp;&nbsp;&nbsp;{{ account.name | truncate }}</div>
     </mat-list-item>
   </mat-list>
 
-  <mat-card *ngIf="filteredAccounts.length == 0"> You have no accounts for {{ network.name }} ({{ network.symbol }}). </mat-card>
+  <mat-card *ngIf="filteredAccounts.length == 0">{{ "Account.YouHaveNoAccountsFor" | translate }} {{ network.name }} ({{ network.symbol }}). </mat-card>
 
   <br /><br />
 
-  <button class="signup-button" mat-flat-button color="warn" (click)="cancel()">Cancel</button>
+  <button class="signup-button" mat-flat-button color="warn" (click)="cancel()">{{ "Account.Cancel" | translate }}</button>
 </div>

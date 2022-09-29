@@ -61,7 +61,7 @@ export class WalletCreateComponent implements OnInit {
   }
 
   async ngOnInit() {
-    this.uiState.title = await this.translate.get('Wallet.CreateNew').toPromise();
+    this.uiState.title = await this.translate.get('Wallet.CreateWallet').toPromise();
 
     this.wordlist = this.crypto.listname;
     this.wordlists = this.crypto.languages();

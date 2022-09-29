@@ -2,7 +2,7 @@
   <mat-tab>
     <ng-template mat-tab-label>
       <mat-icon class="example-tab-icon">person</mat-icon>&nbsp;
-      <span>Identity</span>
+      <span>{{ "Account.Identity" | translate }}</span>
     </ng-template>
 
     <div class="page">
@@ -18,8 +18,8 @@
     </button></h3> -->
       <!-- <h4>{{walletManager.activeAccount.did}}</h4> -->
 
-      <p class="icon-indicator" *ngIf="!identity?.published"><mat-icon class="icon-warn">done</mat-icon> This identity is currently NOT public</p>
-      <p class="icon-indicator" *ngIf="identity?.published"><mat-icon class="icon-success">done</mat-icon> This identity is currently public</p>
+      <p class="icon-indicator" *ngIf="!identity?.published"><mat-icon class="icon-warn">done</mat-icon>{{ "Account.ThisIdentityIsCurrentlyNOTPublic" | translate }}</p>
+      <p class="icon-indicator" *ngIf="identity?.published"><mat-icon class="icon-success">done</mat-icon>{{ "Account.ThisIdentityIsCurrentlyPublic" | translate }}</p>
 
       <!-- <mat-form-field class="input-full-width" appearance="outline">
         <mat-label>Verifiable Data Registry URL</mat-label>
@@ -56,13 +56,13 @@
       </p> -->
 
       <p *ngIf="identity?.published">
-        <a [href]="identityUrl" target="_blank">View identity on server</a>
+        <a [href]="identityUrl" target="_blank">{{ "Account.ViewIdentityOnServer" | translate }}</a>
       </p>
 
       <br /><br />
       <p>
-        <button class="signup-button" mat-stroked-button (click)="copyDIDDocument()">Copy DID Document</button>
-        <button class="signup-button" mat-stroked-button (click)="copyVaultConfiguration()">Copy Blockcore Vault setup configuration</button>
+        <button class="signup-button" mat-stroked-button (click)="copyDIDDocument()">{{ "Account.CopyDIDDocument" | translate }}</button>
+        <button class="signup-button" mat-stroked-button (click)="copyVaultConfiguration()">{{ "Account.CopyBlockcoreVaultSetupConfiguration" | translate }}</button>
       </p>
       <!-- <p>
                 Your identity is primarily a list of public keys that you make public available for others to connect with you
@@ -78,32 +78,32 @@
   <mat-tab>
     <ng-template mat-tab-label>
       <mat-icon class="example-tab-icon">contact_mail</mat-icon>&nbsp;
-      <span>Profile</span>
+      <span>{{ "Account.Profile" | translate }}</span>
     </ng-template>
 
     <div class="page">
       <!-- <h2>Profile:</h2> -->
       <!-- <h4>{{identity.id}}</h4> -->
 
-      <p class="icon-indicator" *ngIf="!identity?.published"><mat-icon class="icon-warn">done</mat-icon> This profile is currently NOT public</p>
-      <p class="icon-indicator" *ngIf="identity?.published"><mat-icon class="icon-success">done</mat-icon> This profile is currently public</p>
+      <p class="icon-indicator" *ngIf="!identity?.published"><mat-icon class="icon-warn">done</mat-icon> {{ "Account.ThisProfileIsCurrentlyNOTPublic" | translate }}</p>
+      <p class="icon-indicator" *ngIf="identity?.published"><mat-icon class="icon-success">done</mat-icon> {{ "Account.ThisProfileIsCurrentlyPublic" | translate }}</p>
 
       <mat-form-field class="input-full-width" appearance="outline">
-        <mat-label>Name</mat-label>
+        <mat-label>{{ "Account.ProfileName" | translate }}</mat-label>
         <input matInput [(ngModel)]="profile.name" />
-        <mat-hint>The name you want to be identified with.</mat-hint>
+        <mat-hint>{{ "Account.ProfileNameHint" | translate }}</mat-hint>
       </mat-form-field>
 
       <mat-form-field class="input-full-width" appearance="outline">
-        <mat-label>E-mail</mat-label>
+        <mat-label>{{ "Account.ProfileEmail" | translate }}</mat-label>
         <input matInput [(ngModel)]="profile.email" />
-        <mat-hint>The e-mail to contact the identity.</mat-hint>
+        <mat-hint>{{ "Account.ProfileEmailHint" | translate }}</mat-hint>
       </mat-form-field>
 
       <mat-form-field class="input-full-width" appearance="outline">
-        <mat-label>Website</mat-label>
+        <mat-label>{{ "Account.ProfileWebsite" | translate }}</mat-label>
         <input matInput [(ngModel)]="profile.website" />
-        <mat-hint>Website that is connected to the identity.</mat-hint>
+        <mat-hint>{{ "Account.ProfileWebsiteHint" | translate }}</mat-hint>
       </mat-form-field>
 
       <br /><br />
@@ -115,17 +115,17 @@
 
       <br /><br />
       <p>
-        <button class="signup-button" mat-flat-button color="primary" (click)="save()">Save (locally)</button>
-        <button class="signup-button" mat-flat-button color="warn" (click)="publish()">Publish</button>
+        <button class="signup-button" mat-flat-button color="primary" (click)="save()">{{ "Account.SaveLocally" | translate }}</button>
+        <button class="signup-button" mat-flat-button color="warn" (click)="publish()">{{ "Account.Publish" | translate }}</button>
       </p>
 
       <p *ngIf="identity?.published">
-        <a [href]="identityUrl" target="_blank">View identity on server</a>
+        <a [href]="identityUrl" target="_blank">{{ "Account.ViewIdentityOnServer" | translate }}</a>
       </p>
 
       <br /><br />
       <p>
-        <button class="signup-button" mat-stroked-button (click)="copyProfileDocument()">Copy profile Document</button>
+        <button class="signup-button" mat-stroked-button (click)="copyProfileDocument()">{{ "Account.CopyProfileDocument" | translate }}</button>
       </p>
       <!-- <p>
                 Your identity is primarily a list of public keys that you make public available for others to connect with you

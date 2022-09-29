@@ -1,7 +1,7 @@
 <div>
   <div class="qr-scan" id="reader"></div>
 
-  <button class="camera-button" mat-icon-button (click)="changeCamera()" matTooltip="Change camera">
+  <button class="camera-button" mat-icon-button (click)="changeCamera()" matTooltip='{{ "Account.ChangeCamera" | translate }}'>
     <mat-icon>cameraswitch</mat-icon>
   </button>
 
@@ -13,7 +13,7 @@
     <mat-icon>file_open</mat-icon>
   </button> -->
 
-  <button class="camera-close-button" (click)="onNoClick()" mat-icon-button matTooltip="Close">
+  <button class="camera-close-button" (click)="onNoClick()" mat-icon-button matTooltip='{{ "Account.Close" | translate }}'>
     <mat-icon>close</mat-icon>
   </button>
 

@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { Network } from '../../../shared/networks';
 import { MessageService } from 'src/shared';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { TranslateService } from '@ngx-translate/core';
 const { v4: uuidv4 } = require('uuid');
 
 @Component({
@@ -49,9 +50,9 @@ export class AccountCreateComponent implements OnInit, OnDestroy {
     public walletManager: WalletManager,
     private networkStatusService: NetworkStatusService,
     private cd: ChangeDetectorRef,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    public translate: TranslateService,
   ) {
-    this.uiState.title = 'Create new account';
     this.icon = icons.default;
 
     for (let i = 0; i < 100; i++) {
@@ -66,7 +67,9 @@ export class AccountCreateComponent implements OnInit, OnDestroy {
     this.onNetworkChanged();
   }
 
-  ngOnInit() {
+  async ngOnInit() {
+    this.uiState.title = await this.translate.get('Account.CreateAccount').toPromise();
+
     this.firstFormGroup = this._formBuilder.group({
       // firstCtrl: ['', Validators.required]
     });
