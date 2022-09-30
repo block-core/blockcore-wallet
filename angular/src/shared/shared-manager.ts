@@ -50,8 +50,6 @@ export class SharedManager {
   }
 
   async checkLockTimeout() {
-    // console.log('SharedManager:checkLockTimeout');
-
     if (this.storage.runtime.isExtension) {
       const storage = globalThis.chrome.storage as any;
 
@@ -73,8 +71,6 @@ export class SharedManager {
         // Check of the timeout has been reached and clear if it has.
         if (resetDate > timeoutDate) {
           await storage.session.remove(['keys']);
-          // await storage.session.clear(); // Might be dramatic to clear to whole session storage?
-          console.log('Timeout has been researched, session storage is cleared.');
 
           this.message.send(this.message.createMessage('timeout', {}, 'background'));
 
