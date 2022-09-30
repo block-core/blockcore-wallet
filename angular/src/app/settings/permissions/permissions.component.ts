@@ -54,7 +54,6 @@ export class PermissionsComponent implements OnDestroy, OnInit {
   async refresh() {
     await this.permissionStore.load();
     this.permissions = this.permissionStore.all();
-    console.log(this.permissions);
   }
 
   toArray(items: any): Permission[][] {

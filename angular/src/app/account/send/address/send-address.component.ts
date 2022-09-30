@@ -70,9 +70,9 @@ export class AccountSendAddressComponent implements OnInit, OnDestroy {
     this.hasSidechain = this.sendService.network.sidechains != null;
   }
 
-  ngOnDestroy() { }
+  ngOnDestroy() {}
 
-  async ngOnInit() { }
+  async ngOnInit() {}
 
   scanQrCode() {
     const dialogRef = this.dialog.open(QrScanDialog, {
@@ -110,11 +110,15 @@ export class AccountSendAddressComponent implements OnInit, OnDestroy {
 
           // Alert, but continue:
           if (this.sendService.network.symbol.toUpperCase() != payment.network.toUpperCase()) {
-            this.snackBar.open(`${await this.translate.get('Account.PaymentRequestIsMadeForAnotherNetwork').toPromise()} ${payment.network.toUpperCase()}`, await this.translate.get('Account.PaymentRequestIsMadeForAnotherNetworkAction').toPromise(), {
-              duration: 6000,
-              horizontalPosition: 'center',
-              verticalPosition: 'bottom',
-            });
+            this.snackBar.open(
+              `${await this.translate.get('Account.PaymentRequestIsMadeForAnotherNetwork').toPromise()} ${payment.network.toUpperCase()}`,
+              await this.translate.get('Account.PaymentRequestIsMadeForAnotherNetworkAction').toPromise(),
+              {
+                duration: 6000,
+                horizontalPosition: 'center',
+                verticalPosition: 'bottom',
+              }
+            );
           }
         } else {
           this.sendService.address = clipboardContents;
@@ -139,6 +143,6 @@ export class AccountSendAddressComponent implements OnInit, OnDestroy {
       return await this.translate.get('Account.YouMustEnterValue').toPromise();
     }
 
-    return this.form.get('addressInput').hasError('email') ? await this.translate.get('Account.NotValidEmail').toPromise(): '';
+    return this.form.get('addressInput').hasError('email') ? await this.translate.get('Account.NotValidEmail').toPromise() : '';
   }
 }
