@@ -66,7 +66,6 @@ export class QrScanDialog implements OnInit {
   async requestCameras() {
     try {
       this.cameras = await Html5Qrcode.getCameras();
-      console.log(this.cameras);
     } catch (err) {
       this.error = await this.translate.get('Account.UnableToGetCameras').toPromise();
     }

@@ -101,14 +101,11 @@ export class IdentityComponent implements OnInit, OnDestroy {
 
       const accountState = this.accountStateStore.get(this.walletManager.activeAccount.identifier);
 
-      console.log('accountState:', this.accountStateStore.all());
-
       // The very first receive address is the actual identity of the account.
       const address = accountState.receive[0];
 
       this.identifier = `${this.network.symbol}:${address.address}`;
       this.readableId = `${this.network.symbol}:${address.address.substring(0, 4)}...${address.address.substring(address.address.length - 4)}`;
-      console.log(this.identifier);
 
       // this.uiState.persisted.activeAccountIndex = Number(index);
 

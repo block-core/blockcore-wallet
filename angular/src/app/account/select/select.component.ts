@@ -35,9 +35,7 @@ export class AccountSelectComponent implements OnInit, OnDestroy {
   async ngOnInit(): Promise<void> {
     this.uiState.title = await this.translate.get('Account.SelectAccounts').toPromise();
     // Get the default accounts for the current wallet:
-    console.log('this.env.instanceName:', this.env.instance);
     const accounts = Defaults.getDefaultAccounts(this.env.instance);
-    console.log('DEFAULT ACCOUNTS:', accounts);
 
     this.coins = accounts.filter((item) => (item.type === 'coin' || item.type === 'token') && !this.networkService.getNetwork(item.networkType).testnet);
     this.coinsTest = accounts.filter((item) => (item.type === 'coin' || item.type === 'token') && this.networkService.getNetwork(item.networkType).testnet);

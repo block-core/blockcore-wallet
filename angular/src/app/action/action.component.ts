@@ -1,12 +1,9 @@
-import { Component, ChangeDetectorRef, HostListener, OnInit } from '@angular/core';
+import { Component, ChangeDetectorRef, OnInit } from '@angular/core';
 import { ActionService } from 'src/app/services/action.service';
-// import * as browser from 'webextension-polyfill';
-import { AccountState, AccountStateStore, ActionMessage, Permission } from 'src/shared';
+import { AccountState, AccountStateStore } from 'src/shared';
 import { PermissionStore } from 'src/shared/store/permission-store';
-import { Actions, PERMISSIONS } from 'src/app/shared/constants';
 import { AppManager, NetworksService, UIState, WalletManager } from '../services';
 import { TranslateService } from '@ngx-translate/core';
-const { v4: uuidv4 } = require('uuid');
 
 @Component({
   selector: 'app-action',
@@ -14,7 +11,6 @@ const { v4: uuidv4 } = require('uuid');
   styleUrls: ['./action.component.css'],
 })
 export class ActionComponent implements OnInit {
-  // contentToSign: string;
   accountState: AccountState;
   addresses: any[];
   accounts: any[];
@@ -22,21 +18,22 @@ export class ActionComponent implements OnInit {
   requestedKey: string;
   keySelectionDisabled = false;
 
-  constructor(public translate: TranslateService, public uiState: UIState, private accountStateStore: AccountStateStore, private permissionStore: PermissionStore, public action: ActionService, public networkService: NetworksService, public walletManager: WalletManager, private manager: AppManager, private cd: ChangeDetectorRef) {
-    // this.contentToSign = uiState.action.args;
-    // this.action.content = this.uiState.action?.document;
-    // this.action.content = this.contentToSign;
-
+  constructor(
+    public translate: TranslateService,
+    public uiState: UIState,
+    private accountStateStore: AccountStateStore,
+    private permissionStore: PermissionStore,
+    public action: ActionService,
+    public networkService: NetworksService,
+    public walletManager: WalletManager,
+    private manager: AppManager,
+    private cd: ChangeDetectorRef
+  ) {
     // Improve this logic, just quickly select the key:
     const firstArgument = this.uiState.action.params[0];
 
     const requestedKey = firstArgument.key;
 
-    // Only display the message part of the argument, which is what user should sign:
-    // this.action.content = firstArgument.message;
-    console.log('ACTION:', this.action);
-
-    // this.action.app = this.uiState.action?.app;
     this.accounts = this.walletManager.activeWallet.accounts;
     this.action.accountId = this.walletManager.activeAccountId;
 
@@ -113,9 +110,6 @@ export class ActionComponent implements OnInit {
 
     this.action.keyId = this.addresses[keyIndex].keyId;
     this.action.key = this.addresses[keyIndex].key;
-
-    console.log('ACTION IN UI:', this.action);
-    console.log('ADDRESS IN UI:', this.addresses);
   }
 
   async onAccountChanged() {
@@ -127,7 +121,6 @@ export class ActionComponent implements OnInit {
   }
 
   onKeyChanged() {
-    console.log('ON KEY CHANGED:', this.action.keyId);
     const address = this.addresses.find((a) => a.keyId == this.action.keyId);
     this.action.key = address.key;
   }

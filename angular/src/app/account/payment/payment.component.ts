@@ -24,7 +24,19 @@ export class PaymentComponent implements OnInit, OnDestroy {
   filteredAccounts: Account[];
   amount: Big;
 
-  constructor(private paymentRequest: PaymentRequest, private walletManager: WalletManager, public sendService: SendService, private snackBar: MatSnackBar, private activatedRoute: ActivatedRoute, private router: Router, public uiState: UIState, public networkService: NetworksService, private fb: FormBuilder, private contactStore: ContactStore, public translate: TranslateService) {
+  constructor(
+    private paymentRequest: PaymentRequest,
+    private walletManager: WalletManager,
+    public sendService: SendService,
+    private snackBar: MatSnackBar,
+    private activatedRoute: ActivatedRoute,
+    private router: Router,
+    public uiState: UIState,
+    public networkService: NetworksService,
+    private fb: FormBuilder,
+    private contactStore: ContactStore,
+    public translate: TranslateService
+  ) {
     this.uiState.showBackButton = true;
     this.uiState.goBackHome = false;
   }
@@ -39,18 +51,10 @@ export class PaymentComponent implements OnInit, OnDestroy {
 
   async ngOnInit(): Promise<void> {
     this.network = this.networkService.getNetworkBySymbol(this.uiState.payment.network);
-
-    console.log(this.network);
-    console.log(this.uiState.payment);
-
     this.amount = this.paymentRequest.parseAmount(this.uiState.payment.options.amount);
-    console.log('AMOUNT', this.amount);
 
     var accounts = this.walletManager.activeWallet.accounts;
     this.filteredAccounts = accounts.filter((a) => a.networkType == this.network.id);
-
-    console.log(accounts);
-    console.log(this.filteredAccounts);
   }
 
   async copy(content: string) {

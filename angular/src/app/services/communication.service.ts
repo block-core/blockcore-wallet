@@ -53,7 +53,7 @@ export class CommunicationService {
         });
       });
     } else {
-      console.log('Running in web mode, event handling is processes by FrontEnd Service.');
+      // 'Running in web mode, event handling is processes by FrontEnd Service.
 
       // this.events.subscribeAll().subscribe(async (message) => {
       //   this.ngZone.run(async () => {

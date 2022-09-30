@@ -204,7 +204,6 @@ export class AccountComponent implements OnInit, OnDestroy {
 
       var callback = 'https://' + parsedUrl;
       const authRequest = await axios.post(callback, payload);
-      console.log(authRequest);
 
       this.loginurlMessage = '';
       this.loginurl = '';

@@ -1,11 +1,9 @@
-import { Component, Inject, NgZone, OnDestroy, OnInit } from '@angular/core';
-import { AbstractControl, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import { Component, NgZone, OnDestroy, OnInit } from '@angular/core';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import Big from 'big.js';
 import { InputValidators } from 'src/app/services/inputvalidators';
-import { SATOSHI_FACTOR } from 'src/app/shared/constants';
 import { WalletManager, UIState, SendSidechainService, SendService, NetworkStatusService } from '../../../services';
-import { Html5QrcodeScanner, Html5QrcodeSupportedFormats } from 'html5-qrcode';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { AddressValidationService } from 'src/app/services/address-validation.service';
 import { QrScanDialog } from '../../send/address/qr-scanning.component';
 
@@ -29,7 +27,17 @@ export class AccountSendSidechainAddressComponent implements OnInit, OnDestroy {
 
   confirmationMessage = '';
 
-  constructor(public uiState: UIState, public sendService: SendService, public sendSidechainService: SendSidechainService, public walletManager: WalletManager, public networkStatusService: NetworkStatusService, private addressValidation: AddressValidationService, private ngZone: NgZone, public dialog: MatDialog, private fb: UntypedFormBuilder) {
+  constructor(
+    public uiState: UIState,
+    public sendService: SendService,
+    public sendSidechainService: SendSidechainService,
+    public walletManager: WalletManager,
+    public networkStatusService: NetworkStatusService,
+    private addressValidation: AddressValidationService,
+    private ngZone: NgZone,
+    public dialog: MatDialog,
+    private fb: UntypedFormBuilder
+  ) {
     this.form = fb.group({
       // addressInput: new UntypedFormControl('', [Validators.required, Validators.minLength(6), InputValidators.address(this.sendService, this.addressValidation)]),
       changeAddressInput: new UntypedFormControl('', [InputValidators.address(this.sendService, this.addressValidation)]),
@@ -99,7 +107,6 @@ export class AccountSendSidechainAddressComponent implements OnInit, OnDestroy {
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      console.log('RESULT', result);
       this.sendService.address = result;
     });
   }
@@ -128,7 +135,6 @@ export class AccountSendSidechainAddressComponent implements OnInit, OnDestroy {
         this.sendSidechainService.sidechainAddress = clipboardContents;
       }
     } catch (error) {
-      console.log('Unable to get clipboard permissions!');
       console.error(error);
     }
   }

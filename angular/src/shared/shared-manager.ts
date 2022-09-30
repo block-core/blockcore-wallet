@@ -45,8 +45,6 @@ export class SharedManager {
     } else {
       this.keys = new Map<string, string>();
     }
-
-    // this.unlockedWalletsSubject.next(<string[]>Array.from(this.keys.keys()));
   }
 
   async checkLockTimeout() {
@@ -83,15 +81,10 @@ export class SharedManager {
       const { active } = JSON.parse(globalThis.localStorage.getItem('active'));
       const { timeout } = JSON.parse(globalThis.localStorage.getItem('timeout'));
 
-      // Get both "active" (Date) and timeout (number of minutes) from local settings.
-      // const { active, timeout } = await storage.getItem().get(['active', 'timeout']);
-
       // Reset storage if there is no 'active' state data.
       if (!active) {
         // In the browser, the keys are ONLY in session, we should not persist permanently!
         globalThis.sessionStorage.removeItem('keys');
-        // await storage.session.clear(); // Might be dramatic to clear to whole session storage?
-        console.log('There are no active value, session storage is cleared.');
       } else {
         // Parse the active date.
         const timeoutDate = new Date(active);
@@ -102,8 +95,6 @@ export class SharedManager {
         // Check of the timeout has been reached and clear if it has.
         if (resetDate > timeoutDate) {
           globalThis.sessionStorage.removeItem('keys');
-          // await storage.session.clear(); // Might be dramatic to clear to whole session storage?
-          console.log('Timeout has been reached, session storage is cleared.');
 
           this.message.send(this.message.createMessage('timeout', {}, 'background'));
 

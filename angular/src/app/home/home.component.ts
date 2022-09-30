@@ -28,7 +28,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     private communication: CommunicationService,
     private secure: SecureStateService,
     public walletManager: WalletManager,
-    private cd: ChangeDetectorRef,
+    private cd: ChangeDetectorRef
   ) {
     this.uiState.showBackButton = false;
     this.activateAlarm();
@@ -47,13 +47,9 @@ export class HomeComponent implements OnInit, OnDestroy {
       this.uiState.title = await this.translate.get('App.UnlockTitle', { value: this.walletManager.activeWallet.name }).toPromise();
 
       if (this.secure.unlocked(this.walletManager.activeWallet?.id)) {
-        console.log('Wallet already unlocked!!');
-
         if (this.uiState.action?.action) {
           this.router.navigate(['action', this.uiState.action.action]);
-          console.log('THERE IS ACTION!');
         } else {
-          console.log('No action...');
           this.router.navigateByUrl('/dashboard');
         }
       }

@@ -1,17 +1,12 @@
-import { Component, Inject, HostBinding, OnDestroy, OnInit, ViewChild, Renderer2 } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Location } from '@angular/common';
-import { UIState, CommunicationService, IconService, NetworksService, NetworkStatusService, EnvironmentService, WalletManager, LoggerService } from '../../services';
+import { Component, OnDestroy, OnInit, Renderer2 } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { UIState, NetworksService, NetworkStatusService, EnvironmentService, WalletManager, LoggerService } from '../../services';
 import { copyToClipboard } from '../../shared/utilities';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import * as QRCode from 'qrcode';
-import { Address, NetworkStatus, Transaction, TransactionMetadata, TransactionMetadataEntry, TransactionView } from '../../../shared/interfaces';
+import { Address, NetworkStatus, TransactionMetadata, TransactionMetadataEntry, TransactionView } from '../../../shared/interfaces';
 import { Network } from '../../../shared/networks';
 import { TransactionMetadataStore, TransactionStore } from 'src/shared';
-import { AccountStateStore } from 'src/shared/store/account-state-store';
 import { RuntimeService } from 'src/shared/runtime.service';
-var QRCode2 = require('qrcode');
 import * as secp from '@noble/secp256k1';
 import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 
@@ -120,9 +115,6 @@ export class AccountTransactionComponent implements OnInit, OnDestroy {
         this.metadataEntry.memo = memo;
       }
     }
-
-    console.log(this.metadataEntry);
-    console.log(this.metadata);
 
     await this.transactionMetadataStore.save();
 
