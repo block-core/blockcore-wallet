@@ -10,7 +10,7 @@
     <br />
     <button class="signup-button" mat-flat-button color="primary" (click)="create()">{{ "Wallet.CreateWallet" | translate }}</button>
     <br />
-    <button class="signup-button" mat-flat-button (click)="restore()">{{ "Wallet.Recover" | translate }}</button>
+    <button class="signup-button" mat-flat-button (click)="restore()">{{ "Wallet.RecoverWallet" | translate }}</button>
     <br /><br />
     <br />
     <!-- <div class="sub-title">{{ "App.Version" | translate }} {{ uiState.manifest?.version }}</div> -->
@@ -43,13 +43,15 @@
     <!-- <mat-stepper [linear]="true" #stepper>
             <mat-step [stepControl]="firstFormGroup" [editable]="false"> -->
     <form [formGroup]="firstFormGroup">
-      <h1>{{ "Wallet.SecretRecoveryPhrase" | translate }}</h1>
+
+      <h1 *ngIf="!recover">{{ "Wallet.CreateWallet" | translate }}</h1>
+      <h1 *ngIf="recover">{{ "Wallet.RecoverWallet" | translate }}</h1>
 
       <p *ngIf="!recover">This is your private and secret sentence that is your account. You must store it safely, if you lose it, you will lose all your assets. Nobody can recover it for you. <strong>Never share it.</strong></p>
 
       <p *ngIf="recover">Restore your existing wallet with your 12 or 24-word secret recovery phrase.</p>
 
-      <mat-card *ngIf="!recover" class="recovery-phrase selectable" [class.mat-elevation-z8]="true"
+      <mat-card dir="ltr" *ngIf="!recover" class="recovery-phrase selectable" [class.mat-elevation-z8]="true"
         >{{ mnemonic }}
         <button class="copy-button" mat-icon-button (click)="copy()">
           <mat-icon>content_copy</mat-icon>
@@ -95,7 +97,7 @@
       <div>
         <br />
         <button *ngIf="!recover" class="signup-button" mat-flat-button color="primary" (click)="next(2)">{{ "Wallet.Confirm" | translate }}</button>
-        <button *ngIf="recover" class="signup-button" mat-flat-button color="primary" (click)="next(2)" [disabled]="!firstFormGroup.valid">{{ "Wallet.Import" | translate }}</button>
+        <button *ngIf="recover" class="signup-button" mat-flat-button color="primary" (click)="next(2)" [disabled]="!firstFormGroup.valid">{{ "Wallet.RecoverWallet" | translate }}</button>
         <button class="signup-button" mat-stroked-button (click)="cancel()">{{ "App.Cancel" | translate }}</button>
       </div>
     </form>

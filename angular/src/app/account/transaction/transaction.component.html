@@ -1,57 +1,57 @@
 <div class="page">
   <mat-card class="example-card">
-    <mat-card-title>Transaction</mat-card-title>
+    <mat-card-title>{{ "Account.Transaction" | translate }}</mat-card-title>
     <mat-card-content>
       <p class="wrap">
-        <span class="label">ID</span><br />{{ transaction.transactionHash }}
+        <span class="label">{{ "Account.ID" | translate }}</span><br />{{ transaction.transactionHash }}
         <!-- <button class="copy-button" mat-icon-button (click)="copy()">
                 <mat-icon>content_copy</mat-icon>
             </button> -->
       </p>
 
       <p *ngIf="!transaction.unconfirmed">
-        <span class="label">Date</span><br />
+        <span class="label">{{ "Account.Date" | translate }}</span><br />
         {{ transaction.details.timestamp * 1000 | date: "long" }}
       </p>
 
       <p *ngIf="!transaction.unconfirmed">
-        <span class="label">Confirmations</span><br />
+        <span class="label">{{ "Account.Confirmations" | translate }}</span><br />
         <!-- {{currentNetworkStatus.blockSyncHeight - transaction.details.blockIndex + 1}} -->
-        Confirmed
+        {{ "Account.Confirmed" | translate }}
       </p>
-      <p *ngIf="transaction.unconfirmed"><span class="label">Confirmations</span><br />Unconfirmed (mempool)</p>
+      <p *ngIf="transaction.unconfirmed"><span class="label">{{ "Account.Confirmations" | translate }}</span><br />{{ "Account.UnconfirmedMempool" | translate }}</p>
 
-      <p><span class="label">Fee</span><br />{{ transaction.details.fee | amount }}</p>
+      <p><span class="label">{{ "Account.Fee" | translate }}</span><br />{{ transaction.details.fee | amount }}</p>
 
       <!-- <span *ngIf="transaction.hasContract"><a
                     [href]="'https://explorer.coinvault.net/CRS/explorer/transaction/' + transaction.transactionHash">View
                     Smart Contract invocation</a></span> -->
 
       <p *ngIf="transaction.details.data.length > 0">
-        <span class="label">Data (OP_RETURN)</span><br />
+        <span class="label">{{ transaction.details.fee | amount }} {{ "Account.DataOPRETURN" | translate }}</span><br />
         <span class="wrap selectable" *ngFor="let data of transaction.details.data">{{ parseOpreturn(data) }}</span>
       </p>
 
       <mat-card *ngIf="metadataEntry?.payment" [class.mat-elevation-z8]="true">
-        <strong>Label: {{ metadataEntry.payment.label }}</strong
+        <strong>{{ "Account.Label" | translate }}: {{ metadataEntry.payment.label }}</strong
         ><br />
-        Message: {{ metadataEntry.payment.message }}<br /><br />
-        Payment ID: {{ metadataEntry.payment.id }}<br />
+        {{ "Account.Message" | translate }}: {{ metadataEntry.payment.message }}<br /><br />
+        {{ "Account.PaymentID" | translate }}: {{ metadataEntry.payment.id }}<br />
       </mat-card>
 
       <br />
 
       <form [formGroup]="form">
         <mat-form-field class="input-full-width" appearance="outline">
-          <mat-label>Private Memo</mat-label>
+          <mat-label>{{ "Account.PrivateMemo" | translate }}</mat-label>
           <input matInput formControlName="memoInput" />
         </mat-form-field>
-        <button class="full-width" [disabled]="!form.dirty" mat-raised-button (click)="saveMemo()" color="warn">Save memo</button>
+        <button class="full-width" [disabled]="!form.dirty" mat-raised-button (click)="saveMemo()" color="warn">{{ "Account.SaveMemo" | translate }}</button>
       </form>
     </mat-card-content>
 
     <mat-card-actions>
-      <button class="full-width" mat-raised-button color="primary" (click)="openExplorer(transaction.transactionHash)">Open Transaction in Block Explorer</button>
+      <button class="full-width" mat-raised-button color="primary" (click)="openExplorer(transaction.transactionHash)">{{ "Account.OpenTransactionInBlockExplorer" | translate }}</button>
 
       <!-- <button *ngIf="transaction.hasContract" mat-raised-button color="primary" (click)="openExplorer(transaction.transactionHash)">Open in Block
                 Explorer</button> -->
@@ -61,27 +61,27 @@
   <br />
 
   <mat-card class="example-card">
-    <mat-card-title>Block</mat-card-title>
+    <mat-card-title>{{ "Account.Block" | translate }}</mat-card-title>
     <mat-card-content>
       <p class="wrap" *ngIf="!transaction.unconfirmed">
-        <span class="label">Block Hash</span><br />
+        <span class="label">{{ "Account.BlockHash" | translate }}</span><br />
         {{ transaction.details.blockHash }}
       </p>
       <p *ngIf="!transaction.unconfirmed">
-        <span class="label">Block Height</span><br />
+        <span class="label">{{ "Account.BlockHeight" | translate }}</span><br />
         {{ transaction.details.blockIndex }}
       </p>
       <p>
-        <span class="label">Inputs</span> ({{ transaction.details.inputs.length }})<br />
+        <span class="label">{{ "Account.Inputs" | translate }}</span> ({{ transaction.details.inputs.length }})<br />
         {{ transaction.details.inputsAmount | amount }}
       </p>
       <p>
-        <span class="label">Outputs</span> ({{ transaction.details.outputs.length }})<br />
+        <span class="label">{{ "Account.Outputs" | translate }}</span> ({{ transaction.details.outputs.length }})<br />
         {{ transaction.details.outputsAmount | amount }}
       </p>
     </mat-card-content>
     <mat-card-actions>
-      <button class="full-width" mat-raised-button color="primary" (click)="openExplorerBlock(transaction.details.blockHash)">Open Block in Block Explorer</button>
+      <button class="full-width" mat-raised-button color="primary" (click)="openExplorerBlock(transaction.details.blockHash)">{{ "Account.OpenBlockInBlockExplorer" | translate }}</button>
     </mat-card-actions>
   </mat-card>
 </div>
