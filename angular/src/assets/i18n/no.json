@@ -9,7 +9,7 @@
   "App": {
     "AddAccount": "Ny konto",
     "ChooseWallet": "Valg lommebok",
-    "CreateWallet": "Lag lommebok",
+    "CreateWallet": "Opprett lommebok",
     "UnlockWallet": "Lås opp lommebok",
     "LockWallet": "Lås lommebok",
     "ViewWallet": "Vis lommebok",
@@ -26,7 +26,8 @@
     "Save": "Lagre",
     "Remove": "Fjern",
     "UnlockTitle": "Lås opp {{value}}",
-    "Version": "Versjon"
+    "Version": "Versjon",
+    "CreateAccount": "Opprett konto"
   },
   "Dashboard": {
     "Accounts": "Kontoer",
@@ -36,8 +37,8 @@
     "Inbox": "Innboks",
     "Tools": "Verktøy",
     "AddressBook": "Adressebok",
-    "AddAccount": "Lag konto",
-    "AddWallet": "Lag lommebok",
+    "AddAccount": "Opprett konto",
+    "AddWallet": "Opprett lommebok",
     "Exchange": "Exchange (kjøp/selg)",
     "ScanPayment": "Skann betaling",
     "CreateAccount": "Opprett konto",
@@ -84,7 +85,7 @@
     "CustomServerHint": "Den tilpassede serveren må inneholde en variabel (id) som er nettverket for hver konto du oppretter."
   },
   "Wallet": {
-    "CreateNew": "Lag ny lommebok",
+    "CreateNew": "Opprett ny lommebok",
     "Recover": "Bruk eksisterende Hemmelig gjenopprettingsfrase",
     "SecretRecoveryPhrase": "Hemmelig gjenopprettingsfrase",
     "Confirm": "OK, jeg har lagret",
@@ -118,7 +119,10 @@
     "Legacy": "Legacy",
     "SegWit": "SegWit",
     "RemoveAccountFromWallet": "Fjern konto fra lommebok",
+    "RemoveAccount": "Fjern konto",
     "RemoveConfirm": "Ja, fjern denne kontoen",
+    "Purpose": "Formål",
+    "AddressType": "Adressetype",
     "EditAccount": "Endre konto",
     "Identity": "Identitet",
     "ThisIdentityIsCurrentlyNOTPublic": "Denne identiteten er for øyeblikket IKKE offentlig",
