@@ -1,13 +1,13 @@
 <div class="page centered">
 
   <mat-form-field class="input-full-width" appearance="outline">
-    <mat-label>Wallet name</mat-label>
+    <mat-label>{{ "Wallet.WalletName" | translate }}</mat-label>
     <input matInput [(ngModel)]="walletName" required>
   </mat-form-field>
 
   <br>
-  <button class="signup-button" mat-flat-button color="primary" (click)="save()">Save</button>
+  <button class="signup-button" mat-flat-button color="primary" (click)="save()">{{ "Wallet.Save" | translate }}</button>
   <br>
-  <button class="signup-button" mat-flat-button (click)="cancel()">Cancel</button>
-  
+  <button class="signup-button" mat-flat-button (click)="cancel()">{{ "Wallet.Cancel" | translate }}</button>
+
 </div>

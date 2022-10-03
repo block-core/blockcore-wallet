@@ -87,7 +87,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         }
       } else {
         // TODO: Add text resource to i18n.
-        this.error = 'Invalid password';
+        this.error = await this.translate.get('Wallet.InvalidPassword').toPromise();
       }
     }
   }

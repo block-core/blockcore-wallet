@@ -116,7 +116,7 @@
 
       <a mat-list-item *ngIf="uiState.showInstallButton" (click)="uiState.install(); drawer.toggle()" routerLinkActive="active-link">
         <mat-icon mat-list-icon>get_app</mat-icon>
-        <div mat-line>Install App</div>
+        <div mat-line>{{ "App.InstallApp" | translate }}</div>
       </a>
 
     </mat-nav-list>
@@ -142,7 +142,7 @@
         <mat-icon mat-list-icon class="account-icon">{{walletManager.activeAccount.icon}}</mat-icon>
         <div class="detail-network">
           {{walletManager.activeAccount | network}}<br>
-          Index: {{walletManager.activeAccount?.index}}
+          {{ "Account.Index" | translate }}: {{walletManager.activeAccount?.index}}
         </div>
       </div>
 

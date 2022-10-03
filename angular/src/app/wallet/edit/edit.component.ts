@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common'
 import { UIState, CommunicationService, WalletManager } from '../../services';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-wallet-edit',
@@ -17,10 +18,14 @@ export class WalletEditComponent {
     private router: Router,
     private location: Location,
     public walletManager: WalletManager,
-    public uiState: UIState
+    public uiState: UIState,
+    public translate: TranslateService,
   ) {
-    this.uiState.title = 'Edit Wallet'
-    this.walletName = this.walletManager.activeWallet?.name;
+      this.walletName = this.walletManager.activeWallet?.name;
+  }
+
+  async ngOnInit() {
+    this.uiState.title = await this.translate.get('Wallet.EditWallet').toPromise();
   }
 
   async save() {
