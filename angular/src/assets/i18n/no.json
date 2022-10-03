@@ -93,7 +93,6 @@
     "Import": "Importer hemmelig gjenopprettingsfrase",
     "Receive": "Motta",
     "CreateWallet": "Opprett lommebok",
-    "":"",
     "CreateWalletDescription":"Dette er din private og hemmelige setning som er din konto. Du må oppbevare den trygt, hvis du mister den, vil du miste alle eiendelene dine. Ingen kan gjenopprette det for deg.",
     "NeverShareIt":"Del den aldri.",
     "RecoverWalletDescription":"Gjenopprett din eksisterende lommebok med din hemmelige gjenopprettingsfrase på 12 eller 24 ord.",
