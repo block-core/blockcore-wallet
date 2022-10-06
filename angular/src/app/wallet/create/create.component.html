@@ -48,7 +48,10 @@
 
       <h1 *ngIf="recover">{{ "Wallet.RecoverWallet" | translate }}</h1>
 
-      <p *ngIf="!recover">{{ "Wallet.CreateWalletDescription" | translate }} <strong>{{ "Wallet.NeverShareIt" | translate }}</strong></p>
+      <p *ngIf="!recover">{{ "Wallet.CreateWalletDescription" | translate }}
+        <br />
+        <strong>{{ "Wallet.NeverShareIt" | translate }}</strong>
+      </p>
 
       <p *ngIf="recover">{{ "Wallet.RecoverWalletDescription" | translate }}</p>
 

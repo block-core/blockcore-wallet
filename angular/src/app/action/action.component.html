@@ -10,7 +10,7 @@
   <br />
 
   <mat-form-field appearance="outline" class="input-full-width">
-    <mat-label>Account</mat-label>
+    <mat-label>{{ "Action.Account" | translate }}</mat-label>
 
     <mat-select (selectionChange)="onAccountChanged()" [(value)]="action.accountId">
       <mat-option *ngFor="let account of accounts" [value]="account.identifier">{{ account.name }} </mat-option>
@@ -20,7 +20,7 @@
   <br />
 
   <mat-form-field appearance="outline" class="input-full-width">
-    <mat-label>Key</mat-label>
+    <mat-label>{{ "Action.Key" | translate }}</mat-label>
 
     <mat-select [disabled]="keySelectionDisabled" (selectionChange)="onKeyChanged()" [(value)]="action.keyId">
       <mat-option *ngFor="let address of addresses" [value]="address.keyId">{{ address.address }} </mat-option>
@@ -37,7 +37,7 @@
 
   <router-outlet></router-outlet>
   <div>
-    <button class="action-button" mat-flat-button color="primary" (click)="action.authorize('once')">Authorize once</button>&nbsp; <button class="action-button" mat-flat-button (click)="action.authorize('expirable')">Authorize for 5 minutes</button>&nbsp; <button class="action-button" mat-flat-button (click)="action.authorize('forever')">Authorize forever</button>&nbsp;
-    <button class="action-button" mat-flat-button (click)="action.authorize('no')">Cancel</button>
+    <button class="action-button" mat-flat-button color="primary" (click)="action.authorize('once')">{{ "Action.AuthorizeOnce" | translate }}</button>&nbsp; <button class="action-button" mat-flat-button (click)="action.authorize('expirable')">{{ "Action.AuthorizeFor5Minutes" | translate }}</button>&nbsp; <button class="action-button" mat-flat-button (click)="action.authorize('forever')">{{ "Action.AuthorizeForever" | translate }}</button>&nbsp;
+    <button class="action-button" mat-flat-button (click)="action.authorize('no')">{{ "Action.Cancel" | translate }}</button>
   </div>
 </div>

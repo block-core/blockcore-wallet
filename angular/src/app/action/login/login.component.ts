@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { CryptoService, UIState, NetworksService, AppManager, WalletManager } from '../../services';
 import { Router } from '@angular/router';
 import { ActionService } from 'src/app/services/action.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-login',
@@ -12,10 +13,12 @@ import { ActionService } from 'src/app/services/action.service';
 export class ActionLoginComponent {
   content?: string;
 
-  constructor(public uiState: UIState, private crypto: CryptoService, private router: Router, private app: ApplicationRef, private ngZone: NgZone, private action: ActionService, public networkService: NetworksService, public walletManager: WalletManager, private manager: AppManager, private cd: ChangeDetectorRef) {
-    this.uiState.title = 'Action: Login';
+  constructor(public uiState: UIState, private crypto: CryptoService, private router: Router, private app: ApplicationRef, private ngZone: NgZone, private action: ActionService, public networkService: NetworksService, public walletManager: WalletManager, private manager: AppManager, private cd: ChangeDetectorRef, public translate: TranslateService) {
+  }
 
-    this.content = this.uiState.action?.content;
+  async ngOnInit() {
+    this.uiState.title = await this.translate.get('Account.ActionIdentity').toPromise();
+    this.content = this.uiState.action?.content; // await this.translate.get('Account.SigningContent').toPromise();
   }
 
   sign() {
