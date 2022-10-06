@@ -7,25 +7,20 @@
       <!-- <button mat-icon-button matTooltip="Scan QR code">
         <mat-icon>qr_code_scanner</mat-icon>
       </button> -->
-      <button mat-icon-button (click)="paste()" matTooltip="Paste address from clipboard">
+      <button mat-icon-button (click)="paste()" matTooltip='{{"AddressBook.PasteAddress" | translate}}'>
         <mat-icon>content_paste</mat-icon>
       </button>
     </div>
 
     <mat-form-field class="input-full-width" appearance="outline">
-      <mat-label>Address</mat-label>
+      <mat-label>{{ "AddressBook.Address" | translate }}</mat-label>
       <input matInput formControlName="address" (change)="updateNetwork()" />
-      <!-- <mat-error *ngIf="form.controls['amountInput'].invalid">Amount is required and must be correctly entered.</mat-error> -->
-      <mat-error *ngIf="form.controls['address'].errors?.['min']">Amount cannot be negative.</mat-error>
-      <mat-error *ngIf="form.controls['address'].errors?.['required']">Amount is required and must be correctly entered.</mat-error>
-      <mat-error *ngIf="form.controls['address'].errors?.['tooManyDecimals']">The value of amount cannot have more than 8 decimals.</mat-error>
-      <mat-error *ngIf="form.controls['address'].errors?.['tooHighValue']">The value of amount must be below 100000000000.</mat-error>
-      <mat-error *ngIf="form.controls['address'].errors?.['tooHighAmount']">Insufficient funds available.</mat-error>
-      <!-- *ngIf="(myForm.get('phone').touched || myForm.get('phone').dirty) && myForm.get('phone').invalid" -->
+      <mat-error *ngIf="form.controls['address'].errors?.['invalid']">{{ "AddressBook.AddressInvalid" | translate }}</mat-error>
+      <mat-error *ngIf="form.controls['address'].errors?.['required']">{{ "AddressBook.AddressRequired" | translate }}</mat-error>
     </mat-form-field>
 
     <mat-form-field appearance="outline" class="input-full-width">
-      <mat-label>Network</mat-label>
+      <mat-label>{{ "AddressBook.Network" | translate }}</mat-label>
 
       <mat-select (selectionChange)="onNetworkChanged()" [(value)]="network">
         <mat-option *ngFor="let net of this.networkService.networks" [value]="net.id">{{ net.name }} </mat-option>
@@ -33,16 +28,16 @@
     </mat-form-field>
 
     <mat-form-field class="input-full-width" appearance="outline">
-      <mat-label>Name</mat-label>
+      <mat-label>{{ "AddressBook.Name" | translate }}</mat-label>
       <input matInput formControlName="name" />
       <!-- <mat-error
             *ngIf="form.controls['addressInput'].hasError('required') && form.controls['addressInput'].dirty || form.controls['addressInput'].touched">
             Address is required.</mat-error> -->
-      <mat-error *ngIf="form.controls['name'].invalid">Address is required.</mat-error>
+      <mat-error *ngIf="form.controls['name'].invalid">{{ "AddressBook.NameRequired" | translate }}</mat-error>
     </mat-form-field>
 
     <mat-form-field class="input-full-width" appearance="outline">
-      <mat-label>E-mail</mat-label>
+      <mat-label>{{ "AddressBook.Email" | translate }}</mat-label>
       <input matInput formControlName="email" />
       <!-- <mat-error
             *ngIf="form.controls['addressInput'].hasError('required') && form.controls['addressInput'].dirty || form.controls['addressInput'].touched">
@@ -80,6 +75,6 @@
 
   <!-- <button class="full-width" [disabled]="!form.valid" mat-raised-button routerLink="../confirm" color="primary">Continue</button> -->
 
-  <button class="contacts-button" [disabled]="!form.valid" mat-raised-button (click)="save()" color="primary">Create</button>
-  <button class="contacts-button" mat-raised-button [routerLink]="['/', 'contacts']">Cancel</button>
+  <button class="contacts-button" [disabled]="!form.valid" mat-raised-button (click)="save()" color="primary">{{ "AddressBook.Create" | translate }}</button>
+  <button class="contacts-button" mat-raised-button [routerLink]="['/', 'contacts']">{{ "AddressBook.Cancel" | translate }}</button>
 </div>

@@ -136,7 +136,19 @@
     "NoContacts": "No contacts yet",
     "GetStarted": "Get started by adding contacts.",
     "CreateContact": "Create contact",
-    "AddressBookHint": "Contacts are stored locally on your device. They are not synced with any servers. If you reset your wallet on this device or another device, your contacts will not be restored."
+    "AddressBookHint": "Contacts are stored locally on your device. They are not synced with any servers. If you reset your wallet on this device or another device, your contacts will not be restored.",
+    "PasteAddress": "Paste address from clipboard",
+    "AddressInvalid": "Address is invalid format.",
+    "AddressRequired": "Address is required.",
+    "NameRequired":"Name is required.",
+    "Address": "Address",
+    "Network": "Network",
+    "Name": "Name",
+    "Email": "E-mail",
+    "Create": "Create",
+    "Cancel": "Cancel",
+    "SendUsingAccount": "Send using this account",
+    "Remove": "Remove"
   },
   "Account": {
     "Account": "Account",
@@ -342,6 +354,10 @@
     "AuthorizeOnce": "Authorize once",
     "AuthorizeFor5Minutes": "Authorize for 5 minutes",
     "AuthorizeForever": "Authorize forever"
+  },
+  "Collectables": {
+    "PurchasePrice": "purchase price",
+    "Details": "details"
   },
   "Manifest": {
     "Description": "Non-Custodial wallet for Coins, Tokens, Identities, NFTs and more."

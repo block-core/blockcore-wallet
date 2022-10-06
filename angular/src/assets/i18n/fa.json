@@ -136,7 +136,19 @@
     "NoContacts": "هنوز مخاطبی وجود ندارد",
     "GetStarted": "با افزودن مخاطبین شروع کنید.",
     "CreateContact": "ساختن مخاطب",
-    "AddressBookHint": "مخاطبین به صورت محلی در دستگاه شما ذخیره می شوند. آنها با هیچ سروری همگام سازی نمی شوند. اگر کیف پول خود را در این دستگاه یا دستگاه دیگری بازنشانی کنید، مخاطبین شما بازیابی نمی شوند."
+    "AddressBookHint": "مخاطبین به صورت محلی در دستگاه شما ذخیره می شوند. آنها با هیچ سروری همگام سازی نمی شوند. اگر کیف پول خود را در این دستگاه یا دستگاه دیگری بازنشانی کنید، مخاطبین شما بازیابی نمی شوند.",
+    "PasteAddress": "Paste address from clipboard",
+    "AddressInvalid": "Address is invalid format.",
+    "AddressRequired": "Address is required.",
+    "NameRequired":"Name is required.",
+    "Address": "Address",
+    "Network": "Network",
+    "Name": "Name",
+    "Email": "E-mail",
+    "Create": "Create",
+    "Cancel": "Cancel",
+    "SendUsingAccount": "Send using this account",
+    "Remove": "Remove"
   },
   "Account": {
     "Account": "حساب",
@@ -344,6 +356,10 @@
   },
   "Manifest": {
     "Description": "Non-Custodial wallet for Coins, Tokens, Identities, NFTs and more."
+  },
+  "Collectables": {
+    "PurchasePrice": "قیمت خرید",
+    "Details": "جزئیات"
   },
   "english": "English",
   "chinese_simplified": "Chinese (Simplified)",

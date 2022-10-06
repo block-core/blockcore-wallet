@@ -135,7 +135,19 @@
     "NoContacts": "Ingen kontakter enda",
     "GetStarted": "Kom igang med å legge til nye kontakter.",
     "CreateContact": "Opprett kontakt",
-    "AddressBookHint": "Kontakter er kun lagret lokalt på denne enheten. Kontakter blir ikke synkronisert. Hvis du sletter lommeboken, vil ikke kontaktene kommer tilbake."
+    "AddressBookHint": "Kontakter er kun lagret lokalt på denne enheten. Kontakter blir ikke synkronisert. Hvis du sletter lommeboken, vil ikke kontaktene kommer tilbake.",
+    "PasteAddress": "Lim inn adresse fra utklippstavlen",
+    "AddressInvalid": "Adressen er ugyldig format.",
+    "AddressRequired": "Adresse er påkrevd.",
+    "NameRequired":"Navn er påkrevd.",
+    "Address": "Adresse",
+    "Network": "Nettverk",
+    "Name": "Navn",
+    "Email": "E-post",
+    "Create": "Opprett",
+    "Cancel": "Avbryt",
+    "SendUsingAccount": "Send med denne kontoen",
+    "Remove": "Fjern"
   },
   "Account": {
     "Account": "konto",
@@ -339,6 +351,10 @@
     "AuthorizeOnce": "Godkjenn én gang",
     "AuthorizeFor5Minutes": "Godkjenn i 5 minutter",
     "AuthorizeForever": "Autoriser for alltid"
+  },
+  "Collectables": {
+    "PurchasePrice": "kjøpesum",
+    "Details": "detaljer"
   },
   "Manifest": {
     "Description": "Ikke-forvaringspliktig lommebok for mynter, tokens, identiteter, NFTer og mer."

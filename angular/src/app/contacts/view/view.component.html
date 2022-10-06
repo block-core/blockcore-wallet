@@ -1,16 +1,16 @@
 <div class="page" *ngIf="contact">
   <h1>{{ contact.name }}</h1>
   <div class="contact-line" *ngIf="contact.address">
-    Address: <strong>{{ contact.address }}</strong>
+    {{ "AddressBook.Address" | translate }}: <strong>{{ contact.address }}</strong>
     <button class="copy-button" mat-icon-button (click)="copy(contact.address)">
       <mat-icon>content_copy</mat-icon>
     </button>
   </div>
   <div class="contact-line">
-    Network: <strong>{{ network.name }} ({{ network.symbol }})</strong>
+    {{ "AddressBook.Network" | translate }}: <strong>{{ network.name }} ({{ network.symbol }})</strong>
   </div>
   <div class="contact-line" *ngIf="contact.email">
-    Email: <strong>{{ contact.email }}</strong>
+    {{ "AddressBook.Email" | translate }}: <strong>{{ contact.email }}</strong>
     <button class="copy-button" mat-icon-button (click)="copy(contact.email)">
       <mat-icon>content_copy</mat-icon>
     </button>
@@ -19,11 +19,11 @@
   <mat-list>
     <mat-list-item *ngFor="let account of filteredAccounts; let i = index" routerLinkActive="active-link">
       <mat-icon mat-list-icon>{{ account.icon }}</mat-icon>
-      <div mat-line class="name-field"><button class="half-width" (click)="sendToUsing(contact.address, account.identifier)" mat-raised-button>Send using this account</button>&nbsp;&nbsp;&nbsp;{{ account.name | truncate }}</div>
+      <div mat-line class="name-field"><button class="half-width" (click)="sendToUsing(contact.address, account.identifier)" mat-raised-button>{{ "AddressBook.SendUsingAccount" | translate }}</button>&nbsp;&nbsp;&nbsp;{{ account.name | truncate }}</div>
     </mat-list-item>
   </mat-list>
 
   <br /><br />
 
-  <button class="signup-button" mat-flat-button color="warn" (click)="remove()">Remove</button>
+  <button class="signup-button" mat-flat-button color="warn" (click)="remove()">{{ "AddressBook.Remove" | translate }}</button>
 </div>
