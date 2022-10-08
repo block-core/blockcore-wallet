@@ -170,6 +170,7 @@
     "Legacy": "Legacy",
     "SegWit": "SegWit",
     "RemoveAccountFromWallet": "حذف حساب از کیف پول",
+    "RemoveAccount": "حذف حساب",
     "RemoveConfirm": "بله، این حساب را حذف کنید",
     "Purpose": "هدف",
     "AddressType": "نوع آدرس",
@@ -361,6 +362,19 @@
   "Collectables": {
     "PurchasePrice": "قیمت خرید",
     "Details": "جزئیات"
+  },
+  "Exchange": {
+    "PurchaseCrypto": "Purchase Crypto",
+    "PurchaseCryptoDescription": "Purchase your first cryptocurrency using traditional payment methods such as Visa, MasterCard, Apple Pay, SWIFT, SEPA, and more.",
+    "BuyBTC": "Buy Bitcoin (BTC) with Simplex",
+    "BuySTRAX": "Buy Stratis (STRAX) with Simplex",
+    "BuyCRS": "Buy Cirrus (CRS) with Simplex",
+    "ExchangeCrypto": "Exchange Crypto",
+    "ExchangeCryptoDescription": "Exchange your existing cryptocurrency for other cryptocurrency.",
+    "ExchangeBTCForSTRAX": "Exchange BTC for STRAX with Exolix",
+    "ExchangeSTRAXForBTC": "Exchange STRAX for BTC with Exolix",
+    "Partners": "Partners",
+    "PartnersDescription": "Using our links and affiliated partners, helps support the continued development of this wallet."
   },
   "english": "English",
   "chinese_simplified": "Chinese (Simplified)",

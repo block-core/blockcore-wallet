@@ -45,7 +45,8 @@
     "CreateAccount": "Create Account",
     "CreateWallet": "Create Wallet",
     "NoCollectablesFound": "No collectables found",
-    "GoToMarketplace": "Go to marketplace"
+    "GoToMarketplace": "Go to marketplace",
+    "ZeroAccounts": "Your wallet has zero accounts."
   },
   "Settings": {
     "Settings": "Settings",
@@ -136,7 +137,19 @@
     "NoContacts": "No contacts yet",
     "GetStarted": "Get started by adding contacts.",
     "CreateContact": "Create contact",
-    "AddressBookHint": "Contacts are stored locally on your device. They are not synced with any servers. If you reset your wallet on this device or another device, your contacts will not be restored."
+    "AddressBookHint": "Contacts are stored locally on your device. They are not synced with any servers. If you reset your wallet on this device or another device, your contacts will not be restored.",
+    "PasteAddress": "Paste address from clipboard",
+    "AddressInvalid": "Address is invalid format.",
+    "AddressRequired": "Address is required.",
+    "NameRequired": "Name is required.",
+    "Address": "Address",
+    "Network": "Network",
+    "Name": "Name",
+    "Email": "E-mail",
+    "Create": "Create",
+    "Cancel": "Cancel",
+    "SendUsingAccount": "Send using this account",
+    "Remove": "Remove"
   },
   "Account": {
     "Account": "Account",
@@ -343,8 +356,25 @@
     "AuthorizeFor5Minutes": "Authorize for 5 minutes",
     "AuthorizeForever": "Authorize forever"
   },
+  "Collectables": {
+    "PurchasePrice": "purchase price",
+    "Details": "details"
+  },
   "Manifest": {
     "Description": "Non-Custodial wallet for Coins, Tokens, Identities, NFTs and more."
+  },
+  "Exchange": {
+    "PurchaseCrypto": "Purchase Crypto",
+    "PurchaseCryptoDescription": "Purchase your first cryptocurrency using traditional payment methods such as Visa, MasterCard, Apple Pay, SWIFT, SEPA, and more.",
+    "BuyBTC": "Buy Bitcoin (BTC) with Simplex",
+    "BuySTRAX": "Buy Stratis (STRAX) with Simplex",
+    "BuyCRS": "Buy Cirrus (CRS) with Simplex",
+    "ExchangeCrypto": "Exchange Crypto",
+    "ExchangeCryptoDescription": "Exchange your existing cryptocurrency for other cryptocurrency.",
+    "ExchangeBTCForSTRAX": "Exchange BTC for STRAX with Exolix",
+    "ExchangeSTRAXForBTC": "Exchange STRAX for BTC with Exolix",
+    "Partners": "Partners",
+    "PartnersDescription": "Using our links and affiliated partners, helps support the continued development of this wallet."
   },
   "english": "English",
   "chinese_simplified": "Chinese (Simplified)",

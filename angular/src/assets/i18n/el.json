@@ -26,6 +26,7 @@
     "Save": "Αποθήκευση",
     "Remove": "Αφαίρεση",
     "UnlockTitle": "Ξεκλείδωμα {{value}}",
+    "Version": "Εκδοχή",
     "CreateAccount": "Δημιουργήστε λογαριασμό",
     "InstallApp": "Εγκαταστήστε την εφαρμογή"
   },
@@ -86,11 +87,13 @@
     "CustomServerHint": "Ο προσαρμοσμένος διακομιστής πρέπει να περιέχει μια μεταβλητή (id) που είναι το δίκτυο για κάθε λογαριασμό που δημιουργείτε."
   },
   "Wallet": {
-    "CreateNew": "Δημιουργία νέου πορτοφολιού",
+    "CreateNewWallet": "Δημιουργία νέου πορτοφολιού",
+    "RecoverWallet": "Ανάκτηση Πορτοφολιού",
     "Recover": "Εισάγετε την φράση μυστικής ανάκτησης",
     "SecretRecoveryPhrase": "Μυστική φράση ανάκτησης",
     "Confirm": "Tο έχω αποθηκεύσει",
     "Import": "Εισαγωγή φράσης ανάκτησης μυστικού",
+    "Receive": "Λαμβάνω",
     "CreateWallet": "Δημιουργήστε Πορτοφολιού",
     "CreateWalletDescription": "Αυτή είναι η ιδιωτική και μυστική πρόταση που είναι ο λογαριασμός σας. Πρέπει να το αποθηκεύσετε με ασφάλεια, αν το χάσετε, θα χάσετε όλα τα περιουσιακά σας στοιχεία. Κανείς δεν μπορεί να σας το ανακτήσει.",
     "NeverShareIt": "Μην το μοιραστείτε ποτέ.",
@@ -167,7 +170,10 @@
     "Legacy": "Κληρονομιά",
     "Segwit": "SegWit",
     "RemoveAccountFromWallet": "Αφαίρεση λογαριασμού από το πορτοφόλι",
+    "RemoveAccount": "Κατάργηση λογαριασμού",
     "RemoveConfirm": "Είναι εντάξει να αφαιρεθεί αυτός ο λογαριασμός",
+    "Purpose": "Σκοπός",
+    "AddressType": "Τύπος Διεύθυνσης",
     "EditAccount": "Επεξεργασία λογαριασμού",
     "Identity": "Ταυτότητα",
     "ThisIdentityIsCurrentlyNOTPublic": "Αυτή η ταυτότητα ΔΕΝ είναι δημόσια",
@@ -353,6 +359,22 @@
   "Collectables": {
     "PurchasePrice": "τιμή αγοράς",
     "Details": "Λεπτομέριες"
+  },
+  "Manifest": {
+    "Description": "Non-Custodial wallet for Coins, Tokens, Identities, NFTs and more."
+  },
+  "Exchange": {
+    "PurchaseCrypto": "Purchase Crypto",
+    "PurchaseCryptoDescription": "Purchase your first cryptocurrency using traditional payment methods such as Visa, MasterCard, Apple Pay, SWIFT, SEPA, and more.",
+    "BuyBTC": "Buy Bitcoin (BTC) with Simplex",
+    "BuySTRAX": "Buy Stratis (STRAX) with Simplex",
+    "BuyCRS": "Buy Cirrus (CRS) with Simplex",
+    "ExchangeCrypto": "Exchange Crypto",
+    "ExchangeCryptoDescription": "Exchange your existing cryptocurrency for other cryptocurrency.",
+    "ExchangeBTCForSTRAX": "Exchange BTC for STRAX with Exolix",
+    "ExchangeSTRAXForBTC": "Exchange STRAX for BTC with Exolix",
+    "Partners": "Partners",
+    "PartnersDescription": "Using our links and affiliated partners, helps support the continued development of this wallet."
   },
   "english": "Αγγλικά",
   "chinese_simplified": "Κινέζικα (Απλοποιημένα)",
