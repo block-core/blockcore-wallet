@@ -44,7 +44,8 @@
     "CreateAccount": "Δημιουργήστε λογαριασμό",
     "CreateWallet": "Δημιουργήστε Πορτοφολιού",
     "NoCollectablesFound": "Δεν βρέθηκαν συλλεκτικά αντικείμενα",
-    "GoToMarketplace": "Πηγαίνετε στην αγορά"
+    "GoToMarketplace": "Πηγαίνετε στην αγορά",
+    "ZeroAccounts": "Το πορτοφόλι σας έχει μηδενικούς λογαριασμούς."
   },
   "Settings": {
     "Settings": "Ρυθμίσεις",

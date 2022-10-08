@@ -45,7 +45,8 @@
     "CreateAccount": "Opprett konto",
     "CreateWallet": "Opprett lommebok",
     "NoCollectablesFound": "Ingen samleobjekter funnet",
-    "GoToMarketplace": "Gå til markedsplassen"
+    "GoToMarketplace": "Gå til markedsplassen",
+    "ZeroAccounts": "Lommeboken din har null kontoer."
   },
   "Settings": {
     "Settings": "Innstillinger",

@@ -45,7 +45,8 @@
     "CreateAccount": "ساختن حساب",
     "CreateWallet": "ساختن کیف پول",
     "NoCollectablesFound": "موردی یافت نشد",
-    "GoToMarketplace": "به بازار بروید"
+    "GoToMarketplace": "به بازار بروید",
+    "ZeroAccounts": "در کیف پول شما حسابی وجود ندارد."
   },
   "Settings": {
     "Settings": "تنظیمات",
