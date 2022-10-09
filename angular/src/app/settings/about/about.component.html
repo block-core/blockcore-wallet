@@ -1,30 +1,24 @@
 <div class="page centered">
-    <h1>About {{env.instanceName}}</h1>
+    <h1>{{ "Settings.About" | translate }} {{env.instanceName}}</h1>
 
     <p><img src="assets/icon-128x128.png"></p>
 
-    <p>Version: {{env.version}}<br>
-        By {{ uiState.manifest?.author }}</p>
+    <p>{{ "Settings.Version" | translate }}: {{env.version}}<br>
+      {{ "Settings.By" | translate }} {{ uiState.manifest?.author }}</p>
 
     <p>
-        Non-Custodial HD wallet in your browser for Coins, Tokens, Identities, NFTs and more.
+      {{ "Settings.WalletDescriptionP1" | translate }}
     </p>
     <p>
-        This wallet is a free and open source software.
+      {{ "Settings.WalletDescriptionP2" | translate }}
     </p>
-    <p>Made with ❤</p>
+    <p>{{ "Settings.MadeWith" | translate }}</p>
     <p><a [href]="env.instanceUrl" target="_blank">{{env.instanceUrl}}</a></p>
 
     <p>&nbsp;</p>
 
     <mat-card>
-        <p><em>“Unlike the communities
-                traditionally associated with the word "anarchy", in a crypto-anarchy the
-                government is not temporarily destroyed but permanently forbidden and
-                permanently unnecessary. It's a community where the threat of violence is
-                impotent because violence is impossible, and violence is impossible
-                because its participants cannot be linked to their true names or physical
-                locations.” - Wei Dai 1998</em></p>
+        <p><em>{{ "Settings.AnarchyText" | translate }}</em></p>
     </mat-card>
 
 </div>

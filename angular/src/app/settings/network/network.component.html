@@ -3,16 +3,15 @@
     <mat-icon class="large-icon">travel_explore</mat-icon>
     <br />
     <h1>{{ "Settings.NetworkStatus" | translate }}</h1>
-    <p>Lists indexers used by accounts in your wallet.</p>
+    <p>{{ "Settings.NetworkStatusDescription" | translate }}</p>
   </div>
 
   <mat-spinner *ngIf="updating" class="loader"></mat-spinner>
 
   <div *ngIf="!updating">
     <mat-radio-group (change)="updatedSelectedNetwork()" class="network-items" *ngFor="let status of networks; let i = index" [(ngModel)]="status.selectedDomain">
-      <strong class="network-type">{{ status.type }}</strong
-      ><br />
-      <span *ngIf="status.networks?.length == 0">No servers online for this network.<br /></span>
+      <strong class="network-type">{{ status.type }}</strong><br />
+      <span *ngIf="status.networks?.length == 0">{{ "Settings.NoServerOnline" | translate }}<br /></span>
       <mat-radio-button *ngFor="let network of status.networks" class="network-line" [value]="network.domain">
         <app-network-status [value]="network.availability"></app-network-status> {{ network.domain }}<br /><span class="dimmed">{{ network.status }}</span>
       </mat-radio-button>
@@ -21,6 +20,6 @@
 
   <br /><br />
   <div class="centered">
-    <button (click)="reset()" [disabled]="updating" mat-flat-button color="primary">Reset Network Status Cache</button>
+    <button (click)="reset()" [disabled]="updating" mat-flat-button color="primary">{{ "Settings.ResetNetworkStatusCache" | translate }}</button>
   </div>
 </div>

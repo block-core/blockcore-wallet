@@ -1,15 +1,14 @@
 <div class="page centered">
     <mat-icon class="large-icon">delete_forever</mat-icon>
     <br>
-    <h1>Wipe all data and cache</h1>
+    <h1>{{ 'Wipe.WipeAllDataAndCache' | translate }}</h1>
 
     <p>
-        This will remove all data, state and cache from the extension.
-        All local changes that has not been persisted to cloud storage or blockchain, will be lost.
+      {{ 'Wipe.WipeAllDataAndCacheDescription' | translate }}
     </p>
 
     <br>
-    <button class="signup-button" mat-flat-button (click)="cancel()">Cancel</button>
+    <button class="signup-button" mat-flat-button (click)="cancel()">{{ 'Wipe.Cancel' | translate }}</button>
     <br>
-    <button class="signup-button" mat-flat-button color="warn" (click)="wipe()">Yes, wipe data</button>
+    <button class="signup-button" mat-flat-button color="warn" (click)="wipe()">{{ 'Wipe.YesWipeData' | translate }}</button>
 </div>

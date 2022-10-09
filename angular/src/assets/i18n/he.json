@@ -29,8 +29,8 @@
     "Version": "גירסה",
     "CreateAccount": "יצירת חשבון",
     "InstallApp": "התקן אפליקציה",
-    "ReloadExtension":"טען מחדש את ההרחבה",
-    "LoadingProblemText":"לא ניתן לטעון את האפליקציה במלואה. נסה לטעון מחדש, או אם הבעיה נמשכת, אנא הסר והתקן מחדש את האפליקציה. הסרת האפליקציה תמחק את הארנק שלך, אל תסיר אלא אם יש לך גיבוי."
+    "ReloadExtension": "טען מחדש את ההרחבה",
+    "LoadingProblemText": "לא ניתן לטעון את האפליקציה במלואה. נסה לטעון מחדש, או אם הבעיה נמשכת, אנא הסר והתקן מחדש את האפליקציה. הסרת האפליקציה תמחק את הארנק שלך, אל תסיר אלא אם יש לך גיבוי."
   },
   "Dashboard": {
     "Accounts": "חשבונות",
@@ -86,7 +86,40 @@
     "Official": "רשמי",
     "Custom": "התאמה אישית",
     "CustomServer": "שרת מותאם אישית",
-    "CustomServerHint": "שרת מותאם אישית חייב להכיל ערך (זיהוי) המייצג את הרשת לכל חשבון שנוצר."
+    "CustomServerHint": "שרת מותאם אישית חייב להכיל ערך (זיהוי) המייצג את הרשת לכל חשבון שנוצר.",
+    "Version": "Version",
+    "By": "By",
+    "WalletDescriptionP1": "Non-Custodial HD wallet in your browser for Coins, Tokens, Identities, NFTs and more.",
+    "WalletDescriptionP2": "This wallet is a free and open source software.",
+    "MadeWith": "Made with ❤",
+    "AnarchyText": "“Unlike the communities traditionally associated with the word 'anarchy', in a crypto-anarchy the government is not temporarily destroyed but permanently forbidden and permanently unnecessary. It's a community where the threat of violence is impotent because violence is impossible, and violence is impossible because its participants cannot be linked to their true names or physical locations.” - Wei Dai 1998",
+    "LogsDescription": "Debug and error logs from the app that you can share with the developers.",
+    "ToggleLevelOfLogging": "Toggle level of logging",
+    "RegisterProtocolHandlerDescription": "You can register this extension as handler for different protocols. This action must be done in full window mode, it is not possible to do in extension popup view. Click the expander icon at the bottom right, then open \"Settings\" and \"Register Protocol Handler\" again.",
+    "RegisterProtocolHandlerDescriptionP1": "If you click X on the request or block the request, the request will never be displayed again until you manually unblock the extension.",
+    "RegisterProtocolHandlerDescriptionP2": "Copy the link manually and open in a new tab.",
+    "PaymentRequest": "Payment Request (PAY)",
+    "ProtocolHandlers": "Protocol Handlers",
+    "ThirdPartyLicensesDescription": "CoinVault is an open source project published under the MIT license. You can view the source code on",
+    "GitHub": "GitHub",
+    "Licenses": "Licenses",
+    "NetworkStatusDescription": "Lists indexers used by accounts in your wallet.",
+    "NoServerOnline": "No servers online for this network.",
+    "ResetNetworkStatusCache": "Reset Network Status Cache",
+    "ChangePasswordDescription": "Change the password you use to unlock your wallet.",
+    "CurrentPassword": "Current password",
+    "NewPassword": "New password",
+    "ConfirmNewPassword": "Confirm new password",
+    "Cancel": "Cancel",
+    "PermissionsDescription": "Manage persisted permissions you have authorized web apps.",
+    "Type": "Type",
+    "Created": "Created",
+    "RemoveAllPermissions": "Remove all permissions",
+    "ShowSecretRecoveryPhraseDescription": "Do NOT share you secret phrase with anyone!",
+    "ShowSecretRecoveryPhraseDescriptionP1": "If someone has your secret recovery phrase, they have full control over your wallet.",
+    "VerifyPassword": "Verify password",
+    "Close": "Close",
+    "Show": "Show"
   },
   "Wallet": {
     "CreateNew": "יצירת ארנק חדש",
@@ -133,6 +166,12 @@
     "DeleteYourWallet": "Delete your wallet",
     "YesWipeMyWallet": "Yes, wipe my wallet",
     "DeleteYourWalletMessage": "This will remove the '{{ name }}' wallet. Make sure you have a backup of your secret recovery phrase or you might lose your wallet forever. Nobody can restore it except you."
+  },
+  "Wipe": {
+    "WipeAllDataAndCache": "Wipe all data and cache",
+    "WipeAllDataAndCacheDescription": "This will remove all data, state and cache from the extension. All local changes that has not been persisted to cloud storage or blockchain, will be lost.",
+    "YesWipeData": "Yes, wipe data",
+    "Cancel": "Cancel"
   },
   "AddressBook": {
     "AddressBook": "ספר כתובות",

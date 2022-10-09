@@ -3,7 +3,7 @@
     <mat-icon class="large-icon">vpn_lock</mat-icon>
     <br />
     <h1>{{ 'Settings.Permissions' | translate }}</h1>
-    <p>Manage persisted permissions you have authorized web apps.</p>
+    <p>{{ 'Settings.PermissionsDescription' | translate }}</p>
   </div>
 
   <div class="list-action-table" *ngFor="let permissionSet of permissions">
@@ -14,7 +14,7 @@
         <div>
           <strong>{{ perm.action }}</strong>
           <br />
-          <span class="dimmed">Type: {{ perm.type }} - Created: {{ perm.created * 1000 | date }}</span><br />
+          <span class="dimmed">{{ 'Settings.Type' | translate }}: {{ perm.type }} - {{ 'Settings.Created' | translate }}: {{ perm.created * 1000 | date }}</span><br />
           <span class="dimmed">{{ getWalletName(perm.walletId) }} / {{ getAccountName(perm.walletId, perm.accountId) }} / {{ perm.key }}</span>
         </div>
         <div>
@@ -26,5 +26,5 @@
     </div>
   </div>
 
-  <button *ngIf="permissions?.length > 0" class="signup-button" mat-flat-button color="primary" (click)="removeAllPermissions()">Remove all permissions</button>
+  <button *ngIf="permissions?.length > 0" class="signup-button" mat-flat-button color="primary" (click)="removeAllPermissions()">{{ 'Settings.RemoveAllPermissions' | translate }}</button>
 </div>
