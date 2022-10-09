@@ -28,7 +28,9 @@
     "UnlockTitle": "Lås opp {{value}}",
     "Version": "Versjon",
     "CreateAccount": "Opprett konto",
-    "InstallApp": "Installer app"
+    "InstallApp": "Installer app",
+    "ReloadExtension":"Last utvidelse på nytt",
+    "LoadingProblemText":"Kan ikke laste appen helt. Prøv å laste inn på nytt, eller hvis problemet vedvarer, fjern og installer appen på nytt. Fjerning av appen vil slette lommeboken din, IKKE FJERN med mindre du har backup."
   },
   "Dashboard": {
     "Accounts": "Kontoer",

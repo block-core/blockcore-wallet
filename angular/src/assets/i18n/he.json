@@ -28,7 +28,9 @@
     "UnlockTitle": "שחרור נעילת {{value}}",
     "Version": "גירסה",
     "CreateAccount": "יצירת חשבון",
-    "InstallApp": "Install App"
+    "InstallApp": "התקן אפליקציה",
+    "ReloadExtension":"טען מחדש את ההרחבה",
+    "LoadingProblemText":"לא ניתן לטעון את האפליקציה במלואה. נסה לטעון מחדש, או אם הבעיה נמשכת, אנא הסר והתקן מחדש את האפליקציה. הסרת האפליקציה תמחק את הארנק שלך, אל תסיר אלא אם יש לך גיבוי."
   },
   "Dashboard": {
     "Accounts": "חשבונות",
@@ -88,7 +90,7 @@
   },
   "Wallet": {
     "CreateNew": "יצירת ארנק חדש",
-    "RecoverWallet": "Recover Wallet",
+    "RecoverWallet": "שחזור ארנק",
     "Recover": "שחזור ארנק עם ביטוי סודי",
     "SecretRecoveryPhrase": "ביטוי סודי לשחזור הארנק",
     "Confirm": "השמירה בוצעה",

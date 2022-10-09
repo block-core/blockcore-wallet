@@ -28,7 +28,9 @@
     "UnlockTitle": "Unlock {{value}}",
     "Version": "Version",
     "CreateAccount": "Create Account",
-    "InstallApp": "Install App"
+    "InstallApp": "Install App",
+    "ReloadExtension":"Reload Extension",
+    "LoadingProblemText":"Unable to fully load the app. Try to reload, or if problem continues, please remove and reinstall the app. Removing the app will delete your wallet, DO NOT REMOVE unless you have backup."
   },
   "Dashboard": {
     "Accounts": "Accounts",
