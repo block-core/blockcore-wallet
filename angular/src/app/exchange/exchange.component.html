@@ -1,35 +1,35 @@
 <div class="page">
-  <h1>Purchase Crypto</h1>
+  <h1>{{ "Exchange.PurchaseCrypto" | translate }}</h1>
 
-  <p>Purchase your first cryptocurrency using traditional payment methods such as Visa, MasterCard, Apple Pay, SWIFT, SEPA, and more.</p>
+  <p>{{ "Exchange.PurchaseCryptoDescription" | translate }}</p>
 
   <p>
-    <button class="purchase-button" color="primary" mat-raised-button (click)="purchase('', 'BTC')"><mat-icon>attach_money</mat-icon>&nbsp;Buy Bitcoin (BTC) with Simplex</button>
+    <button class="purchase-button" color="primary" mat-raised-button (click)="purchase('', 'BTC')"><mat-icon>attach_money</mat-icon>&nbsp;{{ "Exchange.BuyBTC" | translate }}</button>
   </p>
   <p>
-    <button class="purchase-button" color="primary" mat-raised-button (click)="purchase('', 'STRAX')"><mat-icon>attach_money</mat-icon>&nbsp;Buy Stratis (STRAX) with Simplex</button>
+    <button class="purchase-button" color="primary" mat-raised-button (click)="purchase('', 'STRAX')"><mat-icon>attach_money</mat-icon>&nbsp;{{ "Exchange.BuySTRAX" | translate }}</button>
   </p>
   <p>
-    <button class="purchase-button" color="primary" mat-raised-button (click)="purchase('', 'CRS')"><mat-icon>attach_money</mat-icon>&nbsp;Buy Cirrus (CRS) with Simplex</button>
-  </p>
-
-  <br />
-  <h1>Exchange Crypto</h1>
-
-  <p>Exchange your existing cryptocurrency for other cryptocurrency.</p>
-
-  <p>
-    <button class="purchase-button" color="primary" mat-raised-button (click)="buy('', 'STRAX')"><mat-icon>currency_bitcoin</mat-icon>&nbsp;Exchange BTC for STRAX with Exolix</button>
-  </p>
-
-  <p>
-    <button class="purchase-button" color="primary" mat-raised-button (click)="sell('', 'STRAX')"><mat-icon>currency_bitcoin</mat-icon>&nbsp;Exchange STRAX for BTC with Exolix</button>
+    <button class="purchase-button" color="primary" mat-raised-button (click)="purchase('', 'CRS')"><mat-icon>attach_money</mat-icon>&nbsp;{{ "Exchange.BuyCRS" | translate }}</button>
   </p>
 
   <br />
-  <h2>Partners</h2>
+  <h1>{{ "Exchange.ExchangeCrypto" | translate }}</h1>
+
+  <p>{{ "Exchange.ExchangeCryptoDescription" | translate }}</p>
+
+  <p>
+    <button class="purchase-button" color="primary" mat-raised-button (click)="buy('', 'STRAX')"><mat-icon>currency_bitcoin</mat-icon>&nbsp;{{ "Exchange.ExchangeBTCForSTRAX" | translate }}</button>
+  </p>
+
+  <p>
+    <button class="purchase-button" color="primary" mat-raised-button (click)="sell('', 'STRAX')"><mat-icon>currency_bitcoin</mat-icon>&nbsp;{{ "Exchange.ExchangeSTRAXForBTC" | translate }}</button>
+  </p>
+
+  <br />
+  <h2>{{ "Exchange.Partners" | translate }}</h2>
   <p><a href="https://exolix.com?ref=BcG9dcJcQqLeXPf5" target="_blank">Exolix</a></p>
   <!-- <p><a href="https://www.coinvault.io/simplex/?crypto=BTC&fiat=EUR&amount=200" target="_blank">Simplex</a></p> -->
 
-  <p class="mat-caption network-info">Using our links and affiliated partners, helps support the continued development of this wallet.</p>
+  <p class="mat-caption network-info">{{ "Exchange.PartnersDescription" | translate }}</p>
 </div>

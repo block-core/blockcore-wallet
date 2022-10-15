@@ -1,5 +1,6 @@
 import { Location } from '@angular/common';
 import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import { EventBus, NetworkStatus, NetworkStatusEntry, NetworkStatusStore } from 'src/shared';
 import { StateStore } from 'src/shared/store/state-store';
 import { UIState, FeatureService, NetworkStatusService, StateService } from '../../services';
@@ -15,13 +16,15 @@ export class NetworkComponent implements OnDestroy, OnInit {
   sub: any;
   updating = false;
 
-  constructor(private events: EventBus, public uiState: UIState, public location: Location, private stateService: StateService, private stateStore: StateStore, public networkStatus: NetworkStatusService, public feature: FeatureService) {
-    this.uiState.title = 'Network Status';
+  constructor(private events: EventBus, public uiState: UIState, public location: Location, private stateService: StateService, private stateStore: StateStore, public networkStatus: NetworkStatusService, public feature: FeatureService, public translate: TranslateService) {
     this.uiState.showBackButton = true;
     this.uiState.goBackHome = false;
   }
 
   async ngOnInit() {
+
+    this.uiState.title = await this.translate.get('Settings.NetworkStatus').toPromise();
+
     await this.load();
 
     // When the state service is changed, something it will be after network status update, we must reload UI.

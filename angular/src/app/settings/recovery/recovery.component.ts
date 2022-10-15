@@ -1,6 +1,7 @@
 import { Location } from '@angular/common';
 import { Component, HostBinding, OnDestroy, ViewEncapsulation } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { TranslateService } from '@ngx-translate/core';
 import { UIState, WalletManager } from '../../services';
 import { copyToClipboard } from '../../shared/utilities';
 
@@ -21,11 +22,15 @@ export class RecoveryComponent implements OnDestroy {
         public uiState: UIState,
         public walletManager: WalletManager,
         private snackBar: MatSnackBar,
-        public location: Location) {
-        this.uiState.title = 'Recovery Phrase';
+        public location: Location,
+        public translate: TranslateService) {
         this.uiState.showBackButton = true;
         this.uiState.goBackHome = false;
 
+    }
+
+    async ngOnInit() {
+      this.uiState.title = await this.translate.get('Settings.ShowSecretRecoveryPhrase').toPromise();
     }
 
     ngOnDestroy() {

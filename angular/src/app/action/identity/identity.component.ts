@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { CryptoService, NetworksService, AppManager, WalletManager, UIState } from '../../services';
 import { Router } from '@angular/router';
 import { ActionService } from 'src/app/services/action.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-identity',
@@ -12,10 +13,12 @@ import { ActionService } from 'src/app/services/action.service';
 export class ActionIdentityComponent {
   content?: string;
 
-  constructor(public uiState: UIState, private crypto: CryptoService, private router: Router, private app: ApplicationRef, private ngZone: NgZone, private action: ActionService, public networkService: NetworksService, private manager: AppManager, public walletManager: WalletManager, private cd: ChangeDetectorRef) {
-    this.uiState.title = 'Action: Identity';
+  constructor(public uiState: UIState, private crypto: CryptoService, private router: Router, private app: ApplicationRef, private ngZone: NgZone, private action: ActionService, public networkService: NetworksService, private manager: AppManager, public walletManager: WalletManager, private cd: ChangeDetectorRef, public translate: TranslateService) {
+  }
 
-    this.content = 'The website is requesting you to generate an DID Document.'; // this.uiState.action?.document;
+  async ngOnInit() {
+    this.uiState.title = await this.translate.get('Account.ActionIdentity').toPromise();
+    this.content = await this.translate.get('Account.SigningContent').toPromise(); // this.uiState.action?.document;
   }
 
   sign() {

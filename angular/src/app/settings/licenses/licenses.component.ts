@@ -3,6 +3,7 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { retry, tap } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { UIState } from 'src/app/services/ui-state.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-licenses',
@@ -19,8 +20,8 @@ export class LicensesComponent implements OnDestroy, OnInit {
         public uiState: UIState,
         private readonly cd: ChangeDetectorRef,
         private readonly sanitizer: DomSanitizer,
-        private readonly http: HttpClient) {
-        this.uiState.title = 'Licenses';
+        private readonly http: HttpClient,
+        public translate: TranslateService) {
         this.uiState.showBackButton = true;
         this.uiState.goBackHome = false;
     }
@@ -28,7 +29,8 @@ export class LicensesComponent implements OnDestroy, OnInit {
     ngOnDestroy() {
     }
 
-    ngOnInit() {
+    async ngOnInit() {
+        this.uiState.title = await this.translate.get('Settings.ThirdPartyLicenses').toPromise();
         // TODO: Perform security and santiation verification so we never get into problems with
         // third party license files exploiting the extension.
         const dataFormatter = (data: string) => `<pre>${data.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</pre>`;

@@ -3,17 +3,17 @@
   <br />
   <h1>{{ 'Settings.RegisterProtocolHandler' | translate }}</h1>
 
-  <mat-card class="handlers">You can register this extension as handler for different protocols. This action must be done in full window mode, it is not possible to do in extension popup view. Click the expander icon at the bottom right, then open "Settings" and "Register Protocol Handler" again.</mat-card>
+  <mat-card class="handlers">{{ 'Settings.RegisterProtocolHandlerDescription' | translate }}</mat-card>
 
-  <p class="handler-actions">If you click X on the request or block the request, the request will never be displayed again until you manually unblock the extension.</p>
+  <p class="handler-actions">{{ 'Settings.RegisterProtocolHandlerDescriptionP1' | translate }}</p>
   <p class="handler-actions selectable">chrome://settings/content/handlers</p>
   <p class="handler-actions">
-    Copy the link manually and open in a new tab.<br>
+    {{ 'Settings.RegisterProtocolHandlerDescriptionP2' | translate }}<br>
     <!-- TODO: Make this link work cross-browsers. -->
   </p>
 
   <p class="handler-actions">
-    <button *ngIf="feature.enabledGroup('handler:pay')" class="signup-button" mat-flat-button color="primary" (click)="registerHandler('web+pay', 'pay')">Payment Request (PAY)</button>
+    <button *ngIf="feature.enabledGroup('handler:pay')" class="signup-button" mat-flat-button color="primary" (click)="registerHandler('web+pay', 'pay')">{{ 'Settings.PaymentRequest' | translate }}</button>
   </p>
 
   <!-- <br>

@@ -1,40 +1,40 @@
 <div class="page" *ngIf="status == 0">
-    <h2>Confirm Login Message</h2>
+    <h2>{{ "Action.ConfirmLoginMessage" | translate }}</h2>
 
-    Wallet: {{walletManager.activeWallet?.name}}<br>
-    Account: {{walletManager.activeAccount?.name}}<br>
-    Derivation path: {{networkService.getDerivationPathForAccount(walletManager.activeAccount)}}<br><br>
+    {{ "Action.Wallet" | translate }}: {{walletManager.activeWallet?.name}}<br>
+    {{ "Action.Account" | translate }}: {{walletManager.activeAccount?.name}}<br>
+    {{ "Action.DerivationPath" | translate }}: {{networkService.getDerivationPathForAccount(walletManager.activeAccount)}}<br><br>
 
-    Expiry: {{expiryDate}}<br>
-    Expiry: {{expiryDate.toISOString()}}<br><br>
-    Callback URL: {{callback}}<br><br>
+    {{ "Action.Expiry" | translate }}: {{expiryDate}}<br>
+    {{ "Action.Expiry" | translate }}: {{expiryDate.toISOString()}}<br><br>
+    {{ "Action.CallbackURL" | translate }}: {{callback}}<br><br>
 
-    You attest with your select account to the following content:
+    {{ "Action.AttestContentDescription" | translate }}:
     <br><br>
     <mat-form-field class="input-full-width" appearance="outline">
-        <mat-label>Signing content</mat-label>
+        <mat-label>{{ "Action.SigningContentLabel" | translate }}</mat-label>
         <textarea class="signing-content" matInput [ngModel]="content"></textarea>
     </mat-form-field>
 
-    <div *ngIf="success === true">You have successfully logged in. You can now close this window</div>
-    <div *ngIf="success === false">Failed to authenticate.<br>{{result}}</div>
+    <div *ngIf="success === true">{{ "Action.SuccessfullyLoggedIn" | translate }}</div>
+    <div *ngIf="success === false">{{ "Action.FailedToAuthenticate" | translate }}<br>{{result}}</div>
 
-    <button class="signup-button" mat-flat-button color="primary" (click)="sign()">Sign & Callback</button>&nbsp;
-    <button class="signup-button" mat-flat-button (click)="exit()">Exit Action</button>
+    <button class="signup-button" mat-flat-button color="primary" (click)="sign()">{{ "Action.SignAndCallback" | translate }}</button>&nbsp;
+    <button class="signup-button" mat-flat-button (click)="exit()">{{ "Action.ExitAction" | translate }}</button>
 </div>
 
 <div class="page" *ngIf="status == 1">
-    <h2>Login Successsful</h2>
+    <h2>{{ "Action.LoginSuccesssful" | translate }}</h2>
 
-    <p>You have successfully logged in. You can now close this window.</p>
+    <p> {{ "Action.SuccessfullyLoggedIn" | translate }}</p>
 
-    <div *ngIf="success === false">Failed to authenticate.<br>{{result}}</div>
+    <div *ngIf="success === false">{{ "Action.FailedToAuthenticate" | translate }}<br>{{result}}</div>
 
-    <button class="signup-button" mat-flat-button (click)="close()">Close Window</button>
+    <button class="signup-button" mat-flat-button (click)="close()">{{ "Action.CloseWindow" | translate }}</button>
 </div>
 
 <div class="page" *ngIf="status == 2">
-    <h2>Failed to authenticate</h2>
+    <h2>{{ "Action.FailedToAuthenticate" | translate }}</h2>
 
-    <button class="signup-button" mat-flat-button (click)="close()">Close Window</button>
+    <button class="signup-button" mat-flat-button (click)="close()">{{ "Action.CloseWindow" | translate }}</button>
 </div>

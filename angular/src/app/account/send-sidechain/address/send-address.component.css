@@ -4,8 +4,21 @@
   cursor: pointer;
 }
 
+[dir=rtl]
+.available-balance {
+  float: left;
+  margin-top: 0.5em;
+  cursor: pointer;
+}
+
 .input-actions {
   float: right;
+  margin-top: 0.5em;
+}
+
+[dir=rtl]
+.input-actions {
+  float: left;
   margin-top: 0.5em;
 }
 /*

@@ -9,7 +9,7 @@
       <mat-nav-list>
         <div mat-subheader>{{ "Dashboard.Accounts" | translate }}</div>
 
-        <div class="centered" *ngIf="walletManager.activeWallet.accounts.length == 0">Your wallet has zero accounts.<br /><br /></div>
+        <div class="centered" *ngIf="walletManager.activeWallet.accounts.length == 0">{{ "Dashboard.ZeroAccounts" | translate }}<br /><br /></div>
 
         <a mat-list-item *ngFor="let account of walletManager.activeWallet.accounts; let i = index" routerLinkActive="active-link" [routerLink]="getLink(account)">
           <mat-icon mat-list-icon>{{ account.icon }}</mat-icon>

@@ -1,6 +1,7 @@
 import { Location } from '@angular/common';
 import { Component, HostBinding, OnDestroy, ViewEncapsulation } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { TranslateService } from '@ngx-translate/core';
 import { UIState, CommunicationService, FeatureService } from '../../services';
 
 @Component({
@@ -16,10 +17,14 @@ export class HandlerComponent implements OnDestroy {
         private snackBar: MatSnackBar,
         private communication: CommunicationService,
         public feature: FeatureService,
+        public translate: TranslateService
     ) {
-        this.uiState.title = 'Protocol Handlers';
         this.uiState.showBackButton = true;
         this.uiState.goBackHome = false;
+    }
+
+    async ngOnInit() {
+      this.uiState.title = await this.translate.get('Settings.ProtocolHandlers').toPromise();
     }
 
     ngOnDestroy() {

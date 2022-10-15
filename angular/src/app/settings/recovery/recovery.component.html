@@ -3,15 +3,16 @@
 
     <mat-icon class="large-icon">warning</mat-icon>
     <br>
-
+    <h1>{{ 'Settings.ShowSecretRecoveryPhrase' | translate }}</h1>
+    <br>
     <h3>
-        Do NOT share you secret phrase with anyone!
+      {{ 'Settings.ShowSecretRecoveryPhraseDescription' | translate }}
     </h3>
 
-    <p>If someone has your secret recovery phrase, they have full control over your wallet.</p>
+    <p>{{ 'Settings.ShowSecretRecoveryPhraseDescriptionP1' | translate }}</p>
 
     <mat-form-field appearance="outline" class="input-full-width" *ngIf="!mnemonic">
-        <mat-label>Verify password</mat-label>
+        <mat-label>{{ 'Settings.VerifyPassword' | translate }}</mat-label>
         <input matInput type="password" [(ngModel)]="password">
     </mat-form-field>
 
@@ -23,8 +24,8 @@
 
     <br>
 
-    <button class="signup-button" *ngIf="mnemonic" mat-flat-button color="primary" (click)="cancel()">Close</button>
-    <button class="signup-button" *ngIf="!mnemonic" mat-flat-button (click)="cancel()">Cancel</button>
-    <button class="signup-button" *ngIf="!mnemonic" mat-flat-button color="primary" (click)="show()">Show</button>
+    <button class="signup-button" *ngIf="mnemonic" mat-flat-button color="primary" (click)="cancel()">{{ 'Settings.Close' | translate }}</button>
+    <button class="signup-button" *ngIf="!mnemonic" mat-flat-button (click)="cancel()">{{ 'Settings.Cancel' | translate }}</button>
+    <button class="signup-button" *ngIf="!mnemonic" mat-flat-button color="primary" (click)="show()">{{ 'Settings.Show' | translate }}</button>
 
 </div>

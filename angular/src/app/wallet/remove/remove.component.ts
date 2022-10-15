@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { Location } from '@angular/common'
 import { UIState, LoggerService, WalletManager } from '../../services';
 import { WalletStore } from 'src/shared';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-wallet-remove',
@@ -10,19 +11,22 @@ import { WalletStore } from 'src/shared';
   styleUrls: ['../wallet.component.css']
 })
 export class WalletRemoveComponent implements OnInit, OnDestroy {
+  DeleteYourWalletMessage: string;
   constructor(
     private router: Router,
     private location: Location,
     public walletManager: WalletManager,
     private store: WalletStore,
     private uiState: UIState,
-    private logger: LoggerService
+    private logger: LoggerService,
+    public translate: TranslateService,
   ) {
-    this.uiState.title = 'Delete Wallet';
+
   }
 
-  ngOnInit(): void {
-
+  async ngOnInit() {
+    this.uiState.title = await this.translate.get('Wallet.DeleteWallet').toPromise();
+    this.DeleteYourWalletMessage = await this.translate.get('Wallet.DeleteYourWalletMessage', { name: this.walletManager.activeWallet.name}).toPromise() ;
   }
 
   ngOnDestroy(): void {

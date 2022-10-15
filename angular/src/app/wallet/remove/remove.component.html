@@ -2,16 +2,14 @@
 
   <mat-icon class="large-icon">delete</mat-icon>
   <br>
-  <h1>Delete your wallet</h1>
+  <h1>{{ "Wallet.DeleteYourWallet" | translate }}</h1>
 
   <p>
-    This will remove the "{{walletManager.activeWallet.name}}" wallet. Make sure you have a backup of your secret recovery phrase or
-    you
-    might loose your wallet forever. Nobody can restore it except you.
+    {{ DeleteYourWalletMessage }}
   </p>
 
   <br>
-  <button class="signup-button" mat-flat-button (click)="cancel()">Cancel</button>
+  <button class="signup-button" mat-flat-button (click)="cancel()">{{ "Wallet.Cancel" | translate }}</button>
   <br>
-  <button class="signup-button" mat-flat-button color="warn" (click)="wipe()">Yes, wipe my wallet</button>
+  <button class="signup-button" mat-flat-button color="warn" (click)="wipe()">{{ "Wallet.YesWipeMyWallet" | translate }}</button>
 </div>

@@ -7,11 +7,11 @@
     <mat-card-content>
       <img class="resize" [src]="tokenJson.image"/>
       <p>
-        <span *ngIf="nonFungibleToken.pricePaid">purchase price: {{nonFungibleToken.pricePaid | amount}}</span>
+        <span *ngIf="nonFungibleToken.pricePaid">{{ "Collectables.PurchasePrice" | translate }}: {{nonFungibleToken.pricePaid | amount}}</span>
       </p>
 
       <p>
-        <button mat-icon-button (click)="toggleAttributes()" *ngIf="tokenJson.attributes.length > 0">details
+        <button mat-icon-button (click)="toggleAttributes()" *ngIf="tokenJson.attributes.length > 0">{{ "Collectables.Details" | translate }}
           <mat-icon *ngIf="!showAttributes">keyboard_arrow_down</mat-icon>
           <mat-icon *ngIf="showAttributes">keyboard_arrow_up</mat-icon>
         </button>

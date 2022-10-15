@@ -1,8 +1,7 @@
 <br>
-You are performing a request for Blockcore Vault setup. This action involves you picking the decentralized identifier you
-want to be owner of the Blockcore Vault instance.
+{{ "Action.BlockcoreVaultSetupDescription" | translate }}
 <br /><br />
 <mat-form-field class="input-full-width" appearance="outline">
-  <mat-label>Signing content</mat-label>
+  <mat-label>{{ "Action.SigningContentLabel" | translate }}</mat-label>
   <textarea class="signing-content" readonly="readonly" matInput [ngModel]="contentToSign"></textarea>
 </mat-form-field>

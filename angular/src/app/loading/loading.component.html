@@ -5,11 +5,9 @@
 
   <div *ngIf="problems" class="tools">
 
-    <p class="problems-text">Unable to fully load the app. Try to reload, or if problem continues, please
-      remove and reinstall the app. Removing the app will delete your wallet, DO NOT REMOVE unless you have
-      backup.</p>
+    <p class="problems-text">{{ "App.LoadingProblemText" | translate }}</p>
 
-    <button class="signup-button" mat-flat-button color="primary" (click)="reload()">Reload Extension</button>
+    <button class="signup-button" mat-flat-button color="primary" (click)="reload()">{{ "App.ReloadExtension" | translate }}</button>
   </div>
 
   <!-- Unlocked wallets:<br>

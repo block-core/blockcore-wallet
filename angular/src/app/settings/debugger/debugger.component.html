@@ -2,12 +2,12 @@
   <div class="centered">
     <mat-icon class="large-icon">feedback</mat-icon>
     <br />
-    <h1>Logs</h1>
-    <p>Debug and error logs from the app that you can share with the developers.</p>
+    <h1>{{ "Settings.Logs" | translate }}</h1>
+    <p>{{ "Settings.LogsDescription" | translate }}</p>
   </div>
 
   <br /><br />
   <div class="centered">
-    <button (click)="reset()" [disabled]="updating" mat-flat-button color="primary">Toggle level of logging</button>
+    <button (click)="reset()" [disabled]="updating" mat-flat-button color="primary">{{ "Settings.ToggleLevelOfLogging" | translate }}</button>
   </div>
 </div>

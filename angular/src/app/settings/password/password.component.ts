@@ -2,6 +2,7 @@ import { Location } from '@angular/common';
 import { Component, HostBinding, OnDestroy, ViewEncapsulation } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 import { UIState, WalletManager } from '../../services';
 
 @Component({
@@ -22,12 +23,15 @@ export class PasswordComponent implements OnDestroy {
         public location: Location,
         private snackBar: MatSnackBar,
         public walletManager: WalletManager,
-        private router: Router
+        private router: Router,
+        public translate: TranslateService
     ) {
-        this.uiState.title = 'Change password';
         this.uiState.showBackButton = true;
         this.uiState.goBackHome = false;
+    }
 
+    async ngOnInit() {
+      this.uiState.title = await this.translate.get('Settings.ChangePassword').toPromise();
     }
 
     ngOnDestroy() {

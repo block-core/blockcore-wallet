@@ -1,17 +1,17 @@
 <div class="page">
 
-    <h2>Login</h2>
+    <h2>{{ "Action.Login" | translate }}</h2>
 
-    Signing account: {{walletManager.activeAccount?.name}}<br>
-    Derivation path: {{networkService.getDerivationPathForAccount(walletManager.activeAccount)}}<br><br>
+    {{ "Action.SigningAccount" | translate }}: {{walletManager.activeAccount?.name}}<br>
+    {{ "Action.DerivationPath" | translate }}: {{networkService.getDerivationPathForAccount(walletManager.activeAccount)}}<br><br>
 
-    You attest with your select account to the following content:
+    {{ "Action.SigningAccountMessage" | translate }}:
     <br><br>
     <mat-form-field class="input-full-width" appearance="outline">
-        <mat-label>Signing content</mat-label>
+        <mat-label>{{ "Action.SigningContentLabel" | translate }}</mat-label>
         <textarea class="signing-content" matInput [ngModel]="content"></textarea>
     </mat-form-field>
 
-    <button class="signup-button" mat-flat-button color="primary" (click)="sign()">Sign and close</button>&nbsp;
-    <button class="signup-button" mat-flat-button (click)="exit()">Exit Action</button>
+    <button class="signup-button" mat-flat-button color="primary" (click)="sign()">{{ "Action.SignAndClose" | translate }}</button>&nbsp;
+    <button class="signup-button" mat-flat-button (click)="exit()">{{ "Action.ExitAction" | translate }}</button>
 </div>
