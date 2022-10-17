@@ -9,14 +9,14 @@
             <div mat-line>{{account.name}} ({{account | network}})</div>
             <!-- <div mat-line> {{account.symbol}} / {{account.network}} </div> -->
         </mat-list-option>
-        <mat-divider *ngIf="coinsTest.length > 0"></mat-divider>
+        <mat-divider *ngIf="coinsTest?.length > 0"></mat-divider>
         <div mat-subheader *ngIf="coinsTest.length > 0">{{ "Account.TestNetworks" | translate }}</div>
         <mat-list-option *ngFor="let account of coinsTest" [(selected)]="account.selected">
             <mat-icon mat-list-icon>{{account.icon}}</mat-icon>
             <div mat-line>{{account.name}} ({{account | network}})</div>
             <!-- <div mat-line> {{account.purpose}} / {{account.network}} </div> -->
         </mat-list-option>
-        <mat-divider *ngIf="identity.length > 0"></mat-divider>
+        <mat-divider *ngIf="identity?.length > 0"></mat-divider>
         <div mat-subheader *ngIf="identity.length > 0">{{ "Account.Identity" | translate }}</div>
         <mat-list-option *ngFor="let account of identity" [(selected)]="account.selected">
             <mat-icon mat-list-icon>{{account.icon}}</mat-icon>
