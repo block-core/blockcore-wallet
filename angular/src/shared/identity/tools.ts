@@ -96,10 +96,10 @@ export class BlockcoreIdentityTools {
   // }
 
   /** Get a VerificationMethod structure from a keypair instance. */
-  getVerificationMethod(privateKey: Uint8Array, keyIndex: number = 1): VerificationMethod {
+  getVerificationMethod(privateKey: Uint8Array, keyIndex: number = 1, method: string = BlockcoreIdentity.PREFIX): VerificationMethod {
     const publicKey = secp.schnorr.getPublicKey(privateKey);
     const publicKeyHex = secp.utils.bytesToHex(publicKey);
-    const did = `${BlockcoreIdentity.PREFIX}${publicKeyHex}`;
+    const did = `${method}:${publicKeyHex}`;
 
     return {
       id: `${did}#keys-${keyIndex}`,

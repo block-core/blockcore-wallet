@@ -38,7 +38,7 @@ export class BlockcoreIdentityIssuer {}
 
 /** Blockcore DID only supports SchnorrSecp256k1Signature2019. Each instance of this object represents an DID. */
 export class BlockcoreIdentity {
-  public static readonly PREFIX = 'did:is:';
+  public static readonly PREFIX = 'did:is';
   public readonly id: string;
 
   // readonly privateKey: string;

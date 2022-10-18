@@ -200,7 +200,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
 
     const identityNode = this.identityService.getIdentityNode(this.walletManager.activeWallet, this.walletManager.activeAccount);
     const privateKey = identityNode.privateKey;
-    const verificationMethod = tools.getVerificationMethod(privateKey);
+    const verificationMethod = tools.getVerificationMethod(privateKey, 0, this.network.symbol);
 
     console.log('verificationMethod:', verificationMethod);
 

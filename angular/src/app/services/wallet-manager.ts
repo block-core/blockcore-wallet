@@ -346,7 +346,7 @@ export class WalletManager {
       feeRate: tx.getFeeRate(),
       virtualSize: finalTransaction.virtualSize(),
       weight: finalTransaction.weight(),
-      data: nullData
+      data: nullData,
     };
   }
 
@@ -842,6 +842,10 @@ export class WalletManager {
     const network = this.getNetwork(account.networkType);
     const accountNode = HDKey.fromExtendedKey(account.xpub, network.bip32);
     const addressNode = accountNode.deriveChild(type).deriveChild(index);
+
+    // if (account.type === 'identity') {
+    //   return 'YEES!';
+    // }
 
     return this.crypto.getAddressByNetwork(Buffer.from(addressNode.publicKey), network, account.purposeAddress);
   }
