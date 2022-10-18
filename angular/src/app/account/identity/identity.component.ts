@@ -9,6 +9,10 @@ import { Network } from '../../../shared/networks';
 import { IdentityService } from 'src/app/services/identity.service';
 import { BlockcoreIdentity, BlockcoreIdentityTools } from 'src/shared/identity';
 import { TranslateService } from '@ngx-translate/core';
+// import { v4 as uuidv4 } from 'uuid';
+const { v4: uuidv4 } = require('uuid');
+import { base64url } from 'multiformats/bases/base64';
+import { generateCid } from './cid';
 
 @Component({
   selector: 'app-identity',
@@ -95,7 +99,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
       // // }
 
       // this.manager.setActiveAccountId(index);
-      this.uiState.title = await this.translate.get('Account.Account').toPromise() + ': ' + this.walletManager.activeAccount?.name;
+      this.uiState.title = (await this.translate.get('Account.Account').toPromise()) + ': ' + this.walletManager.activeAccount?.name;
 
       this.network = this.walletManager.getNetwork(this.walletManager.activeAccount.networkType);
 
@@ -125,7 +129,6 @@ export class IdentityComponent implements OnInit, OnDestroy {
     });
   }
 
-
   async copy() {
     copyToClipboard(this.identifier);
 
@@ -136,7 +139,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
     });
   }
 
-  ngOnDestroy(): void { }
+  ngOnDestroy(): void {}
 
   save() {
     if (!this.identity) {
@@ -194,7 +197,60 @@ export class IdentityComponent implements OnInit, OnDestroy {
     }
   }
 
-  async copyDIDDocument() {
+  async copyDWNRequest() {
+    // const didDocument = await this.generateDIDDocument();
+    const didDocument = await this.generateDIDDocument();
+
+    // const signatureInput = {
+    //   jwkPrivate      : privateJwk,
+    //   protectedHeader : {
+    //     alg : privateJwk.alg as string,
+    //     kid : keyId
+    //   }
+    // };
+
+    const bytes = new TextEncoder().encode('Hello World');
+    const base64UrlString = base64url.baseEncode(bytes);
+    const cid = await generateCid(base64UrlString);
+
+    const doc = {
+      messages: [
+        {
+          authorization: {
+            payload: '',
+            signatures: [
+              {
+                protected: '',
+                signature: '',
+              },
+            ],
+          },
+          descriptor: {
+            target: didDocument.id,
+            method: 'CollectionsWrite',
+            recordId: uuidv4(),
+            nonce: '',
+            dataCid: cid,
+            dateCreated: Date.now(),
+            dataFormat: 'application/json',
+          },
+          encodedData: base64UrlString,
+        },
+      ],
+    };
+
+    console.log(doc);
+
+    copyToClipboard(JSON.stringify(doc));
+
+    this.snackBar.open('Decentralized Web Node request copied', 'Hide', {
+      duration: 2500,
+      horizontalPosition: 'center',
+      verticalPosition: 'bottom',
+    });
+  }
+
+  async generateDIDDocument() {
     const tools = new BlockcoreIdentityTools();
     // const keyPair = tools.generateKeyPair();
 
@@ -208,6 +264,11 @@ export class IdentityComponent implements OnInit, OnDestroy {
 
     const doc = identity.document();
     console.log(JSON.stringify(doc));
+    return doc;
+  }
+
+  async copyDIDDocument() {
+    const doc = await this.generateDIDDocument();
 
     copyToClipboard(JSON.stringify(doc));
 
@@ -231,7 +292,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
   }
 
   async ngOnInit(): Promise<void> {
-    this.uiState.title = await this.translate.get('Account.Account').toPromise() + ': ';
+    this.uiState.title = (await this.translate.get('Account.Account').toPromise()) + ': ';
 
     // this.sub4 = this.communication.listen('identity-published', (data: Identity) => {
     //   this.identity = data;
