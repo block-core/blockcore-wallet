@@ -12,7 +12,6 @@ import { TranslateService } from '@ngx-translate/core';
 // import { v4 as uuidv4 } from 'uuid';
 const { v4: uuidv4 } = require('uuid');
 import { base64url } from 'multiformats/bases/base64';
-import { generateCid } from './cid';
 
 @Component({
   selector: 'app-identity',
@@ -211,7 +210,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
 
     const bytes = new TextEncoder().encode('Hello World');
     const base64UrlString = base64url.baseEncode(bytes);
-    const cid = await generateCid(base64UrlString);
+    // const cid = await generateCid(base64UrlString);
 
     const doc = {
       messages: [
@@ -230,7 +229,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
             method: 'CollectionsWrite',
             recordId: uuidv4(),
             nonce: '',
-            dataCid: cid,
+            dataCid: '', //cid,
             dateCreated: Date.now(),
             dataFormat: 'application/json',
           },
