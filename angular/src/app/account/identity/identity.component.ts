@@ -2,7 +2,7 @@ import { Component, Inject, HostBinding, ChangeDetectorRef, OnInit, OnDestroy } 
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { AccountStateStore, generateCid, Identity } from 'src/shared';
+import { AccountStateStore, generateCid, getDagCid, Identity } from 'src/shared';
 import { CommunicationService, CryptoService, SettingsService, UIState, WalletManager } from 'src/app/services';
 import { copyToClipboard } from 'src/app/shared/utilities';
 import { Network } from '../../../shared/networks';
@@ -200,13 +200,57 @@ export class IdentityComponent implements OnInit, OnDestroy {
     // const didDocument = await this.generateDIDDocument();
     const didDocument = await this.generateDIDDocument();
 
-    // const signatureInput = {
-    //   jwkPrivate      : privateJwk,
-    //   protectedHeader : {
-    //     alg : privateJwk.alg as string,
-    //     kid : keyId
-    //   }
-    // };
+    const tools = new BlockcoreIdentityTools();
+    // const keyPair = tools.generateKeyPair();
+
+    const identityNode = this.identityService.getIdentityNode(this.walletManager.activeWallet, this.walletManager.activeAccount);
+    const privateKey = identityNode.privateKey;
+
+    // Does the same thing, verificationMethod doesn't do private key... this is just prototype-code anyway :-P
+    const { privateJwk, publicJwk } = tools.getKeyPair(privateKey, 0, this.network.symbol);
+    const verificationMethod = tools.getVerificationMethod(privateKey, 0, this.network.symbol);
+    const keyId = verificationMethod.id;
+
+    const signatureInput = {
+      jwkPrivate: privateJwk,
+      protectedHeader: {
+        alg: privateJwk.alg as string,
+        kid: keyId,
+      },
+    };
+
+    const options = {
+      target: verificationMethod.controller,
+      recipient: verificationMethod.controller,
+      data: new TextEncoder().encode('HelloWorld'),
+      dataFormat: 'application/json',
+      dateCreated: Date.now(),
+      recordId: uuidv4(),
+      signatureInput,
+    };
+
+    // Get the DagCid from the data payload
+    const dataCid = await getDagCid(options.data);
+    console.log(dataCid);
+
+    
+
+    //const collectionsWrite = await CollectionsWrite.create(options);
+
+    // const message = collectionsWrite.toObject() as CollectionsWriteMessage;
+
+    // expect(message.authorization).to.exist;
+    // expect(message.encodedData).to.equal(base64url.baseEncode(options.data));
+    // expect(message.descriptor.dataFormat).to.equal(options.dataFormat);
+    // expect(message.descriptor.dateCreated).to.equal(options.dateCreated);
+    // expect(message.descriptor.recordId).to.equal(options.recordId);
+
+    // const resolverStub = TestStubGenerator.createDidResolverStub(requesterDid, keyId, publicJwk);
+    // const messageStoreStub = sinon.createStubInstance(MessageStoreLevel);
+
+    // const { author } = await collectionsWrite.verifyAuth(resolverStub, messageStoreStub);
+
+    // expect(author).to.equal(requesterDid);
 
     const bytes = new TextEncoder().encode('Hello World');
     const base64UrlString = base64url.baseEncode(bytes);
