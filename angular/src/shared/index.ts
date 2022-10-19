@@ -14,3 +14,4 @@ export * from './message.service';
 export * from './event-bus';
 export * from './network-loader';
 export * from './web-request';
+export * from './dwn';
