@@ -2,7 +2,7 @@ import { Component, Inject, HostBinding, ChangeDetectorRef, OnInit, OnDestroy } 
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { AccountStateStore, generateCid, getDagCid, Identity } from 'src/shared';
+import { AccountStateStore, bytesToBase64Url, generateCid, getDagCid, Identity, Jws } from 'src/shared';
 import { CommunicationService, CryptoService, SettingsService, UIState, WalletManager } from 'src/app/services';
 import { copyToClipboard } from 'src/app/shared/utilities';
 import { Network } from '../../../shared/networks';
@@ -11,7 +11,9 @@ import { BlockcoreIdentity, BlockcoreIdentityTools } from 'src/shared/identity';
 import { TranslateService } from '@ngx-translate/core';
 // import { v4 as uuidv4 } from 'uuid';
 const { v4: uuidv4 } = require('uuid');
-import { base64url } from 'multiformats/bases/base64';
+// import { base64url } from 'multiformats/bases/base64';
+import { createJWT, ES256KSigner } from 'did-jwt';
+import { calculateJwkThumbprintUri, base64url } from 'jose';
 
 @Component({
   selector: 'app-identity',
@@ -209,7 +211,15 @@ export class IdentityComponent implements OnInit, OnDestroy {
     // Does the same thing, verificationMethod doesn't do private key... this is just prototype-code anyway :-P
     const { privateJwk, publicJwk } = tools.getKeyPair(privateKey, 0, this.network.symbol);
     const verificationMethod = tools.getVerificationMethod(privateKey, 0, this.network.symbol);
-    const keyId = verificationMethod.id;
+
+    // const keyId = verificationMethod.id;
+    // const keyId = await calculateJwkThumbprintUri(publicJwk);
+
+    const id = base64url.encode(JSON.stringify(publicJwk));
+    const keyId = `did:jwk:${id}`;
+
+    console.log('KEY ID');
+    console.log(keyId);
 
     const signatureInput = {
       jwkPrivate: privateJwk,
@@ -220,8 +230,8 @@ export class IdentityComponent implements OnInit, OnDestroy {
     };
 
     const options = {
-      target: verificationMethod.controller,
-      recipient: verificationMethod.controller,
+      target: keyId,
+      recipient: keyId,
       data: new TextEncoder().encode('HelloWorld'),
       dataFormat: 'application/json',
       dateCreated: Date.now(),
@@ -233,7 +243,54 @@ export class IdentityComponent implements OnInit, OnDestroy {
     const dataCid = await getDagCid(options.data);
     console.log(dataCid);
 
-    
+    const descriptor = {
+      target: options.target,
+      recipient: options.recipient,
+      method: 'CollectionsWrite',
+      nonce: uuidv4(),
+      // protocol      : options.protocol,
+      // contextId     : options.contextId,
+      // schema        : options.schema,
+      recordId: options.recordId,
+      // parentId      : options.parentId,
+      dataCid: dataCid.toString(),
+      dateCreated: options.dateCreated ?? Date.now(),
+      // published     : options.published,
+      // datePublished : options.datePublished,
+      dataFormat: options.dataFormat,
+    };
+
+    const encodedData = bytesToBase64Url(options.data);
+
+    // const publicKey = secp.schnorr.getPublicKey(privateKey);
+    // const identifier = this.crypto.getIdentifier(publicKey);
+    // const did = `did:is:${identifier}`;
+
+    // const address0 = this.crypto.getAddress(addressNode);
+    // var signer = await this.crypto.getSigner(addressNode);
+    var signer = ES256KSigner(privateKey);
+
+    // const authorization = await createJWT(
+    //   {
+    //     aud: didDocument.controller,
+    //     exp: 1957463421,
+    //     name: 'Blockcore Developer',
+    //   },
+    //   { issuer: didDocument.controller, signer },
+    //   { alg: 'ES256K' }
+    // );
+
+    // const authorization2 = await createJWT(
+    //   { descriptor },
+    //   { issuer: didDocument.controller, signer },
+    //   { alg: 'ES256K' }
+    // );
+
+    const authorization = await Jws.sign({ descriptor }, options.signatureInput);
+    const message = { descriptor, authorization, encodedData };
+    console.log('MESSAGE:');
+    console.log(message);
+    console.log(JSON.stringify(message));
 
     //const collectionsWrite = await CollectionsWrite.create(options);
 
@@ -253,7 +310,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
     // expect(author).to.equal(requesterDid);
 
     const bytes = new TextEncoder().encode('Hello World');
-    const base64UrlString = base64url.baseEncode(bytes);
+    const base64UrlString = base64url.encode(bytes);
     const cid = await generateCid(base64UrlString);
 
     const doc = {
@@ -285,6 +342,165 @@ export class IdentityComponent implements OnInit, OnDestroy {
     console.log(doc);
 
     copyToClipboard(JSON.stringify(doc));
+
+    this.snackBar.open('Decentralized Web Node request copied', 'Hide', {
+      duration: 2500,
+      horizontalPosition: 'center',
+      verticalPosition: 'bottom',
+    });
+  }
+
+  async copyDWNQueryRequest() {
+    // const didDocument = await this.generateDIDDocument();
+    const didDocument = await this.generateDIDDocument();
+
+    const tools = new BlockcoreIdentityTools();
+    // const keyPair = tools.generateKeyPair();
+
+    const identityNode = this.identityService.getIdentityNode(this.walletManager.activeWallet, this.walletManager.activeAccount);
+    const privateKey = identityNode.privateKey;
+
+    // Does the same thing, verificationMethod doesn't do private key... this is just prototype-code anyway :-P
+    const { privateJwk, publicJwk } = tools.getKeyPair(privateKey, 0, this.network.symbol);
+    const verificationMethod = tools.getVerificationMethod(privateKey, 0, this.network.symbol);
+
+    // const keyId = verificationMethod.id;
+    // const keyId = await calculateJwkThumbprintUri(publicJwk);
+
+    const id = base64url.encode(JSON.stringify(publicJwk));
+    const keyId = `did:jwk:${id}`;
+
+    console.log('KEY ID');
+    console.log(keyId);
+
+    const signatureInput = {
+      jwkPrivate: privateJwk,
+      protectedHeader: {
+        alg: privateJwk.alg as string,
+        kid: keyId,
+      },
+    };
+
+    const options = {
+      target: keyId,
+      recipient: keyId,
+      data: new TextEncoder().encode('HelloWorld'),
+      dataFormat: 'application/json',
+      dateCreated: Date.now(),
+      recordId: uuidv4(),
+      signatureInput,
+    };
+
+    // Get the DagCid from the data payload
+    const dataCid = await getDagCid(options.data);
+    console.log(dataCid);
+
+    const descriptor = {
+      target: options.target,
+      // recipient: options.recipient,
+      method: 'CollectionsQuery',
+
+      filter: {
+        recipient: options.target
+      },
+
+      nonce: uuidv4(),
+      // protocol      : options.protocol,
+      // contextId     : options.contextId,
+      // schema        : options.schema,
+      // recordId: options.recordId,
+      // parentId      : options.parentId,
+      // dataCid: dataCid.toString(),
+
+      // dateSort?: string;
+      // dateCreated: options.dateCreated ?? Date.now(),
+      // published     : options.published,
+      // datePublished : options.datePublished,
+      // dataFormat: options.dataFormat,
+    };
+
+    const encodedData = bytesToBase64Url(options.data);
+
+    // const publicKey = secp.schnorr.getPublicKey(privateKey);
+    // const identifier = this.crypto.getIdentifier(publicKey);
+    // const did = `did:is:${identifier}`;
+
+    // const address0 = this.crypto.getAddress(addressNode);
+    // var signer = await this.crypto.getSigner(addressNode);
+    var signer = ES256KSigner(privateKey);
+
+    // const authorization = await createJWT(
+    //   {
+    //     aud: didDocument.controller,
+    //     exp: 1957463421,
+    //     name: 'Blockcore Developer',
+    //   },
+    //   { issuer: didDocument.controller, signer },
+    //   { alg: 'ES256K' }
+    // );
+
+    // const authorization2 = await createJWT(
+    //   { descriptor },
+    //   { issuer: didDocument.controller, signer },
+    //   { alg: 'ES256K' }
+    // );
+
+    const authorization = await Jws.sign({ descriptor }, options.signatureInput);
+    const message = { descriptor, authorization };
+    console.log('MESSAGE:');
+    console.log(message);
+    console.log(JSON.stringify(message));
+
+    //const collectionsWrite = await CollectionsWrite.create(options);
+
+    // const message = collectionsWrite.toObject() as CollectionsWriteMessage;
+
+    // expect(message.authorization).to.exist;
+    // expect(message.encodedData).to.equal(base64url.baseEncode(options.data));
+    // expect(message.descriptor.dataFormat).to.equal(options.dataFormat);
+    // expect(message.descriptor.dateCreated).to.equal(options.dateCreated);
+    // expect(message.descriptor.recordId).to.equal(options.recordId);
+
+    // const resolverStub = TestStubGenerator.createDidResolverStub(requesterDid, keyId, publicJwk);
+    // const messageStoreStub = sinon.createStubInstance(MessageStoreLevel);
+
+    // const { author } = await collectionsWrite.verifyAuth(resolverStub, messageStoreStub);
+
+    // expect(author).to.equal(requesterDid);
+
+    // const bytes = new TextEncoder().encode('Hello World');
+    // const base64UrlString = base64url.encode(bytes);
+    // const cid = await generateCid(base64UrlString);
+
+    // const doc = {
+    //   messages: [
+    //     {
+    //       authorization: {
+    //         payload: '',
+    //         signatures: [
+    //           {
+    //             protected: '',
+    //             signature: '',
+    //           },
+    //         ],
+    //       },
+    //       descriptor: {
+    //         target: didDocument.id,
+    //         method: 'CollectionsWrite',
+    //         recordId: uuidv4(),
+    //         nonce: '',
+    //         dataCid: cid,
+    //         dateCreated: Date.now(),
+    //         dataFormat: 'application/json',
+    //       },
+    //       encodedData: base64UrlString,
+    //     },
+    //   ],
+    // };
+
+    // console.log(doc);
+
+    copyToClipboard(JSON.stringify(message));
 
     this.snackBar.open('Decentralized Web Node request copied', 'Hide', {
       duration: 2500,

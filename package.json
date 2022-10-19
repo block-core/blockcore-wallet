@@ -75,6 +75,7 @@
     "hammerjs": "^2.0.8",
     "html5-qrcode": "2.2.3",
     "ipfs-unixfs-importer": "^11.0.1",
+    "jose": "^4.10.0",
     "js-base64": "3.7.2",
     "ngx-logger": "^5.0.11",
     "nostr-tools": "0.24.1",
