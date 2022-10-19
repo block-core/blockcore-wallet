@@ -2,7 +2,7 @@ import { Component, Inject, HostBinding, ChangeDetectorRef, OnInit, OnDestroy } 
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { AccountStateStore, Identity } from 'src/shared';
+import { AccountStateStore, generateCid, Identity } from 'src/shared';
 import { CommunicationService, CryptoService, SettingsService, UIState, WalletManager } from 'src/app/services';
 import { copyToClipboard } from 'src/app/shared/utilities';
 import { Network } from '../../../shared/networks';
@@ -210,7 +210,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
 
     const bytes = new TextEncoder().encode('Hello World');
     const base64UrlString = base64url.baseEncode(bytes);
-    // const cid = await generateCid(base64UrlString);
+    const cid = await generateCid(base64UrlString);
 
     const doc = {
       messages: [
@@ -229,7 +229,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
             method: 'CollectionsWrite',
             recordId: uuidv4(),
             nonce: '',
-            dataCid: '', //cid,
+            dataCid: cid,
             dateCreated: Date.now(),
             dataFormat: 'application/json',
           },
