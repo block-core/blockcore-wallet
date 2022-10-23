@@ -218,14 +218,11 @@ export class IdentityComponent implements OnInit, OnDestroy {
     const id = base64url.encode(JSON.stringify(publicJwk));
     const keyId = `did:jwk:${id}`;
 
-    console.log('KEY ID');
-    console.log(keyId);
-
     const signatureInput = {
       jwkPrivate: privateJwk,
       protectedHeader: {
         alg: privateJwk.alg as string,
-        kid: keyId,
+        kid: `${keyId}#0`,
       },
     };
 
@@ -377,7 +374,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
       jwkPrivate: privateJwk,
       protectedHeader: {
         alg: privateJwk.alg as string,
-        kid: keyId,
+        kid: keyId + '#0',
       },
     };
 
