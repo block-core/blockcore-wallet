@@ -397,7 +397,8 @@
     "Key": "Nøkkel",
     "AuthorizeOnce": "Godkjenn én gang",
     "AuthorizeFor5Minutes": "Godkjenn i 5 minutter",
-    "AuthorizeForever": "Autoriser for alltid"
+    "AuthorizeForever": "Autoriser for alltid",
+    "Cancel":"Cancel"
   },
   "Manifest": {
     "Description": "Ikke-forvaringspliktig lommebok for mynter, tokens, identiteter, NFTer og mer."

@@ -397,7 +397,8 @@
     "Key": "Κλειδί",
     "AuthorizeOnce": "Εξουσιοδότηση μία φορά",
     "AuthorizeFor5Miutes": "Εξουσιοδότηση για 5 λεπτά",
-    "AuthorizeForever": "Εξουσιοδότηση για πάντα"
+    "AuthorizeForever": "Εξουσιοδότηση για πάντα",
+    "Cancel":"Cancel"
   },
   "Collectables": {
     "PurchasePrice": "τιμή αγοράς",

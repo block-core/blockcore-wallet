@@ -397,7 +397,8 @@
     "Key": "Key",
     "AuthorizeOnce": "Authorize once",
     "AuthorizeFor5Minutes": "Authorize for 5 minutes",
-    "AuthorizeForever": "Authorize forever"
+    "AuthorizeForever": "Authorize forever",
+    "Cancel":"Cancel"
   },
   "Collectables": {
     "PurchasePrice": "purchase price",

@@ -395,9 +395,10 @@
     "ReadYourPublicKey": "کلید عمومی خود را بخوانید",
     "BlockcoreVaultSetupDescription": "شما در حال انجام یک درخواست برای راه اندازی Blockcore Vault هستید. این اقدام شامل انتخاب شناسه غیرمتمرکز مورد نظر شما برای مالکیت نمونه Blockcore Vault است.",
     "Key": "کلید",
-    "AuthorizeOnce": "یک بار مجوز دهید",
-    "AuthorizeFor5Minutes": "به مدت 5 دقیقه مجوز دهید",
-    "AuthorizeForever": "برای همیشه مجوز دهید"
+    "AuthorizeOnce": "مجاز برای یک بار",
+    "AuthorizeFor5Minutes": "به مدت 5 دقیقه مجاز",
+    "AuthorizeForever": "برای همیشه مجاز",
+    "Cancel":"انصراف"
   },
   "Manifest": {
     "Description": "Non-Custodial wallet for Coins, Tokens, Identities, NFTs and more."
