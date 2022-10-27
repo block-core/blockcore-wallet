@@ -18,6 +18,8 @@
     <div class="sub-title">{{ "Wallet.Disclaimer" | translate }}
       <br><br>
       <a href="https://www.blockcore.net/policy" target="_blank">{{ "Wallet.PrivacyPolicy" | translate }}</a>
+      <br /><br /><br />
+      <div>{{ "App.Version" | translate }} {{ uiState.manifest?.version }}</div>
     </div>
 
     <div *ngIf="uiState.showInstallButton" id="install" class="left">
