@@ -1,3 +1,11 @@
+## <small>1.0.3 (2022-10-27)</small>
+
+* Add display of version on the initial wallet create dialog ([4c63573](https://github.com/block-core/blockcore-wallet/commit/4c63573))
+* Fix issue with loading indicator not stopping in web mode ([eaeb705](https://github.com/block-core/blockcore-wallet/commit/eaeb705)), closes [#241](https://github.com/block-core/blockcore-wallet/issues/241)
+* Update version and changelog ([9e64b55](https://github.com/block-core/blockcore-wallet/commit/9e64b55))
+
+
+
 ## <small>1.0.2 (2022-10-27)</small>
 
 * Enable all networks for Blockcore Wallet ([2b0f191](https://github.com/block-core/blockcore-wallet/commit/2b0f191))
