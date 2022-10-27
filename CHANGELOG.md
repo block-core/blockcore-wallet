@@ -1,4 +1,11 @@
-## <small>1.0.1 (2022-10-27)</small>
+## <small>1.0.2 (2022-10-27)</small>
+
+* Enable all networks for Blockcore Wallet ([2b0f191](https://github.com/block-core/blockcore-wallet/commit/2b0f191))
+* Update version and changelog ([d7de472](https://github.com/block-core/blockcore-wallet/commit/d7de472))
+
+
+
+## <small>1.0.1 (2022-10-23)</small>
 
 * Add a basic Dwn class to keep copy of dwn-sdk-js code ([3459e71](https://github.com/block-core/blockcore-wallet/commit/3459e71))
 * Add a basic prototype for dwn Write and Query ([1daa438](https://github.com/block-core/blockcore-wallet/commit/1daa438))
