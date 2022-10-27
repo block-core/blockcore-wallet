@@ -64,7 +64,7 @@ export class FrontendService implements OnInit {
         }
         case 'updated': {
           // console.log('SERVICE WORKER HAS FINISHED INDEXING, but no changes to the data, but we get updated wallet info.', message.data);
-          await this.state.update();
+          await this.state.refresh();
           return 'ok';
         }
         case 'indexed': {
