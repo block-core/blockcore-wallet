@@ -134,6 +134,7 @@
     "NeverShareIt": "هرگز آن را به اشتراک نگذارید.",
     "RecoverWalletDescription": "کیف پول موجود خود را با عبارت بازیابی مخفی 12 یا 24 کلمه ای خود بازیابی کنید.",
     "Options": "گزینه‌ها",
+    "RecoverWalletNote": "توجه: این یک کیف پول داغ است، توصیه می شود کیف پول های مهم را در کیف های داغ بازیابی نکنید.",
     "Language": "زبان",
     "PersonalExtensionWords": "کلمات پسوند شخصی",
     "YourPersonalExtensionWords": "کلمات پسوند شخصی شما، این اختیاری است.",
@@ -253,6 +254,7 @@
     "CopiedToClipboardAction": "بستن",
     "ReceiveTab": "دریافت",
     "Receive": "دریافت",
+    "ReceiveNote": "توجه: این یک کیف پول داغ است، توصیه می کنیم از آن برای مقادیر کم استفاده کنید.",
     "ReceiveAddressCaption": "این آدرس فقط برای دریافت {{ symbol }} در شبکه {{ name }} قابل استفاده است.",
     "PaymentRequestTab": "درخواست پرداخت",
     "BuyWithSimplex": "با Simplex خرید کنید",
@@ -393,9 +395,10 @@
     "ReadYourPublicKey": "کلید عمومی خود را بخوانید",
     "BlockcoreVaultSetupDescription": "شما در حال انجام یک درخواست برای راه اندازی Blockcore Vault هستید. این اقدام شامل انتخاب شناسه غیرمتمرکز مورد نظر شما برای مالکیت نمونه Blockcore Vault است.",
     "Key": "کلید",
-    "AuthorizeOnce": "یک بار مجوز دهید",
-    "AuthorizeFor5Minutes": "به مدت 5 دقیقه مجوز دهید",
-    "AuthorizeForever": "برای همیشه مجوز دهید"
+    "AuthorizeOnce": "مجاز برای یک بار",
+    "AuthorizeFor5Minutes": "به مدت 5 دقیقه مجاز",
+    "AuthorizeForever": "برای همیشه مجاز",
+    "Cancel":"انصراف"
   },
   "Manifest": {
     "Description": "Non-Custodial wallet for Coins, Tokens, Identities, NFTs and more."
