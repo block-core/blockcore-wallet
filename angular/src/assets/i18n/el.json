@@ -133,6 +133,7 @@
     "CreateWalletDescription": "Αυτή είναι η ιδιωτική και μυστική πρόταση που είναι ο λογαριασμός σας. Πρέπει να το αποθηκεύσετε με ασφάλεια, αν το χάσετε, θα χάσετε όλα τα περιουσιακά σας στοιχεία. Κανείς δεν μπορεί να σας το ανακτήσει.",
     "NeverShareIt": "Μην το μοιραστείτε ποτέ.",
     "RecoverWalletDescription": "Επαναφέρετε το υπάρχον πορτοφόλι σας με τη φράση μυστικής ανάκτησης 12 ή 24 λέξεων.",
+    "RecoverWalletNote": "Note: This is a hot wallet it is advice to don't recover important wallets on hot wallets.",
     "Options": "Επιλογές",
     "Language": "Γλώσσα",
     "PersonalExtensionWords": "Προσωπικές λέξεις επέκτασης",
@@ -253,6 +254,7 @@
     "CopiedToClipboardAction": "Κρύβω",
     "ReceiveTab": "λαμβάνω",
     "Receive": "λαμβάνω",
+    "ReceiveNote": "Note: this is a hot wallet, we recommend using it for small amounts",
     "ReceiveAddressCaption": "Αυτή η διεύθυνση μπορεί να χρησιμοποιηθεί μόνο για τη λήψη {{ symbol }} στο δίκτυο {{ name }}.",
     "BuyWithSimplex": "Αγορά με Simplex",
     "ExchangeWithExolix": "Ανταλλαγή με Exolix",
@@ -395,7 +397,8 @@
     "Key": "Κλειδί",
     "AuthorizeOnce": "Εξουσιοδότηση μία φορά",
     "AuthorizeFor5Miutes": "Εξουσιοδότηση για 5 λεπτά",
-    "AuthorizeForever": "Εξουσιοδότηση για πάντα"
+    "AuthorizeForever": "Εξουσιοδότηση για πάντα",
+    "Cancel":"Cancel"
   },
   "Collectables": {
     "PurchasePrice": "τιμή αγοράς",

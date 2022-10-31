@@ -133,6 +133,7 @@
     "CreateWalletDescription": "This is your private and secret sentence that is your account. You must store it safely, if you lose it, you will lose all your assets. Nobody can recover it for you.",
     "NeverShareIt": "Never share it.",
     "RecoverWalletDescription": "Restore your existing wallet with your 12 or 24-word secret recovery phrase.",
+    "RecoverWalletNote": "Note: This is a hot wallet it is advice to don't recover important wallets on hot wallets.",
     "Options": "Options",
     "Language": "Language",
     "PersonalExtensionWords": "Personal extension words",
@@ -253,6 +254,7 @@
     "CopiedToClipboardAction": "Hide",
     "ReceiveTab": "Receive",
     "Receive": "Receive",
+    "ReceiveNote": "Note: this is a hot wallet, we recommend using it for small amounts",
     "ReceiveAddressCaption": "This address can only be used to receive {{ symbol }} on the {{ name }} network.",
     "BuyWithSimplex": "Buy with Simplex",
     "ExchangeWithExolix": "Exchange with Exolix",
@@ -395,7 +397,8 @@
     "Key": "Key",
     "AuthorizeOnce": "Authorize once",
     "AuthorizeFor5Minutes": "Authorize for 5 minutes",
-    "AuthorizeForever": "Authorize forever"
+    "AuthorizeForever": "Authorize forever",
+    "Cancel":"Cancel"
   },
   "Collectables": {
     "PurchasePrice": "purchase price",
