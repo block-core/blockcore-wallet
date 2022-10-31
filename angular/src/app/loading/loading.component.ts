@@ -94,7 +94,7 @@ export class LoadingComponent implements OnInit, OnDestroy {
       await this.appManager.initialize();
       await this.status.initialize();
 
-      this.translate.addLangs(['ar', 'el', 'en', 'fa', 'fr', 'he', 'no']);
+      this.translate.addLangs(['ar', 'el', 'en', 'fa', 'fr', 'he', 'no', 'ru']);
       this.translate.setDefaultLang('en');
 
       // TODO: Backwards compatible fix. Remove on release.
