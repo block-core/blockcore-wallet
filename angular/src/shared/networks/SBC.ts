@@ -16,8 +16,8 @@ export class SBC implements Network {
     pubKeyHash = 63;
     scriptHash = 125;
     wif = 0x08;
-    feeRate = 10000;
-    minFeeRate = 10000;
+    minimumFeeRate = 10;
+    maximumFeeRate = 5000;
     testnet = false;
     smartContractSupport = false;
     isProofOfStake = true;

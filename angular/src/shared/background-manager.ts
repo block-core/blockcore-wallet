@@ -152,7 +152,7 @@ export class BackgroundManager {
                 networkType: account.networkType,
                 availability: IndexerApiStatus.Error,
                 status: 'Error: ' + data.error,
-                relayFee: 0.0001 * FEE_FACTOR,
+                relayFee: 10,
               };
             } else {
               const blocksBehind = data.blockchain.blocks - data.syncBlockIndex;
@@ -187,8 +187,7 @@ export class BackgroundManager {
               networkType: account.networkType,
               availability: IndexerApiStatus.Error,
               status: 'Error: ' + response.status,
-              relayFee: 0.0001 * FEE_FACTOR,
-              // relayFee: network.feeRate * FEE_FACTOR, // feeRate is in satoshi, but relayFee is in Bitcoin.
+              relayFee: 10
             };
           }
         } catch (error: any) {
@@ -209,7 +208,7 @@ export class BackgroundManager {
               networkType: account.networkType,
               availability: IndexerApiStatus.Error,
               status: 'Error',
-              relayFee: 0.0001 * FEE_FACTOR,
+              relayFee: 10,
             };
           } else if (error.request) {
             // The request was made but no response was received
@@ -225,7 +224,7 @@ export class BackgroundManager {
               networkType: account.networkType,
               availability: IndexerApiStatus.Offline,
               status: 'Offline',
-              relayFee: 0.0001 * FEE_FACTOR,
+              relayFee: 10,
             };
           } else {
             // Something happened in setting up the request that triggered an Error
@@ -238,7 +237,7 @@ export class BackgroundManager {
               networkType: account.networkType,
               availability: IndexerApiStatus.Unknown,
               status: 'Error:' + error.message,
-              relayFee: 0.0001 * FEE_FACTOR,
+              relayFee: 10,
             };
           }
         }
