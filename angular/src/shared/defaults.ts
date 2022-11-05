@@ -1,5 +1,5 @@
 import { Account } from './interfaces';
-import { BTC, CITY, CRS, CY, IDENTITY, NOSTR, RSC, SBC, STRAX, TCRS, TSTRAX, X42 , IMPLX, KEY} from './networks';
+import { BTC, CITY, CRS, CY, IDENTITY, NOSTR, RSC, SBC, STRAX, TCRS, TSTRAX, X42 , IMPLX, MOL,  KEY} from './networks';
 import { JWK } from './networks/JWK';
 const { v4: uuidv4 } = require('uuid');
 
@@ -14,6 +14,7 @@ export class Defaults {
     networks.push(new JWK());
     networks.push(new KEY());
     networks.push(new IMPLX());
+    networks.push(new MOL());
     networks.push(new NOSTR());
     networks.push(new RSC());
     networks.push(new SBC());
@@ -78,6 +79,19 @@ export class Defaults {
             name: 'Impleum',
             type: 'coin',
             network: 701,
+            purpose: 44,
+            purposeAddress: 44,
+            icon: 'paid',
+          },
+          {
+            identifier: uuidv4(),
+            selected: false,
+            networkType: 'MOL',
+            mode: 'normal',
+            index: 0,
+            name: 'Molie',
+            type: 'coin',
+            network: 772,
             purpose: 44,
             purposeAddress: 44,
             icon: 'paid',
