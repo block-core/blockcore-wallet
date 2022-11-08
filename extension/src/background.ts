@@ -83,6 +83,11 @@ async function handleContentScriptMessage(message: ActionMessage) {
   // const handler = Handlers.getAction(method);
   let id = Math.random().toString().slice(4);
 
+  // Ensure that we have a BackgroundManager available for the action handler.
+  if (networkManager == null) {
+    networkManager = new BackgroundManager(shared);
+  }
+
   const state = new ActionState();
   state.id = message.id;
   state.id2 = id;
