@@ -31,8 +31,13 @@ export class SignMessageHandler implements ActionHandler {
     const { network, node } = await this.backgroundManager.getKey(permission.walletId, permission.accountId, permission.keyId);
 
     if (state.content) {
-      const contentText = JSON.stringify(state.content);
-      let signedData = await this.signData(network, node, contentText);
+      let contentText = state.content;
+
+      if (typeof state.content !== 'string') {
+        contentText = JSON.stringify(state.content);
+      }
+
+      let signedData = await this.signData(network, node, contentText as string);
 
       return { key: permission.key, signature: signedData, request: state.message.request, content: state.content };
     } else {
