@@ -417,6 +417,9 @@ interface Action {
   tabId?: string;
   // level?: number;
   // condition?: string
+
+  /** Indicates if the current dapp domain is allowed or not. */
+  verify?: boolean | undefined;
 }
 
 // interface PermissionArguments {
@@ -538,6 +541,9 @@ interface ActionUrlParameters {
   params: string;
 
   pay?: string;
+
+  /** Indicates if the current dapp domain is allowed or not. */
+  verify?: string | undefined;
 }
 
 export interface Token {
@@ -578,7 +584,7 @@ interface ActionResponse {
   error?: unknown | any | { message?: string; stack?: any };
 
   /** The unique identifier of the network user selected. */
-  network: string;
+  network?: string;
 }
 
 interface ActionPrepareResult {
@@ -610,6 +616,9 @@ interface ActionMessage {
 
   /** The public key used to identity the signature returned. */
   key?: string;
+
+  /** Indicates if the current dapp domain is allowed or not. */
+  verify?: boolean | undefined;
 }
 
 interface Message {

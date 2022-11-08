@@ -52,6 +52,27 @@ export class ActionComponent implements OnInit {
   async ngOnInit() {
     const actionName = await this.translate.get('Action.' + this.uiState.action?.action).toPromise();
     this.uiState.title = 'Action: ' + actionName;
+
+    if (this.uiState.action.verify === true) {
+      this.verifyStatus = {
+        icon: 'verified', // verified, new_releases, report_gmailerrorred, dangerous
+        status: 'Verified App', // Verified App, Verification Status Unavailable, Reported and suspected app, Dangerous app. Proceed with extreme caution.
+        color: 'positive-color', // negative-color, positive-color, other-color
+      };
+    } else if (this.uiState.action.verify === false) {
+      // SHOULD NOT HAPPEN!
+      this.verifyStatus = {
+        icon: 'dangerous', // verified, new_releases, report_gmailerrorred, dangerous
+        status: 'Dangerous app. Proceed with extreme caution.', // Verified App, Verification Status Unavailable, Reported and suspected app, Dangerous app. Proceed with extreme caution.
+        color: 'negative-color', // negative-color, positive-color, other-color
+      };
+    } else {
+      this.verifyStatus = {
+        icon: 'new_releases', // verified, new_releases, report_gmailerrorred, dangerous
+        status: 'Verification Status Unavailable', // Verified App, Verification Status Unavailable, Reported and suspected app, Dangerous app. Proceed with extreme caution.
+        color: 'other-color', // negative-color, positive-color, other-color
+      };
+    }
   }
 
   verifyStatus = {

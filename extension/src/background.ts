@@ -5,7 +5,7 @@ import { RunState } from '../../angular/src/shared/task-runner';
 import { WalletStore } from '../../angular/src/shared/store/wallet-store';
 import { PermissionServiceShared } from '../../angular/src/shared/permission.service';
 import * as browser from 'webextension-polyfill';
-import { ActionState, Handlers } from '../../angular/src/shared';
+import { ActionState, DomainVerification, Handlers } from '../../angular/src/shared';
 import { Mutex } from 'async-mutex';
 import { StorageService } from '../../angular/src/shared/storage.service';
 import { RuntimeService } from '../../angular/src/shared/runtime.service';
@@ -35,6 +35,17 @@ let walletStore: WalletStore;
 
 // Don't mark this method async, it will result in caller not being called in "sendResponse".
 browser.runtime.onMessage.addListener(async (msg: ActionMessage, sender) => {
+  // We verify in both content.ts and here, simply because hostile website can always load the provider.ts if
+  // they reference it directly manually.
+  let verify = DomainVerification.verify(msg.app);
+
+  if (verify == false) {
+    console.warn('Request is not allowed on this domain.');
+    return;
+  }
+
+  msg.verify = verify;
+
   // console.log('Receive message in background:', msg);
 
   // When messages are coming from popups, the prompt will be set.
@@ -62,11 +73,20 @@ browser.runtime.onMessage.addListener(async (msg: ActionMessage, sender) => {
   }
 });
 
-browser.runtime.onMessageExternal.addListener(async (message: ActionMessage, sender) => {
-  console.log('BACKGROUND:EXTERNAL:MSG:', message);
+browser.runtime.onMessageExternal.addListener(async (msg: ActionMessage, sender) => {
+  // We verify in both content.ts and here, simply because hostile website can always load the provider.ts if
+  // they reference it directly manually.
+  let verify = DomainVerification.verify(msg.app);
+
+  if (verify == false) {
+    console.warn('Request is not allowed on this domain.');
+    return;
+  }
+
+  console.log('BACKGROUND:EXTERNAL:MSG:', msg);
   let extensionId = new URL(sender.url!).host;
-  message.app = extensionId;
-  return handleContentScriptMessage(message);
+  msg.app = extensionId;
+  return handleContentScriptMessage(msg);
 });
 
 async function handleContentScriptMessage(message: ActionMessage) {
@@ -209,6 +229,7 @@ async function promptPermission(state: ActionState) {
     action: state.message.request.method,
     content: JSON.stringify(state.content), // Content prepared by the handler to be displayed for user.
     params: JSON.stringify(state.message.request.params), // Params is used to display structured information for signing.
+    verify: state.message.verify,
   };
 
   let qs = new URLSearchParams(parameters);
