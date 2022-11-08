@@ -86,7 +86,7 @@ async function handleContentScriptMessage(message: ActionMessage) {
   const state = new ActionState();
   state.id = message.id;
   state.id2 = id;
-  state.handler = Handlers.getAction(method, watchManager!);
+  state.handler = Handlers.getAction(method, networkManager); // watchManager can sometimes be null.
   state.message = message;
 
   // Make sure we reload wallets at this point every single process.
@@ -103,8 +103,6 @@ async function handleContentScriptMessage(message: ActionMessage) {
   // Use the handler to prepare the content to be displayed for signing.
   const prepare = await state.handler.prepare(state);
   state.content = prepare.content;
-
-  console.log('PREPARED:', state.content);
 
   // Reload the permissions each time.
   await permissionService.refresh();
@@ -139,7 +137,6 @@ async function handleContentScriptMessage(message: ActionMessage) {
       permission = await promptPermission(state);
       // authorized, proceed
     } catch (_) {
-      console.log('NO PERMISSION!!');
       // not authorized, stop here
       return {
         error: { message: `Insufficient permissions, required "${method}".` },
