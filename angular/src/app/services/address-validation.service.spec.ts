@@ -1,6 +1,6 @@
 import { EnvironmentService } from './environment.service';
 import { AddressValidationService } from './address-validation.service';
-import { BTC, CITY, CRS, STRAX, IMPLX } from 'src/shared/networks';
+import { BTC, CITY, CRS, STRAX, IMPLX, MOL } from 'src/shared/networks';
 
 describe('AddressValidationService', () => {
   let service: AddressValidationService;
@@ -62,5 +62,15 @@ describe('AddressValidationService', () => {
     expect(service.validateByNetwork('Xhh9Cb3u8MHdEkTDsiMnQ1GVE654Hr56Wm', network)).toBeTrue();
 
     expect(service.validate('Xr9UFDUhpz3Wq8kSV3h8kAwK31fhumDWLU').networks.find((n: { id: string; }) => n.id == 'IMPLX')).toBeDefined();
+  });
+
+  it('Validate Molie Base58 address', () => {
+    const network = new MOL();
+    expect(service.validateByNetwork('mol1qyvzfm0ntlzqrc9gslmvwnuf9c52sj07n9a7uvu', network)).toBeTrue();
+    expect(service.validateByNetwork('MaHcbWp216MqtK1HCnxPYSBRGBYkkcQavm', network)).toBeTrue();
+    expect(service.validateByNetwork('mol1qr4xuhd2vfmpk6d5r7uq8pt4nnvc0l4zty497zp', network)).toBeTrue();
+    expect(service.validateByNetwork('Mphpyr7KQxkwcb2W8agYvMfUVdg1sThMJc', network)).toBeTrue();
+
+    expect(service.validate('MsKU23PLL6FaDNXNcqqVYXt82KjXq7gJd5').networks.find((n: { id: string; }) => n.id == 'MOL')).toBeDefined();
   });
 });

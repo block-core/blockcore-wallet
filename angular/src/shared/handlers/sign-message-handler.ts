@@ -17,8 +17,12 @@ export class SignMessageHandler implements ActionHandler {
   }
 
   async prepare(state: ActionState): Promise<ActionPrepareResult> {
+    if (!state.message || !state.message.request || !state.message.request.params || !state.message.request.params[0] || !state.message.request.params[0].message) {
+      throw Error('The params must include a single entry that has a message field.');
+    }
+
     return {
-      content: null,
+      content: state.message.request.params[0].message,
     };
   }
 
