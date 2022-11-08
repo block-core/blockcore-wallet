@@ -47,8 +47,8 @@
     "ScanPayment": "Отсканировать платёж",
     "CreateAccount": "Создать аккаунт",
     "CreateWallet": "Создать кошелёк",
-    "NoCollectablesFound": "No collectables found",
-    "GoToMarketplace": "Go to marketplace",
+    "NoCollectablesFound": "Коллекционные предметы не найдены.",
+    "GoToMarketplace": "Перейти на торговую площадку.",
     "ZeroAccounts": "В вашем кошельке нет учётных записей."
   },
   "Settings": {
