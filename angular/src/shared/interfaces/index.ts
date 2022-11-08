@@ -576,6 +576,9 @@ interface ActionResponse {
   content?: object | string;
 
   error?: unknown | any | { message?: string; stack?: any };
+
+  /** The unique identifier of the network user selected. */
+  network: string;
 }
 
 interface ActionPrepareResult {
