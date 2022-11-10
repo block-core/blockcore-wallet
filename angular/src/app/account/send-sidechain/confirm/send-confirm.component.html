@@ -1,43 +1,88 @@
-<h2>Confirm {{sendSidechainService.selectedSidechain}} Swap</h2>
+<h2>Confirm {{ sendSidechainService.selectedSidechain }} Swap</h2>
 
 <div class="grid-row-label-value">
-    <div><span>{{ "Account.FederationAddress" | translate }}</span><span>{{sendService.address}}</span></div>
-    <div><span>{{ "Account.TargetAddressOn" | translate }} {{sendSidechainService.selectedSidechain}}</span><span>{{sendSidechainService.sidechainAddress}}</span></div>
-    <div><span>{{ "Account.From" | translate }}</span><span>{{sendService.account.name}}</span></div>
-    <div *ngIf="sendService.changeAddress"><span>{{ "Account.Change" | translate }}</span><span>{{sendService.changeAddress}}</span></div>
-    <div><span>{{ "Account.Amount" | translate }}</span><span>{{sendService.amountAsSatoshi | amount}} {{sendService.network.symbol}}</span></div>
+  <div>
+    <span>{{ "Account.FederationAddress" | translate }}</span
+    ><span>{{ sendService.address }}</span>
+  </div>
+  <div>
+    <span>{{ "Account.TargetAddressOn" | translate }} {{ sendSidechainService.selectedSidechain }}</span
+    ><span>{{ sendSidechainService.sidechainAddress }}</span>
+  </div>
+  <div>
+    <span>{{ "Account.From" | translate }}</span
+    ><span>{{ sendService.account.name }}</span>
+  </div>
+  <div *ngIf="sendService.changeAddress">
+    <span>{{ "Account.Change" | translate }}</span
+    ><span>{{ sendService.changeAddress }}</span>
+  </div>
+  <div>
+    <span>{{ "Account.Amount" | translate }}</span
+    ><span>{{ sendService.amountAsSatoshi | amount }} {{ sendService.network.symbol }}</span>
+  </div>
 
-    <!-- <div><span>Fee</span><span>{{sendService.fee}} ({{sendService.feeAsSatoshi}}) {{sendService.network.symbol}}</span></div> -->
-    <div *ngIf="transaction"><span>{{ "Account.Fee" | translate }}</span><span>{{transaction.fee | amount}} {{sendService.network.symbol}}</span></div>
+  <!-- <div><span>Fee</span><span>{{sendService.fee}} ({{sendService.feeAsSatoshi}}) {{sendService.network.symbol}}</span></div> -->
+  <div *ngIf="transaction">
+    <span>{{ "Account.Fee" | translate }}</span
+    ><span>{{ transaction.fee | amount }} {{ sendService.network.symbol }}</span>
+  </div>
+  <div *ngIf="transaction">
+    <span>~{{ "Account.FeeRate" | translate }}</span
+    ><span>{{ transaction.feeRate }} {{ "Account.SatByte" | translate }}</span>
+  </div>
 
-    <div *ngIf="transaction"><span>{{ "Account.FeeRate" | translate }}</span><span>{{transaction.feeRate}} {{ "Account.SatByte" | translate }}</span></div>
-    <div *ngIf="invalidFeeAmount" class="mat-error"><span>{{ "Account.FeeRateTooLow" | translate }}</span><span>{{sendService.feeRate}} {{ "Account.SatByte" | translate }}</span></div>
-
-    <!-- <div *ngIf="transaction"><span>virtualSize</span><span>{{transaction.virtualSize}}</span></div>
+  <!-- <div *ngIf="transaction"><span>virtualSize</span><span>{{transaction.virtualSize}}</span></div>
     <div *ngIf="transaction"><span>weight</span><span>{{transaction.weight}}</span></div> -->
 
-    <div *ngIf="detailsOpen" class="grid-row-label-value">
+  <div *ngIf="detailsOpen" class="grid-row-label-value">
+    <div *ngIf="transaction">
+      <span>{{ "Account.ChangeAmount" | translate }}</span
+      ><span>{{ transaction.changeAmount | amount }} {{ sendService.network.symbol }}</span>
+    </div>
+    <div *ngIf="transaction">
+      <span>{{ "Account.ChangeAddress" | translate }}</span
+      ><span>{{ transaction.changeAddress }}</span>
+    </div>
 
-        <div *ngIf="transaction"><span>{{ "Account.ChangeAmount" | translate }}</span><span>{{transaction.changeAmount | amount}} {{sendService.network.symbol}}</span></div>
-        <div *ngIf="transaction"><span>{{ "Account.ChangeAddress" | translate }}</span><span>{{transaction.changeAddress}}</span></div>
+    <div *ngIf="transaction">
+      <span>{{ "Account.VirtualSize" | translate }}</span
+      ><span>{{ transaction.virtualSize }} bytes</span>
+    </div>
+    <div *ngIf="transaction">
+      <span>{{ "Account.Weight" | translate }}</span
+      ><span>{{ transaction.weight }} bytes</span>
+    </div>
 
-        <div *ngIf="transaction"><span>{{ "Account.Weight" | translate }}</span><span>{{transaction.weight | size }} </span></div>
-        <div *ngIf="transaction"><span>{{ "Account.VirtualSize" | translate }}</span><span>{{transaction.virtualSize | size }} </span></div>
+    <div *ngIf="transaction">
+      <span>Inputs</span><span> {{ transaction.transaction.txInputs.length }} UTXOs</span>
+    </div>
 
-        <!-- <mat-form-field class="input-full-width" appearance="outline">
+    <div *ngIf="transaction">
+      <span>Outputs</span>
+      <span>
+        {{ transaction.transaction.txOutputs.length }} UTXOs<br /><br />
+        <div *ngFor="let output of transaction.transaction.txOutputs">{{ output.value | amount }} {{ sendService.network.symbol }} to address: {{ output.address }}</div></span
+      >
+    </div>
+
+    <!-- <mat-form-field class="input-full-width" appearance="outline">
             <mat-label>Custom change address</mat-label>
             <input matInput formControlName="changeAddressInput" [(ngModel)]="sendService.changeAddress">
         </mat-form-field> -->
+  </div>
 
-    </div>
+  <button class="full-width" (click)="toggleDetails()" mat-raised-button>{{ "Account.Details" | translate }}</button>
 
-    <button class="full-width" (click)="toggleDetails()" mat-raised-button>Details...</button>
+  <div>
+    <span>{{ "Account.Total" | translate }}</span
+    ><span class="total" *ngIf="sendService.total">{{ sendService.total | amount }} {{ sendService.network.symbol }}</span>
+  </div>
 
-    <div><span>Total</span><span class="total">{{sendService.total | amount}} {{sendService.network.symbol}}</span></div>
-
-    <div *ngIf="error" class="icon-warn">
-        <h2>ERROR</h2><span>{{error}}</span>
-    </div>
+  <div *ngIf="error" class="icon-warn">
+    <h2>{{ "Account.Error" | translate }}</h2>
+    <span>{{ error }}</span>
+  </div>
 </div>
 
 <!-- <p>Sending to:</p>
@@ -75,7 +120,7 @@
     <mat-label>Fee</mat-label>
     <input matInput [(ngModel)]="sendService.fee" required>
 </mat-form-field> -->
-<br>
+<br />
 
 <button class="full-width" [disabled]="!valid" mat-raised-button routerLink="../sending" color="primary">{{ "Account.Send" | translate }}</button>
 

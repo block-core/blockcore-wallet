@@ -15,8 +15,8 @@ export class TCRS implements Network {
     pubKeyHash = 127;
     scriptHash = 137;
     wif = 0x08; // TODO: Verify if this is still used for CRS.
-    feeRate = 10000;
-    minFeeRate = 10000;
+    minimumFeeRate = 10;
+    maximumFeeRate = 5000;
     testnet = true;
     singleAddress = true;
     smartContractSupport = true;

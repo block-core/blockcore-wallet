@@ -16,8 +16,8 @@ export class RSC implements Network {
     pubKeyHash = 60;
     scriptHash = 122;
     wif = 0x08;
-    feeRate = 1000000;
-    minFeeRate = 1000000;
+    minimumFeeRate = 1000;
+    maximumFeeRate = 500000;
     testnet = false;
     smartContractSupport = false;
     isProofOfStake = true;

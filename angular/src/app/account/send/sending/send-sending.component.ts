@@ -48,6 +48,15 @@ export class AccountSendSendingComponent implements OnInit, OnDestroy {
     } else {
       this.sendService.transactionId = this.sendService.transactionResult;
 
+      // This means the transaction was sent successfully, we should now mark the UTXOs as spent.
+      this.sendService.selectedData.inputs.forEach((i) => {
+        const existingUTXO = this.sendService.accountHistory.unspent.find((u) => u.transactionHash == i.txId && u.address == i.address && u.index == i.vout);
+
+        if (existingUTXO) {
+          existingUTXO.spent = true;
+        }
+      });
+
       // When the transaction is successfull, we'll store the metadata for it.
       let txMetadata = this.transactionMetadataStore.get(this.sendService.account.identifier);
 
@@ -74,8 +83,6 @@ export class AccountSendSendingComponent implements OnInit, OnDestroy {
         txMetadata.transactions.push(metadataEntry);
         await this.transactionMetadataStore.save();
       }
-
-      // this.transactionMetadataStore.set()
     }
 
     this.sendService.transactionHex = transactionDetails.transactionHex;

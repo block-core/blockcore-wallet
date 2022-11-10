@@ -60,6 +60,26 @@ interface NetworkStatus {
   relayFee: number;
 }
 
+interface CoinSelectionResult {
+  fee: number;
+  inputs: CoinSelectionInput[],
+  outputs: CoinSelectionOutput[]
+}
+
+interface CoinSelectionInput {
+  address: string;
+  nonWitnessUtxo?: Buffer;
+  txId: string;
+  value: number;
+  vout: number;
+}
+
+interface CoinSelectionOutput {
+  address: string;
+  value: number;
+  script: any;
+}
+
 interface NetworkStatusEntry {
   type: string;
   selectedDomain: string;
@@ -749,4 +769,7 @@ export {
   StateEntry,
   TransactionMetadata,
   TransactionMetadataEntry,
+  CoinSelectionResult,
+  CoinSelectionInput,
+  CoinSelectionOutput
 };

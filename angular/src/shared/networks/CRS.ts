@@ -15,8 +15,8 @@ export class CRS implements Network {
     pubKeyHash = 28;
     scriptHash = 88;
     wif = 0x08; // TODO: Verify if this is still used for CRS.
-    feeRate = 10000;
-    minFeeRate = 10000;
+    minimumFeeRate = 10;
+    maximumFeeRate = 5000;
     testnet = false;
     singleAddress = true;
     smartContractSupport = true;

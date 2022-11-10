@@ -15,8 +15,8 @@ export class IMPLX implements Network {
   pubKeyHash = 76;
   scriptHash = 141;
   wif = 0x08;
-  feeRate = 10000;
-  minFeeRate = 10000;
+  minimumFeeRate = 10;
+  maximumFeeRate = 5000;
   testnet = false;
   isProofOfStake = true;
   smartContractSupport = false;

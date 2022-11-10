@@ -15,8 +15,8 @@ export class BTC implements Network {
     pubKeyHash = 0;
     scriptHash = 5;
     wif = 0x08;
-    feeRate = 10000;
-    minFeeRate = 10000;
+    minimumFeeRate = 20;
+    maximumFeeRate = 5000;
     testnet = false;
     smartContractSupport = false;
     type = 'coin';

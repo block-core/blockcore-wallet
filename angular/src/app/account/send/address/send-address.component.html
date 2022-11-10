@@ -34,16 +34,19 @@
     <mat-error *ngIf="form.controls['amountInput'].errors?.['tooHighAmount']">{{ "Account.AmountTooHighAmount" | translate }}</mat-error>
   </mat-form-field>
 
-  <mat-form-field class="input-full-width" appearance="outline">
-    <mat-label>{{ "Account.Fee" | translate }}</mat-label>
-    <input matInput formControlName="feeInput" [(ngModel)]="sendService.fee" required />
-    <mat-error *ngIf="form.controls['feeInput'].invalid">{{ "Account.FeeInvalid" | translate }}</mat-error>
-    <mat-hint *ngIf="sendService.feeError" align="start"><strong>{{ sendService.feeError }}</strong>
-    </mat-hint>
-    <mat-hint align="end">{{ "Account.MinimumFeeRate" | translate }}: {{ sendService.feeRate }} {{ "Account.SatByte" | translate }}</mat-hint>
-  </mat-form-field>
-
   <div *ngIf="optionsOpen">
+
+    <mat-form-field class="input-full-width" appearance="outline">
+      <mat-label>{{ "Account.Fee" | translate }} ({{ "Account.SatByte" | translate }})</mat-label>
+      <input matInput formControlName="feeInput" [(ngModel)]="sendService.fee" required />
+      
+      <mat-error *ngIf="form.controls['feeInput'].errors?.['min']">{{ "Account.FeeAmountMin" | translate }}</mat-error>
+      <mat-error *ngIf="form.controls['feeInput'].errors?.['required']">{{ "Account.FeeAmountRequired" | translate }}</mat-error>
+      <mat-error *ngIf="form.controls['feeInput'].invalid">{{ "Account.FeeInvalid" | translate }}</mat-error>
+      <!-- <mat-hint *ngIf="sendService.feeError" align="start"><strong>{{ sendService.feeError }}</strong></mat-hint> -->
+      <!-- <mat-hint align="end">{{ "Account.MinimumFeeRate" | translate }}: {{ sendService.targetFeeRate }} || {{ "Account.SatByte" | translate }}</mat-hint> -->
+    </mat-form-field>
+
     <mat-form-field class="input-full-width" appearance="outline">
       <mat-label>{{ "Account.CustomChangeAddress" | translate }}</mat-label>
       <input matInput formControlName="changeAddressInput" [(ngModel)]="sendService.changeAddress" />
@@ -57,7 +60,7 @@
 
   <button class="full-width" (click)="toggleOptions()" mat-raised-button>{{ "Account.Options" | translate }}...</button>
   <br /><br />
-  <h3>{{ "Account.Total" | translate }}: {{ sendService.total | amount }} {{ sendService.network.symbol }}</h3>
+  <!-- <h3>{{ "Account.Total" | translate }}: {{ sendService.total | amount }} {{ sendService.network.symbol }}</h3> -->
 
   <mat-card *ngIf="this.sendService.payment">
     <span *ngIf="this.sendService.payment.options.label">{{ "Account.Label" | translate }}: <strong>{{ this.sendService.payment.options.label }}</strong><br /> </span>
