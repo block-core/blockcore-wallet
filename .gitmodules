@@ -1,0 +1,3 @@
+[submodule "lists"]
+	path = lists
+	url = https://github.com/block-core/blockcore-lists

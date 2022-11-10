@@ -17,8 +17,12 @@ export class SignMessageHandler implements ActionHandler {
   }
 
   async prepare(state: ActionState): Promise<ActionPrepareResult> {
+    if (!state.message || !state.message.request || !state.message.request.params || !state.message.request.params[0] || !state.message.request.params[0].message) {
+      throw Error('The params must include a single entry that has a message field.');
+    }
+
     return {
-      content: null,
+      content: state.message.request.params[0].message,
     };
   }
 
@@ -27,12 +31,17 @@ export class SignMessageHandler implements ActionHandler {
     const { network, node } = await this.backgroundManager.getKey(permission.walletId, permission.accountId, permission.keyId);
 
     if (state.content) {
-      const contentText = JSON.stringify(state.content);
-      let signedData = await this.signData(network, node, contentText);
+      let contentText = state.content;
 
-      return { key: permission.key, signature: signedData, request: state.message.request, content: state.content };
+      if (typeof state.content !== 'string') {
+        contentText = JSON.stringify(state.content);
+      }
+
+      let signedData = await this.signData(network, node, contentText as string);
+
+      return { key: permission.key, signature: signedData, request: state.message.request, content: state.content, network: network.id };
     } else {
-      return { key: '', signature: '', content: null, request: state.message.request };
+      return { key: '', signature: '', content: null, request: state.message.request, network: network.id };
     }
   }
 }

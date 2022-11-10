@@ -59,10 +59,9 @@
     </div>
 
     <div *ngIf="transaction">
-      <span>Outputs</span
-      ><span>
+      <span>Outputs</span>
+      <span>
         {{ transaction.transaction.txOutputs.length }} UTXOs<br /><br />
-
         <div *ngFor="let output of transaction.transaction.txOutputs">{{ output.value | amount }} {{ sendService.network.symbol }} to address: {{ output.address }}</div></span
       >
     </div>

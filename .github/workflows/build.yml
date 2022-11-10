@@ -18,8 +18,10 @@ jobs:
       SMARTCITYPLATFORM: "smartcityplatform"
 
     steps:
-      - uses: actions/checkout@master
-        name: Checkout
+      - name: Checkout
+        uses: actions/checkout@master
+        with:
+          submodules: true
 
       - uses: actions/setup-node@v2
         with:
