@@ -366,6 +366,7 @@
     "Outputs": "Outputs"
   },
   "Action": {
+    "Authorize": "Authorize",
     "did.request": "DID Request",
     "vaultSetup": "Vault Setup",
     "signMessage": "Sign Message",

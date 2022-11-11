@@ -17,6 +17,15 @@ export class ActionService {
   // content: string;
   // args: any[];
 
+  /** Indicates if the action is a single user or if user is allowed to give authorization temporarily or permanently. */
+  ephemeral = false;
+
+  status = {
+    icon: 'verified_user',
+    title: 'Permission Request',
+    description: '"Sign data using your private key"',
+  };
+
   async clearAction() {
     this.store.set(undefined);
     await this.store.save();

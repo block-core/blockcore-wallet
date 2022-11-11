@@ -23,7 +23,7 @@ export class ActionComponent implements OnInit {
     public uiState: UIState,
     private accountStateStore: AccountStateStore,
     private permissionStore: PermissionStore,
-    public action: ActionService,
+    public actionService: ActionService,
     public networkService: NetworksService,
     public walletManager: WalletManager,
     private manager: AppManager,
@@ -35,7 +35,7 @@ export class ActionComponent implements OnInit {
     const requestedKey = firstArgument.key;
 
     this.accounts = this.walletManager.activeWallet.accounts;
-    this.action.accountId = this.walletManager.activeAccountId;
+    this.actionService.accountId = this.walletManager.activeAccountId;
 
     if (requestedKey) {
       this.requestedKey = requestedKey;
@@ -81,11 +81,11 @@ export class ActionComponent implements OnInit {
     color: 'other-color', // negative-color, positive-color, other-color
   };
 
-  actionStatus = {
-    icon: 'verified_user',
-    title: 'Permission Request',
-    description: '"Sign data using your private key"',
-  };
+  // actionStatus = {
+  //   icon: 'verified_user',
+  //   title: 'Permission Request',
+  //   description: '"Sign data using your private key"',
+  // };
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
@@ -129,12 +129,12 @@ export class ActionComponent implements OnInit {
       }
     }
 
-    this.action.keyId = this.addresses[keyIndex].keyId;
-    this.action.key = this.addresses[keyIndex].key;
+    this.actionService.keyId = this.addresses[keyIndex].keyId;
+    this.actionService.key = this.addresses[keyIndex].key;
   }
 
   async onAccountChanged() {
-    await this.walletManager.setActiveAccount(this.action.accountId);
+    await this.walletManager.setActiveAccount(this.actionService.accountId);
 
     // this.selectedNetwork = this.networkService.getNetwork(this.network);
     // this.derivationPath = this.getDerivationPath();
@@ -142,7 +142,7 @@ export class ActionComponent implements OnInit {
   }
 
   onKeyChanged() {
-    const address = this.addresses.find((a) => a.keyId == this.action.keyId);
-    this.action.key = address.key;
+    const address = this.addresses.find((a) => a.keyId == this.actionService.keyId);
+    this.actionService.key = address.key;
   }
 }

@@ -9,7 +9,7 @@ export class DidRequestHandler implements ActionHandler {
 
   async prepare(state: ActionState): Promise<ActionPrepareResult> {
     return {
-      content: ['did:is', 'did:jwk', 'did:key'],
+      content: state.message.request.params[0].challenge,
       consent: true,
     };
   }
