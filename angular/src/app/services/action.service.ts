@@ -62,6 +62,14 @@ export class ActionService {
     this.uiState.params = null;
 
     const action = this.uiState.action;
+    let key = this.key;
+
+    const network = this.walletManager.getNetwork(this.walletManager.activeAccount.networkType);
+
+    // This is a quick workaround for adding the DID Method prefix to the key (address/pubkey) for identities.
+    if (network.type === 'identity') {
+      key = `${network.symbol}:${key}`;
+    }
 
     const reply: ActionMessage = {
       prompt: true, // This indicates that message comes from the popup promt.
@@ -77,7 +85,7 @@ export class ActionService {
       walletId: this.walletManager.activeWalletId,
       accountId: this.accountId,
       keyId: this.keyId,
-      key: this.key,
+      key: key,
     };
 
     // Inform the provider script that user has signed the data.
