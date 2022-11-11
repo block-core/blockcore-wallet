@@ -25,7 +25,7 @@ export class ActionDidRequestComponent implements OnInit, OnDestroy {
     this.actionService.status.description = `Reason: "${param.reason}"`;
 
     this.actionService.ephemeral = true;
-    this.actionService.accountFilter = { types: ['identity'] };
+    this.actionService.accountFilter = { types: ['identity'], symbol: param.methods };
   }
 
   ngOnDestroy(): void {}

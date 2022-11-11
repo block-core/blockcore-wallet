@@ -28,14 +28,27 @@ export class ActionComponent implements OnInit {
     public walletManager: WalletManager,
     private manager: AppManager,
     private cd: ChangeDetectorRef
-  ) {
+  ) {}
+
+  async ngOnInit() {
     // Improve this logic, just quickly select the key:
     const firstArgument = this.uiState.action.params[0];
     const requestedKey = firstArgument.key;
-    const filter = this.actionService.accountFilter?.types;
+
+    this.accounts = this.walletManager.activeWallet.accounts;
+    const filter = this.actionService.accountFilter;
 
     if (filter) {
-      this.accounts = this.walletManager.activeWallet.accounts.filter((a) => filter.includes(a.type));
+      if (filter.types && filter.types.length > 0) {
+        this.accounts = this.accounts.filter((a) => filter.types.includes(a.type));
+      }
+
+      if (filter.symbol && filter.symbol.length > 0) {
+        this.accounts = this.accounts.filter((a) => {
+          const network = this.networkService.getNetwork(a.networkType);
+          return filter.symbol.includes(network.symbol);
+        });
+      }
     } else {
       this.accounts = this.walletManager.activeWallet.accounts;
     }
@@ -52,9 +65,7 @@ export class ActionComponent implements OnInit {
     this.subscription = this.walletManager.activeAccount$.subscribe((a) => {
       this.update();
     });
-  }
 
-  async ngOnInit() {
     const actionName = await this.translate.get('Action.' + this.uiState.action?.action).toPromise();
     this.uiState.title = 'Action: ' + actionName;
 
@@ -93,7 +104,9 @@ export class ActionComponent implements OnInit {
   // };
 
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
   }
 
   update() {

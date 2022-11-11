@@ -620,7 +620,10 @@ interface ActionPrepareResult {
 
 interface AccountFilter {
   /** The types of accounts to display. */
-  types: string[];
+  types?: string[];
+
+  /** The symbol of accounts to display. */
+  symbol?: string[];
 }
 
 interface DIDRequestOptions {
