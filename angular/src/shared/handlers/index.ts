@@ -26,7 +26,7 @@ export class Handlers {
       // case 'publicKey':
       //   return new PublicKeyHandler();
       default:
-        return null;
+        throw Error(`Action not supported: ${action}.`);
     }
   }
 }

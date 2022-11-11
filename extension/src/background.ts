@@ -111,6 +111,8 @@ async function handleContentScriptMessage(message: ActionMessage) {
   const state = new ActionState();
   state.id = message.id;
   state.id2 = id;
+
+  // This will throw error if the action is not supported.
   state.handler = Handlers.getAction(method, networkManager); // watchManager can sometimes be null.
   state.message = message;
 

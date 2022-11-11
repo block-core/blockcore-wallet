@@ -11,11 +11,10 @@ class BlockcoreRequestProvider implements Web5RequestProvider {
     // is not related to the extension.
     globalThis.addEventListener('message', (message) => {
       // Make sure there is response in the data, extension is setup and it belongs to the existing promises in this web app.
-      if (!message.data || !message.data.response || message.data.ext !== 'blockcore' || !globalThis.blockcore._requests[message.data.id]) {
+      if (!message.data || !message.data.response || message.data.ext !== 'blockcore' || !this.#requests[message.data.id]) {
         return;
       }
 
-      console.log('MESSAGE RECEIVED IN PROVIDER:', message);
       const data = message.data as ActionMessage;
 
       // It is possible that calls to the extension is returned without handled by an instance of the extension,
@@ -25,13 +24,12 @@ class BlockcoreRequestProvider implements Web5RequestProvider {
         let error = new Error(data.response.error.message);
         error.stack = data.response.error?.stack;
 
-        // TODO: Verify if we can access "this.#requests" here or if this handler doesn't have this context available.
-        globalThis.blockcore._requests[data.id].reject(error);
+        this.#requests[data.id].reject(error);
       } else {
-        globalThis.blockcore._requests[data.id].resolve(data.response);
+        this.#requests[data.id].resolve(data.response);
       }
 
-      delete globalThis.blockcore._requests[data.id];
+      delete this.#requests[data.id];
     });
   }
 
