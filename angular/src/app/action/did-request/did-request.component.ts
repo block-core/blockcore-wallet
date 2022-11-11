@@ -25,8 +25,8 @@ export class ActionDidRequestComponent implements OnInit, OnDestroy {
 
     const param = this.uiState.action.params[0];
 
-    this.actionService.status.title = 'Give DID to app';
-    this.actionService.status.description = `Reason: ${param.reason}`;
+    this.actionService.status.title = 'Share your DID';
+    this.actionService.status.description = `Reason: "${param.reason}"`;
     
     this.actionService.ephemeral = true;
     
