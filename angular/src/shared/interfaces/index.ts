@@ -618,6 +618,11 @@ interface ActionPrepareResult {
   consent: boolean;
 }
 
+interface AccountFilter {
+  /** The types of accounts to display. */
+  types: string[];
+}
+
 interface DIDRequestOptions {
   /** a challenge to prove DID control */
   challenge: String;
@@ -799,5 +804,6 @@ export {
   CoinSelectionInput,
   CoinSelectionOutput,
   DIDRequestOptions,
-  DIDRequestResponse
+  DIDRequestResponse,
+  AccountFilter
 };

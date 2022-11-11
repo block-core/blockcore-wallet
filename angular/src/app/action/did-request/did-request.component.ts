@@ -10,11 +10,7 @@ import { ActionService } from 'src/app/services/action.service';
 export class ActionDidRequestComponent implements OnInit, OnDestroy {
   content: string;
 
-  constructor(public uiState: UIState, public actionService: ActionService) {}
-
-  ngOnDestroy(): void {}
-
-  ngOnInit(): void {
+  constructor(public uiState: UIState, public actionService: ActionService) {
     // The content that is prepared for signing is normally an object, to render
     // this to the user, we'd want to make it a nice string if it's not an string.
     if (typeof this.uiState.action.content !== 'string') {
@@ -27,8 +23,12 @@ export class ActionDidRequestComponent implements OnInit, OnDestroy {
 
     this.actionService.status.title = 'Share your DID';
     this.actionService.status.description = `Reason: "${param.reason}"`;
-    
+
     this.actionService.ephemeral = true;
-    
+    this.actionService.accountFilter = { types: ['identity'] };
   }
+
+  ngOnDestroy(): void {}
+
+  ngOnInit(): void {}
 }

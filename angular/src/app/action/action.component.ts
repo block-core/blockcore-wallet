@@ -31,10 +31,15 @@ export class ActionComponent implements OnInit {
   ) {
     // Improve this logic, just quickly select the key:
     const firstArgument = this.uiState.action.params[0];
-
     const requestedKey = firstArgument.key;
+    const filter = this.actionService.accountFilter?.types;
 
-    this.accounts = this.walletManager.activeWallet.accounts;
+    if (filter) {
+      this.accounts = this.walletManager.activeWallet.accounts.filter((a) => filter.includes(a.type));
+    } else {
+      this.accounts = this.walletManager.activeWallet.accounts;
+    }
+
     this.actionService.accountId = this.walletManager.activeAccountId;
 
     if (requestedKey) {

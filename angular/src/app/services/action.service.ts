@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Action, ActionMessage, ActionStore, MessageService } from 'src/shared';
+import { AccountFilter, Action, ActionMessage, ActionStore, MessageService } from 'src/shared';
 import { CommunicationService } from './communication.service';
 import { UIState } from './ui-state.service';
 import { WalletManager } from './wallet-manager';
@@ -9,7 +9,7 @@ import { WalletManager } from './wallet-manager';
 })
 export class ActionService {
   constructor(private communication: CommunicationService, private message: MessageService, private store: ActionStore, public uiState: UIState, public walletManager: WalletManager) {}
-
+  accountFilter: AccountFilter;
   accountId: string;
   keyId: string;
   key: string;
