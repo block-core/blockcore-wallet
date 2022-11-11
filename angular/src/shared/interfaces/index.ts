@@ -618,7 +618,7 @@ interface ActionPrepareResult {
   consent: boolean;
 }
 
-type DIDRequestOptions = {
+interface DIDRequestOptions {
   /** a challenge to prove DID control */
   challenge: String;
 
@@ -629,7 +629,7 @@ type DIDRequestOptions = {
   reason?: String;
 };
 
-type DIDRequestResponse = {
+interface DIDRequestResponse {
   /** the wallet owner's selected DID */
   did: String;
 
