@@ -366,6 +366,7 @@
     "Outputs": "Outputs"
   },
   "Action": {
+    "did.request": "DID Request",
     "vaultSetup": "Vault Setup",
     "signMessage": "Sign Message",
     "IdentityDID": "Identity (DID)",

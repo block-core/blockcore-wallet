@@ -117,6 +117,7 @@ import { NameserverService } from 'src/shared/nameserver.service';
 import { LanguageSelectorComponent } from './shared/language-selector/language-selector.component';
 import { BidiModule } from '@angular/cdk/bidi';
 import { DebuggerComponent } from './settings/debugger/debugger.component';
+import { ActionDidRequestComponent } from './action/did-request/did-request.component';
 
 // required for AOT compilation
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
@@ -188,7 +189,8 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     ActionVaultSetupComponent,
     PaymentComponent,
     LanguageSelectorComponent,
-    DebuggerComponent
+    DebuggerComponent,
+    ActionDidRequestComponent
   ],
   imports: [
     BrowserModule,
