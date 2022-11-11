@@ -598,8 +598,11 @@ interface ActionResponse {
   /** The signature for the signed content in base64 encoding. */
   signature?: string;
 
-  /** A copy of the actual content string that was signed. */
+  /** OBSOLETE (use response instead): A copy of the actual content string that was signed. */
   content?: object | string;
+
+  /** The response from the action. */
+  response?: object | string;
 
   error?: unknown | any | { message?: string; stack?: any };
 
@@ -608,7 +611,11 @@ interface ActionResponse {
 }
 
 interface ActionPrepareResult {
+  /** The prepared result from the handler, this can be used in the UI. */
   content: object | string;
+
+  /** Indicates if this handler requires the user consent to execute. */
+  consent: boolean;
 }
 
 interface ActionMessage {

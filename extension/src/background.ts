@@ -119,65 +119,55 @@ async function handleContentScriptMessage(message: ActionMessage) {
   // Make sure we reload wallets at this point every single process.
   // await this.walletStore.load();
   // await this.accountStateStore.load();
-
   // const wallets = this.walletStore.getWallets();
-
   // ActionStateHolder.prompts.push(state);
-
-  // console.log('prompts:', JSON.stringify(ActionStateHolder.prompts));
-  // console.log('prompts (length):', ActionStateHolder.prompts.length);
 
   // Use the handler to prepare the content to be displayed for signing.
   const prepare = await state.handler.prepare(state);
   state.content = prepare.content;
 
-  // Reload the permissions each time.
-  await permissionService.refresh();
-
   let permission: Permission | unknown | null = null;
 
-  if (params.key) {
-    permission = permissionService.findPermissionByKey(message.app!, method, params.key);
-  } else {
-    // Get all existing permissions that exists for this app and method:
-    let permissions = permissionService.findPermissions(message.app!, method);
+  if (prepare.consent) {
+    // Reload the permissions each time.
+    await permissionService.refresh();
 
-    // If there are no specific key specified in the signing request, just grab the first permission that is approved for this
-    // website and use that. Normally there will only be a single one if the web app does not request specific key.
-    if (permissions.length > 0) {
-      permission = permissions[0];
-    }
-  }
-
-  // permissionService.findPermission(message.app, method, message.walletId, message.accountId, message.keyId);
-  // let permissionSet = permissionService.get(message.app);
-
-  // if (permissionSet) {
-  //   permission = permissionSet.permissions[method];
-  // }
-
-  // Check if user have already approved this kind of access on this domain/host.
-  if (!permission) {
-    try {
-      // Keep a copy of the prompt message, we need it to finalize if user clicks "X" to close window.
-      // state.promptPermission = await promptPermission({ app: message.app, id: message.id, method: method, params: message.args.params });
-      permission = await promptPermission(state);
-      // authorized, proceed
-    } catch (_) {
-      // not authorized, stop here
-      return {
-        error: { message: `Insufficient permissions, required "${method}".` },
-      };
-    }
-  } else {
-    // TODO: This logic can be put into the query into permission set, because permissions
-    // must be stored with more keys than just "action", it must contain wallet/account and potentially keyId.
-
-    // If there exists an permission, verify that the permission applies to the specified (or active) wallet and account.
-    // If the caller has supplied walletId and accountId, use that.
-    if (message.walletId && message.accountId) {
+    if (params?.key) {
+      permission = permissionService.findPermissionByKey(message.app!, method, params.key);
     } else {
-      // If nothing is supplied, verify against the current active wallet/account.
+      // Get all existing permissions that exists for this app and method:
+      let permissions = permissionService.findPermissions(message.app!, method);
+
+      // If there are no specific key specified in the signing request, just grab the first permission that is approved for this
+      // website and use that. Normally there will only be a single one if the web app does not request specific key.
+      if (permissions.length > 0) {
+        permission = permissions[0];
+      }
+    }
+
+    // Check if user have already approved this kind of access on this domain/host.
+    if (!permission) {
+      try {
+        // Keep a copy of the prompt message, we need it to finalize if user clicks "X" to close window.
+        // state.promptPermission = await promptPermission({ app: message.app, id: message.id, method: method, params: message.args.params });
+        permission = await promptPermission(state);
+        // authorized, proceed
+      } catch (_) {
+        // not authorized, stop here
+        return {
+          error: { message: `Insufficient permissions, required "${method}".` },
+        };
+      }
+    } else {
+      // TODO: This logic can be put into the query into permission set, because permissions
+      // must be stored with more keys than just "action", it must contain wallet/account and potentially keyId.
+
+      // If there exists an permission, verify that the permission applies to the specified (or active) wallet and account.
+      // If the caller has supplied walletId and accountId, use that.
+      if (message.walletId && message.accountId) {
+      } else {
+        // If nothing is supplied, verify against the current active wallet/account.
+      }
     }
   }
 

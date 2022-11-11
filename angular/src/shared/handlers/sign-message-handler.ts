@@ -23,6 +23,7 @@ export class SignMessageHandler implements ActionHandler {
 
     return {
       content: state.message.request.params[0].message,
+      consent: true
     };
   }
 
@@ -39,9 +40,9 @@ export class SignMessageHandler implements ActionHandler {
 
       let signedData = await this.signData(network, node, contentText as string);
 
-      return { key: permission.key, signature: signedData, request: state.message.request, content: state.content, network: network.id };
+      return { key: permission.key, signature: signedData, request: state.message.request, response: state.content, content: state.content, network: network.id };
     } else {
-      return { key: '', signature: '', content: null, request: state.message.request, network: network.id };
+      return { key: '', signature: '', response: null, content: null, request: state.message.request, network: network.id };
     }
   }
 }
