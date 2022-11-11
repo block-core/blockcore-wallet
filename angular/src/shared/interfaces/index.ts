@@ -62,8 +62,8 @@ interface NetworkStatus {
 
 interface CoinSelectionResult {
   fee: number;
-  inputs: CoinSelectionInput[],
-  outputs: CoinSelectionOutput[]
+  inputs: CoinSelectionInput[];
+  outputs: CoinSelectionOutput[];
 }
 
 interface CoinSelectionInput {
@@ -618,6 +618,25 @@ interface ActionPrepareResult {
   consent: boolean;
 }
 
+type DIDRequestOptions = {
+  /** a challenge to prove DID control */
+  challenge: String;
+
+  /** a list of accepted DID methods */
+  methods?: String[];
+
+  /** client's reason for requesting a DID. Will be displayed to wallet controller */
+  reason?: String;
+};
+
+type DIDRequestResponse = {
+  /** the wallet owner's selected DID */
+  did: String;
+
+  /** proof of control for selected DID */
+  proof: String;
+};
+
 interface ActionMessage {
   /** The type of action, this is currently limited to `request` */
   type: string;
@@ -778,5 +797,7 @@ export {
   TransactionMetadataEntry,
   CoinSelectionResult,
   CoinSelectionInput,
-  CoinSelectionOutput
+  CoinSelectionOutput,
+  DIDRequestOptions,
+  DIDRequestResponse
 };

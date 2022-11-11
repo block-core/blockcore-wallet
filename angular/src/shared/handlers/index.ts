@@ -1,5 +1,6 @@
 import { BackgroundManager } from '../background-manager';
 import { ActionHandler } from './action-handler';
+import { DidRequestHandler } from './did-request-handler';
 import { DidSupportedMethodsHandler } from './did-supported-methods-handler';
 import { PaymentHandler } from './payment-handler';
 // import { PublicKeyHandler } from './publicKey-handler';
@@ -22,6 +23,8 @@ export class Handlers {
         return new PaymentHandler(backgroundManager);
       case 'did.supportedMethods':
         return new DidSupportedMethodsHandler(backgroundManager);
+        case 'did.request':
+          return new DidRequestHandler(backgroundManager);
       // case 'signVerifiableCredential': // Signing of Verifiable Credential, JSON encoded as signed JSON Web Token.
       //   return new SignVerifiableCredentialHandler();
       // case 'signTypedData': // Not implemented yet, will be inspired by EIP-712: https://github.com/ethereum/EIPs/blob/master/EIPS/eip-712.md
