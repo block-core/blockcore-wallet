@@ -34,7 +34,7 @@ export class DidRequestHandler implements ActionHandler {
       const proofContent = {
         challenge: state.content,
         origin: state.message.app,
-        type: 'didauthn',
+        type: 'web5.did.get',
       };
 
       const tools = new BlockcoreIdentityTools();
