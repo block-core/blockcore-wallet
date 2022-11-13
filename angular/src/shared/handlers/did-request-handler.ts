@@ -4,6 +4,7 @@ import { ActionMessage, ActionPrepareResult, ActionRequest, ActionResponse, Acti
 import * as bitcoinMessage from 'bitcoinjs-message';
 import { HDKey } from '@scure/bip32';
 import { Network } from '../networks';
+import { BlockcoreIdentity, BlockcoreIdentityTools } from '../identity';
 
 export class DidRequestHandler implements ActionHandler {
   action = ['did.request'];
@@ -30,21 +31,28 @@ export class DidRequestHandler implements ActionHandler {
     if (state.content) {
       let contentText = state.content;
 
-      if (typeof state.content !== 'string') {
-        contentText = JSON.stringify(state.content);
-      }
+      const proofContent = {
+        challenge: state.content,
+        origin: state.message.app,
+        type: 'didauthn',
+      };
 
-      let signedData = await this.signData(network, node, contentText as string);
+      const tools = new BlockcoreIdentityTools();
+      const privateKey = node.privateKey;
+      const verificationMethod = tools.getVerificationMethod(privateKey, 0, network.symbol);
+      const identity = new BlockcoreIdentity(verificationMethod);
+
+      // "jws" or "jwt"?
+      const jws = await identity.jwt({ privateKey: privateKey, payload: proofContent });
 
       let returnData: ActionResponse = {
         key: permission.key,
-        signature: signedData,
         request: state.message.request,
         content: state.content,
         network: network.id,
         response: {
           did: permission.key,
-          proof: signedData,
+          proof: jws,
         } as DIDRequestResponse,
       };
 
@@ -52,9 +60,5 @@ export class DidRequestHandler implements ActionHandler {
     } else {
       return { key: '', signature: '', response: null, content: null, request: state.message.request, network: network.id };
     }
-    // return {
-    //   request: state.message.request,
-    //   response: state.content,
-    // };
   }
 }
