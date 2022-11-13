@@ -47,8 +47,8 @@
     "ScanPayment": "Scan Payment",
     "CreateAccount": "Create Account",
     "CreateWallet": "Create Wallet",
-    "NoCollectablesFound": "No collectables found",
-    "GoToMarketplace": "Go to marketplace",
+    "NoCollectablesFound": "No collectables found.",
+    "GoToMarketplace": "Go to marketplace.",
     "ZeroAccounts": "Your wallet has zero accounts."
   },
   "Settings": {
