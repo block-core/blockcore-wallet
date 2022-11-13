@@ -5,7 +5,7 @@ import { RunState } from '../../angular/src/shared/task-runner';
 import { WalletStore } from '../../angular/src/shared/store/wallet-store';
 import { PermissionServiceShared } from '../../angular/src/shared/permission.service';
 import * as browser from 'webextension-polyfill';
-import { ActionState, DomainVerification, Handlers } from '../../angular/src/shared';
+import { ActionState, DecentralizedWebNode, DomainVerification, Handlers } from '../../angular/src/shared';
 import { Mutex } from 'async-mutex';
 import { StorageService } from '../../angular/src/shared/storage.service';
 import { RuntimeService } from '../../angular/src/shared/runtime.service';
@@ -25,6 +25,7 @@ let indexing = false;
 let networkLoader = new NetworkLoader();
 let runtimeService = new RuntimeService();
 let messageService = new MessageService(runtimeService, new EventBus());
+let dwn = new DecentralizedWebNode();
 
 let shared = new SharedManager(new StorageService(runtimeService), new WalletStore(), networkLoader, messageService);
 const networkUpdateInterval = 45000;
@@ -262,6 +263,9 @@ async function getTabId() {
 }
 
 chrome.runtime.onInstalled.addListener(async ({ reason }) => {
+  // Initialize the Decentralized Web Node.
+  await dwn.load();
+
   // console.debug('onInstalled', reason);
 
   // Periodic alarm that will check if wallet should be locked.

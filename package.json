@@ -58,6 +58,7 @@
     "@scure/base": "^1.1.1",
     "@scure/bip32": "^1.1.0",
     "@scure/bip39": "^1.1.0",
+    "@tbd54566975/dwn-sdk-js": "^0.0.12",
     "@types/qs": "^6.9.7",
     "async-mutex": "^0.4.0",
     "axios": "0.27.2",

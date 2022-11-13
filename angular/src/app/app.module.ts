@@ -74,7 +74,7 @@ import { HandlerComponent } from './settings/handler/handler.component';
 import { ActionStratisIdentityComponent } from './action/sid/sid.component';
 import { ActionNostrIdentityComponent } from './action/nostr/nostr.component';
 import { AboutComponent } from './settings/about/about.component';
-import { AccountHistoryStore, AddressStore, NetworkStatusStore, TransactionStore, UIStore, WalletStore, AddressIndexedStore, EventBus, NetworkLoader, TransactionMetadataStore } from 'src/shared';
+import { AccountHistoryStore, AddressStore, NetworkStatusStore, TransactionStore, UIStore, WalletStore, AddressIndexedStore, EventBus, NetworkLoader, TransactionMetadataStore, DecentralizedWebNode } from 'src/shared';
 import { ActionStore } from 'src/shared/store/action-store';
 import { SettingStore } from 'src/shared/store/setting-store';
 import { AddressWatchStore } from 'src/shared/store/address-watch-store';
@@ -285,6 +285,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     CryptoUtility,
     PaymentRequest,
     NameserverService,
+    DecentralizedWebNode,
     EventBus,
     {
       provide: MessageService,
