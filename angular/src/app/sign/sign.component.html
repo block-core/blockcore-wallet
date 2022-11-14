@@ -1,15 +1,25 @@
 <mat-tab-group>
   <mat-tab label="Sign Message">
     <div class="sign-content">
-      <form class="sign-form">
+      <form class="sign-form" [formGroup]="signFormGroup">
+        <h4>mat select</h4>
+        <mat-form-field appearance="fill">
+          <mat-label>Favorite animal</mat-label>
+          <mat-select formControlName="accountCtrl" required>
+            <mat-option>--</mat-option>
+            <!-- <mat-option *ngFor="let animal of animals" [value]="animal">
+              {{ animal.name }}
+            </mat-option> -->
+          </mat-select>
+        </mat-form-field>
         <mat-form-field class="sign-full-width" appearance="fill">
           <mat-label>Favorite food</mat-label>
           <input matInput placeholder="Ex. Pizza" value="Sushi" />
         </mat-form-field>
         <br />
         <mat-form-field class="sign-full-width" appearance="fill">
-          <mat-label>Leave a comment</mat-label>
-          <textarea matInput placeholder="Ex. It makes me feel..."></textarea>
+          <mat-label>Message to sign</mat-label>
+          <textarea matInput formControlName = "messageCtrl"></textarea>
         </mat-form-field>
         <br /><button mat-flat-button color="primary">Sign</button>
         <button mat-stroked-button color="primary" class="sign-clear">Clear All</button>
