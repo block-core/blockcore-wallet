@@ -17,6 +17,9 @@ export class SignComponent {
         private runtime: RuntimeService
     ) {
         this.uiState.title = 'Sign & Verify';
+        this.uiState.showBackButton = true;
+        this.uiState.goBackHome = true;
+    
     }
 
 }
