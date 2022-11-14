@@ -54,6 +54,7 @@ import { ActionSignMessageComponent } from './action/sign-message/sign.component
 import { ActionVaultSetupComponent } from './action/vault-setup/vault-setup.component';
 import { PaymentComponent } from './account/payment/payment.component';
 import { DebuggerComponent } from './settings/debugger/debugger.component';
+import { SignComponent } from './sign/sign.component';
 const routes: Routes = [
   {
     path: '',
@@ -341,6 +342,13 @@ const routes: Routes = [
   // {
   //   path: 'vault/remove/:index', component: VaultRemoveComponent
   // },
+  {
+    path: 'sign',
+    component: SignComponent,
+    resolve: {
+      data: LoadingResolverService,
+    },
+  },
   {
     path: 'dashboard',
     component: DashboardComponent,
