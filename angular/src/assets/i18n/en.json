@@ -49,6 +49,8 @@
     "CreateWallet": "Create Wallet",
     "NoCollectablesFound": "No collectables found.",
     "GoToMarketplace": "Go to marketplace.",
+    "ZeroAccounts": "Your wallet has zero accounts.",
+    "SignVerify": "Sign & Verify",
     "ZeroAccounts": "Your wallet has zero accounts."
   },
   "Settings": {

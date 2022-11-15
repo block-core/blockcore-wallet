@@ -70,6 +70,11 @@
           <div mat-line>{{ "Dashboard.Exchange" | translate }}</div>
         </a>
 
+        <a mat-list-item [routerLink]="['/sign']">
+          <mat-icon mat-list-icon>fingerprint</mat-icon>
+          <div mat-line>{{"Dashboard.SignVerify" | translate }}</div>
+        </a>
+
         <!-- <a mat-list-item (click)="copyErrorLogs()">
           <mat-icon mat-list-icon>report_problem</mat-icon>
           <div mat-line>Copy Error Logs</div>
