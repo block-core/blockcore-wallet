@@ -43,14 +43,28 @@ export class AccountSendAddressComponent implements OnInit, OnDestroy {
     private fb: UntypedFormBuilder,
     private snackBar: MatSnackBar,
     public translate: TranslateService
-  ) {
-    this.form = fb.group({
+  ) {}
+
+  ngOnDestroy() {}
+
+  async ngOnInit() {
+    // Constructor of send.component.ts should have called resetFee() by now, which sets
+    // the fee to network definition. Here we will attempt to get it from blockchain API.
+    const networkStatus = this.networkStatusService.get(this.sendService.network.id);
+
+    // Grab the fee rate either from network definition or from blockchain API status:
+    if (networkStatus.length > 0) {
+      this.sendService.targetFeeRate = networkStatus[0].relayFee;
+    }
+
+    this.form = this.fb.group({
       addressInput: new UntypedFormControl('', [Validators.required, Validators.minLength(6), InputValidators.address(this.sendService, this.addressValidation)]),
       changeAddressInput: new UntypedFormControl('', [InputValidators.address(this.sendService, this.addressValidation)]),
       memoInput: new UntypedFormControl(''),
-      amountInput: new UntypedFormControl('', [Validators.required, Validators.min(0), Validators.pattern(/^-?(0|[0-9]+[.]?[0-9]*)?$/), InputValidators.maximumBitcoin(sendService)]),
-      // TODO: Make an custom validator that sets form error when fee input is too low.
-      feeInput: new UntypedFormControl(this.sendService.getNetworkFee(), [Validators.required, Validators.min(0), Validators.pattern(/^-?(0|[0-9]+[.]?[0-9]*)?$/)]),
+      amountInput: new UntypedFormControl('', [Validators.required, Validators.min(0), Validators.pattern(/^-?(0|[0-9]+[.]?[0-9]*)?$/), InputValidators.maximumBitcoin(this.sendService)]),
+
+      // Make sure we set the default value to target rate, or the form won't be valid when the fee input is hidden behind options expander:
+      feeInput: new UntypedFormControl(this.sendService.targetFeeRate, [Validators.required, Validators.min(this.sendService.targetFeeRate), Validators.pattern(/^-?(0|[0-9]+[.]?[0-9]*)?$/)]),
     });
 
     this.optionFeeInput.valueChanges.subscribe((value) => {
@@ -59,20 +73,8 @@ export class AccountSendAddressComponent implements OnInit, OnDestroy {
       this.optionAmountInput.markAsTouched();
     });
 
-    const networkStatus = this.networkStatusService.get(this.sendService.network.id);
-
-    if (networkStatus.length == 0) {
-      this.sendService.feeRate = this.sendService.network.feeRate;
-    } else {
-      this.sendService.feeRate = networkStatus[0].relayFee;
-    }
-
     this.hasSidechain = this.sendService.network.sidechains != null;
   }
-
-  ngOnDestroy() {}
-
-  async ngOnInit() {}
 
   scanQrCode() {
     const dialogRef = this.dialog.open(QrScanDialog, {

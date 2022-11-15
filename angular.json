@@ -35,7 +35,10 @@
               "@stablelib/random",
               "elliptic",
               "s-sha3",
-              "satcomma"
+              "satcomma",
+              "bitcoinjs-message",
+              "err-code",
+              "sparse-array"
             ],
             "aot": true,
             "outputPath": "dist/extension",

@@ -15,3 +15,5 @@ export * from './event-bus';
 export * from './network-loader';
 export * from './web-request';
 export * from './dwn';
+export * from './domainverification';
+export * from './decentralized-web-node';

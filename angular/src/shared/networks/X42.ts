@@ -15,8 +15,8 @@ export class X42 implements Network {
     pubKeyHash = 75;
     scriptHash = 125;
     wif = 0x08;
-    feeRate = 0;
-    minFeeRate = 0;
+    minimumFeeRate = 0;
+    maximumFeeRate = 0;
     testnet = false;
     smartContractSupport = false;
     isProofOfStake = true;

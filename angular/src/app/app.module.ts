@@ -74,7 +74,7 @@ import { HandlerComponent } from './settings/handler/handler.component';
 import { ActionStratisIdentityComponent } from './action/sid/sid.component';
 import { ActionNostrIdentityComponent } from './action/nostr/nostr.component';
 import { AboutComponent } from './settings/about/about.component';
-import { AccountHistoryStore, AddressStore, NetworkStatusStore, TransactionStore, UIStore, WalletStore, AddressIndexedStore, EventBus, NetworkLoader, TransactionMetadataStore } from 'src/shared';
+import { AccountHistoryStore, AddressStore, NetworkStatusStore, TransactionStore, UIStore, WalletStore, AddressIndexedStore, EventBus, NetworkLoader, TransactionMetadataStore, DecentralizedWebNode } from 'src/shared';
 import { ActionStore } from 'src/shared/store/action-store';
 import { SettingStore } from 'src/shared/store/setting-store';
 import { AddressWatchStore } from 'src/shared/store/address-watch-store';
@@ -118,6 +118,7 @@ import { LanguageSelectorComponent } from './shared/language-selector/language-s
 import { BidiModule } from '@angular/cdk/bidi';
 import { DebuggerComponent } from './settings/debugger/debugger.component';
 import { SignComponent } from './sign/sign.component';
+import { ActionDidRequestComponent } from './action/did-request/did-request.component';
 
 // required for AOT compilation
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
@@ -190,8 +191,8 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     PaymentComponent,
     LanguageSelectorComponent,
     DebuggerComponent,
-    SignComponent
-    
+    SignComponent,
+    ActionDidRequestComponent
   ],
   imports: [
     BrowserModule,
@@ -286,6 +287,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     CryptoUtility,
     PaymentRequest,
     NameserverService,
+    DecentralizedWebNode,
     EventBus,
     {
       provide: MessageService,

@@ -60,6 +60,26 @@ interface NetworkStatus {
   relayFee: number;
 }
 
+interface CoinSelectionResult {
+  fee: number;
+  inputs: CoinSelectionInput[];
+  outputs: CoinSelectionOutput[];
+}
+
+interface CoinSelectionInput {
+  address: string;
+  nonWitnessUtxo?: Buffer;
+  txId: string;
+  value: number;
+  vout: number;
+}
+
+interface CoinSelectionOutput {
+  address: string;
+  value: number;
+  script: any;
+}
+
 interface NetworkStatusEntry {
   type: string;
   selectedDomain: string;
@@ -417,6 +437,9 @@ interface Action {
   tabId?: string;
   // level?: number;
   // condition?: string
+
+  /** Indicates if the current dapp domain is allowed or not. */
+  verify?: boolean | undefined;
 }
 
 // interface PermissionArguments {
@@ -538,6 +561,9 @@ interface ActionUrlParameters {
   params: string;
 
   pay?: string;
+
+  /** Indicates if the current dapp domain is allowed or not. */
+  verify?: string | undefined;
 }
 
 export interface Token {
@@ -572,15 +598,52 @@ interface ActionResponse {
   /** The signature for the signed content in base64 encoding. */
   signature?: string;
 
-  /** A copy of the actual content string that was signed. */
+  /** OBSOLETE (use response instead): A copy of the actual content string that was signed. */
   content?: object | string;
 
+  /** The response from the action. */
+  response?: object | string;
+
   error?: unknown | any | { message?: string; stack?: any };
+
+  /** The unique identifier of the network user selected. */
+  network?: string;
 }
 
 interface ActionPrepareResult {
+  /** The prepared result from the handler, this can be used in the UI. */
   content: object | string;
+
+  /** Indicates if this handler requires the user consent to execute. */
+  consent: boolean;
 }
+
+interface AccountFilter {
+  /** The types of accounts to display. */
+  types?: string[];
+
+  /** The symbol of accounts to display. */
+  symbol?: string[];
+}
+
+interface DIDRequestOptions {
+  /** a challenge to prove DID control */
+  challenge: String;
+
+  /** a list of accepted DID methods */
+  methods?: String[];
+
+  /** client's reason for requesting a DID. Will be displayed to wallet controller */
+  reason?: String;
+};
+
+interface DIDRequestResponse {
+  /** the wallet owner's selected DID */
+  did: String;
+
+  /** proof of control for selected DID */
+  proof: String;
+};
 
 interface ActionMessage {
   /** The type of action, this is currently limited to `request` */
@@ -607,6 +670,9 @@ interface ActionMessage {
 
   /** The public key used to identity the signature returned. */
   key?: string;
+
+  /** Indicates if the current dapp domain is allowed or not. */
+  verify?: boolean | undefined;
 }
 
 interface Message {
@@ -737,4 +803,10 @@ export {
   StateEntry,
   TransactionMetadata,
   TransactionMetadataEntry,
+  CoinSelectionResult,
+  CoinSelectionInput,
+  CoinSelectionOutput,
+  DIDRequestOptions,
+  DIDRequestResponse,
+  AccountFilter
 };

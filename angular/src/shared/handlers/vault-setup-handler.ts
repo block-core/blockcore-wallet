@@ -36,7 +36,7 @@ export class VaultSetupHandler implements ActionHandler {
     // Therefore we must make sure the updated content for signing is setup as args.
     // this.action.args = [this.action.content];
 
-    const result: ActionPrepareResult = { content: setupDocument };
+    const result: ActionPrepareResult = { content: setupDocument, consent: true };
     return result;
   }
 

@@ -2,7 +2,7 @@
 import { HDKey } from '@scure/bip32';
 import { mnemonicToSeedSync } from '@scure/bip39';
 
-import { Account, AccountUnspentTransactionOutput, Address, Wallet } from '../../shared';
+import { Account, AccountUnspentTransactionOutput, Address, CoinSelectionInput, CoinSelectionOutput, CoinSelectionResult, Wallet } from '../../shared';
 import { MINUTE } from '../shared/constants';
 import { payments, Psbt } from '@blockcore/blockcore-js';
 import * as ecc from 'tiny-secp256k1';
@@ -25,6 +25,9 @@ import { UnspentOutputService } from './unspent-output.service';
 import { AccountStateStore } from 'src/shared/store/account-state-store';
 import { CryptoService } from './';
 import { StandardTokenStore } from '../../shared/store/standard-token-store';
+import { InputValidators } from './inputvalidators';
+let coinselect = require('coinselect');
+let coinsplit = require('coinselect/split');
 
 const ECPair = ECPairFactory(ecc);
 var bitcoinMessage = require('bitcoinjs-message');
@@ -186,14 +189,58 @@ export class WalletManager {
     return data;
   }
 
+  async selectUtxos(utxos: { txId: string; vout: number; value: number }[], targets: { address: string; value: number }[], feeRate: number): Promise<CoinSelectionResult> {
+    // When user manually edits fee, the value becomes string and not number and the coinselect library is very strict on type.
+    if (typeof String(feeRate)) {
+      feeRate = Number(feeRate);
+    }
+
+    // The coin select library will result in fee rate that is right below what is specified, so for example
+    // 10 can result in fees at around 9.9-9.5 etc. and that won't be accepted by the nodes when broadcasted.
+    feeRate = feeRate + 1;
+
+    const totalInputAmount = utxos.reduce((partialSum, a) => partialSum + a.value, 0);
+    const totalOutputAmount = targets.reduce((partialSum, a) => partialSum + a.value, 0);
+    let result: CoinSelectionResult = null;
+
+    // We could/should also check if the output is within the threshold of dust or not.
+    if (totalInputAmount == totalOutputAmount) {
+      // Run coinsplit instead of coinselect and remove the specified output for now.
+      result = coinsplit(
+        utxos,
+        [
+          {
+            address: targets[0].address,
+          },
+        ],
+        feeRate
+      ) as any;
+
+      // .inputs and .outputs will be undefined if no solution was found
+      if (!result.inputs || !result.outputs) {
+        throw Error('Unable to estimate fee correctly.');
+      }
+    } else {
+      result = coinselect(utxos, targets, feeRate) as any;
+
+      // .inputs and .outputs will be undefined if no solution was found
+      if (!result.inputs || !result.outputs) {
+        throw Error('Unable to estimate fee correctly.');
+      }
+    }
+
+    return result;
+  }
+
   async createTransaction(
     wallet: Wallet,
     account: Account,
     address: string,
     changeAddress: string,
     amount: Big,
-    fee: Big,
-    unspent: AccountUnspentTransactionOutput[],
+    feeRate: number,
+    inputs: CoinSelectionInput[],
+    outputs: CoinSelectionOutput[],
     nullData?: string // opreturn data
   ): Promise<{
     changeAddress: string;
@@ -205,103 +252,72 @@ export class WalletManager {
     virtualSize: number;
     weight: number;
     data?: string;
+    transaction: Psbt;
   }> {
     // TODO: Verify the address for this network!! ... Help the user avoid sending transactions on very wrong addresses.
     const network = this.getNetwork(account.networkType);
 
     const accountState = this.accountStateStore.get(account.identifier);
-    const affectedAddresses = [];
+    const affectedAddresses: string[] = [];
 
-    const tx = new Psbt({ network: network, maximumFeeRate: 5000 }); // satoshi per byte, 5000 is default.
+    const tx = new Psbt({ network: network, maximumFeeRate: network.maximumFeeRate }); // satoshi per byte, 5000 is default.
     tx.setVersion(1); // Lock-time is not used so set to 1 (defaults to 2).
     tx.setLocktime(0); // These are defaults. This line is not needed.
 
-    // Collect unspent until we have enough amount.
-    const requiredAmount = amount.add(fee);
-
     let aggregatedAmount = Big(0);
-    let inputs: AccountUnspentTransactionOutput[] = [];
+    // let inputs: AccountUnspentTransactionOutput[] = [];
 
-    if (account.mode === 'normal') {
-      for (let i = 0; i < unspent.length; i++) {
-        const utxo = unspent[i];
-
-        // If the UTXO is spent, skip it.
-        if (utxo.spent) {
-          continue;
-        }
-
-        aggregatedAmount = aggregatedAmount.plus(new Big(utxo.balance));
-
-        inputs.push(utxo);
-
-        if (aggregatedAmount.gte(requiredAmount)) {
-          break;
-        }
-      }
-    } else {
-      // When performing send using a "quick" mode account, we will retrieve the UTXOs on-demand.
-      const result = await this.unspentService.getUnspentByAmount(requiredAmount, account);
-
-      aggregatedAmount = result.amount;
-      inputs.push(...result.utxo);
-    }
-
-    // Mark all inputs as "dirty" to avoid them being used for secondary transactions:
-    for (let i = 0; i < inputs.length; i++) {
-      inputs[i].spent = true;
-    }
-
-    for (let i = 0; i < inputs.length; i++) {
-      const input = inputs[i];
-      let hex = input.hex;
-
-      // If we don't have the hex, retrieve it to be used in the transaction.
-      // This was needed when hex retrieval was removed to optimize extremely large wallets.
-      if (!hex) {
-        hex = await this.getTransactionHex(account, input.transactionHash);
-      }
+    inputs.forEach((input) => {
+      tx.addInput({
+        hash: input.txId,
+        index: input.vout,
+        nonWitnessUtxo: input.nonWitnessUtxo,
+        // OR (not both)
+        // witnessUtxo: input.witnessUtxo,
+      });
 
       if (affectedAddresses.indexOf(input.address) == -1) {
         affectedAddresses.push(input.address);
       }
+    });
 
-      tx.addInput({
-        hash: input.transactionHash,
-        index: input.index,
-        nonWitnessUtxo: Buffer.from(hex, 'hex'),
-      });
+    // If the user has not supplied override on change address, get the change address automatically.
+    if (changeAddress == null || changeAddress == '') {
+      const changeAddressItem = await this.getChangeAddress(account);
+      changeAddress = changeAddressItem.address;
     }
 
-    // Add the output the user requested.
-    tx.addOutput({ address, value: amount.toNumber() });
+    let changeAmount = new Big(0); // aggregatedAmount.minus(amount).minus(paymentFee); //  Number(aggregatedAmount) - Number(amount) - Number(fee);
 
-    // Take the total sum of the aggregated inputs, remove the sendAmount and fee.
-    const changeAmount = aggregatedAmount.minus(amount).minus(fee); //  Number(aggregatedAmount) - Number(amount) - Number(fee);
-
-    // If there is any change amount left, make sure we send it to the user's change address.
-    if (changeAmount > Big(0)) {
-      // If the user has not supplied override on change address, get the change address automatically.
-      if (changeAddress == null || changeAddress == '') {
-        const changeAddressItem = await this.getChangeAddress(account);
-        changeAddress = changeAddressItem.address;
+    outputs.forEach((output) => {
+      // watch out, outputs may have been added that you need to provide
+      // an output address/script for
+      if (!output.address) {
+        output.address = changeAddress;
+        changeAmount = changeAmount.add(output.value); // Aggregate the change amount returned to user.
+        console.log('INCREASE CHANGE AMOUNT!!', output);
       }
 
-      // // Send the rest to change address.
-      tx.addOutput({ address: changeAddress, value: changeAmount.toNumber() });
-    }
+      if (output.script) {
+        tx.addOutput({
+          script: output.script,
+          value: output.value,
+        });
+      } else {
+        tx.addOutput({
+          address: output.address,
+          value: output.value,
+        });
+      }
 
-    if (nullData != null && nullData != '') {
-      var data = Buffer.from(nullData);
-      const dataScript = payments.embed({ data: [data] });
-      tx.addOutput({ script: dataScript.output, value: 0 }); // OP_RETURN always with 0 value unless you want to burn coins
-    }
+      if (affectedAddresses.indexOf(output.address) == -1) {
+        affectedAddresses.push(output.address);
+      }
+    });
 
     // Get the secret seed.
     const masterSeedBase64 = this.secure.get(wallet.id);
     const masterSeed = Buffer.from(masterSeedBase64, 'base64');
-
-    // const secret = this.walletSecrets.get(wallet.id);
 
     // Create the master node.
     const masterNode = HDKey.fromMasterSeed(masterSeed, network.bip32);
@@ -337,6 +353,8 @@ export class WalletManager {
     const finalTransaction = tx.finalizeAllInputs().extractTransaction();
     const transactionHex = finalTransaction.toHex();
 
+    console.log('transactionHex:', transactionHex);
+
     return {
       changeAddress,
       changeAmount,
@@ -347,6 +365,7 @@ export class WalletManager {
       virtualSize: finalTransaction.virtualSize(),
       weight: finalTransaction.weight(),
       data: nullData,
+      transaction: tx,
     };
   }
 
@@ -527,28 +546,6 @@ export class WalletManager {
   get hasAccounts(): boolean {
     return this.activeWallet.accounts?.length > 0;
   }
-
-  // get activeAccount() {
-  //     if (!this.activeWallet) {
-  //         return null;
-  //     }
-
-  //     const activeWallet = this.activeWallet;
-
-  //     if (!activeWallet.accounts) {
-  //         return null;
-  //     }
-
-  //     if (activeWallet.activeAccountIndex == null || activeWallet.activeAccountIndex == -1) {
-  //         activeWallet.activeAccountIndex = 0;
-  //     }
-  //     // If the active index is higher than available accounts, reset to zero.
-  //     else if (activeWallet.activeAccountIndex >= activeWallet.accounts.length) {
-  //         activeWallet.activeAccountIndex = 0;
-  //     }
-
-  //     return this.activeWallet.accounts[activeWallet.activeAccountIndex];
-  // }
 
   isActiveWalletUnlocked(): boolean {
     return this.secure.unlocked(this.activeWallet.id);

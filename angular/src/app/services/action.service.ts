@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Action, ActionMessage, ActionStore, MessageService } from 'src/shared';
+import { AccountFilter, Action, ActionMessage, ActionStore, MessageService } from 'src/shared';
 import { CommunicationService } from './communication.service';
 import { UIState } from './ui-state.service';
 import { WalletManager } from './wallet-manager';
@@ -9,13 +9,22 @@ import { WalletManager } from './wallet-manager';
 })
 export class ActionService {
   constructor(private communication: CommunicationService, private message: MessageService, private store: ActionStore, public uiState: UIState, public walletManager: WalletManager) {}
-
+  accountFilter: AccountFilter;
   accountId: string;
   keyId: string;
   key: string;
   // app: string;
   // content: string;
   // args: any[];
+
+  /** Indicates if the action is a single user or if user is allowed to give authorization temporarily or permanently. */
+  ephemeral = false;
+
+  status = {
+    icon: 'verified_user',
+    title: 'Permission Request',
+    description: '"Sign data using your private key"',
+  };
 
   async clearAction() {
     this.store.set(undefined);
@@ -53,6 +62,14 @@ export class ActionService {
     this.uiState.params = null;
 
     const action = this.uiState.action;
+    let key = this.key;
+
+    const network = this.walletManager.getNetwork(this.walletManager.activeAccount.networkType);
+
+    // This is a quick workaround for adding the DID Method prefix to the key (address/pubkey) for identities.
+    if (network.type === 'identity') {
+      key = `${network.symbol}:${key}`;
+    }
 
     const reply: ActionMessage = {
       prompt: true, // This indicates that message comes from the popup promt.
@@ -68,7 +85,7 @@ export class ActionService {
       walletId: this.walletManager.activeWalletId,
       accountId: this.accountId,
       keyId: this.keyId,
-      key: this.key,
+      key: key,
     };
 
     // Inform the provider script that user has signed the data.

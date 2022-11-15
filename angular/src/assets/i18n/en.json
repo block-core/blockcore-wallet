@@ -50,7 +50,8 @@
     "NoCollectablesFound": "No collectables found.",
     "GoToMarketplace": "Go to marketplace.",
     "ZeroAccounts": "Your wallet has zero accounts.",
-    "SignVerify": "Sign & Verify"
+    "SignVerify": "Sign & Verify",
+    "ZeroAccounts": "Your wallet has zero accounts."
   },
   "Settings": {
     "Settings": "Settings",
@@ -367,12 +368,14 @@
     "Outputs": "Outputs"
   },
   "Action": {
+    "Authorize": "Authorize",
+    "did.request": "DID Request",
     "vaultSetup": "Vault Setup",
     "signMessage": "Sign Message",
     "IdentityDID": "Identity (DID)",
     "SigningAccount": "Signing account",
     "DerivationPath": "Derivation path",
-    "SigningAccountMessage": "You attest with your select account to the following content",
+    "SigningAccountMessage": "You attest with your selected account to the following content",
     "SigningContentLabel": "Signing content",
     "SignAndClose": "Sign and close",
     "ExitAction": "Exit Action",
@@ -384,7 +387,7 @@
     "Account": "Account",
     "Expiry": "Expiry",
     "CallbackURL": "Callback URL",
-    "AttestContentDescription": "You attest with your select account to the following content",
+    "AttestContentDescription": "You attest with your selected account to the following content",
     "SuccessfullyLoggedIn": "You have successfully logged in. You can now close this window",
     "FailedToAuthenticate": "Failed to authenticate.",
     "SignAndCallback": "Sign & Callback",

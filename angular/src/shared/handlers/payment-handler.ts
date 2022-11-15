@@ -10,6 +10,7 @@ export class PaymentHandler implements ActionHandler {
   async prepare(state: ActionState): Promise<ActionPrepareResult> {
     return {
       content: null,
+      consent: true
     };
   }
 

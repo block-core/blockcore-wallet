@@ -927,7 +927,7 @@ export class IndexerBackgroundService {
         try {
             const clonedIndexerUrl = indexerUrl.slice(); // clone the URL
             const url = `${clonedIndexerUrl}/api/query/address/${state.address}`;
-            console.log(`address url ${url}`);
+            // console.log(`address url ${url}`);
 
             const response = await this.webRequest.fetch(url);
 

@@ -1,3 +1,27 @@
+## <small>1.0.4 (2022-11-10)</small>
+
+* Add partial translation (#283) ([0030dab](https://github.com/block-core/blockcore-wallet/commit/0030dab)), closes [#283](https://github.com/block-core/blockcore-wallet/issues/283)
+* Add Russian language to language selection list ([3e65010](https://github.com/block-core/blockcore-wallet/commit/3e65010))
+* Add the lists submodule ([f6deb4f](https://github.com/block-core/blockcore-wallet/commit/f6deb4f))
+* Add the Russian language file (#272) ([5e069a7](https://github.com/block-core/blockcore-wallet/commit/5e069a7)), closes [#272](https://github.com/block-core/blockcore-wallet/issues/272)
+* Add usage of web5-injector ([619cd30](https://github.com/block-core/blockcore-wallet/commit/619cd30))
+* Add use of coinselect to improve transaction sending (#281) ([bd7fd7e](https://github.com/block-core/blockcore-wallet/commit/bd7fd7e)), closes [#281](https://github.com/block-core/blockcore-wallet/issues/281)
+* Add verification of allow/deny based upon the lists provided ([7fa25f8](https://github.com/block-core/blockcore-wallet/commit/7fa25f8))
+* Added note text in recovery and receiving (#269) ([ce23905](https://github.com/block-core/blockcore-wallet/commit/ce23905)), closes [#269](https://github.com/block-core/blockcore-wallet/issues/269)
+* Adding Molie nrtwork and MOL (#278) ([8980a1c](https://github.com/block-core/blockcore-wallet/commit/8980a1c)), closes [#278](https://github.com/block-core/blockcore-wallet/issues/278)
+* Avoid performing JSON stringify on text content during signing ([034bb95](https://github.com/block-core/blockcore-wallet/commit/034bb95))
+* Ensure that background manager instance is created ([71d414d](https://github.com/block-core/blockcore-wallet/commit/71d414d))
+* Ensure that submodules are retrieved in the checkout ([c0bb3f5](https://github.com/block-core/blockcore-wallet/commit/c0bb3f5))
+* Fix issue with signing message ([db6ff7f](https://github.com/block-core/blockcore-wallet/commit/db6ff7f))
+* Fix minor issue on the swap send page (#277) ([72372d8](https://github.com/block-core/blockcore-wallet/commit/72372d8)), closes [#277](https://github.com/block-core/blockcore-wallet/issues/277) [#277](https://github.com/block-core/blockcore-wallet/issues/277)
+* Fix Website title (#284) ([487f621](https://github.com/block-core/blockcore-wallet/commit/487f621)), closes [#284](https://github.com/block-core/blockcore-wallet/issues/284)
+* Return the network on signing results ([f74c982](https://github.com/block-core/blockcore-wallet/commit/f74c982))
+* Update fa.json (#271) ([f5d55f6](https://github.com/block-core/blockcore-wallet/commit/f5d55f6)), closes [#271](https://github.com/block-core/blockcore-wallet/issues/271)
+* Update some package dependencies ([629d2e0](https://github.com/block-core/blockcore-wallet/commit/629d2e0))
+* Update version and changelog ([a889e6a](https://github.com/block-core/blockcore-wallet/commit/a889e6a))
+
+
+
 ## <small>1.0.3 (2022-10-27)</small>
 
 * Add display of version on the initial wallet create dialog ([4c63573](https://github.com/block-core/blockcore-wallet/commit/4c63573))

@@ -55,6 +55,7 @@ import { ActionVaultSetupComponent } from './action/vault-setup/vault-setup.comp
 import { PaymentComponent } from './account/payment/payment.component';
 import { DebuggerComponent } from './settings/debugger/debugger.component';
 import { SignComponent } from './sign/sign.component';
+import { ActionDidRequestComponent } from './action/did-request/did-request.component';
 const routes: Routes = [
   {
     path: '',
@@ -406,6 +407,13 @@ const routes: Routes = [
       {
         path: 'signMessage',
         component: ActionSignMessageComponent,
+        resolve: {
+          data: LoadingResolverService,
+        },
+      },
+      {
+        path: 'did.request',
+        component: ActionDidRequestComponent,
         resolve: {
           data: LoadingResolverService,
         },

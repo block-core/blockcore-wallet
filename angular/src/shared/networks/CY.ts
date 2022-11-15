@@ -16,8 +16,8 @@ export class CY implements Network {
     pubKeyHash = 28;
     scriptHash = 87;
     wif = 0x08;
-    feeRate = 0;
-    minFeeRate = 0;
+    minimumFeeRate = 0;
+    maximumFeeRate = 0;
     testnet = false;
     smartContractSupport = false;
     isProofOfStake = true;
