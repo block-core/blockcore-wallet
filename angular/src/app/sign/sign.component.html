@@ -7,14 +7,14 @@
             <mat-label>Account</mat-label>
             <mat-select formControlName="accountCtrl" required (selectionChange)="onAccountChanged()">
               <mat-option *ngFor="let account of accounts" [value]="account.identifier">
-              {{ account.name }}
-            </mat-option>
-          </mat-select>
+                {{ account.name }}
+              </mat-option>
+            </mat-select>
           </mat-form-field>
           <mat-form-field appearance="outline" class="input-full-width">
             <mat-label>{{ "Action.Key" | translate }}</mat-label>
-        
-            <mat-select formControlName = "addressCtrl">
+
+            <mat-select formControlName="addressCtrl">
               <mat-option *ngFor="let address of addresses" [value]="address.key">{{ address.address }} </mat-option>
             </mat-select>
           </mat-form-field>
@@ -26,10 +26,10 @@
           <br />
           <mat-form-field class="sign-full-width" appearance="fill">
             <mat-label>Signature</mat-label>
-            <input matInput formControlName = "signatureCtrl"/>
+            <input matInput formControlName="signatureCtrl" />
           </mat-form-field>
           <br />
-          <br /><button mat-flat-button color="primary" (click) = "sign()">Sign</button>
+          <br /><button mat-flat-button color="primary" (click)="sign()">Sign</button>
           <button mat-stroked-button color="primary" class="sign-clear">Clear All</button>
         </form>
       </div>
@@ -37,22 +37,23 @@
 
     <mat-tab label="Verify Message">
       <div class="sign-content">
-        <form class="sign-form">
+        <form class="sign-form" [formGroup]="verifyFormGroup" >
           <mat-form-field class="sign-full-width" appearance="fill">
             <mat-label>Address</mat-label>
-            <input matInput placeholder="Ex. Pizza" value="Sushi" />
+            <input matInput formControlName="addressCtrl" />
           </mat-form-field>
           <br />
           <mat-form-field class="sign-full-width" appearance="fill">
             <mat-label>Message</mat-label>
-            <textarea matInput placeholder="Ex. It makes me feel..."></textarea>
+            <textarea matInput formControlName="messageCtrl"></textarea>
           </mat-form-field>
           <br />
           <mat-form-field class="sign-full-width" appearance="fill">
             <mat-label>Signature</mat-label>
-            <input matInput placeholder="Ex. Pizza" value="Sushi" />
+            <input matInput formControlName="signatureCtrl" />
           </mat-form-field>
-          <br /><button mat-flat-button color="primary">Verify</button>
+          {{verified}}
+          <br /><button mat-flat-button color="primary" (click)="verify()">Verify</button>
           <button mat-stroked-button color="primary" class="sign-clear">Clear All</button>
         </form>
       </div>

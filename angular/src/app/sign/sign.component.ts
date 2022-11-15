@@ -16,10 +16,12 @@ import { HDKey } from '@scure/bip32';
 })
 export class SignComponent implements OnInit {
   signFormGroup!: UntypedFormGroup;
+  verifyFormGroup!: UntypedFormGroup;
   accounts: Account[];
   subscription: any;
   addresses: any[];
   accountState: AccountState;
+  verified: boolean;
 
   constructor(
     private accountStateStore: AccountStateStore,
@@ -35,6 +37,7 @@ export class SignComponent implements OnInit {
     this.uiState.showBackButton = true;
     this.uiState.goBackHome = true;
     this.signFormGroup = this.fb.group({ accountCtrl: [''], messageCtrl: [''], addressCtrl: [''], signatureCtrl: [''] });
+    this.verifyFormGroup = this.fb.group({ messageCtrl: [''], addressCtrl: [''], signatureCtrl: [''] });
     // Make sure we listen to active account changes to perform updated list of keys.
     // TODO: Figure out why subscribing to this on the prompt makes it trigger twice. Perhaps there is some code elsewhere that
     // needs fixing to avoid running the operation twice.
@@ -51,6 +54,12 @@ export class SignComponent implements OnInit {
     const message = this.signFormGroup.controls['messageCtrl'].value;
     const signature = await this.walletManager.signData(this.walletManager.activeWallet, this.walletManager.activeAccount, this.signFormGroup.controls['addressCtrl'].value, message);
     this.signFormGroup.controls['signatureCtrl'].setValue(signature);
+  }
+  verify() {
+    const address = this.verifyFormGroup.controls['addressCtrl'].value;
+    const message = this.verifyFormGroup.controls['messageCtrl'].value;
+    const signature = this.verifyFormGroup.controls['signatureCtrl'].value;
+    this.verified = bitcoinMessage.verify (message, address, signature);
   }
   async onAccountChanged() {
     await this.walletManager.setActiveAccount(this.signFormGroup.controls['accountCtrl'].value);
@@ -87,6 +96,8 @@ export class SignComponent implements OnInit {
 
     let keyIndex = 0;
     this.signFormGroup.controls['addressCtrl'].setValue(this.addresses[0].key);
+
+    
 
     //this.action.keyId = this.addresses[keyIndex].keyId;
     //this.action.key = this.addresses[keyIndex].key;
