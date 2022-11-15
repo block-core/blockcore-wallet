@@ -34,7 +34,7 @@ export class SignComponent implements OnInit {
     this.uiState.title = 'Sign & Verify';
     this.uiState.showBackButton = true;
     this.uiState.goBackHome = true;
-    this.signFormGroup = this.fb.group({ accountCtrl: ['From Russia with Love'], messageCtrl: ['From Russia with Love 2'], addressCtrl: [''], signatureCtrl: [''] });
+    this.signFormGroup = this.fb.group({ accountCtrl: [''], messageCtrl: [''], addressCtrl: [''], signatureCtrl: [''] });
     // Make sure we listen to active account changes to perform updated list of keys.
     // TODO: Figure out why subscribing to this on the prompt makes it trigger twice. Perhaps there is some code elsewhere that
     // needs fixing to avoid running the operation twice.
