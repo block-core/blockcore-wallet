@@ -5,12 +5,20 @@
         <form class="sign-form" [formGroup]="signFormGroup">
           <mat-form-field class="sign-full-width" appearance="fill">
             <mat-label>Account</mat-label>
-            <mat-select formControlName="accountCtrl" required>
+            <mat-select formControlName="accountCtrl" required (selectionChange)="onAccountChanged()">
               <mat-option *ngFor="let account of accounts" [value]="account.identifier">
               {{ account.name }}
             </mat-option>
+          </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="input-full-width">
+            <mat-label>{{ "Action.Key" | translate }}</mat-label>
+        
+            <mat-select formControlName = "addressCtrl">
+              <mat-option *ngFor="let address of addresses" [value]="address.key">{{ address.address }} </mat-option>
             </mat-select>
           </mat-form-field>
+
           <mat-form-field class="sign-full-width" appearance="fill">
             <mat-label>Message to sign</mat-label>
             <textarea matInput formControlName="messageCtrl"></textarea>
@@ -18,7 +26,7 @@
           <br />
           <mat-form-field class="sign-full-width" appearance="fill">
             <mat-label>Signature</mat-label>
-            <input matInput placeholder="Ex. Pizza" value="Sushi" />
+            <input matInput formControlName = "signatureCtrl"/>
           </mat-form-field>
           <br />
           <br /><button mat-flat-button color="primary" (click) = "sign()">Sign</button>
