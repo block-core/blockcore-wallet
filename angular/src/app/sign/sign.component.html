@@ -1,46 +1,54 @@
-<mat-tab-group>
-  <mat-tab label="Sign Message">
-    <div class="sign-content">
-      <form class="sign-form" [formGroup]="signFormGroup">
-        <mat-form-field class="sign-full-width" appearance="fill">
-          <mat-label>Favorite animal</mat-label>
-          <mat-select formControlName="accountCtrl" required>
-            <mat-option>--</mat-option>
-            <!-- <mat-option *ngFor="let animal of animals" [value]="animal">
+<div>
+  <mat-tab-group>
+    <mat-tab label="Sign Message">
+      <div class="sign-content">
+        <form class="sign-form" [formGroup]="signFormGroup">
+          <mat-form-field class="sign-full-width" appearance="fill">
+            <mat-label>Account</mat-label>
+            <mat-select formControlName="accountCtrl" required>
+              <mat-option>--</mat-option>
+              <!-- <mat-option *ngFor="let animal of animals" [value]="animal">
               {{ animal.name }}
             </mat-option> -->
-          </mat-select>
-        </mat-form-field>
-        <mat-form-field class="sign-full-width" appearance="fill">
-          <mat-label>Favorite food</mat-label>
-          <input matInput placeholder="Ex. Pizza" value="Sushi" />
-        </mat-form-field>
-        <br />
-        <mat-form-field class="sign-full-width" appearance="fill">
-          <mat-label>Message to sign</mat-label>
-          <textarea matInput formControlName="messageCtrl"></textarea>
-        </mat-form-field>
-        <br /><button mat-flat-button color="primary">Sign</button>
-        <button mat-stroked-button color="primary" class="sign-clear">Clear All</button>
-      </form>
-    </div>
-  </mat-tab>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field class="sign-full-width" appearance="fill">
+            <mat-label>Message to sign</mat-label>
+            <textarea matInput formControlName="messageCtrl"></textarea>
+          </mat-form-field>
+          <br />
+          <mat-form-field class="sign-full-width" appearance="fill">
+            <mat-label>Signature</mat-label>
+            <input matInput placeholder="Ex. Pizza" value="Sushi" />
+          </mat-form-field>
+          <br />
+          <br /><button mat-flat-button color="primary">Sign</button>
+          <button mat-stroked-button color="primary" class="sign-clear">Clear All</button>
+        </form>
+      </div>
+    </mat-tab>
 
-  <mat-tab label="Verify Message">
-    <div class="sign-content">
-      <form class="sign-form">
-        <mat-form-field class="sign-full-width" appearance="fill">
-          <mat-label>Favorite food</mat-label>
-          <input matInput placeholder="Ex. Pizza" value="Sushi" />
-        </mat-form-field>
-        <br />
-        <mat-form-field class="sign-full-width" appearance="fill">
-          <mat-label>Leave a comment</mat-label>
-          <textarea matInput placeholder="Ex. It makes me feel..."></textarea>
-        </mat-form-field>
-        <br /><button mat-flat-button color="primary">Verify</button>
-        <button mat-stroked-button color="primary" class="sign-clear">Clear All</button>
-      </form>
-    </div>
-  </mat-tab>
-</mat-tab-group>
+    <mat-tab label="Verify Message">
+      <div class="sign-content">
+        <form class="sign-form">
+          <mat-form-field class="sign-full-width" appearance="fill">
+            <mat-label>Address</mat-label>
+            <input matInput placeholder="Ex. Pizza" value="Sushi" />
+          </mat-form-field>
+          <br />
+          <mat-form-field class="sign-full-width" appearance="fill">
+            <mat-label>Message</mat-label>
+            <textarea matInput placeholder="Ex. It makes me feel..."></textarea>
+          </mat-form-field>
+          <br />
+          <mat-form-field class="sign-full-width" appearance="fill">
+            <mat-label>Signature</mat-label>
+            <input matInput placeholder="Ex. Pizza" value="Sushi" />
+          </mat-form-field>
+          <br /><button mat-flat-button color="primary">Verify</button>
+          <button mat-stroked-button color="primary" class="sign-clear">Clear All</button>
+        </form>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+</div>
