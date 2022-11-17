@@ -53,7 +53,8 @@
             <mat-label>Signature</mat-label>
             <input matInput formControlName="signatureCtrl" />
           </mat-form-field>
-          {{ verified }}
+          <mat-card class = "verify-status" *ngIf="verified === true"><p><mat-icon class = "positive-color">verified</mat-icon></p><h2>Signature verified</h2><p>This means that the message has been verified to be signed by the owner of the address/identity specified.</p></mat-card>
+          <mat-card class = "verify-status" *ngIf="verified === false"><p><mat-icon class = "negative-color">error</mat-icon></p><h2>Failed signature verification</h2><p>This means that the message was not signed by the owner of the address/identity specified.</p></mat-card>
           <br /><button mat-flat-button color="primary" (click)="verify()">Verify</button>
           <button mat-stroked-button color="primary" class="sign-clear">Clear All</button>
         </form>
