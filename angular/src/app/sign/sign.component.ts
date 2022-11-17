@@ -55,11 +55,18 @@ export class SignComponent implements OnInit {
     const signature = await this.walletManager.signData(this.walletManager.activeWallet, this.walletManager.activeAccount, this.signFormGroup.controls['addressCtrl'].value, message);
     this.signFormGroup.controls['signatureCtrl'].setValue(signature);
   }
+  resetSign() {
+    this.signFormGroup.reset();
+  }
   verify() {
     const address = this.verifyFormGroup.controls['addressCtrl'].value;
     const message = this.verifyFormGroup.controls['messageCtrl'].value;
     const signature = this.verifyFormGroup.controls['signatureCtrl'].value;
-    this.verified = bitcoinMessage.verify (message, address, signature);
+    this.verified = bitcoinMessage.verify(message, address, signature);
+  }
+  resetVerify() {
+    this.verifyFormGroup.reset();
+    this.verified = null;
   }
   async onAccountChanged() {
     await this.walletManager.setActiveAccount(this.signFormGroup.controls['accountCtrl'].value);
@@ -96,8 +103,6 @@ export class SignComponent implements OnInit {
 
     let keyIndex = 0;
     this.signFormGroup.controls['addressCtrl'].setValue(this.addresses[0].key);
-
-    
 
     //this.action.keyId = this.addresses[keyIndex].keyId;
     //this.action.key = this.addresses[keyIndex].key;
