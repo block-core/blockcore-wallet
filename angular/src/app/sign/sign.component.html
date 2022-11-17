@@ -18,7 +18,8 @@
             </mat-select>
           </mat-form-field>
 
-          <mat-card class="selectable">{{address.value}}</mat-card><br>
+          <mat-card class="selectable">{{ address.value }}</mat-card
+          ><br />
 
           <mat-form-field class="sign-full-width" appearance="fill">
             <mat-label>Message to sign</mat-label>
@@ -31,7 +32,7 @@
           </mat-form-field>
           <br />
           <br /><button mat-flat-button color="primary" (click)="sign()">Sign</button>
-          <button mat-stroked-button color="primary" class="sign-clear">Clear All</button>
+          <button mat-stroked-button color="primary" class="sign-clear" (click)="resetSign()">Clear All</button>
         </form>
       </div>
     </mat-tab>
@@ -53,10 +54,18 @@
             <mat-label>Signature</mat-label>
             <input matInput formControlName="signatureCtrl" />
           </mat-form-field>
-          <mat-card class = "verify-status" *ngIf="verified === true"><p><mat-icon class = "positive-color">verified</mat-icon></p><h2>Signature verified</h2><p>This means that the message has been verified to be signed by the owner of the address/identity specified.</p></mat-card>
-          <mat-card class = "verify-status" *ngIf="verified === false"><p><mat-icon class = "negative-color">error</mat-icon></p><h2>Failed signature verification</h2><p>This means that the message was not signed by the owner of the address/identity specified.</p></mat-card>
+          <mat-card class="verify-status" *ngIf="verified === true"
+            ><p><mat-icon class="positive-color">verified</mat-icon></p>
+            <h2>Signature verified</h2>
+            <p>This means that the message has been verified to be signed by the owner of the address/identity specified.</p></mat-card
+          >
+          <mat-card class="verify-status" *ngIf="verified === false"
+            ><p><mat-icon class="negative-color">error</mat-icon></p>
+            <h2>Failed signature verification</h2>
+            <p>This means that the message was not signed by the owner of the address/identity specified.</p></mat-card
+          >
           <br /><button mat-flat-button color="primary" (click)="verify()">Verify</button>
-          <button mat-stroked-button color="primary" class="sign-clear">Clear All</button>
+          <button mat-stroked-button color="primary" class="sign-clear" (click)="resetVerify()">Clear All</button>
         </form>
       </div>
     </mat-tab>
