@@ -65,7 +65,6 @@ export function maxBitcoinValidator(sendService: SendService): ValidatorFn {
     }
 
     let maxNumber = Big(max);
-    let maxNumberPlusFee = maxNumber.minus(Big(sendService.feeAsSatoshi));
     const number = new Big(control.value);
 
     if (number.e < -8) {
@@ -78,7 +77,7 @@ export function maxBitcoinValidator(sendService: SendService): ValidatorFn {
 
     const amountValue = number.times(Math.pow(10, 8));
 
-    if (amountValue.gt(maxNumberPlusFee)) {
+    if (amountValue.gt(maxNumber)) {
       return { tooHighAmount: true };
     }
 

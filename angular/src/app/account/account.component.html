@@ -228,7 +228,7 @@
         <mat-card-content>
           <p>{{ "Account.Network" | translate }}: {{ networkStatus.node.blockchain.chain }}</p>
           <p>{{ "Account.Height" | translate }}: {{ networkStatus.blockHeight }}</p>
-          <p>{{ "Account.RelayFee" | translate }}: {{ networkStatus.node.network.relayFee }}</p>
+          <p>{{ "Account.RelayFee" | translate }}: {{ networkStatus.node.network.relayFee * 100000 }} {{ "Account.SatByte" | translate }}</p>
           <p>{{ "Account.MemoryPool" | translate }}: {{ networkStatus.node.transactionsInPool }} {{ "Account.Transaction" | translate }}</p>
           <p>{{ "Account.Connections" | translate }}: {{ networkStatus.node.network.connections }}</p>
           <p>

@@ -5,7 +5,7 @@ import { RunState } from '../../angular/src/shared/task-runner';
 import { WalletStore } from '../../angular/src/shared/store/wallet-store';
 import { PermissionServiceShared } from '../../angular/src/shared/permission.service';
 import * as browser from 'webextension-polyfill';
-import { ActionState, Handlers } from '../../angular/src/shared';
+import { ActionState, DecentralizedWebNode, DomainVerification, Handlers } from '../../angular/src/shared';
 import { Mutex } from 'async-mutex';
 import { StorageService } from '../../angular/src/shared/storage.service';
 import { RuntimeService } from '../../angular/src/shared/runtime.service';
@@ -25,6 +25,7 @@ let indexing = false;
 let networkLoader = new NetworkLoader();
 let runtimeService = new RuntimeService();
 let messageService = new MessageService(runtimeService, new EventBus());
+let dwn = new DecentralizedWebNode();
 
 let shared = new SharedManager(new StorageService(runtimeService), new WalletStore(), networkLoader, messageService);
 const networkUpdateInterval = 45000;
@@ -35,6 +36,17 @@ let walletStore: WalletStore;
 
 // Don't mark this method async, it will result in caller not being called in "sendResponse".
 browser.runtime.onMessage.addListener(async (msg: ActionMessage, sender) => {
+  // We verify in both content.ts and here, simply because hostile website can always load the provider.ts if
+  // they reference it directly manually.
+  let verify = DomainVerification.verify(msg.app);
+
+  if (verify == false) {
+    console.warn('Request is not allowed on this domain.');
+    return;
+  }
+
+  msg.verify = verify;
+
   // console.log('Receive message in background:', msg);
 
   // When messages are coming from popups, the prompt will be set.
@@ -62,11 +74,20 @@ browser.runtime.onMessage.addListener(async (msg: ActionMessage, sender) => {
   }
 });
 
-browser.runtime.onMessageExternal.addListener(async (message: ActionMessage, sender) => {
-  console.log('BACKGROUND:EXTERNAL:MSG:', message);
+browser.runtime.onMessageExternal.addListener(async (msg: ActionMessage, sender) => {
+  // We verify in both content.ts and here, simply because hostile website can always load the provider.ts if
+  // they reference it directly manually.
+  let verify = DomainVerification.verify(msg.app);
+
+  if (verify == false) {
+    console.warn('Request is not allowed on this domain.');
+    return;
+  }
+
+  console.log('BACKGROUND:EXTERNAL:MSG:', msg);
   let extensionId = new URL(sender.url!).host;
-  message.app = extensionId;
-  return handleContentScriptMessage(message);
+  msg.app = extensionId;
+  return handleContentScriptMessage(msg);
 });
 
 async function handleContentScriptMessage(message: ActionMessage) {
@@ -83,74 +104,71 @@ async function handleContentScriptMessage(message: ActionMessage) {
   // const handler = Handlers.getAction(method);
   let id = Math.random().toString().slice(4);
 
+  // Ensure that we have a BackgroundManager available for the action handler.
+  if (networkManager == null) {
+    networkManager = new BackgroundManager(shared);
+  }
+
   const state = new ActionState();
   state.id = message.id;
   state.id2 = id;
+
+  // This will throw error if the action is not supported.
   state.handler = Handlers.getAction(method, networkManager); // watchManager can sometimes be null.
   state.message = message;
 
   // Make sure we reload wallets at this point every single process.
   // await this.walletStore.load();
   // await this.accountStateStore.load();
-
   // const wallets = this.walletStore.getWallets();
-
   // ActionStateHolder.prompts.push(state);
-
-  // console.log('prompts:', JSON.stringify(ActionStateHolder.prompts));
-  // console.log('prompts (length):', ActionStateHolder.prompts.length);
 
   // Use the handler to prepare the content to be displayed for signing.
   const prepare = await state.handler.prepare(state);
   state.content = prepare.content;
 
-  // Reload the permissions each time.
-  await permissionService.refresh();
-
   let permission: Permission | unknown | null = null;
 
-  if (params.key) {
-    permission = permissionService.findPermissionByKey(message.app!, method, params.key);
-  } else {
-    // Get all existing permissions that exists for this app and method:
-    let permissions = permissionService.findPermissions(message.app!, method);
+  if (prepare.consent) {
+    // Reload the permissions each time.
+    await permissionService.refresh();
 
-    // If there are no specific key specified in the signing request, just grab the first permission that is approved for this
-    // website and use that. Normally there will only be a single one if the web app does not request specific key.
-    if (permissions.length > 0) {
-      permission = permissions[0];
-    }
-  }
-
-  // permissionService.findPermission(message.app, method, message.walletId, message.accountId, message.keyId);
-  // let permissionSet = permissionService.get(message.app);
-
-  // if (permissionSet) {
-  //   permission = permissionSet.permissions[method];
-  // }
-
-  // Check if user have already approved this kind of access on this domain/host.
-  if (!permission) {
-    try {
-      // Keep a copy of the prompt message, we need it to finalize if user clicks "X" to close window.
-      // state.promptPermission = await promptPermission({ app: message.app, id: message.id, method: method, params: message.args.params });
-      permission = await promptPermission(state);
-      // authorized, proceed
-    } catch (_) {
-      // not authorized, stop here
-      return {
-        error: { message: `Insufficient permissions, required "${method}".` },
-      };
-    }
-  } else {
-    // TODO: This logic can be put into the query into permission set, because permissions
-    // must be stored with more keys than just "action", it must contain wallet/account and potentially keyId.
-
-    // If there exists an permission, verify that the permission applies to the specified (or active) wallet and account.
-    // If the caller has supplied walletId and accountId, use that.
-    if (message.walletId && message.accountId) {
+    if (params?.key) {
+      permission = permissionService.findPermissionByKey(message.app!, method, params.key);
     } else {
-      // If nothing is supplied, verify against the current active wallet/account.
+      // Get all existing permissions that exists for this app and method:
+      let permissions = permissionService.findPermissions(message.app!, method);
+
+      // If there are no specific key specified in the signing request, just grab the first permission that is approved for this
+      // website and use that. Normally there will only be a single one if the web app does not request specific key.
+      if (permissions.length > 0) {
+        permission = permissions[0];
+      }
+    }
+
+    // Check if user have already approved this kind of access on this domain/host.
+    if (!permission) {
+      try {
+        // Keep a copy of the prompt message, we need it to finalize if user clicks "X" to close window.
+        // state.promptPermission = await promptPermission({ app: message.app, id: message.id, method: method, params: message.args.params });
+        permission = await promptPermission(state);
+        // authorized, proceed
+      } catch (_) {
+        // not authorized, stop here
+        return {
+          error: { message: `Insufficient permissions, required "${method}".` },
+        };
+      }
+    } else {
+      // TODO: This logic can be put into the query into permission set, because permissions
+      // must be stored with more keys than just "action", it must contain wallet/account and potentially keyId.
+
+      // If there exists an permission, verify that the permission applies to the specified (or active) wallet and account.
+      // If the caller has supplied walletId and accountId, use that.
+      if (message.walletId && message.accountId) {
+      } else {
+        // If nothing is supplied, verify against the current active wallet/account.
+      }
     }
   }
 
@@ -204,6 +222,7 @@ async function promptPermission(state: ActionState) {
     action: state.message.request.method,
     content: JSON.stringify(state.content), // Content prepared by the handler to be displayed for user.
     params: JSON.stringify(state.message.request.params), // Params is used to display structured information for signing.
+    verify: state.message.verify,
   };
 
   let qs = new URLSearchParams(parameters);
@@ -244,6 +263,9 @@ async function getTabId() {
 }
 
 chrome.runtime.onInstalled.addListener(async ({ reason }) => {
+  // Initialize the Decentralized Web Node.
+  await dwn.load();
+
   // console.debug('onInstalled', reason);
 
   // Periodic alarm that will check if wallet should be locked.

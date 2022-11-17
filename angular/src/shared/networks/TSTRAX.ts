@@ -15,8 +15,8 @@ export class TSTRAX implements Network {
     pubKeyHash = 120;
     scriptHash = 127;
     wif = 0x08;
-    feeRate = 10000;
-    minFeeRate = 10000;
+    minimumFeeRate = 10;
+    maximumFeeRate = 5000;
     testnet = true;
     smartContractSupport = false;
     type = 'coin';

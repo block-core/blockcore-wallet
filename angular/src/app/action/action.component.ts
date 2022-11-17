@@ -23,19 +23,37 @@ export class ActionComponent implements OnInit {
     public uiState: UIState,
     private accountStateStore: AccountStateStore,
     private permissionStore: PermissionStore,
-    public action: ActionService,
+    public actionService: ActionService,
     public networkService: NetworksService,
     public walletManager: WalletManager,
     private manager: AppManager,
     private cd: ChangeDetectorRef
-  ) {
+  ) {}
+
+  async ngOnInit() {
     // Improve this logic, just quickly select the key:
     const firstArgument = this.uiState.action.params[0];
-
     const requestedKey = firstArgument.key;
 
     this.accounts = this.walletManager.activeWallet.accounts;
-    this.action.accountId = this.walletManager.activeAccountId;
+    const filter = this.actionService.accountFilter;
+
+    if (filter) {
+      if (filter.types && filter.types.length > 0) {
+        this.accounts = this.accounts.filter((a) => filter.types.includes(a.type));
+      }
+
+      if (filter.symbol && filter.symbol.length > 0) {
+        this.accounts = this.accounts.filter((a) => {
+          const network = this.networkService.getNetwork(a.networkType);
+          return filter.symbol.includes(network.symbol);
+        });
+      }
+    } else {
+      this.accounts = this.walletManager.activeWallet.accounts;
+    }
+
+    this.actionService.accountId = this.walletManager.activeAccountId;
 
     if (requestedKey) {
       this.requestedKey = requestedKey;
@@ -47,11 +65,30 @@ export class ActionComponent implements OnInit {
     this.subscription = this.walletManager.activeAccount$.subscribe((a) => {
       this.update();
     });
-  }
 
-  async ngOnInit() {
     const actionName = await this.translate.get('Action.' + this.uiState.action?.action).toPromise();
     this.uiState.title = 'Action: ' + actionName;
+
+    if (this.uiState.action.verify === true) {
+      this.verifyStatus = {
+        icon: 'verified', // verified, new_releases, report_gmailerrorred, dangerous
+        status: 'Verified App', // Verified App, Verification Status Unavailable, Reported and suspected app, Dangerous app. Proceed with extreme caution.
+        color: 'positive-color', // negative-color, positive-color, other-color
+      };
+    } else if (this.uiState.action.verify === false) {
+      // SHOULD NOT HAPPEN!
+      this.verifyStatus = {
+        icon: 'dangerous', // verified, new_releases, report_gmailerrorred, dangerous
+        status: 'Dangerous app. Proceed with extreme caution.', // Verified App, Verification Status Unavailable, Reported and suspected app, Dangerous app. Proceed with extreme caution.
+        color: 'negative-color', // negative-color, positive-color, other-color
+      };
+    } else {
+      this.verifyStatus = {
+        icon: 'new_releases', // verified, new_releases, report_gmailerrorred, dangerous
+        status: 'Verification Status Unavailable', // Verified App, Verification Status Unavailable, Reported and suspected app, Dangerous app. Proceed with extreme caution.
+        color: 'other-color', // negative-color, positive-color, other-color
+      };
+    }
   }
 
   verifyStatus = {
@@ -60,14 +97,16 @@ export class ActionComponent implements OnInit {
     color: 'other-color', // negative-color, positive-color, other-color
   };
 
-  actionStatus = {
-    icon: 'verified_user',
-    title: 'Permission Request',
-    description: '"Sign data using your private key"',
-  };
+  // actionStatus = {
+  //   icon: 'verified_user',
+  //   title: 'Permission Request',
+  //   description: '"Sign data using your private key"',
+  // };
 
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
   }
 
   update() {
@@ -108,12 +147,12 @@ export class ActionComponent implements OnInit {
       }
     }
 
-    this.action.keyId = this.addresses[keyIndex].keyId;
-    this.action.key = this.addresses[keyIndex].key;
+    this.actionService.keyId = this.addresses[keyIndex].keyId;
+    this.actionService.key = this.addresses[keyIndex].key;
   }
 
   async onAccountChanged() {
-    await this.walletManager.setActiveAccount(this.action.accountId);
+    await this.walletManager.setActiveAccount(this.actionService.accountId);
 
     // this.selectedNetwork = this.networkService.getNetwork(this.network);
     // this.derivationPath = this.getDerivationPath();
@@ -121,7 +160,7 @@ export class ActionComponent implements OnInit {
   }
 
   onKeyChanged() {
-    const address = this.addresses.find((a) => a.keyId == this.action.keyId);
-    this.action.key = address.key;
+    const address = this.addresses.find((a) => a.keyId == this.actionService.keyId);
+    this.actionService.key = address.key;
   }
 }

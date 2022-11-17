@@ -40,9 +40,7 @@ export class LoadingComponent implements OnInit, OnDestroy {
     private orchestrator: OrchestratorService,
     private runtime: RuntimeService,
     @Inject(DOCUMENT) private document: Document
-  ) {
-
-  }
+  ) {}
 
   ngOnDestroy(): void {
     if (this.sub) {
@@ -125,6 +123,15 @@ export class LoadingComponent implements OnInit, OnDestroy {
     if (this.uiState.params) {
       const parameters: ActionUrlParameters = this.uiState.params;
 
+      let verify = undefined;
+
+      // All parameters are always string, so validate the verify here:
+      if (parameters.verify === 'true') {
+        verify = true;
+      } else if (parameters.verify === 'false') {
+        verify = false;
+      }
+
       if (parameters.action) {
         this.uiState.action = {
           action: parameters.action,
@@ -132,6 +139,7 @@ export class LoadingComponent implements OnInit, OnDestroy {
           content: JSON.parse(parameters.content), // Transform the content to be displayed to user.
           params: JSON.parse(parameters.params), // Transform the params from string to object here after we've received it through the query string.
           app: parameters.app,
+          verify: verify,
         };
       }
 

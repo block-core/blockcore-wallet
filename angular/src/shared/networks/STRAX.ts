@@ -15,8 +15,8 @@ export class STRAX implements Network {
     pubKeyHash = 75;
     scriptHash = 140;
     wif = 0x08;
-    feeRate = 10000;
-    minFeeRate = 10000;
+    minimumFeeRate = 10;
+    maximumFeeRate = 5000;
     testnet = false;
     smartContractSupport = false;
     type = 'coin';

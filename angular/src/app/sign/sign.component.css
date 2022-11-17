@@ -1,0 +1,17 @@
+.sign-content {
+  padding: 2em;
+}
+.sign-full-width {
+    width: 100%;
+}
+.sign-form button {
+    margin-right: 1em ;
+}
+.sign-clear {
+    float: right;
+    margin-right: 0 !important;
+}
+.sign-form {
+    max-width: 500px;
+}
+

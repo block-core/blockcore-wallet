@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Account, AccountHistory } from '../../shared/interfaces';
+import { Account, AccountHistory, CoinSelectionResult } from '../../shared/interfaces';
 import { Network } from '../../shared/networks';
 import Big from 'big.js';
 import { PaymentRequestData } from 'src/shared/payment';
@@ -21,48 +21,35 @@ export class SendService {
   transactionResult: string | any;
   routingIndex: number;
   accountHistory: AccountHistory;
-  feeRate: number;
   payment: PaymentRequestData;
   memo: string;
+  feeError: string;
+  selectedData: CoinSelectionResult;
 
-  private feeValue: Big;
+  /** The amount of satoshi pr. byte that is the target minimum. */
+  targetFeeRate: number;
+
+  // The internal amount parsed to Big.
   private amountValue: Big;
+
   private factor: number;
 
-  feeError: string;
+  #fee: number;
 
-  get fee(): string {
-    if (this.feeValue == null) {
-      return '';
-    }
-
-    return this.feeValue.div(this.factor).toString();
+  /** The fee in sat/byte format as a number. */
+  get fee(): number {
+    return this.#fee;
   }
 
-  /** Sets the fee, the value is expected to be of format "0.0001" */
-  set fee(value: string) {
-    if (value == null || value == '') {
-      this.feeValue = null;
-      return;
-    }
+  /** The fee in sat/byte format as a number. */
+  set fee(value: number) {
+    this.#fee = value;
 
-    const number = new Big(value);
-
-    if (number.e < -8) {
-      throw new TypeError('The value of fee cannot have more than 8 decimals.');
-    }
-
-    const fee = number.times(this.factor);
-    const minFee = new Big(this.network.minFeeRate);
-
-    if (fee.lt(minFee)) {
-      this.feeError = `The fee cannot be lower than minimum free rate: ${minFee.div(this.factor).toString()}`;
-      // throw new Error(`The fee cannot be lower than minimum free rate: ${this.network.minFeeRate}`);
+    if (value < this.targetFeeRate) {
+      this.feeError = `The fee cannot be lower than minimum free rate: ${this.targetFeeRate} sat/byte`;
     } else {
       this.feeError = null;
     }
-
-    this.feeValue = fee;
   }
 
   get amount(): string {
@@ -73,7 +60,7 @@ export class SendService {
     return this.amountValue.div(this.factor).toString();
   }
 
-  /** Sets the fee, the value is expected to be of format "2.5" */
+  /** Sets the amount, the value is expected to be of format "2.5" */
   set amount(value: string) {
     if (value == null || value == '') {
       this.amountValue = null;
@@ -96,30 +83,17 @@ export class SendService {
   /** The affected addresses for the current transaction. */
   addresses: string[];
 
-  /** Returns the amount and fee added together in satoshis. */
-  get total(): Big {
-    let amount = this.amountValue;
+  total: Big;
 
-    if (amount == null) {
-      amount = Big(0);
-    }
-
-    let fee = this.feeValue;
-
-    if (fee == null) {
-      fee = Big(0);
-    }
-
-    return amount.add(fee);
-  }
+  actualAmountAsSatoshi: Big;
 
   get amountAsSatoshi(): Big {
     return this.amountValue;
     // return new Big(this.amount).times(Math.pow(10, 8)).toNumber();
   }
 
-  get feeAsSatoshi(): Big {
-    return this.feeValue;
+  get feeAsBig(): Big {
+    return new Big(this.fee);
     // return new Big(this.fee).times(Math.pow(10, 8)).toNumber();
   }
 
@@ -137,9 +111,9 @@ export class SendService {
 
   /** Used to specify maximum amount as satoshi and fee will be subtracted from the supplied amount. */
   setMax(amount: Big) {
-    if (this.fee == null) {
-      throw new TypeError('Fee must be set before max can be set.');
-    }
+    // if (this.fee == null) {
+    //   throw new TypeError('Fee must be set before max can be set.');
+    // }
 
     // TODO: Validate that the input does not contains any decimals.
     // console.log('CHECK', amount);
@@ -147,16 +121,20 @@ export class SendService {
     //     throw new TypeError('The amount must be in the format of satoshi.');
     // }
 
-    const maxAmountWithoutFeeAsSats = amount.minus(this.feeValue);
-    this.amountValue = maxAmountWithoutFeeAsSats;
-  }
-
-  getNetworkFee() {
-    return new Big(this.network.feeRate).div(this.factor).toString();
+    // const maxAmountWithoutFeeAsSats = amount.minus(this.feeValue);
+    this.amountValue = amount;
   }
 
   resetFee() {
-    this.feeValue = new Big(this.network.feeRate);
+    // If fee rate is not set, use network.
+    if (!this.targetFeeRate) {
+      console.log(this.network);
+      this.targetFeeRate = this.network.minimumFeeRate;
+      console.log('THIS NET WORK FEE RATE:', this.network.minimumFeeRate);
+    }
+
+    this.fee = this.targetFeeRate;
+    // this.feeValue = new Big(this.targetFeeRate);
   }
 
   reset() {
@@ -182,6 +160,5 @@ export class SendService {
       this.amount = this.sendAmount;
       this.sendAmount = '';
     }
-
   }
 }
