@@ -58,7 +58,7 @@
     "DisplayLanguage": "Display Language",
     "DisplayLanguageHint": "Change the display language for the app.",
     "ChooseMode": "Choose your mode",
-    "ChooseModeHint": "You must save the settings for mode and accent color to be persisted.",
+    "ChooseModeHint": "You must save the settings for mode to be persisted.",
     "Dark": "Dark",
     "Light": "Light",
     "OtherActions": "Other Actions",
