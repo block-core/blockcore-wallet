@@ -284,7 +284,7 @@
     "InteractionWithContract": "Interaction with contract",
     "StandardTokensNotice": "Notice: The token API does not support decimals in the current release. Values are shown without decimals in this version.",
     "Login": "Login",
-    "PasteTheLoginUrl": "Paste the login url",
+    "PasteTheLoginURL": "Paste the login URL",
     "WalletsPersistedState": "Wallets Persisted State",
     "WalletsPersistedStateMessage": "Contains your encrypted secret recovery phrase. Do NOT share this with anyone!",
     "NetworkStatus": "Network Status",

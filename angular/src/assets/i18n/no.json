@@ -283,7 +283,7 @@
     "InteractionWithContract": "Samspill med kontrakt",
     "StandardTokensNotice": "Merk: Token API støtter ikke desimaler i gjeldende utgivelse. Verdier vises uten desimaler i denne versjonen.",
     "Login": "Logg Inn",
-    "PasteTheLoginUrl": "Lim inn påloggings-url",
+    "PasteTheLoginURL": "Lim inn påloggings-URL",
     "WalletsPersistedState": "Lommebøker vedvarte tilstand",
     "WalletsPersistedStateMessage": "Inneholder din krypterte hemmelige gjenopprettingsfrase. IKKE del dette med noen!",
     "NetworkStatus": "Nettverksstatus",
