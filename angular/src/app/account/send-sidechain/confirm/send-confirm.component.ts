@@ -34,6 +34,7 @@ export class AccountSendSidechainConfirmComponent implements OnInit, OnDestroy {
       },
     ];
 
+    debugger;
     // Add OP_RETURN output before we calculate fee size:
     if (data != null && data != '') {
       var buffer = Buffer.from(data);

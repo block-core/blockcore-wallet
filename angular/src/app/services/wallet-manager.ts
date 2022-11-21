@@ -205,16 +205,11 @@ export class WalletManager {
 
     // We could/should also check if the output is within the threshold of dust or not.
     if (totalInputAmount == totalOutputAmount) {
+      // Remove the "value" from the first (target address) to ensure everything is used (except fee).
+      targets[0].value = undefined;
+
       // Run coinsplit instead of coinselect and remove the specified output for now.
-      result = coinsplit(
-        utxos,
-        [
-          {
-            address: targets[0].address,
-          },
-        ],
-        feeRate
-      ) as any;
+      result = coinsplit(utxos, targets, feeRate) as any;
 
       // .inputs and .outputs will be undefined if no solution was found
       if (!result.inputs || !result.outputs) {
