@@ -424,6 +424,13 @@
     "Partners": "Partners",
     "PartnersDescription": "Using our links and affiliated partners, helps support the continued development of this wallet."
   },
+  "SignVerify": {
+    "Account": "Account",
+    "MessageToSign": "Message to sign",
+    "Signature": "Signature",
+    "Sign": "Sign",
+
+  },
   "english": "English",
   "chinese_simplified": "Chinese (Simplified)",
   "chinese_traditional": "Chinese (Traditional)",

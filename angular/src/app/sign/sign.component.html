@@ -4,7 +4,7 @@
       <div class="sign-content">
         <form class="sign-form" [formGroup]="signFormGroup">
           <mat-form-field class="sign-full-width" appearance="fill">
-            <mat-label>Account</mat-label>
+            <mat-label>{{"SignVerify.Account" | translate}}</mat-label>
             <mat-select formControlName="accountCtrl" required (selectionChange)="onAccountChanged()">
               <mat-option *ngFor="let account of accounts" [value]="account.identifier">
                 {{ account.name }}
@@ -22,7 +22,7 @@
           ><br />
 
           <mat-form-field class="sign-full-width" appearance="fill">
-            <mat-label>Message to sign</mat-label>
+            <mat-label>{{ "SignVerify.MessageToSign" | translate }}</mat-label>
             <textarea matInput formControlName="messageCtrl"></textarea>
           </mat-form-field>
           <br />
