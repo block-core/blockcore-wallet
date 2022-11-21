@@ -113,21 +113,12 @@ export class AccountSendSidechainConfirmComponent implements OnInit, OnDestroy {
 
   async ngOnInit() {
     try {
-      // let data = this.sendService.payment?.options.data;
-
-      // if (data != null) {
-      //   var enc = new TextEncoder(); // always utf-8
-      //   var arr = enc.encode(data);
-
-      //   // Slice the data and only read 80 bytes:
-      //   const sliced = arr.slice(0, 80); // Enforce the max length of 80 on OP_RETURN data.
-
-      //   // Decode the array back into UTF-8:
-      //   var dec = new TextDecoder('utf-8');
-      //   data = dec.decode(sliced);
-      // }
-
       const tx = await this.generateTransaction(this.walletManager.activeAccount, this.sendSidechainService.sidechainAddress ?? null);
+
+      // Validate that we do have OP_RETURN data specified.
+      if (!tx.data) {
+        throw new Error('There was no data in the transaction. For sidechain swaps this is required to be the swap address. Cannot continue.');
+      }
 
       // Calculate and set the total, take it from the outputs wince the generat transaction
       // can potentially have changed the output value (if sending max for example).
