@@ -1,3 +1,32 @@
+## <small>1.0.5 (2022-11-21)</small>
+
+* Add ability to filter on type and DID Method ([3d07285](https://github.com/block-core/blockcore-wallet/commit/3d07285))
+* Add component for "did.request" action ([3f9e6a4](https://github.com/block-core/blockcore-wallet/commit/3f9e6a4))
+* Add DID Method prefix for selected key ([6173632](https://github.com/block-core/blockcore-wallet/commit/6173632))
+* Add filter to account listing ([3bee1fa](https://github.com/block-core/blockcore-wallet/commit/3bee1fa))
+* Add signature generation and proper return response for did.request ([616dc1f](https://github.com/block-core/blockcore-wallet/commit/616dc1f))
+* Add some extra validation on OP_RETURN data for sidechain swaps ([ed3ea1a](https://github.com/block-core/blockcore-wallet/commit/ed3ea1a))
+* Add some packages to allowedCommonJsDependencies (#286) ([b3bcba8](https://github.com/block-core/blockcore-wallet/commit/b3bcba8)), closes [#286](https://github.com/block-core/blockcore-wallet/issues/286)
+* Add status to the action service allowing actions to change the UI ([1f1c776](https://github.com/block-core/blockcore-wallet/commit/1f1c776))
+* Add support for did.supportedMethods in provider ([b9db6fc](https://github.com/block-core/blockcore-wallet/commit/b9db6fc))
+* Add the ability to sign message (#290) ([42b9e38](https://github.com/block-core/blockcore-wallet/commit/42b9e38)), closes [#290](https://github.com/block-core/blockcore-wallet/issues/290)
+* Add the DecentralizedWebNode instance to background and frontend (PWA) ([eb59c54](https://github.com/block-core/blockcore-wallet/commit/eb59c54))
+* Add types for did.request action ([6eb7365](https://github.com/block-core/blockcore-wallet/commit/6eb7365))
+* Add verify (#291) ([144e19c](https://github.com/block-core/blockcore-wallet/commit/144e19c)), closes [#291](https://github.com/block-core/blockcore-wallet/issues/291)
+* Change the DID Request handler to return JWT as proof ([8eb7fc3](https://github.com/block-core/blockcore-wallet/commit/8eb7fc3))
+* Completed more RU translation (#292) ([96adde6](https://github.com/block-core/blockcore-wallet/commit/96adde6)), closes [#292](https://github.com/block-core/blockcore-wallet/issues/292)
+* Fix a minor issue with Norwegian (#289) ([d199440](https://github.com/block-core/blockcore-wallet/commit/d199440)), closes [#289](https://github.com/block-core/blockcore-wallet/issues/289)
+* Fix a typo in the action dialog ([ed4f4b6](https://github.com/block-core/blockcore-wallet/commit/ed4f4b6))
+* Fix issue with sidechain swap and max-send ([d9586c0](https://github.com/block-core/blockcore-wallet/commit/d9586c0))
+* Improve handling of unknown message requests ([96258ee](https://github.com/block-core/blockcore-wallet/commit/96258ee))
+* Make the selected address displayed so it can be copied ([e7dc8c9](https://github.com/block-core/blockcore-wallet/commit/e7dc8c9))
+* Sidechain address is required for swaps ([1e93cc9](https://github.com/block-core/blockcore-wallet/commit/1e93cc9))
+* Sign & Verify UI (#293) ([112da81](https://github.com/block-core/blockcore-wallet/commit/112da81)), closes [#293](https://github.com/block-core/blockcore-wallet/issues/293)
+* Update the type on proof for DID Request ([be1d114](https://github.com/block-core/blockcore-wallet/commit/be1d114))
+* Update version and changelog ([494e914](https://github.com/block-core/blockcore-wallet/commit/494e914))
+
+
+
 ## <small>1.0.4 (2022-11-10)</small>
 
 * Add partial translation (#283) ([0030dab](https://github.com/block-core/blockcore-wallet/commit/0030dab)), closes [#283](https://github.com/block-core/blockcore-wallet/issues/283)
