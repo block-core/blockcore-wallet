@@ -113,7 +113,7 @@ export class AccountSendSidechainConfirmComponent implements OnInit, OnDestroy {
 
   async ngOnInit() {
     try {
-      const tx = await this.generateTransaction(this.walletManager.activeAccount, this.sendSidechainService.sidechainAddress ?? null);
+      const tx = await this.generateTransaction(this.walletManager.activeAccount, this.sendSidechainService.sidechainAddress);
 
       // Validate that we do have OP_RETURN data specified.
       if (!tx.data) {
