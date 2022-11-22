@@ -4,7 +4,7 @@
       <div class="sign-content">
         <form class="sign-form" [formGroup]="signFormGroup">
           <mat-form-field class="sign-full-width" appearance="fill">
-            <mat-label>{{"SignVerify.Account" | translate}}</mat-label>
+            <mat-label>{{ "Account.Account" | translate }}</mat-label>
             <mat-select formControlName="accountCtrl" required (selectionChange)="onAccountChanged()">
               <mat-option *ngFor="let account of accounts" [value]="account.identifier">
                 {{ account.name }}
@@ -27,7 +27,7 @@
           </mat-form-field>
           <br />
           <mat-form-field class="sign-full-width" appearance="fill">
-            <mat-label>Signature</mat-label>
+            <mat-label>{{ "SignVerify.Signature" | translate }}</mat-label>
             <input matInput formControlName="signatureCtrl" />
           </mat-form-field>
           <br />
@@ -41,28 +41,28 @@
       <div class="sign-content">
         <form class="sign-form" [formGroup]="verifyFormGroup">
           <mat-form-field class="sign-full-width" appearance="fill">
-            <mat-label>Address</mat-label>
+            <mat-label>{{ "Action.Key" | translate }}</mat-label>
             <input matInput formControlName="addressCtrl" />
           </mat-form-field>
           <br />
           <mat-form-field class="sign-full-width" appearance="fill">
-            <mat-label>Message</mat-label>
+            <mat-label>{{ "Account.Message" | translate }}</mat-label>
             <textarea matInput formControlName="messageCtrl"></textarea>
           </mat-form-field>
           <br />
           <mat-form-field class="sign-full-width" appearance="fill">
-            <mat-label>Signature</mat-label>
+            <mat-label>{{ "SignVerify.Signature" | translate }}</mat-label>
             <input matInput formControlName="signatureCtrl" />
           </mat-form-field>
           <mat-card class="verify-status" *ngIf="verified === true"
             ><p><mat-icon class="positive-color">verified</mat-icon></p>
-            <h2>Signature verified</h2>
-            <p>This means that the message has been verified to be signed by the owner of the address/identity specified.</p></mat-card
+            <h2>{{ "SignVerify.SignatureVerified" | translate }}</h2>
+            <p>{{ "SignVerify.SignatureVerifiedDescription" | translate }}</p></mat-card
           >
           <mat-card class="verify-status" *ngIf="verified === false"
             ><p><mat-icon class="negative-color">error</mat-icon></p>
-            <h2>Failed signature verification</h2>
-            <p>This means that the message was not signed by the owner of the address/identity specified.</p></mat-card
+            <h2>{{ "SignVerify.FailedSignatureVerification" | translate }}</h2>
+            <p>{{ "SignVerify.FailedSignatureVerificationDescription" | translate }}</p></mat-card
           >
           <br /><button mat-flat-button color="primary" (click)="verify()">Verify</button>
           <button mat-stroked-button color="primary" class="sign-clear" (click)="resetVerify()">Clear All</button>

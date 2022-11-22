@@ -429,7 +429,10 @@
     "MessageToSign": "Message to sign",
     "Signature": "Signature",
     "Sign": "Sign",
-
+    "SignatureVerified": "Signature verified",
+    "SignatureVerifiedDescription": "This means that the message has been verified to be signed by the owner of the address/identity specified.",
+    "FailedSignatureVerification": "Failed signature verification",
+    "FailedSignatureVerificationDescription":"This means that the message was not signed by the owner of the address/identity specified."
   },
   "english": "English",
   "chinese_simplified": "Chinese (Simplified)",
@@ -440,5 +443,6 @@
   "japanese": "Japanese",
   "korean": "Korean",
   "portuguese": "Portuguese",
-  "spanish": "Spanish"
+  "spanish": "Spanish",
+  "russian": "Russian"
 }
