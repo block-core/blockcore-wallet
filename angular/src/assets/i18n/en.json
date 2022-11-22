@@ -402,7 +402,7 @@
     "AuthorizeOnce": "Authorize once",
     "AuthorizeFor5Minutes": "Authorize for 5 minutes",
     "AuthorizeForever": "Authorize forever",
-    "Cancel":"Cancel"
+    "Cancel": "Cancel"
   },
   "Collectables": {
     "PurchasePrice": "purchase price",
@@ -432,7 +432,7 @@
     "SignatureVerified": "Signature verified",
     "SignatureVerifiedDescription": "This means that the message has been verified to be signed by the owner of the address/identity specified.",
     "FailedSignatureVerification": "Failed signature verification",
-    "FailedSignatureVerificationDescription":"This means that the message was not signed by the owner of the address/identity specified."
+    "FailedSignatureVerificationDescription": "This means that the message was not signed by the owner of the address/identity specified."
   },
   "english": "English",
   "chinese_simplified": "Chinese (Simplified)",
