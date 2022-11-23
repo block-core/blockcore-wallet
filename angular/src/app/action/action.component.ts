@@ -119,7 +119,7 @@ export class ActionComponent implements OnInit {
 
       if (account.type === 'identity') {
         const network = this.networkService.getNetwork(account.networkType);
-        address = `${network.symbol}:${addressEntry.address.substring(0, 4)}...${addressEntry.address.substring(addressEntry.address.length - 4)}`;
+        address = `${network.symbol}:${addressEntry.address.substring(0, 5)}...${addressEntry.address.substring(addressEntry.address.length - 5)}`;
       } else {
         address = addressEntry.address;
       }

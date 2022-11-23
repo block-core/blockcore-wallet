@@ -110,7 +110,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
       const address = accountState.receive[0];
 
       this.identifier = `${this.network.symbol}:${address.address}`;
-      this.readableId = `${this.network.symbol}:${address.address.substring(0, 4)}...${address.address.substring(address.address.length - 4)}`;
+      this.readableId = `${this.network.symbol}:${address.address.substring(0, 5)}...${address.address.substring(address.address.length - 5)}`;
 
       // this.uiState.persisted.activeAccountIndex = Number(index);
 
