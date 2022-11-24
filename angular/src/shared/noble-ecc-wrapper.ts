@@ -1,3 +1,4 @@
+// @ts-nocheck
 import * as necc from '@noble/secp256k1';
 import { BIP32API, BIP32Factory, BIP32Interface } from 'bip32';
 import createHash from 'create-hash';
