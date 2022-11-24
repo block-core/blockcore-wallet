@@ -4,7 +4,8 @@ import { ActionMessage, ActionPrepareResult, ActionRequest, ActionResponse, Acti
 import * as bitcoinMessage from 'bitcoinjs-message';
 import { HDKey } from '@scure/bip32';
 import { Network } from '../networks';
-import { BlockcoreIdentity, BlockcoreIdentityTools } from '../identity';
+import { BlockcoreIdentity, BlockcoreIdentityTools } from '@blockcore/identity';
+import { createJWS } from 'did-jwt';
 
 export class DidRequestHandler implements ActionHandler {
   action = ['did.request'];
@@ -43,7 +44,9 @@ export class DidRequestHandler implements ActionHandler {
       const identity = new BlockcoreIdentity(verificationMethod);
 
       // "jws" or "jwt"?
-      const jws = await identity.jwt({ privateKey: privateKey, payload: proofContent });
+      // const didDocument = identity.document();
+
+      const jws = await createJWS(proofContent, tools.getSigner(privateKey), { kid: verificationMethod.id });
 
       let returnData: ActionResponse = {
         key: permission.key,

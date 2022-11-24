@@ -1,12 +1,9 @@
 /* Source based on example by Brady Joslin - https://github.com/bradyjoslin */
 import { Base64 } from 'js-base64';
 import { payments } from '@blockcore/blockcore-js';
-import { BlockcoreIdentity, BlockcoreIdentityTools } from '@blockcore/identity';
-import * as bs58 from 'bs58';
-import { Secp256k1KeyPair } from '@transmute/did-key-secp256k1';
-import { CryptoService } from './crypto.service';
+import { BlockcoreIdentity } from '@blockcore/identity';
 import * as secp from '@noble/secp256k1';
-import { createJWT, ES256KSigner } from 'did-jwt';
+import { ES256KSigner } from 'did-jwt';
 import { HDKey } from '@scure/bip32';
 import { Network } from '../../shared/networks';
 
@@ -16,20 +13,6 @@ const dec = new TextDecoder();
 export class CryptoUtility {
   // constructor(private cryptoService: CryptoService) {}
   constructor() {}
-
-  getProfileNetwork() {
-    var tools = new BlockcoreIdentityTools();
-    return tools.getProfileNetwork();
-  }
-
-  getAddress(node: any) {
-    const { address } = payments.p2pkh({
-      pubkey: node.publicKey,
-      network: this.getProfileNetwork(),
-    });
-
-    return address;
-  }
 
   getAddressByNetwork(publicKey: Buffer, network: Network, addressPurpose: number) {
     if (addressPurpose == 44) {
@@ -119,10 +102,10 @@ export class CryptoUtility {
     return address;
   }
 
-  getIdentity(keyPair: Secp256k1KeyPair) {
-    var identity = new BlockcoreIdentity(keyPair.toKeyPair(false));
-    return identity;
-  }
+  // getIdentity(keyPair: Secp256k1KeyPair) {
+  //   var identity = new BlockcoreIdentity(keyPair.toKeyPair(false));
+  //   return identity;
+  // }
 
   getPasswordKey(password: string) {
     return window.crypto.subtle.importKey('raw', enc.encode(password), 'PBKDF2', false, ['deriveKey']);

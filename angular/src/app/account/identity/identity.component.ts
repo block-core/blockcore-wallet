@@ -7,7 +7,7 @@ import { CommunicationService, CryptoService, SettingsService, UIState, WalletMa
 import { copyToClipboard } from 'src/app/shared/utilities';
 import { Network } from '../../../shared/networks';
 import { IdentityService } from 'src/app/services/identity.service';
-import { BlockcoreIdentity, BlockcoreIdentityTools } from 'src/shared/identity';
+import { BlockcoreIdentity, BlockcoreIdentityTools } from '@blockcore/identity';
 import { TranslateService } from '@ngx-translate/core';
 // import { v4 as uuidv4 } from 'uuid';
 const { v4: uuidv4 } = require('uuid');
@@ -209,7 +209,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
     const privateKey = identityNode.privateKey;
 
     // Does the same thing, verificationMethod doesn't do private key... this is just prototype-code anyway :-P
-    const { privateJwk, publicJwk } = tools.getKeyPair(privateKey, 0, this.network.symbol);
+    const { privateJwk, publicJwk } = tools.convertPrivateKeyToJsonWebKeyPair(privateKey);
     const verificationMethod = tools.getVerificationMethod(privateKey, 0, this.network.symbol);
 
     // const keyId = verificationMethod.id;
@@ -358,7 +358,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
     const privateKey = identityNode.privateKey;
 
     // Does the same thing, verificationMethod doesn't do private key... this is just prototype-code anyway :-P
-    const { privateJwk, publicJwk } = tools.getKeyPair(privateKey, 0, this.network.symbol);
+    const { privateJwk, publicJwk } = tools.convertPrivateKeyToJsonWebKeyPair(privateKey);
     const verificationMethod = tools.getVerificationMethod(privateKey, 0, this.network.symbol);
 
     // const keyId = verificationMethod.id;
@@ -398,7 +398,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
       method: 'CollectionsQuery',
 
       filter: {
-        recipient: options.target
+        recipient: options.target,
       },
 
       nonce: uuidv4(),

@@ -2,7 +2,6 @@ import { CryptoUtility } from './crypto-utility';
 import * as bip32 from 'bip32';
 import { decodeJWT, verifyJWT } from 'did-jwt';
 import { ServiceEndpoint } from 'did-resolver';
-import { keyUtils, Secp256k1KeyPair } from '@transmute/did-key-secp256k1';
 import { BlockcoreIdentity } from '@blockcore/identity';
 import { Issuer } from 'did-jwt-vc';
 import { AppManager } from './application-manager';
@@ -10,213 +9,209 @@ import { Injectable } from '@angular/core';
 const axios = require('axios');
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: 'root',
 })
 /** Responsible for syncing data between the extension and vault instances. */
 export class DataSyncService {
-    timer: any;
+  timer: any;
 
-    // The Blockcore Vault instances operate on a log of operations, this DataSyncService must be 
-    // refactored to perform similar logic. If the user edits an identity twice while being offline 
-    // then we must be sure of syncing the first edit first in a queue when user come back online.
+  // The Blockcore Vault instances operate on a log of operations, this DataSyncService must be
+  // refactored to perform similar logic. If the user edits an identity twice while being offline
+  // then we must be sure of syncing the first edit first in a queue when user come back online.
 
-    constructor() {
+  constructor() {}
 
-    }
+  // TODO: REFACTORY IDENTITY!!
 
-    // TODO: REFACTORY IDENTITY!!
+  // /** Will attempt to create or update an vault. */
+  // async saveVault(data: Vault) {
+  //     // TODO: Further improve the logic of the identity saving.
 
+  //     // If we have invalid sequence number for the update operation, we'll
+  //     // not be able to update. So the question is if we should simply get
+  //     // latest DID Document, update the sequence and replace without informing
+  //     // the user, or should we give user option to resolve conflict so they
+  //     // don't potentially overwrite previous information?
+  //     // Initial version will simply attempt to create or update once.
 
-    // /** Will attempt to create or update an vault. */
-    // async saveVault(data: Vault) {
-    //     // TODO: Further improve the logic of the identity saving.
+  //     // Get the signed JWS payload, we must combine the fields so we include the signature:
+  //     // var jws = data.didPayload?.data + '.' + data.didPayload?.signature;
 
-    //     // If we have invalid sequence number for the update operation, we'll
-    //     // not be able to update. So the question is if we should simply get 
-    //     // latest DID Document, update the sequence and replace without informing
-    //     // the user, or should we give user option to resolve conflict so they 
-    //     // don't potentially overwrite previous information?
-    //     // Initial version will simply attempt to create or update once.
+  //     debugger;
 
-    //     // Get the signed JWS payload, we must combine the fields so we include the signature:
-    //     // var jws = data.didPayload?.data + '.' + data.didPayload?.signature;
+  //     // var jws = data.jws;
+  //     var jws = data;
 
-    //     debugger;
+  //     var keyPair = await this.getIdentityKeyPair();
 
-    //     // var jws = data.jws;
-    //     var jws = data;
+  //     var identity = await this.getIdentity(keyPair);
 
-    //     var keyPair = await this.getIdentityKeyPair();
+  //     var operationPayload;
 
-    //     var identity = await this.getIdentity(keyPair);
+  //     // If there are no did resolution available for this identity, it means
+  //     // it has never been published.
+  //     if (data.sequence == null || data.sequence === -1) {
+  //         data.sequence = 0;
+  //         var operationPayloadCreate = await identity.generateOperation('vault', 'create', 0, jws);
+  //         operationPayload = await this.signDocument(identity, keyPair, operationPayloadCreate);
+  //     } else {
+  //         // var sequence = (data.didResolution.didResolutionMetadata.sequence + 1);
 
-    //     var operationPayload;
+  //         // TODO: We're going to need a fairly advanced retry-logic where we ensure that sequence
+  //         // is correct. We can't simply keep increasing the sequence here, if the post fails against
+  //         // the vault, then we must keep the previous action and send that in a queue first.
 
-    //     // If there are no did resolution available for this identity, it means 
-    //     // it has never been published.
-    //     if (data.sequence == null || data.sequence === -1) {
-    //         data.sequence = 0;
-    //         var operationPayloadCreate = await identity.generateOperation('vault', 'create', 0, jws);
-    //         operationPayload = await this.signDocument(identity, keyPair, operationPayloadCreate);
-    //     } else {
-    //         // var sequence = (data.didResolution.didResolutionMetadata.sequence + 1);
+  //         // TODO: Refactor this to make a queue of requests to be synced externally to vaults.
+  //         data.sequence = (data.sequence + 1);
+  //         var operationPayloadCreate = await identity.generateOperation('vault', 'replace', data.sequence, jws);
+  //         operationPayload = await this.signDocument(identity, keyPair, operationPayloadCreate);
+  //     }
 
-    //         // TODO: We're going to need a fairly advanced retry-logic where we ensure that sequence
-    //         // is correct. We can't simply keep increasing the sequence here, if the post fails against 
-    //         // the vault, then we must keep the previous action and send that in a queue first.
+  //     const operationUrl = this.state.persisted.settings.dataVault + '/operation';
 
-    //         // TODO: Refactor this to make a queue of requests to be synced externally to vaults.
-    //         data.sequence = (data.sequence + 1);
-    //         var operationPayloadCreate = await identity.generateOperation('vault', 'replace', data.sequence, jws);
-    //         operationPayload = await this.signDocument(identity, keyPair, operationPayloadCreate);
-    //     }
+  //     const operationJson = {
+  //         "jwt": operationPayload
+  //     }
 
-    //     const operationUrl = this.state.persisted.settings.dataVault + '/operation';
+  //     try {
+  //         var content = await axios.post(operationUrl, operationJson);
+  //         console.log('RESULT FROM OPERATION POST:');
+  //         console.log(content);
+  //     } catch (error) {
+  //         console.error(error);
+  //         throw error;
+  //     }
 
-    //     const operationJson = {
-    //         "jwt": operationPayload
-    //     }
+  //     // const rawResponse = await fetch(operationUrl, {
+  //     //     method: 'POST',
+  //     //     headers: {
+  //     //         'Accept': 'application/json',
+  //     //         'Content-Type': 'application/json'
+  //     //     },
+  //     //     body: JSON.stringify(operationJson)
+  //     // });
 
-    //     try {
-    //         var content = await axios.post(operationUrl, operationJson);
-    //         console.log('RESULT FROM OPERATION POST:');
-    //         console.log(content);
-    //     } catch (error) {
-    //         console.error(error);
-    //         throw error;
-    //     }
+  //     // const content = await rawResponse.json();
+  //     // console.log('RESULT FROM OPERATION POST:');
+  //     // console.log(content);
+  // }
 
-    //     // const rawResponse = await fetch(operationUrl, {
-    //     //     method: 'POST',
-    //     //     headers: {
-    //     //         'Accept': 'application/json',
-    //     //         'Content-Type': 'application/json'
-    //     //     },
-    //     //     body: JSON.stringify(operationJson)
-    //     // });
+  // /** Will attempt to create or update an identity. */
+  // async saveIdentity(data: Identity) {
+  //     // TODO: Further improve the logic of the identity saving.
 
-    //     // const content = await rawResponse.json();
-    //     // console.log('RESULT FROM OPERATION POST:');
-    //     // console.log(content);
-    // }
+  //     // If we have invalid sequence number for the update operation, we'll
+  //     // not be able to update. So the question is if we should simply get
+  //     // latest DID Document, update the sequence and replace without informing
+  //     // the user, or should we give user option to resolve conflict so they
+  //     // don't potentially overwrite previous information?
+  //     // Initial version will simply attempt to create or update once.
 
+  //     // Get the signed JWS payload, we must combine the fields so we include the signature:
+  //     var jws = data.didPayload?.data + '.' + data.didPayload?.signature;
 
-    // /** Will attempt to create or update an identity. */
-    // async saveIdentity(data: Identity) {
-    //     // TODO: Further improve the logic of the identity saving.
+  //     var keyPair = await this.getIdentityKeyPair();
 
-    //     // If we have invalid sequence number for the update operation, we'll
-    //     // not be able to update. So the question is if we should simply get 
-    //     // latest DID Document, update the sequence and replace without informing
-    //     // the user, or should we give user option to resolve conflict so they 
-    //     // don't potentially overwrite previous information?
-    //     // Initial version will simply attempt to create or update once.
+  //     var identity = await this.getIdentity(keyPair);
 
-    //     // Get the signed JWS payload, we must combine the fields so we include the signature:
-    //     var jws = data.didPayload?.data + '.' + data.didPayload?.signature;
+  //     var operationPayload;
 
-    //     var keyPair = await this.getIdentityKeyPair();
+  //     // If there are no did resolution available for this identity, it means
+  //     // it has never been published.
+  //     if (data.sequence == null || data.sequence === -1) {
+  //         data.sequence = 0;
+  //         var operationPayloadCreate = await identity.generateOperation('identity', 'create', 0, jws);
+  //         operationPayload = await this.signDocument(identity, keyPair, operationPayloadCreate);
+  //     } else {
+  //         // var sequence = (data.didResolution.didResolutionMetadata.sequence + 1);
 
-    //     var identity = await this.getIdentity(keyPair);
+  //         // TODO: We're going to need a fairly advanced retry-logic where we ensure that sequence
+  //         // is correct. We can't simply keep increasing the sequence here, if the post fails against
+  //         // the vault, then we must keep the previous action and send that in a queue first.
 
-    //     var operationPayload;
+  //         // TODO: Refactor this to make a queue of requests to be synced externally to vaults.
+  //         data.sequence = (data.sequence + 1);
+  //         var operationPayloadCreate = await identity.generateOperation('identity', 'replace', data.sequence, jws);
+  //         operationPayload = await this.signDocument(identity, keyPair, operationPayloadCreate);
+  //     }
 
-    //     // If there are no did resolution available for this identity, it means 
-    //     // it has never been published.
-    //     if (data.sequence == null || data.sequence === -1) {
-    //         data.sequence = 0;
-    //         var operationPayloadCreate = await identity.generateOperation('identity', 'create', 0, jws);
-    //         operationPayload = await this.signDocument(identity, keyPair, operationPayloadCreate);
-    //     } else {
-    //         // var sequence = (data.didResolution.didResolutionMetadata.sequence + 1);
+  //     const operationUrl = this.state.persisted.settings.dataVault + '/operation';
 
-    //         // TODO: We're going to need a fairly advanced retry-logic where we ensure that sequence
-    //         // is correct. We can't simply keep increasing the sequence here, if the post fails against 
-    //         // the vault, then we must keep the previous action and send that in a queue first.
+  //     const operationJson = {
+  //         "jwt": operationPayload
+  //     }
 
-    //         // TODO: Refactor this to make a queue of requests to be synced externally to vaults.
-    //         data.sequence = (data.sequence + 1);
-    //         var operationPayloadCreate = await identity.generateOperation('identity', 'replace', data.sequence, jws);
-    //         operationPayload = await this.signDocument(identity, keyPair, operationPayloadCreate);
-    //     }
+  //     try {
+  //         var content = await axios.post(operationUrl, operationJson);
+  //         console.log('RESULT FROM OPERATION POST:');
+  //         console.log(content);
+  //     } catch (error) {
+  //         console.error(error);
+  //         throw error;
+  //     }
 
-    //     const operationUrl = this.state.persisted.settings.dataVault + '/operation';
+  //     // const rawResponse = await fetch(operationUrl, {
+  //     //     method: 'POST',
+  //     //     headers: {
+  //     //         'Accept': 'application/json',
+  //     //         'Content-Type': 'application/json'
+  //     //     },
+  //     //     body: JSON.stringify(operationJson)
+  //     // });
 
-    //     const operationJson = {
-    //         "jwt": operationPayload
-    //     }
+  //     // const content = await rawResponse.json();
+  //     // console.log('RESULT FROM OPERATION POST:');
+  //     // console.log(content);
+  // }
 
-    //     try {
-    //         var content = await axios.post(operationUrl, operationJson);
-    //         console.log('RESULT FROM OPERATION POST:');
-    //         console.log(content);
-    //     } catch (error) {
-    //         console.error(error);
-    //         throw error;
-    //     }
+  // async getIdentityKeyPair(): Promise<Secp256k1KeyPair> {
+  //     var account = this.state.activeAccount;
+  //     var wallet = this.state.activeWallet;
 
-    //     // const rawResponse = await fetch(operationUrl, {
-    //     //     method: 'POST',
-    //     //     headers: {
-    //     //         'Accept': 'application/json',
-    //     //         'Content-Type': 'application/json'
-    //     //     },
-    //     //     body: JSON.stringify(operationJson)
-    //     // });
+  //     if (!account || !wallet) {
+  //         throw Error('No active wallet/account.');
+  //     }
 
-    //     // const content = await rawResponse.json();
-    //     // console.log('RESULT FROM OPERATION POST:');
-    //     // console.log(content);
-    // }
+  //     let password = this.state.passwords.get(wallet.id);
 
-    // async getIdentityKeyPair(): Promise<Secp256k1KeyPair> {
-    //     var account = this.state.activeAccount;
-    //     var wallet = this.state.activeWallet;
+  //     if (!password) {
+  //         throw Error('missing password');
+  //     }
 
-    //     if (!account || !wallet) {
-    //         throw Error('No active wallet/account.');
-    //     }
+  //     let unlockedMnemonic = null;
+  //     unlockedMnemonic = await this.crypto.decryptData(wallet.mnemonic, password);
 
-    //     let password = this.state.passwords.get(wallet.id);
+  //     // TODO: MUST VERIFY THAT ACCOUNT RESTORE AND NODES IS ALL CORRECT BELOW.
+  //     var masterSeed = await bip39.mnemonicToSeed(unlockedMnemonic, '');
+  //     const masterNode = bip32.fromSeed(masterSeed, this.crypto.getProfileNetwork());
 
-    //     if (!password) {
-    //         throw Error('missing password');
-    //     }
+  //     // Get the hardened purpose and account node.
+  //     const accountNode = masterNode.derivePath(account.derivationPath); // m/302'/616'
 
-    //     let unlockedMnemonic = null;
-    //     unlockedMnemonic = await this.crypto.decryptData(wallet.mnemonic, password);
+  //     // const address0 = this.crypto.getAddress(accountNode);
+  //     var keyPair = await this.crypto.getKeyPairFromNode(accountNode);
 
-    //     // TODO: MUST VERIFY THAT ACCOUNT RESTORE AND NODES IS ALL CORRECT BELOW.
-    //     var masterSeed = await bip39.mnemonicToSeed(unlockedMnemonic, '');
-    //     const masterNode = bip32.fromSeed(masterSeed, this.crypto.getProfileNetwork());
+  //     return keyPair;
+  // }
 
-    //     // Get the hardened purpose and account node.
-    //     const accountNode = masterNode.derivePath(account.derivationPath); // m/302'/616'
+  // async getIdentity(keyPair: Secp256k1KeyPair): Promise<BlockcoreIdentity> {
+  //     // Get the identity corresponding with the key pair, does not contain the private key any longer.
+  //     var identity = this.crypto.getIdentity(keyPair);
+  //     return identity;
+  // }
 
-    //     // const address0 = this.crypto.getAddress(accountNode);
-    //     var keyPair = await this.crypto.getKeyPairFromNode(accountNode);
+  // async getIssuer(identity: BlockcoreIdentity, keyPair: Secp256k1KeyPair) {
+  //     // Create an issuer from the identity, this is used to issue VCs.
+  //     const issuer = identity.issuer({ privateKey: keyPair.privateKeyBuffer?.toString('hex') });
+  //     return issuer;
+  // }
 
-    //     return keyPair;
-    // }
+  // async signDocument(identity: BlockcoreIdentity, keyPair: Secp256k1KeyPair, document: any) {
+  //     const jws = await identity.jws({
+  //         payload: document,
+  //         privateKey: keyPair.privateKeyBuffer?.toString('hex')
+  //     });
 
-    // async getIdentity(keyPair: Secp256k1KeyPair): Promise<BlockcoreIdentity> {
-    //     // Get the identity corresponding with the key pair, does not contain the private key any longer.
-    //     var identity = this.crypto.getIdentity(keyPair);
-    //     return identity;
-    // }
-
-    // async getIssuer(identity: BlockcoreIdentity, keyPair: Secp256k1KeyPair) {
-    //     // Create an issuer from the identity, this is used to issue VCs.
-    //     const issuer = identity.issuer({ privateKey: keyPair.privateKeyBuffer?.toString('hex') });
-    //     return issuer;
-    // }
-
-    // async signDocument(identity: BlockcoreIdentity, keyPair: Secp256k1KeyPair, document: any) {
-    //     const jws = await identity.jws({
-    //         payload: document,
-    //         privateKey: keyPair.privateKeyBuffer?.toString('hex')
-    //     });
-
-    //     return jws;
-    // }
+  //     return jws;
+  // }
 }

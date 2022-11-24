@@ -1,7 +1,5 @@
-import { BlockcoreIdentity, Identity } from './identity';
-import { BlockcoreIdentityTools } from './tools';
 
-export { BlockcoreIdentity, Identity, BlockcoreIdentityTools };
+// export { BlockcoreIdentity, Identity, BlockcoreIdentityTools };
 
 export * from './interfaces';
 export * from './schnorr-signer';
