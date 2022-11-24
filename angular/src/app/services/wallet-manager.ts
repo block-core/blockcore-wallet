@@ -1,12 +1,9 @@
 // import { HDKey } from "micro-bip32"; // TODO: Uninstall the previous package, replaced with @scure.
 import { HDKey } from '@scure/bip32';
 import { mnemonicToSeedSync } from '@scure/bip39';
-
-import { Account, AccountUnspentTransactionOutput, Address, CoinSelectionInput, CoinSelectionOutput, CoinSelectionResult, Wallet } from '../../shared';
+import { Account, Address, CoinSelectionInput, CoinSelectionOutput, CoinSelectionResult, Wallet } from '../../shared';
 import { MINUTE } from '../shared/constants';
-import { payments, Psbt } from '@blockcore/blockcore-js';
-import * as ecc from 'tiny-secp256k1';
-import ECPairFactory from 'ecpair';
+import { Psbt } from '@blockcore/blockcore-js';
 import { Injectable } from '@angular/core';
 import { LoggerService } from './logger.service';
 import { CryptoUtility } from './crypto-utility';
@@ -25,11 +22,13 @@ import { UnspentOutputService } from './unspent-output.service';
 import { AccountStateStore } from 'src/shared/store/account-state-store';
 import { CryptoService } from './';
 import { StandardTokenStore } from '../../shared/store/standard-token-store';
-import { InputValidators } from './inputvalidators';
+import * as ecc from 'tiny-secp256k1';
+import ECPairFactory from 'ecpair';
+const ECPair = ECPairFactory(ecc);
+
 let coinselect = require('coinselect');
 let coinsplit = require('coinselect/split');
 
-const ECPair = ECPairFactory(ecc);
 var bitcoinMessage = require('bitcoinjs-message');
 const axios = require('axios').default;
 axiosRetry(axios, { retries: 3, retryDelay: axiosRetry.exponentialDelay });
@@ -140,10 +139,7 @@ export class WalletManager {
     addressNode = masterNode.derive(`m/${account.purpose}'/${account.network}'/${account.index}'/${addressType}/${addressItem.index}`);
 
     try {
-      const ecPair = ECPair.fromPrivateKey(Buffer.from(addressNode.privateKey), { network: network });
-      const privateKey = ecPair.privateKey;
-
-      var signature = bitcoinMessage.sign(content, privateKey, ecPair.compressed);
+      var signature = bitcoinMessage.sign(content, Buffer.from(addressNode.privateKey), true, network.messagePrefix);
       return signature.toString('base64');
     } catch (error) {
       this.logger.error(error);
@@ -337,8 +333,9 @@ export class WalletManager {
       }
 
       try {
-        const ecPair = ECPair.fromPrivateKey(Buffer.from(addressNode.privateKey), { network: network });
-        tx.signInput(i, ecPair);
+        // TODO: Implement an HDSigner by using @noble and remove last dependency on these EC libraries.
+        const ecPair2 = ECPair.fromPrivateKey(Buffer.from(addressNode.privateKey), { network: network });
+        tx.signInput(i, ecPair2);
       } catch (error) {
         this.logger.error(error);
         throw Error('Unable to sign the transaction. Unable to continue.');
