@@ -22,9 +22,7 @@ import { UnspentOutputService } from './unspent-output.service';
 import { AccountStateStore } from 'src/shared/store/account-state-store';
 import { CryptoService } from './';
 import { StandardTokenStore } from '../../shared/store/standard-token-store';
-import * as ecc from 'tiny-secp256k1';
-import ECPairFactory from 'ecpair';
-const ECPair = ECPairFactory(ecc);
+import { ECPair, bip32 } from '../../shared/noble-ecc-wrapper';
 
 let coinselect = require('coinselect');
 let coinsplit = require('coinselect/split');
@@ -333,9 +331,8 @@ export class WalletManager {
       }
 
       try {
-        // TODO: Implement an HDSigner by using @noble and remove last dependency on these EC libraries.
-        const ecPair2 = ECPair.fromPrivateKey(Buffer.from(addressNode.privateKey), { network: network });
-        tx.signInput(i, ecPair2);
+        const ecPair = ECPair.fromPrivateKey(Buffer.from(addressNode.privateKey), { network: network });
+        tx.signInput(i, ecPair);
       } catch (error) {
         this.logger.error(error);
         throw Error('Unable to sign the transaction. Unable to continue.');
