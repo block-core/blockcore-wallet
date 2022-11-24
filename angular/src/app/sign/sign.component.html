@@ -31,8 +31,8 @@
             <input matInput formControlName="signatureCtrl" />
           </mat-form-field>
           <br />
-          <br /><button mat-flat-button color="primary" (click)="sign()">Sign</button>
-          <button mat-stroked-button color="primary" class="sign-clear" (click)="resetSign()">Clear All</button>
+          <br /><button mat-flat-button color="primary" (click)="sign()">{{"SignVerify.Sign" | translate}} </button>
+          <button mat-stroked-button color="primary" class="sign-clear" (click)="resetSign()">{{ "SignVerify.ClearAll" | translate }}</button>
         </form>
       </div>
     </mat-tab>
@@ -64,8 +64,8 @@
             <h2>{{ "SignVerify.FailedSignatureVerification" | translate }}</h2>
             <p>{{ "SignVerify.FailedSignatureVerificationDescription" | translate }}</p></mat-card
           >
-          <br /><button mat-flat-button color="primary" (click)="verify()">Verify</button>
-          <button mat-stroked-button color="primary" class="sign-clear" (click)="resetVerify()">Clear All</button>
+          <br /><button mat-flat-button color="primary" (click)="verify()">{{"SignVerify.Verify"| translate}}</button>
+          <button mat-stroked-button color="primary" class="sign-clear" (click)="resetVerify()">{{"SignVerify.ClearAll"|translate}}</button>
         </form>
       </div>
     </mat-tab>
