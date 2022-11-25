@@ -153,6 +153,18 @@
       <p>
         <button class="signup-button" mat-stroked-button (click)="copyDIDDocument()">{{ "Account.CopyDIDDocument" | translate }}</button>
 
+        <br /><br />
+        <mat-card>
+          <mat-form-field class="input-full-width" appearance="outline">
+            <mat-label>Domain</mat-label>
+            <input matInput [(ngModel)]="wellKnownDomain" />
+          </mat-form-field>
+
+          <button class="signup-button" mat-stroked-button (click)="copyWellKnownConfiguration()">Copy .well-known configuration</button>
+        </mat-card>
+
+        <br /><br />
+
         <button class="signup-button" mat-stroked-button (click)="copyDWNRequest()">Copy DWN Write Request</button>
 
         <button class="signup-button" mat-stroked-button (click)="copyDWNQueryRequest()">Copy DWN Query Request</button>

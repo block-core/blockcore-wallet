@@ -37,6 +37,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
   identifier: string;
   readableId: string;
   network: Network;
+  wellKnownDomain = 'https://';
   verifiableDataRegistryUrl = '';
   prefix = '';
   profile = {
@@ -484,6 +485,30 @@ export class IdentityComponent implements OnInit, OnDestroy {
     const identity = new BlockcoreIdentity(verificationMethod);
     const didDocument: DIDDocument = identity.document();
     return didDocument;
+  }
+
+  async generateWellKnownConfiguration(publicKey: Uint8Array, privateKey: Uint8Array, domain: string) {
+    const tools = new BlockcoreIdentityTools();
+
+    const verificationMethod = tools.getVerificationMethod(publicKey, 0, this.network.symbol);
+    const identity = new BlockcoreIdentity(verificationMethod);
+    const issuer = tools.getIssuer(identity.did, privateKey);
+
+    const document = await identity.configuration(domain, issuer, verificationMethod.id);
+    return document;
+  }
+
+  async copyWellKnownConfiguration() {
+    const identityNode = this.identityService.getIdentityNode(this.walletManager.activeWallet, this.walletManager.activeAccount);
+    const doc = await this.generateWellKnownConfiguration(identityNode.publicKey, identityNode.privateKey, this.wellKnownDomain);
+
+    copyToClipboard(JSON.stringify(doc));
+
+    this.snackBar.open('Copied to clipboard', 'Hide', {
+      duration: 2500,
+      horizontalPosition: 'center',
+      verticalPosition: 'bottom',
+    });
   }
 
   async copyDIDDocument() {
