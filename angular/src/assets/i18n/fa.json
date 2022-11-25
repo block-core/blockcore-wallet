@@ -421,6 +421,17 @@
     "Partners": "شرکا",
     "PartnersDescription": "استفاده از پیوندها و شرکای وابسته ما، به حمایت از توسعه مداوم این کیف پول کمک می‌کند."
   },
+  "SignVerify": {
+    "MessageToSign": "Message to sign",
+    "Signature": "Signature",
+    "Sign": "Sign",
+    "SignatureVerified": "Signature verified",
+    "SignatureVerifiedDescription": "This means that the message has been verified to be signed by the owner of the address/identity specified.",
+    "Verify":"Verify",
+    "FailedSignatureVerification": "Failed signature verification",
+    "FailedSignatureVerificationDescription": "This means that the message was not signed by the owner of the address/identity specified.",
+    "ClearAll":"Clear All"
+  },
   "english": "English",
   "chinese_simplified": "Chinese (Simplified)",
   "chinese_traditional": "Chinese (Traditional)",

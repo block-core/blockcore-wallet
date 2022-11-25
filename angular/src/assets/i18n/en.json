@@ -58,7 +58,7 @@
     "DisplayLanguage": "Display Language",
     "DisplayLanguageHint": "Change the display language for the app.",
     "ChooseMode": "Choose your mode",
-    "ChooseModeHint": "You must save the settings for mode and accent color to be persisted.",
+    "ChooseModeHint": "You must save the settings for mode to be persisted.",
     "Dark": "Dark",
     "Light": "Light",
     "OtherActions": "Other Actions",
@@ -284,7 +284,7 @@
     "InteractionWithContract": "Interaction with contract",
     "StandardTokensNotice": "Notice: The token API does not support decimals in the current release. Values are shown without decimals in this version.",
     "Login": "Login",
-    "PasteTheLoginUrl": "Paste the login url",
+    "PasteTheLoginURL": "Paste the login URL",
     "WalletsPersistedState": "Wallets Persisted State",
     "WalletsPersistedStateMessage": "Contains your encrypted secret recovery phrase. Do NOT share this with anyone!",
     "NetworkStatus": "Network Status",
@@ -402,7 +402,7 @@
     "AuthorizeOnce": "Authorize once",
     "AuthorizeFor5Minutes": "Authorize for 5 minutes",
     "AuthorizeForever": "Authorize forever",
-    "Cancel":"Cancel"
+    "Cancel": "Cancel"
   },
   "Collectables": {
     "PurchasePrice": "purchase price",
@@ -424,6 +424,17 @@
     "Partners": "Partners",
     "PartnersDescription": "Using our links and affiliated partners, helps support the continued development of this wallet."
   },
+  "SignVerify": {
+    "MessageToSign": "Message to sign",
+    "Signature": "Signature",
+    "Sign": "Sign",
+    "SignatureVerified": "Signature verified",
+    "SignatureVerifiedDescription": "This means that the message has been verified to be signed by the owner of the address/identity specified.",
+    "Verify":"Verify",
+    "FailedSignatureVerification": "Failed signature verification",
+    "FailedSignatureVerificationDescription": "This means that the message was not signed by the owner of the address/identity specified.",
+    "ClearAll":"Clear All"
+  },
   "english": "English",
   "chinese_simplified": "Chinese (Simplified)",
   "chinese_traditional": "Chinese (Traditional)",
@@ -433,5 +444,6 @@
   "japanese": "Japanese",
   "korean": "Korean",
   "portuguese": "Portuguese",
-  "spanish": "Spanish"
+  "spanish": "Spanish",
+  "russian": "Russian"
 }
