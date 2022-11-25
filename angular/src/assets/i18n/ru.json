@@ -421,6 +421,17 @@
     "Partners": "Партнёры",
     "PartnersDescription": "Использование наших ссылок и связанных партнеров помогает поддерживать дальнейшее развитие этого кошелька."
   },
+  "SignVerify": {
+    "MessageToSign": "Message to sign",
+    "Signature": "Signature",
+    "Sign": "Подписать",
+    "SignatureVerified": "Подпись верифицирована",
+    "SignatureVerifiedDescription": "This means that the message has been verified to be signed by the owner of the address/identity specified.",
+    "Verify":"Проверить",
+    "FailedSignatureVerification": "Failed signature verification",
+    "FailedSignatureVerificationDescription": "This means that the message was not signed by the owner of the address/identity specified.",
+    "ClearAll":"Очистить все поля"
+  },
   "english": "Английский",
   "chinese_simplified": "Китайский (Упрощённый)",
   "chinese_traditional": "Китайский (Традиционный)",
