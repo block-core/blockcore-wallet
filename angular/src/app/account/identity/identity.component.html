@@ -11,6 +11,9 @@
         <button class="copy-button" mat-icon-button (click)="copy()">
           <mat-icon>content_copy</mat-icon>
         </button>
+        <button class="copy-button" mat-icon-button (click)="openDid()">
+          <mat-icon>travel_explore</mat-icon>
+        </button>
       </h2>
 
       <!-- <h3 class="break">{{identifier}} <button class="copy-button" mat-icon-button (click)="copy()">
@@ -18,8 +21,9 @@
     </button></h3> -->
       <!-- <h4>{{walletManager.activeAccount.did}}</h4> -->
 
-      <p class="icon-indicator" *ngIf="!identity?.published"><mat-icon class="icon-warn">done</mat-icon>{{ "Account.ThisIdentityIsCurrentlyNOTPublic" | translate }}</p>
-      <p class="icon-indicator" *ngIf="identity?.published"><mat-icon class="icon-success">done</mat-icon>{{ "Account.ThisIdentityIsCurrentlyPublic" | translate }}</p>
+      <p class="icon-indicator" *ngIf="published === undefined"><mat-icon class="icon-warn">loop</mat-icon>Loading...</p>
+      <p class="icon-indicator" *ngIf="published === false"><mat-icon class="icon-warn">done</mat-icon>{{ "Account.ThisIdentityIsCurrentlyNOTPublic" | translate }}</p>
+      <p class="icon-indicator" *ngIf="published === true"><mat-icon class="icon-success">done</mat-icon>{{ "Account.ThisIdentityIsCurrentlyPublic" | translate }}</p>
 
       <!-- <mat-form-field class="input-full-width" appearance="outline">
         <mat-label>Verifiable Data Registry URL</mat-label>
@@ -60,15 +64,11 @@
       </p>
 
       <br /><br />
+
       <p>
-        <button class="signup-button" mat-stroked-button (click)="copyDIDDocument()">{{ "Account.CopyDIDDocument" | translate }}</button>
-
-        <button class="signup-button" mat-stroked-button (click)="copyDWNRequest()">Copy DWN Write Request</button>
-
-        <button class="signup-button" mat-stroked-button (click)="copyDWNQueryRequest()">Copy DWN Query Request</button>
-
-        <button class="signup-button" mat-stroked-button (click)="copyVaultConfiguration()">{{ "Account.CopyBlockcoreVaultSetupConfiguration" | translate }}</button>
+        <button class="signup-button" [disabled]="published === true" mat-flat-button color="warn" (click)="publish()">{{ "Account.Publish" | translate }}</button>
       </p>
+
       <!-- <p>
                 Your identity is primarily a list of public keys that you make public available for others to connect with you
                 in a secure manner.</p>
@@ -140,6 +140,25 @@
 
       <!-- <h3>DID Document:</h3>
             <textarea class="diddocument">{{identity.didDocument | json}}</textarea> -->
+    </div>
+  </mat-tab>
+
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <mat-icon class="example-tab-icon">handyman</mat-icon>&nbsp;
+      <span>Tools</span>
+    </ng-template>
+
+    <div class="page">
+      <p>
+        <button class="signup-button" mat-stroked-button (click)="copyDIDDocument()">{{ "Account.CopyDIDDocument" | translate }}</button>
+
+        <button class="signup-button" mat-stroked-button (click)="copyDWNRequest()">Copy DWN Write Request</button>
+
+        <button class="signup-button" mat-stroked-button (click)="copyDWNQueryRequest()">Copy DWN Query Request</button>
+
+        <button class="signup-button" mat-stroked-button (click)="copyVaultConfiguration()">{{ "Account.CopyBlockcoreVaultSetupConfiguration" | translate }}</button>
+      </p>
     </div>
   </mat-tab>
 
