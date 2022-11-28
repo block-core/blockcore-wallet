@@ -27,10 +27,11 @@ export class AccountSendSidechainConfirmComponent implements OnInit, OnDestroy {
   }
 
   async generateTransaction(account: Account, data: any) {
+    const totalAmount = this.sendSidechainService.includeFee ? this.sendService.amountAsSatoshi.add(Big(100000)).toNumber(): this.sendService.amountAsSatoshi.toNumber();
     const targets: any[] = [
       {
         address: this.sendService.address,
-        value: this.sendService.amountAsSatoshi.toNumber(),
+        value: totalAmount,
       },
     ];
 

@@ -11,6 +11,7 @@ export class SendSidechainService {
   sidechainAddress: string;
   selectedSidechain: string;
   network : Network;
+  includeFee = true;
 
   reset() {
     this.sidechainAddress = null;
