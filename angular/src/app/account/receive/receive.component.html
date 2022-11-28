@@ -20,8 +20,8 @@
 
       <p class="mat-caption network-info">{{ receiveAddressCaption }}</p>
 
-      <button class="purchase-button" color="primary" *ngIf="network.id === 'STRAX' || network.id === 'CRS' || network.id === 'BTC'" mat-raised-button (click)="openSimplex(address, network)">{{ "Account.BuyWithSimplex" | translate }} {{ network.symbol }}</button>&nbsp;
-      <button class="purchase-button" color="primary" *ngIf="network.id === 'STRAX'" mat-raised-button (click)="openExolix(address, network)">{{ "Account.ExchangeWithExolix" | translate }} {{ network.symbol }}</button>
+      <button class="purchase-button" color="primary" *ngIf="network.id === 'STRAX' || network.id === 'CRS' || network.id === 'BTC'" mat-stroked-button (click)="openSimplex(address, network)">{{ "Account.BuyWithSimplex" | translate }} {{ network.symbol }}</button>&nbsp;
+      <button class="purchase-button" color="primary" *ngIf="network.id === 'STRAX'" mat-stroked-button (click)="openExolix(address, network)">{{ "Account.ExchangeWithExolix" | translate }} {{ network.symbol }}</button>
     </div>
   </mat-tab>
 
