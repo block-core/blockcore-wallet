@@ -1,11 +1,13 @@
 # Blockcore Wallet
 
-### Wallet for your coins, tokens, identities, NFTs and more.
+### Non-Custodial Web5 Wallet for your Browser
 
 The Blockcore Wallet does wallet management, account management, identity management and signing. Built on web-technology, Blockcore Wallet is cross-platform and works in
 different modes, such as browser extension, Progressive Web App, native mobile and desktop app and more.
 
-![](/doc/blockcore-extension-walkthrough.gif)
+Open the [Wallet Guide](https://www.blockcore.net/wallet/guide) to install the wallet.
+
+![](/doc/wallet-create-wallet.gif)
 
 ## Features
 
