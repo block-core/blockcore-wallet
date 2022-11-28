@@ -349,7 +349,6 @@
     "SelectSidechain": "Select a sidechain",
     "FederationSwapAddress": "Federation Swap Address",
     "SidechainAddress": "Sidechain address",
-    "SwapCardMessage": "Additional chain swap fee is taken from the amount entered, which is a fixed amountof '0.001'. If you want the receiver to get '1', enter amount '1.001'.",
     "SwapAmountMin": "Amount must be more than 1.",
     "FederationAddress": "Federation Address",
     "TargetAddressOn": "Target address on",
@@ -430,10 +429,10 @@
     "Sign": "Sign",
     "SignatureVerified": "Signature verified",
     "SignatureVerifiedDescription": "This means that the message has been verified to be signed by the owner of the address/identity specified.",
-    "Verify":"Verify",
+    "Verify": "Verify",
     "FailedSignatureVerification": "Failed signature verification",
     "FailedSignatureVerificationDescription": "This means that the message was not signed by the owner of the address/identity specified.",
-    "ClearAll":"Clear All"
+    "ClearAll": "Clear All"
   },
   "english": "English",
   "chinese_simplified": "Chinese (Simplified)",

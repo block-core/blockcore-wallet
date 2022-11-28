@@ -348,7 +348,6 @@
     "SelectSidechain": "Select a sidechain",
     "FederationSwapAddress": "Federation Swap Address",
     "SidechainAddress": "Sidechain address",
-    "SwapCardMessage": "Additional chain swap fee is taken from the amount entered, which is a fixed amountof '0.001'. If you want the receiver to get '1', enter amount '1.001'.",
     "SwapAmountMin": "Сумма должна быть больше 1.",
     "FederationAddress": "Federation Address",
     "TargetAddressOn": "Target address on",

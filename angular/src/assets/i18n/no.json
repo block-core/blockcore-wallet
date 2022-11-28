@@ -348,7 +348,6 @@
     "SelectSidechain": "Velg en sidekjede",
     "FederationSwapAddress": "Føderasjonsbytteadresse",
     "SidechainAddress": "Sidekjedeadresses",
-    "SwapCardMessage": "Ekstra kjedebyttegebyr tas fra beløpet som er lagt inn, som er et fast beløp på '0,001'. Hvis du vil at mottakeren skal få '1', skriv inn beløpet '1.001'.",
     "SwapAmountMin": "Beløpet må være mer enn 1.",
     "FederationAddress": "Forbundsadresse",
     "TargetAddressOn": "Måladresse på",
