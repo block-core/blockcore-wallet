@@ -1,3 +1,21 @@
+## <small>1.0.6 (2022-11-28)</small>
+
+* Add "SignVerify" to .json (#295) ([a3221d0](https://github.com/block-core/blockcore-wallet/commit/a3221d0)), closes [#295](https://github.com/block-core/blockcore-wallet/issues/295)
+* Add basic publish of DID Document for did:is ([73dd6b4](https://github.com/block-core/blockcore-wallet/commit/73dd6b4))
+* Add support for generating the .well-known configuration in wallet ([5cd0686](https://github.com/block-core/blockcore-wallet/commit/5cd0686))
+* Add the noble-ecc-wrapper ([ba5178a](https://github.com/block-core/blockcore-wallet/commit/ba5178a))
+* Change the readable IDs to use 5 + 5 characters ([99b4e09](https://github.com/block-core/blockcore-wallet/commit/99b4e09))
+* Finalize migration to only use @noble/secp256k1 ([a12f247](https://github.com/block-core/blockcore-wallet/commit/a12f247))
+* Fix build error with QR code scanner ([d12295f](https://github.com/block-core/blockcore-wallet/commit/d12295f))
+* Migrate identity logic to use published library ([6fb2cb8](https://github.com/block-core/blockcore-wallet/commit/6fb2cb8))
+* Remove buttons from profile as profile support is not functional (needs backend) ([b3444ff](https://github.com/block-core/blockcore-wallet/commit/b3444ff))
+* Revert to older version of ecpair ([99938ed](https://github.com/block-core/blockcore-wallet/commit/99938ed))
+* tiny-secp256k1 relies on WebAssembly, remove the library ([bba6fe8](https://github.com/block-core/blockcore-wallet/commit/bba6fe8))
+* Update some of dependency packages ([689dd4b](https://github.com/block-core/blockcore-wallet/commit/689dd4b))
+* Update version and changelog ([3909808](https://github.com/block-core/blockcore-wallet/commit/3909808))
+
+
+
 ## <small>1.0.5 (2022-11-21)</small>
 
 * Add ability to filter on type and DID Method ([3d07285](https://github.com/block-core/blockcore-wallet/commit/3d07285))
