@@ -1,73 +1,71 @@
-<div>
-  <mat-tab-group>
-    <mat-tab label="Sign Message">
-      <div class="sign-content">
-        <form class="sign-form" [formGroup]="signFormGroup">
-          <mat-form-field class="sign-full-width" appearance="fill">
-            <mat-label>{{ "Account.Account" | translate }}</mat-label>
-            <mat-select formControlName="accountCtrl" required (selectionChange)="onAccountChanged()">
-              <mat-option *ngFor="let account of accounts" [value]="account.identifier">
-                {{ account.name }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-          <mat-form-field appearance="outline" class="input-full-width">
-            <mat-label>{{ "Action.Key" | translate }}</mat-label>
-            <mat-select #address formControlName="addressCtrl">
-              <mat-option *ngFor="let address of addresses" [value]="address.key">{{ address.address }} </mat-option>
-            </mat-select>
-          </mat-form-field>
+<mat-tab-group class="tabs" mat-stretch-tabs>
+  <mat-tab label="Sign Message">
+    <div class="sign-content page">
+      <form class="sign-form" [formGroup]="signFormGroup">
+        <mat-form-field class="sign-full-width" appearance="fill">
+          <mat-label>{{ "Account.Account" | translate }}</mat-label>
+          <mat-select formControlName="accountCtrl" required (selectionChange)="onAccountChanged()">
+            <mat-option *ngFor="let account of accounts" [value]="account.identifier">
+              {{ account.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="input-full-width">
+          <mat-label>{{ "Action.Key" | translate }}</mat-label>
+          <mat-select #address formControlName="addressCtrl">
+            <mat-option *ngFor="let address of addresses" [value]="address.key">{{ address.address }} </mat-option>
+          </mat-select>
+        </mat-form-field>
 
-          <mat-card class="selectable">{{ address.value }}</mat-card
-          ><br />
+        <mat-card class="selectable">{{ address.value }}</mat-card
+        ><br />
 
-          <mat-form-field class="sign-full-width" appearance="fill">
-            <mat-label>{{ "SignVerify.MessageToSign" | translate }}</mat-label>
-            <textarea matInput formControlName="messageCtrl"></textarea>
-          </mat-form-field>
-          <br />
-          <mat-form-field class="sign-full-width" appearance="fill">
-            <mat-label>{{ "SignVerify.Signature" | translate }}</mat-label>
-            <input matInput formControlName="signatureCtrl" />
-          </mat-form-field>
-          <br />
-          <br /><button mat-flat-button color="primary" (click)="sign()">{{"SignVerify.Sign" | translate}} </button>
-          <button mat-stroked-button color="primary" class="sign-clear" (click)="resetSign()">{{ "SignVerify.ClearAll" | translate }}</button>
-        </form>
-      </div>
-    </mat-tab>
+        <mat-form-field class="sign-full-width" appearance="fill">
+          <mat-label>{{ "SignVerify.MessageToSign" | translate }}</mat-label>
+          <textarea matInput formControlName="messageCtrl"></textarea>
+        </mat-form-field>
+        <br />
+        <mat-form-field class="sign-full-width" appearance="fill">
+          <mat-label>{{ "SignVerify.Signature" | translate }}</mat-label>
+          <input matInput formControlName="signatureCtrl" />
+        </mat-form-field>
+        <br />
+        <br /><button mat-flat-button color="primary" (click)="sign()">{{ "SignVerify.Sign" | translate }}</button>
+        <button mat-stroked-button color="primary" class="sign-clear" (click)="resetSign()">{{ "SignVerify.ClearAll" | translate }}</button>
+      </form>
+    </div>
+  </mat-tab>
 
-    <mat-tab label="Verify Message">
-      <div class="sign-content">
-        <form class="sign-form" [formGroup]="verifyFormGroup">
-          <mat-form-field class="sign-full-width" appearance="fill">
-            <mat-label>{{ "Account.Address" | translate }}</mat-label>
-            <input matInput formControlName="addressCtrl" />
-          </mat-form-field>
-          <br />
-          <mat-form-field class="sign-full-width" appearance="fill">
-            <mat-label>{{ "Account.Message" | translate }}</mat-label>
-            <textarea matInput formControlName="messageCtrl"></textarea>
-          </mat-form-field>
-          <br />
-          <mat-form-field class="sign-full-width" appearance="fill">
-            <mat-label>{{ "SignVerify.Signature" | translate }}</mat-label>
-            <input matInput formControlName="signatureCtrl" />
-          </mat-form-field>
-          <mat-card class="verify-status" *ngIf="verified === true"
-            ><p><mat-icon class="positive-color">verified</mat-icon></p>
-            <h2>{{ "SignVerify.SignatureVerified" | translate }}</h2>
-            <p>{{ "SignVerify.SignatureVerifiedDescription" | translate }}</p></mat-card
-          >
-          <mat-card class="verify-status" *ngIf="verified === false"
-            ><p><mat-icon class="negative-color">error</mat-icon></p>
-            <h2>{{ "SignVerify.FailedSignatureVerification" | translate }}</h2>
-            <p>{{ "SignVerify.FailedSignatureVerificationDescription" | translate }}</p></mat-card
-          >
-          <br /><button mat-flat-button color="primary" (click)="verify()">{{"SignVerify.Verify"| translate}}</button>
-          <button mat-stroked-button color="primary" class="sign-clear" (click)="resetVerify()">{{"SignVerify.ClearAll"|translate}}</button>
-        </form>
-      </div>
-    </mat-tab>
-  </mat-tab-group>
-</div>
+  <mat-tab label="Verify Message">
+    <div class="sign-content page">
+      <form class="sign-form" [formGroup]="verifyFormGroup">
+        <mat-form-field class="sign-full-width" appearance="fill">
+          <mat-label>{{ "Account.Address" | translate }}</mat-label>
+          <input matInput formControlName="addressCtrl" />
+        </mat-form-field>
+        <br />
+        <mat-form-field class="sign-full-width" appearance="fill">
+          <mat-label>{{ "Account.Message" | translate }}</mat-label>
+          <textarea matInput formControlName="messageCtrl"></textarea>
+        </mat-form-field>
+        <br />
+        <mat-form-field class="sign-full-width" appearance="fill">
+          <mat-label>{{ "SignVerify.Signature" | translate }}</mat-label>
+          <input matInput formControlName="signatureCtrl" />
+        </mat-form-field>
+        <mat-card class="verify-status" *ngIf="verified === true"
+          ><p><mat-icon class="positive-color">verified</mat-icon></p>
+          <h2>{{ "SignVerify.SignatureVerified" | translate }}</h2>
+          <p>{{ "SignVerify.SignatureVerifiedDescription" | translate }}</p></mat-card
+        >
+        <mat-card class="verify-status" *ngIf="verified === false"
+          ><p><mat-icon class="negative-color">error</mat-icon></p>
+          <h2>{{ "SignVerify.FailedSignatureVerification" | translate }}</h2>
+          <p>{{ "SignVerify.FailedSignatureVerificationDescription" | translate }}</p></mat-card
+        >
+        <br /><button mat-flat-button color="primary" (click)="verify()">{{ "SignVerify.Verify" | translate }}</button>
+        <button mat-stroked-button color="primary" class="sign-clear" (click)="resetVerify()">{{ "SignVerify.ClearAll" | translate }}</button>
+      </form>
+    </div>
+  </mat-tab>
+</mat-tab-group>
