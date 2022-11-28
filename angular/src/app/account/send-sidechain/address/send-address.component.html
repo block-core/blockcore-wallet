@@ -35,8 +35,6 @@
     <mat-error *ngIf="form.controls['sidechainAddressInput'].errors?.['required']">{{ "Account.AddressRequired" | translate }}</mat-error>
   </mat-form-field>
 
-  <mat-card>{{ "Account.SwapCardMessage" | translate }}</mat-card>
-
   <div class="available-balance" matTooltip="Click to fill out maximum (minus fee)" (click)="fillMax(sendService.accountHistory.balance)">{{ "Account.Available" | translate }}: {{ sendService.accountHistory.balance || 0 | amount }}</div>
 
   <mat-form-field class="input-full-width" appearance="outline">
@@ -50,6 +48,7 @@
   </mat-form-field>
 
   <div class="confirmation-label" *ngIf="confirmationMessage">{{ confirmationMessage }}</div>
+  <p><mat-checkbox formControlName="sidechainFee" [(ngModel)]="sendSidechainService.includeFee">Include sidechain fee</mat-checkbox></p>
 
   <div *ngIf="optionsOpen">
     <mat-form-field class="input-full-width" appearance="outline">

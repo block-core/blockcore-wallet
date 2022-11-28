@@ -57,6 +57,7 @@ export class AccountSendSidechainAddressComponent implements OnInit, OnDestroy {
       amountInput: new UntypedFormControl('', [Validators.required, Validators.min(1), Validators.pattern(/^-?(0|[0-9]+[.]?[0-9]*)?$/), InputValidators.maximumBitcoin(this.sendService)]),
       // TODO: Make an custom validator that sets form error when fee input is too low.
       feeInput: new UntypedFormControl(this.sendService.targetFeeRate, [Validators.required, Validators.min(this.sendService.targetFeeRate), Validators.pattern(/^-?(0|[0-9]+[.]?[0-9]*)?$/)]),
+      sidechainFee: new UntypedFormControl ('true'),
 
       // TODO: validate the sidechain target address using the sidechain network
       sidechainAddressInput: new UntypedFormControl('', [InputValidators.addressSidechain(this.sendSidechainService, this.addressValidation)]),
