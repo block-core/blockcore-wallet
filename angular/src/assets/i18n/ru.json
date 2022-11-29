@@ -314,7 +314,7 @@
     "DataOPRETURN": "Data (OP_RETURN)",
     "Available": "Доступно",
     "ClickToFillOutMaximum": "Click to fill out maximum (minus fee)",
-    "PrivateMemo": "Private Memo",
+    "PrivateMemo": "Личная заметка",
     "CustomChangeAddress": "Custom change address",
     "MinimumFeeRate": "Minimum fee rate",
     "SatByte": "sat/byte",
