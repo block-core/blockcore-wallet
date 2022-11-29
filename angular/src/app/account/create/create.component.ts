@@ -51,7 +51,7 @@ export class AccountCreateComponent implements OnInit, OnDestroy {
     private networkStatusService: NetworkStatusService,
     private cd: ChangeDetectorRef,
     private snackBar: MatSnackBar,
-    public translate: TranslateService,
+    public translate: TranslateService
   ) {
     this.icon = icons.default;
 
@@ -135,8 +135,8 @@ export class AccountCreateComponent implements OnInit, OnDestroy {
 
   onNetworkChanged() {
     this.selectedNetwork = this.networkService.getNetwork(this.network);
-    this.derivationPath = this.getDerivationPath();
     this.purpose = this.selectedNetwork.purpose ?? 44;
+    this.derivationPath = this.getDerivationPath();
   }
 
   onPurposeChanged() {
