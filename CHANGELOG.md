@@ -1,4 +1,18 @@
-## <small>1.0.6 (2022-11-28)</small>
+## <small>1.0.7 (2022-11-29)</small>
+
+* Enable Identity on Smart City Platform ([86fe03f](https://github.com/block-core/blockcore-wallet/commit/86fe03f))
+* Fixed translation on Account.Login (#299) ([d1e55b7](https://github.com/block-core/blockcore-wallet/commit/d1e55b7)), closes [#299](https://github.com/block-core/blockcore-wallet/issues/299)
+* Made "SignVerify" centered (#298) ([e739869](https://github.com/block-core/blockcore-wallet/commit/e739869)), closes [#298](https://github.com/block-core/blockcore-wallet/issues/298)
+* Set purpose before re-calculate the derivation path ([b455ac7](https://github.com/block-core/blockcore-wallet/commit/b455ac7))
+* Sidechain fee (#297) ([f9cfc85](https://github.com/block-core/blockcore-wallet/commit/f9cfc85)), closes [#297](https://github.com/block-core/blockcore-wallet/issues/297) [#294](https://github.com/block-core/blockcore-wallet/issues/294)
+* Update diw-jwt dependency ([df3399b](https://github.com/block-core/blockcore-wallet/commit/df3399b))
+* Update the network for JWK and KEY DID Methods ([657d13a](https://github.com/block-core/blockcore-wallet/commit/657d13a))
+* Update the README with link to Guide and new animation ([b20f010](https://github.com/block-core/blockcore-wallet/commit/b20f010))
+* Update version and changelog ([e07c2df](https://github.com/block-core/blockcore-wallet/commit/e07c2df))
+
+
+
+## <small>1.0.6 (2022-11-27)</small>
 
 * Add "SignVerify" to .json (#295) ([a3221d0](https://github.com/block-core/blockcore-wallet/commit/a3221d0)), closes [#295](https://github.com/block-core/blockcore-wallet/issues/295)
 * Add basic publish of DID Document for did:is ([73dd6b4](https://github.com/block-core/blockcore-wallet/commit/73dd6b4))
