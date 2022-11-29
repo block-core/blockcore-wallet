@@ -273,6 +273,19 @@ export class Defaults {
             purposeAddress: 44,
             icon: 'paid',
           },
+          {
+            identifier: uuidv4(),
+            index: 0,
+            networkType: 'IDENTITY',
+            selected: true,
+            mode: 'normal',
+            name: 'City Chain Identity',
+            type: 'identity',
+            network: 616,
+            purpose: 302,
+            purposeAddress: 340, // BIP0340
+            icon: 'account_circle',
+          },
           // , {
           //     identifier: uuidv4(),
           //     index: 0,
