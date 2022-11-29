@@ -4,7 +4,7 @@ export class JWK implements Network {
     id = 'JWK';
     name = 'Identity (did:jwk)';
     symbol = 'did:jwk';
-    network = 616;
+    network = 617;
     purpose = 302;
     messagePrefix = '\x18Bitcoin Signed Message:\n';
     bech32 = 'jwk';

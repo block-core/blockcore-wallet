@@ -4,7 +4,7 @@ export class KEY implements Network {
     id = 'KEY';
     name = 'Identity (did:key)';
     symbol = 'did:key';
-    network = 616;
+    network = 618;
     purpose = 302;
     messagePrefix = '\x18Bitcoin Signed Message:\n';
     bech32 = 'key';
