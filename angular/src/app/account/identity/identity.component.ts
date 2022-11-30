@@ -457,7 +457,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
 
   openDid() {
     // TODO: We need to somehow get active service URL from the resolver library.
-    const url = `https://id.blockcore.net/1.0/identifiers/${this.identifier}`;
+    const url = `https://did.is/${this.identifier}`;
     window.open(url, '_blank');
     // window.open(url, 'exolixPopup', 'height=820,width=600,left=200,top=200,resizable=yes,channelmode=yes,scrollbars=yes,toolbar=yes,menubar=no,location=yes,directories=no,status=yes');
   }
