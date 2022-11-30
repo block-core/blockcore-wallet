@@ -368,6 +368,7 @@
   "Action": {
     "Authorize": "Authorize",
     "did.request": "DID Request",
+    "vc.request": "VC Request",
     "vaultSetup": "Vault Setup",
     "signMessage": "Sign Message",
     "IdentityDID": "Identity (DID)",

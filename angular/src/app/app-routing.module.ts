@@ -56,6 +56,7 @@ import { PaymentComponent } from './account/payment/payment.component';
 import { DebuggerComponent } from './settings/debugger/debugger.component';
 import { SignComponent } from './sign/sign.component';
 import { ActionDidRequestComponent } from './action/did-request/did-request.component';
+import { ActionVcRequestComponent } from './action/vc-request/vc-request.component';
 const routes: Routes = [
   {
     path: '',
@@ -414,6 +415,13 @@ const routes: Routes = [
       {
         path: 'did.request',
         component: ActionDidRequestComponent,
+        resolve: {
+          data: LoadingResolverService,
+        },
+      },
+      {
+        path: 'vc.request',
+        component: ActionVcRequestComponent,
         resolve: {
           data: LoadingResolverService,
         },

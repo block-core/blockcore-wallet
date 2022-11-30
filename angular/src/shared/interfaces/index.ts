@@ -645,6 +645,14 @@ interface DIDRequestResponse {
   proof: String;
 };
 
+interface VCRequestResponse {
+  /** the wallet owner's selected DID */
+  did: String;
+
+  /** The verifiable credential */
+  vc: String;
+};
+
 interface ActionMessage {
   /** The type of action, this is currently limited to `request` */
   type: string;
@@ -808,5 +816,6 @@ export {
   CoinSelectionOutput,
   DIDRequestOptions,
   DIDRequestResponse,
-  AccountFilter
+  AccountFilter,
+  VCRequestResponse
 };
