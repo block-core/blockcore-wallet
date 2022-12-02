@@ -59,6 +59,11 @@ export class FrontendService implements OnInit {
           await this.executeIndexer();
           return 'ok';
         }
+        case 'network': {
+          await this.networkStatusWatcher();
+          await this.executeIndexer();
+          return 'ok';
+        }
         case 'keep-alive': {
           console.log('keep-alive!!!');
           return 'ok';
