@@ -277,7 +277,15 @@ export class IndexerBackgroundService {
         // the loop.
         // const allAccountTypes = wallets.flatMap(w => w.accounts).flatMap(a => a.networkType);
         // const uniqueAccountTypes = Array.from([...new Set(allAccountTypes)]);;
-        const uniqueAccounts = wallets.flatMap(w => w.accounts).filter((value, index, self) => self.map(x => x.networkType).indexOf(value.networkType) == index);
+        let uniqueAccounts = wallets.flatMap(w => w.accounts).filter((value, index, self) => self.map(x => x.networkType).indexOf(value.networkType) == index);
+
+        // Filter out all IDENTITY accounts, we don't sync those.
+        uniqueAccounts = uniqueAccounts.filter(a => a.networkType != 'IDENTITY');
+
+        if (uniqueAccounts.length == 0) {
+            return { cancelled: true, completed: true };
+        }
+
         let anyIndexerOnline = false;
         // console.log('uniqueAccountTypes:', uniqueAccounts);
 

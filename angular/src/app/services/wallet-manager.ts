@@ -748,8 +748,11 @@ export class WalletManager {
       await this.accountStateStore.save();
 
       // TODO: Improve this to only require full updateAll for networks but only newly added account's network.
+      
+      // Make sure we have status on the network added in this new account and then run indexing. This is not await, so
+      // potential race condition here the first loop of indexing.
       this.message.send(this.message.createMessage('network', null, 'background'));
-      // Whenever 'network' is finished, the indexing will also be automatically called.
+      this.message.send(this.message.createMessage('index', null, 'background'));
 
       // If the wallet type is restored, force an index process to restore the state.
       // if (wallet.restored && runIndexIfRestored == true) {

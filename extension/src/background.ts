@@ -358,7 +358,8 @@ const networkStatusWatcher = async () => {
     );
 
     // Whenever the network status has updated, also trigger indexer.
-    await executeIndexer();
+    // 2022-02-12: We don't need to force indexer it, it just adds too many extra calls to indexing.
+    // await executeIndexer();
 
     // Continue running the watcher if it has not been cancelled.
     networkWatcherRef = globalThis.setTimeout(interval, networkUpdateInterval);
