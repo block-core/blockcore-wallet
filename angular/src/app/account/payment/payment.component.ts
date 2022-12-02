@@ -19,7 +19,7 @@ import { NetworksService, SendService, UIState, WalletManager } from '../../serv
 })
 export class PaymentComponent implements OnInit, OnDestroy {
   network: Network;
-  public contact: Contact;
+  contact: Contact;
   subscriptions: Subscription[] = [];
   filteredAccounts: Account[];
   amount: Big;
@@ -41,7 +41,7 @@ export class PaymentComponent implements OnInit, OnDestroy {
     this.uiState.goBackHome = false;
   }
 
-  ngOnDestroy(): void {
+  ngOnDestroy() {
     this.subscriptions.forEach((sub) => {
       sub.unsubscribe();
     });
@@ -49,7 +49,7 @@ export class PaymentComponent implements OnInit, OnDestroy {
     this.subscriptions = [];
   }
 
-  async ngOnInit(): Promise<void> {
+  ngOnInit() {
     this.network = this.networkService.getNetworkBySymbol(this.uiState.payment.network);
     this.amount = this.paymentRequest.parseAmount(this.uiState.payment.options.amount);
 
@@ -67,7 +67,7 @@ export class PaymentComponent implements OnInit, OnDestroy {
     });
   }
 
-  async cancel() {
+  cancel() {
     this.uiState.payment = null;
     this.router.navigateByUrl('/dashboard');
   }
