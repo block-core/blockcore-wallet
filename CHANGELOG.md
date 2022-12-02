@@ -1,3 +1,13 @@
+## <small>1.0.8 (2022-12-02)</small>
+
+* Add City Chain Identity default account selection for Smart City Platform ([6249f85](https://github.com/block-core/blockcore-wallet/commit/6249f85))
+* Add VC Request handler ([f492b08](https://github.com/block-core/blockcore-wallet/commit/f492b08))
+* Change the lookup URL for identities to be a friendly URL ([3b1b20b](https://github.com/block-core/blockcore-wallet/commit/3b1b20b))
+* Reduce number of time indexing is run to optimize performance and network traffic ([233eb07](https://github.com/block-core/blockcore-wallet/commit/233eb07))
+* Update version and changelog ([56c5dbc](https://github.com/block-core/blockcore-wallet/commit/56c5dbc))
+
+
+
 ## <small>1.0.7 (2022-11-29)</small>
 
 * Enable Identity on Smart City Platform ([86fe03f](https://github.com/block-core/blockcore-wallet/commit/86fe03f))
