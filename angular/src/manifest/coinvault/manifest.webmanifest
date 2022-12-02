@@ -4,7 +4,7 @@
     "start_url": "./",
     "name": "CoinVault",
     "short_name": "CoinVault",
-    "version": "1.0.9",
+    "version": "1.0.10",
     "author": "Softchains Ltd",
     "display": "standalone",
     "theme_color": "#206997",

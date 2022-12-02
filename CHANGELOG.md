@@ -1,3 +1,10 @@
+## <small>1.0.9 (2022-12-02)</small>
+
+* Ensure that network status has run before initial index of new accounts ([b073bfa](https://github.com/block-core/blockcore-wallet/commit/b073bfa))
+* Update version and changelog ([d614986](https://github.com/block-core/blockcore-wallet/commit/d614986))
+
+
+
 ## <small>1.0.8 (2022-12-02)</small>
 
 * Add City Chain Identity default account selection for Smart City Platform ([6249f85](https://github.com/block-core/blockcore-wallet/commit/6249f85))
