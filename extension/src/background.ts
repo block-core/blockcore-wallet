@@ -63,7 +63,9 @@ browser.runtime.onMessage.addListener(async (msg: ActionMessage, sender) => {
     } else if (msg.type === 'watch') {
       await runWatcher();
     } else if (msg.type === 'network') {
-      await networkStatusWatcher();
+      // When we get the 'network' message, we'll scan network and then run index.
+      await updateNetworkStatus();
+      await executeIndexer();
     } else if (msg.type === 'activated') {
       // console.log('THE UI WAS ACTIVATED!!');
       // When UI is triggered, we'll also trigger network watcher.
@@ -325,6 +327,31 @@ chrome.alarms.onAlarm.addListener(async (alarm: chrome.alarms.Alarm) => {
 // let store = new NetworkStatusStore();
 let networkWatcherRef;
 
+const updateNetworkStatus = async () => {
+  // We don't have the Angular environment information available in the service worker,
+  // so we'll default to the default blockcore accounts, which should include those that
+  // are default on CoinVault.
+  await networkManager.updateNetworkStatus('blockcore');
+
+  chrome.runtime.sendMessage(
+    {
+      type: 'network-updated',
+      data: { source: 'network-status-watcher' },
+      ext: 'blockcore',
+      source: 'background',
+      target: 'tabs',
+      host: location.host,
+    },
+    function (response) {
+      // console.log('Extension:sendMessage:response:indexed:', response);
+    }
+  );
+
+  // Whenever the network status has updated, also trigger indexer.
+  // 2022-02-12: We don't need to force indexer it, it just adds too many extra calls to indexing.
+  // await executeIndexer();
+};
+
 const networkStatusWatcher = async () => {
   // const manifest = chrome.runtime.getManifest();
 
@@ -338,28 +365,7 @@ const networkStatusWatcher = async () => {
   }
 
   var interval = async () => {
-    // We don't have the Angular environment information available in the service worker,
-    // so we'll default to the default blockcore accounts, which should include those that
-    // are default on CoinVault.
-    await networkManager.updateNetworkStatus('blockcore');
-
-    chrome.runtime.sendMessage(
-      {
-        type: 'network-updated',
-        data: { source: 'network-status-watcher' },
-        ext: 'blockcore',
-        source: 'background',
-        target: 'tabs',
-        host: location.host,
-      },
-      function (response) {
-        // console.log('Extension:sendMessage:response:indexed:', response);
-      }
-    );
-
-    // Whenever the network status has updated, also trigger indexer.
-    // 2022-02-12: We don't need to force indexer it, it just adds too many extra calls to indexing.
-    // await executeIndexer();
+    await updateNetworkStatus();
 
     // Continue running the watcher if it has not been cancelled.
     networkWatcherRef = globalThis.setTimeout(interval, networkUpdateInterval);

@@ -752,7 +752,6 @@ export class WalletManager {
       // Make sure we have status on the network added in this new account and then run indexing. This is not await, so
       // potential race condition here the first loop of indexing.
       this.message.send(this.message.createMessage('network', null, 'background'));
-      this.message.send(this.message.createMessage('index', null, 'background'));
 
       // If the wallet type is restored, force an index process to restore the state.
       // if (wallet.restored && runIndexIfRestored == true) {
