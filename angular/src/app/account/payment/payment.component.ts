@@ -67,7 +67,7 @@ export class PaymentComponent implements OnInit, OnDestroy {
     });
   }
 
-  async cancel() {
+  cancel() {
     this.uiState.payment = null;
     this.router.navigateByUrl('/dashboard');
   }

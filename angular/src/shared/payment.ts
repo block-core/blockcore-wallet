@@ -74,6 +74,10 @@ export class PaymentRequest {
   }
 
   parseAmount(amount: string) {
+    if (amount === undefined || amount === null || amount === '') {
+      amount = '0';
+    }
+
     const number = new Big(amount);
 
     if (number.e < -8) {
