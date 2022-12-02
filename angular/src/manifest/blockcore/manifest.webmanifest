@@ -4,7 +4,7 @@
     "start_url": "./",
     "name": "Blockcore Wallet",
     "short_name": "Blockcore",
-    "version": "1.0.10",
+    "version": "1.0.11",
     "author": "Blockcore",
     "display": "standalone",
     "theme_color": "#22a893",

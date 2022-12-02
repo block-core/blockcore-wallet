@@ -1,3 +1,10 @@
+## <small>1.0.10 (2022-12-02)</small>
+
+* Handle the 'network' event in PWA mode ([53ca5b8](https://github.com/block-core/blockcore-wallet/commit/53ca5b8))
+* Update version and changelog ([0600486](https://github.com/block-core/blockcore-wallet/commit/0600486))
+
+
+
 ## <small>1.0.9 (2022-12-02)</small>
 
 * Ensure that network status has run before initial index of new accounts ([b073bfa](https://github.com/block-core/blockcore-wallet/commit/b073bfa))
