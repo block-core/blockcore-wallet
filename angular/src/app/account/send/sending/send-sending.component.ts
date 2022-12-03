@@ -34,12 +34,12 @@ export class AccountSendSendingComponent implements OnInit, OnDestroy {
   async ngOnInit() {
     this.sendService.loading = true;
 
-    // const transactionDetails = await this.walletManager.sendTransaction(this.sendService.account, this.sendService.transactionHex);
+    const transactionDetails = await this.walletManager.sendTransaction(this.sendService.account, this.sendService.transactionHex);
     // Replace with test data to simulate an actual transaction broadcast.
-    const transactionDetails = {
-      transactionHex: '01000000638c8a6301c1d0793c5babee26351e5fd150505777f0344978097c882acb519b16516d0128000000006a473044022017bccecbe3458634683a6db4b1a485454855add3d582507885507246a64aaffe022049213cf0ae49f6bc509fc2f4ad5d2916d24cbd4d192e55c33f2c00218fec774c0121026add073b767e0795042276d4525c9dda85820cb6e92a1acb9dc11f8a01a58409ffffffff0200e1f505000000001976a914668782a465c4027312434e7ae1cea0cd2837484c88ac4a7ad717000000001976a9148e25224a6674da8843280d59e9bdd2750b9db4af88ac00000000',
-      transactionResult: '1c72f48428ea20156e34bebc7a9cd1a3f6fd02ba9fe1d7d8825984817b112257'
-    };
+    // const transactionDetails = {
+    //   transactionHex: '01000000638c8a6301c1d0793c5babee26351e5fd150505777f0344978097c882acb519b16516d0128000000006a473044022017bccecbe3458634683a6db4b1a485454855add3d582507885507246a64aaffe022049213cf0ae49f6bc509fc2f4ad5d2916d24cbd4d192e55c33f2c00218fec774c0121026add073b767e0795042276d4525c9dda85820cb6e92a1acb9dc11f8a01a58409ffffffff0200e1f505000000001976a914668782a465c4027312434e7ae1cea0cd2837484c88ac4a7ad717000000001976a9148e25224a6674da8843280d59e9bdd2750b9db4af88ac00000000',
+    //   transactionResult: '1c72f48428ea20156e34bebc7a9cd1a3f6fd02ba9fe1d7d8825984817b112257'
+    // };
 
     this.sendService.loading = false;
     this.sendService.transactionResult = transactionDetails.transactionResult;
