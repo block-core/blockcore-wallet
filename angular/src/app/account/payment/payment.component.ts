@@ -50,6 +50,8 @@ export class PaymentComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.uiState.isPaymentAction = true;
+
     this.network = this.networkService.getNetworkBySymbol(this.uiState.payment.network);
     this.amount = this.paymentRequest.parseAmount(this.uiState.payment.options.amount);
 

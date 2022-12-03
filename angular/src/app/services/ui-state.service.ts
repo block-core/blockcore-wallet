@@ -89,6 +89,8 @@ export class UIState {
 
     payment: PaymentRequestData;
 
+    isPaymentAction: boolean;
+
     title!: string;
 
     cameraId: string;

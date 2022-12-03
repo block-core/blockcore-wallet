@@ -13,23 +13,29 @@
 
   <br /><br />
 
-  <button class="full-width" mat-raised-button [routerLink]="['/account', 'view', sendService.account.identifier]" color="primary">{{ "Account.OK" | translate }}</button>
+  <div *ngIf="uiState.isPaymentAction">
+    <button class="full-width" mat-raised-button (click)="closeWindow()" color="primary">{{ "Account.Close" | translate }}</button>
+  </div>
+
+  <div *ngIf="!uiState.isPaymentAction">
+    <button class="full-width" mat-raised-button [routerLink]="['/account', 'view', sendService.account.identifier]" color="primary">{{ "Account.OK" | translate }}</button>
+  </div>
 </div>
 
 <div *ngIf="sendService.transactionError">
-    <h2>{{ "Account.PaymentError" | translate }}!</h2>
+  <h2>{{ "Account.PaymentError" | translate }}!</h2>
 
-    <div class="centered-block">
-      <mat-icon class="success-icon">error</mat-icon>
-    </div>
-
-    <div *ngIf="sendService.transactionHex" class="wrap selectable">
-      <br /><br />
-      {{ "Account.Error" | translate }}:<br />
-      <h3>{{ sendService.transactionError }}</h3>
-    </div>
-
-    <br /><br />
-
-    <button class="full-width" mat-raised-button [routerLink]="['/account', 'view', sendService.account.identifier]" color="primary">{{ "Account.OK" | translate }}</button>
+  <div class="centered-block">
+    <mat-icon class="success-icon">error</mat-icon>
   </div>
+
+  <div *ngIf="sendService.transactionHex" class="wrap selectable">
+    <br /><br />
+    {{ "Account.Error" | translate }}:<br />
+    <h3>{{ sendService.transactionError }}</h3>
+  </div>
+
+  <br /><br />
+
+  <button class="full-width" mat-raised-button [routerLink]="['/account', 'view', sendService.account.identifier]" color="primary">{{ "Account.OK" | translate }}</button>
+</div>

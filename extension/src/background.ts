@@ -21,6 +21,7 @@ let permissionService = new PermissionServiceShared();
 let watchManager: BackgroundManager | null;
 let networkManager: BackgroundManager;
 let indexing = false;
+let customActionResponse = undefined;
 
 let networkLoader = new NetworkLoader();
 let runtimeService = new RuntimeService();
@@ -70,6 +71,21 @@ browser.runtime.onMessage.addListener(async (msg: ActionMessage, sender) => {
       // console.log('THE UI WAS ACTIVATED!!');
       // When UI is triggered, we'll also trigger network watcher.
       await networkStatusWatcher();
+    } else if (msg.type === 'broadcast') {
+      // Grab the content returned in this message and use as custom action response.
+      customActionResponse = msg.response.content;
+
+      // If there is an active prompt, it means we should resolve it with the broadcast result:
+      if (prompt) {
+        prompt?.resolve?.();
+        prompt = null;
+        releaseMutex();
+      }
+
+      // if (sender) {
+      //   // Remove the popup window that was opened:
+      //   browser.windows.remove(sender.tab.windowId);
+      // }
     }
   } else {
     // console.log('Unhandled message:', msg);
@@ -155,7 +171,12 @@ async function handleContentScriptMessage(message: ActionMessage) {
         // state.promptPermission = await promptPermission({ app: message.app, id: message.id, method: method, params: message.args.params });
         permission = await promptPermission(state);
         // authorized, proceed
-      } catch (_) {
+      } catch (err) {
+        console.error('Permission not accepted: ', err);
+
+        // When the user clicks X during a payment request, the user might still have completed the process, and
+        // we should return a successful response here. For other actions, clicking X means "Cancel"/"Deny".
+
         // not authorized, stop here
         return {
           error: { message: `Insufficient permissions, required "${method}".` },
@@ -174,6 +195,13 @@ async function handleContentScriptMessage(message: ActionMessage) {
     }
   }
 
+  if (customActionResponse) {
+    // Clone and clean.
+    const customReturn = JSON.stringify(customActionResponse);
+    customActionResponse = undefined;
+    return JSON.parse(customReturn);
+  }
+
   try {
     // User have given permission to execute.
     const result = await state.handler.execute(state, <Permission>permission);
@@ -185,6 +213,8 @@ async function handleContentScriptMessage(message: ActionMessage) {
 }
 
 function handlePromptMessage(message: ActionMessage, sender) {
+  debugger;
+
   // console.log('handlePromptMessage!!!:', message);
   // Create an permission instance from the message received from prompt dialog:
   const permission = permissionService.createPermission(message);
@@ -243,7 +273,10 @@ async function promptPermission(state: ActionState) {
 }
 
 browser.windows.onRemoved.addListener(function (windowId) {
+  console.log('WINDOW ON REMOVED!!!');
+
   if (prompt) {
+    console.log('REJECT THE PROMPT AND RELEASE MUTEX!!!');
     prompt?.reject?.();
     prompt = null;
     releaseMutex();

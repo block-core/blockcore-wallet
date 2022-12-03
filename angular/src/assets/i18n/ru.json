@@ -340,7 +340,7 @@
     "Error": "Ошибка",
     "SendingPayment": "Платёж отправляется...",
     "PaymentSent": "Платёж отправлен",
-    "TransactionId": "TXID",
+    "TransactionId": "Transaction ID",
     "OK": "ОК",
     "PaymentError": "Ошибка платежа",
     "Swap": "Сменить",

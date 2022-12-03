@@ -341,7 +341,7 @@
     "Error": "Error",
     "SendingPayment": "Sending Payment...",
     "PaymentSent": "Payment sent",
-    "TransactionId": "TXID",
+    "TransactionId": "Transaction ID",
     "OK": "OK",
     "PaymentError": "Payment error",
     "Swap": "Swap",

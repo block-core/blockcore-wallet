@@ -32,7 +32,6 @@ export class ActionService {
   }
 
   async setAction(data: Action, broadcast: boolean) {
-    debugger;
     console.log('IS THIS CALLED?!');
 
     if (typeof data.action !== 'string') {
