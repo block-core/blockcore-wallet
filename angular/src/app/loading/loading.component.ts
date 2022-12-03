@@ -146,10 +146,12 @@ export class LoadingComponent implements OnInit, OnDestroy {
       // Parse the payment request and keep it in the state until wallet is ready:
       if (parameters.pay) {
         this.uiState.payment = this.paymentRequest.decode(this.paymentRequest.removeHandler(parameters.pay));
+        this.uiState.isPaymentAction = false;
         console.log('Payment request:', this.uiState.payment);
       } else if (this.uiState.action?.action == 'payment') {
         const param = this.uiState.action.params[0];
         this.uiState.payment = this.paymentRequest.transform(param);
+        this.uiState.isPaymentAction = true;
 
         // Reset the action as payment is not a normal action.
         this.uiState.action = null;

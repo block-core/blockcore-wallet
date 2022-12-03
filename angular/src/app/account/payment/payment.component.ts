@@ -36,10 +36,7 @@ export class PaymentComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private contactStore: ContactStore,
     public translate: TranslateService
-  ) {
-    this.uiState.showBackButton = true;
-    this.uiState.goBackHome = false;
-  }
+  ) {}
 
   ngOnDestroy() {
     this.subscriptions.forEach((sub) => {
@@ -50,7 +47,12 @@ export class PaymentComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.uiState.isPaymentAction = true;
+    if (this.uiState.isPaymentAction) {
+      this.uiState.showBackButton = false;
+    } else {
+      this.uiState.showBackButton = true;
+      this.uiState.goBackHome = true;
+    }
 
     this.network = this.networkService.getNetworkBySymbol(this.uiState.payment.network);
     this.amount = this.paymentRequest.parseAmount(this.uiState.payment.options.amount);
@@ -69,9 +71,14 @@ export class PaymentComponent implements OnInit, OnDestroy {
     });
   }
 
-  cancel() {
+  cancel(close: boolean) {
     this.uiState.payment = null;
-    this.router.navigateByUrl('/dashboard');
+
+    if (close) {
+      window.close();
+    } else {
+      this.router.navigateByUrl('/dashboard');
+    }
   }
 
   async sendToUsing(address: string, accountId: string) {
