@@ -3,6 +3,7 @@ import { ActionHandler } from './action-handler';
 import { DidRequestHandler } from './did-request-handler';
 import { DidSupportedMethodsHandler } from './did-supported-methods-handler';
 import { PaymentHandler } from './payment-handler';
+import { PaymentSignHandler } from './payment-sign-handler';
 // import { PublicKeyHandler } from './publicKey-handler';
 // import { SignVerifiableCredentialHandler } from './sign-credential-handler';
 // import { SignHandler } from './sign-handler';
@@ -19,12 +20,14 @@ export class Handlers {
         return new SignMessageHandler(backgroundManager);
       case 'payment':
         return new PaymentHandler(backgroundManager);
+      case 'payment.sign':
+        return new PaymentSignHandler(backgroundManager);
       case 'did.supportedMethods':
         return new DidSupportedMethodsHandler(backgroundManager);
       case 'did.request':
         return new DidRequestHandler(backgroundManager);
-        case 'vc.request':
-          return new VcRequestHandler(backgroundManager);
+      case 'vc.request':
+        return new VcRequestHandler(backgroundManager);
       // case 'signVerifiableCredential': // Signing of Verifiable Credential, JSON encoded as signed JSON Web Token.
       //   return new SignVerifiableCredentialHandler();
       // case 'signTypedData': // Not implemented yet, will be inspired by EIP-712: https://github.com/ethereum/EIPs/blob/master/EIPS/eip-712.md
