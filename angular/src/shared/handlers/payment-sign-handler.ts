@@ -48,7 +48,7 @@ export class PaymentSignHandler implements ActionHandler {
       // "jws" or "jwt"?
       // const didDocument = identity.document();
 
-      const jws = await createJWS(proofContent, tools.getSigner(privateKey), { kid: verificationMethod.id });
+      const jws = await createJWS(proofContent, tools.getSigner(privateKey), { kid: `${identity.did}${verificationMethod.id}` });
 
       let returnData: ActionResponse = {
         key: permission.key,
