@@ -81,3 +81,11 @@ This will run Angular in watch-mode and ensure it auto-reloads.
 To install the extension, follow the instructions here: https://docs.microsoft.com/en-us/microsoft-edge/extensions-chromium/getting-started/extension-sideloading
 
 Choose the `blockcore-wallet\dist\extension` folder when picking folder for extension to load from.
+
+## Update Allow/Deny lists
+
+The `lists` is a git submodule and to update to latest:
+
+```sh
+git submodule update --remote --merge
+```
