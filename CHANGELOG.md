@@ -1,3 +1,19 @@
+## <small>1.0.11 (2022-12-11)</small>
+
+* Fix enabling sending ([9496dcb](https://github.com/block-core/blockcore-wallet/commit/9496dcb))
+* Fixed fail in Payment request (#303) ([efc6d75](https://github.com/block-core/blockcore-wallet/commit/efc6d75)), closes [#303](https://github.com/block-core/blockcore-wallet/issues/303) [#268](https://github.com/block-core/blockcore-wallet/issues/268)
+* Make the "Cancel" button close the payment request from provider ([21267aa](https://github.com/block-core/blockcore-wallet/commit/21267aa))
+* Make the "kid" fully qualified for DID requests ([83a5e33](https://github.com/block-core/blockcore-wallet/commit/83a5e33))
+* Make the identity node exactly same as coin/token nodes ([ff8f59c](https://github.com/block-core/blockcore-wallet/commit/ff8f59c))
+* Return transaction ID on payment requests ([69c82ef](https://github.com/block-core/blockcore-wallet/commit/69c82ef))
+* Update package-lock.json ([b72174a](https://github.com/block-core/blockcore-wallet/commit/b72174a))
+* Update the allow/ban lists ([6409096](https://github.com/block-core/blockcore-wallet/commit/6409096))
+* Update the QRCode package ([bc91d62](https://github.com/block-core/blockcore-wallet/commit/bc91d62))
+* Update version and changelog ([f8793b0](https://github.com/block-core/blockcore-wallet/commit/f8793b0))
+* WIP: payment.sign handler ([ffeac8d](https://github.com/block-core/blockcore-wallet/commit/ffeac8d))
+
+
+
 ## <small>1.0.10 (2022-12-02)</small>
 
 * Handle the 'network' event in PWA mode ([53ca5b8](https://github.com/block-core/blockcore-wallet/commit/53ca5b8))
