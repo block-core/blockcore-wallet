@@ -53,9 +53,7 @@ export class IdentityService {
     // Create the master node.
     const masterNode = HDKey.fromMasterSeed(masterSeed, network.bip32);
 
-    let addressNode = masterNode.derive(
-      `m/${account.purpose}'/${account.network}'/${account.index}'/0'/0'` // Only use hardened keys for identity.
-    );
+    let addressNode = masterNode.derive(`m/${account.purpose}'/${account.network}'/${account.index}'/0/0`);
 
     return addressNode;
   }
