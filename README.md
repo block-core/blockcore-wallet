@@ -55,6 +55,21 @@ All the standard practices for cryptocurrency wallets apply: Make sure you take 
 
 # Development
 
+First you need to get the source code and you should include the submodules:
+
+```
+git clone --recurse-submodules https://github.com/block-core/blockcore-wallet.git
+```
+
+If you have already cloned and don't have the submodules, you might get an error with importing the lists.
+
+You can do the following to initialize the submodules if you cloned without --recurse-submodules.
+
+```
+git submodule init
+git submodule update
+```
+
 ## Requirements
 
 - Node.js LTS (16.x): https://nodejs.org/en/
