@@ -9,6 +9,7 @@ import { PaymentSignHandler } from './payment-sign-handler';
 // import { SignHandler } from './sign-handler';
 import { SignMessageHandler } from './sign-message-handler';
 import { VcRequestHandler } from './vc-request-handler';
+import { AccountBalanceHandler } from './account-balance-handler';
 
 // TODO: Make this more generic where the handlers are registered as form of factory.
 export class Handlers {
@@ -28,6 +29,8 @@ export class Handlers {
         return new DidRequestHandler(backgroundManager);
       case 'vc.request':
         return new VcRequestHandler(backgroundManager);
+      case 'accountbalance':
+        return new AccountBalanceHandler(backgroundManager);
       // case 'signVerifiableCredential': // Signing of Verifiable Credential, JSON encoded as signed JSON Web Token.
       //   return new SignVerifiableCredentialHandler();
       // case 'signTypedData': // Not implemented yet, will be inspired by EIP-712: https://github.com/ethereum/EIPs/blob/master/EIPS/eip-712.md

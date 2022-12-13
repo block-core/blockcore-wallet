@@ -55,6 +55,18 @@ export class BackgroundManager {
 
   intervalRef: any;
 
+  async getAccount(walletId: string, accountId: string, pubkey: string) {
+    const wallet = await this.sharedManager.getWallet(walletId);
+    const account = this.sharedManager.getAccount(wallet, accountId);
+
+    const accountStateStore = new AccountStateStore();
+    await accountStateStore.load();
+    var accountState = accountStateStore.get(account.identifier);
+    
+    return { account, accountState };
+  }
+
+
   async getKey(walletId: string, accountId: string, keyId: string) {
     await this.sharedManager.loadPrivateKeys();
 
