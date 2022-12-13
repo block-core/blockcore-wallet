@@ -421,6 +421,7 @@ interface Settings {
   themeColor: string;
   language: string;
   dir: string;
+  requirePassword: boolean;
   /** Allows users to change how the amounts are displayed. */
   amountFormat: string;
 }

@@ -2,15 +2,17 @@
   <div class="send-header-title">
     <h2>{{ "Account.Send" | translate }} {{ sendService.network.symbol }}</h2>
   </div>
-  <div class="send-header-actions" *ngIf="hasSidechain"><button class="half-width" [routerLink]="['/', 'account', 'send-sidechain']" mat-raised-button>{{ "Account.SidechainSwap" | translate }}</button></div>
+  <div class="send-header-actions" *ngIf="hasSidechain">
+    <button class="half-width" [routerLink]="['/', 'account', 'send-sidechain']" mat-raised-button>{{ "Account.SidechainSwap" | translate }}</button>
+  </div>
 </div>
 
 <form [formGroup]="form">
   <div class="input-actions">
-    <button mat-icon-button (click)="scanQrCode()" matTooltip='{{ "Account.ScanQRCode" | translate }}'>
+    <button mat-icon-button (click)="scanQrCode()" matTooltip="{{ 'Account.ScanQRCode' | translate }}">
       <mat-icon>qr_code_scanner</mat-icon>
     </button>
-    <button mat-icon-button (click)="paste()" matTooltip='{{ "Account.PasteAddress" | translate }}'>
+    <button mat-icon-button (click)="paste()" matTooltip="{{ 'Account.PasteAddress' | translate }}">
       <mat-icon>content_paste</mat-icon>
     </button>
   </div>
@@ -22,7 +24,9 @@
     <mat-error *ngIf="form.controls['addressInput'].errors?.['required']">{{ "Account.AddressRequired" | translate }}</mat-error>
   </mat-form-field>
 
-  <div class="available-balance" matTooltip='{{ "Account.ClickToFillOutMaximum" | translate }}' (click)="fillMax(sendService.accountHistory.balance)">{{ "Account.Available" | translate }}: {{ sendService.accountHistory.balance || 0 | amount }}</div>
+  <div class="available-balance" matTooltip="{{ 'Account.ClickToFillOutMaximum' | translate }}" (click)="fillMax(sendService.accountHistory.balance)">
+    {{ "Account.Available" | translate }}: {{ sendService.accountHistory.balance || 0 | amount }}
+  </div>
 
   <mat-form-field class="input-full-width" appearance="outline">
     <mat-label>{{ "Account.Amount" | translate }}</mat-label>
@@ -34,12 +38,17 @@
     <mat-error *ngIf="form.controls['amountInput'].errors?.['tooHighAmount']">{{ "Account.AmountTooHighAmount" | translate }}</mat-error>
   </mat-form-field>
 
-  <div *ngIf="optionsOpen">
+  <mat-form-field *ngIf="settings.requirePassword" class="input-full-width" appearance="outline">
+    <mat-label>Wallet Password</mat-label>
+    <input type="password" matInput formControlName="walletPasswordInput" />
+    <mat-error *ngIf="form.controls['walletPasswordInput'].invalid">Invalid Password</mat-error>
+  </mat-form-field>
 
+  <div *ngIf="optionsOpen">
     <mat-form-field class="input-full-width" appearance="outline">
       <mat-label>{{ "Account.Fee" | translate }} ({{ "Account.SatByte" | translate }})</mat-label>
       <input matInput formControlName="feeInput" [(ngModel)]="sendService.fee" required />
-      
+
       <mat-error *ngIf="form.controls['feeInput'].errors?.['min']">{{ "Account.FeeAmountMin" | translate }}</mat-error>
       <mat-error *ngIf="form.controls['feeInput'].errors?.['required']">{{ "Account.FeeAmountRequired" | translate }}</mat-error>
       <mat-error *ngIf="form.controls['feeInput'].invalid">{{ "Account.FeeInvalid" | translate }}</mat-error>
@@ -63,7 +72,10 @@
   <!-- <h3>{{ "Account.Total" | translate }}: {{ sendService.total | amount }} {{ sendService.network.symbol }}</h3> -->
 
   <mat-card *ngIf="this.sendService.payment">
-    <span *ngIf="this.sendService.payment.options.label">{{ "Account.Label" | translate }}: <strong>{{ this.sendService.payment.options.label }}</strong><br /> </span>
+    <span *ngIf="this.sendService.payment.options.label"
+      >{{ "Account.Label" | translate }}: <strong>{{ this.sendService.payment.options.label }}</strong
+      ><br />
+    </span>
     <span *ngIf="this.sendService.payment.options.message">{{ "Account.Message" | translate }}: {{ this.sendService.payment.options.message }}<br /><br /> </span>
     <span *ngIf="this.sendService.payment.options.id">{{ "Account.PaymentID" | translate }}: {{ this.sendService.payment.options.id }}<br /> </span>
     <span *ngIf="this.sendService.payment.options.data">{{ "Account.DataOPRETURN" | translate }}: {{ this.sendService.payment.options.data }}<br /> </span>
