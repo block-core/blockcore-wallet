@@ -2,13 +2,14 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import Big from 'big.js';
 import { InputValidators } from 'src/app/services/inputvalidators';
-import { WalletManager, UIState, SendService, NetworkStatusService } from '../../../services';
+import { WalletManager, UIState, SendService, NetworkStatusService, SettingsService } from '../../../services';
 import { MatDialog } from '@angular/material/dialog';
 import { QrScanDialog } from './qr-scanning.component';
 import { AddressValidationService } from 'src/app/services/address-validation.service';
 import { PaymentRequest } from 'src/shared/payment';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
+import { Settings } from 'src/shared';
 
 @Component({
   selector: 'app-account-send-address',
@@ -20,7 +21,7 @@ export class AccountSendAddressComponent implements OnInit, OnDestroy {
   optionsOpen = false;
   amountTooLarge = false;
   hasSidechain = false;
-  walletPassword = '';
+  settings : Settings;
 
   get optionAmountInput() {
     return this.form.get('amountInput') as UntypedFormControl;
@@ -40,8 +41,11 @@ export class AccountSendAddressComponent implements OnInit, OnDestroy {
     public dialog: MatDialog,
     private fb: UntypedFormBuilder,
     private snackBar: MatSnackBar,
-    public translate: TranslateService
-  ) {}
+    public translate: TranslateService,
+    public settingsService: SettingsService,
+  ) {
+    this.settings=settingsService.values;
+  }
 
   ngOnDestroy() {}
 
@@ -60,14 +64,19 @@ export class AccountSendAddressComponent implements OnInit, OnDestroy {
       changeAddressInput: new UntypedFormControl('', [InputValidators.address(this.sendService, this.addressValidation)]),
       memoInput: new UntypedFormControl(''),
       amountInput: new UntypedFormControl('', [Validators.required, Validators.min(0), Validators.pattern(/^-?(0|[0-9]+[.]?[0-9]*)?$/), InputValidators.maximumBitcoin(this.sendService)]),
-      walletPasswordInput: new UntypedFormControl('', {
-        validators: [Validators.required],
-        asyncValidators: [InputValidators.walletPassword(this.walletManager)],
-        updateOn: 'blur',
-      }),
       // Make sure we set the default value to target rate, or the form won't be valid when the fee input is hidden behind options expander:
       feeInput: new UntypedFormControl(this.sendService.targetFeeRate, [Validators.required, Validators.min(this.sendService.targetFeeRate), Validators.pattern(/^-?(0|[0-9]+[.]?[0-9]*)?$/)]),
     });
+
+    if (this.settings.requirePassword) {
+      this.form.addControl(
+        'walletPasswordInput', new UntypedFormControl('', {
+          validators: [Validators.required],
+          asyncValidators: [InputValidators.walletPassword(this.walletManager)],
+          updateOn: 'blur',
+        }),
+      );
+    }
 
     this.optionFeeInput.valueChanges.subscribe((value) => {
       this.sendService.fee = value;

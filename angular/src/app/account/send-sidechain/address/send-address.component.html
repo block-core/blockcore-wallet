@@ -50,6 +50,12 @@
   <div class="confirmation-label" *ngIf="confirmationMessage">{{ confirmationMessage }}</div>
   <p><mat-checkbox formControlName="sidechainFee" [(ngModel)]="sendSidechainService.includeFee">Include sidechain fee</mat-checkbox></p>
 
+  <mat-form-field *ngIf="settings.requirePassword" class="input-full-width" appearance="outline">
+    <mat-label>Wallet Password</mat-label>
+    <input type="password" matInput formControlName="walletPasswordInput" />
+    <mat-error *ngIf="form.controls['walletPasswordInput'].invalid">Invalid Password</mat-error>
+  </mat-form-field>
+
   <div *ngIf="optionsOpen">
     <mat-form-field class="input-full-width" appearance="outline">
       <mat-label>{{ "Account.Fee" | translate }} ({{ "Account.SatByte" | translate }})</mat-label>

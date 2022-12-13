@@ -38,9 +38,9 @@
     <mat-error *ngIf="form.controls['amountInput'].errors?.['tooHighAmount']">{{ "Account.AmountTooHighAmount" | translate }}</mat-error>
   </mat-form-field>
 
-  <mat-form-field class="input-full-width" appearance="outline">
+  <mat-form-field *ngIf="settings.requirePassword" class="input-full-width" appearance="outline">
     <mat-label>Wallet Password</mat-label>
-    <input type="password" matInput formControlName="walletPasswordInput" [(ngModel)]="walletPassword" />
+    <input type="password" matInput formControlName="walletPasswordInput" />
     <mat-error *ngIf="form.controls['walletPasswordInput'].invalid">Invalid Password</mat-error>
   </mat-form-field>
 
