@@ -49,8 +49,8 @@
   <mat-form-field class="input-full-width" appearance="outline">
     <mat-label>{{ 'Settings.RequirePasswordForSending' | translate }}</mat-label>
     <mat-select [(value)]="settings.requirePassword">
-      <mat-option [value]="false">{{ 'Settings.No' | translate }}</mat-option>
       <mat-option [value]="true">{{ 'Settings.Yes' | translate }}</mat-option>
+      <mat-option [value]="false">{{ 'Settings.No' | translate }}</mat-option>
     </mat-select>
   </mat-form-field>
 
