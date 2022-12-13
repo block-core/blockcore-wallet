@@ -1,4 +1,4 @@
-import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
+import { AbstractControl, AsyncValidatorFn, ValidationErrors, ValidatorFn } from '@angular/forms';
 import Big from 'big.js';
 import { Network } from 'src/shared/networks';
 import { AddressValidationService } from './address-validation.service';
@@ -23,7 +23,7 @@ export class InputValidators {
     return addressSidechainValidator(sendSidechainService, addressValidation);
   }
 
-  static walletPassword(walletManager: WalletManager): ValidatorFn {
+  static walletPassword(walletManager: WalletManager) {
     return walletPasswordValidator(walletManager);
   }
 }
@@ -132,23 +132,13 @@ export function addressSidechainValidator(sendSidechainService: SendSidechainSer
   };
 }
 
-export function walletPasswordValidator(walletManager: WalletManager): ValidatorFn {
-  return (control: AbstractControl): ValidationErrors | null => {
-    try {
-      // If there are no value, we'll skip validation and allow this input.
-      if (!control.value) {
-        return null;
-      }
-
-      const result = walletManager.verifyWalletPassword (walletManager.activeWalletId,control.value);
-
-      if (result) {
-        return null;
-      } else {
-        return { invalid: true };
-      }
-    } catch (err) {
-      return { invalid: true, error: err };
+export function walletPasswordValidator(walletManager: WalletManager): AsyncValidatorFn {
+  return async (control: AbstractControl): Promise<ValidationErrors | null> => {
+    const result = await walletManager.verifyWalletPassword(walletManager.activeWalletId, control.value);
+    if (result) {
+      return null;
+    } else {
+      return { invalid: true };
     }
   };
 }

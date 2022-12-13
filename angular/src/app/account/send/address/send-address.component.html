@@ -42,7 +42,6 @@
     <mat-label>Wallet Password</mat-label>
     <input type="password" matInput formControlName="walletPasswordInput" [(ngModel)]="walletPassword" />
     <mat-error *ngIf="form.controls['walletPasswordInput'].invalid">Invalid Password</mat-error>
-    <mat-error *ngIf="form.controls['walletPasswordInput'].errors?.['invalid']"> invalid password!</mat-error>
   </mat-form-field>
 
   <div *ngIf="optionsOpen">
