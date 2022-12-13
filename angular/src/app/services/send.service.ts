@@ -25,6 +25,7 @@ export class SendService {
   memo: string;
   feeError: string;
   selectedData: CoinSelectionResult;
+  walletPassword: string;
 
   /** The amount of satoshi pr. byte that is the target minimum. */
   targetFeeRate: number;

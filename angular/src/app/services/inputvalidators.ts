@@ -4,6 +4,7 @@ import { Network } from 'src/shared/networks';
 import { AddressValidationService } from './address-validation.service';
 import { SendService } from './send.service';
 import { SendSidechainService } from './send-sidechain.service';
+import { WalletManager } from './wallet-manager';
 
 export class InputValidators {
   static maximumBitcoin(sendService: SendService): ValidatorFn {
@@ -20,6 +21,10 @@ export class InputValidators {
 
   static addressSidechain(sendSidechainService: SendSidechainService, addressValidation: AddressValidationService): ValidatorFn {
     return addressSidechainValidator(sendSidechainService, addressValidation);
+  }
+
+  static walletPassword(walletManager: WalletManager): ValidatorFn {
+    return walletPasswordValidator(walletManager);
   }
 }
 
@@ -95,9 +100,6 @@ export function addressValidator(sendService: SendService, addressValidation: Ad
 
       const result = addressValidation.validateByNetwork(control.value, sendService.network);
 
-      console.log('VALIDATION RESULT:', result);
-      console.log('NETWORK:', sendService.network);
-
       if (result) {
         return null;
       } else {
@@ -119,8 +121,26 @@ export function addressSidechainValidator(sendSidechainService: SendSidechainSer
 
       const result = addressValidation.validateByNetwork(control.value, sendSidechainService.network);
 
-      console.log('VALIDATION RESULT:', result);
-      console.log('NETWORK:', sendSidechainService.network);
+      if (result) {
+        return null;
+      } else {
+        return { invalid: true };
+      }
+    } catch (err) {
+      return { invalid: true, error: err };
+    }
+  };
+}
+
+export function walletPasswordValidator(walletManager: WalletManager): ValidatorFn {
+  return (control: AbstractControl): ValidationErrors | null => {
+    try {
+      // If there are no value, we'll skip validation and allow this input.
+      if (!control.value) {
+        return null;
+      }
+
+      const result = walletManager.verifyWalletPassword (walletManager.activeWalletId,control.value);
 
       if (result) {
         return null;

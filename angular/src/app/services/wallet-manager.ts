@@ -433,6 +433,17 @@ export class WalletManager {
     }
   }
 
+  async verifyWalletPassword (walletId: string, password: string) {
+    const wallet = this.getWallet(walletId);
+
+    if (!wallet) {
+      return false;
+    }
+
+    const unlockedMnemonic = await this.cryptoService.decryptData(wallet.mnemonic, password);
+    return (unlockedMnemonic!=null && unlockedMnemonic!='');
+  }
+
   /** Cange the wallet password in one operation. */
   async changeWalletPassword(walletId: string, oldpassword: string, newpassword: string) {
     const wallet = this.getWallet(walletId);

@@ -22,6 +22,7 @@ export class AccountSendAddressComponent implements OnInit, OnDestroy {
   optionsOpen = false;
   amountTooLarge = false;
   hasSidechain = false;
+  walletPassword = '';
 
   get optionAmountInput() {
     return this.form.get('amountInput') as UntypedFormControl;
@@ -62,6 +63,7 @@ export class AccountSendAddressComponent implements OnInit, OnDestroy {
       changeAddressInput: new UntypedFormControl('', [InputValidators.address(this.sendService, this.addressValidation)]),
       memoInput: new UntypedFormControl(''),
       amountInput: new UntypedFormControl('', [Validators.required, Validators.min(0), Validators.pattern(/^-?(0|[0-9]+[.]?[0-9]*)?$/), InputValidators.maximumBitcoin(this.sendService)]),
+      walletPasswordInput: new UntypedFormControl('', [Validators.required, InputValidators.walletPassword(this.walletManager)]),
 
       // Make sure we set the default value to target rate, or the form won't be valid when the fee input is hidden behind options expander:
       feeInput: new UntypedFormControl(this.sendService.targetFeeRate, [Validators.required, Validators.min(this.sendService.targetFeeRate), Validators.pattern(/^-?(0|[0-9]+[.]?[0-9]*)?$/)]),
