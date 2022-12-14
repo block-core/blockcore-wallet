@@ -1,4 +1,4 @@
-<div [ngClass]="{ leftToRight: uiState.documentDirection === 'rtl' }" [dir]="uiState.documentDirection">
+<div [ngClass]="{ rightToLeft: uiState.documentDirection === 'rtl' }" [dir]="uiState.documentDirection">
   <div class="maximize" (click)="maximize()">
     <mat-icon matTooltip="{{ 'App.ExpandView' | translate }}">zoom_out_map</mat-icon>
   </div>
