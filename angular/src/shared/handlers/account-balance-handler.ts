@@ -11,31 +11,31 @@ export class AccountBalanceHandler implements ActionHandler {
   constructor(private backgroundManager: BackgroundManager) {}
 
   async prepare(state: ActionState): Promise<ActionPrepareResult> {
-    if (!state.message || !state.message.request || !state.message.request.params || !state.message.request.params[0] || !state.message.request.params[0].pubkey) {
+    if (!state.message || !state.message.request || !state.message.request.params || !state.message.request.params[0] || !state.message.request.params[0]) {
+      throw Error('The params must include a single entry that has a message field.');
+    }
+
+    var params = !state.message.request.params[0] as any;
+
+    if (!params.walletId || !params.accountId) {
       throw Error('The params must include a single entry that has a message field.');
     }
 
     return {
-      content: state.message.request.params[0].message,
-      consent: true
+      content: state.message.request.params[0],
+      consent: false
     };
   }
 
   async execute(state: ActionState, permission: Permission): Promise<ActionResponse> {
-    // Get the private key
-    const { network, node } = await this.backgroundManager.getKey(permission.walletId, permission.accountId, permission.keyId);
-    const { account, accountState } = await this.backgroundManager.getAccount(permission.walletId, permission.accountId, state.message.request.params[0].pubkey);
 
-    if (accountState)
+    var params = !state.message.request.params[0] as any;
+
+    // get the account
+    const { network, account, accountState } = await this.backgroundManager.getAccount(params.walletId, params.accountId);
+
+    if (state.content)
     {
-      //let contentText = state.content;
-
-      //if (typeof state.content !== 'string') {
-      //  contentText = JSON.stringify(state.content);
-      //}
-
-     // let signedData = await this.signData(network, node, contentText as string);
-
       return {
         key: permission.key, request: state.message.request, response: { balance: accountState.balance }, network: network.id };
     }
