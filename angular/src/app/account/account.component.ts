@@ -246,7 +246,9 @@ export class AccountComponent implements OnInit, OnDestroy {
 
   loadTokens() {
     let accountTokens = this.standardTokenStore.get(this.walletManager.activeAccount.identifier);
-    if (accountTokens != undefined) this.standardTokens = accountTokens.tokens;
+    if (accountTokens != undefined) {
+      this.standardTokens = accountTokens.tokens;
+    }
   }
 
   async ngOnInit() {

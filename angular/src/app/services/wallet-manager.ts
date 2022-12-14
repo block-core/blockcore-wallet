@@ -789,7 +789,7 @@ export class WalletManager {
       const tokens = await axios.get(`${indexerUrl}/api/query/${network.name.toLowerCase()}/tokens/${address.address}`);
 
       if (tokens.status == 200) {
-        this.tokensStore.set(account.identifier, { tokens: tokens.data.items });
+        this.tokensStore.set(account.identifier, { tokens: tokens.data });
         await this.tokensStore.save();
       }
     } catch (err) {
