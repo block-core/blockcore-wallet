@@ -15,7 +15,7 @@ export class AccountBalanceHandler implements ActionHandler {
       throw Error('The params must include a single entry that has a message field.');
     }
 
-    var params = !state.message.request.params[0] as any;
+    var params = state.message.request.params[0];
 
     if (!params.walletId || !params.accountId) {
       throw Error('The params walletId and accountId are missing.');
@@ -29,14 +29,14 @@ export class AccountBalanceHandler implements ActionHandler {
 
   async execute(state: ActionState, permission: Permission): Promise<ActionResponse> {
 
-    var params = !state.message.request.params[0] as any;
+    var data = state.content as any;
 
     // get the account
-    const { network, account, accountState } = await this.backgroundManager.getAccount(params.walletId, params.accountId);
+    const { network, account, accountState, accountHistory } = await this.backgroundManager.getAccount(data.walletId, data.accountId);
 
     if (state.content)
     {
-      return { key: permission.key, request: state.message.request, response: { balance: accountState.balance }, network: network.id };
+      return { key: data.key, request: state.message.request, response: { balance: accountHistory.balance }, network: network.id };
     }
     else
     {

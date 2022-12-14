@@ -63,8 +63,12 @@ export class BackgroundManager {
     const accountStateStore = new AccountStateStore();
     await accountStateStore.load();
     var accountState = accountStateStore.get(account.identifier);
-    
-    return { network, account, accountState };
+
+    const accountHistoryStore = new AccountHistoryStore();
+    await accountHistoryStore.load();
+    var accountHistory = accountHistoryStore.get(account.identifier);
+
+    return { network, account, accountState, accountHistory };
   }
 
   async getKey(walletId: string, accountId: string, keyId: string) {
