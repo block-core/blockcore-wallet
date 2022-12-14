@@ -608,6 +608,12 @@ interface ActionResponse {
 
   /** The unique identifier of the network user selected. */
   network?: string;
+
+  /** The wallet identifier. */
+  walletId?: string;
+
+  /** The account identifier. */
+  accountId?: string;
 }
 
 interface ActionPrepareResult {
