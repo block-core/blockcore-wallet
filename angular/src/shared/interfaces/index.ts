@@ -573,6 +573,7 @@ export interface Token {
   totalSupply: number;
   address: string;
   amount: number;
+  decimals: number;
 }
 
 export interface AccountTokens {
