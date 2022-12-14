@@ -1,3 +1,14 @@
+## <small>1.0.12 (2022-12-14)</small>
+
+* Add some instructions on cloning with submodule ([1627396](https://github.com/block-core/blockcore-wallet/commit/1627396))
+* Add Wallet password on Send (#305) ([63b802f](https://github.com/block-core/blockcore-wallet/commit/63b802f)), closes [#305](https://github.com/block-core/blockcore-wallet/issues/305)
+* Attempt to fix right to left (#310) ([3b0268c](https://github.com/block-core/blockcore-wallet/commit/3b0268c)), closes [#310](https://github.com/block-core/blockcore-wallet/issues/310)
+* Display decimals for tokens (#308) ([917a14c](https://github.com/block-core/blockcore-wallet/commit/917a14c)), closes [#308](https://github.com/block-core/blockcore-wallet/issues/308) [#300](https://github.com/block-core/blockcore-wallet/issues/300)
+* Fixes token display (#307) ([b20837e](https://github.com/block-core/blockcore-wallet/commit/b20837e)), closes [#307](https://github.com/block-core/blockcore-wallet/issues/307) [#306](https://github.com/block-core/blockcore-wallet/issues/306)
+* Update version and changelog ([8215dd4](https://github.com/block-core/blockcore-wallet/commit/8215dd4))
+
+
+
 ## <small>1.0.11 (2022-12-11)</small>
 
 * Fix enabling sending ([9496dcb](https://github.com/block-core/blockcore-wallet/commit/9496dcb))
