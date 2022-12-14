@@ -50,6 +50,11 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
 }
 
+.leftToRight > * {
+  direction: ltr;
+  unicode-bidi: embed;
+}
+
 [dir=rtl] {
   h1,
   h2,
