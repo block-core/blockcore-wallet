@@ -17,10 +17,6 @@ class BlockcoreRequestProvider implements Web5RequestProvider {
 
       const data = message.data as ActionMessage;
 
-      const response = data.response.response as ActionResponse;
-      response.walletId = data.walletId;
-      response.accountId = data.accountId;
-
       // It is possible that calls to the extension is returned without handled by an instance of the extension,
       // if that happens, then response will be undefined.
 

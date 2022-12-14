@@ -11,14 +11,14 @@ export class AccountBalanceHandler implements ActionHandler {
   constructor(private backgroundManager: BackgroundManager) {}
 
   async prepare(state: ActionState): Promise<ActionPrepareResult> {
-    if (!state.message || !state.message.request || !state.message.request.params || !state.message.request.params[0] || !state.message.request.params[0]) {
+    if (!state.message || !state.message.request || !state.message.request.params || !state.message.request.params[0]) {
       throw Error('The params must include a single entry that has a message field.');
     }
 
     var params = !state.message.request.params[0] as any;
 
     if (!params.walletId || !params.accountId) {
-      throw Error('The params must include a single entry that has a message field.');
+      throw Error('The params walletId and accountId are missing.');
     }
 
     return {
@@ -36,8 +36,7 @@ export class AccountBalanceHandler implements ActionHandler {
 
     if (state.content)
     {
-      return {
-        key: permission.key, request: state.message.request, response: { balance: accountState.balance }, network: network.id };
+      return { key: permission.key, request: state.message.request, response: { balance: accountState.balance }, network: network.id };
     }
     else
     {
