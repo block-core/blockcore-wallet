@@ -55,6 +55,52 @@ export class BackgroundManager {
 
   intervalRef: any;
 
+  /** This get's wallet and all the accounts within it. */
+  async getWalletAndAccounts(walletId: string) {
+    const result: any = {};
+
+    const wallet = await this.sharedManager.getWallet(walletId);
+
+    if (!wallet) {
+      return null;
+    }
+
+    // VERY IMPORTANT WE MAP THE OBJECTS!! These objects contains secret recovery phrase (encrypted) and xpub for accounts!
+    result.wallet = {
+      id: wallet.id,
+      name: wallet.name,
+    };
+
+    result.accounts = [];
+    // Here we probably need to loop all accounts and get ALL data.
+
+    for (var i = 0; i < wallet.accounts.length; i++) {
+      const account = wallet.accounts[i];
+      const accountData = await this.getAccount(walletId, account.identifier);
+
+      // VERY IMPORTANT WE MAP THE OBJECTS!!
+      // TODO: Decide what to use from account data, history, etc. is available if we want.
+      const accountEntry = {
+        icon: accountData.account.icon,
+        name: accountData.account.name,
+        id: accountData.account.identifier,
+        network: accountData.account.network,
+        networkType: accountData.account.networkType,
+        purpose: accountData.account.purpose,
+        purposeAddress: accountData.account.purposeAddress,
+        type: accountData.account.type,
+
+        history: accountData.accountHistory,
+        state: accountData.accountState,
+        networkDefinition: accountData.network,
+      };
+
+      result.accounts.push(accountEntry);
+    }
+
+    return result;
+  }
+
   async getAccount(walletId: string, accountId: string) {
     const wallet = await this.sharedManager.getWallet(walletId);
     const account = this.sharedManager.getAccount(wallet, accountId);
@@ -203,7 +249,7 @@ export class BackgroundManager {
               networkType: account.networkType,
               availability: IndexerApiStatus.Error,
               status: 'Error: ' + response.status,
-              relayFee: 10
+              relayFee: 10,
             };
           }
         } catch (error: any) {

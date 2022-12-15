@@ -11,35 +11,19 @@ export class WalletsHandler implements ActionHandler {
   constructor(private backgroundManager: BackgroundManager) {}
 
   async prepare(state: ActionState): Promise<ActionPrepareResult> {
-    // if (!state.message || !state.message.request || !state.message.request.params || !state.message.request.params[0]) {
-    //   throw Error('The params must include a single entry that has a message field.');
-    // }
-
-    // var params = !state.message.request.params[0] as any;
-
-    // if (!params.walletId || !params.accountId) {
-    //   throw Error('The params walletId and accountId are missing.');
-    // }
-
-    console.log('PREPARE WALLET HANLDER:', state);
-
     return {
-      // content: state.message.request.params[0],
       content: 'Wallet access',
       consent: true,
     };
   }
 
   async execute(state: ActionState, permission: Permission): Promise<ActionResponse> {
-    var params = !state.message.request.params[0] as any;
+    const result = await this.backgroundManager.getWalletAndAccounts(permission.walletId);
 
-    // get the account
-    const { network, account, accountState } = await this.backgroundManager.getAccount(params.walletId, params.accountId);
-
-    if (state.content) {
-      return { key: permission.key, request: state.message.request, response: { balance: accountState.balance }, network: network.id };
+    if (result) {
+      return { key: permission.key, request: state.message.request, response: result };
     } else {
-      return { key: '', signature: '', response: null, content: null, request: state.message.request, network: network.id };
+      return { key: '', signature: '', response: null, content: null, request: state.message.request };
     }
   }
 }

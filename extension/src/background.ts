@@ -213,8 +213,6 @@ async function handleContentScriptMessage(message: ActionMessage) {
 }
 
 function handlePromptMessage(message: ActionMessage, sender) {
-  debugger;
-
   // console.log('handlePromptMessage!!!:', message);
   // Create an permission instance from the message received from prompt dialog:
   const permission = permissionService.createPermission(message);

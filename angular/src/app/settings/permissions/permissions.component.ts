@@ -40,7 +40,6 @@ export class PermissionsComponent implements OnDestroy, OnInit {
 
     const permissions = permissionSet.permissions[permission.action] as Permission[];
 
-    debugger;
     const index = permissions.findIndex((p) => p.key == permission.key);
 
     if (index > -1) {
