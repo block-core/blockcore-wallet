@@ -1,5 +1,6 @@
 import { Network } from './network';
 
+/** Network that implements NIP-06: https://github.com/nostr-protocol/nips/blob/master/06.md */
 export class NOSTR implements Network {
     id = 'NOSTR';
     name = 'Nostr';
