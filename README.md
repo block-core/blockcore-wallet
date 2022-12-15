@@ -20,6 +20,11 @@ The wallet supports having multiple active wallets at the same time, and each wa
 - [x] Internationalization support with multiple languages and LTR/RTL support.
 - [x] Nostr support
 
+## Browser Support
+Blockcore Wallet supports all Chromium based browsers - Chrome, Edge Opera, Brave etc.
+
+FireFox is not supported. Support for FireFox is not planned.
+
 ### Normal vs Quick
 
 When adding additional accounts to your wallet, you have the option to choose the modes `Normal` and `Quick`. The difference can be very important depending on your usage and needs.
