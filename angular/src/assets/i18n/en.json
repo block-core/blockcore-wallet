@@ -369,8 +369,8 @@
     "Outputs": "Outputs"
   },
   "Action": {
-    "nostr.publickey": "Nostr Identity",
-    "nostr.signevent": "Nostr Sign",
+    "nostr.publickey": "Nostr Identifier",
+    "nostr.signevent": "Nostr Sign Event",
     "Connect": "Connect",
     "wallets": "Connect",
     "Authorize": "Authorize",

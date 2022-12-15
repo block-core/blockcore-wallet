@@ -5,10 +5,11 @@
 .top-spacer {
   flex: 1 1 auto;
   margin-left: 0.4em;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-[dir=rtl]
-.top-spacer {
+[dir="rtl"] .top-spacer {
   flex: 1 1 auto;
   margin-right: 0.4em;
 }
@@ -27,8 +28,7 @@
   margin-left: 0.8em;
 }
 
-[dir=rtl]
-.logo-icon div {
+[dir="rtl"] .logo-icon div {
   font-size: 0.8em;
   margin-right: 0.8em;
 }
@@ -81,8 +81,7 @@
   margin-bottom: 0.5em;
 }
 
-[dir=rtl]
-.detail-network {
+[dir="rtl"] .detail-network {
   line-height: 1.8em;
   margin-right: 0.5em;
   margin-bottom: 0.5em;
@@ -100,8 +99,7 @@
   margin-top: -0.5em;
 }
 
-[dir=rtl]
-.close-sidenav-icon {
+[dir="rtl"] .close-sidenav-icon {
   float: left;
   margin-left: -0.5em;
   margin-top: -0.5em;
@@ -111,14 +109,10 @@
   text-align: left;
 }
 
-[dir=rtl]
-.mat-form-field {
+[dir="rtl"] .mat-form-field {
   text-align: right;
 }
 
-[dir=rtl]
-.arrow-back{
+[dir="rtl"] .arrow-back {
   transform: rotate(180deg);
 }
-
-
