@@ -13,6 +13,13 @@ Open the [Wallet Guide](https://www.blockcore.net/wallet/guide) to install the w
 
 The wallet supports having multiple active wallets at the same time, and each wallet can contain one or more accounts, even on different blockchains and networks.
 
+- [x] Multiple wallets with multiple accounts
+- [x] Web5 wallet for identity and data
+- [x] Payment requests
+- [x] Decentralized blockchain API discovery
+- [x] Internationalization support with multiple languages and LTR/RTL support.
+- [x] Nostr support
+
 ### Normal vs Quick
 
 When adding additional accounts to your wallet, you have the option to choose the modes `Normal` and `Quick`. The difference can be very important depending on your usage and needs.
