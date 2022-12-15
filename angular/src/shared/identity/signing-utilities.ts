@@ -10,15 +10,15 @@ export class SigningUtilities {
     return schnorrPublicKey;
   }
 
-  schnorrPublicKeyToHex(publicKey: Uint8Array) {
+  keyToHex(publicKey: Uint8Array) {
     return secp.utils.bytesToHex(publicKey);
   }
 
   getIdentifier(publicKey: Uint8Array) {
     if (publicKey.length == 33) {
-      return this.schnorrPublicKeyToHex(this.convertEdcsaPublicKeyToSchnorr(publicKey));
+      return this.keyToHex(this.convertEdcsaPublicKeyToSchnorr(publicKey));
     } else {
-      return this.schnorrPublicKeyToHex(publicKey);
+      return this.keyToHex(publicKey);
     }
   }
 }

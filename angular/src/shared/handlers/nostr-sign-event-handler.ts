@@ -28,7 +28,7 @@ export class NostrSignEventHandler implements ActionHandler {
     if (!event.pubkey) event.pubkey = this.utility.getIdentifier(node.publicKey);
     if (!event.id) event.id = await getEventHash(event);
     if (!validateEvent(event)) throw new Error('Invalid Nostr event.');
-    event.sig = await signEvent(event, node.privateKey);
+    event.sig = await signEvent(event, this.utility.keyToHex(node.privateKey));
 
     // const valid = await secp.schnorr.verify(event.sig, event.id, event.pubkey);
 
