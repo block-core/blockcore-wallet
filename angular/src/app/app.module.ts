@@ -122,6 +122,7 @@ import { ActionDidRequestComponent } from './action/did-request/did-request.comp
 import { ActionVcRequestComponent } from './action/vc-request/vc-request.component';
 import { ActionWalletsComponent } from './action/wallets/wallets.component';
 import { ActionNostrPublicKeyComponent } from './action/nostr.publickey/nostr.publickey.component';
+import { ActionNostrSignEventComponent } from './action/nostr.signevent/nostr.signevent.component';
 
 // required for AOT compilation
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
@@ -198,7 +199,8 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     ActionDidRequestComponent,
     ActionVcRequestComponent,
     ActionWalletsComponent,
-    ActionNostrPublicKeyComponent
+    ActionNostrPublicKeyComponent,
+    ActionNostrSignEventComponent
   ],
   imports: [
     BrowserModule,

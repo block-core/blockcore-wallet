@@ -109,8 +109,6 @@ export class PermissionServiceShared {
   findPermissions(app: string, action: string) {
     let permissionSet = this.store.get(app);
 
-    // console.log(`PERMISSION SET FOR ${app}`, permissionSet);
-
     if (!permissionSet) {
       return [];
     }

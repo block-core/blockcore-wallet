@@ -94,46 +94,27 @@ class BlockcoreRequestProvider implements Web5RequestProvider {
 
   /** Nostr NIP-07 function: https://github.com/nostr-protocol/nips/blob/master/07.md */
   async getPublicKey(): Promise<string | unknown> {
-    const call = await this.#call('request', {
+    const call = (await this.#call('request', {
       method: 'nostr.publickey',
       params: [{}],
-    });
+    })) as any;
 
-    // TODO: Parse the response and only return pubkey.
-    return call;
+    // Only return the response which contains pubkey string.
+    return call.response;
   }
 
   /** Nostr NIP-07 function: https://github.com/nostr-protocol/nips/blob/master/07.md */
   async signEvent(event: Event): Promise<Event> {
     const call = (await this.#call('request', {
-      method: 'nostr.sign',
-      params: [{}],
-    })) as Promise<Event>;
+      method: 'nostr.signevent',
+      params: [event],
+    })) as any;
 
-    // TODO: Parse the response and only return event.
-    return call;
+    // Parse the response and only return event.
+    return call.response;
   }
 
   // TODO: Add support for NIP-04 (encrypt/decrypt), example: https://github.com/getAlby/lightning-browser-extension/blob/master/src/extension/ln/nostr/index.ts
-}
-
-export type Event = {
-  id?: string;
-  kind: EventKind;
-  pubkey?: string;
-  content: string;
-  tags: string[];
-  created_at: number;
-  sig?: string;
-};
-
-export enum EventKind {
-  Metadata = 0,
-  Text = 1,
-  RelayRec = 2,
-  Contacts = 3,
-  DM = 4,
-  Deleted = 5,
 }
 
 const provider = new BlockcoreRequestProvider();

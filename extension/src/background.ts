@@ -159,7 +159,7 @@ async function handleContentScriptMessage(message: ActionMessage) {
 
       // If there are no specific key specified in the signing request, just grab the first permission that is approved for this
       // website and use that. Normally there will only be a single one if the web app does not request specific key.
-      if (permissions.length > 0) {
+      if (permissions?.length > 0) {
         permission = permissions[0];
       }
     }
