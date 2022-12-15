@@ -16,7 +16,7 @@
     </mat-select>
   </mat-form-field>
 
-  <mat-form-field *ngIf="actionService.permissionLevel == 'key'" appearance="outline" class="input-full-width">
+  <mat-form-field *ngIf="actionService.permissionLevel == 'key' || actionService.permissionLevel == 'account'" appearance="outline" class="input-full-width">
     <mat-label>{{ "Action.Account" | translate }}</mat-label>
 
     <mat-select (selectionChange)="onAccountChanged()" [(value)]="actionService.accountId">
@@ -26,7 +26,7 @@
 
   <br />
 
-  <mat-form-field *ngIf="actionService.permissionLevel == 'account'" appearance="outline" class="input-full-width">
+  <mat-form-field *ngIf="actionService.permissionLevel == 'key'" appearance="outline" class="input-full-width">
     <mat-label>{{ "Action.Key" | translate }}</mat-label>
 
     <mat-select [disabled]="keySelectionDisabled" (selectionChange)="onKeyChanged()" [(value)]="actionService.keyId">

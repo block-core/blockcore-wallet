@@ -154,7 +154,9 @@ export class AccountCreateComponent implements OnInit, OnDestroy {
     const parsedPurpose = Number(splittedPathReplaced[1]);
     const parsedNetwork = Number(splittedPathReplaced[2]);
     const parsedIndex = Number(splittedPathReplaced[3]);
-    const accountType = this.selectedNetwork.purpose == 302 ? 'identity' : 'coin';
+
+    const accountType = this.selectedNetwork.type;
+    // const accountType = this.selectedNetwork.purpose == 302 ? 'identity' : 'coin';
 
     // Read the purpose address from UI selection:
     let selectedPurposeAddress = this.purpose;

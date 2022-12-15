@@ -58,6 +58,7 @@ import { SignComponent } from './sign/sign.component';
 import { ActionDidRequestComponent } from './action/did-request/did-request.component';
 import { ActionVcRequestComponent } from './action/vc-request/vc-request.component';
 import { ActionWalletsComponent } from './action/wallets/wallets.component';
+import { ActionNostrPublicKeyComponent } from './action/nostr.publickey/nostr.publickey.component';
 const routes: Routes = [
   {
     path: '',
@@ -437,6 +438,13 @@ const routes: Routes = [
       {
         path: 'vaultSetup',
         component: ActionVaultSetupComponent,
+        resolve: {
+          data: LoadingResolverService,
+        },
+      },
+      {
+        path: 'nostr.publickey',
+        component: ActionNostrPublicKeyComponent,
         resolve: {
           data: LoadingResolverService,
         },
