@@ -24,7 +24,7 @@ export class ActionDidRequestComponent implements OnInit, OnDestroy {
     this.actionService.status.title = 'Share your DID';
     this.actionService.status.description = `Reason: "${param.reason}"`;
 
-    this.actionService.ephemeral = true;
+    this.actionService.consentType = 'ephemeral';
     this.actionService.accountFilter = { types: ['identity'], symbol: param.methods };
   }
 

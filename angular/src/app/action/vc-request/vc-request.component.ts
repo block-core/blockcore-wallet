@@ -24,7 +24,7 @@ export class ActionVcRequestComponent implements OnInit, OnDestroy {
     this.actionService.status.title = 'Sign Verifiable Credentials claim';
     this.actionService.status.description = `Reason: "${param.reason}"`;
 
-    this.actionService.ephemeral = true;
+    this.actionService.consentType = 'ephemeral';
     this.actionService.accountFilter = { types: ['identity'], symbol: param.methods };
   }
 

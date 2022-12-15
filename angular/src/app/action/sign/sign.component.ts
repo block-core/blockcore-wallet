@@ -17,7 +17,8 @@ const { v4: uuidv4 } = require('uuid');
 export class ActionSignComponent {
   contentToSign: string;
 
-  constructor(public uiState: UIState, private permissionStore: PermissionStore, public action: ActionService, public networkService: NetworksService, public walletManager: WalletManager, private manager: AppManager, private cd: ChangeDetectorRef) {
+  constructor(public uiState: UIState, private permissionStore: PermissionStore, public actionService: ActionService, public networkService: NetworksService, public walletManager: WalletManager, private manager: AppManager, private cd: ChangeDetectorRef) {
     this.contentToSign = uiState.action.content;
+    this.actionService.consentType = 'regular';
   }
 }

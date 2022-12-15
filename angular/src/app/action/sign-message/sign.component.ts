@@ -10,7 +10,9 @@ import { ActionService } from 'src/app/services/action.service';
 export class ActionSignMessageComponent implements OnInit, OnDestroy {
   content: string;
 
-  constructor(public uiState: UIState, public action: ActionService) {}
+  constructor(public uiState: UIState, public actionService: ActionService) {
+    this.actionService.consentType = 'regular';
+  }
 
   ngOnDestroy(): void {}
 

@@ -369,6 +369,8 @@
     "Outputs": "Outputs"
   },
   "Action": {
+    "Connect": "Connect",
+    "wallets": "Connect",
     "Authorize": "Authorize",
     "did.request": "DID Request",
     "vc.request": "VC Request",

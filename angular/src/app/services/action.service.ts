@@ -10,6 +10,7 @@ import { WalletManager } from './wallet-manager';
 export class ActionService {
   constructor(private communication: CommunicationService, private message: MessageService, private store: ActionStore, public uiState: UIState, public walletManager: WalletManager) {}
   accountFilter: AccountFilter;
+  walletId: string;
   accountId: string;
   keyId: string;
   key: string;
@@ -18,7 +19,8 @@ export class ActionService {
   // args: any[];
 
   /** Indicates if the action is a single user or if user is allowed to give authorization temporarily or permanently. */
-  ephemeral = false;
+  consentType: 'ephemeral' | 'connect' | 'regular' = 'regular';
+  permissionLevel: 'wallet' | 'account' | 'key' = 'key';
 
   status = {
     icon: 'verified_user',
@@ -63,31 +65,50 @@ export class ActionService {
     const action = this.uiState.action;
     let key = this.key;
 
-    const network = this.walletManager.getNetwork(this.walletManager.activeAccount.networkType);
+    if (permission != 'connect') {
+      const network = this.walletManager.getNetwork(this.walletManager.activeAccount.networkType);
 
-    // This is a quick workaround for adding the DID Method prefix to the key (address/pubkey) for identities.
-    if (network.type === 'identity') {
-      key = `${network.symbol}:${key}`;
+      // This is a quick workaround for adding the DID Method prefix to the key (address/pubkey) for identities.
+      if (network.type === 'identity') {
+        key = `${network.symbol}:${key}`;
+      }
+
+      const reply: ActionMessage = {
+        prompt: true, // This indicates that message comes from the popup promt.
+        target: 'provider',
+        source: 'tabs',
+        ext: 'blockcore',
+        permission: permission,
+        request: { method: action.action, params: action.params }, // Re-create the request object.
+        // response: { content: action.content },
+        id: this.uiState.action.id,
+        type: this.uiState.action.action,
+        app: this.uiState.action.app,
+        walletId: this.walletManager.activeWalletId,
+        accountId: this.accountId,
+        keyId: this.keyId,
+        key: key,
+      };
+
+      // Inform the provider script that user has signed the data.
+      this.message.send(reply);
+    } else {
+      const reply: ActionMessage = {
+        prompt: true, // This indicates that message comes from the popup promt.
+        target: 'provider',
+        source: 'tabs',
+        ext: 'blockcore',
+        permission: permission,
+        request: { method: action.action, params: action.params }, // Re-create the request object.
+        // response: { content: action.content },
+        id: this.uiState.action.id,
+        type: this.uiState.action.action,
+        app: this.uiState.action.app,
+        walletId: this.walletManager.activeWalletId, // This shouldn't really be the internal wallet ID, but instead should be the pubkey? Or should we have both key and wallet ID?
+      };
+
+      // Inform the provider script that user has signed the data.
+      this.message.send(reply);
     }
-
-    const reply: ActionMessage = {
-      prompt: true, // This indicates that message comes from the popup promt.
-      target: 'provider',
-      source: 'tabs',
-      ext: 'blockcore',
-      permission: permission,
-      request: { method: action.action, params: action.params }, // Re-create the request object.
-      // response: { content: action.content },
-      id: this.uiState.action.id,
-      type: this.uiState.action.action,
-      app: this.uiState.action.app,
-      walletId: this.walletManager.activeWalletId,
-      accountId: this.accountId,
-      keyId: this.keyId,
-      key: key,
-    };
-
-    // Inform the provider script that user has signed the data.
-    this.message.send(reply);
   }
 }

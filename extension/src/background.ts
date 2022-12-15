@@ -213,14 +213,13 @@ async function handleContentScriptMessage(message: ActionMessage) {
 }
 
 function handlePromptMessage(message: ActionMessage, sender) {
-  debugger;
-
   // console.log('handlePromptMessage!!!:', message);
   // Create an permission instance from the message received from prompt dialog:
   const permission = permissionService.createPermission(message);
 
   switch (message.permission) {
     case 'forever':
+    case 'connect':
     case 'expirable':
       // const permission = permissionService.persistPermission(permission); // .updatePermission(message.app, message.type, message.permission, message.walletId, message.accountId, message.keyId, message.key);
       permissionService.persistPermission(permission);

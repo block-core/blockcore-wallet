@@ -1,4 +1,4 @@
-import { ActionMessage, ActionRequest, EventEmitter, Listener } from '../../angular/src/shared';
+import { ActionMessage, ActionRequest, ActionResponse, EventEmitter, Listener } from '../../angular/src/shared';
 import { Injector, RequestArguments, Web5RequestProvider } from '@blockcore/web5-injector';
 
 class BlockcoreRequestProvider implements Web5RequestProvider {

@@ -13,7 +13,8 @@ import { TranslateService } from '@ngx-translate/core';
 export class ActionIdentityComponent {
   content?: string;
 
-  constructor(public uiState: UIState, private crypto: CryptoService, private router: Router, private app: ApplicationRef, private ngZone: NgZone, private action: ActionService, public networkService: NetworksService, private manager: AppManager, public walletManager: WalletManager, private cd: ChangeDetectorRef, public translate: TranslateService) {
+  constructor(public uiState: UIState, private crypto: CryptoService, private router: Router, private app: ApplicationRef, private ngZone: NgZone, private actionService: ActionService, public networkService: NetworksService, private manager: AppManager, public walletManager: WalletManager, private cd: ChangeDetectorRef, public translate: TranslateService) {
+    this.actionService.consentType = 'regular';
   }
 
   async ngOnInit() {
@@ -27,6 +28,6 @@ export class ActionIdentityComponent {
   }
 
   exit() {
-    this.action.clearAction();
+    this.actionService.clearAction();
   }
 }
