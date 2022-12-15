@@ -46,7 +46,7 @@
 
   <router-outlet></router-outlet>
   <div *ngIf="actionService.consentType === 'connect'">
-    <button class="action-button" mat-flat-button color="primary" (click)="actionService.authorize('forever')">{{ "Action.Connect" | translate }}</button>&nbsp; &nbsp;
+    <button class="action-button" mat-flat-button color="primary" (click)="actionService.authorize('connect')">{{ "Action.Connect" | translate }}</button>&nbsp; &nbsp;
     <button class="action-button" mat-flat-button (click)="actionService.authorize('no')">{{ "Action.Cancel" | translate }}</button>
   </div>
   <div *ngIf="actionService.consentType === 'ephemeral'">

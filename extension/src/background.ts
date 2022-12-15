@@ -221,6 +221,7 @@ function handlePromptMessage(message: ActionMessage, sender) {
 
   switch (message.permission) {
     case 'forever':
+    case 'connect':
     case 'expirable':
       // const permission = permissionService.persistPermission(permission); // .updatePermission(message.app, message.type, message.permission, message.walletId, message.accountId, message.keyId, message.key);
       permissionService.persistPermission(permission);
