@@ -37,11 +37,15 @@
   </mat-card>
 
   <router-outlet></router-outlet>
-  <div *ngIf="actionService.ephemeral">
+  <div *ngIf="actionService.consentType === 'connect'">
+    <button class="action-button" mat-flat-button color="primary" (click)="actionService.authorize('once')">{{ "Action.Connect" | translate }}</button>&nbsp; &nbsp;
+    <button class="action-button" mat-flat-button (click)="actionService.authorize('no')">{{ "Action.Cancel" | translate }}</button>
+  </div>
+  <div *ngIf="actionService.consentType === 'ephemeral'">
     <button class="action-button" mat-flat-button color="primary" (click)="actionService.authorize('once')">{{ "Action.Authorize" | translate }}</button>&nbsp; &nbsp;
     <button class="action-button" mat-flat-button (click)="actionService.authorize('no')">{{ "Action.Cancel" | translate }}</button>
   </div>
-  <div *ngIf="!actionService.ephemeral">
+  <div *ngIf="actionService.consentType === 'regular'">
     <button class="action-button" mat-flat-button color="primary" (click)="actionService.authorize('once')">{{ "Action.AuthorizeOnce" | translate }}</button>&nbsp;
     <button class="action-button" mat-flat-button (click)="actionService.authorize('expirable')">{{ "Action.AuthorizeFor5Minutes" | translate }}</button>&nbsp;
     <button class="action-button" mat-flat-button (click)="actionService.authorize('forever')">{{ "Action.AuthorizeForever" | translate }}</button>&nbsp;

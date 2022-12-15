@@ -120,6 +120,7 @@ import { DebuggerComponent } from './settings/debugger/debugger.component';
 import { SignComponent } from './sign/sign.component';
 import { ActionDidRequestComponent } from './action/did-request/did-request.component';
 import { ActionVcRequestComponent } from './action/vc-request/vc-request.component';
+import { ActionWalletsComponent } from './action/wallets/wallets.component';
 
 // required for AOT compilation
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
@@ -194,7 +195,8 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     DebuggerComponent,
     SignComponent,
     ActionDidRequestComponent,
-    ActionVcRequestComponent
+    ActionVcRequestComponent,
+    ActionWalletsComponent
   ],
   imports: [
     BrowserModule,

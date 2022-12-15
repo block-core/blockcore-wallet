@@ -18,7 +18,8 @@ export class ActionService {
   // args: any[];
 
   /** Indicates if the action is a single user or if user is allowed to give authorization temporarily or permanently. */
-  ephemeral = false;
+  // ephemeral = false;
+  consentType: 'ephemeral' | 'connect' | 'regular'
 
   status = {
     icon: 'verified_user',

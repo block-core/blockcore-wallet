@@ -10,15 +10,22 @@ import { Actions, PERMISSIONS } from 'src/app/shared/constants';
 const { v4: uuidv4 } = require('uuid');
 
 @Component({
-  selector: 'app-sign-credential',
-  templateUrl: './sign.component.html',
-  styleUrls: ['./sign.component.css'],
+  selector: 'app-action-wallets',
+  templateUrl: './wallets.component.html',
+  styleUrls: ['./wallets.component.css'],
 })
-export class ActionSignVerifiableCredentialComponent {
-  contentToSign: string;
-
-  constructor(public uiState: UIState, private permissionStore: PermissionStore, public actionService: ActionService, public networkService: NetworksService, public walletManager: WalletManager, private manager: AppManager, private cd: ChangeDetectorRef) {
-    this.contentToSign = uiState.action.content;
-    this.actionService.consentType = 'regular';
+export class ActionWalletsComponent {
+  constructor(
+    public uiState: UIState,
+    private permissionStore: PermissionStore,
+    public actionService: ActionService,
+    public networkService: NetworksService,
+    public walletManager: WalletManager,
+    private manager: AppManager,
+    private cd: ChangeDetectorRef
+  ) {
+    this.actionService.status.title = 'Connect with App';
+    this.actionService.status.description = `Select the wallet to use on this site`;
+    this.actionService.consentType = 'connect';
   }
 }
