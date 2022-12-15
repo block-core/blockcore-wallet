@@ -27,5 +27,6 @@ export class ActionWalletsComponent {
     this.actionService.status.title = 'Connect with App';
     this.actionService.status.description = `Select the wallet to use on this site`;
     this.actionService.consentType = 'connect';
+    this.actionService.permissionLevel = 'wallet';
   }
 }

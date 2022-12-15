@@ -4,6 +4,7 @@ import { AccountState, AccountStateStore } from 'src/shared';
 import { PermissionStore } from 'src/shared/store/permission-store';
 import { AppManager, NetworksService, UIState, WalletManager } from '../services';
 import { TranslateService } from '@ngx-translate/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-action',
@@ -14,13 +15,16 @@ export class ActionComponent implements OnInit {
   accountState: AccountState;
   addresses: any[];
   accounts: any[];
+  wallets: any[];
   subscription: any;
+  subscription2: any;
   requestedKey: string;
   keySelectionDisabled = false;
 
   constructor(
     public translate: TranslateService,
     public uiState: UIState,
+    private router: Router,
     private accountStateStore: AccountStateStore,
     private permissionStore: PermissionStore,
     public actionService: ActionService,
@@ -31,40 +35,63 @@ export class ActionComponent implements OnInit {
   ) {}
 
   async ngOnInit() {
-    // Improve this logic, just quickly select the key:
-    const firstArgument = this.uiState.action.params[0];
-    const requestedKey = firstArgument.key;
+    if (this.actionService.permissionLevel === 'wallet') {
+      this.wallets = this.walletManager.getWallets();
+      console.log('WALLETS:', this.wallets);
 
-    this.accounts = this.walletManager.activeWallet.accounts;
-    const filter = this.actionService.accountFilter;
+      // Make sure we listen to active account changes to perform updated list of keys.
+      // TODO: Figure out why subscribing to this on the prompt makes it trigger twice. Perhaps there is some code elsewhere that
+      // needs fixing to avoid running the operation twice.
+      this.subscription2 = this.walletManager.activeWallet$.subscribe((a) => {
+        console.log('WALLET CHANGED!!!', this.actionService.walletId);
+        // Check if the newly selected wallet is unlocked, if not, go to home and unlock.
+        if (this.actionService.walletId && !this.walletManager.isUnlocked(this.actionService.walletId)) {
+          console.log('REDIRECT TO HOME!!!');
+          // this.router.navigateByUrl('/home');
+        }
 
-    if (filter) {
-      if (filter.types && filter.types.length > 0) {
-        this.accounts = this.accounts.filter((a) => filter.types.includes(a.type));
-      }
+        // this.update();
+      });
 
-      if (filter.symbol && filter.symbol.length > 0) {
-        this.accounts = this.accounts.filter((a) => {
-          const network = this.networkService.getNetwork(a.networkType);
-          return filter.symbol.includes(network.symbol);
-        });
+      if (!this.actionService.walletId) {
+        this.actionService.walletId = this.walletManager.activeWalletId;
       }
     } else {
+      // Improve this logic, just quickly select the key:
+      const firstArgument = this.uiState.action.params[0];
+      const requestedKey = firstArgument.key;
+
       this.accounts = this.walletManager.activeWallet.accounts;
+      const filter = this.actionService.accountFilter;
+
+      if (filter) {
+        if (filter.types && filter.types.length > 0) {
+          this.accounts = this.accounts.filter((a) => filter.types.includes(a.type));
+        }
+
+        if (filter.symbol && filter.symbol.length > 0) {
+          this.accounts = this.accounts.filter((a) => {
+            const network = this.networkService.getNetwork(a.networkType);
+            return filter.symbol.includes(network.symbol);
+          });
+        }
+      } else {
+        this.accounts = this.walletManager.activeWallet.accounts;
+      }
+
+      this.actionService.accountId = this.walletManager.activeAccountId;
+
+      if (requestedKey) {
+        this.requestedKey = requestedKey;
+      }
+
+      // Make sure we listen to active account changes to perform updated list of keys.
+      // TODO: Figure out why subscribing to this on the prompt makes it trigger twice. Perhaps there is some code elsewhere that
+      // needs fixing to avoid running the operation twice.
+      this.subscription = this.walletManager.activeAccount$.subscribe((a) => {
+        this.update();
+      });
     }
-
-    this.actionService.accountId = this.walletManager.activeAccountId;
-
-    if (requestedKey) {
-      this.requestedKey = requestedKey;
-    }
-
-    // Make sure we listen to active account changes to perform updated list of keys.
-    // TODO: Figure out why subscribing to this on the prompt makes it trigger twice. Perhaps there is some code elsewhere that
-    // needs fixing to avoid running the operation twice.
-    this.subscription = this.walletManager.activeAccount$.subscribe((a) => {
-      this.update();
-    });
 
     const actionName = await this.translate.get('Action.' + this.uiState.action?.action).toPromise();
     this.uiState.title = 'Action: ' + actionName;
@@ -107,52 +134,71 @@ export class ActionComponent implements OnInit {
     if (this.subscription) {
       this.subscription.unsubscribe();
     }
+
+    if (this.subscription2) {
+      this.subscription2.unsubscribe();
+    }
   }
 
   update() {
-    const account = this.walletManager.activeAccount;
-    this.accountState = this.accountStateStore.get(account.identifier);
-
-    if (account.singleAddress || account.type === 'identity') {
-      const addressEntry = this.accountState.receive[0];
-      let address = '';
-
-      if (account.type === 'identity') {
-        const network = this.networkService.getNetwork(account.networkType);
-        address = `${network.symbol}:${addressEntry.address.substring(0, 5)}...${addressEntry.address.substring(addressEntry.address.length - 5)}`;
-      } else {
-        address = addressEntry.address;
-      }
-
-      this.addresses = [{ address: address, keyId: '0/0', key: addressEntry.address }];
+    if (this.actionService.permissionLevel === 'wallet') {
     } else {
-      const array1 = this.accountState.receive.map((r) => {
-        return { address: `${r.address} (Receive: ${r.index})`, keyId: '0/' + r.index, key: r.address };
-      });
-      const array2 = this.accountState.change.map((r) => {
-        return { address: `${r.address} (Change: ${r.index})`, keyId: '1/' + r.index, key: r.address };
-      });
-      this.addresses = [...array1, ...array2];
-    }
+      const account = this.walletManager.activeAccount;
+      this.accountState = this.accountStateStore.get(account.identifier);
 
-    let keyIndex = 0;
+      if (account.singleAddress || account.type === 'identity') {
+        const addressEntry = this.accountState.receive[0];
+        let address = '';
 
-    if (this.requestedKey) {
-      keyIndex = this.addresses.findIndex((a) => a.key == this.requestedKey);
+        if (account.type === 'identity') {
+          const network = this.networkService.getNetwork(account.networkType);
+          address = `${network.symbol}:${addressEntry.address.substring(0, 5)}...${addressEntry.address.substring(addressEntry.address.length - 5)}`;
+        } else {
+          address = addressEntry.address;
+        }
 
-      if (keyIndex == -1) {
-        keyIndex = 0;
+        this.addresses = [{ address: address, keyId: '0/0', key: addressEntry.address }];
       } else {
-        this.keySelectionDisabled = true;
+        const array1 = this.accountState.receive.map((r) => {
+          return { address: `${r.address} (Receive: ${r.index})`, keyId: '0/' + r.index, key: r.address };
+        });
+        const array2 = this.accountState.change.map((r) => {
+          return { address: `${r.address} (Change: ${r.index})`, keyId: '1/' + r.index, key: r.address };
+        });
+        this.addresses = [...array1, ...array2];
       }
-    }
 
-    this.actionService.keyId = this.addresses[keyIndex].keyId;
-    this.actionService.key = this.addresses[keyIndex].key;
+      let keyIndex = 0;
+
+      if (this.requestedKey) {
+        keyIndex = this.addresses.findIndex((a) => a.key == this.requestedKey);
+
+        if (keyIndex == -1) {
+          keyIndex = 0;
+        } else {
+          this.keySelectionDisabled = true;
+        }
+      }
+
+      this.actionService.keyId = this.addresses[keyIndex].keyId;
+      this.actionService.key = this.addresses[keyIndex].key;
+    }
   }
 
   async onAccountChanged() {
     await this.walletManager.setActiveAccount(this.actionService.accountId);
+
+    // this.selectedNetwork = this.networkService.getNetwork(this.network);
+    // this.derivationPath = this.getDerivationPath();
+    // this.purposeAddress = this.selectedNetwork.purposeAddress ?? 44;
+  }
+
+  async onWalletChanged() {
+    console.log('this.actionService.walletId:', this.actionService.walletId);
+
+    if (this.actionService.walletId) {
+      await this.walletManager.setActiveWallet(this.actionService.walletId);
+    }
 
     // this.selectedNetwork = this.networkService.getNetwork(this.network);
     // this.derivationPath = this.getDerivationPath();

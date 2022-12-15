@@ -10,6 +10,7 @@ import { WalletManager } from './wallet-manager';
 export class ActionService {
   constructor(private communication: CommunicationService, private message: MessageService, private store: ActionStore, public uiState: UIState, public walletManager: WalletManager) {}
   accountFilter: AccountFilter;
+  walletId: string;
   accountId: string;
   keyId: string;
   key: string;
@@ -18,8 +19,8 @@ export class ActionService {
   // args: any[];
 
   /** Indicates if the action is a single user or if user is allowed to give authorization temporarily or permanently. */
-  // ephemeral = false;
-  consentType: 'ephemeral' | 'connect' | 'regular'
+  consentType: 'ephemeral' | 'connect' | 'regular' = 'regular';
+  permissionLevel: 'wallet' | 'account' | 'key' = 'key';
 
   status = {
     icon: 'verified_user',

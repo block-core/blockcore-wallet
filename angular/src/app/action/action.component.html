@@ -8,7 +8,15 @@
   </mat-card>
   <br />
 
-  <mat-form-field appearance="outline" class="input-full-width">
+  <mat-form-field *ngIf="actionService.permissionLevel == 'wallet'" appearance="outline" class="input-full-width">
+    <mat-label>{{ "Action.Wallet" | translate }}</mat-label>
+
+    <mat-select (selectionChange)="onWalletChanged()" [(value)]="actionService.walletId">
+      <mat-option *ngFor="let wallet of wallets" [value]="wallet.id">{{ wallet.name }} </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field *ngIf="actionService.permissionLevel == 'key'" appearance="outline" class="input-full-width">
     <mat-label>{{ "Action.Account" | translate }}</mat-label>
 
     <mat-select (selectionChange)="onAccountChanged()" [(value)]="actionService.accountId">
@@ -18,7 +26,7 @@
 
   <br />
 
-  <mat-form-field appearance="outline" class="input-full-width">
+  <mat-form-field *ngIf="actionService.permissionLevel == 'account'" appearance="outline" class="input-full-width">
     <mat-label>{{ "Action.Key" | translate }}</mat-label>
 
     <mat-select [disabled]="keySelectionDisabled" (selectionChange)="onKeyChanged()" [(value)]="actionService.keyId">
@@ -38,7 +46,7 @@
 
   <router-outlet></router-outlet>
   <div *ngIf="actionService.consentType === 'connect'">
-    <button class="action-button" mat-flat-button color="primary" (click)="actionService.authorize('once')">{{ "Action.Connect" | translate }}</button>&nbsp; &nbsp;
+    <button class="action-button" mat-flat-button color="primary" (click)="actionService.authorize('forever')">{{ "Action.Connect" | translate }}</button>&nbsp; &nbsp;
     <button class="action-button" mat-flat-button (click)="actionService.authorize('no')">{{ "Action.Cancel" | translate }}</button>
   </div>
   <div *ngIf="actionService.consentType === 'ephemeral'">
