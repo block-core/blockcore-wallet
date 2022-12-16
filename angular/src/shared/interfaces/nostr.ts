@@ -1,4 +1,4 @@
-export type Event = {
+export type NostrEvent = {
   id?: string;
   kind: EventKind;
   pubkey?: string;
