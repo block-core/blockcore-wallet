@@ -75,6 +75,9 @@ export class PermissionServiceShared {
 
   findPermissionIndexInSetByKey(permissionSet: PermissionDomain, action: string, key: string) {
     const permissions = permissionSet.permissions[action] as Permission[];
+    if (!permissions) {
+      return -1;
+    }
     const permissionIndex = permissions.findIndex((p) => p.key == key);
     return permissionIndex;
   }
