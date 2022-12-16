@@ -133,19 +133,19 @@ class NostrProvider {
 export class NostrNip04 {
   constructor(private provider: BlockcoreRequestProvider) {}
 
-  async encrypt(plaintext: string): Promise<string> {
+  async encrypt(peer: string, plaintext: string): Promise<string> {
     const result = (await this.provider.request({
       method: 'nostr.encrypt',
-      params: [plaintext],
+      params: [{ peer, plaintext: plaintext }],
     })) as any;
 
     return result.response || {};
   }
 
-  async decrypt(ciphertext: string): Promise<string> {
+  async decrypt(peer: string, ciphertext: string): Promise<string> {
     const result = (await this.provider.request({
       method: 'nostr.decrypt',
-      params: [ciphertext],
+      params: [{ peer, ciphertext: ciphertext }],
     })) as any;
 
     return result.response || {};

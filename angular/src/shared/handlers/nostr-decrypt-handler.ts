@@ -4,6 +4,7 @@ import { ActionHandler, ActionState } from './action-handler';
 import { validateEvent, signEvent, getEventHash, Event } from 'nostr-tools';
 import { SigningUtilities } from '../identity/signing-utilities';
 import { NostrEvent } from '../interfaces/nostr';
+import { decrypt } from 'nostr-tools/nip04';
 
 export class NostrDecryptHandler implements ActionHandler {
   action = ['nostr.decrypt'];
@@ -21,23 +22,11 @@ export class NostrDecryptHandler implements ActionHandler {
   }
 
   async execute(state: ActionState, permission: Permission): Promise<ActionResponse> {
-    // Get the private key
     const { network, node } = await this.backgroundManager.getKey(permission.walletId, permission.accountId, permission.keyId);
+    const publicKeyHex = this.utility.getIdentifier(node.publicKey);
+    const privateKeyHex = this.utility.keyToHex(node.privateKey);
 
-    // There are no proper
-    const event = state.content as NostrEvent;
-
-    //if (!event.pubkey) event.pubkey = this.utility.getIdentifier(node.publicKey);
-    // Override the pubkey if provided, we use what the user selected.
-    event.pubkey = this.utility.getIdentifier(node.publicKey);
-    if (!event.id) event.id = await getEventHash(event);
-    if (!validateEvent(event)) throw new Error('Invalid Nostr event.');
-
-    // Out-of-sync type definitions require an any here. It does return string, even though type definition says otherwise.
-    const signature = (await signEvent(event, this.utility.keyToHex(node.privateKey))) as any;
-    event.sig = signature;
-
-    // const valid = await secp.schnorr.verify(event.sig, event.id, event.pubkey);
+    const event = decrypt(privateKeyHex, publicKeyHex, state.content.ciphertext);
 
     return {
       request: state.message.request,
