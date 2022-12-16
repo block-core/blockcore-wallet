@@ -27,7 +27,9 @@ export class NostrSignEventHandler implements ActionHandler {
     // There are no proper
     const event = state.content as NostrEvent;
 
-    if (!event.pubkey) event.pubkey = this.utility.getIdentifier(node.publicKey);
+    //if (!event.pubkey) event.pubkey = this.utility.getIdentifier(node.publicKey);
+    // Override the pubkey if provided, we use what the user selected.
+    event.pubkey = this.utility.getIdentifier(node.publicKey);
     if (!event.id) event.id = await getEventHash(event);
     if (!validateEvent(event)) throw new Error('Invalid Nostr event.');
 

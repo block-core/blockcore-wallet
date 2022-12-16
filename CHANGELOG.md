@@ -1,3 +1,22 @@
+## <small>1.0.13 (2022-12-16)</small>
+
+* Add a feature list to README ([bfd0b19](https://github.com/block-core/blockcore-wallet/commit/bfd0b19))
+* Add a reference to NIP-06 that our Nostr network definition implements ([6d5dd4b](https://github.com/block-core/blockcore-wallet/commit/6d5dd4b))
+* Add nostr.signevent and utilize nostr-tools ([493d1d0](https://github.com/block-core/blockcore-wallet/commit/493d1d0))
+* Add some default Nostr relays ([841e2e4](https://github.com/block-core/blockcore-wallet/commit/841e2e4))
+* Add support for nostr.getrelays ([9adb44c](https://github.com/block-core/blockcore-wallet/commit/9adb44c))
+* Add support for nostr.publickey and fix UI issue for key selection ([636a305](https://github.com/block-core/blockcore-wallet/commit/636a305))
+* Add translations for nostr actions ([cbb95db](https://github.com/block-core/blockcore-wallet/commit/cbb95db))
+* Fix issue with invalid types on nostr-tools ([8fc70e2](https://github.com/block-core/blockcore-wallet/commit/8fc70e2))
+* Fix issue with types for signEvent call ([977414e](https://github.com/block-core/blockcore-wallet/commit/977414e))
+* Get an accounts balance from the provider (#304) ([f2f5f79](https://github.com/block-core/blockcore-wallet/commit/f2f5f79)), closes [#304](https://github.com/block-core/blockcore-wallet/issues/304)
+* Improve the title truncate using CSS instead of hard-limit with pipe ([021ae41](https://github.com/block-core/blockcore-wallet/commit/021ae41))
+* Minor fix for RTL style ([b9d173e](https://github.com/block-core/blockcore-wallet/commit/b9d173e))
+* Update README.md ([117350f](https://github.com/block-core/blockcore-wallet/commit/117350f))
+* Update version and changelog ([e53c574](https://github.com/block-core/blockcore-wallet/commit/e53c574))
+
+
+
 ## <small>1.0.12 (2022-12-14)</small>
 
 * Add some instructions on cloning with submodule ([1627396](https://github.com/block-core/blockcore-wallet/commit/1627396))
