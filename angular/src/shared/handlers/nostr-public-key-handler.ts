@@ -8,6 +8,7 @@ import { SigningUtilities } from '../identity/signing-utilities';
 // https://metadata.nostr.com/
 // https://alphaama.com/
 // https://nostr-army-knife.netlify.app/
+// https://nostr-registry.netlify.app/
 
 export class NostrPublicKeyHandler implements ActionHandler {
   action = ['nostr.publickey'];

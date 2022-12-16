@@ -9,25 +9,16 @@ export class NostrGetRelaysHandler implements ActionHandler {
 
   async prepare(state: ActionState): Promise<ActionPrepareResult> {
     return {
-      content: [
-        'wss://nostr-pub.wellorder.net',
-        'wss://nostr-relay.untethr.me',
-        'wss://nostr.semisol.dev',
-        'wss://nostr-pub.semisol.dev',
-        'wss://nostr-verified.wellorder.net',
-        'wss://nostr.drss.io',
-        'wss://relay.damus.io',
-        'wss://nostr.openchain.fr',
-        'wss://nostr.delo.software',
-        'wss://relay.nostr.info',
-        'wss://relay.minds.com/nostr/v1/ws',
-        'wss://nostr.zaprite.io',
-        'wss://nostr.oxtr.dev',
-        'wss://nostr.ono.re',
-        'wss://relay.grunch.dev',
-        'wss://nostr.sandwich.farm',
-        'wss://relay.nostr.ch',
-      ],
+      content: {
+        'wss://nostr-pub.wellorder.net': { read: true, write: true },
+        'wss://nostr-verified.wellorder.net': { read: false, write: true },
+        'wss://nostr.bitcoiner.social': { read: true, write: true },
+        'wss://nostr.drss.io': { read: true, write: true },
+        'wss://relay.damus.io': { read: true, write: true },
+        'wss://relay.nostr.info	': { read: true, write: true },
+        'wss://relay.minds.com/nostr/v1/ws': { read: false, write: true },
+        'wss://relay.nostr.ch	': { read: true, write: true },
+      },
       consent: false,
     };
   }
