@@ -400,6 +400,20 @@ export class WalletManager {
     return this.secure.unlockedWalletsSubject.value.indexOf(walletId) > -1;
   }
 
+  public getWalletNode(wallet: Wallet) {
+    const masterSeedBase64 = this.secure.get(wallet.id);
+    const masterSeed = Buffer.from(masterSeedBase64, 'base64');
+
+    const masterNode = HDKey.fromMasterSeed(masterSeed, {
+      public: 0x0488b21e,
+      private: 0x0488ade4,
+    });
+
+    let walletNode = masterNode.derive(`m/3'`);
+
+    return walletNode;
+  }
+
   async unlockWallet(walletId: string, password: string) {
     const wallet = this.getWallet(walletId);
     let unlockedMnemonic = null;
@@ -433,7 +447,7 @@ export class WalletManager {
     }
   }
 
-  async verifyWalletPassword (walletId: string, password: string) {
+  async verifyWalletPassword(walletId: string, password: string) {
     const wallet = this.getWallet(walletId);
 
     if (!wallet) {
@@ -441,7 +455,7 @@ export class WalletManager {
     }
 
     const unlockedMnemonic = await this.cryptoService.decryptData(wallet.mnemonic, password);
-    return (unlockedMnemonic!=null && unlockedMnemonic!='');
+    return unlockedMnemonic != null && unlockedMnemonic != '';
   }
 
   /** Cange the wallet password in one operation. */
@@ -759,7 +773,7 @@ export class WalletManager {
       await this.accountStateStore.save();
 
       // TODO: Improve this to only require full updateAll for networks but only newly added account's network.
-      
+
       // Make sure we have status on the network added in this new account and then run indexing. This is not await, so
       // potential race condition here the first loop of indexing.
       this.message.send(this.message.createMessage('network', null, 'background'));
