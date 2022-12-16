@@ -60,6 +60,8 @@ import { ActionVcRequestComponent } from './action/vc-request/vc-request.compone
 import { ActionWalletsComponent } from './action/wallets/wallets.component';
 import { ActionNostrPublicKeyComponent } from './action/nostr.publickey/nostr.publickey.component';
 import { ActionNostrSignEventComponent } from './action/nostr.signevent/nostr.signevent.component';
+import { ActionNostrEncryptComponent } from './action/nostr.encrypt/nostr.encrypt.component';
+import { ActionNostrDecryptComponent } from './action/nostr.decrypt/nostr.decrypt.component';
 const routes: Routes = [
   {
     path: '',
@@ -453,6 +455,20 @@ const routes: Routes = [
       {
         path: 'nostr.signevent',
         component: ActionNostrSignEventComponent,
+        resolve: {
+          data: LoadingResolverService,
+        },
+      },
+      {
+        path: 'nostr.encrypt',
+        component: ActionNostrEncryptComponent,
+        resolve: {
+          data: LoadingResolverService,
+        },
+      },
+      {
+        path: 'nostr.decrypt',
+        component: ActionNostrDecryptComponent,
         resolve: {
           data: LoadingResolverService,
         },

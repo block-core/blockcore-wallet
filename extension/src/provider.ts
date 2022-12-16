@@ -123,8 +123,47 @@ class BlockcoreRequestProvider implements Web5RequestProvider {
     return call.response || {};
   }
 
+  nip04 = {
+    async encrypt(plaintext: string): Promise<string> {
+      const call = (await this.provider.#call('request', {
+        method: 'nostr.encrypt',
+        params: [plaintext],
+      })) as any;
+
+      return call.response || {};
+    },
+
+    async decrypt(ciphertext: string): Promise<string> {
+      const call = (await this.provider.#call('request', {
+        method: 'nostr.encrypt',
+        params: [ciphertext],
+      })) as any;
+
+      return call.response || {};
+    },
+  };
+
   // TODO: Add support for NIP-04 (encrypt/decrypt), example: https://github.com/getAlby/lightning-browser-extension/blob/master/src/extension/ln/nostr/index.ts
 }
+
+// class NostrNip04 {
+//   constructor(private provider: BlockcoreRequestProvider) {}
+
+//   async encrypt(peer: string, plaintext: string): Promise<string> {
+//     const call = (await this.provider.#call('request', {
+//       method: 'nostr.encrypt',
+//       params: [{}],
+//     })) as any;
+
+//     return call.response || {};
+
+//     return this.provider.execute('encryptOrPrompt', { peer, plaintext });
+//   }
+
+//   async decrypt(peer: string, ciphertext: string): Promise<string> {
+//     return this.provider.execute('decryptOrPrompt', { peer, ciphertext });
+//   }
+// }
 
 const provider = new BlockcoreRequestProvider();
 Injector.register(provider);
