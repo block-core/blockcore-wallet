@@ -1,7 +1,7 @@
 import { ActionMessage, ActionRequest, ActionResponse, EventEmitter, Listener } from '../../angular/src/shared';
 import { Injector, RequestArguments, Web5RequestProvider } from '@blockcore/web5-injector';
 
-class BlockcoreRequestProvider implements Web5RequestProvider {
+export class BlockcoreRequestProvider implements Web5RequestProvider {
   name = 'Blockcore';
   #requests = {};
   #events = new EventEmitter();
@@ -91,79 +91,66 @@ class BlockcoreRequestProvider implements Web5RequestProvider {
     }
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, getRandomSymbol);
   }
+}
+
+class NostrProvider {
+  constructor(private provider: BlockcoreRequestProvider) {}
 
   /** Nostr NIP-07 function: https://github.com/nostr-protocol/nips/blob/master/07.md */
   async getPublicKey(): Promise<string | unknown> {
-    const call = (await this.#call('request', {
+    const result = (await this.provider.request({
       method: 'nostr.publickey',
       params: [{}],
     })) as any;
 
-    // Only return the response which contains pubkey string.
-    return call.response;
+    // Parse the response and only return event.
+    return result.response;
   }
 
   /** Nostr NIP-07 function: https://github.com/nostr-protocol/nips/blob/master/07.md */
   async signEvent(event: Event): Promise<Event> {
-    const call = (await this.#call('request', {
+    const result = (await this.provider.request({
       method: 'nostr.signevent',
       params: [event],
     })) as any;
 
     // Parse the response and only return event.
-    return call.response;
+    return result.response;
   }
 
   async getRelays(): Promise<string[]> {
-    const call = (await this.#call('request', {
+    const result = (await this.provider.request({
       method: 'nostr.getrelays',
       params: [{}],
     })) as any;
 
-    return call.response || {};
+    return result.response || {};
   }
 
-  nip04 = {
-    async encrypt(plaintext: string): Promise<string> {
-      const call = (await this.provider.#call('request', {
-        method: 'nostr.encrypt',
-        params: [plaintext],
-      })) as any;
-
-      return call.response || {};
-    },
-
-    async decrypt(ciphertext: string): Promise<string> {
-      const call = (await this.provider.#call('request', {
-        method: 'nostr.encrypt',
-        params: [ciphertext],
-      })) as any;
-
-      return call.response || {};
-    },
-  };
-
-  // TODO: Add support for NIP-04 (encrypt/decrypt), example: https://github.com/getAlby/lightning-browser-extension/blob/master/src/extension/ln/nostr/index.ts
+  nip04 = new NostrNip04(this.provider);
 }
 
-// class NostrNip04 {
-//   constructor(private provider: BlockcoreRequestProvider) {}
+export class NostrNip04 {
+  constructor(private provider: BlockcoreRequestProvider) {}
 
-//   async encrypt(peer: string, plaintext: string): Promise<string> {
-//     const call = (await this.provider.#call('request', {
-//       method: 'nostr.encrypt',
-//       params: [{}],
-//     })) as any;
+  async encrypt(plaintext: string): Promise<string> {
+    const result = (await this.provider.request({
+      method: 'nostr.encrypt',
+      params: [plaintext],
+    })) as any;
 
-//     return call.response || {};
+    return result.response || {};
+  }
 
-//     return this.provider.execute('encryptOrPrompt', { peer, plaintext });
-//   }
+  async decrypt(ciphertext: string): Promise<string> {
+    const result = (await this.provider.request({
+      method: 'nostr.decrypt',
+      params: [ciphertext],
+    })) as any;
 
-//   async decrypt(peer: string, ciphertext: string): Promise<string> {
-//     return this.provider.execute('decryptOrPrompt', { peer, ciphertext });
-//   }
-// }
+    return result.response || {};
+  }
+}
 
 const provider = new BlockcoreRequestProvider();
 Injector.register(provider);
@@ -174,4 +161,4 @@ globalThis.blockcore = provider;
 // TODO: Consider playing nice with other extensions that implement the same global objects,
 // perhaps something similar like the suggest Web5Provider. Also we should consider not injection if
 // user have zero Nostr accounts in their wallets.
-globalThis.nostr = provider;
+globalThis.nostr = new NostrProvider(provider);
