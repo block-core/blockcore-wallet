@@ -5,7 +5,7 @@
       <span>{{ "Account.Identity" | translate }}</span>
     </ng-template>
 
-    <div class="page">
+    <div *ngIf="isDid" class="page">
       <h2>
         {{ readableId }}
         <button class="copy-button" mat-icon-button (click)="copy()">
@@ -68,6 +68,82 @@
       <p>
         <button class="signup-button" [disabled]="published === true" mat-flat-button color="warn" (click)="publish()">{{ "Account.Publish" | translate }}</button>
       </p>
+
+      <!-- <p>
+                Your identity is primarily a list of public keys that you make public available for others to connect with you
+                in a secure manner.</p>
+            <p>You can use your identity to login to web apps, to chat with others, to sign contracts and documents, to
+                establish digital agreements and a lot more.</p> -->
+
+      <!-- <h3>DID Document:</h3>
+            <textarea class="diddocument">{{identity.didDocument | json}}</textarea> -->
+    </div>
+
+    <div *ngIf="!isDid" class="page">
+      <h2>
+        {{ readableId }}
+        <button class="copy-button" mat-icon-button (click)="copy()">
+          <mat-icon>content_copy</mat-icon>
+        </button>
+        <!-- <button class="copy-button" mat-icon-button (click)="openDid()">
+          <mat-icon>travel_explore</mat-icon>
+        </button> -->
+      </h2>
+
+      <!-- <h3 class="break">{{identifier}} <button class="copy-button" mat-icon-button (click)="copy()">
+        <mat-icon>content_copy</mat-icon>
+    </button></h3> -->
+      <!-- <h4>{{walletManager.activeAccount.did}}</h4> -->
+
+      <!-- <p class="icon-indicator" *ngIf="published === undefined"><mat-icon class="icon-warn">loop</mat-icon>Loading...</p>
+      <p class="icon-indicator" *ngIf="published === false"><mat-icon class="icon-warn">done</mat-icon>{{ "Account.ThisIdentityIsCurrentlyNOTPublic" | translate }}</p>
+      <p class="icon-indicator" *ngIf="published === true"><mat-icon class="icon-success">done</mat-icon>{{ "Account.ThisIdentityIsCurrentlyPublic" | translate }}</p> -->
+
+      <!-- <mat-form-field class="input-full-width" appearance="outline">
+        <mat-label>Verifiable Data Registry URL</mat-label>
+        <input matInput [(ngModel)]="verifiableDataRegistryUrl" />
+        <mat-hint
+          >Set a custom VDR URL if you self-host your own instance of Blockcore
+          Vault.</mat-hint
+        >
+      </mat-form-field>
+
+      <br /><br />
+      IMPORTANT NOTE ON PRIVACY
+      <br />
+      The DID Document should never contain personal identifiable information.
+      Never put your e-mail address or name of any kind into the URL above.
+      <br /><br />
+      <p>
+        <button
+          class="signup-button"
+          mat-flat-button
+          color="primary"
+          (click)="save()"
+        >
+          Save (locally)
+        </button>
+        <button
+          class="signup-button"
+          mat-flat-button
+          color="warn"
+          (click)="publish()"
+        >
+          Publish
+        </button>
+      </p> -->
+
+      <p *ngIf="identity?.published">
+        <a [href]="identityUrl" target="_blank">{{ "Account.ViewIdentityOnServer" | translate }}</a>
+      </p>
+
+      <br /><br />
+
+      <!--
+      <p>
+        <button class="signup-button" [disabled]="published === true" mat-flat-button color="warn" (click)="publish()">{{ "Account.Publish" | translate }}</button>
+      </p>
+      -->
 
       <!-- <p>
                 Your identity is primarily a list of public keys that you make public available for others to connect with you

@@ -37,6 +37,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
   identifier: string;
   readableId: string;
   network: Network;
+  isDid = true;
   wellKnownDomain = 'https://';
   verifiableDataRegistryUrl = '';
   prefix = '';
@@ -91,6 +92,10 @@ export class IdentityComponent implements OnInit, OnDestroy {
       const identity = new BlockcoreIdentity(verificationMethod);
       this.identifier = identity.did;
       this.readableId = identity.short;
+
+      if (this.identifier.startsWith('nostr') || this.identifier.startsWith('npub')) {
+        this.isDid = false;
+      }
 
       // Persist when changing accounts.
       // this.uiState.save();
