@@ -3,6 +3,12 @@ import { ActionPrepareResult, ActionResponse, Permission } from '../interfaces';
 import { ActionHandler, ActionState } from './action-handler';
 import { SigningUtilities } from '../identity/signing-utilities';
 
+// Some Nostr resources and tools:
+
+// https://metadata.nostr.com/
+// https://alphaama.com/
+// https://nostr-army-knife.netlify.app/
+
 export class NostrPublicKeyHandler implements ActionHandler {
   action = ['nostr.publickey'];
   utility = new SigningUtilities();

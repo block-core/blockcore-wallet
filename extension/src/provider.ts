@@ -114,6 +114,15 @@ class BlockcoreRequestProvider implements Web5RequestProvider {
     return call.response;
   }
 
+  async getRelays(): Promise<string[]> {
+    const call = (await this.#call('request', {
+      method: 'nostr.getrelays',
+      params: [{}],
+    })) as any;
+
+    return call.response || {};
+  }
+
   // TODO: Add support for NIP-04 (encrypt/decrypt), example: https://github.com/getAlby/lightning-browser-extension/blob/master/src/extension/ln/nostr/index.ts
 }
 
