@@ -371,6 +371,8 @@
   "Action": {
     "nostr.publickey": "Nostr Identifier",
     "nostr.signevent": "Nostr Sign Event",
+    "nostr.encrypt": "Nostr Encrypt Event",
+    "nostr.decrypt": "Nostr Decrypt Event",
     "Connect": "Connect",
     "wallets": "Connect",
     "Authorize": "Authorize",
