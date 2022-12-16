@@ -12,6 +12,10 @@ export class ActionNostrEncryptComponent implements OnInit, OnDestroy {
 
   constructor(public uiState: UIState, public actionService: ActionService) {
     this.actionService.consentType = 'regular';
+
+    this.actionService.status.icon = 'security';
+    this.actionService.status.title = 'Encrypt data';
+    this.actionService.status.description = `App wants you to perform encryption on the following text`;
   }
 
   ngOnDestroy(): void {}
@@ -20,7 +24,9 @@ export class ActionNostrEncryptComponent implements OnInit, OnDestroy {
     // The content that is prepared for signing is normally an object, to render
     // this to the user, we'd want to make it a nice string if it's not an string.
     if (typeof this.uiState.action.content !== 'string') {
-      this.content = JSON.stringify(this.uiState.action.content, null, 2);
+      const cont = this.uiState.action.content as any;
+      this.content = JSON.stringify(cont.plaintext);
+      // this.content = JSON.stringify(this.uiState.action.content, null, 2);
     } else {
       this.content = this.uiState.action.content;
     }
