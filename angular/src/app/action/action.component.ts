@@ -5,6 +5,7 @@ import { PermissionStore } from 'src/shared/store/permission-store';
 import { AppManager, NetworksService, UIState, WalletManager } from '../services';
 import { TranslateService } from '@ngx-translate/core';
 import { Router } from '@angular/router';
+import { SigningUtilities } from '../../shared/identity/signing-utilities';
 
 @Component({
   selector: 'app-action',
@@ -20,6 +21,7 @@ export class ActionComponent implements OnInit {
   subscription2: any;
   requestedKey: string;
   keySelectionDisabled = false;
+  utility = new SigningUtilities();
 
   constructor(
     public translate: TranslateService,
@@ -50,7 +52,7 @@ export class ActionComponent implements OnInit {
           // this.router.navigateByUrl('/home');
         }
 
-        // this.update();
+        this.update();
       });
 
       if (!this.actionService.walletId) {
@@ -142,6 +144,19 @@ export class ActionComponent implements OnInit {
 
   update() {
     if (this.actionService.permissionLevel === 'wallet') {
+      const account = this.walletManager.activeAccount;
+      this.accountState = this.accountStateStore.get(account.identifier);
+
+      const walletNode = this.walletManager.getWalletNode(this.walletManager.activeWallet);
+
+      const address = this.utility.getIdentifier(walletNode.publicKey);
+      this.addresses = [{ address: address, keyId: null, key: address }];
+
+      let keyIndex = 0;
+
+      this.keySelectionDisabled = true;
+      this.actionService.keyId = this.addresses[keyIndex].keyId;
+      this.actionService.key = this.addresses[keyIndex].key;
     } else {
       const account = this.walletManager.activeAccount;
       this.accountState = this.accountStateStore.get(account.identifier);

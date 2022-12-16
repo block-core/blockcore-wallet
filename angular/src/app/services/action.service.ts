@@ -105,6 +105,7 @@ export class ActionService {
         type: this.uiState.action.action,
         app: this.uiState.action.app,
         walletId: this.walletManager.activeWalletId, // This shouldn't really be the internal wallet ID, but instead should be the pubkey? Or should we have both key and wallet ID?
+        key: key, // Wallet Key public key (BCIP-0003).
       };
 
       // Inform the provider script that user has signed the data.

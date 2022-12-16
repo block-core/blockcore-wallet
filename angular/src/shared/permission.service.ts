@@ -23,11 +23,9 @@ export class PermissionServiceShared {
       const permissionSet = permissions[i];
 
       for (let permission in permissionSet.permissions) {
-
         const perms = permissionSet.permissions[permission];
 
-        for(let j = 0; j < perms.length; j++)
-        {
+        for (let j = 0; j < perms.length; j++) {
           const perm = perms[j];
 
           console.log('PERM', perm);
@@ -69,10 +67,20 @@ export class PermissionServiceShared {
 
   findPermissionIndexInSet(permissionSet: PermissionDomain, action: string, walletId: string, accountId: string, keyId: string) {
     const permissions = permissionSet.permissions[action] as Permission[];
+    let permissionIndex = -1;
+
     if (!permissions) {
-      return -1;
+      return permissionIndex;
     }
-    const permissionIndex = permissions.findIndex((p) => p.walletId == walletId && p.accountId == accountId && p.keyId == keyId);
+
+    if (accountId && keyId) {
+      permissionIndex = permissions.findIndex((p) => p.walletId == walletId && p.accountId == accountId && p.keyId == keyId);
+    } else if (accountId) {
+      permissionIndex = permissions.findIndex((p) => p.walletId == walletId && p.accountId == accountId && p.keyId == keyId);
+    } else {
+      permissionIndex = permissions.findIndex((p) => p.walletId == walletId);
+    }
+
     return permissionIndex;
   }
 
@@ -145,10 +153,16 @@ export class PermissionServiceShared {
       }
 
       // First check if we already have an persisted permission for this exact key:
-      const permissions = permissionSet.permissions[permission.action] as Permission[];
+      let permissions = permissionSet.permissions[permission.action] as Permission[];
 
+      // If the permissions for this action does not exists, create it and assign it.
+      if (permissions == undefined || permissions == null) {
+        permissions = [];
+        permissionSet.permissions[permission.action] = permissions;
+      }
+
+      // This will return permission based upon either just walletId, walletId and accountId, or walletId, accountId and keyId.
       const permissionIndex = this.findPermissionIndexInSet(permissionSet, permission.action, permission.walletId, permission.accountId, permission.keyId);
-      // const permissionIndex = permissions.findIndex((p) => p.walletId == permission.walletId && p.accountId == permission.accountId && p.keyId == permission.keyId);
 
       // Replace existing permission if exists.
       if (permissionIndex > -1) {

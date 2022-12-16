@@ -20,6 +20,9 @@ export class WalletsHandler implements ActionHandler {
   async execute(state: ActionState, permission: Permission): Promise<ActionResponse> {
     const result = await this.backgroundManager.getWalletAndAccounts(permission.walletId);
 
+    // Put the Wallet Key public key on the response.
+    result.wallet.key = permission.key;
+
     if (result) {
       return { key: permission.key, request: state.message.request, response: result };
     } else {
