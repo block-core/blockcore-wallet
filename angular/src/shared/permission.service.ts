@@ -69,6 +69,9 @@ export class PermissionServiceShared {
 
   findPermissionIndexInSet(permissionSet: PermissionDomain, action: string, walletId: string, accountId: string, keyId: string) {
     const permissions = permissionSet.permissions[action] as Permission[];
+    if (!permissions) {
+      return -1;
+    }
     const permissionIndex = permissions.findIndex((p) => p.walletId == walletId && p.accountId == accountId && p.keyId == keyId);
     return permissionIndex;
   }
