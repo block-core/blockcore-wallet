@@ -1,4 +1,12 @@
-## <small>1.0.14 (2022-12-17)</small>
+## <small>1.0.15 (2022-12-17)</small>
+
+* Ensure that nostr get public key always work even when wallet is locked ([fe2f385](https://github.com/block-core/blockcore-wallet/commit/fe2f385))
+* Update lists ([508303c](https://github.com/block-core/blockcore-wallet/commit/508303c))
+* Update version and changelog ([108712c](https://github.com/block-core/blockcore-wallet/commit/108712c))
+
+
+
+## <small>1.0.14 (2022-12-16)</small>
 
 * Add language resources for new actions ([7b40a45](https://github.com/block-core/blockcore-wallet/commit/7b40a45))
 * Add working encryption for Nostr ([b5b565f](https://github.com/block-core/blockcore-wallet/commit/b5b565f))
