@@ -155,10 +155,11 @@ async function handleContentScriptMessage(message: ActionMessage) {
       permission = permissionService.findPermissionByKey(message.app!, method, params.key);
     } else {
       // Get all existing permissions that exists for this app and method:
-      let permissions = permissionService.findPermissions(message.app!, method);
+      let permissions = permissionService.findPermissions(message.app!, method) as any[];
 
       // If there are no specific key specified in the signing request, just grab the first permission that is approved for this
       // website and use that. Normally there will only be a single one if the web app does not request specific key.
+      // This key is selected based upon app and method.
       if (permissions?.length > 0) {
         permission = permissions[0];
       }

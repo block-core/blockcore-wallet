@@ -24,14 +24,16 @@ export class NostrPublicKeyHandler implements ActionHandler {
   }
 
   async execute(state: ActionState, permission: Permission): Promise<ActionResponse> {
-    // Get the private key
-    const { network, node } = await this.backgroundManager.getKey(permission.walletId, permission.accountId, permission.keyId);
+    let publicKey = permission.key;
 
-    const publicKeyHex = this.utility.getIdentifier(node.publicKey);
+    // Remove the "nostr:key:" prefix.
+    if (publicKey.indexOf(':') > -1) {
+      publicKey = publicKey.substring(publicKey.lastIndexOf(':') + 1);
+    }
 
     return {
       request: state.message.request,
-      response: publicKeyHex,
+      response: publicKey,
     };
   }
 }
