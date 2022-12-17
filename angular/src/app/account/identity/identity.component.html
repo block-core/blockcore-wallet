@@ -162,9 +162,7 @@
       <span>{{ "Account.Profile" | translate }}</span>
     </ng-template>
 
-    <div class="page">
-      <!-- <h2>Profile:</h2> -->
-      <!-- <h4>{{identity.id}}</h4> -->
+    <div *ngIf="isDid" class="page">
 
       <p class="icon-indicator" *ngIf="!identity?.published"><mat-icon class="icon-warn">done</mat-icon> {{ "Account.ThisProfileIsCurrentlyNOTPublic" | translate }}</p>
       <p class="icon-indicator" *ngIf="identity?.published"><mat-icon class="icon-success">done</mat-icon> {{ "Account.ThisProfileIsCurrentlyPublic" | translate }}</p>
@@ -225,7 +223,7 @@
       <span>Tools</span>
     </ng-template>
 
-    <div class="page">
+    <div *ngIf="isDid" class="page">
       <p>
         <button class="signup-button" mat-stroked-button (click)="copyDIDDocument()">{{ "Account.CopyDIDDocument" | translate }}</button>
 
