@@ -35,7 +35,6 @@
   },
   "Dashboard": {
     "Accounts": "حساب‌ها",
-    "Actions": "عملیات",
     "Vaults": "خزانه‌ها",
     "Collectibles": "کلکسیون",
     "Inbox": "صندوق ورودی",
@@ -45,8 +44,6 @@
     "AddWallet": "افزودن کیف پول",
     "Exchange": "صرافی (خرید/فروش)",
     "ScanPayment": "اسکن پرداخت",
-    "CreateAccount": "ساختن حساب",
-    "CreateWallet": "ساختن کیف پول",
     "NoCollectablesFound": "موردی یافت نشد",
     "GoToMarketplace": "به بازار بروید",
     "ZeroAccounts": "کیف پول شما هیچ حسابی ندارد."

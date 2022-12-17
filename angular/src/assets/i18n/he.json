@@ -35,7 +35,6 @@
   },
   "Dashboard": {
     "Accounts": "חשבונות",
-    "Actions": "פעולות",
     "Vaults": "כספות",
     "Collectibles": "אוספים",
     "Inbox": "תיבת הודעות",
@@ -45,8 +44,6 @@
     "AddWallet": "הוספת ארנק",
     "Exchange": "החלפת מטבעות (מכירה/קניה)",
     "ScanPayment": "סריקת תשלום",
-    "CreateAccount": "יצירת חשבון",
-    "CreateWallet": "יצירת ארנק",
     "NoCollectablesFound": "לא נמצאו פריטים",
     "GoToMarketplace": "פתיחת שוק פריטים",
     "ZeroAccounts": "Your wallet has zero accounts."

@@ -35,7 +35,6 @@
   },
   "Dashboard": {
     "Accounts": "Accounts",
-    "Actions": "Actions",
     "Vaults": "Vaults",
     "Collectibles": "Collectibles",
     "Inbox": "Inbox",
@@ -45,8 +44,6 @@
     "AddWallet": "Add Wallet",
     "Exchange": "Exchange (buy/sell)",
     "ScanPayment": "Scan Payment",
-    "CreateAccount": "Create Account",
-    "CreateWallet": "Create Wallet",
     "NoCollectablesFound": "No collectables found",
     "GoToMarketplace": "Go to marketplace",
     "ZeroAccounts": "Your wallet has zero accounts."
@@ -204,7 +201,6 @@
     "AddressMode": "Address Mode",
     "AddressFormat": "Address Format",
     "AccountDerivationPath": "Account Derivation Path",
-    "CreateAccount": "Create Account",
     "AccountName": "Account name",
     "Index": "Index",
     "Normal": "Normal",

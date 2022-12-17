@@ -35,7 +35,6 @@
   },
   "Dashboard": {
     "Accounts": "Kontoer",
-    "Actions": "Handlinger",
     "Vaults": "Hvelv",
     "Collectibles": "Samleobjekter",
     "Inbox": "Innboks",
@@ -45,8 +44,6 @@
     "AddWallet": "Opprett lommebok",
     "Exchange": "Exchange (kjøp/selg)",
     "ScanPayment": "Skann betaling",
-    "CreateAccount": "Opprett konto",
-    "CreateWallet": "Opprett lommebok",
     "NoCollectablesFound": "Ingen samleobjekter funnet",
     "GoToMarketplace": "Gå til markedsplassen",
     "ZeroAccounts": "Lommeboken din har null kontoer."

@@ -40,25 +40,13 @@
         </a> -->
 
         <mat-divider></mat-divider>
-        <div mat-subheader>{{ "Dashboard.Actions" | translate }}</div>
+
+        <div mat-subheader>{{ "Dashboard.Tools" | translate }}</div>
 
         <a mat-list-item *ngIf="walletManager.activeWallet && walletManager.unlocked" (click)="scanPayment()" routerLinkActive="active-link">
           <mat-icon mat-list-icon>qr_code_scanner</mat-icon>
           <div mat-line>{{ "Dashboard.ScanPayment" | translate }}</div>
         </a>
-
-        <a mat-list-item *ngIf="walletManager.activeWallet && walletManager.unlocked" [routerLink]="['/account/create']" routerLinkActive="active-link">
-          <mat-icon mat-list-icon>add_circle_outline</mat-icon>
-          <div mat-line>{{ "Dashboard.CreateAccount" | translate }}</div>
-        </a>
-
-        <a mat-list-item *ngIf="walletManager.activeWallet && walletManager.unlocked" [routerLink]="['/wallet/create']" routerLinkActive="active-link">
-          <mat-icon mat-list-icon>account_balance_wallet</mat-icon>
-          <div mat-line>{{ "Dashboard.CreateWallet" | translate }}</div>
-        </a>
-
-        <mat-divider></mat-divider>
-        <div mat-subheader>{{ "Dashboard.Tools" | translate }}</div>
 
         <a mat-list-item [routerLink]="['/contacts']">
           <mat-icon mat-list-icon>import_contacts</mat-icon>
@@ -72,7 +60,7 @@
 
         <a mat-list-item [routerLink]="['/sign']">
           <mat-icon mat-list-icon>fingerprint</mat-icon>
-          <div mat-line>{{"Dashboard.SignVerify" | translate }}</div>
+          <div mat-line>{{ "Dashboard.SignVerify" | translate }}</div>
         </a>
 
         <!-- <a mat-list-item (click)="copyErrorLogs()">
