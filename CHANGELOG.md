@@ -1,3 +1,19 @@
+## <small>1.0.14 (2022-12-17)</small>
+
+* Add language resources for new actions ([7b40a45](https://github.com/block-core/blockcore-wallet/commit/7b40a45))
+* Add working encryption for Nostr ([b5b565f](https://github.com/block-core/blockcore-wallet/commit/b5b565f))
+* Change the identity UI for nostr based idenetities ([00012e4](https://github.com/block-core/blockcore-wallet/commit/00012e4))
+* check that permission is not null (#309) ([121badb](https://github.com/block-core/blockcore-wallet/commit/121badb)), closes [#309](https://github.com/block-core/blockcore-wallet/issues/309)
+* Fix bug in get permission by key (#313) ([d958284](https://github.com/block-core/blockcore-wallet/commit/d958284)), closes [#313](https://github.com/block-core/blockcore-wallet/issues/313)
+* Fully implement BCIP-0003 with Wallet Key ([8ff8144](https://github.com/block-core/blockcore-wallet/commit/8ff8144))
+* Implements BCIP-0003 that have deterministic Wallet Key derivation ([04f8f24](https://github.com/block-core/blockcore-wallet/commit/04f8f24))
+* Refactor Nostr Provider and separate into dedicated class ([cddac01](https://github.com/block-core/blockcore-wallet/commit/cddac01))
+* Update labels and information on encrypt and decrypt actions ([7d70ef9](https://github.com/block-core/blockcore-wallet/commit/7d70ef9))
+* Update version and changelog ([1fbf7da](https://github.com/block-core/blockcore-wallet/commit/1fbf7da))
+* WIP: Add encrypt and decrypt actions for Nostr ([2a57feb](https://github.com/block-core/blockcore-wallet/commit/2a57feb))
+
+
+
 ## <small>1.0.13 (2022-12-16)</small>
 
 * Add a feature list to README ([bfd0b19](https://github.com/block-core/blockcore-wallet/commit/bfd0b19))
