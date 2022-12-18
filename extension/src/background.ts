@@ -292,10 +292,9 @@ chrome.runtime.onSuspend.addListener(() => {
   console.log('Extension: onSuspend.');
 });
 
-async function getTabId() {
-  var tabs = await chrome.tabs.query({ active: true, currentWindow: true });
-  return tabs[0].id;
-}
+chrome.runtime.onConnect.addListener((port) => {
+  console.log('onConnect:', port);
+});
 
 chrome.runtime.onInstalled.addListener(async ({ reason }) => {
   // Initialize the Decentralized Web Node.
@@ -332,8 +331,6 @@ chrome.runtime.onInstalled.addListener(async ({ reason }) => {
 });
 
 chrome.alarms.onAlarm.addListener(async (alarm: chrome.alarms.Alarm) => {
-  // console.debug('onAlarm', alarm);
-
   if (alarm.name === 'periodic') {
     await shared.checkLockTimeout();
   } else if (alarm.name === 'index') {
@@ -341,23 +338,6 @@ chrome.alarms.onAlarm.addListener(async (alarm: chrome.alarms.Alarm) => {
   }
 });
 
-// chrome.runtime.onMessage.addListener(async (req, sender) => {
-//   let { prompt } = req;
-
-//   if (prompt) {
-//     console.log('handlePromptMessage');
-//     // return handlePromptMessage(req, sender);
-//   } else {
-//     console.log('handleContentScriptMessage');
-//     // return handleContentScriptMessage(req);
-//   }
-// });
-
-// chrome.runtime.onMessage.addListener(async (message: Message, sender, sendResponse) => {
-
-// });
-
-// let store = new NetworkStatusStore();
 let networkWatcherRef;
 
 const updateNetworkStatus = async () => {

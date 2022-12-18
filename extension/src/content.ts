@@ -44,7 +44,13 @@ if (!globalThis.blockcore) {
 
       try {
         // Send the message to background service:
-        response = await browser.runtime.sendMessage(msg);
+        if (chrome.runtime?.id) {
+          response = await browser.runtime.sendMessage(msg);
+        } else {
+          console.warn('The extension has been updated and context is lost. Page requires reload.');
+          // TODO: Can we re-inject script in the caller? Should we display a popup in the DOM of the website?
+          location.reload();
+        }
       } catch (error) {
         response = { error };
       }

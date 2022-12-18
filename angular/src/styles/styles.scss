@@ -55,7 +55,7 @@ body {
   unicode-bidi: embed;
 }
 
-[dir=rtl] {
+[dir="rtl"] {
   h1,
   h2,
   h3,
@@ -185,7 +185,7 @@ a:hover {
   cursor: pointer;
 }
 
-[dir=rtl] {
+[dir="rtl"] {
   .maximize {
     position: fixed;
     bottom: 0px;
@@ -238,6 +238,11 @@ header {
 
 .wrap {
   overflow-wrap: break-word;
+}
+
+.unwrap {
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .hint-icon {
@@ -312,12 +317,24 @@ select {
   background-color: #a3a5a7c2;
 }
 
-.network-status { font-size: 0.6em;}
-.network-status-syncing { color: orange; }
-.network-status-online { color: #22a848; }
-.network-status-error { color: #a83222; }
-.network-status-offline { color: #a83222; }
-.network-status-unknown { color: gray; }
+.network-status {
+  font-size: 0.6em;
+}
+.network-status-syncing {
+  color: orange;
+}
+.network-status-online {
+  color: #22a848;
+}
+.network-status-error {
+  color: #a83222;
+}
+.network-status-offline {
+  color: #a83222;
+}
+.network-status-unknown {
+  color: gray;
+}
 
 .icon-warn {
   color: orange;
