@@ -7,7 +7,7 @@ export class NOSTR implements Network {
     symbol = 'nostr:key';
     network = 1237;
     purpose = 44;
-    addressPurpose = 19; // NIP-19
+    addressPurpose = 340;
     messagePrefix = '\x18Bitcoin Signed Message:\n';
     bech32 = 'npub';
     bip32 = {

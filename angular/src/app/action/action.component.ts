@@ -166,7 +166,9 @@ export class ActionComponent implements OnInit {
         let address = '';
 
         // Only do this for DIDs, not for Nostr.
-        if (account.type === 'identity' && account.purposeAddress != 19) {
+        if (account.purposeAddress == 19) {
+          address = this.utility.getNostrIdentifier(addressEntry.address);
+        } else if (account.type === 'identity') {
           const network = this.networkService.getNetwork(account.networkType);
           address = `${network.symbol}:${addressEntry.address.substring(0, 5)}...${addressEntry.address.substring(addressEntry.address.length - 5)}`;
         } else {

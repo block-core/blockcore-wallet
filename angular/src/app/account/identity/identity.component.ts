@@ -113,13 +113,12 @@ export class IdentityComponent implements OnInit, OnDestroy {
 
         // For backwards compatibility, we might need to derive the address again and update the store.
         // TODO: Delete this in the future!
-        if (!address.address.startsWith('npub')) {
-          accountState.receive[0] = this.walletManager.getReceiveAddressByIndex(this.walletManager.activeAccount, 0);
-          accountState.change[0] = this.walletManager.getReceiveAddressByIndex(this.walletManager.activeAccount, 0);
-          await this.accountStateStore.save();
-
-          address = accountState.receive[0];
-        }
+        // if (!address.address.startsWith('npub')) {
+        //   accountState.receive[0] = this.walletManager.getReceiveAddressByIndex(this.walletManager.activeAccount, 0);
+        //   accountState.change[0] = this.walletManager.getReceiveAddressByIndex(this.walletManager.activeAccount, 0);
+        //   await this.accountStateStore.save();
+        //   address = accountState.receive[0];
+        // }
 
         this.identifier = address.address;
         // this.identifierWithoutPrefix = this.identifier.substring(this.identifier.lastIndexOf(':') + 1);

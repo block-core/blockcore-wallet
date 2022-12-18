@@ -38,8 +38,8 @@ export class CryptoUtility {
       });
 
       return address;
-    } else if (addressPurpose == 19) {
-      return this.convertToBech32(publicKey, network.bech32);
+    // } else if (addressPurpose == 19) {
+    //   return this.convertToBech32(publicKey, network.bech32);
     } else if (addressPurpose == 340) {
       return this.getIdentifier(publicKey);
     }
