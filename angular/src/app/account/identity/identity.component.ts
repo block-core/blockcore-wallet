@@ -18,6 +18,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { PasswordDialog } from 'src/app/shared/password-dialog/password-dialog';
 import * as secp from '@noble/secp256k1';
 import * as QRCode from 'qrcode';
+import { SigningUtilities } from 'src/shared/identity/signing-utilities';
 
 @Component({
   selector: 'app-identity',
@@ -58,6 +59,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
   invalidConversion: boolean;
   showConversionOptions = false;
   conversionKeyType = 'npub';
+  utility = new SigningUtilities();
 
   get identityUrl(): string {
     if (!this.identity?.published) {
@@ -108,8 +110,10 @@ export class IdentityComponent implements OnInit, OnDestroy {
       this.identifier = identity.did;
       this.readableId = identity.short;
 
-      if (this.identifier.startsWith('nostr') || this.identifier.startsWith('npub')) {
+      if (this.network.bech32 === 'npub') {
         this.isDid = false;
+
+        this.identifier = this.utility.getNostrIdentifier(address.address);
 
         // For backwards compatibility, we might need to derive the address again and update the store.
         // TODO: Delete this in the future!
@@ -120,7 +124,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
         //   address = accountState.receive[0];
         // }
 
-        this.identifier = address.address;
+        // this.identifier = address.address;
         // this.identifierWithoutPrefix = this.identifier.substring(this.identifier.lastIndexOf(':') + 1);
         // this.readableId = identity.short.substring(identity.short.lastIndexOf(':') + 1);
 

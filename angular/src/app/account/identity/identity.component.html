@@ -82,7 +82,7 @@
     <div *ngIf="!isDid" class="page centered wrap">
       <h2>Nostr Public Key</h2>
 
-      <p>
+      <p class="selectable">
         {{ identifier }}
         <button class="copy-button" mat-icon-button (click)="copy()">
           <mat-icon>content_copy</mat-icon>
