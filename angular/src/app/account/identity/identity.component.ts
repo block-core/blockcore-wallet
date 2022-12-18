@@ -139,6 +139,16 @@ export class IdentityComponent implements OnInit, OnDestroy {
     });
   }
 
+  async copyPrivateKey() {
+    copyToClipboard(this.privateKey);
+
+    this.snackBar.open(await this.translate.get('Account.PrivateKeyCopiedToClipboard').toPromise(), await this.translate.get('Account.PrivateKeyCopiedToClipboardAction').toPromise(), {
+      duration: 2500,
+      horizontalPosition: 'center',
+      verticalPosition: 'bottom',
+    });
+  }
+
   async copy() {
     copyToClipboard(this.identifier);
 

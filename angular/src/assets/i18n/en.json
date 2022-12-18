@@ -240,6 +240,8 @@
     "DIDDocumentCopiedToClipboardAction": "Hide",
     "IdentifierCopiedToClipboard": "Identifier copied to clipboard",
     "IdentifierCopiedToClipboardAction": "Hide",
+    "PrivateKeyCopiedToClipboard": "Private Key copied to clipboard",
+    "PrivateKeyCopiedToClipboardAction": "Hide",
     "PaymentRequest": "Payment Request",
     "Message": "Message",
     "Address": "Address",
