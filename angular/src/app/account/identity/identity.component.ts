@@ -17,6 +17,9 @@ import { calculateJwkThumbprintUri, base64url } from 'jose';
 import { IdentityResolverService } from 'src/app/services/identity-resolver.service';
 import { DIDDocument } from 'did-resolver';
 import { BlockcoreDns } from '@blockcore/dns';
+import { MatDialog } from '@angular/material/dialog';
+import { PasswordDialog } from 'src/app/shared/password-dialog/password-dialog';
+import * as secp from '@noble/secp256k1';
 
 @Component({
   selector: 'app-identity',
@@ -46,6 +49,8 @@ export class IdentityComponent implements OnInit, OnDestroy {
     email: '',
     website: '',
   };
+  privateKey = '';
+  verifiedWalletPassword?: boolean;
 
   get identityUrl(): string {
     if (!this.identity?.published) {
@@ -64,7 +69,8 @@ export class IdentityComponent implements OnInit, OnDestroy {
     private accountStateStore: AccountStateStore,
     private settings: SettingsService,
     private identityService: IdentityService,
-    public translate: TranslateService
+    public translate: TranslateService,
+    public dialog: MatDialog
   ) {
     this.uiState.showBackButton = true;
 
@@ -110,6 +116,25 @@ export class IdentityComponent implements OnInit, OnDestroy {
       // if (service) {
       //   this.verifiableDataRegistryUrl = service.serviceEndpoint;
       // }
+    });
+  }
+
+  exportPrivateKey() {
+    this.verifiedWalletPassword = null;
+    this.privateKey = null;
+    const dialogRef = this.dialog.open(PasswordDialog, {
+      data: { password: null },
+    });
+
+    dialogRef.afterClosed().subscribe(async (result) => {
+      if (result === null && result === undefined && result === '') {
+        return;
+      }
+      this.verifiedWalletPassword = await this.walletManager.verifyWalletPassword(this.walletManager.activeWalletId, result);
+      if (this.verifiedWalletPassword === true) {
+        const identityNode = this.identityService.getIdentityNode(this.walletManager.activeWallet, this.walletManager.activeAccount);
+        this.privateKey = secp.utils.bytesToHex(identityNode.privateKey);
+      }
     });
   }
 
