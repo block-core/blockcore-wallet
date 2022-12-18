@@ -109,7 +109,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
         this.identifierWithoutPrefix = this.identifier.substring(this.identifier.lastIndexOf(':') + 1);
         this.readableId = identity.short.substring(identity.short.lastIndexOf(':') + 1);
 
-        this.qrCodePublicKey = await QRCode.toDataURL(this.identifier, {
+        this.qrCodePublicKey = await QRCode.toDataURL('nostr:pub:' + this.identifierWithoutPrefix, {
           errorCorrectionLevel: 'L',
           margin: 2,
           scale: 5,
@@ -132,7 +132,13 @@ export class IdentityComponent implements OnInit, OnDestroy {
     });
   }
 
-  exportPrivateKey() {
+  resetPrivateKey() {
+    this.privateKey = null;
+    this.qrCodePrivateKey = null;
+    this.verifiedWalletPassword = null;
+  }
+
+  async exportPrivateKey() {
     this.verifiedWalletPassword = null;
     this.privateKey = null;
     const dialogRef = this.dialog.open(PasswordDialog, {
@@ -145,9 +151,16 @@ export class IdentityComponent implements OnInit, OnDestroy {
       }
 
       this.verifiedWalletPassword = await this.walletManager.verifyWalletPassword(this.walletManager.activeWalletId, result);
+
       if (this.verifiedWalletPassword === true) {
         const identityNode = this.identityService.getIdentityNode(this.walletManager.activeWallet, this.walletManager.activeAccount);
         this.privateKey = secp.utils.bytesToHex(identityNode.privateKey);
+
+        this.qrCodePrivateKey = await QRCode.toDataURL('nostr:prv:' + this.identifierWithoutPrefix, {
+          errorCorrectionLevel: 'L',
+          margin: 2,
+          scale: 5,
+        });
       }
     });
   }

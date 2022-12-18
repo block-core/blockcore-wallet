@@ -8,6 +8,7 @@
   "he": "Hebrew",
   "ru": "Русский",
   "App": {
+    "Hide": "Hide",
     "AddAccount": "Add Account",
     "ChooseWallet": "Choose Wallet",
     "CreateWallet": "Create Wallet",
