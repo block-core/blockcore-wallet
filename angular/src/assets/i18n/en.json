@@ -9,6 +9,7 @@
   "ru": "Русский",
   "App": {
     "Hide": "Hide",
+    "ConvertKey": "Convert Key",
     "AddAccount": "Add Account",
     "ChooseWallet": "Choose Wallet",
     "CreateWallet": "Create Wallet",

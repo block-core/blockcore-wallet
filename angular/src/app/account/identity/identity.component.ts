@@ -53,6 +53,11 @@ export class IdentityComponent implements OnInit, OnDestroy {
   qrCodePublicKey: string;
   qrCodePrivateKey: string;
   cryptoUtility: CryptoUtility;
+  conversionKey: string;
+  convertedKey: string;
+  invalidConversion: boolean;
+  showConversionOptions = false;
+  conversionKeyType = 'npub';
 
   get identityUrl(): string {
     if (!this.identity?.published) {
@@ -129,6 +134,31 @@ export class IdentityComponent implements OnInit, OnDestroy {
     });
   }
 
+  convertKey() {
+    this.invalidConversion = false;
+
+    if (!this.conversionKey) {
+      this.convertedKey = null;
+      this.showConversionOptions = false;
+      return;
+    }
+
+    try {
+      if (this.conversionKey.startsWith('npub') || this.conversionKey.startsWith('nsec')) {
+        this.showConversionOptions = false;
+        this.convertedKey = this.cryptoUtility.arrayToHex(this.cryptoUtility.convertFromBech32(this.conversionKey));
+      } else {
+        this.showConversionOptions = true;
+        const key = this.cryptoUtility.hexToArray(this.conversionKey);
+        this.convertedKey = this.cryptoUtility.convertToBech32(key, this.conversionKeyType);
+      }
+    } catch (err) {
+      this.invalidConversion = true;
+      this.convertedKey = null;
+      this.showConversionOptions = false;
+    }
+  }
+
   resetPrivateKey() {
     this.privateKey = null;
     this.qrCodePrivateKey = null;
@@ -178,6 +208,16 @@ export class IdentityComponent implements OnInit, OnDestroy {
 
   async copy() {
     copyToClipboard(this.identifier);
+
+    this.snackBar.open(await this.translate.get('Account.IdentifierCopiedToClipboard').toPromise(), await this.translate.get('Account.IdentifierCopiedToClipboardAction').toPromise(), {
+      duration: 2500,
+      horizontalPosition: 'center',
+      verticalPosition: 'bottom',
+    });
+  }
+
+  async copyConvertedKey() {
+    copyToClipboard(this.convertedKey);
 
     this.snackBar.open(await this.translate.get('Account.IdentifierCopiedToClipboard').toPromise(), await this.translate.get('Account.IdentifierCopiedToClipboardAction').toPromise(), {
       duration: 2500,
