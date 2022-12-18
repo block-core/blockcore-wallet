@@ -1,19 +1,16 @@
-import { Component, Inject, HostBinding, ChangeDetectorRef, OnInit, OnDestroy } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AccountStateStore, bytesToBase64Url, generateCid, getDagCid, Identity, Jws } from 'src/shared';
-import { CommunicationService, CryptoService, SettingsService, UIState, WalletManager } from 'src/app/services';
+import { CryptoUtility, SettingsService, UIState, WalletManager } from 'src/app/services';
 import { copyToClipboard } from 'src/app/shared/utilities';
 import { Network } from '../../../shared/networks';
 import { IdentityService } from 'src/app/services/identity.service';
 import { BlockcoreIdentity, BlockcoreIdentityTools } from '@blockcore/identity';
 import { TranslateService } from '@ngx-translate/core';
-// import { v4 as uuidv4 } from 'uuid';
 const { v4: uuidv4 } = require('uuid');
-// import { base64url } from 'multiformats/bases/base64';
-import { createJWT, ES256KSigner } from 'did-jwt';
-import { calculateJwkThumbprintUri, base64url } from 'jose';
+import { ES256KSigner } from 'did-jwt';
+import { base64url } from 'jose';
 import { IdentityResolverService } from 'src/app/services/identity-resolver.service';
 import { DIDDocument } from 'did-resolver';
 import { BlockcoreDns } from '@blockcore/dns';
@@ -55,6 +52,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
   verifiedWalletPassword?: boolean;
   qrCodePublicKey: string;
   qrCodePrivateKey: string;
+  cryptoUtility: CryptoUtility;
 
   get identityUrl(): string {
     if (!this.identity?.published) {
@@ -78,6 +76,8 @@ export class IdentityComponent implements OnInit, OnDestroy {
   ) {
     this.uiState.showBackButton = true;
 
+    this.cryptoUtility = new CryptoUtility();
+
     this.activatedRoute.paramMap.subscribe(async (params) => {
       const accountIdentifier: any = params.get('index');
 
@@ -94,7 +94,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
       const accountState = this.accountStateStore.get(this.walletManager.activeAccount.identifier);
 
       // The very first receive address is the actual identity of the account.
-      const address = accountState.receive[0];
+      let address = accountState.receive[0];
 
       const tools = new BlockcoreIdentityTools();
       const identityNode = this.identityService.getIdentityNode(this.walletManager.activeWallet, this.walletManager.activeAccount);
@@ -106,29 +106,26 @@ export class IdentityComponent implements OnInit, OnDestroy {
       if (this.identifier.startsWith('nostr') || this.identifier.startsWith('npub')) {
         this.isDid = false;
 
-        this.identifierWithoutPrefix = this.identifier.substring(this.identifier.lastIndexOf(':') + 1);
-        this.readableId = identity.short.substring(identity.short.lastIndexOf(':') + 1);
+        // For backwards compatibility, we might need to derive the address again and update the store.
+        // TODO: Delete this in the future!
+        if (!address.address.startsWith('npub')) {
+          accountState.receive[0] = this.walletManager.getReceiveAddressByIndex(this.walletManager.activeAccount, 0);
+          accountState.change[0] = this.walletManager.getReceiveAddressByIndex(this.walletManager.activeAccount, 0);
+          await this.accountStateStore.save();
 
-        this.qrCodePublicKey = await QRCode.toDataURL('nostr:pub:' + this.identifierWithoutPrefix, {
+          address = accountState.receive[0];
+        }
+
+        this.identifier = address.address;
+        // this.identifierWithoutPrefix = this.identifier.substring(this.identifier.lastIndexOf(':') + 1);
+        // this.readableId = identity.short.substring(identity.short.lastIndexOf(':') + 1);
+
+        this.qrCodePublicKey = await QRCode.toDataURL('nostr:' + this.identifier, {
           errorCorrectionLevel: 'L',
           margin: 2,
           scale: 5,
         });
       }
-
-      // Persist when changing accounts.
-      // this.uiState.save();
-
-      // this.previousIndex = index;
-
-      // var did = this.walletManager.activeAccount?.identifier;
-      // this.identity = this.uiState.store.identities.find(i => i.id == did);
-
-      // let service = this.identity?.services.find((s) => s.type == 'VerifiableDataRegistry');
-
-      // if (service) {
-      //   this.verifiableDataRegistryUrl = service.serviceEndpoint;
-      // }
     });
   }
 
@@ -153,10 +150,14 @@ export class IdentityComponent implements OnInit, OnDestroy {
       this.verifiedWalletPassword = await this.walletManager.verifyWalletPassword(this.walletManager.activeWalletId, result);
 
       if (this.verifiedWalletPassword === true) {
+        const network = this.identityService.getNetwork(this.walletManager.activeAccount.networkType);
         const identityNode = this.identityService.getIdentityNode(this.walletManager.activeWallet, this.walletManager.activeAccount);
-        this.privateKey = secp.utils.bytesToHex(identityNode.privateKey);
 
-        this.qrCodePrivateKey = await QRCode.toDataURL('nostr:prv:' + this.identifierWithoutPrefix, {
+        this.privateKey = this.cryptoUtility.convertToBech32(identityNode.privateKey, 'nsec');
+        console.log(secp.utils.bytesToHex(identityNode.privateKey));
+        //this.privateKey = secp.utils.bytesToHex(identityNode.privateKey);
+
+        this.qrCodePrivateKey = await QRCode.toDataURL('nostr:' + this.privateKey, {
           errorCorrectionLevel: 'L',
           margin: 2,
           scale: 5,
@@ -177,16 +178,6 @@ export class IdentityComponent implements OnInit, OnDestroy {
 
   async copy() {
     copyToClipboard(this.identifier);
-
-    this.snackBar.open(await this.translate.get('Account.IdentifierCopiedToClipboard').toPromise(), await this.translate.get('Account.IdentifierCopiedToClipboardAction').toPromise(), {
-      duration: 2500,
-      horizontalPosition: 'center',
-      verticalPosition: 'bottom',
-    });
-  }
-
-  async copyNostrPublicKey() {
-    copyToClipboard(this.identifierWithoutPrefix);
 
     this.snackBar.open(await this.translate.get('Account.IdentifierCopiedToClipboard').toPromise(), await this.translate.get('Account.IdentifierCopiedToClipboardAction').toPromise(), {
       duration: 2500,

@@ -80,22 +80,22 @@
     </div>
 
     <div *ngIf="!isDid" class="page centered wrap">
-      <h1>Nostr Public Key:</h1>
+      <h2>Nostr Public Key</h2>
 
-      <h2>
-        {{ readableId }}
-        <button class="copy-button" mat-icon-button (click)="copyNostrPublicKey()">
+      <p>
+        {{ identifier }}
+        <button class="copy-button" mat-icon-button (click)="copy()">
           <mat-icon>content_copy</mat-icon>
         </button>
         <!-- <button class="copy-button" mat-icon-button (click)="openDid()">
           <mat-icon>travel_explore</mat-icon>
         </button> -->
-      </h2>
+      </p>
 
       <p>
         <img [src]="qrCodePublicKey" class="qr-code" />
       </p>
-      <div class="dimmed">nostr:pub:{{ identifierWithoutPrefix }}</div>
+      <div class="dimmed">nostr:{{ identifier }}</div>
 
       <!-- <h3 class="break">{{identifier}} <button class="copy-button" mat-icon-button (click)="copy()">
         <mat-icon>content_copy</mat-icon>
@@ -265,10 +265,10 @@
           <p>
             <img [src]="qrCodePrivateKey" class="qr-code" />
           </p>
-          <div class="dimmed">nostr:prv:{{ privateKey }}</div>
+          <div class="dimmed">nostr:{{ privateKey }}</div>
         </mat-card>
         <mat-card *ngIf="verifiedWalletPassword === false">Invalid Password</mat-card>
-        <br>
+        <br />
         <button *ngIf="verifiedWalletPassword === true" class="signup-button" mat-flat-button color="warn" (click)="resetPrivateKey()">{{ "App.Hide" | translate }}</button>
       </p>
     </div>
