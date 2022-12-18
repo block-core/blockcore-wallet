@@ -9,7 +9,7 @@ import { PaymentSignHandler } from './payment-sign-handler';
 // import { SignHandler } from './sign-handler';
 import { SignMessageHandler } from './sign-message-handler';
 import { VcRequestHandler } from './vc-request-handler';
-import { AccountBalanceHandler } from './account-balance-handler';
+import { AtomicSwapsKeyHandler } from './atomic-swap-key-handler';
 import { WalletsHandler } from './wallets-handler';
 import { NostrPublicKeyHandler } from './nostr-public-key-handler';
 import { NostrSignEventHandler } from './nostr-sign-event-handler';
@@ -35,8 +35,8 @@ export class Handlers {
         return new DidRequestHandler(backgroundManager);
       case 'vc.request':
         return new VcRequestHandler(backgroundManager);
-      case 'accountbalance':
-        return new AccountBalanceHandler(backgroundManager);
+      case 'atomicswaps.keyhandler':
+        return new AtomicSwapsKeyHandler(backgroundManager);
       case 'wallets':
         return new WalletsHandler(backgroundManager);
       case 'nostr.publickey':

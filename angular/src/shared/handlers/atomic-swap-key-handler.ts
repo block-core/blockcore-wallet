@@ -4,9 +4,11 @@ import { ActionHandler, ActionState } from './action-handler';
 import * as bitcoinMessage from 'bitcoinjs-message';
 import { HDKey } from '@scure/bip32';
 import { Network } from '../networks';
+import { SigningUtilities } from '../identity/signing-utilities';
 
-export class AccountBalanceHandler implements ActionHandler {
-  action = ['accountbalance'];
+export class AtomicSwapsKeyHandler implements ActionHandler {
+  action = ['atomicswaps.keyhandler'];
+  utility = new SigningUtilities();
 
   constructor(private backgroundManager: BackgroundManager) {}
 
@@ -21,6 +23,10 @@ export class AccountBalanceHandler implements ActionHandler {
       throw Error('The params walletId and accountId are missing.');
     }
 
+    if (params.walletId.includePrivateKey) {
+      // whould we ask for consent when fetching the swap private key?
+    }
+
     return {
       content: state.message.request.params[0],
       consent: false
@@ -32,11 +38,19 @@ export class AccountBalanceHandler implements ActionHandler {
     var data = state.content as any;
 
     // get the account
-    const { network, account, accountState, accountHistory } = await this.backgroundManager.getAccount(data.walletId, data.accountId);
+    const { network, node } = await this.backgroundManager.getDerivedKeyFromWalletPath(data.walletId, data.accountId, "0'/0");
 
     if (state.content)
     {
-      return { key: data.key, request: state.message.request, response: { balance: accountHistory.balance }, network: network.id };
+      var response;
+
+      if (data.includePrivateKey) {
+        response = { publicKey: this.utility.keyToHex(node.publicKey), privateKey:  this.utility.keyToHex(node.privateKey) };
+      }
+      else {
+        response = { publicKey: this.utility.keyToHex(node.publicKey) };
+      }
+      return { key: data.key, request: state.message.request, response: response, network: network.id };
     }
     else
     {
