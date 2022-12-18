@@ -54,7 +54,6 @@ export class CommunicationService {
       });
     } else {
       // 'Running in web mode, event handling is processes by FrontEnd Service.
-
       // this.events.subscribeAll().subscribe(async (message) => {
       //   this.ngZone.run(async () => {
       //     // Compared to the extension based messaging, we don't have response messages.
@@ -66,6 +65,12 @@ export class CommunicationService {
   }
 
   handleInternalMessage(message: Message, sender: chrome.runtime.MessageSender) {
+    // If the source is provider, never handle these messages as multiple open
+    // instances of the extension will cause callbacks from provider to complete.
+    if (message.source === 'provider') {
+      return null;
+    }
+
     // We can't do async await in this handler, because the chrome extension runtime does not support it
     // and will begin to throw channel port errors.
     // console.log('CommunicationService:handleInternalMessage:', message);
@@ -116,14 +121,16 @@ export class CommunicationService {
           return 'ok';
           //return null;
         }
-        default:
-          this.logger.warn(`The message type ${message.type} is not known.`);
-          return 'ok';
-          //return null;
+        // default:
+        //   this.logger.warn(`The message type ${message.type} is not known.`);
+        //   return 'ok';
+        //return null;
       }
     } catch (error: any) {
       return { error: { message: error.message, stack: error.stack } };
     }
+
+    return null;
   }
 
   async handleExternalMessage(message: any, sender: chrome.runtime.MessageSender) {

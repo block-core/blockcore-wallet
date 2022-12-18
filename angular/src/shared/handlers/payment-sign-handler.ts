@@ -52,18 +52,17 @@ export class PaymentSignHandler implements ActionHandler {
 
       let returnData: ActionResponse = {
         key: permission.key,
-        request: state.message.request,
-        content: state.content,
-        network: network.id,
-        response: {
+        content: {
           did: permission.key,
           proof: jws,
+          content: state.content,
         } as DIDRequestResponse,
+        network: network.id,
       };
 
       return returnData;
     } else {
-      return { key: '', signature: '', response: null, content: null, request: state.message.request, network: network.id };
+      return { key: '', signature: '', response: null, content: null, network: network.id };
     }
   }
 }

@@ -51,18 +51,17 @@ export class VcRequestHandler implements ActionHandler {
 
       let returnData: ActionResponse = {
         key: permission.key,
-        request: state.message.request,
-        content: state.content,
-        network: network.id,
-        response: {
+        content: {
           did: permission.key,
           vc: vc,
+          content: state.content,
         } as VCRequestResponse,
+        network: network.id,
       };
 
       return returnData;
     } else {
-      return { key: '', signature: '', response: null, content: null, request: state.message.request, network: network.id };
+      return { key: '', signature: '', content: null, request: state.message.request, network: network.id };
     }
   }
 }

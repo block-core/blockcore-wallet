@@ -1,5 +1,5 @@
 import { BackgroundManager } from '../background-manager';
-import {  ActionPrepareResult,  ActionResponse, Permission } from '../interfaces';
+import { ActionPrepareResult, ActionResponse, Permission } from '../interfaces';
 import { ActionHandler, ActionState } from './action-handler';
 
 export class DidSupportedMethodsHandler implements ActionHandler {
@@ -15,9 +15,6 @@ export class DidSupportedMethodsHandler implements ActionHandler {
   }
 
   async execute(state: ActionState, permission: Permission): Promise<ActionResponse> {
-    return {
-      request: state.message.request,
-      response: state.content,
-    };
+    return state.content;
   }
 }

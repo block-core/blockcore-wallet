@@ -15,7 +15,7 @@
           <strong>{{ perm.action }}</strong>
           <br />
           <span class="dimmed">{{ 'Settings.Type' | translate }}: {{ perm.type }} - {{ 'Settings.Created' | translate }}: {{ perm.created * 1000 | date }}</span><br />
-          <span class="dimmed">{{ getWalletName(perm.walletId) }} / {{ getAccountName(perm.walletId, perm.accountId) }} / {{ perm.key }}</span>
+          <div class="dimmed unwrap">{{ getWalletName(perm.walletId) }} / {{ getAccountName(perm.walletId, perm.accountId) }} / {{ perm.key }}</div>
         </div>
         <div>
           <button mat-icon-button (click)="remove(perm, permissionSet)">

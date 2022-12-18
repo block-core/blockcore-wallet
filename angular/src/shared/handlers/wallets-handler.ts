@@ -24,9 +24,9 @@ export class WalletsHandler implements ActionHandler {
     result.wallet.key = permission.key;
 
     if (result) {
-      return { key: permission.key, request: state.message.request, response: result };
+      return { key: permission.key, content: result };
     } else {
-      return { key: '', signature: '', response: null, content: null, request: state.message.request };
+      return { key: '', content: null };
     }
   }
 }

@@ -44,7 +44,6 @@ export class DidRequestHandler implements ActionHandler {
 
       const verificationMethod = tools.getVerificationMethod(publicKey, 0, network.symbol);
       const identity = new BlockcoreIdentity(verificationMethod);
-      
 
       // "jws" or "jwt"?
       // const didDocument = identity.document();
@@ -53,18 +52,17 @@ export class DidRequestHandler implements ActionHandler {
 
       let returnData: ActionResponse = {
         key: permission.key,
-        request: state.message.request,
-        content: state.content,
-        network: network.id,
-        response: {
+        content: {
           did: permission.key,
           proof: jws,
+          challenge: state.content,
         } as DIDRequestResponse,
+        network: network.id,
       };
 
       return returnData;
     } else {
-      return { key: '', signature: '', response: null, content: null, request: state.message.request, network: network.id };
+      return { key: '', signature: '', content: null, network: network.id };
     }
   }
 }

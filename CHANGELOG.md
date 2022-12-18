@@ -1,3 +1,16 @@
+## <small>1.0.16 (2022-12-18)</small>
+
+* Fix issue with unexpected callbacks on web provider requests ([f181020](https://github.com/block-core/blockcore-wallet/commit/f181020))
+* Force a page reload whenever the extension has lost context (happens on updates) ([6b24d82](https://github.com/block-core/blockcore-wallet/commit/6b24d82))
+* Reduce visual clutter on wallet management menu ([657651b](https://github.com/block-core/blockcore-wallet/commit/657651b))
+* Remove "Actions" from Dashboard ([93ff517](https://github.com/block-core/blockcore-wallet/commit/93ff517))
+* Remove debug logging ([4b617fe](https://github.com/block-core/blockcore-wallet/commit/4b617fe))
+* Remove divider from dashboard to reduce visual clutter ([bc817c9](https://github.com/block-core/blockcore-wallet/commit/bc817c9))
+* Remove Profile and Tools for nostr identities ([29cfba2](https://github.com/block-core/blockcore-wallet/commit/29cfba2))
+* Update version and changelog ([7bef268](https://github.com/block-core/blockcore-wallet/commit/7bef268))
+
+
+
 ## <small>1.0.15 (2022-12-17)</small>
 
 * Ensure that nostr get public key always work even when wallet is locked ([fe2f385](https://github.com/block-core/blockcore-wallet/commit/fe2f385))

@@ -7,8 +7,6 @@
 
     <div>
       <mat-nav-list>
-        <div mat-subheader>{{ "Dashboard.Accounts" | translate }}</div>
-
         <div class="centered" *ngIf="walletManager.activeWallet.accounts.length == 0">{{ "Dashboard.ZeroAccounts" | translate }}<br /><br /></div>
 
         <a mat-list-item *ngFor="let account of walletManager.activeWallet.accounts; let i = index" routerLinkActive="active-link" [routerLink]="getLink(account)">
@@ -39,7 +37,7 @@
             <div mat-line> {{item.updated | date}} </div>
         </a> -->
 
-        <div mat-subheader>{{ "Dashboard.Tools" | translate }}</div>
+        <mat-divider></mat-divider>
 
         <a mat-list-item *ngIf="walletManager.activeWallet && walletManager.unlocked" (click)="scanPayment()" routerLinkActive="active-link">
           <mat-icon mat-list-icon>qr_code_scanner</mat-icon>

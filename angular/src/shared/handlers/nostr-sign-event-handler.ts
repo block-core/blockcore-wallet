@@ -12,7 +12,7 @@ export class NostrSignEventHandler implements ActionHandler {
   constructor(private backgroundManager: BackgroundManager) {}
 
   async prepare(state: ActionState): Promise<ActionPrepareResult> {
-    console.log('NostrSignEventHandler: PREPARE!', state.message.request.params[0]);
+    console.log('PREPARE: nostr.signevent');
 
     return {
       content: state.message.request.params[0],
@@ -21,6 +21,8 @@ export class NostrSignEventHandler implements ActionHandler {
   }
 
   async execute(state: ActionState, permission: Permission): Promise<ActionResponse> {
+    console.log('EXECUTE: nostr.signevent');
+
     // Get the private key
     const { network, node } = await this.backgroundManager.getKey(permission.walletId, permission.accountId, permission.keyId);
 
@@ -39,9 +41,6 @@ export class NostrSignEventHandler implements ActionHandler {
 
     // const valid = await secp.schnorr.verify(event.sig, event.id, event.pubkey);
 
-    return {
-      request: state.message.request,
-      response: event,
-    };
+    return event;
   }
 }

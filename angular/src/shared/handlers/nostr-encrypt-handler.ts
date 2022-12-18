@@ -13,8 +13,6 @@ export class NostrEncryptHandler implements ActionHandler {
   constructor(private backgroundManager: BackgroundManager) {}
 
   async prepare(state: ActionState): Promise<ActionPrepareResult> {
-    console.log('NostrSignEventHandler: PREPARE!', state.message.request.params[0]);
-
     return {
       content: state.message.request.params[0],
       consent: true,
@@ -33,9 +31,6 @@ export class NostrEncryptHandler implements ActionHandler {
 
     const cipher = encrypt(privateKeyHex, publicKeyHex, JSON.stringify(state.content.plaintext));
 
-    return {
-      request: state.message.request,
-      response: cipher,
-    };
+    return cipher;
   }
 }
