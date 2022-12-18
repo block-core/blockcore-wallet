@@ -249,7 +249,7 @@
     <div *ngIf="!isDid" class="page">
       <p>
         <button class="signup-button" mat-stroked-button (click)="exportPrivateKey()">{{ "Account.ExportPrivateKey" | translate }}</button>
-        <mat-card class="selectable" *ngIf="verifiedWalletPassword === true">{{ privateKey }}</mat-card>
+        <mat-card class="selectable wrap" *ngIf="verifiedWalletPassword === true">{{ privateKey }}</mat-card>
         <mat-card *ngIf="verifiedWalletPassword === false">Invalid Password</mat-card>
       </p>
     </div>
