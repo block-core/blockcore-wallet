@@ -55,7 +55,7 @@ if (!globalThis.blockcore) {
         response = { error };
       }
 
-      const responseMsg: ActionMessage = { ...data, response: response };
+      const responseMsg: ActionMessage = { ...data, response };
       responseMsg.target = 'provider';
 
       // Return the response to the provider/caller.

@@ -24,9 +24,6 @@ export class NostrGetRelaysHandler implements ActionHandler {
   }
 
   async execute(state: ActionState, permission: Permission): Promise<ActionResponse> {
-    return {
-      request: state.message.request,
-      response: state.content,
-    };
+    return state.content;
   }
 }

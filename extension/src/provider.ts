@@ -15,21 +15,23 @@ export class BlockcoreRequestProvider implements Web5RequestProvider {
         return;
       }
 
-      const data = message.data as ActionMessage;
+      // Only handle messages that originate from provider and is received back from tabs, or messages that
+      // are directly targeted as the provider.
+      if (message.data.source === 'provider' || message.data.target === 'provider') {
+        const data = message.data as ActionMessage;
 
-      // It is possible that calls to the extension is returned without handled by an instance of the extension,
-      // if that happens, then response will be undefined.
+        if (data.response?.error) {
+          let error = new Error(data.response.error.message);
+          error.stack = data.response.error?.stack;
+          this.#requests[data.id].reject(error);
+        } else {
+          this.#requests[data.id].resolve(data.response);
+        }
 
-      if (data.response?.error) {
-        let error = new Error(data.response.error.message);
-        error.stack = data.response.error?.stack;
-
-        this.#requests[data.id].reject(error);
+        delete this.#requests[data.id];
       } else {
-        this.#requests[data.id].resolve(data.response);
+        console.log('Target is NOT provider....');
       }
-
-      delete this.#requests[data.id];
     });
   }
 
@@ -104,7 +106,7 @@ class NostrProvider {
     })) as any;
 
     // Parse the response and only return event.
-    return result.response;
+    return result;
   }
 
   /** Nostr NIP-07 function: https://github.com/nostr-protocol/nips/blob/master/07.md */
@@ -115,7 +117,7 @@ class NostrProvider {
     })) as any;
 
     // Parse the response and only return event.
-    return result.response;
+    return result;
   }
 
   async getRelays(): Promise<string[]> {
@@ -124,7 +126,7 @@ class NostrProvider {
       params: [{}],
     })) as any;
 
-    return result.response || {};
+    return result || {};
   }
 
   nip04 = new NostrNip04(this.provider);
@@ -139,7 +141,7 @@ export class NostrNip04 {
       params: [{ peer, plaintext: plaintext }],
     })) as any;
 
-    return result.response || {};
+    return result || {};
   }
 
   async decrypt(peer: string, ciphertext: string): Promise<string> {
@@ -148,7 +150,7 @@ export class NostrNip04 {
       params: [{ peer, ciphertext: ciphertext }],
     })) as any;
 
-    return result.response || {};
+    return result || {};
   }
 }
 

@@ -31,9 +31,6 @@ export class NostrEncryptHandler implements ActionHandler {
 
     const cipher = encrypt(privateKeyHex, publicKeyHex, JSON.stringify(state.content.plaintext));
 
-    return {
-      request: state.message.request,
-      response: cipher,
-    };
+    return cipher;
   }
 }

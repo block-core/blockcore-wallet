@@ -592,7 +592,7 @@ interface ActionRequest {
 
 interface ActionResponse {
   /** The original request for this response. */
-  request: ActionRequest;
+  request?: ActionRequest;
 
   /** The public key user picked for the action. */
   key?: string;

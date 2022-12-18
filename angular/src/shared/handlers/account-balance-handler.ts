@@ -23,24 +23,20 @@ export class AccountBalanceHandler implements ActionHandler {
 
     return {
       content: state.message.request.params[0],
-      consent: false
+      consent: false,
     };
   }
 
   async execute(state: ActionState, permission: Permission): Promise<ActionResponse> {
-
     var data = state.content as any;
 
     // get the account
     const { network, account, accountState, accountHistory } = await this.backgroundManager.getAccount(data.walletId, data.accountId);
 
-    if (state.content)
-    {
-      return { key: data.key, request: state.message.request, response: { balance: accountHistory.balance }, network: network.id };
-    }
-    else
-    {
-      return { key: '', signature: '', response: null, content: null, request: state.message.request, network: network.id };
+    if (state.content) {
+      return { key: data.key, content: { balance: accountHistory.balance }, network: network.id };
+    } else {
+      return { key: '', signature: '', content: null, network: network.id };
     }
   }
 }
