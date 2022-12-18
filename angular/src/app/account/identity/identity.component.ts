@@ -127,9 +127,10 @@ export class IdentityComponent implements OnInit, OnDestroy {
     });
 
     dialogRef.afterClosed().subscribe(async (result) => {
-      if (result === null && result === undefined && result === '') {
+      if (result === null || result === undefined || result === '') {
         return;
       }
+
       this.verifiedWalletPassword = await this.walletManager.verifyWalletPassword(this.walletManager.activeWalletId, result);
       if (this.verifiedWalletPassword === true) {
         const identityNode = this.identityService.getIdentityNode(this.walletManager.activeWallet, this.walletManager.activeAccount);
