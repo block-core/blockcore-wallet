@@ -20,6 +20,7 @@ import { BlockcoreDns } from '@blockcore/dns';
 import { MatDialog } from '@angular/material/dialog';
 import { PasswordDialog } from 'src/app/shared/password-dialog/password-dialog';
 import * as secp from '@noble/secp256k1';
+import * as QRCode from 'qrcode';
 
 @Component({
   selector: 'app-identity',
@@ -38,6 +39,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
   previousIndex!: number;
   identity: Identity | undefined;
   identifier: string;
+  identifierWithoutPrefix: string;
   readableId: string;
   network: Network;
   isDid = true;
@@ -51,6 +53,8 @@ export class IdentityComponent implements OnInit, OnDestroy {
   };
   privateKey = '';
   verifiedWalletPassword?: boolean;
+  qrCodePublicKey: string;
+  qrCodePrivateKey: string;
 
   get identityUrl(): string {
     if (!this.identity?.published) {
@@ -101,6 +105,15 @@ export class IdentityComponent implements OnInit, OnDestroy {
 
       if (this.identifier.startsWith('nostr') || this.identifier.startsWith('npub')) {
         this.isDid = false;
+
+        this.identifierWithoutPrefix = this.identifier.substring(this.identifier.lastIndexOf(':') + 1);
+        this.readableId = identity.short.substring(identity.short.lastIndexOf(':') + 1);
+
+        this.qrCodePublicKey = await QRCode.toDataURL(this.identifier, {
+          errorCorrectionLevel: 'L',
+          margin: 2,
+          scale: 5,
+        });
       }
 
       // Persist when changing accounts.
@@ -151,6 +164,16 @@ export class IdentityComponent implements OnInit, OnDestroy {
 
   async copy() {
     copyToClipboard(this.identifier);
+
+    this.snackBar.open(await this.translate.get('Account.IdentifierCopiedToClipboard').toPromise(), await this.translate.get('Account.IdentifierCopiedToClipboardAction').toPromise(), {
+      duration: 2500,
+      horizontalPosition: 'center',
+      verticalPosition: 'bottom',
+    });
+  }
+
+  async copyNostrPublicKey() {
+    copyToClipboard(this.identifierWithoutPrefix);
 
     this.snackBar.open(await this.translate.get('Account.IdentifierCopiedToClipboard').toPromise(), await this.translate.get('Account.IdentifierCopiedToClipboardAction').toPromise(), {
       duration: 2500,

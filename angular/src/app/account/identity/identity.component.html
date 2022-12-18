@@ -79,16 +79,23 @@
             <textarea class="diddocument">{{identity.didDocument | json}}</textarea> -->
     </div>
 
-    <div *ngIf="!isDid" class="page">
+    <div *ngIf="!isDid" class="page centered wrap">
+      <h1>Nostr Public Key:</h1>
+
       <h2>
         {{ readableId }}
-        <button class="copy-button" mat-icon-button (click)="copy()">
+        <button class="copy-button" mat-icon-button (click)="copyNostrPublicKey()">
           <mat-icon>content_copy</mat-icon>
         </button>
         <!-- <button class="copy-button" mat-icon-button (click)="openDid()">
           <mat-icon>travel_explore</mat-icon>
         </button> -->
       </h2>
+
+      <p>
+        <img [src]="qrCodePublicKey" class="qr-code" />
+      </p>
+      <div class="dimmed">{{ identifierWithoutPrefix }}</div>
 
       <!-- <h3 class="break">{{identifier}} <button class="copy-button" mat-icon-button (click)="copy()">
         <mat-icon>content_copy</mat-icon>

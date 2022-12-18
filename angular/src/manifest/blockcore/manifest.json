@@ -1,6 +1,6 @@
 {
   "name": "Blockcore Wallet",
-  "version": "1.0.17",
+  "version": "1.0.18",
   "manifest_version": 3,
   "description": "Non-Custodial wallet for Coins, Tokens, Identities, NFTs and more.",
   "author": "Blockcore",

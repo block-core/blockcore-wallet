@@ -1,3 +1,14 @@
+## <small>1.0.17 (2022-12-18)</small>
+
+* Add copy button to private key export ([2c10f4f](https://github.com/block-core/blockcore-wallet/commit/2c10f4f))
+* Added export of individual private key on identity tools (#316) ([65f21b9](https://github.com/block-core/blockcore-wallet/commit/65f21b9)), closes [#316](https://github.com/block-core/blockcore-wallet/issues/316)
+* Fix guard clause for empty password input ([57e9c83](https://github.com/block-core/blockcore-wallet/commit/57e9c83))
+* Make the dashboard cleaner and more focused ([4286f11](https://github.com/block-core/blockcore-wallet/commit/4286f11))
+* Update version and changelog ([c5657a1](https://github.com/block-core/blockcore-wallet/commit/c5657a1))
+* Wrap the private key on export ([cb81224](https://github.com/block-core/blockcore-wallet/commit/cb81224))
+
+
+
 ## <small>1.0.16 (2022-12-18)</small>
 
 * Fix issue with unexpected callbacks on web provider requests ([f181020](https://github.com/block-core/blockcore-wallet/commit/f181020))
