@@ -1,3 +1,15 @@
+## <small>1.0.18 (2022-12-18)</small>
+
+* Add a key conversion tool for Nostr ([9398bad](https://github.com/block-core/blockcore-wallet/commit/9398bad))
+* Add export of private key using QR code ([14ffa60](https://github.com/block-core/blockcore-wallet/commit/14ffa60))
+* Add npub and nsec export format support for Nostr ([70029df](https://github.com/block-core/blockcore-wallet/commit/70029df))
+* Change to use hex as address values, but display as npub to users ([0246bbe](https://github.com/block-core/blockcore-wallet/commit/0246bbe))
+* Internally keep the Nostr addresses in hex format ([0bbcf1a](https://github.com/block-core/blockcore-wallet/commit/0bbcf1a))
+* Update the  bech32 prefix for Nostr ([0ac4a79](https://github.com/block-core/blockcore-wallet/commit/0ac4a79))
+* Update version and changelog, add QR code for public key ([f018e23](https://github.com/block-core/blockcore-wallet/commit/f018e23))
+
+
+
 ## <small>1.0.17 (2022-12-18)</small>
 
 * Add copy button to private key export ([2c10f4f](https://github.com/block-core/blockcore-wallet/commit/2c10f4f))
