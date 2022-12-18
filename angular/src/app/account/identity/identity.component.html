@@ -163,7 +163,6 @@
     </ng-template>
 
     <div *ngIf="isDid" class="page">
-
       <p class="icon-indicator" *ngIf="!identity?.published"><mat-icon class="icon-warn">done</mat-icon> {{ "Account.ThisProfileIsCurrentlyNOTPublic" | translate }}</p>
       <p class="icon-indicator" *ngIf="identity?.published"><mat-icon class="icon-success">done</mat-icon> {{ "Account.ThisProfileIsCurrentlyPublic" | translate }}</p>
 
@@ -244,6 +243,14 @@
         <button class="signup-button" mat-stroked-button (click)="copyDWNQueryRequest()">Copy DWN Query Request</button>
 
         <button class="signup-button" mat-stroked-button (click)="copyVaultConfiguration()">{{ "Account.CopyBlockcoreVaultSetupConfiguration" | translate }}</button>
+      </p>
+    </div>
+
+    <div *ngIf="!isDid" class="page">
+      <p>
+        <button class="signup-button" mat-stroked-button (click)="exportPrivateKey()">{{ "Account.ExportPrivateKey" | translate }}</button>
+        <mat-card class="selectable" *ngIf="verifiedWalletPassword === true">{{ privateKey }}</mat-card>
+        <mat-card *ngIf="verifiedWalletPassword === false">Invalid Password</mat-card>
       </p>
     </div>
   </mat-tab>

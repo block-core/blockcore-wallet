@@ -362,7 +362,8 @@
     "BlockHash": "Block Hash",
     "BlockHeight": "Block Height",
     "Inputs": "Inputs",
-    "Outputs": "Outputs"
+    "Outputs": "Outputs",
+    "ExportPrivateKey": "Export Private Key"
   },
   "Action": {
     "nostr.publickey": "Nostr Identifier",
