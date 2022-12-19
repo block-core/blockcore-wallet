@@ -73,7 +73,7 @@ browser.runtime.onMessage.addListener(async (msg: ActionMessage, sender) => {
       await networkStatusWatcher();
     } else if (msg.type === 'broadcast') {
       // Grab the content returned in this message and use as custom action response.
-      customActionResponse = msg.response.content;
+      customActionResponse = msg.response.response;
 
       // If there is an active prompt, it means we should resolve it with the broadcast result:
       if (prompt) {
