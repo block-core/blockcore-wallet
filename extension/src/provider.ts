@@ -27,26 +27,28 @@ export class BlockcoreRequestProvider implements Web5RequestProvider {
         } else {
           this.#requests[data.id].resolve(data.response);
 
-          const popupWindow = document.createElement('DIV');
-          popupWindow.style.display = 'block';
-          popupWindow.style.padding = '20px';
-          popupWindow.style.color = '#212121';
-          popupWindow.style.backgroundColor = 'white';
-          popupWindow.style.border = 'solid gray 1px';
-          popupWindow.style.borderRadius = '6px';
-          popupWindow.style.position = 'fixed';
-          popupWindow.style.width = '250px';
-          popupWindow.style.top = '10px';
-          popupWindow.style.margin = '0 auto';
-          popupWindow.style.left = '50%';
-          popupWindow.style.transform = 'translate(-50%, 0%)';
-          popupWindow.innerHTML = data.response.notification;
+          if (data.response.notification) {
+            const popupWindow = document.createElement('DIV');
+            popupWindow.style.display = 'block';
+            popupWindow.style.padding = '20px';
+            popupWindow.style.color = '#212121';
+            popupWindow.style.backgroundColor = 'white';
+            popupWindow.style.border = 'solid gray 1px';
+            popupWindow.style.borderRadius = '6px';
+            popupWindow.style.position = 'fixed';
+            popupWindow.style.width = '250px';
+            popupWindow.style.top = '10px';
+            popupWindow.style.margin = '0 auto';
+            popupWindow.style.left = '50%';
+            popupWindow.style.transform = 'translate(-50%, 0%)';
+            popupWindow.innerHTML = data.response.notification;
 
-          document.body.appendChild(popupWindow);
+            document.body.appendChild(popupWindow);
 
-          setTimeout(() => {
-            document.body.removeChild(popupWindow);
-          }, 1500);
+            setTimeout(() => {
+              document.body.removeChild(popupWindow);
+            }, 1500);
+          }
         }
 
         delete this.#requests[data.id];

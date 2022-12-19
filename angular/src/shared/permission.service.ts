@@ -68,7 +68,12 @@ export class PermissionServiceShared {
   }
 
   async increaseExecution(permission: Permission) {
+    if (!permission) {
+      return -1;
+    }
+
     const key = PermissionStore.permissionKey(permission);
+
     let executions = this.storeExecutions.get(key);
 
     if (!executions) {
@@ -82,6 +87,7 @@ export class PermissionServiceShared {
 
     this.storeExecutions.set(key, executions);
     await this.storeExecutions.save();
+    return executions.executions;
   }
 
   async resetExecution(permission: Permission) {

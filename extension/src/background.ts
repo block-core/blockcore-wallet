@@ -209,11 +209,11 @@ async function handleContentScriptMessage(message: ActionMessage) {
     console.log('ACTION RESPONSE: ', result);
 
     // Increase the execution counter
-    permissionService.increaseExecution(<Permission>permission);
+    const executions = await permissionService.increaseExecution(<Permission>permission);
 
     // If this execution required consent then display a notification.
     if (prepare.consent) {
-      result.notification = `App executed ${(<Permission>permission).action}`;
+      result.notification = `App executed ${(<Permission>permission).action} (${executions})`;
     }
 
     return result;
