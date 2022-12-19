@@ -207,6 +207,10 @@ async function handleContentScriptMessage(message: ActionMessage) {
     // User have given permission to execute.
     const result = await state.handler.execute(state, <Permission>permission);
     console.log('ACTION RESPONSE: ', result);
+
+    // Increase the execution counter
+    permissionService.increaseExecution(<Permission>permission);
+
     return result;
   } catch (error) {
     return { error: { message: error.message, stack: error.stack } };

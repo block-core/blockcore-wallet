@@ -17,8 +17,6 @@ export class NostrPublicKeyHandler implements ActionHandler {
   constructor(private backgroundManager: BackgroundManager) {}
 
   async prepare(state: ActionState): Promise<ActionPrepareResult> {
-    console.log('PREPARE: nostr.publickey');
-
     return {
       content: [],
       consent: true,
@@ -26,8 +24,6 @@ export class NostrPublicKeyHandler implements ActionHandler {
   }
 
   async execute(state: ActionState, permission: Permission): Promise<ActionResponse> {
-    console.log('EXECUTE: nostr.publickey');
-
     let publicKey: any = permission.key;
 
     // Remove the "nostr:key:" prefix.

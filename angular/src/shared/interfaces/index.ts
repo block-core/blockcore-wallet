@@ -449,6 +449,11 @@ interface Action {
 //   condition: string;
 // }
 
+interface PermissionExecution {
+  key: string;
+  executions: number;
+}
+
 interface PermissionDomain {
   app: string;
   permissions: any;
@@ -825,5 +830,6 @@ export {
   DIDRequestOptions,
   DIDRequestResponse,
   AccountFilter,
-  VCRequestResponse
+  VCRequestResponse,
+  PermissionExecution
 };

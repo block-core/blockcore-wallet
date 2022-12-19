@@ -1,12 +1,17 @@
 import { ActionMessage, Permission, PermissionDomain } from './interfaces';
+import { PermissionExecutionStore } from './store/permission-execution-store';
 import { PermissionStore } from './store/permission-store';
 
 export class PermissionServiceShared {
   private store: PermissionStore;
+  private storeExecutions: PermissionExecutionStore;
 
   constructor() {
     this.store = new PermissionStore();
     this.store.load();
+
+    this.storeExecutions = new PermissionExecutionStore();
+    this.storeExecutions.load();
   }
 
   get(app: string) {
@@ -16,6 +21,7 @@ export class PermissionServiceShared {
   /** Will reload the permissions, and remove permissions that has timed out. */
   async refresh() {
     await this.store.load();
+    await this.storeExecutions.load();
     const permissions = this.store.all();
 
     for (let i = 0; i < permissions.length; i++) {
@@ -29,6 +35,7 @@ export class PermissionServiceShared {
           const perm = perms[j];
 
           if (perm.type === 'expirable' && perm.created < Date.now() / 1000 - 1 * 60) {
+            await this.removeExecution(perm); // Remove the execution history for this permission.
             perms.splice(j, 1);
             // delete permissionSet.permissions[permission];
             updated = true;
@@ -58,6 +65,46 @@ export class PermissionServiceShared {
     };
 
     return permission;
+  }
+
+  async increaseExecution(permission: Permission) {
+    const key = PermissionStore.permissionKey(permission);
+    let executions = this.storeExecutions.get(key);
+
+    if (!executions) {
+      executions = {
+        key: key,
+        executions: 0,
+      };
+    }
+
+    ++executions.executions;
+
+    this.storeExecutions.set(key, executions);
+    await this.storeExecutions.save();
+  }
+
+  async resetExecution(permission: Permission) {
+    const key = PermissionStore.permissionKey(permission);
+    let executions = this.storeExecutions.get(key);
+
+    if (!executions) {
+      executions = {
+        key: key,
+        executions: 0,
+      };
+    }
+
+    executions.executions = 0;
+
+    this.storeExecutions.set(key, executions);
+    await this.storeExecutions.save();
+  }
+
+  async removeExecution(permission: Permission) {
+    const key = PermissionStore.permissionKey(permission);
+    this.storeExecutions.remove(key);
+    await this.storeExecutions.save();
   }
 
   findPermissionIndexInSet(permissionSet: PermissionDomain, action: string, walletId: string, accountId: string, keyId: string) {
