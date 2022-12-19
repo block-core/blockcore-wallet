@@ -35,6 +35,6 @@ export class NostrSignEventHandler implements ActionHandler {
     const signature = (await signEvent(event, this.utility.keyToHex(node.privateKey))) as any;
     event.sig = signature;
 
-    return event;
+    return { key: event.pubkey, response: event };
   }
 }

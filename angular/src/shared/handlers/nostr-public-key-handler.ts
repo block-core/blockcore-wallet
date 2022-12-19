@@ -31,6 +31,6 @@ export class NostrPublicKeyHandler implements ActionHandler {
       publicKey = publicKey.substring(publicKey.lastIndexOf(':') + 1);
     }
 
-    return publicKey;
+    return { key: publicKey, response: publicKey };
   }
 }

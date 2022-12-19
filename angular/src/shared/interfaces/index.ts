@@ -603,10 +603,10 @@ interface ActionResponse {
   key?: string;
 
   /** The signature for the signed content in base64 encoding. */
-  signature?: string;
+  // signature?: string;
 
   /** OBSOLETE (use response instead): A copy of the actual content string that was signed. */
-  content?: object | string;
+  // content?: object | string;
 
   /** The response from the action. */
   response?: object | string;
@@ -621,6 +621,9 @@ interface ActionResponse {
 
   /** The account identifier. */
   accountId?: string;
+
+  /** Notification to display in the DOM upon key usage. */
+  notification?: string;
 }
 
 interface ActionPrepareResult {

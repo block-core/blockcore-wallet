@@ -34,9 +34,9 @@ export class AccountBalanceHandler implements ActionHandler {
     const { network, account, accountState, accountHistory } = await this.backgroundManager.getAccount(data.walletId, data.accountId);
 
     if (state.content) {
-      return { key: data.key, content: { balance: accountHistory.balance }, network: network.id };
+      return { key: data.key, response: { balance: accountHistory.balance }, network: network.id };
     } else {
-      return { key: '', signature: '', content: null, network: network.id };
+      return { key: '', response: null, network: network.id };
     }
   }
 }

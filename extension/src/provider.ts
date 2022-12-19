@@ -26,6 +26,27 @@ export class BlockcoreRequestProvider implements Web5RequestProvider {
           this.#requests[data.id].reject(error);
         } else {
           this.#requests[data.id].resolve(data.response);
+
+          const popupWindow = document.createElement('DIV');
+          popupWindow.style.display = 'block';
+          popupWindow.style.padding = '20px';
+          popupWindow.style.color = '#212121';
+          popupWindow.style.backgroundColor = 'white';
+          popupWindow.style.border = 'solid gray 1px';
+          popupWindow.style.borderRadius = '6px';
+          popupWindow.style.position = 'fixed';
+          popupWindow.style.width = '250px';
+          popupWindow.style.top = '10px';
+          popupWindow.style.margin = '0 auto';
+          popupWindow.style.left = '50%';
+          popupWindow.style.transform = 'translate(-50%, 0%)';
+          popupWindow.innerHTML = data.response.notification;
+
+          document.body.appendChild(popupWindow);
+
+          setTimeout(() => {
+            document.body.removeChild(popupWindow);
+          }, 1500);
         }
 
         delete this.#requests[data.id];
@@ -106,7 +127,7 @@ class NostrProvider {
     })) as any;
 
     // Parse the response and only return event.
-    return result;
+    return result.response;
   }
 
   /** Nostr NIP-07 function: https://github.com/nostr-protocol/nips/blob/master/07.md */
@@ -117,7 +138,7 @@ class NostrProvider {
     })) as any;
 
     // Parse the response and only return event.
-    return result;
+    return result.response;
   }
 
   async getRelays(): Promise<string[]> {
@@ -126,7 +147,7 @@ class NostrProvider {
       params: [{}],
     })) as any;
 
-    return result || {};
+    return result.response || {};
   }
 
   nip04 = new NostrNip04(this.provider);
@@ -141,7 +162,7 @@ export class NostrNip04 {
       params: [{ peer, plaintext: plaintext }],
     })) as any;
 
-    return result || {};
+    return result.response || {};
   }
 
   async decrypt(peer: string, ciphertext: string): Promise<string> {
@@ -150,7 +171,7 @@ export class NostrNip04 {
       params: [{ peer, ciphertext: ciphertext }],
     })) as any;
 
-    return result || {};
+    return result.response || {};
   }
 }
 
