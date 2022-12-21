@@ -33,10 +33,11 @@ export class BlockcoreRequestProvider implements Web5RequestProvider {
             popupWindow.style.padding = '20px';
             popupWindow.style.color = '#212121';
             popupWindow.style.backgroundColor = 'white';
+            popupWindow.style.zIndex = '2147483647';
             popupWindow.style.border = 'solid gray 1px';
             popupWindow.style.borderRadius = '6px';
             popupWindow.style.position = 'fixed';
-            popupWindow.style.width = '250px';
+            popupWindow.style.width = '320px';
             popupWindow.style.top = '10px';
             popupWindow.style.margin = '0 auto';
             popupWindow.style.left = '50%';

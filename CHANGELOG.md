@@ -1,3 +1,13 @@
+## <small>1.0.19 (2022-12-19)</small>
+
+* Add execution notification to calling website ([d439463](https://github.com/block-core/blockcore-wallet/commit/d439463))
+* Add executions counter for permissions and display under settings ([ef50a85](https://github.com/block-core/blockcore-wallet/commit/ef50a85)), closes [#318](https://github.com/block-core/blockcore-wallet/issues/318)
+* Don't show dialog on executions that don't require permissions (consent) ([6d541fc](https://github.com/block-core/blockcore-wallet/commit/6d541fc))
+* Fix a minor compile issue ([171d667](https://github.com/block-core/blockcore-wallet/commit/171d667))
+* Update version and changelog ([2a87767](https://github.com/block-core/blockcore-wallet/commit/2a87767))
+
+
+
 ## <small>1.0.18 (2022-12-18)</small>
 
 * Add a key conversion tool for Nostr ([9398bad](https://github.com/block-core/blockcore-wallet/commit/9398bad))
