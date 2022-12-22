@@ -122,6 +122,7 @@ export class BackgroundManager {
 
     // Get the secret seed.
     const masterSeedBase64 = this.sharedManager.getPrivateKey(walletId);
+    if (!masterSeedBase64) throw "Wallet is locked";
     const masterSeed = Buffer.from(masterSeedBase64, 'base64');
 
     const wallet = await this.sharedManager.getWallet(walletId);
