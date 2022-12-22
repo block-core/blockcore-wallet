@@ -2,8 +2,8 @@ import { BackgroundManager } from '../background-manager';
 import { ActionPrepareResult, ActionResponse, Permission } from '../interfaces';
 import { ActionHandler, ActionState } from './action-handler';
 
-export class BuildTransactionHandler implements ActionHandler {
-  action = ['buildtransaction'];
+export class SendTransactionHandler implements ActionHandler {
+  action = ['sendtransaction'];
 
   constructor(private backgroundManager: BackgroundManager) {}
 
