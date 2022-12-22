@@ -17,6 +17,8 @@ import { NostrSignEventHandler } from './nostr-sign-event-handler';
 import { NostrGetRelaysHandler } from './nostr-get-relays-handler';
 import { NostrEncryptHandler } from './nostr-encrypt-handler';
 import { NostrDecryptHandler } from './nostr-decrypt-handler';
+import { SignTransactionInputsHandler } from './sign-transaction-inputs-handler';
+
 
 // TODO: Make this more generic where the handlers are registered as form of factory.
 export class Handlers {
@@ -52,6 +54,8 @@ export class Handlers {
         return new NostrEncryptHandler(backgroundManager);
       case 'nostr.decrypt':
         return new NostrDecryptHandler(backgroundManager);
+      case 'signtransactioninputs':
+        return new SignTransactionInputsHandler(backgroundManager);
       // case 'signVerifiableCredential': // Signing of Verifiable Credential, JSON encoded as signed JSON Web Token.
       //   return new SignVerifiableCredentialHandler();
       // case 'signTypedData': // Not implemented yet, will be inspired by EIP-712: https://github.com/ethereum/EIPs/blob/master/EIPS/eip-712.md
