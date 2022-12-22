@@ -52,7 +52,7 @@ export class DidRequestHandler implements ActionHandler {
 
       let returnData: ActionResponse = {
         key: permission.key,
-        content: {
+        response: {
           did: permission.key,
           proof: jws,
           challenge: state.content,
@@ -62,7 +62,7 @@ export class DidRequestHandler implements ActionHandler {
 
       return returnData;
     } else {
-      return { key: '', signature: '', content: null, network: network.id };
+      return { key: '', response: null, network: network.id };
     }
   }
 }

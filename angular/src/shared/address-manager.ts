@@ -1,140 +1,157 @@
-import { Account, Address } from "./interfaces";
-import { HDKey } from "@scure/bip32";
+import { Account, Address } from './interfaces';
+import { HDKey } from '@scure/bip32';
 import { payments } from '@blockcore/blockcore-js';
-import { NetworkLoader } from "./network-loader";
-import { Network } from "./networks";
+import { NetworkLoader } from './network-loader';
+import { Network } from './networks';
 import * as secp from '@noble/secp256k1';
+import { bech32 } from '@scure/base';
 
 export class AddressManager {
+  private allNetworks: Network[];
 
-    private allNetworks: Network[];
+  constructor(public networkLoader: NetworkLoader) {
+    this.allNetworks = this.networkLoader.getAllNetworks();
+  }
 
-    constructor(public networkLoader: NetworkLoader) {
-        this.allNetworks = this.networkLoader.getAllNetworks();
+  getAddress(account: Account, type: number, index: number): Address {
+    const network = this.getNetwork(account.networkType);
+    const accountNode = HDKey.fromExtendedKey(account.xpub, network.bip32);
+    const addressNode = accountNode.deriveChild(type).deriveChild(index);
+    const address = this.getAddressByNetwork(Buffer.from(addressNode.publicKey), network, account.purposeAddress);
+
+    return {
+      index: index,
+      address: address,
+    };
+  }
+
+  /** Get the network definition based upon the network identifier. */
+  getNetwork(networkType: string) {
+    return this.allNetworks.find((w) => w.id == networkType);
+  }
+
+  // private generateRandomNumber(min: number, max: number) {
+  //     return Math.floor(Math.random() * (max - min + 1)) + min;
+  // }
+
+  // getServer(networkType: string, networkGroup: string, customServer?: string) {
+  //     if (networkGroup == 'custom') {
+  //         const server = customServer.replace('{id}', networkGroup.toLowerCase());
+  //     } else {
+  //         const serversGroup = Servers[networkGroup];
+  //         const servers = serversGroup[networkType];
+
+  //         // TODO: Figure out the best way to pick and perhaps cycle the servers.
+  //         // As of now, we'll randomly pick every time this method is called.
+  //         const serverIndex = this.generateRandomNumber(0, servers.length);
+  //         const server = servers[serverIndex];
+
+  //         return server;
+  //     }
+  // }
+
+  /** These functions are duplicate code from CryptoUtility, but loading issues between "extension" code and "UI" code must be fixed. */
+  getAddressByNetwork(publicKey: Buffer, network: Network, addressPurpose: number) {
+    if (addressPurpose == 44) {
+      const { address } = payments.p2pkh({
+        pubkey: publicKey,
+        network: network,
+      });
+
+      return address;
+    } else if (addressPurpose == 49) {
+      throw Error(`The address purpose ${addressPurpose} is currently not supported.`);
+
+      // const { address } = payments.p2wsh({
+      //     pubkey: publicKey,
+      //     network: network,
+      // });
+
+      // return address;
+    } else if (addressPurpose == 84) {
+      const { address } = payments.p2wpkh({
+        pubkey: publicKey,
+        network: network,
+      });
+
+      return address;
+    // } else if (addressPurpose == 19) {
+    //   return this.convertToBech32(publicKey, network.bech32);
+    } else if (addressPurpose == 340) {
+      return this.getIdentifier(publicKey);
     }
 
-    getAddress(account: Account, type: number, index: number): Address {
-        const network = this.getNetwork(account.networkType);
-        const accountNode = HDKey.fromExtendedKey(account.xpub, network.bip32);
-        const addressNode = accountNode.deriveChild(type).deriveChild(index);
-        const address = this.getAddressByNetwork(Buffer.from(addressNode.publicKey), network, account.purposeAddress);
+    throw Error(`The address purpose ${addressPurpose} is currently not supported.`);
+  }
 
-        return {
-            index: index,
-            address: address
-        };
+  /** These functions are duplicate code from CryptoUtility, but loading issues between "extension" code and "UI" code must be fixed. */
+  private convertToBech32(key: Uint8Array, prefix: string) {
+    const keyValue = this.ensureSchnorrPublicKey(key);
+    const words = bech32.toWords(keyValue);
+    const value = bech32.encode(prefix, words);
+
+    return value;
+  }
+
+  /** These functions are duplicate code from CryptoUtility, but loading issues between "extension" code and "UI" code must be fixed. */
+  private ensureSchnorrPublicKey(publicKey: Uint8Array) {
+    if (publicKey.length == 33) {
+      return publicKey.slice(1);
     }
 
-    /** Get the network definition based upon the network identifier. */
-    getNetwork(networkType: string) {
-        return this.allNetworks.find(w => w.id == networkType);
+    return publicKey;
+  }
+
+  getIdentifier(publicKey: Buffer) {
+    return this.schnorrPublicKeyToHex(this.convertEdcsaPublicKeyToSchnorr(publicKey));
+  }
+
+  convertEdcsaPublicKeyToSchnorr(publicKey: Buffer) {
+    if (publicKey.length != 33) {
+      throw Error('The public key must be compressed EDCSA public key of length 33.');
     }
 
-    // private generateRandomNumber(min: number, max: number) {
-    //     return Math.floor(Math.random() * (max - min + 1)) + min;
-    // }
+    const schnorrPublicKey = publicKey.slice(1);
+    return schnorrPublicKey;
+  }
 
-    // getServer(networkType: string, networkGroup: string, customServer?: string) {
-    //     if (networkGroup == 'custom') {
-    //         const server = customServer.replace('{id}', networkGroup.toLowerCase());
-    //     } else {
-    //         const serversGroup = Servers[networkGroup];
-    //         const servers = serversGroup[networkType];
+  schnorrPublicKeyToHex(publicKey: Buffer) {
+    return secp.utils.bytesToHex(publicKey);
+  }
 
-    //         // TODO: Figure out the best way to pick and perhaps cycle the servers.
-    //         // As of now, we'll randomly pick every time this method is called.
-    //         const serverIndex = this.generateRandomNumber(0, servers.length);
-    //         const server = servers[serverIndex];
+  getAddressByNetworkp2wsh(node: any, network: any) {
+    const { address } = payments.p2wsh({
+      pubkey: node.publicKey,
+      network: network,
+    });
 
-    //         return server;
-    //     }
-    // }
+    return address;
+  }
 
-    getAddressByNetwork(publicKey: Buffer, network: any, addressPurpose: number) {
-        if (addressPurpose == 44) {
-            const { address } = payments.p2pkh({
-                pubkey: publicKey,
-                network: network,
-            });
+  getAddressByNetworkp2pkh(node: any, network: any) {
+    const { address } = payments.p2pkh({
+      pubkey: node.publicKey,
+      network: network,
+    });
 
-            return address;
-        } else if (addressPurpose == 49) {
-            throw Error(`The address purpose ${addressPurpose} is currently not supported.`);
+    return address;
+  }
 
-            // const { address } = payments.p2wsh({
-            //     pubkey: publicKey,
-            //     network: network,
-            // });
+  getAddressByNetworkp2pkhFromBuffer(publicKey: Buffer, network: any) {
+    const { address } = payments.p2pkh({
+      pubkey: publicKey,
+      network: network,
+    });
 
-            // return address;
-        } else if (addressPurpose == 84) {
-            const { address } = payments.p2wpkh({
-                pubkey: publicKey,
-                network: network,
-            });
+    return address;
+  }
 
-            return address;
-        } else if (addressPurpose == 340) {
-            return this.getIdentifier(publicKey);
-        }
+  getAddressByNetworkp2wpkh(node: any, network: any) {
+    const { address } = payments.p2wpkh({
+      pubkey: node.publicKey,
+      network: network,
+    });
 
-        throw Error(`The address purpose ${addressPurpose} is currently not supported.`);
-    }
-
-    getIdentifier(publicKey: Buffer)
-    {
-        return this.schnorrPublicKeyToHex(this.convertEdcsaPublicKeyToSchnorr(publicKey));
-    }
-
-    convertEdcsaPublicKeyToSchnorr(publicKey: Buffer)
-    {
-        if (publicKey.length != 33) {
-            throw Error('The public key must be compressed EDCSA public key of length 33.');
-        }
-
-        const schnorrPublicKey = publicKey.slice(1);
-        return schnorrPublicKey;
-    }
-
-    schnorrPublicKeyToHex(publicKey: Buffer)
-    {
-        return secp.utils.bytesToHex(publicKey);
-    }
-
-    getAddressByNetworkp2wsh(node: any, network: any) {
-        const { address } = payments.p2wsh({
-            pubkey: node.publicKey,
-            network: network,
-        });
-
-        return address;
-    }
-
-    getAddressByNetworkp2pkh(node: any, network: any) {
-        const { address } = payments.p2pkh({
-            pubkey: node.publicKey,
-            network: network,
-        });
-
-        return address;
-    }
-
-    getAddressByNetworkp2pkhFromBuffer(publicKey: Buffer, network: any) {
-        const { address } = payments.p2pkh({
-            pubkey: publicKey,
-            network: network,
-        });
-
-        return address;
-    }
-
-    getAddressByNetworkp2wpkh(node: any, network: any) {
-        const { address } = payments.p2wpkh({
-            pubkey: node.publicKey,
-            network: network,
-        });
-
-        return address;
-    }
-
+    return address;
+  }
 }

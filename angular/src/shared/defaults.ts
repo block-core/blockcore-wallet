@@ -197,7 +197,7 @@ export class Defaults {
             type: 'identity',
             network: 1237,
             purpose: 44,
-            purposeAddress: 340, // BIP0340
+            purposeAddress: 340,
             icon: 'account_circle',
           },
         ];
@@ -313,7 +313,7 @@ export class Defaults {
           //     type: 'other',
           //     network: 1237,
           //     purpose: 44,
-          //     purposeAddress: 44, // TODO: Nostr should have custom derived address, add this ability (schnorr signature)
+          //     purposeAddress: 340, // TODO: Nostr should have custom derived address, add this ability (schnorr signature)
           //     icon: 'account_circle',
           //     state: {
           //         balance: 0,

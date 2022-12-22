@@ -40,9 +40,9 @@ export class SignMessageHandler implements ActionHandler {
 
       let signedData = await this.signData(network, node, contentText as string);
 
-      return { key: permission.key, walletId: permission.walletId, accountId: permission.accountId, signature: signedData, content: state.content, network: network.id };
+      return { key: permission.key, walletId: permission.walletId, accountId: permission.accountId, response: { signature: signedData, content: state.content }, network: network.id };
     } else {
-      return { key: '', signature: '', content: null, network: network.id };
+      return { key: '', response: null, network: network.id };
     }
   }
 }

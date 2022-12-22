@@ -1,11 +1,11 @@
 /* Source based on example by Brady Joslin - https://github.com/bradyjoslin */
 import { Base64 } from 'js-base64';
 import { payments } from '@blockcore/blockcore-js';
-import { BlockcoreIdentity } from '@blockcore/identity';
 import * as secp from '@noble/secp256k1';
 import { ES256KSigner } from 'did-jwt';
 import { HDKey } from '@scure/bip32';
 import { Network } from '../../shared/networks';
+import { bech32 } from '@scure/base';
 
 const enc = new TextEncoder();
 const dec = new TextDecoder();
@@ -38,11 +38,28 @@ export class CryptoUtility {
       });
 
       return address;
+    // } else if (addressPurpose == 19) {
+    //   return this.convertToBech32(publicKey, network.bech32);
     } else if (addressPurpose == 340) {
       return this.getIdentifier(publicKey);
     }
 
     throw Error(`The address purpose ${addressPurpose} is currently not supported.`);
+  }
+
+  convertToBech32(key: Uint8Array, prefix: string) {
+    const keyValue = this.ensureSchnorrPublicKey(key);
+    const words = bech32.toWords(keyValue);
+    const value = bech32.encode(prefix, words);
+
+    return value;
+  }
+
+  convertFromBech32(address: string) {
+    const decoded = bech32.decode(address);
+    const key = bech32.fromWords(decoded.words);
+
+    return key;
   }
 
   getIdentifier(publicKey: Uint8Array) {
@@ -62,8 +79,25 @@ export class CryptoUtility {
     return schnorrPublicKey;
   }
 
+  ensureSchnorrPublicKey(publicKey: Uint8Array) {
+    if (publicKey.length == 33) {
+      return publicKey.slice(1);
+    }
+
+    return publicKey;
+  }
+
+  /** DEPRECATED: Use arrayToHex. */
   schnorrPublicKeyToHex(publicKey: Uint8Array) {
     return secp.utils.bytesToHex(publicKey);
+  }
+
+  arrayToHex(value: Uint8Array) {
+    return secp.utils.bytesToHex(value);
+  }
+
+  hexToArray(value: string) {
+    return secp.utils.hexToBytes(value);
   }
 
   getAddressByNetworkp2wsh(node: any, network: any) {

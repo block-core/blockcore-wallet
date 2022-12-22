@@ -1,3 +1,36 @@
+## <small>1.0.19 (2022-12-19)</small>
+
+* Add execution notification to calling website ([d439463](https://github.com/block-core/blockcore-wallet/commit/d439463))
+* Add executions counter for permissions and display under settings ([ef50a85](https://github.com/block-core/blockcore-wallet/commit/ef50a85)), closes [#318](https://github.com/block-core/blockcore-wallet/issues/318)
+* Don't show dialog on executions that don't require permissions (consent) ([6d541fc](https://github.com/block-core/blockcore-wallet/commit/6d541fc))
+* Fix a minor compile issue ([171d667](https://github.com/block-core/blockcore-wallet/commit/171d667))
+* Update version and changelog ([2a87767](https://github.com/block-core/blockcore-wallet/commit/2a87767))
+
+
+
+## <small>1.0.18 (2022-12-18)</small>
+
+* Add a key conversion tool for Nostr ([9398bad](https://github.com/block-core/blockcore-wallet/commit/9398bad))
+* Add export of private key using QR code ([14ffa60](https://github.com/block-core/blockcore-wallet/commit/14ffa60))
+* Add npub and nsec export format support for Nostr ([70029df](https://github.com/block-core/blockcore-wallet/commit/70029df))
+* Change to use hex as address values, but display as npub to users ([0246bbe](https://github.com/block-core/blockcore-wallet/commit/0246bbe))
+* Internally keep the Nostr addresses in hex format ([0bbcf1a](https://github.com/block-core/blockcore-wallet/commit/0bbcf1a))
+* Update the  bech32 prefix for Nostr ([0ac4a79](https://github.com/block-core/blockcore-wallet/commit/0ac4a79))
+* Update version and changelog, add QR code for public key ([f018e23](https://github.com/block-core/blockcore-wallet/commit/f018e23))
+
+
+
+## <small>1.0.17 (2022-12-18)</small>
+
+* Add copy button to private key export ([2c10f4f](https://github.com/block-core/blockcore-wallet/commit/2c10f4f))
+* Added export of individual private key on identity tools (#316) ([65f21b9](https://github.com/block-core/blockcore-wallet/commit/65f21b9)), closes [#316](https://github.com/block-core/blockcore-wallet/issues/316)
+* Fix guard clause for empty password input ([57e9c83](https://github.com/block-core/blockcore-wallet/commit/57e9c83))
+* Make the dashboard cleaner and more focused ([4286f11](https://github.com/block-core/blockcore-wallet/commit/4286f11))
+* Update version and changelog ([c5657a1](https://github.com/block-core/blockcore-wallet/commit/c5657a1))
+* Wrap the private key on export ([cb81224](https://github.com/block-core/blockcore-wallet/commit/cb81224))
+
+
+
 ## <small>1.0.16 (2022-12-18)</small>
 
 * Fix issue with unexpected callbacks on web provider requests ([f181020](https://github.com/block-core/blockcore-wallet/commit/f181020))

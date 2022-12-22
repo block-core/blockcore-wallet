@@ -125,6 +125,8 @@ import { ActionNostrPublicKeyComponent } from './action/nostr.publickey/nostr.pu
 import { ActionNostrSignEventComponent } from './action/nostr.signevent/nostr.signevent.component';
 import { ActionNostrEncryptComponent } from './action/nostr.encrypt/nostr.encrypt.component';
 import { ActionNostrDecryptComponent } from './action/nostr.decrypt/nostr.decrypt.component';
+import { PasswordDialog } from './shared/password-dialog/password-dialog';
+import { PermissionExecutionStore } from 'src/shared/store/permission-execution-store';
 
 // required for AOT compilation
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
@@ -204,7 +206,8 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     ActionNostrPublicKeyComponent,
     ActionNostrSignEventComponent,
     ActionNostrEncryptComponent,
-    ActionNostrDecryptComponent
+    ActionNostrDecryptComponent,
+    PasswordDialog,
   ],
   imports: [
     BrowserModule,
@@ -290,6 +293,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     AddressIndexedStore,
     AccountStateStore,
     PermissionStore,
+    PermissionExecutionStore,
     AppUpdateService,
     ContactStore,
     StandardTokenStore,

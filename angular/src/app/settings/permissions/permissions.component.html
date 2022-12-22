@@ -2,8 +2,8 @@
   <div class="centered">
     <mat-icon class="large-icon">vpn_lock</mat-icon>
     <br />
-    <h1>{{ 'Settings.Permissions' | translate }}</h1>
-    <p>{{ 'Settings.PermissionsDescription' | translate }}</p>
+    <h1>{{ "Settings.Permissions" | translate }}</h1>
+    <p>{{ "Settings.PermissionsDescription" | translate }}</p>
   </div>
 
   <div class="list-action-table" *ngFor="let permissionSet of permissions">
@@ -14,7 +14,10 @@
         <div>
           <strong>{{ perm.action }}</strong>
           <br />
-          <span class="dimmed">{{ 'Settings.Type' | translate }}: {{ perm.type }} - {{ 'Settings.Created' | translate }}: {{ perm.created * 1000 | date }}</span><br />
+          <strong>Used {{ executedCount(perm) }} times.</strong>
+          <br />
+          <span class="dimmed">{{ "Settings.Type" | translate }}: {{ perm.type }} - {{ "Settings.Created" | translate }}: {{ perm.created * 1000 | date }}</span
+          ><br />
           <div class="dimmed unwrap">{{ getWalletName(perm.walletId) }} / {{ getAccountName(perm.walletId, perm.accountId) }} / {{ perm.key }}</div>
         </div>
         <div>
@@ -26,5 +29,7 @@
     </div>
   </div>
 
-  <button *ngIf="permissions?.length > 0" class="signup-button" mat-flat-button color="primary" (click)="removeAllPermissions()">{{ 'Settings.RemoveAllPermissions' | translate }}</button>
+  <!-- <div *ngFor="let execution of executions">{{ execution | json }}<br /></div> -->
+
+  <button *ngIf="permissions?.length > 0" class="signup-button" mat-flat-button color="primary" (click)="removeAllPermissions()">{{ "Settings.RemoveAllPermissions" | translate }}</button>
 </div>

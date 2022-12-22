@@ -12,8 +12,6 @@ export class NostrSignEventHandler implements ActionHandler {
   constructor(private backgroundManager: BackgroundManager) {}
 
   async prepare(state: ActionState): Promise<ActionPrepareResult> {
-    console.log('PREPARE: nostr.signevent');
-
     return {
       content: state.message.request.params[0],
       consent: true,
@@ -21,8 +19,6 @@ export class NostrSignEventHandler implements ActionHandler {
   }
 
   async execute(state: ActionState, permission: Permission): Promise<ActionResponse> {
-    console.log('EXECUTE: nostr.signevent');
-
     // Get the private key
     const { network, node } = await this.backgroundManager.getKey(permission.walletId, permission.accountId, permission.keyId);
 
@@ -39,8 +35,6 @@ export class NostrSignEventHandler implements ActionHandler {
     const signature = (await signEvent(event, this.utility.keyToHex(node.privateKey))) as any;
     event.sig = signature;
 
-    // const valid = await secp.schnorr.verify(event.sig, event.id, event.pubkey);
-
-    return event;
+    return { key: event.pubkey, response: event };
   }
 }

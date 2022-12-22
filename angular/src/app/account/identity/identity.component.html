@@ -79,16 +79,23 @@
             <textarea class="diddocument">{{identity.didDocument | json}}</textarea> -->
     </div>
 
-    <div *ngIf="!isDid" class="page">
-      <h2>
-        {{ readableId }}
+    <div *ngIf="!isDid" class="page centered wrap">
+      <h2>Nostr Public Key</h2>
+
+      <p class="selectable">
+        {{ identifier }}
         <button class="copy-button" mat-icon-button (click)="copy()">
           <mat-icon>content_copy</mat-icon>
         </button>
         <!-- <button class="copy-button" mat-icon-button (click)="openDid()">
           <mat-icon>travel_explore</mat-icon>
         </button> -->
-      </h2>
+      </p>
+
+      <p>
+        <img [src]="qrCodePublicKey" class="qr-code" />
+      </p>
+      <div class="dimmed">nostr:{{ identifier }}</div>
 
       <!-- <h3 class="break">{{identifier}} <button class="copy-button" mat-icon-button (click)="copy()">
         <mat-icon>content_copy</mat-icon>
@@ -163,7 +170,6 @@
     </ng-template>
 
     <div *ngIf="isDid" class="page">
-
       <p class="icon-indicator" *ngIf="!identity?.published"><mat-icon class="icon-warn">done</mat-icon> {{ "Account.ThisProfileIsCurrentlyNOTPublic" | translate }}</p>
       <p class="icon-indicator" *ngIf="identity?.published"><mat-icon class="icon-success">done</mat-icon> {{ "Account.ThisProfileIsCurrentlyPublic" | translate }}</p>
 
@@ -244,6 +250,63 @@
         <button class="signup-button" mat-stroked-button (click)="copyDWNQueryRequest()">Copy DWN Query Request</button>
 
         <button class="signup-button" mat-stroked-button (click)="copyVaultConfiguration()">{{ "Account.CopyBlockcoreVaultSetupConfiguration" | translate }}</button>
+      </p>
+    </div>
+
+    <div *ngIf="!isDid" class="page">
+      <p>
+        <mat-card>
+          <mat-card-header>
+            <mat-card-title>Export Private Key</mat-card-title>
+            <mat-card-subtitle>Keep this private key safe, if you loose it or share it with websites, it can be stolen and misused.</mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content>
+            <button class="signup-button" mat-stroked-button (click)="exportPrivateKey()">{{ "Account.ExportPrivateKey" | translate }}</button>
+            <mat-card class="mat-elevation-z6 selectable wrap" *ngIf="verifiedWalletPassword === true"
+              >{{ privateKey
+              }}<button class="copy-button" mat-icon-button (click)="copyPrivateKey()">
+                <mat-icon>content_copy</mat-icon>
+              </button>
+
+              <p>
+                <img [src]="qrCodePrivateKey" class="qr-code" />
+              </p>
+              <div class="dimmed">nostr:{{ privateKey }}</div>
+            </mat-card>
+            <mat-card *ngIf="verifiedWalletPassword === false">Invalid Password</mat-card>
+            <br />
+            <button *ngIf="verifiedWalletPassword === true" class="signup-button" mat-flat-button color="warn" (click)="resetPrivateKey()">{{ "App.Hide" | translate }}</button>
+          </mat-card-content>
+        </mat-card>
+      </p>
+
+      <p>
+        <mat-card>
+          <mat-card-header>
+            <mat-card-title>Key Conversion</mat-card-title>
+            <mat-card-subtitle>Convert between any Nostr key format (e.g. npub to hex)</mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content>
+            <mat-form-field class="input-full-width" appearance="outline">
+              <mat-label>Key (any type of Nostr key)</mat-label>
+              <input matInput (change)="convertKey()" [(ngModel)]="conversionKey" />
+            </mat-form-field>
+
+            <mat-radio-group (change)="convertKey()" [(ngModel)]="conversionKeyType" *ngIf="showConversionOptions">
+              <mat-radio-button value="npub">Public Key</mat-radio-button>&nbsp;
+              <mat-radio-button value="nsec">Private Key</mat-radio-button>
+            </mat-radio-group>
+            <br><br>
+
+            <mat-card class="mat-elevation-z6 selectable wrap" *ngIf="convertedKey"
+              >{{ convertedKey
+              }}<button class="copy-button" mat-icon-button (click)="copyConvertedKey()">
+                <mat-icon>content_copy</mat-icon>
+              </button>
+            </mat-card>
+            <mat-card *ngIf="invalidConversion">Invalid input, unable to convert</mat-card>
+          </mat-card-content>
+        </mat-card>
       </p>
     </div>
   </mat-tab>
