@@ -54,7 +54,7 @@ export class AtomicSwapsKeyHandler implements ActionHandler {
     }
     else
     {
-      return { key: '', signature: '', response: null, content: null, request: state.message.request, network: network.id };
+      return { key: '', response: null };
     }
   }
 }

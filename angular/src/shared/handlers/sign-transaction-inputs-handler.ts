@@ -48,7 +48,7 @@ export class SignTransactionInputsHandler implements ActionHandler {
       return { key: data.key, request: state.message.request, response: response, network: network.id };
     }
     else {
-      return { key: '', signature: '', response: null, content: null, request: state.message.request, network: network.id };
+      return { key: '', response: null };
     }
   }
 }

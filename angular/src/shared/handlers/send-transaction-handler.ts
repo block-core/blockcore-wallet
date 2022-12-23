@@ -14,9 +14,11 @@ export class SendTransactionHandler implements ActionHandler {
 
     var params = state.message.request.params[0];
 
-    if (!params.recipents) {
+    if (!params.data || !params.data.recipents) {
       throw Error('The param recipents is missing.');
     }
+
+    // here we will build the trasnaction and show it to the user
 
     return {
       content: state.message.request.params[0],
@@ -25,8 +27,16 @@ export class SendTransactionHandler implements ActionHandler {
   }
 
   async execute(state: ActionState, permission: Permission): Promise<ActionResponse> {
-    // Get the private key
-    // const { network, node } = await this.backgroundManager.getKey(permission.walletId, permission.accountId, permission.keyId);
-    return { content: null };
+
+    // here we will sign the trasnaction
+
+    if (state.content) {
+    
+
+      return { key: '', response: null };
+    }
+    else {
+      return { key: '', response: null };
+    }
   }
 }
