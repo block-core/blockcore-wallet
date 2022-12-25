@@ -66,7 +66,7 @@ export class Defaults {
             name: 'Cybits',
             type: 'coin',
             network: 3601,
-            purpose: 44,
+            purpose: 84,
             purposeAddress: 84,
             icon: 'paid',
           },
