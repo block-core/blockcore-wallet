@@ -20,5 +20,4 @@ export const environment: IEnvironment = {
   instanceUrl: 'https://www.blockcore.net/',
   instanceExplorerUrl: 'https://explorer.blockcore.net',
   networks: [] as string[] // Returns all
-  // networks: ['STRAX', 'CRS', 'TSTRAX', 'TCRS', 'IMPLX', 'MOL', 'CITY', 'CY', 'RSC', 'SBC', 'X42']
 };
