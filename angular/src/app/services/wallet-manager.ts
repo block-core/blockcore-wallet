@@ -23,6 +23,7 @@ import { AccountStateStore } from 'src/shared/store/account-state-store';
 import { CryptoService } from './';
 import { StandardTokenStore } from '../../shared/store/standard-token-store';
 import { ECPair, bip32 } from '../../shared/noble-ecc-wrapper';
+import { getPublicKey } from 'nostr-tools';
 
 let coinselect = require('coinselect');
 let coinsplit = require('coinselect/split');
@@ -721,17 +722,19 @@ export class WalletManager {
 
   async addAccount(account: Account, wallet: Wallet, runIndexIfRestored = true) {
     try {
-      // First derive the xpub and store that on the account.
-      // const secret = this.walletSecrets.get(wallet.id);
-      // Get the secret seed.
-      const masterSeedBase64 = this.secure.get(wallet.id);
-      const masterSeed = Buffer.from(masterSeedBase64, 'base64');
       const network = this.getNetwork(account.networkType);
-      const masterNode = HDKey.fromMasterSeed(masterSeed, network.bip32);
 
-      const accountNode = masterNode.derive(`m/${account.purpose}'/${account.network}'/${account.index}'`);
+      if (!account.prv) {
+        // First derive the xpub and store that on the account.
+        // const secret = this.walletSecrets.get(wallet.id);
+        // Get the secret seed.
+        const masterSeedBase64 = this.secure.get(wallet.id);
+        const masterSeed = Buffer.from(masterSeedBase64, 'base64');
+        const masterNode = HDKey.fromMasterSeed(masterSeed, network.bip32);
+        const accountNode = masterNode.derive(`m/${account.purpose}'/${account.network}'/${account.index}'`);
 
-      account.xpub = accountNode.publicExtendedKey;
+        account.xpub = accountNode.publicExtendedKey;
+      }
 
       // Add account to the wallet and persist.
       wallet.accounts.push(account);
@@ -740,23 +743,38 @@ export class WalletManager {
       this.state.persisted.previousAccountId = account.identifier;
       this._activeAccountId = account.identifier;
 
-      // After new account has been added and set as active, we'll generate some addresses:
-      this.accountStateStore.set(account.identifier, {
-        id: account.identifier,
-        balance: 0,
-        receive: [
-          {
-            address: this.getAddressByIndex(account, 0, 0),
-            index: 0,
-          },
-        ],
-        change: [
-          {
-            address: this.getAddressByIndex(account, 1, 0),
-            index: 0,
-          },
-        ],
-      });
+      if (!account.prv) {
+        // After new account has been added and set as active, we'll generate some addresses:
+        this.accountStateStore.set(account.identifier, {
+          id: account.identifier,
+          balance: 0,
+          receive: [
+            {
+              address: this.getAddressByIndex(account, 0, 0),
+              index: 0,
+            },
+          ],
+          change: [
+            {
+              address: this.getAddressByIndex(account, 1, 0),
+              index: 0,
+            },
+          ],
+        });
+      } else {
+        // After new account has been added and set as active, we'll generate some addresses:
+        this.accountStateStore.set(account.identifier, {
+          id: account.identifier,
+          balance: 0,
+          receive: [
+            {
+              address: getPublicKey(account.prv),
+              index: 0,
+            },
+          ],
+          change: [],
+        });
+      }
 
       await this.store.save();
       await this.state.save();

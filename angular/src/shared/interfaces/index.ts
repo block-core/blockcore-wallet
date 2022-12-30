@@ -117,6 +117,9 @@ interface Account {
   /** Extended Public Key for this account. */
   xpub?: string;
 
+  /** Imported private key for this account. */
+  prv?: string;
+
   /** When the account is created, the DID is generated and never changes. */
   // did?: string;
 

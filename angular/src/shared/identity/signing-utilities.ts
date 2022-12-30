@@ -30,7 +30,7 @@ export class SigningUtilities {
     return converted;
   }
 
-  private hexToArray(value: string) {
+  hexToArray(value: string) {
     return secp.utils.hexToBytes(value);
   }
 

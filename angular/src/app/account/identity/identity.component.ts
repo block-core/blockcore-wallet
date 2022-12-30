@@ -105,14 +105,16 @@ export class IdentityComponent implements OnInit, OnDestroy {
 
       const tools = new BlockcoreIdentityTools();
       const identityNode = this.identityService.getIdentityNode(this.walletManager.activeWallet, this.walletManager.activeAccount);
-      const verificationMethod = tools.getVerificationMethod(identityNode.publicKey, 0, this.network.symbol);
-      const identity = new BlockcoreIdentity(verificationMethod);
-      this.identifier = identity.did;
-      this.readableId = identity.short;
+
+      if (!this.walletManager.activeAccount.prv) {
+        const verificationMethod = tools.getVerificationMethod(identityNode.publicKey, 0, this.network.symbol);
+        const identity = new BlockcoreIdentity(verificationMethod);
+        this.identifier = identity.did;
+        this.readableId = identity.short;
+      }
 
       if (this.network.bech32 === 'npub') {
         this.isDid = false;
-
         this.identifier = this.utility.getNostrIdentifier(address.address);
 
         // For backwards compatibility, we might need to derive the address again and update the store.
