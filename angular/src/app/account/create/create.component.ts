@@ -7,6 +7,7 @@ import { Network } from '../../../shared/networks';
 import { MessageService } from 'src/shared';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
+import { nip19 } from 'nostr-tools';
 const { v4: uuidv4 } = require('uuid');
 
 @Component({
@@ -159,6 +160,11 @@ export class AccountCreateComponent implements OnInit, OnDestroy {
   }
 
   async import() {
+    if (this.privateKeyImport.startsWith('nsec')) {
+      const decoded = nip19.decode(this.privateKeyImport);
+      this.privateKeyImport = decoded.data as string;
+    }
+
     const account: Account = {
       prv: this.privateKeyImport,
       identifier: uuidv4(),
