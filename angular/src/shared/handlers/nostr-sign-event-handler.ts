@@ -3,7 +3,6 @@ import { ActionPrepareResult, ActionResponse, Permission } from '../interfaces';
 import { ActionHandler, ActionState } from './action-handler';
 import { validateEvent, signEvent, getEventHash, Event } from 'nostr-tools';
 import { SigningUtilities } from '../identity/signing-utilities';
-import { NostrEvent } from '../interfaces/nostr';
 
 export class NostrSignEventHandler implements ActionHandler {
   action = ['nostr.signevent'];
@@ -23,7 +22,7 @@ export class NostrSignEventHandler implements ActionHandler {
     const { network, node } = await this.backgroundManager.getKey(permission.walletId, permission.accountId, permission.keyId);
 
     // There are no proper
-    const event = state.content as NostrEvent;
+    const event = state.content as Event;
 
     //if (!event.pubkey) event.pubkey = this.utility.getIdentifier(node.publicKey);
     // Override the pubkey if provided, we use what the user selected.
