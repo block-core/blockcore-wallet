@@ -133,10 +133,19 @@ export class AccountCreateComponent implements OnInit, OnDestroy {
     return `${derivationPath}/${this.index.toString()}'`;
   }
 
+  displayKeyImport = false;
+  privateKeyImport: string;
+
   onNetworkChanged() {
     this.selectedNetwork = this.networkService.getNetwork(this.network);
     this.purpose = this.selectedNetwork.purpose ?? 44;
     this.derivationPath = this.getDerivationPath();
+
+    if (this.selectedNetwork.id === 'NOSTR') {
+      this.displayKeyImport = true;
+    } else {
+      this.displayKeyImport = false;
+    }
   }
 
   onPurposeChanged() {
