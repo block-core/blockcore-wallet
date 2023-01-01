@@ -25,7 +25,7 @@ if (!globalThis.blockcore) {
     document.head.appendChild(script);
 
     script.onload = function () {
-      console.log('Blockcore Provider Script Loaded from Extension.');
+      // console.log('Blockcore Provider Script Loaded from Extension.');
     };
 
     // listen for messages from the provider script

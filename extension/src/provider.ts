@@ -98,7 +98,7 @@ export class BlockcoreRequestProvider implements Web5RequestProvider {
       }
 
       const msg: ActionMessage = { type, id, request: <ActionRequest>request, source: 'provider', target: 'tabs', ext: 'blockcore' };
-      console.log('Provider:postMessage:', msg);
+      // console.log('Provider:postMessage:', msg);
 
       globalThis.postMessage(msg, '*');
     });
