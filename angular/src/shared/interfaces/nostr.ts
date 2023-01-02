@@ -1,13 +1,3 @@
-export type NostrEvent = {
-  id?: string;
-  kind: EventKind;
-  pubkey?: string;
-  content: string;
-  tags: string[];
-  created_at: number;
-  sig?: string;
-};
-
 export enum EventKind {
   Metadata = 0,
   Text = 1,

@@ -7,6 +7,7 @@ import { Network } from '../../../shared/networks';
 import { MessageService } from 'src/shared';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
+import { nip19 } from 'nostr-tools';
 const { v4: uuidv4 } = require('uuid');
 
 @Component({
@@ -24,6 +25,7 @@ export class AccountCreateComponent implements OnInit, OnDestroy {
   password = '';
   password2 = '';
   network = '';
+  importNetwork = 'NOSTR';
   indexes: number[] = [];
   index: number = 0;
   derivationPath!: string;
@@ -34,6 +36,7 @@ export class AccountCreateComponent implements OnInit, OnDestroy {
   mode: string = 'normal';
   addressMode: string = 'normal';
   purpose: number = 44;
+  privateKeyImport: string;
 
   get passwordValidated(): boolean {
     return this.password === this.password2 && this.secondFormGroup.valid;
@@ -133,10 +136,18 @@ export class AccountCreateComponent implements OnInit, OnDestroy {
     return `${derivationPath}/${this.index.toString()}'`;
   }
 
+  displayKeyImport = false;
+
   onNetworkChanged() {
     this.selectedNetwork = this.networkService.getNetwork(this.network);
     this.purpose = this.selectedNetwork.purpose ?? 44;
     this.derivationPath = this.getDerivationPath();
+
+    if (this.selectedNetwork.id === 'NOSTR') {
+      this.displayKeyImport = true;
+    } else {
+      this.displayKeyImport = false;
+    }
   }
 
   onPurposeChanged() {
@@ -146,6 +157,54 @@ export class AccountCreateComponent implements OnInit, OnDestroy {
   async onAccountIndexChanged(event: any) {
     // this.index = event.value;
     this.derivationPath = this.getDerivationPath();
+  }
+
+  async import() {
+    if (this.privateKeyImport.startsWith('nsec')) {
+      const decoded = nip19.decode(this.privateKeyImport);
+      this.privateKeyImport = decoded.data as string;
+    }
+
+    const account: Account = {
+      prv: this.privateKeyImport,
+      identifier: uuidv4(),
+      type: 'identity',
+      mode: 'normal',
+      singleAddress: true,
+      networkType: 'NOSTR',
+      name: this.name,
+      index: -1,
+      network: 1237,
+      purpose: 44,
+      purposeAddress: 340,
+      icon: this.icon,
+    };
+
+    // Don't persist the selected value.
+    delete account.selected;
+
+    try {
+      await this.walletManager.addAccount(account, this.walletManager.activeWallet);
+    } catch (err) {
+      this.snackBar.open('Error while creating account. Critical error, please try again.', 'Hide', {
+        duration: 8000,
+        horizontalPosition: 'center',
+        verticalPosition: 'bottom',
+      });
+    }
+
+    // Make sure we get a recent state of the network user added account on. If this is the first time the user have added
+    // account from this network, this will ensure that we have a status as early as possible.
+    this.message.send(this.message.createMessage('network', { accounts: [account] }));
+    // await this.networkStatusService.updateAll([account]); // TODO: This should perhaps not send single account, but all accounts.
+
+    if (account.type == 'identity') {
+      // When adding an account, the active account ID will be updated so we can read it here.
+      this.router.navigateByUrl('/account/identity/' + this.walletManager.activeAccountId);
+    } else {
+      // When adding an account, the active account ID will be updated so we can read it here.
+      this.router.navigateByUrl('/account/view/' + this.walletManager.activeAccountId);
+    }
   }
 
   async create() {

@@ -213,6 +213,13 @@ header {
   margin-right: auto;
 }
 
+.page-small-top {
+  padding: 0 2em 2em 2em;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 /* Ensures we don't get sideways scrolling right above 600px width */
 .mat-tab-label {
   min-width: 72px !important;

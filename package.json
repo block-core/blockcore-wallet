@@ -1,6 +1,6 @@
 {
   "name": "blockcore-wallet",
-  "version": "1.0.20",
+  "version": "1.0.21",
   "description": "An Non-Custodial HD wallet in your browser for Coins, Tokens, Identities, NFTs and more",
   "scripts": {
     "version": "node -p \"require('./package.json').version\"",
@@ -46,7 +46,7 @@
     "@angular/platform-browser-dynamic": "14.2.1",
     "@angular/router": "14.2.1",
     "@angular/service-worker": "14.2.1",
-    "@blockcore/blockcore-js": "7.0.2",
+    "@blockcore/blockcore-js": "7.0.3",
     "@blockcore/did-resolver": "0.0.3",
     "@blockcore/dns": "0.0.11",
     "@blockcore/identity": "0.0.10",
@@ -84,7 +84,7 @@
     "jose": "^4.11.1",
     "js-base64": "3.7.3",
     "ngx-logger": "^5.0.11",
-    "nostr-tools": "0.24.1",
+    "nostr-tools": "1.1.0",
     "qrcode": "^1.5.1",
     "qs": "^6.11.0",
     "rxjs": "7.5.6",

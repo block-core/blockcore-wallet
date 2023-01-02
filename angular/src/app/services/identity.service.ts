@@ -11,12 +11,15 @@ import { CryptoUtility } from '.';
 import { HDKey } from '@scure/bip32';
 import * as secp from '@noble/secp256k1';
 import { decodeJWT, createJWT, verifyJWT, ES256KSigner } from 'did-jwt';
+import { getPublicKey } from 'nostr-tools';
+import { SigningUtilities } from 'src/shared/identity/signing-utilities';
 
 @Injectable({
   providedIn: 'root',
 })
 export class IdentityService {
   private allNetworks: Network[];
+  private utilities = new SigningUtilities();
 
   constructor(private logger: LoggerService, private networkLoader: NetworkLoader, private secure: SecureStateService, private crypto: CryptoUtility, private accountStateStore: AccountStateStore, private walletManager: WalletManager) {
     this.allNetworks = this.networkLoader.getAllNetworks();
@@ -53,9 +56,18 @@ export class IdentityService {
     // Create the master node.
     const masterNode = HDKey.fromMasterSeed(masterSeed, network.bip32);
 
-    let addressNode = masterNode.derive(`m/${account.purpose}'/${account.network}'/${account.index}'/0/0`);
-
-    return addressNode;
+    // Get the master seed above even though we're accessing an persisted private key, namely because we want to ensure
+    // that the wallet is unlocked for this API call to succeed.
+    if (account.prv) {
+      let addressNode = {
+        privateKey: this.utilities.hexToArray(account.prv),
+        publicKey: this.utilities.hexToArray(getPublicKey(account.prv)),
+      };
+      return addressNode;
+    } else {
+      let addressNode = masterNode.derive(`m/${account.purpose}'/${account.network}'/${account.index}'/0/0`);
+      return addressNode;
+    }
   }
 
   async createIdentityDocument(privateKey: Uint8Array, services?: ServiceEndpoint[]) {

@@ -1,85 +1,120 @@
-<div class="page centered">
+<div class="page-small-top">
+  <mat-tab-group class="account-tabs">
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon class="example-tab-icon">calendar_today</mat-icon>
+        <span>&nbsp;Account Setup</span>
+      </ng-template>
 
-    <mat-form-field class="input-full-width" appearance="outline">
+      <mat-form-field class="input-full-width" appearance="outline">
         <mat-label>{{ "Account.Name" | translate }}</mat-label>
-        <input matInput [(ngModel)]="name" required>
-    </mat-form-field>
+        <input matInput [(ngModel)]="name" required />
+      </mat-form-field>
 
-    <br>
+      <br />
 
-    <mat-form-field appearance="outline" class="input-full-width">
+      <mat-form-field appearance="outline" class="input-full-width">
         <mat-label>{{ "Account.Icon" | translate }}</mat-label>
         <mat-select [(value)]="icon">
-            <mat-option *ngFor="let icon of icons.icons" [value]="icon">
-                <mat-icon>{{icon}}</mat-icon>
-            </mat-option>
-            <mat-select-trigger>
-                <mat-icon>{{icon}}</mat-icon>
-            </mat-select-trigger>
+          <mat-option *ngFor="let icon of icons.icons" [value]="icon">
+            <mat-icon>{{ icon }}</mat-icon>
+          </mat-option>
+          <mat-select-trigger>
+            <mat-icon>{{ icon }}</mat-icon>
+          </mat-select-trigger>
         </mat-select>
-    </mat-form-field>
+      </mat-form-field>
 
-    <br>
+      <br />
 
-    <mat-form-field appearance="outline" class="input-full-width">
+      <mat-form-field appearance="outline" class="input-full-width">
         <mat-label>{{ "Account.Network" | translate }}</mat-label>
 
         <mat-select (selectionChange)="onNetworkChanged()" [(value)]="network">
-            <mat-option *ngFor="let net of this.networkService.networks;" [value]="net.id">{{net.name}}
-            </mat-option>
+          <mat-option *ngFor="let net of this.networkService.networks" [value]="net.id">{{ net.name }}</mat-option>
         </mat-select>
+      </mat-form-field>
 
-    </mat-form-field>
-    
-    <br *ngIf="selectedNetwork.purpose != 302">
+      <span *ngIf="displayKeyImport">If you want to import an existing Nostr private key, choose the "Import Key" tab above.</span>
 
-    <mat-form-field *ngIf="selectedNetwork.purpose != 302" appearance="outline" class="input-full-width">
+      <br *ngIf="selectedNetwork.purpose != 302" />
+
+      <mat-form-field *ngIf="selectedNetwork.purpose != 302" appearance="outline" class="input-full-width">
         <mat-label>{{ "Account.AddressFormat" | translate }}</mat-label>
         <mat-select [(value)]="purpose" (selectionChange)="onPurposeChanged()">
-            <mat-option [value]="44">{{ "Account.Legacy" | translate }}</mat-option>
-            <mat-option [value]="84">{{ "Account.SegWit" | translate }}</mat-option>
+          <mat-option [value]="44">{{ "Account.Legacy" | translate }}</mat-option>
+          <mat-option [value]="84">{{ "Account.SegWit" | translate }}</mat-option>
         </mat-select>
-    </mat-form-field>
+      </mat-form-field>
 
-    <br>
+      <br />
 
-    <mat-form-field appearance="outline" class="input-full-width">
+      <mat-form-field appearance="outline" class="input-full-width">
         <mat-label>{{ "Account.AccountIndex" | translate }}</mat-label>
         <mat-select (selectionChange)="onAccountIndexChanged($event)" [(value)]="index">
-            <mat-option *ngFor="let accountindex of indexes;" [value]="accountindex">{{accountindex}}</mat-option>
+          <mat-option *ngFor="let accountindex of indexes" [value]="accountindex">{{ accountindex }}</mat-option>
         </mat-select>
-    </mat-form-field>
+      </mat-form-field>
 
-    <br *ngIf="selectedNetwork.purpose != 302">
+      <br *ngIf="selectedNetwork.purpose != 302" />
 
-    <mat-form-field *ngIf="selectedNetwork.purpose != 302" appearance="outline" class="input-full-width">
+      <mat-form-field *ngIf="selectedNetwork.purpose != 302" appearance="outline" class="input-full-width">
         <mat-label>{{ "Account.AccountMode" | translate }}</mat-label>
         <mat-select [(value)]="mode">
-            <mat-option [value]="'normal'">{{ "Account.Normal" | translate }}</mat-option>
-            <mat-option [value]="'quick'">{{ "Account.Quick" | translate }}</mat-option>
+          <mat-option [value]="'normal'">{{ "Account.Normal" | translate }}</mat-option>
+          <mat-option [value]="'quick'">{{ "Account.Quick" | translate }}</mat-option>
         </mat-select>
-    </mat-form-field>
-    
-    <br *ngIf="selectedNetwork.purpose != 302">
+      </mat-form-field>
 
-    <mat-form-field *ngIf="selectedNetwork.purpose != 302" appearance="outline" class="input-full-width">
+      <br *ngIf="selectedNetwork.purpose != 302" />
+
+      <mat-form-field *ngIf="selectedNetwork.purpose != 302" appearance="outline" class="input-full-width">
         <mat-label>{{ "Account.AddressMode" | translate }}</mat-label>
         <mat-select [(value)]="addressMode">
-            <mat-option [value]="'normal'">{{ "Account.Normal" | translate }}</mat-option>
-            <mat-option [value]="'single'">{{ "Account.SingleAddress" | translate }}</mat-option>
+          <mat-option [value]="'normal'">{{ "Account.Normal" | translate }}</mat-option>
+          <mat-option [value]="'single'">{{ "Account.SingleAddress" | translate }}</mat-option>
         </mat-select>
-    </mat-form-field>
+      </mat-form-field>
 
+      <br />
 
-
-    <br>
-
-    <mat-form-field class=" input-full-width" appearance="outline">
+      <mat-form-field class="input-full-width" appearance="outline">
         <mat-label>{{ "Account.AccountDerivationPath" | translate }}</mat-label>
-        <input matInput [(ngModel)]="derivationPath" required>
-    </mat-form-field>
+        <input matInput [(ngModel)]="derivationPath" required />
+      </mat-form-field>
 
-    <br>
-    <button class="signup-button" mat-flat-button color="primary" (click)="create()">{{ "Account.CreateAccount" | translate }}</button>
+      <br />
+      <button class="signup-button" mat-flat-button color="primary" (click)="create()">{{ "Account.CreateAccount" | translate }}</button>
+    </mat-tab>
 
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon class="example-tab-icon">calendar_today</mat-icon>
+        <span>&nbsp;Import Key</span>
+      </ng-template>
+
+      <div class="page">
+        <p>Importing key allows you to bring your own key from a different application. This key is NOT backed up from your secret recovery phrase.</p>
+        <p>Make sure that keys you manually import is safely backed up somewhere else.</p>
+
+        <p>NOTICE: The private key is not stored encrypted.</p>
+
+        <mat-form-field appearance="outline" class="input-full-width">
+          <mat-label>{{ "Account.Network" | translate }}</mat-label>
+  
+          <mat-select [(value)]="importNetwork">
+            <mat-option value="NOSTR">Nostr</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field class="input-full-width" appearance="outline">
+          <mat-label>Private Key Import</mat-label>
+          <input matInput type="password" [(ngModel)]="privateKeyImport" />
+        </mat-form-field>
+
+        <button class="signup-button" [disabled]="!privateKeyImport" mat-flat-button color="primary" (click)="import()">Import Key</button>
+
+      </div>
+    </mat-tab>
+  </mat-tab-group>
 </div>

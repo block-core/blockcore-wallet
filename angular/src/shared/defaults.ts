@@ -1,5 +1,5 @@
 import { Account } from './interfaces';
-import { BTC, CITY, CRS, CY, IDENTITY, NOSTR, RSC, SBC, STRAX, TCRS, TSTRAX, X42 , IMPLX, MOL,  KEY} from './networks';
+import { BTC, CITY, CRS, CY, IDENTITY, NOSTR, RSC, SBC, STRAX, TCRS, TSTRAX, X42 , IMPLX, MOL,  KEY, XRC} from './networks';
 import { JWK } from './networks/JWK';
 const { v4: uuidv4 } = require('uuid');
 
@@ -22,6 +22,7 @@ export class Defaults {
     networks.push(new TCRS());
     networks.push(new TSTRAX());
     networks.push(new X42());
+    networks.push(new XRC());
     return networks;
   }
 
@@ -66,7 +67,7 @@ export class Defaults {
             name: 'Cybits',
             type: 'coin',
             network: 3601,
-            purpose: 44,
+            purpose: 84,
             purposeAddress: 84,
             icon: 'paid',
           },
@@ -105,7 +106,7 @@ export class Defaults {
             name: 'Royal Sports City',
             type: 'coin',
             network: 6599,
-            purpose: 44,
+            purpose: 84,
             purposeAddress: 84,
             icon: 'paid',
           },
@@ -118,7 +119,7 @@ export class Defaults {
             name: 'Senior Blockchain',
             type: 'coin',
             network: 5006,
-            purpose: 44,
+            purpose: 84,
             purposeAddress: 84,
             icon: 'paid',
           },
@@ -199,6 +200,19 @@ export class Defaults {
             purpose: 44,
             purposeAddress: 340,
             icon: 'account_circle',
+          },
+          {
+            identifier: uuidv4(),
+            index: 0,
+            networkType: 'XRC',
+            mode: 'normal',
+            selected: false,
+            name: 'XRC',
+            type: 'coin',
+            network: 10291,
+            purpose: 44,
+            purposeAddress: 44,
+            icon: 'paid',
           },
         ];
         break;

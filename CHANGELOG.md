@@ -1,3 +1,13 @@
+## <small>1.0.20 (2022-12-25)</small>
+
+* Disable Angular CLI cache ([f270674](https://github.com/block-core/blockcore-wallet/commit/f270674))
+* Update blockcore-js with latest fix for SegWit PoS transactions ([5a85de1](https://github.com/block-core/blockcore-wallet/commit/5a85de1))
+* Update package-lock.json ([67bdba0](https://github.com/block-core/blockcore-wallet/commit/67bdba0))
+* Update version, changelog and lists ([ebc84ef](https://github.com/block-core/blockcore-wallet/commit/ebc84ef))
+* Use the correct purpose for default SBC and RSC addresses ([d382dd4](https://github.com/block-core/blockcore-wallet/commit/d382dd4))
+
+
+
 ## <small>1.0.19 (2022-12-19)</small>
 
 * Add execution notification to calling website ([d439463](https://github.com/block-core/blockcore-wallet/commit/d439463))
