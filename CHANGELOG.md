@@ -1,3 +1,17 @@
+## <small>1.0.21 (2023-01-02)</small>
+
+* Add key import support for new accounts ([985c662](https://github.com/block-core/blockcore-wallet/commit/985c662))
+* Add support for nsec private key import ([d56d44f](https://github.com/block-core/blockcore-wallet/commit/d56d44f))
+* Add support for XRC chain (#320) ([354dd8a](https://github.com/block-core/blockcore-wallet/commit/354dd8a)), closes [#320](https://github.com/block-core/blockcore-wallet/issues/320)
+* Fix issue with webpack build ([b284239](https://github.com/block-core/blockcore-wallet/commit/b284239))
+* Remove some debug logging that ends up on dapp consoles ([9144333](https://github.com/block-core/blockcore-wallet/commit/9144333))
+* Remove tabs in the default relay list ([7cce9ea](https://github.com/block-core/blockcore-wallet/commit/7cce9ea))
+* Update Cybits network to use standard derivation path for bech32 ([8c6764e](https://github.com/block-core/blockcore-wallet/commit/8c6764e))
+* Update to latest nostr-tools library ([f71fcae](https://github.com/block-core/blockcore-wallet/commit/f71fcae))
+* Update version and changelog ([375d0f1](https://github.com/block-core/blockcore-wallet/commit/375d0f1))
+
+
+
 ## <small>1.0.20 (2022-12-25)</small>
 
 * Disable Angular CLI cache ([f270674](https://github.com/block-core/blockcore-wallet/commit/f270674))

@@ -11,12 +11,8 @@ export class NostrGetRelaysHandler implements ActionHandler {
     return {
       content: {
         'wss://nostr-pub.wellorder.net': { read: true, write: true },
-        'wss://nostr-verified.wellorder.net': { read: false, write: true },
-        'wss://nostr.bitcoiner.social': { read: true, write: true },
-        'wss://nostr.drss.io': { read: true, write: true },
         'wss://relay.damus.io': { read: true, write: true },
         'wss://relay.nostr.info': { read: true, write: true },
-        'wss://relay.minds.com/nostr/v1/ws': { read: false, write: true },
         'wss://relay.nostr.ch': { read: true, write: true },
       },
       consent: false,
