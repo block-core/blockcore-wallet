@@ -132,7 +132,7 @@ export class BackgroundManager {
     const masterNode = HDKey.fromMasterSeed(masterSeed, network.bip32);
 
     if (account.prv) {
-      return { node: { privateKey: account.prv }, network };
+      return { node: { privateKey: account.prv }, network } as any;
     }
 
     var node = masterNode.derive(`m/${account.purpose}'/${account.network}'/${account.index}'/${keyId}`);
