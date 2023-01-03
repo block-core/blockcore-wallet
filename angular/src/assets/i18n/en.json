@@ -374,6 +374,7 @@
     "nostr.signevent": "Nostr Sign Event",
     "nostr.encrypt": "Nostr Encrypt",
     "nostr.decrypt": "Nostr Decrypt",
+    "transaction.send": "Send Transaction",
     "Connect": "Connect",
     "wallets": "Connect",
     "Authorize": "Authorize",

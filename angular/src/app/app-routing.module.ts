@@ -62,6 +62,7 @@ import { ActionNostrPublicKeyComponent } from './action/nostr.publickey/nostr.pu
 import { ActionNostrSignEventComponent } from './action/nostr.signevent/nostr.signevent.component';
 import { ActionNostrEncryptComponent } from './action/nostr.encrypt/nostr.encrypt.component';
 import { ActionNostrDecryptComponent } from './action/nostr.decrypt/nostr.decrypt.component';
+import { ActionTransactionSendComponent } from './action/transaction.send/transaction.send.component';
 const routes: Routes = [
   {
     path: '',
@@ -473,6 +474,14 @@ const routes: Routes = [
           data: LoadingResolverService,
         },
       },
+      {
+        path: 'transaction.send',
+        component: ActionTransactionSendComponent,
+        resolve: {
+          data: LoadingResolverService,
+        },
+      },
+      
       // {
       //   path: 'signVerifiableCredential',
       //   component: ActionSignVerifiableCredentialComponent,

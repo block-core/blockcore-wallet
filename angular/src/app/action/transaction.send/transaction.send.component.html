@@ -1,0 +1,36 @@
+<br />
+<div>Network: {{ content.network }}</div>
+<div>Fee rate: {{ content.feeRate }}</div>
+<div>Data (OP_RETURN): {{ content.data }}</div>
+<!-- <div>
+  Selected Account: <strong>{{ walletManager.activeAccount?.name }}</strong>
+</div> -->
+<div class="recipients" *ngFor="let receipt of content.recipients">
+  <strong>{{ receipt.hint }}</strong
+  ><br />
+  Receiver: <strong>{{ receipt.address }}</strong
+  ><br />
+  Amount: <strong>{{ receipt.amount | amount }}</strong
+  ><br /><br />
+</div>
+
+<!-- Domain: <strong>{{ uiState.action.app }}</strong> -->
+<p class="dimmed">IMPORTANT: Verify all details and amounts above before you accept the transaction request. Only use with web apps you trust.</p>
+
+<!-- <p>
+  <br />
+  Permission: <strong>"Sign data using your private key"</strong>
+  <br />
+</p> -->
+
+<!-- Derivation path: {{networkService.getDerivationPathForAccount(walletManager.activeAccount)}}<br><br> -->
+
+<!-- You attest with your selected account to the following content:
+<br /><br />
+<mat-form-field class="input-full-width" appearance="outline">
+  <mat-label>{{ "Action.SigningContentLabel" | translate }}</mat-label>
+  <textarea class="signing-content" readonly="readonly" matInput [ngModel]="contentToSign"></textarea>
+</mat-form-field> -->
+
+<!-- <button class="signup-button" mat-flat-button color="primary" (click)="sign()">Sign and close</button>&nbsp;
+    <button class="signup-button" mat-flat-button (click)="exit()">Exit Action</button> -->
