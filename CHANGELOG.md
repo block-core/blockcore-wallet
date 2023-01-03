@@ -1,4 +1,12 @@
-## <small>1.0.21 (2023-01-02)</small>
+## <small>1.0.22 (2023-01-03)</small>
+
+* Add support for imported private key ([dc8664a](https://github.com/block-core/blockcore-wallet/commit/dc8664a))
+* Minor type fix for private key improt ([96d2231](https://github.com/block-core/blockcore-wallet/commit/96d2231))
+* Update versoin and changelog ([fc5a68a](https://github.com/block-core/blockcore-wallet/commit/fc5a68a))
+
+
+
+## <small>1.0.21 (2023-01-03)</small>
 
 * Add key import support for new accounts ([985c662](https://github.com/block-core/blockcore-wallet/commit/985c662))
 * Add support for nsec private key import ([d56d44f](https://github.com/block-core/blockcore-wallet/commit/d56d44f))
