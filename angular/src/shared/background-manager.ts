@@ -13,6 +13,14 @@ import { HDKey } from '@scure/bip32';
 import { StateStore } from './store/state-store';
 import { CryptoUtility } from '../app/services/crypto-utility';
 import { WebRequestService } from './web-request';
+import { WalletManager } from '../app/services/wallet-manager';
+import { CryptoService, LoggerService } from '../app/services/';
+import { SettingsService, NetworkStatusService } from '../app/services/';
+import { storage } from 'webextension-polyfill';
+import { StorageService } from '../shared/storage.service';
+import { NGXLogger } from 'ngx-logger';
+import { UnspentOutputService } from '../app/services/unspent-output.service';
+
 const axios = require('axios').default;
 
 const FEE_FACTOR = 100000;
@@ -54,6 +62,130 @@ export class BackgroundManager {
   }
 
   intervalRef: any;
+
+  // build a transaction
+  async buildTrnsaction(walletId: string, accountId: string, recipents: any) {
+
+    var networkLoader = new NetworkLoader();
+
+    const settingStore = new SettingStore();
+    await settingStore.load();
+
+    const walletStore = new WalletStore();
+    await walletStore.load();
+
+    const addressStore = new AddressStore();
+    await addressStore.load();
+
+    const addressIndexedStore = new AddressIndexedStore();
+    await addressIndexedStore.load();
+
+    const transactionStore = new TransactionStore();
+    await transactionStore.load();
+
+    const accountHistoryStore = new AccountHistoryStore();
+    await accountHistoryStore.load();
+
+    const addressWatchStore = new AddressWatchStore();
+    await addressWatchStore.load();
+
+    const accountStateStore = new AccountStateStore();
+    await accountStateStore.load();
+
+    const networkStatusStore = new NetworkStatusStore();
+    await networkStatusStore.load();
+
+    const stateStore = new StateStore();
+    await stateStore.load();
+
+    const cryptoService = new CryptoService();
+
+    //const settingsService = new SettingsService(settingStore, null, null, null);
+
+    const storageService = new StorageService(null);
+
+    const logger = new LoggerService(null);
+
+    const unspentService = new UnspentOutputService(networkLoader, logger, settingStore, accountStateStore);
+
+    const wallet = await this.sharedManager.getWallet(walletId);
+    const { network, account, accountState, accountHistory } = await this.getAccount(walletId, accountId);
+
+    var walletManager = new WalletManager(
+      networkLoader,
+      null,
+      this.crypto,
+      cryptoService,
+      null,
+      walletStore,
+      addressStore,
+      addressWatchStore,
+      accountHistoryStore,
+      null,
+      null,
+      storageService,
+      accountStateStore,
+      null,
+      logger,
+      null,
+      null);
+
+    // for no jus tuse the first address
+    var address = recipents[0].address;
+    var amount = recipents[0].amount;
+
+    const extraFee = network.minimumFeeRate * 1000; // Add an additional 10000 sats by default, or higher if user changes fee.
+
+    const result = await unspentService.getUnspentByAmount(amount.add(extraFee), account);
+    var unspent = result.utxo;
+
+    var utxos = await Promise.all(
+      unspent.map(async (t): Promise<any> => {
+        const container = {} as any;
+
+        container.txId = t.transactionHash;
+        container.vout = t.index;
+        container.value = t.balance;
+        container.address = t.address;
+
+        let hex = t.hex;
+
+        // If we don't have the hex, retrieve it to be used in the transaction.
+        // This was needed when hex retrieval was removed to optimize extremely large wallets.
+        if (!hex) {
+          hex = await walletManager.getTransactionHex(account, t.transactionHash);
+        }
+
+        container.nonWitnessUtxo = Buffer.from(hex, 'hex');
+
+        return container;
+      })
+    );
+
+    const targets: any[] = [
+      {
+        address: address,
+        value: amount,
+      },
+    ];
+
+    const selectionData = await walletManager.selectUtxos(utxos, targets, network.minimumFeeRate);
+
+
+    let tx = walletManager.createTransaction(
+      wallet,
+      account,
+      address,
+      null,
+      amount,
+      extraFee,
+      selectionData.inputs,
+      selectionData.outputs,
+      null);
+
+    return tx;
+
+  }
 
   /** This get's wallet and all the accounts within it. */
   async getWalletAndAccounts(walletId: string) {
