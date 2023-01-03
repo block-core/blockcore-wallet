@@ -6,7 +6,7 @@
   Selected Account: <strong>{{ walletManager.activeAccount?.name }}</strong>
 </div> -->
 <div class="recipients" *ngFor="let receipt of content.recipients">
-  <strong>{{ receipt.hint }}</strong
+  <strong>{{ receipt.hint.substring(0, 64) }}</strong
   ><br />
   Receiver: <strong>{{ receipt.address }}</strong
   ><br />
