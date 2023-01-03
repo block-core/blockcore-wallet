@@ -1,8 +1,11 @@
 import { Injectable } from '@angular/core';
-import { Account, AccountHistory, CoinSelectionResult } from '../../shared/interfaces';
+import { Account, AccountHistory, AccountUnspentTransactionOutput, CoinSelectionResult } from '../../shared/interfaces';
 import { Network } from '../../shared/networks';
 import Big from 'big.js';
 import { PaymentRequestData } from 'src/shared/payment';
+import { payments } from '@blockcore/blockcore-js';
+import { WalletManager } from './wallet-manager';
+import { UnspentOutputService } from './unspent-output.service';
 
 @Injectable({
   providedIn: 'root',
@@ -161,5 +164,90 @@ export class SendService {
       this.amount = this.sendAmount;
       this.sendAmount = '';
     }
+  }
+
+  async generateTransaction(walletManager: WalletManager, unspentService: UnspentOutputService, account: Account, data: any) {
+    const targets: any[] = [
+      {
+        address: this.address,
+        value: this.amountAsSatoshi.toNumber(),
+      },
+    ];
+
+    // Add OP_RETURN output before we calculate fee size:
+    if (data != null && data != '') {
+      var buffer = Buffer.from(data);
+      const dataScript = payments.embed({ data: [buffer] });
+
+      targets.push({ script: dataScript.output, value: 0 }); // OP_RETURN always with 0 value unless you want to burn coins
+      // tx.addOutput({ script: dataScript.output, value: 0 }); // OP_RETURN always with 0 value unless you want to burn coins
+    }
+
+    let utxos: any[];
+    let unspent: AccountUnspentTransactionOutput[];
+
+    if (account.mode === 'normal') {
+      unspent = this.accountHistory.unspent;
+    } else {
+      // When performing send using a "quick" mode account, we will retrieve the UTXOs on-demand.
+
+      // Add an additional amount to ensure we get enough UTXO value to pay for fee. We don't really know at this time
+      // what the fee will actually be, so allow the UI/user to increase it if needed.
+      const extraFee = this.fee * 1000; // Add an additional 10000 sats by default, or higher if user changes fee.
+
+      const result = await unspentService.getUnspentByAmount(this.amountAsSatoshi.add(extraFee), account);
+      unspent = result.utxo;
+
+      // aggregatedAmount = result.amount;
+      // inputs.push(...result.utxo);
+    }
+
+    utxos = await Promise.all(
+      unspent.map(async (t): Promise<any> => {
+        const container = {} as any;
+
+        container.txId = t.transactionHash;
+        container.vout = t.index;
+        container.value = t.balance;
+        container.address = t.address;
+
+        let hex = t.hex;
+
+        // If we don't have the hex, retrieve it to be used in the transaction.
+        // This was needed when hex retrieval was removed to optimize extremely large wallets.
+        if (!hex) {
+          hex = await walletManager.getTransactionHex(account, t.transactionHash);
+        }
+
+        container.nonWitnessUtxo = Buffer.from(hex, 'hex');
+        // container.witnessUtxo = {
+        //   script: Buffer.from(hex, 'hex'),
+        //   value: container.value,
+        // };
+
+        // TODO: Do we need nonWitnessUtxo and witnessUtxo?
+
+        return container;
+      })
+    );
+
+    const selectionData = await walletManager.selectUtxos(utxos, targets, this.fee);
+
+    // Set the selected data on the send service as we want to mark the UTXOs as spent after broadcast.
+    this.selectedData = selectionData;
+
+    let tx = await walletManager.createTransaction(
+      walletManager.activeWallet,
+      walletManager.activeAccount,
+      this.address,
+      this.changeAddress,
+      this.amountAsSatoshi,
+      selectionData.fee,
+      selectionData.inputs,
+      selectionData.outputs,
+      data
+    );
+
+    return tx;
   }
 }

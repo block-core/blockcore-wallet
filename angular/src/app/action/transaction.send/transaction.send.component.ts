@@ -36,4 +36,10 @@ export class ActionTransactionSendComponent {
     this.actionService.status.title = 'Send Transaction';
     this.actionService.status.description = `App wants you to perform a transaction`;
   }
+
+  pay() {
+
+    
+
+  }
 }
