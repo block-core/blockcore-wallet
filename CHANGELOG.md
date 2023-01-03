@@ -1,22 +1,24 @@
+## <small>1.0.23 (2023-01-03)</small>
+
+* Fix bug with encrypt and decrypt on nostr provider ([d220d26](https://github.com/block-core/blockcore-wallet/commit/d220d26))
+* Update version and changelog ([32f5d3c](https://github.com/block-core/blockcore-wallet/commit/32f5d3c))
+
+
+
 ## <small>1.0.22 (2023-01-03)</small>
 
-* Add support for imported private key ([dc8664a](https://github.com/block-core/blockcore-wallet/commit/dc8664a))
-* Minor type fix for private key improt ([96d2231](https://github.com/block-core/blockcore-wallet/commit/96d2231))
-* Update versoin and changelog ([fc5a68a](https://github.com/block-core/blockcore-wallet/commit/fc5a68a))
-
-
-
-## <small>1.0.21 (2023-01-03)</small>
-
 * Add key import support for new accounts ([985c662](https://github.com/block-core/blockcore-wallet/commit/985c662))
+* Add support for imported private key ([dc8664a](https://github.com/block-core/blockcore-wallet/commit/dc8664a))
 * Add support for nsec private key import ([d56d44f](https://github.com/block-core/blockcore-wallet/commit/d56d44f))
 * Add support for XRC chain (#320) ([354dd8a](https://github.com/block-core/blockcore-wallet/commit/354dd8a)), closes [#320](https://github.com/block-core/blockcore-wallet/issues/320)
 * Fix issue with webpack build ([b284239](https://github.com/block-core/blockcore-wallet/commit/b284239))
+* Minor type fix for private key improt ([96d2231](https://github.com/block-core/blockcore-wallet/commit/96d2231))
 * Remove some debug logging that ends up on dapp consoles ([9144333](https://github.com/block-core/blockcore-wallet/commit/9144333))
 * Remove tabs in the default relay list ([7cce9ea](https://github.com/block-core/blockcore-wallet/commit/7cce9ea))
 * Update Cybits network to use standard derivation path for bech32 ([8c6764e](https://github.com/block-core/blockcore-wallet/commit/8c6764e))
 * Update to latest nostr-tools library ([f71fcae](https://github.com/block-core/blockcore-wallet/commit/f71fcae))
 * Update version and changelog ([375d0f1](https://github.com/block-core/blockcore-wallet/commit/375d0f1))
+* Update versoin and changelog ([fc5a68a](https://github.com/block-core/blockcore-wallet/commit/fc5a68a))
 
 
 
