@@ -24,7 +24,7 @@ export class NostrDecryptHandler implements ActionHandler {
     const privateKeyHex = node.privateKey as string;
     const publicKeyHex = getPublicKey(privateKeyHex);
 
-    const event = decrypt(privateKeyHex, publicKeyHex, state.content.ciphertext);
+    const event = await decrypt(privateKeyHex, publicKeyHex, state.content.ciphertext);
     return { key: publicKeyHex, response: event };
   }
 }

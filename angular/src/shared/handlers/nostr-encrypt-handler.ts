@@ -29,7 +29,7 @@ export class NostrEncryptHandler implements ActionHandler {
       state.content.plaintext = JSON.stringify(state.content.plaintext);
     }
 
-    const cipher = encrypt(privateKeyHex, publicKeyHex, JSON.stringify(state.content.plaintext));
+    const cipher = await encrypt(privateKeyHex, publicKeyHex, state.content.plaintext);
 
     return { key: publicKeyHex, response: cipher };
   }
