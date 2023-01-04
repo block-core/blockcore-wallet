@@ -14,13 +14,9 @@ export class SendTransactionHandler implements ActionHandler {
 
     var params = state.message.request.params[0];
 
-    console.log('params:', params);
-
     if (!params || !params.recipients) {
       throw Error('The param recipients is missing.');
     }
-
-    // here we will build the trasnaction and show it to the user
 
     return {
       content: state.message.request.params[0],
@@ -29,12 +25,7 @@ export class SendTransactionHandler implements ActionHandler {
   }
 
   async execute(state: ActionState, permission: Permission): Promise<ActionResponse> {
-    // here we will sign the trasnaction
-
-    if (state.content) {
-      return { key: '', response: null };
-    } else {
-      return { key: '', response: null };
-    }
+    // This is never executed as this action sets the "customActionResponse".
+    return null;
   }
 }

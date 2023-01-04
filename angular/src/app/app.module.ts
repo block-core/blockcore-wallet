@@ -128,6 +128,7 @@ import { ActionNostrDecryptComponent } from './action/nostr.decrypt/nostr.decryp
 import { PasswordDialog } from './shared/password-dialog/password-dialog';
 import { PermissionExecutionStore } from 'src/shared/store/permission-execution-store';
 import { ActionTransactionSendComponent } from './action/transaction.send/transaction.send.component';
+import { SendConfirmationDialog } from './action/transaction.send/send-confirmation-dialog/send-confirmation-dialog';
 
 // required for AOT compilation
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
@@ -209,7 +210,8 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     ActionNostrEncryptComponent,
     ActionNostrDecryptComponent,
     PasswordDialog,
-    ActionTransactionSendComponent
+    ActionTransactionSendComponent,
+    SendConfirmationDialog,
   ],
   imports: [
     BrowserModule,

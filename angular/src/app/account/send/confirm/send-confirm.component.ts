@@ -68,7 +68,7 @@ export class AccountSendConfirmComponent implements OnInit, OnDestroy {
         data = dec.decode(sliced);
       }
 
-      const tx = await this.sendService.generateTransaction(this.walletManager, this.unspentService, this.walletManager.activeAccount, data);
+      const tx = await this.sendService.generateTransaction(this.unspentService, this.walletManager, this.walletManager.activeAccount, data);
 
       // Calculate and set the total, take it from the outputs wince the generat transaction
       // can potentially have changed the output value (if sending max for example).

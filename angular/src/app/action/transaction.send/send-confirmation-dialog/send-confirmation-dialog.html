@@ -1,0 +1,17 @@
+<div class="dialog">
+  <h1 mat-dialog-title>Confirm you want to send this amount</h1>
+  <div mat-dialog-content class="mat-dialog-content">
+    <h3>{{data.amount | amount}} {{ data.symbol }}</h3>
+
+    <!-- <mat-form-field appearance="fill" class="input-full-width">
+      <mat-icon class="circle" matPrefix>person_add</mat-icon>
+      <mat-label>Amount</mat-label>
+      <input matInput type="text" autocomplete="off" [(ngModel)]="data.amount" />
+    </mat-form-field> -->
+  </div>
+
+  <div mat-dialog-actions class="mat-dialog-actions" align="end">
+    <button mat-stroked-button (click)="onNoClick()">Cancel</button>
+    <button mat-flat-button [mat-dialog-close]="data" color="primary" cdkFocusInitial>Approve</button>
+  </div>
+</div>

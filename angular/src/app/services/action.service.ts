@@ -58,7 +58,19 @@ export class ActionService {
     // this.communication.sendToAll('action-changed', this.state.action);
   }
 
-  authorize(permission: string) {
+  /** Define a callback that must return true for the process to complete. */
+  public component: any;
+
+  async authorize(permission: string) {
+    let customResult = undefined;
+
+    if (this.component) {
+      customResult = await this.component.authorize(permission);
+      if (!customResult) {
+        return;
+      }
+    }
+
     // Reset params so the action can be re-triggered.
     this.uiState.params = null;
 
@@ -90,6 +102,10 @@ export class ActionService {
         key: key,
       };
 
+      if (customResult) {
+        reply.promptResponse = customResult;
+      }
+
       // Inform the provider script that user has signed the data.
       this.message.send(reply);
     } else {
@@ -107,6 +123,10 @@ export class ActionService {
         walletId: this.walletManager.activeWalletId, // This shouldn't really be the internal wallet ID, but instead should be the pubkey? Or should we have both key and wallet ID?
         key: key, // Wallet Key public key (BCIP-0003).
       };
+
+      if (customResult) {
+        reply.promptResponse = customResult;
+      }
 
       // Inform the provider script that user has signed the data.
       this.message.send(reply);

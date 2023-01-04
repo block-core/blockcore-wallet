@@ -682,6 +682,9 @@ interface ActionMessage {
   /** The response returned from action handler. */
   response?: ActionResponse;
 
+  /** Additional data from the prompt. */
+  promptResponse?: any;
+
   target: string;
   source: string;
   ext: string;

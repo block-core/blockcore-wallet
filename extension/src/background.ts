@@ -52,6 +52,10 @@ browser.runtime.onMessage.addListener(async (msg: ActionMessage, sender) => {
 
   // When messages are coming from popups, the prompt will be set.
   if (msg.prompt) {
+    if (msg.promptResponse) {
+      customActionResponse = msg.promptResponse;
+    }
+
     return handlePromptMessage(msg, sender);
   } else if (msg.source == 'provider') {
     return handleContentScriptMessage(msg);

@@ -6,6 +6,7 @@ import { PaymentRequestData } from 'src/shared/payment';
 import { payments } from '@blockcore/blockcore-js';
 import { WalletManager } from './wallet-manager';
 import { UnspentOutputService } from './unspent-output.service';
+import { AccountHistoryStore, AccountStateStore, AddressWatchStore, MessageService, TransactionMetadataStore } from 'src/shared';
 
 @Injectable({
   providedIn: 'root',
@@ -166,13 +167,118 @@ export class SendService {
     }
   }
 
-  async generateTransaction(walletManager: WalletManager, unspentService: UnspentOutputService, account: Account, data: any) {
-    const targets: any[] = [
-      {
-        address: this.address,
-        value: this.amountAsSatoshi.toNumber(),
-      },
-    ];
+  async broadcastTransaction(
+    walletManager: WalletManager,
+    transactionMetadataStore: TransactionMetadataStore,
+    accountHistoryStore: AccountHistoryStore,
+    accountStateStore: AccountStateStore,
+    addressWatchStore: AddressWatchStore,
+    message: MessageService
+  ) {
+    const transactionDetails = await walletManager.sendTransaction(this.account, this.transactionHex);
+    // Replace with test data to simulate an actual transaction broadcast.
+    // const transactionDetails = {
+    //   transactionHex: '01000000638c8a6301c1d0793c5babee26351e5fd150505777f0344978097c882acb519b16516d0128000000006a473044022017bccecbe3458634683a6db4b1a485454855add3d582507885507246a64aaffe022049213cf0ae49f6bc509fc2f4ad5d2916d24cbd4d192e55c33f2c00218fec774c0121026add073b767e0795042276d4525c9dda85820cb6e92a1acb9dc11f8a01a58409ffffffff0200e1f505000000001976a914668782a465c4027312434e7ae1cea0cd2837484c88ac4a7ad717000000001976a9148e25224a6674da8843280d59e9bdd2750b9db4af88ac00000000',
+    //   transactionResult: '1c72f48428ea20156e34bebc7a9cd1a3f6fd02ba9fe1d7d8825984817b112257'
+    // };
+
+    this.loading = false;
+    this.transactionResult = transactionDetails.transactionResult;
+
+    if (typeof transactionDetails.transactionResult !== 'string') {
+      this.transactionError = this.transactionResult.title;
+
+      // Examples:
+      // {"title":"bad-txns-inputs-missingorspent","status":200,"traceId":"00-6cae22bb805a8698ffe313f5130f040c-ddbb8afdb391e115-00"}
+      // {"title":"tx-size","status":200,"traceId":"00-859d81fbef41ef9f7832aeaf0f88615b-75998b079a941280-00"}
+    } else {
+      this.transactionId = this.transactionResult;
+
+      // This means the transaction was sent successfully, we should now mark the UTXOs as spent.
+      this.selectedData.inputs.forEach((i) => {
+        const existingUTXO = this.accountHistory.unspent.find((u) => u.transactionHash == i.txId && u.address == i.address && u.index == i.vout);
+
+        if (existingUTXO) {
+          existingUTXO.spent = true;
+        }
+      });
+
+      // When the transaction is successfull, we'll store the metadata for it.
+      let txMetadata = transactionMetadataStore.get(this.account.identifier);
+
+      if (!txMetadata) {
+        txMetadata = {
+          accountId: this.account.identifier,
+          transactions: [],
+        };
+
+        transactionMetadataStore.set(txMetadata.accountId, txMetadata);
+      }
+
+      let metadataEntry = txMetadata.transactions.find((t) => t.transactionHash == this.transactionId);
+
+      if (metadataEntry) {
+        // This should never happen?
+      } else {
+        metadataEntry = {
+          transactionHash: this.transactionId,
+          memo: this.memo,
+          payment: this.payment?.options,
+        };
+
+        txMetadata.transactions.push(metadataEntry);
+        await transactionMetadataStore.save();
+      }
+    }
+
+    this.transactionHex = transactionDetails.transactionHex;
+
+    // After we send the transaction, we will persist the account history store because the spent
+    // utxos have been marked in the createTransaction method.
+    await accountHistoryStore.save();
+
+    // Reload the watch store to ensure we have latest state, the watcher might have updated (and removed) some values.
+    await addressWatchStore.load();
+
+    await accountStateStore.load();
+
+    const accountState = accountStateStore.get(this.account.identifier);
+
+    for (let i = 0; i < this.addresses.length; i++) {
+      const address = this.addresses[i];
+
+      let index = accountState.receive.findIndex((a) => a.address == address);
+
+      if (index === -1) {
+        index = accountState.change.findIndex((a) => a.address == address);
+      }
+
+      // If we cannot find the address that is involved with this transaction, don't add a watch.
+      if (index > -1) {
+        addressWatchStore.set(address, {
+          address,
+          accountId: this.account.identifier,
+          count: 0,
+        });
+      }
+    }
+
+    // Save the watch store so the background watcher will see the new entries.
+    await addressWatchStore.save();
+
+    // Trigger watch process to start immediately now that we've broadcasted a new transaction.
+    message.send(message.createMessage('watch', {}, 'background'));
+  }
+
+  async generateTransaction(unspentService: UnspentOutputService, walletManager: WalletManager, account: Account, data?: any, targets?: any[]) {
+    if (!targets) {
+      targets = [
+        {
+          address: this.address,
+          value: this.amountAsSatoshi.toNumber(),
+        },
+      ];
+    }
 
     // Add OP_RETURN output before we calculate fee size:
     if (data != null && data != '') {
@@ -236,17 +342,7 @@ export class SendService {
     // Set the selected data on the send service as we want to mark the UTXOs as spent after broadcast.
     this.selectedData = selectionData;
 
-    let tx = await walletManager.createTransaction(
-      walletManager.activeWallet,
-      walletManager.activeAccount,
-      this.address,
-      this.changeAddress,
-      this.amountAsSatoshi,
-      selectionData.fee,
-      selectionData.inputs,
-      selectionData.outputs,
-      data
-    );
+    let tx = await walletManager.createTransaction(walletManager.activeWallet, walletManager.activeAccount, this.address, this.changeAddress, this.amountAsSatoshi, selectionData.fee, selectionData.inputs, selectionData.outputs, data);
 
     return tx;
   }
