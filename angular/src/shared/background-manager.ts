@@ -101,6 +101,27 @@ export class BackgroundManager {
     return result;
   }
 
+  async getDerivedKeyFromWalletPath(walletId: string, accountId: string, path: string) {
+    await this.sharedManager.loadPrivateKeys();
+
+    // Get the secret seed.
+    const masterSeedBase64 = this.sharedManager.getPrivateKey(walletId);
+    if (!masterSeedBase64) throw "Wallet is locked";
+    const masterSeed = Buffer.from(masterSeedBase64, 'base64');
+
+    const wallet = await this.sharedManager.getWallet(walletId);
+    const account = this.sharedManager.getAccount(wallet, accountId);
+    const network = this.sharedManager.getNetwork(account.networkType);
+
+    // Create the master node.
+    const masterNode = HDKey.fromMasterSeed(masterSeed, network.bip32);
+
+    // based on BCIP3 we allow to derive a key only
+    // under the wallet path and it must be hardened keys.
+    var node = masterNode.derive(`m/3'/${account.network}'/${path}`);
+    return { network, node };
+  }
+
   async getAccount(walletId: string, accountId: string) {
     const wallet = await this.sharedManager.getWallet(walletId);
     const account = this.sharedManager.getAccount(wallet, accountId);
