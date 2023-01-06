@@ -8,6 +8,7 @@ export class IconService {
         'account_circle',
         'perm_identity',
         'savings',
+        'currency_bitcoin',
         'account_balance',
         'pets',
         'work_outline',
