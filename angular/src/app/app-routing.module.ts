@@ -63,6 +63,8 @@ import { ActionNostrSignEventComponent } from './action/nostr.signevent/nostr.si
 import { ActionNostrEncryptComponent } from './action/nostr.encrypt/nostr.encrypt.component';
 import { ActionNostrDecryptComponent } from './action/nostr.decrypt/nostr.decrypt.component';
 import { ActionTransactionSendComponent } from './action/transaction.send/transaction.send.component';
+import { ActionSwapsSendComponent } from './action/swaps.send/swaps.send.component';
+
 const routes: Routes = [
   {
     path: '',
@@ -477,6 +479,13 @@ const routes: Routes = [
       {
         path: 'transaction.send',
         component: ActionTransactionSendComponent,
+        resolve: {
+          data: LoadingResolverService,
+        },
+      },
+      {
+        path: 'atomicswaps.send',
+        component: ActionSwapsSendComponent,
         resolve: {
           data: LoadingResolverService,
         },

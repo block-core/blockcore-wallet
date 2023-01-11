@@ -64,7 +64,7 @@ export class ActionService {
   async authorize(permission: string) {
     let customResult = undefined;
 
-    if (this.component) {
+    if (this.component && this.component.authorize) {
       customResult = await this.component.authorize(permission);
       if (!customResult) {
         return;

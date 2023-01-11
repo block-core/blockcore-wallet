@@ -5,9 +5,10 @@ import * as bitcoinMessage from 'bitcoinjs-message';
 import { HDKey } from '@scure/bip32';
 import { Network } from '../networks';
 import { SigningUtilities } from '../identity/signing-utilities';
+import { ECPair, bip32 } from '../../shared/noble-ecc-wrapper';
 
-export class AtomicSwapsKeyHandler implements ActionHandler {
-  action = ['atomicswaps.key'];
+export class AtomicSwapsSendHandler implements ActionHandler {
+  action = ['atomicswaps.send'];
   utility = new SigningUtilities();
 
   constructor(private backgroundManager: BackgroundManager) {}
@@ -25,7 +26,7 @@ export class AtomicSwapsKeyHandler implements ActionHandler {
 
     return {
       content: state.message.request.params[0],
-      consent: false
+      consent: true
     };
   }
 
@@ -38,9 +39,15 @@ export class AtomicSwapsKeyHandler implements ActionHandler {
 
     if (state.content)
     {
-      var response;
+      // === IMPORTANT! ====
+      // For now we send the swap private key to the swaps website
+      // a swaps private key is hardened, and to spend a swap we need also the secret hash
 
-      response = { publicKey: this.utility.keyToHex(node.publicKey) };
+      // todo: whitelist that only approved swap websites can cal this handler
+      // todo: sign the HTLC in the wallet
+
+      var response = { privateKey: this.utility.keyToHex(node.privateKey) };
+
       return { key: data.key, request: state.message.request, response: response, network: network.id };
     }
     else

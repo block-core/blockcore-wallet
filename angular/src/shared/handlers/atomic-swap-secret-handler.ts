@@ -8,7 +8,7 @@ import { SigningUtilities } from '../identity/signing-utilities';
 import * as secp from '@noble/secp256k1';
 
 export class AtomicSwapsSecretHandler implements ActionHandler {
-  action = ['atomicswaps.secrethandler'];
+  action = ['atomicswaps.secret'];
   utility = new SigningUtilities();
 
   constructor(private backgroundManager: BackgroundManager) {}
