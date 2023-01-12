@@ -1,7 +1,10 @@
 .licenses {
-    
 }
 
 pre {
-    white-space: pre-wrap;
- }
+  white-space: pre-wrap;
+}
+
+.linebreaks {
+  white-space: pre-line;
+}

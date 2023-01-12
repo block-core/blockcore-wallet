@@ -1,9 +1,12 @@
 <div class="page content">
   <h1>{{ "Settings.ThirdPartyLicenses" | translate }}</h1>
 
-    <!-- <h1 class="mat-h1" *ngIf="appState.handset">{{appState.appTitle$ | async}}</h1> -->
+  <!-- <h1 class="mat-h1" *ngIf="appState.handset">{{appState.appTitle$ | async}}</h1> -->
 
-    <p>{{ "Settings.ThirdPartyLicensesDescription" | translate }} <a href="https://github.com/block-core/blockcore-wallet" target="_blank">{{ "Settings.GitHub" | translate }}</a>.</p>
+  <p>
+    {{ "Settings.ThirdPartyLicensesDescription" | translate }} <a href="https://github.com/block-core/blockcore-wallet" target="_blank">{{ "Settings.GitHub" | translate }}</a
+    >.
+  </p>
 
-    <div [innerHTML]="selectedContent"></div>
+  <div class="linebreaks">{{ selectedContent }}</div>
 </div>

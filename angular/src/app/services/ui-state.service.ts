@@ -106,6 +106,4 @@ export class UIState {
     // port!: chrome.runtime.Port | null;
 
     background: any;
-
-
 }

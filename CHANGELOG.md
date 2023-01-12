@@ -1,3 +1,17 @@
+## <small>1.0.24 (2023-01-10)</small>
+
+* Add ability to issue custom payments from the provider API ([97647da](https://github.com/block-core/blockcore-wallet/commit/97647da))
+* Add support for Web App Launch Handling in PWA-mode ([ed0241a](https://github.com/block-core/blockcore-wallet/commit/ed0241a))
+* Change binding of third party licenses to not use HTML binding ([413bd55](https://github.com/block-core/blockcore-wallet/commit/413bd55))
+* Don't show confirmation dialog when user cancels ([1b55ccc](https://github.com/block-core/blockcore-wallet/commit/1b55ccc))
+* Improve add account layout and move type to first option. Add Bitcoin icon. ([513bff3](https://github.com/block-core/blockcore-wallet/commit/513bff3))
+* Limit length of hint to 64 characters ([17bd0b4](https://github.com/block-core/blockcore-wallet/commit/17bd0b4))
+* Migrate generateTransaction into the SendService ([5b6cc4c](https://github.com/block-core/blockcore-wallet/commit/5b6cc4c))
+* Update version and changelog ([441f18d](https://github.com/block-core/blockcore-wallet/commit/441f18d))
+* WIP: Add the transaction.send action ([0ac76ab](https://github.com/block-core/blockcore-wallet/commit/0ac76ab))
+
+
+
 ## <small>1.0.23 (2023-01-03)</small>
 
 * Fix bug with encrypt and decrypt on nostr provider ([d220d26](https://github.com/block-core/blockcore-wallet/commit/d220d26))

@@ -6,6 +6,18 @@
         <span>&nbsp;Account Setup</span>
       </ng-template>
 
+      <mat-form-field appearance="outline" class="input-full-width">
+        <mat-label>{{ "Account.Network" | translate }}</mat-label>
+
+        <mat-select (selectionChange)="onNetworkChanged()" [(value)]="network">
+          <mat-option *ngFor="let net of this.networkService.networks" [value]="net.id">{{ net.name }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <span *ngIf="displayKeyImport">If you want to import an existing Nostr private key, choose the "Import Key" tab above.</span>
+
+      <br />
+
       <mat-form-field class="input-full-width" appearance="outline">
         <mat-label>{{ "Account.Name" | translate }}</mat-label>
         <input matInput [(ngModel)]="name" required />
@@ -25,21 +37,9 @@
         </mat-select>
       </mat-form-field>
 
-      <br />
+      <br *ngIf="selectedNetwork.type != 'identity'" />
 
-      <mat-form-field appearance="outline" class="input-full-width">
-        <mat-label>{{ "Account.Network" | translate }}</mat-label>
-
-        <mat-select (selectionChange)="onNetworkChanged()" [(value)]="network">
-          <mat-option *ngFor="let net of this.networkService.networks" [value]="net.id">{{ net.name }}</mat-option>
-        </mat-select>
-      </mat-form-field>
-
-      <span *ngIf="displayKeyImport">If you want to import an existing Nostr private key, choose the "Import Key" tab above.</span>
-
-      <br *ngIf="selectedNetwork.purpose != 302" />
-
-      <mat-form-field *ngIf="selectedNetwork.purpose != 302" appearance="outline" class="input-full-width">
+      <mat-form-field *ngIf="selectedNetwork.type != 'identity'" appearance="outline" class="input-full-width">
         <mat-label>{{ "Account.AddressFormat" | translate }}</mat-label>
         <mat-select [(value)]="purpose" (selectionChange)="onPurposeChanged()">
           <mat-option [value]="44">{{ "Account.Legacy" | translate }}</mat-option>
@@ -56,9 +56,9 @@
         </mat-select>
       </mat-form-field>
 
-      <br *ngIf="selectedNetwork.purpose != 302" />
+      <br *ngIf="selectedNetwork.type != 'identity'" />
 
-      <mat-form-field *ngIf="selectedNetwork.purpose != 302" appearance="outline" class="input-full-width">
+      <mat-form-field *ngIf="selectedNetwork.type != 'identity'" appearance="outline" class="input-full-width">
         <mat-label>{{ "Account.AccountMode" | translate }}</mat-label>
         <mat-select [(value)]="mode">
           <mat-option [value]="'normal'">{{ "Account.Normal" | translate }}</mat-option>
@@ -66,9 +66,9 @@
         </mat-select>
       </mat-form-field>
 
-      <br *ngIf="selectedNetwork.purpose != 302" />
+      <br *ngIf="selectedNetwork.type != 'identity'" />
 
-      <mat-form-field *ngIf="selectedNetwork.purpose != 302" appearance="outline" class="input-full-width">
+      <mat-form-field *ngIf="selectedNetwork.type != 'identity'" appearance="outline" class="input-full-width">
         <mat-label>{{ "Account.AddressMode" | translate }}</mat-label>
         <mat-select [(value)]="addressMode">
           <mat-option [value]="'normal'">{{ "Account.Normal" | translate }}</mat-option>

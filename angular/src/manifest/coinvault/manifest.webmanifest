@@ -4,7 +4,7 @@
     "start_url": "./",
     "name": "CoinVault",
     "short_name": "CoinVault",
-    "version": "1.0.24",
+    "version": "1.0.25",
     "author": "Softchains Ltd",
     "display": "standalone",
     "theme_color": "#206997",
@@ -13,11 +13,14 @@
     "orientation": "any",
     "related_applications": [],
     "prefer_related_applications": false,
+    "launch_handler": {
+        "client_mode": "focus-existing"
+    },
     "protocol_handlers": [
-      {
-        "protocol": "web+pay",
-        "url": "/index.html?pay=%s"
-      }
+        {
+            "protocol": "web+pay",
+            "url": "/index.html?pay=%s"
+        }
     ],
     "icons": [
         {
