@@ -106,7 +106,7 @@ export class BackgroundManager {
 
     // Get the secret seed.
     const masterSeedBase64 = this.sharedManager.getPrivateKey(walletId);
-    if (!masterSeedBase64) throw "Wallet is locked";
+    if (!masterSeedBase64) throw Error(`Error - Wallet may be locked`);
     const masterSeed = Buffer.from(masterSeedBase64, 'base64');
 
     const wallet = await this.sharedManager.getWallet(walletId);
@@ -115,7 +115,7 @@ export class BackgroundManager {
 
     // Create the master node.
     const masterNode = HDKey.fromMasterSeed(masterSeed, network.bip32);
-
+    
     // based on BCIP3 we allow to derive a key only
     // under the wallet path and it must be hardened keys.
     var node = masterNode.derive(`m/3'/${account.network}'/${path}`);
