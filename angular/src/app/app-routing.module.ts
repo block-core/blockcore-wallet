@@ -63,6 +63,7 @@ import { ActionNostrSignEventComponent } from './action/nostr.signevent/nostr.si
 import { ActionNostrEncryptComponent } from './action/nostr.encrypt/nostr.encrypt.component';
 import { ActionNostrDecryptComponent } from './action/nostr.decrypt/nostr.decrypt.component';
 import { ActionTransactionSendComponent } from './action/transaction.send/transaction.send.component';
+import { ActionWalletUnlockComponent } from './action/wallet.unlock/wallet.unlock.component';
 const routes: Routes = [
   {
     path: '',
@@ -481,7 +482,14 @@ const routes: Routes = [
           data: LoadingResolverService,
         },
       },
-      
+      {
+        path: 'wallet.unlock',
+        component: ActionWalletUnlockComponent,
+        resolve: {
+          data: LoadingResolverService,
+        },
+      },
+
       // {
       //   path: 'signVerifiableCredential',
       //   component: ActionSignVerifiableCredentialComponent,

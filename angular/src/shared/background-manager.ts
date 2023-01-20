@@ -117,11 +117,28 @@ export class BackgroundManager {
     return { network, account, accountState, accountHistory };
   }
 
+  async isKeyUnlocked(walletId: string) {
+    await this.sharedManager.loadPrivateKeys();
+
+    const masterSeedBase64 = this.sharedManager.getPrivateKey(walletId);
+
+    if (!masterSeedBase64) {
+      return false;
+    }
+
+    return true;
+  }
+
   async getKey(walletId: string, accountId: string, keyId: string) {
     await this.sharedManager.loadPrivateKeys();
 
     // Get the secret seed.
     const masterSeedBase64 = this.sharedManager.getPrivateKey(walletId);
+
+    if (!masterSeedBase64) {
+      return { network: null, node: null };
+    }
+
     const masterSeed = Buffer.from(masterSeedBase64, 'base64');
 
     const wallet = await this.sharedManager.getWallet(walletId);

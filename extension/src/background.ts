@@ -208,9 +208,26 @@ async function handleContentScriptMessage(message: ActionMessage) {
   }
 
   try {
+    const p = <Permission>permission;
+
+    if (p) {
+      const isKeyUnlocked = await networkManager.isKeyUnlocked(p.walletId);
+
+      // The key is empty if the wallet is locked. Force user to unlock before we continue.
+      if (p && prepare.consent && !isKeyUnlocked) {
+        // Clone existing state for use with only unlocking.
+        const unlockState = JSON.parse(JSON.stringify(state)) as ActionState;
+
+        unlockState.message.request.method = 'wallet.unlock';
+        unlockState.message.request.params = [{ walletId: p.walletId }];
+
+        await promptUnlock(unlockState);
+      }
+    }
+
     // User have given permission to execute.
-    const result = await state.handler.execute(state, <Permission>permission);
-    console.log('ACTION RESPONSE: ', result);
+    const result = await state.handler.execute(state, p);
+    // console.log('ACTION RESPONSE: ', result);
 
     // Increase the execution counter
     const executions = await permissionService.increaseExecution(<Permission>permission);
@@ -223,6 +240,17 @@ async function handleContentScriptMessage(message: ActionMessage) {
     return result;
   } catch (error) {
     return { error: { message: error.message, stack: error.stack } };
+  }
+}
+
+async function promptUnlock(state: ActionState) {
+  try {
+    // Keep a copy of the prompt message, we need it to finalize if user clicks "X" to close window.
+    // state.promptPermission = await promptPermission({ app: message.app, id: message.id, method: method, params: message.args.params });
+    await promptPermission(state);
+    // authorized, proceed
+  } catch (err) {
+    console.error('Permission not accepted: ', err);
   }
 }
 
@@ -286,10 +314,7 @@ async function promptPermission(state: ActionState) {
 }
 
 browser.windows.onRemoved.addListener(function (windowId) {
-  console.log('WINDOW ON REMOVED!!!');
-
   if (prompt) {
-    console.log('REJECT THE PROMPT AND RELEASE MUTEX!!!');
     prompt?.reject?.();
     prompt = null;
     releaseMutex();
