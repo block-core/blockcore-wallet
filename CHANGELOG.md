@@ -1,3 +1,13 @@
+## <small>1.0.25 (2023-01-20)</small>
+
+* Add ability for wallet to auto-open when wallet has been locked ([5e5cf75](https://github.com/block-core/blockcore-wallet/commit/5e5cf75))
+* Avoid logging no indexers available ([6b6ab4c](https://github.com/block-core/blockcore-wallet/commit/6b6ab4c))
+* Update lists ([fcf9310](https://github.com/block-core/blockcore-wallet/commit/fcf9310))
+* Update version and changelog ([6671a0f](https://github.com/block-core/blockcore-wallet/commit/6671a0f))
+* Fix: typos (#326) ([d1101f2](https://github.com/block-core/blockcore-wallet/commit/d1101f2)), closes [#326](https://github.com/block-core/blockcore-wallet/issues/326)
+
+
+
 ## <small>1.0.24 (2023-01-10)</small>
 
 * Add ability to issue custom payments from the provider API ([97647da](https://github.com/block-core/blockcore-wallet/commit/97647da))
