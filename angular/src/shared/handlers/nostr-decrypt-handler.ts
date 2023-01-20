@@ -20,11 +20,11 @@ export class NostrDecryptHandler implements ActionHandler {
 
   async execute(state: ActionState, permission: Permission): Promise<ActionResponse> {
     const { network, node } = await this.backgroundManager.getKey(permission.walletId, permission.accountId, permission.keyId);
-    
-    const privateKeyHex = node.privateKey as string;
-    const publicKeyHex = getPublicKey(privateKeyHex);
 
-    const event = await decrypt(privateKeyHex, publicKeyHex, state.content.ciphertext);
+    const privateKeyHex = node.privateKey as string;
+    const event = await decrypt(privateKeyHex, state.message.request.params[0].peer, state.content.ciphertext);
+
+    const publicKeyHex = getPublicKey(privateKeyHex);
     return { key: publicKeyHex, response: event };
   }
 }
