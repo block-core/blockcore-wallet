@@ -1,3 +1,11 @@
+## <small>1.0.26 (2023-01-20)</small>
+
+* Fix issue with decryption of nostr events ([787310b](https://github.com/block-core/blockcore-wallet/commit/787310b))
+* Fix the issue with encryption not using correct public key ([d397e38](https://github.com/block-core/blockcore-wallet/commit/d397e38))
+* Update version and changelog ([a9c842d](https://github.com/block-core/blockcore-wallet/commit/a9c842d))
+
+
+
 ## <small>1.0.25 (2023-01-20)</small>
 
 * Add ability for wallet to auto-open when wallet has been locked ([5e5cf75](https://github.com/block-core/blockcore-wallet/commit/5e5cf75))
