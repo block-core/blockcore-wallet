@@ -158,8 +158,13 @@ export class LoadingComponent implements OnInit, OnDestroy {
       }
     }
 
-    // Activate a wallet if not active.
-    if (this.walletManager.hasWallets && !this.walletManager.activeWallet && this.uiState.persisted.previousWalletId) {
+    // If the loading was triggered by wallet.unlock action, make sure we first change the active wallet before we show
+    // the unlock screen.
+    if (this.uiState.action?.action === 'wallet.unlock') {
+      const walletId = this.uiState.action.params[0].walletId;
+      await this.walletManager.setActiveWallet(walletId);
+    } else if (this.walletManager.hasWallets && !this.walletManager.activeWallet && this.uiState.persisted.previousWalletId) {
+      // Activate a wallet if not active.
       await this.walletManager.setActiveWallet(this.uiState.persisted.previousWalletId);
       await this.walletManager.setActiveAccount(this.uiState.persisted.previousAccountId);
     }

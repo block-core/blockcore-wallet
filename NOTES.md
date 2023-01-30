@@ -2,7 +2,7 @@
 
 ## Developer, architecture and technical notes for the implementation of Blockcore Wallet
 
-This document is used to document and capture some of the decisions that is being made during development of Blockcore Wallet.
+This document is used to document and capture some of the decisions that are being made during development of Blockcore Wallet.
 
 It's separate from user documentation, as the instructions here can be technical.
 
@@ -16,9 +16,9 @@ Address state was separated from the account and account from wallet, to ensure 
 ## Watcher
 
 When performing a transaction send, we need to more rapidly send API requests to update the state of the account. There are different rules
-that is being applied in the watcher:
+that are being applied in the watcher:
 
-- A transaction that is observed is tracked until it's state is finalized, which it is after 500 confirmations.
+- A transaction that is observed is tracked until its state is finalized, which it is after 500 confirmations.
 - All affected addresses are collected when performing a send, these are what the watcher is looking into, in addition to the latest (or single)
   receive address and change address.
 - In extension mode, the background service worker can be put into idle state at any time. There are two alarm timers that will make it up, but
@@ -43,7 +43,7 @@ The API is based upon the latest generic interface on MetaMask: https://docs.met
 
 Messages from `provider.ts` (using `globalThis.postMessage(msg, '*');`) is initially picked up by `content.ts`, where it is filtered for messages that is coming from the extension.
 
-The handler will take the .data, which is the request object coming from web site, and wrap that together with the `location.host` which will
+The handler will take the .data, which is the request object coming from website, and wrap that together with the `location.host` which will
 be the app identifier.
 
 The message is forwarded to `background.ts` using the API: `browser.runtime.sendMessage`.
@@ -57,7 +57,7 @@ relevant for the extension.
 
 The processing of action requests happens in `background.ts`, as described in the section above.
 
-There is an handler for `browser.runtime.onMessage.addListener` which handles messages that arrives both from the `content.ts`, but also from the extension (Angular)
+There is a handler for `browser.runtime.onMessage.addListener` which handles messages that arrives both from the `content.ts`, but also from the extension (Angular)
 itself. If the message contains the field `prompt`, it will be handled as response from the popup-prompt that extension has rendered.
 
 `handlePromptMessage` handles messages from extension.
@@ -170,4 +170,4 @@ https://bitcoinqr.dev/
 
 BIP21: https://github.com/bitcoin/bips/blob/master/bip-0021.mediawiki
 
-Payment requiest formats: https://bitcoin.design/guide/how-it-works/payment-request-formats/
+Payment request formats: https://bitcoin.design/guide/how-it-works/payment-request-formats/
