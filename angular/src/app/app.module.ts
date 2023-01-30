@@ -214,7 +214,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     PasswordDialog,
     ActionTransactionSendComponent,
     SendConfirmationDialog,
-    ActionWalletUnlockComponent
+    ActionWalletUnlockComponent,
     ActionSwapsSendComponent,
   ],
   imports: [
