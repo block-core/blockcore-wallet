@@ -189,7 +189,11 @@ export class AccountTransactionComponent implements OnInit, OnDestroy {
   }
 
   hexToUtf8(hex: any) {
-    return decodeURIComponent('%' + hex.match(/.{1,2}/g).join('%'));
+    try {
+      return decodeURIComponent('%' + hex.match(/.{1,2}/g).join('%'));
+    } catch (err) {
+      return hex;
+    }
   }
 
   copy() {
