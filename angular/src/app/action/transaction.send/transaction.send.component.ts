@@ -47,6 +47,8 @@ export class ActionTransactionSendComponent {
     this.actionService.consentType = 'ephemeral';
     this.actionService.permissionLevel = 'account';
 
+    this.actionService.accountFilter = { symbol: this.content.network };
+
     this.actionService.status.icon = 'currency_bitcoin';
     this.actionService.status.title = 'Send Transaction';
     this.actionService.status.description = `App wants you to perform a transaction`;

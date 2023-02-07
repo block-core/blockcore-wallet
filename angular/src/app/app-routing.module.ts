@@ -64,6 +64,8 @@ import { ActionNostrEncryptComponent } from './action/nostr.encrypt/nostr.encryp
 import { ActionNostrDecryptComponent } from './action/nostr.decrypt/nostr.decrypt.component';
 import { ActionTransactionSendComponent } from './action/transaction.send/transaction.send.component';
 import { ActionWalletUnlockComponent } from './action/wallet.unlock/wallet.unlock.component';
+import { ActionSwapsSendComponent } from './action/swaps.send/swaps.send.component';
+
 const routes: Routes = [
   {
     path: '',
@@ -489,7 +491,14 @@ const routes: Routes = [
           data: LoadingResolverService,
         },
       },
-
+      {
+        path: 'atomicswaps.send',
+        component: ActionSwapsSendComponent,
+        resolve: {
+          data: LoadingResolverService,
+        },
+      },
+      
       // {
       //   path: 'signVerifiableCredential',
       //   component: ActionSignVerifiableCredentialComponent,

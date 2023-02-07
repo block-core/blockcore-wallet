@@ -65,12 +65,12 @@ export class ActionService {
     let customResult = undefined;
 
     if (permission !== 'no') {
-      if (this.component) {
-        customResult = await this.component.authorize(permission);
-        if (!customResult) {
-          return;
+        if (this.component && this.component.authorize) {
+            customResult = await this.component.authorize(permission);
+            if (!customResult) {
+                return;
+            }
         }
-      }
     }
 
     // Reset params so the action can be re-triggered.

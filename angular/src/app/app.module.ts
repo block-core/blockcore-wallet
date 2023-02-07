@@ -130,6 +130,7 @@ import { PermissionExecutionStore } from 'src/shared/store/permission-execution-
 import { ActionTransactionSendComponent } from './action/transaction.send/transaction.send.component';
 import { SendConfirmationDialog } from './action/transaction.send/send-confirmation-dialog/send-confirmation-dialog';
 import { ActionWalletUnlockComponent } from './action/wallet.unlock/wallet.unlock.component';
+import { ActionSwapsSendComponent } from './action/swaps.send/swaps.send.component';
 
 // required for AOT compilation
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
@@ -213,7 +214,8 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     PasswordDialog,
     ActionTransactionSendComponent,
     SendConfirmationDialog,
-    ActionWalletUnlockComponent
+    ActionWalletUnlockComponent,
+    ActionSwapsSendComponent,
   ],
   imports: [
     BrowserModule,
