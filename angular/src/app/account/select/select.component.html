@@ -1,33 +1,26 @@
 <div class="page">
-    <h1>{{ "Account.SelectAccounts" | translate }}</h1>
-    <h3>{{ "Account.SelectAccountsMessage" | translate }}</h3>
+  <h1>{{ "Account.SelectAccounts" | translate }}</h1>
+  <h3>{{ "Account.SelectAccountsMessage" | translate }}</h3>
 
-    <mat-selection-list #accounts>
-        <div mat-subheader>{{ "Account.CoinsTokens" | translate }}</div>
-        <mat-list-option *ngFor="let account of coins" [(selected)]="account.selected">
-            <mat-icon mat-list-icon>{{account.icon}}</mat-icon>
-            <div mat-line>{{account.name}} ({{account | network}})</div>
-            <!-- <div mat-line> {{account.symbol}} / {{account.network}} </div> -->
-        </mat-list-option>
-        <mat-divider *ngIf="coinsTest?.length > 0"></mat-divider>
-        <div mat-subheader *ngIf="coinsTest?.length > 0">{{ "Account.TestNetworks" | translate }}</div>
-        <mat-list-option *ngFor="let account of coinsTest" [(selected)]="account.selected">
-            <mat-icon mat-list-icon>{{account.icon}}</mat-icon>
-            <div mat-line>{{account.name}} ({{account | network}})</div>
-            <!-- <div mat-line> {{account.purpose}} / {{account.network}} </div> -->
-        </mat-list-option>
-        <mat-divider *ngIf="identity?.length > 0"></mat-divider>
-        <div mat-subheader *ngIf="identity?.length > 0">{{ "Account.Identity" | translate }}</div>
-        <mat-list-option *ngFor="let account of identity" [(selected)]="account.selected">
-            <mat-icon mat-list-icon>{{account.icon}}</mat-icon>
-            <div mat-line>{{account.name}} ({{account | network}})</div>
-            <!-- <div mat-line> {{account.purpose}} / {{account.network}} </div> -->
-        </mat-list-option>
-    </mat-selection-list>
+  <mat-selection-list #accounts>
+    <div mat-subheader *ngIf="identity?.length > 0">{{ "Account.Identity" | translate }}</div>
+    <mat-list-option *ngFor="let account of identity" [(selected)]="account.selected">
+      <mat-icon mat-list-icon>{{ account.icon }}</mat-icon>
+      <div mat-line>{{ account.name }} ({{ account | network }})</div>
+    </mat-list-option>
+    <div mat-subheader>{{ "Account.CoinsTokens" | translate }}</div>
+    <mat-list-option *ngFor="let account of coins" [(selected)]="account.selected">
+      <mat-icon mat-list-icon>{{ account.icon }}</mat-icon>
+      <div mat-line>{{ account.name }} ({{ account | network }})</div>
+    </mat-list-option>
+    <div mat-subheader *ngIf="coinsTest?.length > 0">{{ "Account.TestNetworks" | translate }}</div>
+    <mat-list-option *ngFor="let account of coinsTest" [(selected)]="account.selected">
+      <mat-icon mat-list-icon>{{ account.icon }}</mat-icon>
+      <div mat-line>{{ account.name }} ({{ account | network }})</div>
+    </mat-list-option>
+  </mat-selection-list>
 
-    <br>
+  <br />
 
-    <button class="wide-button" [disabled]="creating" mat-flat-button
-        color="primary" (click)="create()">{{ "Account.GetStarted" | translate }}</button>
-
+  <button class="wide-button" [disabled]="creating" mat-flat-button color="primary" (click)="create()">{{ "Account.GetStarted" | translate }}</button>
 </div>
