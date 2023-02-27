@@ -100,11 +100,11 @@ export class QrScanDialog implements OnInit {
 
   async changeCamera() {
     // Perform an request cameras every time user clicks the change camera button, if there are no cameras.
-    if (!this.cameras && this.cameras.length == 0) {
+    if (!this.cameras || this.cameras.length == 0) {
       await this.requestCameras();
     }
 
-    if (!this.cameras && this.cameras.length == 0) {
+    if (!this.cameras || this.cameras.length == 0) {
       return;
     }
 

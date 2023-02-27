@@ -1,3 +1,13 @@
+## <small>1.0.27 (2023-02-23)</small>
+
+* Add atomic swaps handlers (#321) ([2a8eeb3](https://github.com/block-core/blockcore-wallet/commit/2a8eeb3)), closes [#321](https://github.com/block-core/blockcore-wallet/issues/321)
+* Fix issue with crash when decoding OP_RETURN ([61d451d](https://github.com/block-core/blockcore-wallet/commit/61d451d))
+* Made scrollbar better :з (#330) ([21adac7](https://github.com/block-core/blockcore-wallet/commit/21adac7)), closes [#330](https://github.com/block-core/blockcore-wallet/issues/330)
+* Move identity selection to top ([74f484f](https://github.com/block-core/blockcore-wallet/commit/74f484f))
+* Update version and changelog ([73b9cf2](https://github.com/block-core/blockcore-wallet/commit/73b9cf2))
+
+
+
 ## <small>1.0.26 (2023-01-20)</small>
 
 * Fix issue with decryption of nostr events ([787310b](https://github.com/block-core/blockcore-wallet/commit/787310b))
