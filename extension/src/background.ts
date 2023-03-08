@@ -67,6 +67,8 @@ browser.runtime.onMessage.addListener(async (msg: ActionMessage, sender) => {
       await executeIndexer();
     } else if (msg.type === 'watch') {
       await runWatcher();
+    } else if (msg.type === 'data:get') {
+      await getDwnData(msg);
     } else if (msg.type === 'network') {
       // When we get the 'network' message, we'll scan network and then run index.
       await updateNetworkStatus();
@@ -490,6 +492,15 @@ const runIndexer = async () => {
 
   // Reset the manager after full indexer run.
   manager = null;
+};
+
+const getDwnData = async (msg: ActionMessage | any) => {
+  const did = msg.data.did;
+  console.log('Get data for DID: ', did);
+  console.log(msg);
+  debugger;
+  // dwn.dwn.processMessage('', msg, data);
+
 };
 
 const runWatcher = async () => {

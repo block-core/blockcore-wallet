@@ -1,109 +1,113 @@
 import { Injectable } from '@angular/core';
 import { Action, AppState, Persisted } from '../../shared/interfaces';
-import { ReplaySubject, Subject } from 'rxjs';
 import { Network } from '../../shared/networks';
 import { UIStore } from 'src/shared';
 import { LoggerService } from './logger.service';
 import { PaymentRequestData } from 'src/shared/payment';
 import { Direction } from '@angular/cdk/bidi';
+import { BreakpointObserver } from '@angular/cdk/layout';
+import { Subject, map, shareReplay, Observable, ReplaySubject } from 'rxjs';
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: 'root',
 })
 export class UIState {
-    constructor(
-        private logger: LoggerService,
-        private store: UIStore) {
-
-        if ((<any>navigator).standalone === undefined) {
-            // App is not running on iOS/iPadOS.
-            this.iOS = false;
-        } else if ((<any>navigator).standalone === false) {
-            // user opened the PWA in the browser and is using it there.
-            this.standalone = false;
-        } else if ((<any>navigator).standalone === true) {
-            // user opened the PWA from the home screen and is getting the standalone PWA experience.
-            this.standalone = true;
-        }
-
-        // This will keep a copy of the install promt so we can trigger it manually.
-        globalThis.addEventListener('beforeinstallprompt', (e) => {
-            this.showInstallButton = true;
-            this.deferredInstallPrompt = e;
-        });
-
-        globalThis.addEventListener('appinstalled', () => {
-            // If visible, hide the install promotion
-            this.showInstallButton = false;
-            this.logger.info('INSTALL: Success');
-        });
+  constructor(private logger: LoggerService, private breakpointObserver: BreakpointObserver, private store: UIStore) {
+    if ((<any>navigator).standalone === undefined) {
+      // App is not running on iOS/iPadOS.
+      this.iOS = false;
+    } else if ((<any>navigator).standalone === false) {
+      // user opened the PWA in the browser and is using it there.
+      this.standalone = false;
+    } else if ((<any>navigator).standalone === true) {
+      // user opened the PWA from the home screen and is getting the standalone PWA experience.
+      this.standalone = true;
     }
 
-    async save() {
-        return this.store.save();
+    // This will keep a copy of the install promt so we can trigger it manually.
+    globalThis.addEventListener('beforeinstallprompt', (e) => {
+      this.showInstallButton = true;
+      this.deferredInstallPrompt = e;
+    });
+
+    globalThis.addEventListener('appinstalled', () => {
+      // If visible, hide the install promotion
+      this.showInstallButton = false;
+      this.logger.info('INSTALL: Success');
+    });
+
+    this.displayLabels$ = this.breakpointObserver.observe('(max-width: 720px)').pipe(
+      map((result) => result.matches),
+      shareReplay()
+    );
+  }
+
+  displayLabels$: Observable<boolean>;
+
+  async save() {
+    return this.store.save();
+  }
+
+  async install() {
+    if (this.deferredInstallPrompt !== null) {
+      this.deferredInstallPrompt.prompt();
+      const { outcome } = await this.deferredInstallPrompt.userChoice;
+
+      if (outcome === 'accepted') {
+        this.deferredInstallPrompt = null;
+      }
     }
+  }
 
-    async install() {
-        if (this.deferredInstallPrompt !== null) {
+  manifest!: chrome.runtime.Manifest;
 
-            this.deferredInstallPrompt.prompt();
-            const { outcome } = await this.deferredInstallPrompt.userChoice;
+  persisted$: Subject<Persisted> = new ReplaySubject();
 
-            if (outcome === 'accepted') {
-                this.deferredInstallPrompt = null;
-            }
-        }
-    }
+  networks: Network[] = [];
 
-    manifest!: chrome.runtime.Manifest;
+  get persisted(): AppState {
+    return this.store.get();
+  }
 
-    persisted$: Subject<Persisted> = new ReplaySubject();
+  showInstallButton = false;
 
-    networks: Network[] = [];
+  deferredInstallPrompt: any;
 
-    get persisted(): AppState {
-        return this.store.get();
-    }
+  iOS = true;
 
-    showInstallButton = false;
+  standalone = false;
 
-    deferredInstallPrompt: any;
+  showBackButton = false;
 
-    iOS = true;
+  goBackHome = true;
 
-    standalone = false;
+  backUrl: string;
 
-    showBackButton = false;
+  documentDirection: Direction;
 
-    goBackHome = true;
+  /** Parameters that comes from query string during activation of the extension. */
+  params: any;
 
-    backUrl: string;
+  /** Parsed action entry from the query string parameters. */
+  action?: Action;
 
-    documentDirection: Direction;
+  payment: PaymentRequestData;
 
-    /** Parameters that comes from query string during activation of the extension. */
-    params: any;
+  isPaymentAction: boolean;
 
-    /** Parsed action entry from the query string parameters. */
-    action?: Action;
+  title!: string;
 
-    payment: PaymentRequestData;
+  cameraId: string;
 
-    isPaymentAction: boolean;
+  /** Indicates that the UIState has been initilized. */
+  initialized = false;
 
-    title!: string;
+  /** Indicates that the extension is currently loading. This is not just for UIState, but for the whole app. */
+  loading = true;
 
-    cameraId: string;
+  timer: any;
 
-    /** Indicates that the UIState has been initilized. */
-    initialized = false;
+  // port!: chrome.runtime.Port | null;
 
-    /** Indicates that the extension is currently loading. This is not just for UIState, but for the whole app. */
-    loading = true;
-
-    timer: any;
-
-    // port!: chrome.runtime.Port | null;
-
-    background: any;
+  background: any;
 }

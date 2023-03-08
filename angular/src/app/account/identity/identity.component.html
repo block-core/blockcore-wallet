@@ -2,7 +2,7 @@
   <mat-tab>
     <ng-template mat-tab-label>
       <mat-icon class="example-tab-icon">person</mat-icon>&nbsp;
-      <span>{{ "Account.Identity" | translate }}</span>
+      <span *ngIf="(uiState.displayLabels$ | async) === false">{{ "Account.Identity" | translate }}</span>
     </ng-template>
 
     <div *ngIf="isDid" class="page">
@@ -166,7 +166,7 @@
   <mat-tab>
     <ng-template mat-tab-label>
       <mat-icon class="example-tab-icon">contact_mail</mat-icon>&nbsp;
-      <span>{{ "Account.Profile" | translate }}</span>
+      <span *ngIf="(uiState.displayLabels$ | async) === false">{{ "Account.Profile" | translate }}</span>
     </ng-template>
 
     <div *ngIf="isDid" class="page">
@@ -225,8 +225,19 @@
 
   <mat-tab>
     <ng-template mat-tab-label>
+      <mat-icon class="example-tab-icon">inventory_2</mat-icon>&nbsp;
+      <span *ngIf="(uiState.displayLabels$ | async) === false">{{ "Account.Data" | translate }}</span>
+    </ng-template>
+
+    <div *ngIf="isDid" class="page">
+      Coming soon.
+    </div>
+  </mat-tab>
+
+  <mat-tab>
+    <ng-template mat-tab-label>
       <mat-icon class="example-tab-icon">handyman</mat-icon>&nbsp;
-      <span>Tools</span>
+      <span *ngIf="(uiState.displayLabels$ | async) === false">Tools</span>
     </ng-template>
 
     <div *ngIf="isDid" class="page">

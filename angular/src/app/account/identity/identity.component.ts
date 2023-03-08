@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { AccountStateStore, bytesToBase64Url, generateCid, getDagCid, Identity, Jws } from 'src/shared';
+import { AccountStateStore, bytesToBase64Url, DecentralizedWebNode, generateCid, getDagCid, Identity, Jws, MessageService } from 'src/shared';
 import { CryptoUtility, SettingsService, UIState, WalletManager } from 'src/app/services';
 import { copyToClipboard } from 'src/app/shared/utilities';
 import { Network } from '../../../shared/networks';
@@ -70,6 +70,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
   }
 
   constructor(
+    public dwn: DecentralizedWebNode,
     public uiState: UIState,
     public walletManager: WalletManager,
     private snackBar: MatSnackBar,
@@ -79,7 +80,8 @@ export class IdentityComponent implements OnInit, OnDestroy {
     private settings: SettingsService,
     private identityService: IdentityService,
     public translate: TranslateService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private message: MessageService
   ) {
     this.uiState.showBackButton = true;
 
@@ -660,6 +662,11 @@ export class IdentityComponent implements OnInit, OnDestroy {
     } else {
       this.published = false;
     }
+
+    debugger;
+
+    // Send a message to the DWN to get all data.
+    this.message.send(this.message.createMessage('data:get', { did: this.identifier }, 'background'));
 
     // if (didResolution.didResolutionMetadata.error == 'notFound') {
     //   this.identity.published = false;
