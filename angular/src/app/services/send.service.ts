@@ -167,6 +167,11 @@ export class SendService {
     }
   }
 
+  resetError() {
+    this.transactionError = null;
+    this.feeError = null;
+  }
+
   async broadcastTransaction(
     walletManager: WalletManager,
     transactionMetadataStore: TransactionMetadataStore,

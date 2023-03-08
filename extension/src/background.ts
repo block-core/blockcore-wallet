@@ -12,6 +12,7 @@ import { RuntimeService } from '../../angular/src/shared/runtime.service';
 import { NetworkLoader } from '../../angular/src/shared/network-loader';
 import { MessageService } from '../../angular/src/shared';
 import { EventBus } from '../../angular/src/shared/event-bus';
+import { Dwn, DataStream, DidKeyResolver, Jws, RecordsWrite, RecordsQuery } from '@tbd54566975/dwn-sdk-js';
 
 // let state: ActionState;
 let prompt: any | null;
@@ -498,9 +499,26 @@ const getDwnData = async (msg: ActionMessage | any) => {
   const did = msg.data.did;
   console.log('Get data for DID: ', did);
   console.log(msg);
-  debugger;
-  // dwn.dwn.processMessage('', msg, data);
 
+  // const didKey = await DidKeyResolver.generate(); // generate a did:key DID
+  // const signatureMaterial = Jws.createSignatureInput(didKey);
+  // // const data = randomBytes(32); // in node.js
+  // // or in web
+  // const data = Uint8Array.from(msg.data.data);
+
+  // const query = await RecordsWrite.create({
+  //   data,
+  //   dataFormat: 'application/json',
+  //   published: true,
+  //   protocol: 'yeeter',
+  //   schema: 'yeeter/post',
+  //   authorizationSignatureInput: signatureMaterial,
+  // });
+
+  // const dataStream = DataStream.fromBytes(data);
+  // const result = await dwn.dwn.processMessage(didKey.did, query.toJSON(), dataStream);
+  // console.log(result);
+  // dwn.dwn.processMessage('', msg, data);
 };
 
 const runWatcher = async () => {

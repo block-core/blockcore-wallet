@@ -663,10 +663,11 @@ export class IdentityComponent implements OnInit, OnDestroy {
       this.published = false;
     }
 
-    debugger;
+    const data = new Uint8Array(32);
+    window.crypto.getRandomValues(data);
 
     // Send a message to the DWN to get all data.
-    this.message.send(this.message.createMessage('data:get', { did: this.identifier }, 'background'));
+    this.message.send(this.message.createMessage('data:get', { did: this.identifier, data }, 'background'));
 
     // if (didResolution.didResolutionMetadata.error == 'notFound') {
     //   this.identity.published = false;

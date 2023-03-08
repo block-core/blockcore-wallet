@@ -34,7 +34,10 @@ export class AccountSendSendingComponent implements OnInit, OnDestroy {
   async ngOnInit() {
     this.sendService.loading = true;
 
-    this.sendService.broadcastTransaction(this.walletManager, this.transactionMetadataStore, this.accountHistoryStore, this.accountStateStore, this.addressWatchStore, this.message);
+    // If the user have gone back and trying again, make sure to reset the error.
+    this.sendService.resetError();
+
+    await this.sendService.broadcastTransaction(this.walletManager, this.transactionMetadataStore, this.accountHistoryStore, this.accountStateStore, this.addressWatchStore, this.message);
  
     // TODO: Parse the transaction locally and update the local UI state to match the future state of the indexer, ensuring
     // a good user experience where the transaction is displayed in the history immediately. This requires updating multiple
