@@ -1,9 +1,8 @@
 import { BackgroundManager } from '../background-manager';
 import { ActionPrepareResult, ActionResponse, Permission } from '../interfaces';
 import { ActionHandler, ActionState } from './action-handler';
-import { validateEvent, signEvent, getEventHash, Event, getPublicKey } from 'nostr-tools';
+import { validateEvent, signEvent, getEventHash, Event, getPublicKey, nip04 } from 'nostr-tools';
 import { SigningUtilities } from '../identity/signing-utilities';
-import { decrypt } from 'nostr-tools/nip04';
 
 export class NostrDecryptHandler implements ActionHandler {
   action = ['nostr.decrypt'];
@@ -22,7 +21,7 @@ export class NostrDecryptHandler implements ActionHandler {
     const { network, node } = await this.backgroundManager.getKey(permission.walletId, permission.accountId, permission.keyId);
 
     const privateKeyHex = node.privateKey as string;
-    const event = await decrypt(privateKeyHex, state.message.request.params[0].peer, state.content.ciphertext);
+    const event = await nip04.decrypt(privateKeyHex, state.message.request.params[0].peer, state.content.ciphertext);
 
     const publicKeyHex = getPublicKey(privateKeyHex);
     return { key: publicKeyHex, response: event };

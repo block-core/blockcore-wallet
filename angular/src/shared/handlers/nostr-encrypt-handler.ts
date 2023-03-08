@@ -1,9 +1,8 @@
 import { BackgroundManager } from '../background-manager';
 import { ActionPrepareResult, ActionResponse, Permission } from '../interfaces';
 import { ActionHandler, ActionState } from './action-handler';
-import { validateEvent, signEvent, getEventHash, Event, getPublicKey } from 'nostr-tools';
+import { validateEvent, signEvent, getEventHash, Event, getPublicKey, nip04 } from 'nostr-tools';
 import { SigningUtilities } from '../identity/signing-utilities';
-import { encrypt } from 'nostr-tools/nip04';
 
 export class NostrEncryptHandler implements ActionHandler {
   action = ['nostr.encrypt'];
@@ -28,7 +27,7 @@ export class NostrEncryptHandler implements ActionHandler {
       state.content.plaintext = JSON.stringify(state.content.plaintext);
     }
     
-    const cipher = await encrypt(privateKeyHex, state.message.request.params[0].peer, state.content.plaintext);
+    const cipher = await nip04.encrypt(privateKeyHex, state.message.request.params[0].peer, state.content.plaintext);
     
     const publicKeyHex = getPublicKey(privateKeyHex);
     return { key: publicKeyHex, response: cipher };
