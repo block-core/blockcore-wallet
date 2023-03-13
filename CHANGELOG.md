@@ -1,3 +1,13 @@
+## <small>1.0.28 (2023-03-13)</small>
+
+* Add a basic call to get DWN data ([3772652](https://github.com/block-core/blockcore-wallet/commit/3772652))
+* Attempt to fix issue with error persisting across attempts ([1c02513](https://github.com/block-core/blockcore-wallet/commit/1c02513))
+* Update dependencies and fix SegWit sending ([7174fea](https://github.com/block-core/blockcore-wallet/commit/7174fea))
+* Update version and changelog ([fbd9f69](https://github.com/block-core/blockcore-wallet/commit/fbd9f69))
+* Upgrade some packages, including DWN ([6a5c0d6](https://github.com/block-core/blockcore-wallet/commit/6a5c0d6))
+
+
+
 ## <small>1.0.27 (2023-02-23)</small>
 
 * Add atomic swaps handlers (#321) ([2a8eeb3](https://github.com/block-core/blockcore-wallet/commit/2a8eeb3)), closes [#321](https://github.com/block-core/blockcore-wallet/issues/321)
