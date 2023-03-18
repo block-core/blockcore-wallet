@@ -237,7 +237,7 @@ async function handleContentScriptMessage(message: ActionMessage) {
 
     // If this execution required consent then display a notification.
     if (prepare.consent) {
-      result.notification = `App executed ${(<Permission>permission).action} (${executions})`;
+      result.notification = `Blockcore Wallet: ${(<Permission>permission).action} (${executions})`;
     }
 
     return result;
