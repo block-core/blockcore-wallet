@@ -1,5 +1,5 @@
 import { Account } from './interfaces';
-import { BTC, CITY, CRS, CY, IDENTITY, NOSTR, RSC, SBC, STRAX, TCRS, TSTRAX, X42 , IMPLX, MOL,  KEY, XRC} from './networks';
+import { BTC, CITY, CRS, CY, IDENTITY, NOSTR, RSC, SBC, STRAX, TCRS, TSTRAX, X42 , IMPLX, MOL,  KEY, XRC, SERF} from './networks';
 import { JWK } from './networks/JWK';
 const { v4: uuidv4 } = require('uuid');
 
@@ -23,6 +23,7 @@ export class Defaults {
     networks.push(new TSTRAX());
     networks.push(new X42());
     networks.push(new XRC());
+    networks.push(new SERF());
     return networks;
   }
 
@@ -214,6 +215,19 @@ export class Defaults {
             purposeAddress: 44,
             icon: 'paid',
           },
+          {
+            identifier: uuidv4(),
+            selected: false,
+            networkType: 'SERF',
+            mode: 'normal',
+            index: 0,
+            name: 'Serf',
+            type: 'coin',
+            network: 712,
+            purpose: 44,
+            purposeAddress: 44,
+            icon: 'paid',
+          }
         ];
         break;
       case 'coinvault':
