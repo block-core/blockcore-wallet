@@ -6,9 +6,4 @@
     {{ "Action.Account" | translate }}: {{walletManager.activeAccount?.name}}<br>
     {{ "Action.DerivationPath" | translate }}: {{networkService.getDerivationPathForAccount(walletManager.activeAccount)}}<br><br>
 
-    <button (click)="createPrivateChannelAccount()">Create Account</button>
-    <!-- <mat-form-field class="input-full-width" appearance="outline">
-        <mat-label>{{ "Action.SigningContentLabel" | translate }}</mat-label>
-        <textarea class="signing-content" matInput [ngModel]="mnemonic"></textarea>
-    </mat-form-field> -->
 </div>

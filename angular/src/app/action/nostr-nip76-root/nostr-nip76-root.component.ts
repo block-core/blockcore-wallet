@@ -34,12 +34,11 @@ export class ActionNostrNip76RootComponent implements OnInit {
     private cd: ChangeDetectorRef,
     public translate: TranslateService) {
 
-      this.actionService.status.title = 'Create an HDK Index Wallet';
+      this.actionService.status.title = 'Use an HDK Index';
       this.actionService.status.description = 
-        `Creates a separate NIP-76 Hierarchical Deterministic Key Wallet Root used for indexing and encrypting Nostr Events.`;
+        `Uses a separate Hierarchical Deterministic Key on the Account used for signing, indexing and encrypting Nostr Events.`;
       this.actionService.consentType = 'regular';
       this.actionService.permissionLevel = 'account';
-      // this.actionService.accountId = walletManager.activeAccountId;
   }
 
   ngOnDestroy(): void {
