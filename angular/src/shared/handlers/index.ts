@@ -20,6 +20,7 @@ import { SendTransactionHandler } from './send-transaction-handler';
 import { AtomicSwapsKeyHandler } from './atomic-swap-key-handler';
 import { AtomicSwapsSecretHandler } from './atomic-swap-secret-handler';
 import { AtomicSwapsSendHandler } from './atomic-swap-send-handler';
+import { NostrNip76WalletHandler } from './nostr-nip76-wallet-handler';
 
 // TODO: Make this more generic where the handlers are registered as form of factory.
 export class Handlers {
@@ -53,6 +54,14 @@ export class Handlers {
         return new NostrEncryptHandler(backgroundManager);
       case 'nostr.decrypt':
         return new NostrDecryptHandler(backgroundManager);
+      case 'nostr.nip76.wallet':
+      case 'nostr.nip76.event.create':
+      case 'nostr.nip76.event.delete':
+      case 'nostr.nip76.invite.read':
+      case 'nostr.nip76.invite.create':
+        const handler = new NostrNip76WalletHandler(backgroundManager);
+        handler.action = [action];
+        return handler;
       case 'transaction.send':
         return new SendTransactionHandler(backgroundManager);
       case 'atomicswaps.key':

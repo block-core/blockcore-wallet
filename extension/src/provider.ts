@@ -1,5 +1,6 @@
 import { ActionMessage, ActionRequest, ActionResponse, EventEmitter, Listener } from '../../angular/src/shared';
 import { Injector, RequestArguments, Web5RequestProvider } from '@blockcore/web5-injector';
+import { ContentDocument, ContentTemplate, HDKIndex, nip19Extension } from 'animiq-nip76-tools';
 
 export class BlockcoreRequestProvider implements Web5RequestProvider {
   name = 'Blockcore';
@@ -154,6 +155,7 @@ class NostrProvider {
   }
 
   nip04 = new NostrNip04(this.provider);
+  nip76 = new NostrNip76(this.provider);
 }
 
 export class NostrNip04 {
@@ -176,6 +178,56 @@ export class NostrNip04 {
 
     return result.response || {};
   }
+}
+
+export class NostrNip76 {
+  constructor(private provider: BlockcoreRequestProvider) {}
+
+  async getWalletArgs(): Promise<Event> {
+    const result = (await this.provider.request({
+      method: 'nostr.nip76.wallet',
+      params: [''],
+    })) as any;
+
+    return result.response;
+  }
+
+  async createEvent(hdkIndex: HDKIndex, doc: ContentDocument): Promise<Event> {
+    const result = (await this.provider.request({
+      method: 'nostr.nip76.event.create',
+      params: [hdkIndex.toJSON(), doc.serialize(), doc.docIndex],
+    })) as any;
+
+    return result.response.event;
+  }
+
+  async createDeleteEvent(doc: ContentDocument): Promise<Event> {
+    const result = (await this.provider.request({
+      method: 'nostr.nip76.event.delete',
+      params: [doc.dkxParent.toJSON(), doc.nostrEvent.id, doc.docIndex],
+    })) as any;
+
+    return result.response.event;
+  }
+
+  async readInvitation(channelPointer: string): Promise<nip19Extension.PrivateChannelPointerDTO> {
+    const result = (await this.provider.request({
+      method: 'nostr.nip76.invite.read',
+      params: [channelPointer],
+    })) as any;
+    
+    return result.response.pointer;
+  }
+
+  async createInvitation(pointer: nip19Extension.PrivateChannelPointer, forPubkey: string): Promise<string> {
+    const result = (await this.provider.request({
+      method: 'nostr.nip76.invite.create',
+      params: [nip19Extension.pointerToDTO(pointer), forPubkey],
+    })) as any;
+    
+    return result.response.invitation;
+  }
+
 }
 
 const provider = new BlockcoreRequestProvider();

@@ -85,6 +85,7 @@
     "js-base64": "3.7.3",
     "ngx-logger": "^5.0.11",
     "nostr-tools": "1.7.4",
+    "animiq-nip76-tools": "file:../../animiq-nip76-tools/dist",
     "qrcode": "^1.5.1",
     "qs": "^6.11.0",
     "rxjs": "7.5.6",
