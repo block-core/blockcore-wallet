@@ -57,6 +57,7 @@ export class Handlers {
       case 'nostr.nip76.wallet':
       case 'nostr.nip76.event.create':
       case 'nostr.nip76.event.delete':
+      case 'nostr.nip76.invite.index':
       case 'nostr.nip76.invite.read':
       case 'nostr.nip76.invite.create':
         const handler = new NostrNip76WalletHandler(backgroundManager);

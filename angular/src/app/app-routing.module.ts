@@ -500,6 +500,13 @@ const routes: Routes = [
         },
       },
       {
+        path: 'nostr.nip76.invite.index',
+        component: ActionNostrNip76RootComponent,
+        resolve: {
+          data: LoadingResolverService,
+        },
+      },
+      {
         path: 'nostr.nip76.invite.read',
         component: ActionNostrNip76RootComponent,
         resolve: {

@@ -159,7 +159,7 @@ class NostrProvider {
 }
 
 export class NostrNip04 {
-  constructor(private provider: BlockcoreRequestProvider) {}
+  constructor(private provider: BlockcoreRequestProvider) { }
 
   async encrypt(peer: string, plaintext: string): Promise<string> {
     const result = (await this.provider.request({
@@ -181,12 +181,12 @@ export class NostrNip04 {
 }
 
 export class NostrNip76 {
-  constructor(private provider: BlockcoreRequestProvider) {}
+  constructor(private provider: BlockcoreRequestProvider) { }
 
-  async getWalletArgs(): Promise<Event> {
+  async getWalletArgs(keyPage = 0): Promise<Event> {
     const result = (await this.provider.request({
       method: 'nostr.nip76.wallet',
-      params: [''],
+      params: [keyPage],
     })) as any;
 
     return result.response;
@@ -210,12 +210,21 @@ export class NostrNip76 {
     return result.response.event;
   }
 
+  async getInvitationIndex(docIndex: number, keyPage = 0): Promise<string> {
+    const result = (await this.provider.request({
+      method: 'nostr.nip76.invite.index',
+      params: [docIndex, keyPage],
+    })) as any;
+
+    return result.response.dkxInvite;
+  }
+
   async readInvitation(channelPointer: string): Promise<nip19Extension.PrivateChannelPointerDTO> {
     const result = (await this.provider.request({
       method: 'nostr.nip76.invite.read',
       params: [channelPointer],
     })) as any;
-    
+
     return result.response.pointer;
   }
 
@@ -224,7 +233,7 @@ export class NostrNip76 {
       method: 'nostr.nip76.invite.create',
       params: [nip19Extension.pointerToDTO(pointer), forPubkey],
     })) as any;
-    
+
     return result.response.invitation;
   }
 
