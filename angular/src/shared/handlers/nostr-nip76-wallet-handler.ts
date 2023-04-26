@@ -1,7 +1,10 @@
 import { sha512 } from '@noble/hashes/sha512';
 import { bytesToHex } from '@noble/hashes/utils';
 import { HDKey } from '@scure/bip32';
-import { ContentDocument, getReducedKey, HDKey as Nip76HDKey, HDKIndex, HDKIndexType, nip19Extension, NostrEventDocument, SequentialKeysetDTO, Versions, walletRsvpDocumentsOffset } from 'animiq-nip76-tools';
+import {
+  ContentDocument, getReducedKey, HDKey as Nip76HDKey, HDKIndex, HDKIndexDTO, HDKIndexType, nip19Extension,
+  NostrEventDocument, SequentialKeysetDTO, Versions, Nip76ProviderIndexArgs, walletRsvpDocumentsOffset
+} from 'animiq-nip76-tools';
 import { getPublicKey } from 'nostr-tools';
 import { BackgroundManager } from '../background-manager';
 import { SigningUtilities } from '../identity/signing-utilities';
@@ -11,7 +14,7 @@ import { ActionHandler, ActionState } from './action-handler';
 export const nostrPrivateChannelAccountName = 'Nostr Private Channels';
 
 export class NostrNip76WalletHandler implements ActionHandler {
-  action = ['nostr.nip76.wallet'];
+  action = ['nostr.nip76.index'];
   utility = new SigningUtilities();
 
   constructor(private backgroundManager: BackgroundManager) { }
@@ -53,50 +56,69 @@ export class NostrNip76WalletHandler implements ActionHandler {
     const key = getPublicKey(profileKey.privateKey as any);
 
     switch (state.message.request.method) {
-      case 'nostr.nip76.wallet': {
-        const keyPage: number = state.message.request.params[0];
-        const { rootKey, wordset, documentsIndex } = await this.getRootKeyInfo(permission, keyPage);
-        documentsIndex.signingParent.wipePrivateData();
-        documentsIndex.encryptParent.wipePrivateData();
-        const response = {
-          publicKey: key,
-          rootKey: rootKey.extendedPublicKey,
-          wordset: Array.from(wordset),
-          documentsIndex: documentsIndex.toJSON(),
-        };
-        return { key, response };
+      case 'nostr.nip76.index': {
+        const indexArgs: Nip76ProviderIndexArgs = state.message.request.params[1];
+        const { rootKey, wordset, documentsIndex } = await this.getRootKeyInfo(permission, indexArgs.keyPage);
+        if (indexArgs.privateIndexId === null) {
+          documentsIndex.signingParent.wipePrivateData();
+          documentsIndex.encryptParent.wipePrivateData();
+          const response = { hdkIndex: documentsIndex.toJSON() };
+          return { key, response };
+        } else {
+          const keyset = documentsIndex.getDocumentKeyset(indexArgs.privateIndexId, bytesToHex(profileKey.privateKey));
+          const hdkIndex = new HDKIndex(HDKIndexType.Sequential | HDKIndexType.Private, keyset.signingKey, keyset.encryptKey);
+          hdkIndex.getSequentialKeyset(0, indexArgs.keyPage);
+          hdkIndex.signingParent.wipePrivateData();
+          hdkIndex.encryptParent.wipePrivateData();
+          const response = { hdkIndex: hdkIndex.toJSON() };
+          return { key, response };
+        }
       }
       case 'nostr.nip76.event.create': {
-        const hdkIndex = HDKIndex.fromJSON(state.message.request.params[0]);
-        const serializedContent = state.message.request.params[1];
+        const serializedContent = state.message.request.params[2];
         const kind = parseInt(serializedContent.match(/\d+/)![0]);
         const doc = HDKIndex.getContentDocument(kind);
         doc.deserialize(serializedContent);
         doc.content.pubkey = key;
-        doc.docIndex = state.message.request.params[2];
+        doc.docIndex = state.message.request.params[3];
+
+        let hdkIndex: HDKIndex;
+        const indexArgs: Nip76ProviderIndexArgs = state.message.request.params[1];
+        if (indexArgs.publicIndex) {
+          hdkIndex = HDKIndex.fromJSON(indexArgs.publicIndex as HDKIndexDTO);
+        } else {
+          const { rootKey, wordset, documentsIndex } = await this.getRootKeyInfo(permission);
+          if (indexArgs.privateIndexId === null) {
+            hdkIndex = documentsIndex;
+          } else {
+            const keyset = documentsIndex.getDocumentKeyset(indexArgs.privateIndexId, bytesToHex(profileKey.privateKey));
+            hdkIndex = new HDKIndex(HDKIndexType.Sequential | HDKIndexType.Private, keyset.signingKey, keyset.encryptKey);
+          }
+        }
         const event = await hdkIndex.createEvent(doc, bytesToHex(profileKey.privateKey));
         const response = { event };
         return { key, response };
       }
       case 'nostr.nip76.event.delete': {
-        const hdkIndex = HDKIndex.fromJSON(state.message.request.params[0]);
         const doc = new ContentDocument();
-        doc.nostrEvent = { id: state.message.request.params[1] } as NostrEventDocument;
-        doc.docIndex = state.message.request.params[2];
+        doc.nostrEvent = { id: state.message.request.params[2] } as NostrEventDocument;
+        doc.docIndex = state.message.request.params[3];
+
+        let hdkIndex: HDKIndex;
+        const indexArgs: Nip76ProviderIndexArgs = state.message.request.params[1];
+        if (indexArgs.publicIndex) {
+          hdkIndex = HDKIndex.fromJSON(indexArgs.publicIndex as HDKIndexDTO);
+        } else {
+          const { rootKey, wordset, documentsIndex } = await this.getRootKeyInfo(permission);
+          if (indexArgs.privateIndexId === null) {
+            hdkIndex = documentsIndex;
+          } else {
+            const keyset = documentsIndex.getDocumentKeyset(indexArgs.privateIndexId, bytesToHex(profileKey.privateKey));
+            hdkIndex = new HDKIndex(HDKIndexType.Sequential | HDKIndexType.Private, keyset.signingKey, keyset.encryptKey);
+          }
+        }
         const event = await hdkIndex.createDeleteEvent(doc, bytesToHex(profileKey.privateKey));
         const response = { event };
-        return { key, response };
-      }
-      case 'nostr.nip76.invite.index': {
-        const docIndex: number = state.message.request.params[0];
-        const keyPage: number = state.message.request.params[1];
-        const { rootKey, wordset, documentsIndex } = await this.getRootKeyInfo(permission, keyPage);
-        const keyset = documentsIndex.getDocumentKeyset(docIndex, bytesToHex(profileKey.privateKey));
-        const dkxInvite = new HDKIndex(HDKIndexType.Sequential | HDKIndexType.Private, keyset.signingKey, keyset.encryptKey);
-        dkxInvite.getSequentialKeyset(0, keyPage);
-        dkxInvite.signingParent.wipePrivateData();
-        dkxInvite.encryptParent.wipePrivateData();
-        const response = { dkxInvite: dkxInvite.toJSON() };
         return { key, response };
       }
       case 'nostr.nip76.invite.read': {

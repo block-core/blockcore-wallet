@@ -479,7 +479,7 @@ const routes: Routes = [
         },
       },
       {
-        path: 'nostr.nip76.wallet',
+        path: 'nostr.nip76.index',
         component: ActionNostrNip76RootComponent,
         resolve: {
           data: LoadingResolverService,
@@ -494,13 +494,6 @@ const routes: Routes = [
       },
       {
         path: 'nostr.nip76.event.delete',
-        component: ActionNostrNip76RootComponent,
-        resolve: {
-          data: LoadingResolverService,
-        },
-      },
-      {
-        path: 'nostr.nip76.invite.index',
         component: ActionNostrNip76RootComponent,
         resolve: {
           data: LoadingResolverService,
