@@ -37,6 +37,7 @@ export class AccountCreateComponent implements OnInit, OnDestroy {
   addressMode: string = 'normal';
   purpose: number = 44;
   privateKeyImport: string;
+  more = false;
 
   get passwordValidated(): boolean {
     return this.password === this.password2 && this.secondFormGroup.valid;

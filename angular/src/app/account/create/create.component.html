@@ -37,6 +37,20 @@
         </mat-select>
       </mat-form-field>
 
+      <br />
+
+      <mat-form-field appearance="outline" class="input-full-width">
+        <mat-label>{{ "Account.AccountIndex" | translate }}</mat-label>
+        <mat-select (selectionChange)="onAccountIndexChanged($event)" [(value)]="index">
+          <mat-option *ngFor="let accountindex of indexes" [value]="accountindex">{{ accountindex }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      
+      <button (click)="more = !more" mat-stroked-button color="primary"><span *ngIf="more" >Less options...</span> <span *ngIf="!more" >More options...</span></button>
+      <br />
+      <div *ngIf="more">
+      
+
       <br *ngIf="selectedNetwork.type != 'identity'" />
 
       <mat-form-field *ngIf="selectedNetwork.type != 'identity'" appearance="outline" class="input-full-width">
@@ -44,15 +58,6 @@
         <mat-select [(value)]="purpose" (selectionChange)="onPurposeChanged()">
           <mat-option [value]="44">{{ "Account.Legacy" | translate }}</mat-option>
           <mat-option [value]="84">{{ "Account.SegWit" | translate }}</mat-option>
-        </mat-select>
-      </mat-form-field>
-
-      <br />
-
-      <mat-form-field appearance="outline" class="input-full-width">
-        <mat-label>{{ "Account.AccountIndex" | translate }}</mat-label>
-        <mat-select (selectionChange)="onAccountIndexChanged($event)" [(value)]="index">
-          <mat-option *ngFor="let accountindex of indexes" [value]="accountindex">{{ accountindex }}</mat-option>
         </mat-select>
       </mat-form-field>
 
@@ -82,6 +87,7 @@
         <mat-label>{{ "Account.AccountDerivationPath" | translate }}</mat-label>
         <input matInput [(ngModel)]="derivationPath" required />
       </mat-form-field>
+    </div>
 
       <br />
       <button class="signup-button" mat-flat-button color="primary" (click)="create()">{{ "Account.CreateAccount" | translate }}</button>
