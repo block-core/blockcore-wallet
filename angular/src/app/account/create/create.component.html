@@ -37,6 +37,15 @@
         </mat-select>
       </mat-form-field>
 
+      <br />
+
+      <mat-form-field appearance="outline" class="input-full-width">
+        <mat-label>{{ "Account.AccountIndex" | translate }}</mat-label>
+        <mat-select (selectionChange)="onAccountIndexChanged($event)" [(value)]="index">
+          <mat-option *ngFor="let accountindex of indexes" [value]="accountindex">{{ accountindex }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
       <br *ngIf="selectedNetwork.type != 'identity'" />
 
       <mat-form-field *ngIf="selectedNetwork.type != 'identity'" appearance="outline" class="input-full-width">
@@ -44,15 +53,6 @@
         <mat-select [(value)]="purpose" (selectionChange)="onPurposeChanged()">
           <mat-option [value]="44">{{ "Account.Legacy" | translate }}</mat-option>
           <mat-option [value]="84">{{ "Account.SegWit" | translate }}</mat-option>
-        </mat-select>
-      </mat-form-field>
-
-      <br />
-
-      <mat-form-field appearance="outline" class="input-full-width">
-        <mat-label>{{ "Account.AccountIndex" | translate }}</mat-label>
-        <mat-select (selectionChange)="onAccountIndexChanged($event)" [(value)]="index">
-          <mat-option *ngFor="let accountindex of indexes" [value]="accountindex">{{ accountindex }}</mat-option>
         </mat-select>
       </mat-form-field>
 
