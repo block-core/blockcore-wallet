@@ -394,7 +394,7 @@
     "AuthorizeOnce": "مجاز برای یک بار",
     "AuthorizeFor5Minutes": "به مدت 5 دقیقه مجاز",
     "AuthorizeForever": "برای همیشه مجاز",
-    "Cancel":"انصراف"
+    "Cancel": "انصراف"
   },
   "Manifest": {
     "Description": "Non-Custodial wallet for Coins, Tokens, Identities, NFTs and more."
@@ -422,10 +422,10 @@
     "Sign": "Sign",
     "SignatureVerified": "Signature verified",
     "SignatureVerifiedDescription": "This means that the message has been verified to be signed by the owner of the address/identity specified.",
-    "Verify":"Verify",
+    "Verify": "Verify",
     "FailedSignatureVerification": "Failed signature verification",
     "FailedSignatureVerificationDescription": "This means that the message was not signed by the owner of the address/identity specified.",
-    "ClearAll":"Clear All"
+    "ClearAll": "Clear All"
   },
   "english": "English",
   "chinese_simplified": "Chinese (Simplified)",

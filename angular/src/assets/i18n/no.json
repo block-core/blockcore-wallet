@@ -394,7 +394,7 @@
     "AuthorizeOnce": "Godkjenn én gang",
     "AuthorizeFor5Minutes": "Godkjenn i 5 minutter",
     "AuthorizeForever": "Autoriser for alltid",
-    "Cancel":"Cancel"
+    "Cancel": "Cancel"
   },
   "Manifest": {
     "Description": "Ikke-forvaringspliktig lommebok for mynter, tokens, identiteter, NFTer og mer."
@@ -422,10 +422,10 @@
     "Sign": "Sign",
     "SignatureVerified": "Signature verified",
     "SignatureVerifiedDescription": "This means that the message has been verified to be signed by the owner of the address/identity specified.",
-    "Verify":"Verify",
+    "Verify": "Verify",
     "FailedSignatureVerification": "Failed signature verification",
     "FailedSignatureVerificationDescription": "This means that the message was not signed by the owner of the address/identity specified.",
-    "ClearAll":"Clear All"
+    "ClearAll": "Clear All"
   },
   "english": "English",
   "chinese_simplified": "Chinese (Simplified)",

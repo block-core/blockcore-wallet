@@ -394,7 +394,7 @@
     "AuthorizeOnce": "Εξουσιοδότηση μία φορά",
     "AuthorizeFor5Miutes": "Εξουσιοδότηση για 5 λεπτά",
     "AuthorizeForever": "Εξουσιοδότηση για πάντα",
-    "Cancel":"Cancel"
+    "Cancel": "Cancel"
   },
   "Collectables": {
     "PurchasePrice": "τιμή αγοράς",
@@ -422,10 +422,10 @@
     "Sign": "Sign",
     "SignatureVerified": "Signature verified",
     "SignatureVerifiedDescription": "This means that the message has been verified to be signed by the owner of the address/identity specified.",
-    "Verify":"Verify",
+    "Verify": "Verify",
     "FailedSignatureVerification": "Failed signature verification",
     "FailedSignatureVerificationDescription": "This means that the message was not signed by the owner of the address/identity specified.",
-    "ClearAll":"Clear All"
+    "ClearAll": "Clear All"
   },
   "english": "Αγγλικά",
   "chinese_simplified": "Κινέζικα (Απλοποιημένα)",
