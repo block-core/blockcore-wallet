@@ -1,0 +1,9 @@
+<div class="page">
+    {{ "Action.AttestContentDescription" | translate }}:
+    <br><br>
+
+    {{ "Action.Wallet" | translate }}: {{walletManager.activeWallet?.name}}<br>
+    {{ "Action.Account" | translate }}: {{walletManager.activeAccount?.name}}<br>
+    {{ "Action.DerivationPath" | translate }}: {{networkService.getDerivationPathForAccount(walletManager.activeAccount)}}<br><br>
+
+</div>

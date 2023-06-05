@@ -131,7 +131,7 @@ import { ActionTransactionSendComponent } from './action/transaction.send/transa
 import { SendConfirmationDialog } from './action/transaction.send/send-confirmation-dialog/send-confirmation-dialog';
 import { ActionWalletUnlockComponent } from './action/wallet.unlock/wallet.unlock.component';
 import { ActionSwapsSendComponent } from './action/swaps.send/swaps.send.component';
-
+import { ActionNostrNip76RootComponent } from './action/nostr-nip76-root/nostr-nip76-root.component';
 // required for AOT compilation
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
   return new TranslateHttpLoader(http);
@@ -216,6 +216,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     SendConfirmationDialog,
     ActionWalletUnlockComponent,
     ActionSwapsSendComponent,
+    ActionNostrNip76RootComponent
   ],
   imports: [
     BrowserModule,

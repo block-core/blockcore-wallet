@@ -1,6 +1,7 @@
 import { ActionMessage, ActionRequest, ActionResponse, EventEmitter, Listener } from '../../angular/src/shared';
 import { Injector, RequestArguments, Web5RequestProvider } from '@blockcore/web5-injector';
-
+import { ContentDocument, ContentTemplate, HDKIndex, nip19Extension, NostrEventDocument,
+  INostrNip76Provider, Nip76ProviderIndexArgs, Nip76ProviderIndexArgDefaults  } from 'animiq-nip76-tools';
 export class BlockcoreRequestProvider implements Web5RequestProvider {
   name = 'Blockcore';
   #requests = {};
@@ -120,7 +121,7 @@ export class BlockcoreRequestProvider implements Web5RequestProvider {
 }
 
 class NostrProvider {
-  constructor(private provider: BlockcoreRequestProvider) {}
+  constructor(private provider: BlockcoreRequestProvider) { }
 
   /** Nostr NIP-07 function: https://github.com/nostr-protocol/nips/blob/master/07.md */
   async getPublicKey(): Promise<string | unknown> {
@@ -154,10 +155,11 @@ class NostrProvider {
   }
 
   nip04 = new NostrNip04(this.provider);
+  nip76 = new NostrNip76(this.provider);
 }
 
 export class NostrNip04 {
-  constructor(private provider: BlockcoreRequestProvider) {}
+  constructor(private provider: BlockcoreRequestProvider) { }
 
   async encrypt(peer: string, plaintext: string): Promise<string> {
     const result = (await this.provider.request({
@@ -176,6 +178,67 @@ export class NostrNip04 {
 
     return result.response || {};
   }
+}
+
+export class NostrNip76 implements INostrNip76Provider {
+  constructor(private provider: BlockcoreRequestProvider) { }
+
+  async getIndex(privateIndexId?: number, keyPage?: number): Promise<HDKIndex> {
+    const indexArgs = Nip76ProviderIndexArgDefaults;
+    if(privateIndexId) indexArgs.privateIndexId = privateIndexId;
+    if(keyPage) indexArgs.keyPage = keyPage;
+    const result = (await this.provider.request({
+      method: 'nostr.nip76.index',
+      params: [{}, indexArgs],
+    })) as any;
+    const hdkIndex = HDKIndex.fromJSON(result.response.hdkIndex);
+    return hdkIndex;
+  }
+
+  async createEvent(doc: ContentDocument): Promise<NostrEventDocument> {
+    const indexArgs: Nip76ProviderIndexArgs = {
+      publicIndex: doc.dkxParent.isPrivate ? undefined : doc.dkxParent.toJSON(),
+      privateIndexId: doc.dkxParent.isPrivate ? doc.dkxParent.parentDocument?.docIndex : undefined
+    };
+    const result = (await this.provider.request({
+      method: 'nostr.nip76.event.create',
+      params: [{}, indexArgs, doc.serialize(), doc.docIndex],
+    })) as any;
+
+    return result.response.event;
+  }
+
+  async createDeleteEvent(doc: ContentDocument): Promise<NostrEventDocument> {
+    const indexArgs: Nip76ProviderIndexArgs = {
+      publicIndex: doc.dkxParent.isPrivate ? undefined : doc.dkxParent.toJSON(),
+      privateIndexId: doc.dkxParent.isPrivate ? doc.dkxParent.parentDocument?.docIndex : undefined
+    };
+    const result = (await this.provider.request({
+      method: 'nostr.nip76.event.delete',
+      params: [{}, indexArgs, doc.nostrEvent.id, doc.docIndex],
+    })) as any;
+
+    return result.response.event;
+  }
+
+  async readInvitation(channelPointer: string): Promise<nip19Extension.PrivateChannelPointer> {
+    const result = (await this.provider.request({
+      method: 'nostr.nip76.invite.read',
+      params: [channelPointer],
+    })) as any;
+    const pointer = nip19Extension.pointerFromDTO(result.response.pointer);
+    return pointer;
+  }
+
+  async createInvitation(pointer: nip19Extension.PrivateChannelPointer, forPubkey: string): Promise<string> {
+    const result = (await this.provider.request({
+      method: 'nostr.nip76.invite.create',
+      params: [nip19Extension.pointerToDTO(pointer), forPubkey],
+    })) as any;
+
+    return result.response.invitation;
+  }
+
 }
 
 const provider = new BlockcoreRequestProvider();

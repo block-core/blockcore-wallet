@@ -65,6 +65,7 @@ import { ActionNostrDecryptComponent } from './action/nostr.decrypt/nostr.decryp
 import { ActionTransactionSendComponent } from './action/transaction.send/transaction.send.component';
 import { ActionWalletUnlockComponent } from './action/wallet.unlock/wallet.unlock.component';
 import { ActionSwapsSendComponent } from './action/swaps.send/swaps.send.component';
+import { ActionNostrNip76RootComponent } from './action/nostr-nip76-root/nostr-nip76-root.component';
 
 const routes: Routes = [
   {
@@ -473,6 +474,41 @@ const routes: Routes = [
       {
         path: 'nostr.decrypt',
         component: ActionNostrDecryptComponent,
+        resolve: {
+          data: LoadingResolverService,
+        },
+      },
+      {
+        path: 'nostr.nip76.index',
+        component: ActionNostrNip76RootComponent,
+        resolve: {
+          data: LoadingResolverService,
+        },
+      },
+      {
+        path: 'nostr.nip76.event.create',
+        component: ActionNostrNip76RootComponent,
+        resolve: {
+          data: LoadingResolverService,
+        },
+      },
+      {
+        path: 'nostr.nip76.event.delete',
+        component: ActionNostrNip76RootComponent,
+        resolve: {
+          data: LoadingResolverService,
+        },
+      },
+      {
+        path: 'nostr.nip76.invite.read',
+        component: ActionNostrNip76RootComponent,
+        resolve: {
+          data: LoadingResolverService,
+        },
+      },
+      {
+        path: 'nostr.nip76.invite.create',
+        component: ActionNostrNip76RootComponent,
         resolve: {
           data: LoadingResolverService,
         },
