@@ -402,6 +402,8 @@
     "ExchangeCryptoDescription": "تبادل العملات المشفرة الحالية لعملة مشفرة أخرى.",
     "ExchangeBTCForSTRAX": "تبادل BTC مقابل STRAX بواسطة Exolix",
     "ExchangeSTRAXForBTC": "تبادل STRAX مقابل BTC بواسطة Exolix",
+    "ExchangeBTCForSTRAXChangeNOW": "Exchange BTC for STRAX with ChangeNOW",
+    "ExchangeSTRAXForBTCChangeNOW": "Exchange STRAX for BTC with ChangeNOW",
     "Partners": "الشركاء",
     "PartnersDescription": "استخدام روابطنا وشركائنا المرتبطين، يساعد في دعم التطوير المستمر لهذه المحفظة."
   },

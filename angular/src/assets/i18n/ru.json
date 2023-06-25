@@ -413,6 +413,8 @@
     "ExchangeCryptoDescription": "Обменяйте свою существующую криптовалюту на другую криптовалюту.",
     "ExchangeBTCForSTRAX": "Обменять BTC на STRAX с помощью Exolix",
     "ExchangeSTRAXForBTC": "Обменять STRAX на BTC с помощью Exolix",
+    "ExchangeBTCForSTRAXChangeNOW": "Exchange BTC for STRAX with ChangeNOW",
+    "ExchangeSTRAXForBTCChangeNOW": "Exchange STRAX for BTC with ChangeNOW",
     "Partners": "Партнёры",
     "PartnersDescription": "Использование наших ссылок и связанных партнеров помогает поддерживать дальнейшее развитие этого кошелька."
   },

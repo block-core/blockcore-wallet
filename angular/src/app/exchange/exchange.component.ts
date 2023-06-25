@@ -46,4 +46,14 @@ export class ExchangeComponent implements OnInit {
     const network = this.networkLoader.getNetwork(networkType);
     this.exchange.sellPopup(address, network, 200);
   }
+
+  buyChangeNOW(address: string, networkType: string) {
+    const network = this.networkLoader.getNetwork(networkType);
+    this.exchange.popupChangeNOW(address, 'btc', network.symbol, 0.01);
+  }
+
+  sellChangeNOW(address: string, networkType: string) {
+    const network = this.networkLoader.getNetwork(networkType);
+    this.exchange.popupChangeNOW(address, network.symbol, 'btc', 200);
+  }
 }

@@ -21,6 +21,11 @@ export class ExchangeService {
     window.open(url, 'exolixPopup', 'height=820,width=600,left=200,top=200,resizable=yes,channelmode=yes,scrollbars=yes,toolbar=yes,menubar=no,location=yes,directories=no,status=yes');
   }
 
+  popupChangeNOW(address: string, from: string, to: string, amount: number) {
+    const url = `https://changenow.app.link/referral?link_id=d10e70fc57c0e6&amount=${amount}&from=${from}&to=${to}`;
+    window.open(url, 'changeNOWPopup', 'height=820, width=600, left=200, top=200, resizable=yes, channelmode=yes, scrollbars=yes, toolbar=yes, menubar=no, location=yes, directories=no, status=yes')
+  }
+
   purchasePopup(address: string, crypto: string, fiat: string, amount: string) {
     const url = `https://www.coinvault.io/simplex/?crypto=${crypto}&fiat=${fiat}&amount=${amount}&wallet_address=${address}`;
     window.open(url, 'simplexPopup', 'height=800,width=600,left=200,top=200,resizable=yes,channelmode=yes,scrollbars=yes,toolbar=yes,menubar=no,location=yes,directories=no,status=yes');

@@ -436,6 +436,8 @@
     "ExchangeCryptoDescription": "Échangez votre cryptomonnaie existante contre d'autres cryptomonnaies.",
     "ExchangeBTCForSTRAX": "Échanger du BTC contre du STRAX avec Exolix",
     "ExchangeSTRAXForBTC": "Échanger du STRAX contre du BTC avec Exolix",
+    "ExchangeBTCForSTRAXChangeNOW": "Exchange BTC for STRAX with ChangeNOW",
+    "ExchangeSTRAXForBTCChangeNOW": "Exchange STRAX for BTC with ChangeNOW",
     "Partners": "Partenaires",
     "PartnersDescription": "En utilisant nos liens et nos partenaires affiliés, vous contribuez au développement continu de ce portefeuille."
   },
