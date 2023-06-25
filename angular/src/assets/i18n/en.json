@@ -436,6 +436,8 @@
     "ExchangeCryptoDescription": "Exchange your existing cryptocurrency for other cryptocurrency.",
     "ExchangeBTCForSTRAX": "Exchange BTC for STRAX with Exolix",
     "ExchangeSTRAXForBTC": "Exchange STRAX for BTC with Exolix",
+    "ExchangeBTCForSTRAXChangeNOW": "Exchange BTC for STRAX with ChangeNOW",
+    "ExchangeSTRAXForBTCChangeNOW": "Exchange STRAX for BTC with ChangeNOW",
     "Partners": "Partners",
     "PartnersDescription": "Using our links and affiliated partners, helps support the continued development of this wallet."
   },

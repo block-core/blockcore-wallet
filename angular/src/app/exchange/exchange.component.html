@@ -18,13 +18,22 @@
 
   <p>{{ "Exchange.ExchangeCryptoDescription" | translate }}</p>
 
-  <p>
+  <!-- <p>
     <button class="purchase-button" color="primary" mat-raised-button (click)="buy('', 'STRAX')"><mat-icon>currency_bitcoin</mat-icon>&nbsp;{{ "Exchange.ExchangeBTCForSTRAX" | translate }}</button>
   </p>
 
   <p>
     <button class="purchase-button" color="primary" mat-raised-button (click)="sell('', 'STRAX')"><mat-icon>currency_bitcoin</mat-icon>&nbsp;{{ "Exchange.ExchangeSTRAXForBTC" | translate }}</button>
+  </p> -->
+
+  <p>
+    <button class="purchase-button" color="primary" mat-raised-button (click)="buyChangeNOW('', 'STRAX')"><mat-icon>currency_bitcoin</mat-icon>&nbsp;{{ "Exchange.ExchangeBTCForSTRAXChangeNOW" | translate }}</button>
   </p>
+
+  <p>
+    <button class="purchase-button" color="primary" mat-raised-button (click)="sellChangeNOW('', 'STRAX')"><mat-icon>currency_bitcoin</mat-icon>&nbsp;{{ "Exchange.ExchangeSTRAXForBTCChangeNOW" | translate }}</button>
+  </p>
+
 
   <br />
   <h2>{{ "Exchange.Partners" | translate }}</h2>

@@ -413,6 +413,8 @@
     "ExchangeCryptoDescription": "ارز دیجیتال موجود خود را با ارزهای دیجیتال دیگر مبادله کنید.",
     "ExchangeBTCForSTRAX": "BTC را با STRAX با Exolix مبادله کنید",
     "ExchangeSTRAXForBTC": "STRAX را با BTC با Exolix مبادله کنید",
+    "ExchangeBTCForSTRAXChangeNOW": "Exchange BTC for STRAX with ChangeNOW",
+    "ExchangeSTRAXForBTCChangeNOW": "Exchange STRAX for BTC with ChangeNOW",
     "Partners": "شرکا",
     "PartnersDescription": "استفاده از پیوندها و شرکای وابسته ما، به حمایت از توسعه مداوم این کیف پول کمک می‌کند."
   },
