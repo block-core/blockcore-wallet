@@ -1,3 +1,15 @@
+## <small>1.0.29 (2023-06-26)</small>
+
+* Add "more options" button ([dec4cf7](https://github.com/block-core/blockcore-wallet/commit/dec4cf7))
+* Adding Arabic and French languages ([f2b2a3f](https://github.com/block-core/blockcore-wallet/commit/f2b2a3f))
+* Change the notification text that appears injected into webpage when extension is used ([552820b](https://github.com/block-core/blockcore-wallet/commit/552820b))
+* include serf (#333) ([e4e1db2](https://github.com/block-core/blockcore-wallet/commit/e4e1db2)), closes [#333](https://github.com/block-core/blockcore-wallet/issues/333)
+* Replace Exolix with ChangeNOW (#340) ([412fc82](https://github.com/block-core/blockcore-wallet/commit/412fc82)), closes [#340](https://github.com/block-core/blockcore-wallet/issues/340) [#339](https://github.com/block-core/blockcore-wallet/issues/339)
+* Update create.component.html ([52518ed](https://github.com/block-core/blockcore-wallet/commit/52518ed))
+* Update version and changelog ([8cda9b3](https://github.com/block-core/blockcore-wallet/commit/8cda9b3))
+
+
+
 ## <small>1.0.28 (2023-03-13)</small>
 
 * Add a basic call to get DWN data ([3772652](https://github.com/block-core/blockcore-wallet/commit/3772652))
