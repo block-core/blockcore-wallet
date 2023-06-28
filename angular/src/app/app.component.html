@@ -152,7 +152,7 @@
       </mat-form-field> -->
 
       <a mat-list-item *ngFor="let account of walletManager.activeWallet.accounts; let i = index" (click)="onAccountChanged(account.identifier)" routerLinkActive="active-link">
-        <app-account-icon [value]="account" mat-list-icon></app-account-icon>
+        <app-account-icon mat-list-icon [value]="account"></app-account-icon>
         <div mat-line class="name-field">{{ account.name | truncate }}</div>
         <div mat-line>{{ account | network }}</div>
       </a>
