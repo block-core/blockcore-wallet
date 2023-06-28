@@ -50,6 +50,11 @@ export class LoggerService implements Logger {
     config.level = config.level === NgxLoggerLevel.TRACE ? NgxLoggerLevel.ERROR : NgxLoggerLevel.TRACE;
     this.logger.updateConfig(config);
   }
+
+  currentLevel(): NgxLoggerLevel {
+    const config = this.logger.getConfigSnapshot();
+    return config.level;
+  }
 }
 
 @Injectable({
