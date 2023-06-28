@@ -198,8 +198,8 @@
   -->
 
   <!-- <div> -->
-  <mat-sidenav-content>
-    <router-outlet></router-outlet>
+  <mat-sidenav-content [dir]="uiState.documentDirection">
+    <router-outlet [dir]="uiState.documentDirection"></router-outlet>
   </mat-sidenav-content>
   <!-- </div> -->
 </mat-sidenav-container>
