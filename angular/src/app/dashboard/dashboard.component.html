@@ -10,7 +10,7 @@
         <div class="centered" *ngIf="walletManager.activeWallet.accounts.length == 0">{{ "Dashboard.ZeroAccounts" | translate }}<br /><br /></div>
 
         <a mat-list-item *ngFor="let account of walletManager.activeWallet.accounts; let i = index" routerLinkActive="active-link" [routerLink]="getLink(account)">
-          <app-account-icon [value]="account" mat-list-icon></app-account-icon>
+          <app-account-icon mat-list-icon [value]="account"></app-account-icon>
           <div mat-line>
             {{ account.name }}
             <span *ngIf="hasAccountHistory(account.identifier) && account.type != 'identity'" class="account-balance">{{ balance(account.identifier) | amount }}</span>
