@@ -1,5 +1,5 @@
 import { Component, ChangeDetectorRef, OnInit, OnDestroy } from '@angular/core';
-import { CryptoService, SettingsService, UIState } from '../services';
+import { CryptoService, LoggerService, SettingsService, UIState } from '../services';
 import { Router } from '@angular/router';
 import { CommunicationService, SecureStateService, WalletManager } from '../services';
 import { TranslateService } from '@ngx-translate/core';
@@ -25,6 +25,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     public translate: TranslateService,
     private crypto: CryptoService,
     private router: Router,
+    private logger: LoggerService,
     private communication: CommunicationService,
     private secure: SecureStateService,
     public walletManager: WalletManager,
@@ -41,6 +42,9 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   async ngOnInit() {
+
+    this.logger.info('Home component loading...');
+
     // Verify if the wallet is already unlocked.
     if (this.walletManager.activeWallet) {
       // this.uiState.title = `Unlock ${this.walletManager.activeWallet.name}`;

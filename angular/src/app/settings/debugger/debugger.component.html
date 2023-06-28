@@ -6,7 +6,11 @@
     <p>{{ "Settings.LogsDescription" | translate }}</p>
   </div>
 
-  <div class="log-output">blblbl</div>
+  <div class="log-output">
+    <div *ngFor="let entry of logMonitor.entries"><span class="dimmed">{{ entry.timestamp }}:</span> {{ entry.message }}
+      <div class="dimmed" *ngIf="entry.additional">{{ entry.additional | json }}</div>
+    </div>
+  </div>
 
   <br /><br />
   <div class="centered">

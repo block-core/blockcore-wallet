@@ -6,9 +6,7 @@ import { Logger } from '../../shared/interfaces';
   providedIn: 'root',
 })
 export class LoggerService implements Logger {
-  constructor(private logger: NGXLogger) {
-    logger.registerMonitor(new LocalMonitor())
-  }
+  constructor(private logger: NGXLogger) {}
 
   /** Change the logging level to TRACE. This is not persisted and reset on app reloads. */
   enableDebug() {
@@ -48,14 +46,28 @@ export class LoggerService implements Logger {
   }
 
   changeLogLevel(): void {
-    const config = this.logger.getConfigSnapshot()
+    const config = this.logger.getConfigSnapshot();
     config.level = config.level === NgxLoggerLevel.TRACE ? NgxLoggerLevel.ERROR : NgxLoggerLevel.TRACE;
     this.logger.updateConfig(config);
   }
 }
 
-export class LocalMonitor implements INGXLoggerMonitor {
+@Injectable({
+  providedIn: 'root',
+})
+export class LoggingMonitor implements INGXLoggerMonitor {
+  constructor(private logger: NGXLogger) {
+    logger.registerMonitor(this);
+  }
+
+  entries: any[] = [];
+
   onLog(logObject: INGXLoggerMetadata, config: INGXLoggerConfig): void {
-    console.error('Hi there from the local monitor');
+    this.entries.push(logObject);
+
+    // Keep the last 50 log entries at all times.
+    if (this.entries.length > 50) {
+      this.entries.shift();
+    }
   }
 }

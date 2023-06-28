@@ -47,8 +47,7 @@ export class SettingsComponent {
     }
 
     this.uiState.showBackButton = true;
-
-    this.logger.debug('Settings:', this.settings);
+    this.logger.info('Settings:', this.settings);
   }
 
 
