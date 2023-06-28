@@ -122,7 +122,9 @@
     "Show": "Show",
     "RequirePasswordForSending": "Require Password For Sending",
     "Yes": "Yes",
-    "No": "No"
+    "No": "No",
+    "DebugLoggingEnabled": "Debug Logging Enabled",
+    "InfoLoggingEnabled": "Info Logging Enabled"
   },
   "Wallet": {
     "CreateNewWallet": "Create New Wallet",

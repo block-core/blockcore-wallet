@@ -116,7 +116,12 @@
     "ShowSecretRecoveryPhraseDescriptionP1": "Εάν κάποιος έχει τη μυστική σας φράση ανάκτησης, έχει τον πλήρη έλεγχο του πορτοφολιού σας.",
     "VerifyPassword": "Επαλήθευση κωδικού πρόσβασης",
     "Close": "Κλείσιμο",
-    "Show": "Εμφάνιση"
+    "Show": "Εμφάνιση",
+    "RequirePasswordForSending": "Require Password For Sending",
+    "Yes": "Yes",
+    "No": "No",
+    "DebugLoggingEnabled": "Debug Logging Enabled",
+    "InfoLoggingEnabled": "Info Logging Enabled"
   },
   "Wallet": {
     "CreateNewWallet": "Δημιουργία νέου πορτοφολιού",

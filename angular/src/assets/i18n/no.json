@@ -116,7 +116,12 @@
     "ShowSecretRecoveryPhraseDescriptionP1": "Hvis noen har din hemmelige gjenopprettingsfrase, har de full kontroll over lommeboken din.",
     "VerifyPassword": "Bekreft passord",
     "Close": "Lukk",
-    "Show": "Vis"
+    "Show": "Vis",
+    "RequirePasswordForSending": "Require Password For Sending",
+    "Yes": "Yes",
+    "No": "No",
+    "DebugLoggingEnabled": "Debug Logging Enabled",
+    "InfoLoggingEnabled": "Info Logging Enabled"
   },
   "Wallet": {
     "CreateNewWallet": "Opprett ny lommebok",

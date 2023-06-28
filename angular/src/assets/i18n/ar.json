@@ -122,7 +122,9 @@
     "Show": "عرض",
     "RequirePasswordForSending": "يتطلب كلمة المرور للإرسال",
     "Yes": "نعم",
-    "No": "لا"
+    "No": "لا",
+    "DebugLoggingEnabled": "Debug Logging Enabled",
+    "InfoLoggingEnabled": "Info Logging Enabled"
   },
   "Wallet": {
     "CreateNewWallet": "إنشاء محفظة جديدة",

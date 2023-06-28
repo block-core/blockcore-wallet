@@ -116,7 +116,13 @@
     "ShowSecretRecoveryPhraseDescriptionP1": "اگر شخصی عبارت بازیابی مخفی شما را داشته باشد، کنترل کامل بر کیف پول شما دارد.",
     "VerifyPassword": "تائید کلمه عبور",
     "Close": "بستن",
-    "Show": "نمایش"
+    "Show": "نمایش",
+    "RequirePasswordForSending": "Require Password For Sending",
+    "Yes": "Yes",
+    "No": "No",
+    "DebugLoggingEnabled": "Debug Logging Enabled",
+    "InfoLoggingEnabled": "Info Logging Enabled"
+
   },
   "Wallet": {
     "RecoverWallet": "بازیابی کیف پول",

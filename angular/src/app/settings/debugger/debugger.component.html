@@ -6,8 +6,17 @@
     <p>{{ "Settings.LogsDescription" | translate }}</p>
   </div>
 
+  <div class="log-output">
+    <div *ngFor="let entry of logMonitor.entries"><span class="dimmed">{{ entry.timestamp }}:</span> {{ entry.message }}
+      <span class="dimmed" *ngIf="entry.additional">{{ entry.additional | json }}</span>
+    </div>
+  </div>
+
   <br /><br />
   <div class="centered">
     <button (click)="reset()" [disabled]="updating" mat-flat-button color="primary">{{ "Settings.ToggleLevelOfLogging" | translate }}</button>
   </div>
+
+  <div *ngIf="level < 2"> {{ "Settings.DebugLoggingEnabled" | translate }} </div>
+  <div *ngIf="level >= 2"> {{ "Settings.InfoLoggingEnabled" | translate }}</div>
 </div>

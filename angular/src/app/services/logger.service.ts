@@ -1,4 +1,4 @@
-import { NGXLogger, NgxLoggerLevel } from 'ngx-logger';
+import { INGXLoggerConfig, INGXLoggerMetadata, INGXLoggerMonitor, NGXLogger, NgxLoggerLevel } from 'ngx-logger';
 import { Injectable } from '@angular/core';
 import { Logger } from '../../shared/interfaces';
 
@@ -43,5 +43,30 @@ export class LoggerService implements Logger {
 
   fatal(message?: any | (() => any), ...additional: any[]): void {
     this.logger.fatal(message, ...additional);
+  }
+
+  currentLevel(): NgxLoggerLevel {
+    const config = this.logger.getConfigSnapshot();
+    return config.level;
+  }
+}
+
+@Injectable({
+  providedIn: 'root',
+})
+export class LoggingMonitor implements INGXLoggerMonitor {
+  constructor(private logger: NGXLogger) {
+    logger.registerMonitor(this);
+  }
+
+  entries: any[] = [];
+
+  onLog(logObject: INGXLoggerMetadata, config: INGXLoggerConfig): void {
+    this.entries.push(logObject);
+
+    // Keep the last 50 log entries at all times.
+    if (this.entries.length > 50) {
+      this.entries.shift();
+    }
   }
 }

@@ -2,7 +2,7 @@ import { DOCUMENT } from '@angular/common';
 import { ChangeDetectorRef, Component, Inject, NgZone, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import { UIState, CommunicationService, NetworksService, EnvironmentService, AppManager, SecureStateService, WalletManager, SettingsService } from './services';
+import { UIState, CommunicationService, NetworksService, EnvironmentService, AppManager, SecureStateService, WalletManager, SettingsService, LoggingMonitor } from './services';
 import { Location } from '@angular/common';
 import { TranslateService } from '@ngx-translate/core';
 import { RuntimeService } from '../shared/runtime.service';
@@ -26,6 +26,7 @@ export class AppComponent implements OnInit {
   instanceName: string;
 
   constructor(
+    private logMonitor: LoggingMonitor,
     private frontendService: FrontendService,
     public uiState: UIState,
     private router: Router,
@@ -48,7 +49,6 @@ export class AppComponent implements OnInit {
     private rightClickDisable: DisableRightClickService,
     @Inject(DOCUMENT) private document: Document
   ) {
-
     // This must happen in the constructor on app component, or when loading in PWA, it won't
     // be possible to read the query parameters.
     const queryParam = globalThis.location.search;
