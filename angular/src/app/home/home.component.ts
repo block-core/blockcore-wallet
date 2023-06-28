@@ -43,8 +43,6 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   async ngOnInit() {
 
-    this.logger.info('Home component loading...');
-
     // Verify if the wallet is already unlocked.
     if (this.walletManager.activeWallet) {
       // this.uiState.title = `Unlock ${this.walletManager.activeWallet.name}`;
