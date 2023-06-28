@@ -10,9 +10,9 @@
         <div class="centered" *ngIf="walletManager.activeWallet.accounts.length == 0">{{ "Dashboard.ZeroAccounts" | translate }}<br /><br /></div>
 
         <a mat-list-item *ngFor="let account of walletManager.activeWallet.accounts; let i = index" routerLinkActive="active-link" [routerLink]="getLink(account)">
-          <mat-icon mat-list-icon [style.color]="account.color" [style.fill]="account.color">{{ account.icon }}</mat-icon>
+          <app-account-icon [value]="account" mat-list-icon></app-account-icon>
           <div mat-line>
-            {{ account.name }} {{ account.color}}
+            {{ account.name }}
             <span *ngIf="hasAccountHistory(account.identifier) && account.type != 'identity'" class="account-balance">{{ balance(account.identifier) | amount }}</span>
             <span *ngIf="!hasAccountHistory(account.identifier) && account.type != 'identity'" class="account-balance"><mat-spinner [diameter]="16"></mat-spinner> </span>
             <span *ngIf="hasAccountHistory(account.identifier) && !accountState(account).completedScan && account.type != 'identity'" class="account-balance account-scanning">
