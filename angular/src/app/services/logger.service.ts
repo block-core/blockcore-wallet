@@ -1,4 +1,4 @@
-import { NGXLogger, NgxLoggerLevel } from 'ngx-logger';
+import { INGXLoggerConfig, INGXLoggerMetadata, INGXLoggerMonitor, NGXLogger, NgxLoggerLevel } from 'ngx-logger';
 import { Injectable } from '@angular/core';
 import { Logger } from '../../shared/interfaces';
 
@@ -6,7 +6,9 @@ import { Logger } from '../../shared/interfaces';
   providedIn: 'root',
 })
 export class LoggerService implements Logger {
-  constructor(private logger: NGXLogger) {}
+  constructor(private logger: NGXLogger) {
+    logger.registerMonitor(new LocalMonitor())
+  }
 
   /** Change the logging level to TRACE. This is not persisted and reset on app reloads. */
   enableDebug() {
@@ -43,5 +45,17 @@ export class LoggerService implements Logger {
 
   fatal(message?: any | (() => any), ...additional: any[]): void {
     this.logger.fatal(message, ...additional);
+  }
+
+  changeLogLevel(): void {
+    const config = this.logger.getConfigSnapshot()
+    config.level = config.level === NgxLoggerLevel.TRACE ? NgxLoggerLevel.ERROR : NgxLoggerLevel.TRACE;
+    this.logger.updateConfig(config);
+  }
+}
+
+export class LocalMonitor implements INGXLoggerMonitor {
+  onLog(logObject: INGXLoggerMetadata, config: INGXLoggerConfig): void {
+    console.error('Hi there from the local monitor');
   }
 }

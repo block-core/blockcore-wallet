@@ -12,3 +12,10 @@
 .network-item {
   display: block !important;
 }
+
+.log-output {
+  width: 100%;
+  min-height: 300px;
+  border: silver;
+  overflow: auto;
+}
