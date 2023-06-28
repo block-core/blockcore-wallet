@@ -16,4 +16,7 @@
   <div class="centered">
     <button (click)="reset()" [disabled]="updating" mat-flat-button color="primary">{{ "Settings.ToggleLevelOfLogging" | translate }}</button>
   </div>
+
+  <div *ngIf="level < 2"> {{ "Settings.DebugLoggingEnabled" | translate }} </div>
+  <div *ngIf="level >= 2"> {{ "Settings.InfoLoggingEnabled" | translate }}</div>
 </div>

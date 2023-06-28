@@ -45,12 +45,6 @@ export class LoggerService implements Logger {
     this.logger.fatal(message, ...additional);
   }
 
-  changeLogLevel(): void {
-    const config = this.logger.getConfigSnapshot();
-    config.level = config.level === NgxLoggerLevel.TRACE ? NgxLoggerLevel.ERROR : NgxLoggerLevel.TRACE;
-    this.logger.updateConfig(config);
-  }
-
   currentLevel(): NgxLoggerLevel {
     const config = this.logger.getConfigSnapshot();
     return config.level;
