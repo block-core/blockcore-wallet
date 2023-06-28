@@ -12,7 +12,7 @@ import { RuntimeService } from '../../angular/src/shared/runtime.service';
 import { NetworkLoader } from '../../angular/src/shared/network-loader';
 import { MessageService } from '../../angular/src/shared';
 import { EventBus } from '../../angular/src/shared/event-bus';
-import { Dwn, DataStream, DidKeyResolver, Jws, RecordsWrite, RecordsQuery } from '@tbd54566975/dwn-sdk-js';
+// import { Dwn, DataStream, DidKeyResolver, Jws, RecordsWrite, RecordsQuery } from '@tbd54566975/dwn-sdk-js';
 
 // let state: ActionState;
 let prompt: any | null;

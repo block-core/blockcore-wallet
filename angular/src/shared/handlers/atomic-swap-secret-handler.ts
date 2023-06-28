@@ -6,6 +6,7 @@ import { HDKey } from '@scure/bip32';
 import { Network } from '../networks';
 import { SigningUtilities } from '../identity/signing-utilities';
 import * as secp from '@noble/secp256k1';
+import { sha256 } from '@noble/hashes/sha256';
 
 export class AtomicSwapsSecretHandler implements ActionHandler {
   action = ['atomicswaps.secret'];
@@ -48,7 +49,7 @@ export class AtomicSwapsSecretHandler implements ActionHandler {
     mergedArray.set(keyArray);
     mergedArray.set(sessionArray, sessionArray.length);
     
-    const messageHash = await secp.utils.sha256(mergedArray);
+    const messageHash = sha256(mergedArray);
 
     if (state.content)
     {

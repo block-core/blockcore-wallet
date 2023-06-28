@@ -116,7 +116,7 @@ export class AddressManager {
   }
 
   schnorrPublicKeyToHex(publicKey: Buffer) {
-    return secp.utils.bytesToHex(publicKey);
+    return secp.etc.bytesToHex(publicKey);
   }
 
   getAddressByNetworkp2wsh(node: any, network: any) {

@@ -154,7 +154,7 @@ export class AccountTransactionComponent implements OnInit, OnDestroy {
     }
 
     // First get the bytes from the complete hex value:
-    const buff = secp.utils.hexToBytes(data);
+    const buff = secp.etc.hexToBytes(data);
 
     if (buff[0] != 106) {
       throw new Error('Not OP_RETURN.');
@@ -183,7 +183,7 @@ export class AccountTransactionComponent implements OnInit, OnDestroy {
     }
 
     // First transform back to hex, but now only the payload data:
-    const dataHex = secp.utils.bytesToHex(parsedBuff);
+    const dataHex = secp.etc.bytesToHex(parsedBuff);
 
     return this.hexToUtf8(dataHex);
   }

@@ -13,6 +13,8 @@ import * as secp from '@noble/secp256k1';
 import { decodeJWT, createJWT, verifyJWT, ES256KSigner } from 'did-jwt';
 import { getPublicKey } from 'nostr-tools';
 import { SigningUtilities } from 'src/shared/identity/signing-utilities';
+import { sha256 } from '@noble/hashes/sha256';
+import { schnorr } from '@noble/curves/secp256k1';
 
 @Injectable({
   providedIn: 'root',
@@ -37,12 +39,12 @@ export class IdentityService {
     let identity = accountState.receive[0].address;
 
     const messageArray = new Uint8Array(Buffer.from(content));
-    const messageHash = await secp.utils.sha256(messageArray);
+    const messageHash = sha256(messageArray);
     const identifier = this.crypto.getIdentifier(addressNode.publicKey);
 
-    const signatureArray = await secp.schnorr.sign(messageHash, addressNode.privateKey!);
+    const signatureArray = schnorr.sign(messageHash, addressNode.privateKey!);
 
-    const signature = secp.utils.bytesToHex(signatureArray);
+    const signature = secp.etc.bytesToHex(signatureArray);
     return signature;
   }
 
@@ -88,7 +90,7 @@ export class IdentityService {
     // const secureState = this.secure.get(account.identifier);
     // const addressNode = this.getIdentityNode(wallet, account);
 
-    const publicKey = secp.schnorr.getPublicKey(privateKey);
+    const publicKey = schnorr.getPublicKey(privateKey);
     const identifier = this.crypto.getIdentifier(publicKey);
     const did = `did:is:${identifier}`;
 

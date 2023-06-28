@@ -1,5 +1,7 @@
 import * as secp from '@noble/secp256k1';
 import { Signer } from 'did-jwt';
+import { sha256 } from '@noble/hashes/sha256';
+import { schnorr } from '@noble/curves/secp256k1';
 
 /**
  *  Creates a configured signer function for signing data using the SS256K (ES256K) algorithm and Schnorr signatures.
@@ -28,8 +30,13 @@ export function SS256KSigner(privateKey: Uint8Array): Signer {
 
   return async (data: string | Uint8Array): Promise<string> => {
     const dataBytes: Uint8Array = typeof data === 'string' ? new Uint8Array(Buffer.from(data)) : data;
-    const messageHash = await secp.utils.sha256(dataBytes);
-    const signature = await secp.schnorr.sign(messageHash, privateKey);
-    return secp.utils.bytesToHex(signature);
+    const messageHash = sha256(dataBytes);
+
+    const signature = schnorr.sign(messageHash, privateKey);
+    return secp.etc.bytesToHex(signature);
+
+    //const signature = await secp.signAsync(messageHash, privateKey);
+    // const signature = await secp.schnorr.sign(messageHash, privateKey);
+    //return secp.etc.bytesToHex(signature.toCompactHex());
   };
 }

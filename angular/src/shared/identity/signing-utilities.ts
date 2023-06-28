@@ -12,7 +12,7 @@ export class SigningUtilities {
   }
 
   keyToHex(publicKey: Uint8Array) {
-    return secp.utils.bytesToHex(publicKey);
+    return secp.etc.bytesToHex(publicKey);
   }
 
   getIdentifier(publicKey: Uint8Array) {
@@ -31,7 +31,7 @@ export class SigningUtilities {
   }
 
   hexToArray(value: string) {
-    return secp.utils.hexToBytes(value);
+    return secp.etc.hexToBytes(value);
   }
 
   private convertToBech32(key: Uint8Array, prefix: string) {

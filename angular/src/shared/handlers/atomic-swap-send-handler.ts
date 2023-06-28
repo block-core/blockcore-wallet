@@ -5,7 +5,7 @@ import * as bitcoinMessage from 'bitcoinjs-message';
 import { HDKey } from '@scure/bip32';
 import { Network } from '../networks';
 import { SigningUtilities } from '../identity/signing-utilities';
-import { ECPair, bip32 } from '../../shared/noble-ecc-wrapper';
+// import { ECPair, bip32 } from '../../shared/noble-ecc-wrapper';
 
 export class AtomicSwapsSendHandler implements ActionHandler {
   action = ['atomicswaps.send'];

@@ -89,15 +89,15 @@ export class CryptoUtility {
 
   /** DEPRECATED: Use arrayToHex. */
   schnorrPublicKeyToHex(publicKey: Uint8Array) {
-    return secp.utils.bytesToHex(publicKey);
+    return secp.etc.bytesToHex(publicKey);
   }
 
   arrayToHex(value: Uint8Array) {
-    return secp.utils.bytesToHex(value);
+    return secp.etc.bytesToHex(value);
   }
 
   hexToArray(value: string) {
-    return secp.utils.hexToBytes(value);
+    return secp.etc.hexToBytes(value);
   }
 
   getAddressByNetworkp2wsh(node: any, network: any) {

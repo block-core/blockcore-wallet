@@ -16,6 +16,8 @@ import { Wallet } from './interfaces';
 import { AccountHistoryStore, SettingStore } from './store';
 import { AddressStore } from './store/address-store';
 import { NetworkLoader } from './network-loader';
+import { sha256 } from '@noble/hashes/sha256';
+import { schnorr } from '@noble/curves/secp256k1';
 
 describe('SharedTests', () => {
   beforeEach(() => {});
@@ -267,12 +269,12 @@ describe('SharedTests', () => {
       '023fd1cd2a5f8358c5633a5349618cb74f3b0e981ee9a512f9d1e1c71a4f83af82';
 
     // const privateKey = secp.utils.randomPrivateKey();
-    const messageHash = await secp.utils.sha256(messageArray);
+    const messageHash = sha256(messageArray);
 
     const publicKey1 = secp.getPublicKey(prv1, true);
     const publicKey2 = secp.getPublicKey(prv2, true);
-    const publicKeySchnorr1 = secp.schnorr.getPublicKey(prv1);
-    const publicKeySchnorr2 = secp.schnorr.getPublicKey(prv2);
+    const publicKeySchnorr1 = schnorr.getPublicKey(prv1);
+    const publicKeySchnorr2 = schnorr.getPublicKey(prv2);
 
     // No matter if the ECDSA Y value is odd or even, it will be same as schnorr pubkey.
     // Specification: https://github.com/bitcoin/bips/blob/master/bip-0340.mediawiki#public-key-conversion
@@ -282,8 +284,8 @@ describe('SharedTests', () => {
     // Create signatures of ECDSA and Schnorr:
     const signature1 = await secp.sign(messageHash, prv1);
     const signature2 = await secp.sign(messageHash, prv2);
-    const signatureSchnorr1 = await secp.schnorr.sign(messageHash, prv1);
-    const signatureSchnorr2 = await secp.schnorr.sign(messageHash, prv2);
+    const signatureSchnorr1 = schnorr.sign(messageHash, prv1);
+    const signatureSchnorr2 = schnorr.sign(messageHash, prv2);
 
     // Verify using ECDSA compressed public key:
     expect(secp.verify(signature1, messageHash, publicKey1)).toBeTrue();
@@ -291,7 +293,7 @@ describe('SharedTests', () => {
 
     // Attempting to verify using schnorr key:
     expect(
-      await secp.schnorr.verify(
+      schnorr.verify(
         signatureSchnorr1,
         messageHash,
         publicKeySchnorr1
@@ -299,7 +301,7 @@ describe('SharedTests', () => {
     ).toBeTrue();
 
     expect(
-      await secp.schnorr.verify(
+      schnorr.verify(
         signatureSchnorr2,
         messageHash,
         publicKeySchnorr2
@@ -317,11 +319,11 @@ describe('SharedTests', () => {
 
     // Verify using Schnorr method with ECSDA pubkey, this will work in ~50% of cases (odd/even).
     expect(
-      await secp.schnorr.verify(signatureSchnorr1, messageHash, publicKey1)
+      schnorr.verify(signatureSchnorr1, messageHash, publicKey1)
     ).toBeFalse();
 
     expect(
-      await secp.schnorr.verify(signatureSchnorr2, messageHash, publicKey2)
+      schnorr.verify(signatureSchnorr2, messageHash, publicKey2)
     ).toBeTrue();
 
     // Next step is combining with BIP32:
@@ -342,7 +344,7 @@ describe('SharedTests', () => {
     const addressNode2 = accountNode.deriveChild(0).deriveChild(2); // odd pub key
 
     const pubEcdsa = secp.getPublicKey(addressNode1.privateKey!, true);
-    const pubSchnorr = secp.schnorr.getPublicKey(addressNode1.privateKey!);
+    const pubSchnorr = schnorr.getPublicKey(addressNode1.privateKey!);
 
     expect(pubEcdsa.length).toBe(33);
     expect(pubSchnorr.length).toBe(32);
@@ -359,26 +361,26 @@ describe('SharedTests', () => {
     expect(pubSchnorr).toEqual(addressNodePubSliced);
 
     // Take the BIP32 derived private key, sign and then verify using the sliced key:
-    const signatureFromNode1 = await secp.schnorr.sign(
+    const signatureFromNode1 = schnorr.sign(
       messageHash,
       addressNode1.privateKey!
     );
 
     expect(
-      await secp.schnorr.verify(
+      schnorr.verify(
         signatureFromNode1,
         messageHash,
         addressNodePubSliced
       )
     ).toBeTrue;
 
-    const signatureFromNode2 = await secp.schnorr.sign(
+    const signatureFromNode2 = schnorr.sign(
       messageHash,
       addressNode2.privateKey!
     );
 
     expect(
-      await secp.schnorr.verify(
+      schnorr.verify(
         signatureFromNode2,
         messageHash,
         addressNodePubSliced2

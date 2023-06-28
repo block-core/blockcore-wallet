@@ -22,7 +22,7 @@ import { UnspentOutputService } from './unspent-output.service';
 import { AccountStateStore } from 'src/shared/store/account-state-store';
 import { CryptoService } from './';
 import { StandardTokenStore } from '../../shared/store/standard-token-store';
-import { ECPair, bip32 } from '../../shared/noble-ecc-wrapper';
+// import { ECPair, bip32 } from '../../shared/noble-ecc-wrapper';
 import { getPublicKey } from 'nostr-tools';
 
 let coinselect = require('coinselect');

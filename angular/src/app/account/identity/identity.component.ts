@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
-import { AccountStateStore, bytesToBase64Url, DecentralizedWebNode, generateCid, getDagCid, Identity, Jws, MessageService } from 'src/shared';
+import { AccountStateStore, DecentralizedWebNode, Identity, MessageService } from 'src/shared';
 import { CryptoUtility, SettingsService, UIState, WalletManager } from 'src/app/services';
 import { copyToClipboard } from 'src/app/shared/utilities';
 import { Network } from '../../../shared/networks';
@@ -191,8 +191,8 @@ export class IdentityComponent implements OnInit, OnDestroy {
         const identityNode = this.identityService.getIdentityNode(this.walletManager.activeWallet, this.walletManager.activeAccount);
 
         this.privateKey = this.cryptoUtility.convertToBech32(identityNode.privateKey, 'nsec');
-        console.log(secp.utils.bytesToHex(identityNode.privateKey));
-        //this.privateKey = secp.utils.bytesToHex(identityNode.privateKey);
+        console.log(secp.etc.bytesToHex(identityNode.privateKey));
+        //this.privateKey = secp.etc.bytesToHex(identityNode.privateKey);
 
         this.qrCodePrivateKey = await QRCode.toDataURL('nostr:' + this.privateKey, {
           errorCorrectionLevel: 'L',
@@ -321,254 +321,254 @@ export class IdentityComponent implements OnInit, OnDestroy {
     this.published = true;
   }
 
-  async copyDWNRequest() {
-    // const didDocument = await this.generateDIDDocument();
+  // async copyDWNRequest() {
+  //   // const didDocument = await this.generateDIDDocument();
 
-    const identityNode = this.identityService.getIdentityNode(this.walletManager.activeWallet, this.walletManager.activeAccount);
-    const didDocument = await this.generateDIDDocument(identityNode.publicKey);
+  //   const identityNode = this.identityService.getIdentityNode(this.walletManager.activeWallet, this.walletManager.activeAccount);
+  //   const didDocument = await this.generateDIDDocument(identityNode.publicKey);
 
-    const tools = new BlockcoreIdentityTools();
-    // const keyPair = tools.generateKeyPair();
+  //   const tools = new BlockcoreIdentityTools();
+  //   // const keyPair = tools.generateKeyPair();
 
-    const privateKey = identityNode.privateKey;
+  //   const privateKey = identityNode.privateKey;
 
-    // Does the same thing, verificationMethod doesn't do private key... this is just prototype-code anyway :-P
-    const { privateJwk, publicJwk } = tools.convertPrivateKeyToJsonWebKeyPair(privateKey);
-    const verificationMethod = tools.getVerificationMethod(privateKey, 0, this.network.symbol);
+  //   // Does the same thing, verificationMethod doesn't do private key... this is just prototype-code anyway :-P
+  //   const { privateJwk, publicJwk } = tools.convertPrivateKeyToJsonWebKeyPair(privateKey);
+  //   const verificationMethod = tools.getVerificationMethod(privateKey, 0, this.network.symbol);
 
-    // const keyId = verificationMethod.id;
-    // const keyId = await calculateJwkThumbprintUri(publicJwk);
+  //   // const keyId = verificationMethod.id;
+  //   // const keyId = await calculateJwkThumbprintUri(publicJwk);
 
-    const id = base64url.encode(JSON.stringify(publicJwk));
-    const keyId = `did:jwk:${id}`;
+  //   const id = base64url.encode(JSON.stringify(publicJwk));
+  //   const keyId = `did:jwk:${id}`;
 
-    const signatureInput = {
-      jwkPrivate: privateJwk,
-      protectedHeader: {
-        alg: privateJwk.alg as string,
-        kid: `${keyId}#0`,
-      },
-    };
+  //   const signatureInput = {
+  //     jwkPrivate: privateJwk,
+  //     protectedHeader: {
+  //       alg: privateJwk.alg as string,
+  //       kid: `${keyId}#0`,
+  //     },
+  //   };
 
-    const options = {
-      target: keyId,
-      recipient: keyId,
-      data: new TextEncoder().encode('HelloWorld'),
-      dataFormat: 'application/json',
-      dateCreated: Date.now(),
-      recordId: uuidv4(),
-      signatureInput,
-    };
+  //   const options = {
+  //     target: keyId,
+  //     recipient: keyId,
+  //     data: new TextEncoder().encode('HelloWorld'),
+  //     dataFormat: 'application/json',
+  //     dateCreated: Date.now(),
+  //     recordId: uuidv4(),
+  //     signatureInput,
+  //   };
 
-    // Get the DagCid from the data payload
-    const dataCid = await getDagCid(options.data);
-    console.log(dataCid);
+  //   // Get the DagCid from the data payload
+  //   const dataCid = await getDagCid(options.data);
+  //   console.log(dataCid);
 
-    const descriptor = {
-      target: options.target,
-      recipient: options.recipient,
-      method: 'CollectionsWrite',
-      nonce: uuidv4(),
-      // protocol      : options.protocol,
-      // contextId     : options.contextId,
-      // schema        : options.schema,
-      recordId: options.recordId,
-      // parentId      : options.parentId,
-      dataCid: dataCid.toString(),
-      dateCreated: options.dateCreated ?? Date.now(),
-      // published     : options.published,
-      // datePublished : options.datePublished,
-      dataFormat: options.dataFormat,
-    };
+  //   const descriptor = {
+  //     target: options.target,
+  //     recipient: options.recipient,
+  //     method: 'CollectionsWrite',
+  //     nonce: uuidv4(),
+  //     // protocol      : options.protocol,
+  //     // contextId     : options.contextId,
+  //     // schema        : options.schema,
+  //     recordId: options.recordId,
+  //     // parentId      : options.parentId,
+  //     dataCid: dataCid.toString(),
+  //     dateCreated: options.dateCreated ?? Date.now(),
+  //     // published     : options.published,
+  //     // datePublished : options.datePublished,
+  //     dataFormat: options.dataFormat,
+  //   };
 
-    const encodedData = bytesToBase64Url(options.data);
+  //   const encodedData = bytesToBase64Url(options.data);
 
-    var signer = ES256KSigner(privateKey);
+  //   var signer = ES256KSigner(privateKey);
 
-    const authorization = await Jws.sign({ descriptor }, options.signatureInput);
-    const message = { descriptor, authorization, encodedData };
-    console.log('MESSAGE:');
-    console.log(message);
-    console.log(JSON.stringify(message));
+  //   const authorization = await Jws.sign({ descriptor }, options.signatureInput);
+  //   const message = { descriptor, authorization, encodedData };
+  //   console.log('MESSAGE:');
+  //   console.log(message);
+  //   console.log(JSON.stringify(message));
 
-    const bytes = new TextEncoder().encode('Hello World');
-    const base64UrlString = base64url.encode(bytes);
-    const cid = await generateCid(base64UrlString);
+  //   const bytes = new TextEncoder().encode('Hello World');
+  //   const base64UrlString = base64url.encode(bytes);
+  //   const cid = await generateCid(base64UrlString);
 
-    const doc = {
-      messages: [
-        {
-          authorization: {
-            payload: '',
-            signatures: [
-              {
-                protected: '',
-                signature: '',
-              },
-            ],
-          },
-          descriptor: {
-            target: didDocument.id,
-            method: 'CollectionsWrite',
-            recordId: uuidv4(),
-            nonce: '',
-            dataCid: cid,
-            dateCreated: Date.now(),
-            dataFormat: 'application/json',
-          },
-          encodedData: base64UrlString,
-        },
-      ],
-    };
+  //   const doc = {
+  //     messages: [
+  //       {
+  //         authorization: {
+  //           payload: '',
+  //           signatures: [
+  //             {
+  //               protected: '',
+  //               signature: '',
+  //             },
+  //           ],
+  //         },
+  //         descriptor: {
+  //           target: didDocument.id,
+  //           method: 'CollectionsWrite',
+  //           recordId: uuidv4(),
+  //           nonce: '',
+  //           dataCid: cid,
+  //           dateCreated: Date.now(),
+  //           dataFormat: 'application/json',
+  //         },
+  //         encodedData: base64UrlString,
+  //       },
+  //     ],
+  //   };
 
-    console.log(doc);
+  //   console.log(doc);
 
-    copyToClipboard(JSON.stringify(doc));
+  //   copyToClipboard(JSON.stringify(doc));
 
-    this.snackBar.open('Decentralized Web Node request copied', 'Hide', {
-      duration: 2500,
-      horizontalPosition: 'center',
-      verticalPosition: 'bottom',
-    });
-  }
+  //   this.snackBar.open('Decentralized Web Node request copied', 'Hide', {
+  //     duration: 2500,
+  //     horizontalPosition: 'center',
+  //     verticalPosition: 'bottom',
+  //   });
+  // }
 
-  async copyDWNQueryRequest() {
-    // const didDocument = await this.generateDIDDocument();
+  // async copyDWNQueryRequest() {
+  //   // const didDocument = await this.generateDIDDocument();
 
-    const identityNode = this.identityService.getIdentityNode(this.walletManager.activeWallet, this.walletManager.activeAccount);
-    const didDocument = await this.generateDIDDocument(identityNode.publicKey);
+  //   const identityNode = this.identityService.getIdentityNode(this.walletManager.activeWallet, this.walletManager.activeAccount);
+  //   const didDocument = await this.generateDIDDocument(identityNode.publicKey);
 
-    const tools = new BlockcoreIdentityTools();
-    // const keyPair = tools.generateKeyPair();
+  //   const tools = new BlockcoreIdentityTools();
+  //   // const keyPair = tools.generateKeyPair();
 
-    const privateKey = identityNode.privateKey;
+  //   const privateKey = identityNode.privateKey;
 
-    // Does the same thing, verificationMethod doesn't do private key... this is just prototype-code anyway :-P
-    const { privateJwk, publicJwk } = tools.convertPrivateKeyToJsonWebKeyPair(privateKey);
-    const verificationMethod = tools.getVerificationMethod(privateKey, 0, this.network.symbol);
+  //   // Does the same thing, verificationMethod doesn't do private key... this is just prototype-code anyway :-P
+  //   const { privateJwk, publicJwk } = tools.convertPrivateKeyToJsonWebKeyPair(privateKey);
+  //   const verificationMethod = tools.getVerificationMethod(privateKey, 0, this.network.symbol);
 
-    // const keyId = verificationMethod.id;
-    // const keyId = await calculateJwkThumbprintUri(publicJwk);
+  //   // const keyId = verificationMethod.id;
+  //   // const keyId = await calculateJwkThumbprintUri(publicJwk);
 
-    const id = base64url.encode(JSON.stringify(publicJwk));
-    const keyId = `did:jwk:${id}`;
+  //   const id = base64url.encode(JSON.stringify(publicJwk));
+  //   const keyId = `did:jwk:${id}`;
 
-    console.log('KEY ID');
-    console.log(keyId);
+  //   console.log('KEY ID');
+  //   console.log(keyId);
 
-    const signatureInput = {
-      jwkPrivate: privateJwk,
-      protectedHeader: {
-        alg: privateJwk.alg as string,
-        kid: keyId + '#0',
-      },
-    };
+  //   const signatureInput = {
+  //     jwkPrivate: privateJwk,
+  //     protectedHeader: {
+  //       alg: privateJwk.alg as string,
+  //       kid: keyId + '#0',
+  //     },
+  //   };
 
-    const options = {
-      target: keyId,
-      recipient: keyId,
-      data: new TextEncoder().encode('HelloWorld'),
-      dataFormat: 'application/json',
-      dateCreated: Date.now(),
-      recordId: uuidv4(),
-      signatureInput,
-    };
+  //   const options = {
+  //     target: keyId,
+  //     recipient: keyId,
+  //     data: new TextEncoder().encode('HelloWorld'),
+  //     dataFormat: 'application/json',
+  //     dateCreated: Date.now(),
+  //     recordId: uuidv4(),
+  //     signatureInput,
+  //   };
 
-    // Get the DagCid from the data payload
-    const dataCid = await getDagCid(options.data);
-    console.log(dataCid);
+  //   // Get the DagCid from the data payload
+  //   const dataCid = await getDagCid(options.data);
+  //   console.log(dataCid);
 
-    const descriptor = {
-      target: options.target,
-      // recipient: options.recipient,
-      method: 'CollectionsQuery',
+  //   const descriptor = {
+  //     target: options.target,
+  //     // recipient: options.recipient,
+  //     method: 'CollectionsQuery',
 
-      filter: {
-        recipient: options.target,
-      },
+  //     filter: {
+  //       recipient: options.target,
+  //     },
 
-      nonce: uuidv4(),
-      // protocol      : options.protocol,
-      // contextId     : options.contextId,
-      // schema        : options.schema,
-      // recordId: options.recordId,
-      // parentId      : options.parentId,
-      // dataCid: dataCid.toString(),
+  //     nonce: uuidv4(),
+  //     // protocol      : options.protocol,
+  //     // contextId     : options.contextId,
+  //     // schema        : options.schema,
+  //     // recordId: options.recordId,
+  //     // parentId      : options.parentId,
+  //     // dataCid: dataCid.toString(),
 
-      // dateSort?: string;
-      // dateCreated: options.dateCreated ?? Date.now(),
-      // published     : options.published,
-      // datePublished : options.datePublished,
-      // dataFormat: options.dataFormat,
-    };
+  //     // dateSort?: string;
+  //     // dateCreated: options.dateCreated ?? Date.now(),
+  //     // published     : options.published,
+  //     // datePublished : options.datePublished,
+  //     // dataFormat: options.dataFormat,
+  //   };
 
-    const encodedData = bytesToBase64Url(options.data);
+  //   const encodedData = bytesToBase64Url(options.data);
 
-    var signer = ES256KSigner(privateKey);
+  //   var signer = ES256KSigner(privateKey);
 
-    const authorization = await Jws.sign({ descriptor }, options.signatureInput);
-    const message = { descriptor, authorization };
-    console.log('MESSAGE:');
-    console.log(message);
-    console.log(JSON.stringify(message));
+  //   const authorization = await Jws.sign({ descriptor }, options.signatureInput);
+  //   const message = { descriptor, authorization };
+  //   console.log('MESSAGE:');
+  //   console.log(message);
+  //   console.log(JSON.stringify(message));
 
-    //const collectionsWrite = await CollectionsWrite.create(options);
+  //   //const collectionsWrite = await CollectionsWrite.create(options);
 
-    // const message = collectionsWrite.toObject() as CollectionsWriteMessage;
+  //   // const message = collectionsWrite.toObject() as CollectionsWriteMessage;
 
-    // expect(message.authorization).to.exist;
-    // expect(message.encodedData).to.equal(base64url.baseEncode(options.data));
-    // expect(message.descriptor.dataFormat).to.equal(options.dataFormat);
-    // expect(message.descriptor.dateCreated).to.equal(options.dateCreated);
-    // expect(message.descriptor.recordId).to.equal(options.recordId);
+  //   // expect(message.authorization).to.exist;
+  //   // expect(message.encodedData).to.equal(base64url.baseEncode(options.data));
+  //   // expect(message.descriptor.dataFormat).to.equal(options.dataFormat);
+  //   // expect(message.descriptor.dateCreated).to.equal(options.dateCreated);
+  //   // expect(message.descriptor.recordId).to.equal(options.recordId);
 
-    // const resolverStub = TestStubGenerator.createDidResolverStub(requesterDid, keyId, publicJwk);
-    // const messageStoreStub = sinon.createStubInstance(MessageStoreLevel);
+  //   // const resolverStub = TestStubGenerator.createDidResolverStub(requesterDid, keyId, publicJwk);
+  //   // const messageStoreStub = sinon.createStubInstance(MessageStoreLevel);
 
-    // const { author } = await collectionsWrite.verifyAuth(resolverStub, messageStoreStub);
+  //   // const { author } = await collectionsWrite.verifyAuth(resolverStub, messageStoreStub);
 
-    // expect(author).to.equal(requesterDid);
+  //   // expect(author).to.equal(requesterDid);
 
-    // const bytes = new TextEncoder().encode('Hello World');
-    // const base64UrlString = base64url.encode(bytes);
-    // const cid = await generateCid(base64UrlString);
+  //   // const bytes = new TextEncoder().encode('Hello World');
+  //   // const base64UrlString = base64url.encode(bytes);
+  //   // const cid = await generateCid(base64UrlString);
 
-    // const doc = {
-    //   messages: [
-    //     {
-    //       authorization: {
-    //         payload: '',
-    //         signatures: [
-    //           {
-    //             protected: '',
-    //             signature: '',
-    //           },
-    //         ],
-    //       },
-    //       descriptor: {
-    //         target: didDocument.id,
-    //         method: 'CollectionsWrite',
-    //         recordId: uuidv4(),
-    //         nonce: '',
-    //         dataCid: cid,
-    //         dateCreated: Date.now(),
-    //         dataFormat: 'application/json',
-    //       },
-    //       encodedData: base64UrlString,
-    //     },
-    //   ],
-    // };
+  //   // const doc = {
+  //   //   messages: [
+  //   //     {
+  //   //       authorization: {
+  //   //         payload: '',
+  //   //         signatures: [
+  //   //           {
+  //   //             protected: '',
+  //   //             signature: '',
+  //   //           },
+  //   //         ],
+  //   //       },
+  //   //       descriptor: {
+  //   //         target: didDocument.id,
+  //   //         method: 'CollectionsWrite',
+  //   //         recordId: uuidv4(),
+  //   //         nonce: '',
+  //   //         dataCid: cid,
+  //   //         dateCreated: Date.now(),
+  //   //         dataFormat: 'application/json',
+  //   //       },
+  //   //       encodedData: base64UrlString,
+  //   //     },
+  //   //   ],
+  //   // };
 
-    // console.log(doc);
+  //   // console.log(doc);
 
-    copyToClipboard(JSON.stringify(message));
+  //   copyToClipboard(JSON.stringify(message));
 
-    this.snackBar.open('Decentralized Web Node request copied', 'Hide', {
-      duration: 2500,
-      horizontalPosition: 'center',
-      verticalPosition: 'bottom',
-    });
-  }
+  //   this.snackBar.open('Decentralized Web Node request copied', 'Hide', {
+  //     duration: 2500,
+  //     horizontalPosition: 'center',
+  //     verticalPosition: 'bottom',
+  //   });
+  // }
 
   openDid() {
     // TODO: We need to somehow get active service URL from the resolver library.
