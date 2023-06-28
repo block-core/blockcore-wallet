@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit, Renderer2 } from '@angular/core';
 import { UIState, CommunicationService, NetworksService, SendService, SendSidechainService, WalletManager } from '../../services';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
 import { AccountHistory, Address, UnspentTransactionOutput } from '../../../shared/interfaces';
 import { Network } from '../../../shared/networks';
 import { AccountHistoryStore } from 'src/shared';

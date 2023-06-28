@@ -3,11 +3,11 @@ import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } 
 import Big from 'big.js';
 import { InputValidators } from 'src/app/services/inputvalidators';
 import { WalletManager, UIState, SendService, NetworkStatusService, SettingsService } from '../../../services';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { QrScanDialog } from './qr-scanning.component';
 import { AddressValidationService } from 'src/app/services/address-validation.service';
 import { PaymentRequest } from 'src/shared/payment';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
 import { TranslateService } from '@ngx-translate/core';
 import { Settings } from 'src/shared';
 

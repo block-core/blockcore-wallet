@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, ChangeDetectorRef, NgZone } from '@angula
 import { HttpClient } from '@angular/common/http';
 import { UIState, CommunicationService, NetworksService, NetworkStatusService, SettingsService, WalletManager, StateService } from '../services';
 import { ActivatedRoute, Router } from '@angular/router';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
 import { Account, AccountHistory, NetworkStatus, TransactionHistory, Token } from '../../shared/interfaces';
 import { Subscription } from 'rxjs';
 import { AccountHistoryStore, AddressStore, NetworkLoader } from 'src/shared';

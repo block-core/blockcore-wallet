@@ -3,7 +3,7 @@ import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } 
 import Big from 'big.js';
 import { InputValidators } from 'src/app/services/inputvalidators';
 import { WalletManager, UIState, SendSidechainService, SendService, NetworkStatusService, SettingsService } from '../../../services';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { AddressValidationService } from 'src/app/services/address-validation.service';
 import { QrScanDialog } from '../../send/address/qr-scanning.component';
 import { Settings } from 'src/shared';

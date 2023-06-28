@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
 import { AccountStateStore, bytesToBase64Url, DecentralizedWebNode, generateCid, getDagCid, Identity, Jws, MessageService } from 'src/shared';
 import { CryptoUtility, SettingsService, UIState, WalletManager } from 'src/app/services';
 import { copyToClipboard } from 'src/app/shared/utilities';
@@ -14,7 +14,7 @@ import { base64url } from 'jose';
 import { IdentityResolverService } from 'src/app/services/identity-resolver.service';
 import { DIDDocument } from 'did-resolver';
 import { BlockcoreDns } from '@blockcore/dns';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { PasswordDialog } from 'src/app/shared/password-dialog/password-dialog';
 import * as secp from '@noble/secp256k1';
 import * as QRCode from 'qrcode';

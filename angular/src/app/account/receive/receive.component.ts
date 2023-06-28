@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit, Renderer2 } from '@angular/core';
 import { UIState, NetworksService, WalletManager } from '../../services';
 import { copyToClipboard } from '../../shared/utilities';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
 import * as QRCode from 'qrcode';
 import { Address } from '../../../shared/interfaces';
 import { Network } from '../../../shared/networks';

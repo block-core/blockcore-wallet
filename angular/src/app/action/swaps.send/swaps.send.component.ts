@@ -8,7 +8,7 @@ import { AccountHistoryStore, AccountStateStore, ActionMessage, AddressStore, Ad
 import { PermissionStore } from 'src/shared/store/permission-store';
 import { Actions, PERMISSIONS } from 'src/app/shared/constants';
 import { UnspentOutputService } from 'src/app/services/unspent-output.service';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 const { v4: uuidv4 } = require('uuid');
 import { map, switchMap } from 'rxjs';
 import { Network } from 'src/shared/networks';

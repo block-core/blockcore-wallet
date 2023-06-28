@@ -8,9 +8,9 @@ import { BackgroundManager } from 'src/shared/background-manager';
 import { AccountHistoryStore } from 'src/shared';
 import { AddressWatchStore } from 'src/shared/store/address-watch-store';
 import { AccountStateStore } from 'src/shared/store/account-state-store';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { QrScanDialog } from '../account/send/address/qr-scanning.component';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
 import { PaymentRequest } from 'src/shared/payment';
 
 export interface Section {

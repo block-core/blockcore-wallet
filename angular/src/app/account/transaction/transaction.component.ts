@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit, Renderer2 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { UIState, NetworksService, NetworkStatusService, EnvironmentService, WalletManager, LoggerService } from '../../services';
 import { copyToClipboard } from '../../shared/utilities';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
 import { Address, NetworkStatus, TransactionMetadata, TransactionMetadataEntry, TransactionView } from '../../../shared/interfaces';
 import { Network } from '../../../shared/networks';
 import { TransactionMetadataStore, TransactionStore } from 'src/shared';

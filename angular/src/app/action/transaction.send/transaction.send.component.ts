@@ -8,7 +8,7 @@ import { AccountHistoryStore, AccountStateStore, ActionMessage, AddressStore, Ad
 import { PermissionStore } from 'src/shared/store/permission-store';
 import { Actions, PERMISSIONS } from 'src/app/shared/constants';
 import { UnspentOutputService } from 'src/app/services/unspent-output.service';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { SendConfirmationDialog, SendConfirmationDialogData } from './send-confirmation-dialog/send-confirmation-dialog';
 const { v4: uuidv4 } = require('uuid');
 import { map, switchMap } from 'rxjs';
