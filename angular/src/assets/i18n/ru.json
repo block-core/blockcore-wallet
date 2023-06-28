@@ -116,7 +116,12 @@
     "ShowSecretRecoveryPhraseDescriptionP1": "Если кто-то знает вашу секретную фразу восстановления, он имеет полный контроль над вашим кошельком.",
     "VerifyPassword": "Подтвердить пароль",
     "Close": "Закрыть",
-    "Show": "Показать"
+    "Show": "Показать",
+    "RequirePasswordForSending": "Require Password For Sending",
+    "Yes": "Yes",
+    "No": "No",
+    "DebugLoggingEnabled": "Debug Logging Enabled",
+    "InfoLoggingEnabled": "Info Logging Enabled"
   },
   "Wallet": {
     "CreateNewWallet": "Создать новый кошелёк",

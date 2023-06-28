@@ -116,7 +116,12 @@
     "ShowSecretRecoveryPhraseDescriptionP1": "If someone has your secret recovery phrase, they have full control over your wallet.",
     "VerifyPassword": "Verify password",
     "Close": "Close",
-    "Show": "Show"
+    "Show": "Show",
+    "RequirePasswordForSending": "Require Password For Sending",
+    "Yes": "Yes",
+    "No": "No",
+    "DebugLoggingEnabled": "Debug Logging Enabled",
+    "InfoLoggingEnabled": "Info Logging Enabled"
   },
   "Wallet": {
     "CreateNew": "יצירת ארנק חדש",

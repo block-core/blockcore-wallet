@@ -122,7 +122,9 @@
     "Show": "Afficher",
     "RequirePasswordForSending": "Exiger un mot de passe pour envoyer",
     "Yes": "Oui",
-    "No": "Non"
+    "No": "Non",
+    "DebugLoggingEnabled": "Debug Logging Enabled",
+    "InfoLoggingEnabled": "Info Logging Enabled"
   },
   "Wallet": {
     "CreateNewWallet": "Créer un nouveau portefeuille",
