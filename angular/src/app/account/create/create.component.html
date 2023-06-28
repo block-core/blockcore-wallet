@@ -29,13 +29,18 @@
         <mat-label>{{ "Account.Icon" | translate }}</mat-label>
         <mat-select [(value)]="icon">
           <mat-option *ngFor="let icon of icons.icons" [value]="icon">
-            <mat-icon>{{ icon }}</mat-icon>
+            <mat-icon [style.color]="color" [style.fill]="color">{{ icon }}</mat-icon>
           </mat-option>
           <mat-select-trigger>
-            <mat-icon>{{ icon }}</mat-icon>
+            <mat-icon [style.color]="color" [style.fill]="color">{{ icon }}</mat-icon>
           </mat-select-trigger>
         </mat-select>
       </mat-form-field>
+
+      <div>
+        <input type="color" [(ngModel)]="color" id="head" name="head" />
+        <label for="head"> Icon color </label>
+      </div>
 
       <br />
 

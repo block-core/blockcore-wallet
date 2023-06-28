@@ -111,6 +111,8 @@ interface Account {
 
   icon?: string;
 
+  color?: string;
+
   /** The unique identifier for this account. */
   identifier: string;
 
