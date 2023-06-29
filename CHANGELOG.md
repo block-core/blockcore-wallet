@@ -1,9 +1,15 @@
 ## <small>1.0.30 (2023-06-29)</small>
 
 * add a basic log monitor ([c681ef1](https://github.com/block-core/blockcore-wallet/commit/c681ef1))
+* add account-icon component ([17691f3](https://github.com/block-core/blockcore-wallet/commit/17691f3))
+* Add color on toolbar account icon ([9a096a0](https://github.com/block-core/blockcore-wallet/commit/9a096a0))
+* Add color-input ([105e802](https://github.com/block-core/blockcore-wallet/commit/105e802))
 * Add display of log entries from logging monitor ([bb5b1c1](https://github.com/block-core/blockcore-wallet/commit/bb5b1c1))
+* Add edit support ([2b6c52b](https://github.com/block-core/blockcore-wallet/commit/2b6c52b))
 * Add method for getting current level ([30a6854](https://github.com/block-core/blockcore-wallet/commit/30a6854))
+* Add option to show larger icon ([39faf81](https://github.com/block-core/blockcore-wallet/commit/39faf81))
 * add translations ([47c0434](https://github.com/block-core/blockcore-wallet/commit/47c0434)), closes [#245](https://github.com/block-core/blockcore-wallet/issues/245)
+* Added account-icon component ([296298c](https://github.com/block-core/blockcore-wallet/commit/296298c))
 * enable level toggling ([22b8c1b](https://github.com/block-core/blockcore-wallet/commit/22b8c1b))
 * Minor attempt to fix RTL on PWA ([48605d9](https://github.com/block-core/blockcore-wallet/commit/48605d9)), closes [#288](https://github.com/block-core/blockcore-wallet/issues/288)
 * Show additional log on same row ([da84411](https://github.com/block-core/blockcore-wallet/commit/da84411))
