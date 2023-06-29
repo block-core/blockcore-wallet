@@ -1,4 +1,18 @@
-## <small>1.0.29 (2023-06-26)</small>
+## <small>1.0.30 (2023-06-29)</small>
+
+* add a basic log monitor ([c681ef1](https://github.com/block-core/blockcore-wallet/commit/c681ef1))
+* Add display of log entries from logging monitor ([bb5b1c1](https://github.com/block-core/blockcore-wallet/commit/bb5b1c1))
+* Add method for getting current level ([30a6854](https://github.com/block-core/blockcore-wallet/commit/30a6854))
+* add translations ([47c0434](https://github.com/block-core/blockcore-wallet/commit/47c0434)), closes [#245](https://github.com/block-core/blockcore-wallet/issues/245)
+* enable level toggling ([22b8c1b](https://github.com/block-core/blockcore-wallet/commit/22b8c1b))
+* Minor attempt to fix RTL on PWA ([48605d9](https://github.com/block-core/blockcore-wallet/commit/48605d9)), closes [#288](https://github.com/block-core/blockcore-wallet/issues/288)
+* Show additional log on same row ([da84411](https://github.com/block-core/blockcore-wallet/commit/da84411))
+* Update home.component.ts ([c694c11](https://github.com/block-core/blockcore-wallet/commit/c694c11))
+* Update version and changelog ([8c97fa6](https://github.com/block-core/blockcore-wallet/commit/8c97fa6))
+
+
+
+## <small>1.0.29 (2023-06-25)</small>
 
 * Add "more options" button ([dec4cf7](https://github.com/block-core/blockcore-wallet/commit/dec4cf7))
 * Adding Arabic and French languages ([f2b2a3f](https://github.com/block-core/blockcore-wallet/commit/f2b2a3f))
