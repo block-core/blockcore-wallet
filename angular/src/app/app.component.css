@@ -69,6 +69,13 @@
   display: flex;
 }
 
+.toolbar-icon {
+  width: 40px !important;
+  height: 40px !important;
+  display: inline-block;
+  padding-top: 6px;
+}
+
 .detail-network {
   line-height: 1.8em;
   margin-left: 0.5em;
