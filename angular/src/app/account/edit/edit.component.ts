@@ -15,6 +15,7 @@ export class AccountEditComponent implements OnInit, OnDestroy {
   accountName: string | undefined;
   sub2: any;
   icon: string | undefined;
+  color: string | undefined;
 
   constructor(
     private router: Router,
@@ -38,11 +39,13 @@ export class AccountEditComponent implements OnInit, OnDestroy {
       // this.manager.setActiveAccountId(index);
       this.accountName = this.walletManager.activeAccount?.name;
       this.icon = this.walletManager.activeAccount?.icon;
+      this.color = this.walletManager.activeAccount?.color;
     });
 
     this.sub2 = this.walletManager.activeAccount$.subscribe(() => {
       this.accountName = this.walletManager.activeAccount?.name;
       this.icon = this.walletManager.activeAccount?.icon;
+      this.color = this.walletManager.activeAccount?.color;
     });
   }
 
@@ -81,6 +84,7 @@ export class AccountEditComponent implements OnInit, OnDestroy {
       const account = wallet.accounts[accountIndex];
       account.name = this.accountName;
       account.icon = this.icon;
+      account.color = this.color;
 
       await this.walletManager.save();
 

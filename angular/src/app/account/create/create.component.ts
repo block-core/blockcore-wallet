@@ -38,6 +38,7 @@ export class AccountCreateComponent implements OnInit, OnDestroy {
   purpose: number = 44;
   privateKeyImport: string;
   more = false;
+  color: string | undefined;
 
   get passwordValidated(): boolean {
     return this.password === this.password2 && this.secondFormGroup.valid;
@@ -179,6 +180,7 @@ export class AccountCreateComponent implements OnInit, OnDestroy {
       purpose: 44,
       purposeAddress: 340,
       icon: this.icon,
+      color: this.color,
     };
 
     // Don't persist the selected value.
@@ -238,6 +240,7 @@ export class AccountCreateComponent implements OnInit, OnDestroy {
       purpose: parsedPurpose,
       purposeAddress: selectedPurposeAddress,
       icon: this.icon,
+      color: this.color
     };
 
     // Don't persist the selected value.

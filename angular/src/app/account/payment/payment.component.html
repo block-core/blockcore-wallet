@@ -28,7 +28,7 @@
 
   <mat-list *ngIf="filteredAccounts.length > 0">
     <mat-list-item *ngFor="let account of filteredAccounts; let i = index" routerLinkActive="active-link">
-      <mat-icon mat-list-icon>{{ account.icon }}</mat-icon>
+      <app-account-icon mat-list-icon [value]="account"></app-account-icon>
       <div mat-line class="name-field">
         <button class="half-width" (click)="sendToUsing(uiState.payment.address, account.identifier)" mat-raised-button>{{ "Account.SelectAccount" | translate }}</button>&nbsp;&nbsp;&nbsp;{{ account.name | truncate }}
       </div>

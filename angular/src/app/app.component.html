@@ -35,7 +35,8 @@
   <app-language-selector></app-language-selector>
 
   <button *ngIf="walletManager.activeWalletUnlocked" mat-icon-button (click)="draweraccount.toggle()">
-    <mat-icon *ngIf="walletManager.activeAccount">{{ walletManager.activeAccount?.icon }}</mat-icon>
+    <!-- <mat-icon *ngIf="walletManager.activeAccount">{{ walletManager.activeAccount?.icon }}</mat-icon> -->
+    <app-account-icon class="toolbar-icon" [value]="walletManager.activeAccount"></app-account-icon>
     <mat-icon *ngIf="!walletManager.activeAccount">account_circle</mat-icon>
   </button>
 </mat-toolbar>
@@ -124,7 +125,7 @@
       <h2 class="name-field">{{ walletManager.activeAccount.name | truncate }}</h2>
 
       <div class="detail-box">
-        <mat-icon mat-list-icon class="account-icon">{{ walletManager.activeAccount.icon }}</mat-icon>
+        <app-account-icon [large]="true" [value]="walletManager.activeAccount"></app-account-icon>
         <div class="detail-network">
           {{ walletManager.activeAccount | network }}<br />
           {{ "Account.Index" | translate }}: {{ walletManager.activeAccount?.index }}
@@ -152,7 +153,7 @@
       </mat-form-field> -->
 
       <a mat-list-item *ngFor="let account of walletManager.activeWallet.accounts; let i = index" (click)="onAccountChanged(account.identifier)" routerLinkActive="active-link">
-        <mat-icon mat-list-icon>{{ account.icon }}</mat-icon>
+        <app-account-icon mat-list-icon [value]="account"></app-account-icon>
         <div mat-line class="name-field">{{ account.name | truncate }}</div>
         <div mat-line>{{ account | network }}</div>
       </a>

@@ -69,10 +69,11 @@
   display: flex;
 }
 
-.account-icon {
-  font-size: 4em !important;
-  width: 64px;
-  height: 64px;
+.toolbar-icon {
+  width: 40px !important;
+  height: 40px !important;
+  display: inline-block;
+  padding-top: 6px;
 }
 
 .detail-network {

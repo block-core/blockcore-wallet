@@ -5,17 +5,17 @@
   <mat-selection-list #accounts>
     <div mat-subheader *ngIf="identity?.length > 0">{{ "Account.Identity" | translate }}</div>
     <mat-list-option *ngFor="let account of identity" [(selected)]="account.selected">
-      <mat-icon mat-list-icon>{{ account.icon }}</mat-icon>
+      <app-account-icon mat-list-icon [value]="account"></app-account-icon>
       <div mat-line>{{ account.name }} ({{ account | network }})</div>
     </mat-list-option>
     <div mat-subheader>{{ "Account.CoinsTokens" | translate }}</div>
     <mat-list-option *ngFor="let account of coins" [(selected)]="account.selected">
-      <mat-icon mat-list-icon>{{ account.icon }}</mat-icon>
+      <app-account-icon mat-list-icon [value]="account"></app-account-icon>
       <div mat-line>{{ account.name }} ({{ account | network }})</div>
     </mat-list-option>
     <div mat-subheader *ngIf="coinsTest?.length > 0">{{ "Account.TestNetworks" | translate }}</div>
     <mat-list-option *ngFor="let account of coinsTest" [(selected)]="account.selected">
-      <mat-icon mat-list-icon>{{ account.icon }}</mat-icon>
+      <app-account-icon mat-list-icon [value]="account"></app-account-icon>
       <div mat-line>{{ account.name }} ({{ account | network }})</div>
     </mat-list-option>
   </mat-selection-list>

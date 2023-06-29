@@ -131,6 +131,7 @@ import { ActionTransactionSendComponent } from './action/transaction.send/transa
 import { SendConfirmationDialog } from './action/transaction.send/send-confirmation-dialog/send-confirmation-dialog';
 import { ActionWalletUnlockComponent } from './action/wallet.unlock/wallet.unlock.component';
 import { ActionSwapsSendComponent } from './action/swaps.send/swaps.send.component';
+import { AccountIconComponent } from './shared/account-icon/account-icon.component';
 
 // required for AOT compilation
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
@@ -216,6 +217,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     SendConfirmationDialog,
     ActionWalletUnlockComponent,
     ActionSwapsSendComponent,
+    AccountIconComponent
   ],
   imports: [
     BrowserModule,
