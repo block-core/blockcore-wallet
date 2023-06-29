@@ -124,7 +124,8 @@
       <h2 class="name-field">{{ walletManager.activeAccount.name | truncate }}</h2>
 
       <div class="detail-box">
-        <mat-icon mat-list-icon class="account-icon">{{ walletManager.activeAccount.icon }}</mat-icon>
+        <!-- <mat-icon mat-list-icon class="account-icon">{{ walletManager.activeAccount.icon }}</mat-icon> -->
+        <app-account-icon [large]="true" [value]="walletManager.activeAccount"></app-account-icon>
         <div class="detail-network">
           {{ walletManager.activeAccount | network }}<br />
           {{ "Account.Index" | translate }}: {{ walletManager.activeAccount?.index }}
