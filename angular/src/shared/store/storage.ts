@@ -262,4 +262,22 @@ export class Storage {
             },
         });
     }
+
+    async getWallet(key: string) {
+        return this.db.get('wallet', key);
+    }
+
+    async getWallets() {
+        return this.db.getAll('wallet');
+    }
+
+    async putWallet(value: TableWallet) {
+        //value.saved = now();
+        return this.db.put('wallet', value);
+    }
+
+    async deleteWallet(key: string) {
+        return this.db.delete('wallet', key);
+    }
+    
 }
