@@ -1,4 +1,5 @@
 import { openDB, deleteDB, wrap, unwrap, IDBPDatabase, DBSchema } from 'idb';
+import { AccountUnspentTransactionOutput, Action, Persisted, Store, TransactionHistory } from '../interfaces';
 
 /** Make sure you read and learn: https://github.com/jakearchibald/idb */
 
@@ -10,6 +11,11 @@ interface WalletDB extends DBSchema {
     state: {
         value: any;
         key: number;
+    };
+
+    account: {
+        value: any;
+        key: string;
     };
 
     accountstate: {
@@ -43,49 +49,11 @@ interface WalletDB extends DBSchema {
     };
 }
 
-export interface TableAccountState {
-  /** The unique identifier of the account that this state belongs to. */
-  id: string;
-
-  /** The latest known balance of this account */
-  balance: number;
-
-  /** The time when this account data was updated */
-  retrieved?: string;
-
-  /** The total amount of pending received on this account */
-  pendingReceived?: number;
-
-  /** The total amount of pending sent on this account. */
-  pendingSent?: number;
-
-  /** All the known used and one unused receive address. */
-//   receive: Address[];
-
-//   /** All the known used and one unused change address. */
-//   change: Address[];
-
-  /** The last date in ISO format the account was scanned for changes. */
-  lastScan?: string;
-
-  /** Indicates if the scan has been completed. */
-  completedScan?: boolean;
-}
-
-export interface TableAccountHistory {
-    
-}
-
-export interface TableSettings {
-
-}
-
-export interface TableNetworkState {
-
-}
-
-export interface TableApp {
-
+export interface TableState {
+    action?: Action;
+    persisted: Persisted;
+    store: Store;
+    unlocked: string[];
 }
 
 export interface TableAccount {
@@ -142,6 +110,70 @@ export interface TableAccount {
 
 }
 
+export interface TableAccountState {
+    /** The unique identifier of the account that this state belongs to. */
+    id: string;
+
+    /** The latest known balance of this account */
+    balance: number;
+
+    /** The time when this account data was updated */
+    retrieved?: string;
+
+    /** The total amount of pending received on this account */
+    pendingReceived?: number;
+
+    /** The total amount of pending sent on this account. */
+    pendingSent?: number;
+
+    /** All the known used and one unused receive address. */
+    //   receive: Address[];
+
+    //   /** All the known used and one unused change address. */
+    //   change: Address[];
+
+    /** The last date in ISO format the account was scanned for changes. */
+    lastScan?: string;
+
+    /** Indicates if the scan has been completed. */
+    completedScan?: boolean;
+}
+
+export interface TableAccountHistory {
+    balance: number;
+    unconfirmed: number;
+    history: TransactionHistory[];
+    unspent: AccountUnspentTransactionOutput[];
+
+}
+
+
+
+export interface TableSettings {
+    developer: boolean;
+    indexer: string;
+    server: string;
+    dataVault: string;
+    autoTimeout: number;
+    theme: string;
+    themeColor: string;
+    language: string;
+    dir: string;
+    requirePassword: boolean;
+    /** Allows users to change how the amounts are displayed. */
+    amountFormat: string;
+
+}
+
+export interface TableNetworkState {
+
+}
+
+export interface TableApp {
+
+}
+
+
 export interface TableWallet {
     /** Indicates if this wallet was restored or created as new. If the wallet is restored, we will automatically scan the blockchains to data when new accounts are added. */
     restored: boolean;
@@ -190,26 +222,27 @@ export class Storage {
 
                 function upgradeV0toV1() {
                     db.createObjectStore('state', { keyPath: 'url' });
+                    db.createObjectStore('account', { keyPath: 'id' });
                     db.createObjectStore('accountstate', { keyPath: 'id' });
                     db.createObjectStore('accounthistory', { keyPath: 'id', autoIncrement: true });
                     db.createObjectStore('settings', { keyPath: 'id' });
                     db.createObjectStore('networkstate', { keyPath: 'pubkey' });
                     db.createObjectStore('app', { keyPath: 'id' });
                     db.createObjectStore('wallet', { keyPath: 'id' });
-                   // const notificationsStore = db.createObjectStore('notifications', { keyPath: 'id' });
-                   // notificationsStore.createIndex('created', 'created');
+                    // const notificationsStore = db.createObjectStore('notifications', { keyPath: 'id' });
+                    // notificationsStore.createIndex('created', 'created');
 
-                   // const eventsStore = db.createObjectStore('events', { keyPath: 'id' });
-                   // eventsStore.createIndex('pubkey', 'pubkey');
-                   // eventsStore.createIndex('created', 'created_at');
-                   // eventsStore.createIndex('kind', 'kind');
+                    // const eventsStore = db.createObjectStore('events', { keyPath: 'id' });
+                    // eventsStore.createIndex('pubkey', 'pubkey');
+                    // eventsStore.createIndex('created', 'created_at');
+                    // eventsStore.createIndex('kind', 'kind');
 
                     //const profilesStore = db.createObjectStore('profiles', { keyPath: 'pubkey' });
                     //profilesStore.createIndex('status', 'status');
                 }
 
                 function upgradeV1toV2() {
-                //    db.createObjectStore('badges', { keyPath: 'id' });
+                    //    db.createObjectStore('badges', { keyPath: 'id' });
                 }
             },
             blocked(currentVersion, blockedVersion, event) {
@@ -238,6 +271,25 @@ export class Storage {
         return this.db.put('state', value);
     }
 
+    
+    async getAccount(key: string) {
+        return this.db.get('account', key);
+    }
+
+    async getAccounts() {
+        return this.db.getAll('account');
+    }
+
+    async putAccount(value: TableAccount) {
+        //value.saved = now();
+        return this.db.put('account', value);
+    }
+
+    async deleteAccount(key: string) {
+        return this.db.delete('account', key);
+    }
+
+
     async getAccountState(key: string) {
         return this.db.get('accountstate', key);
     }
@@ -263,6 +315,80 @@ export class Storage {
         });
     }
 
+    
+    async getAccountHistory(key: string) {
+        return this.db.get('accounthistory', key);
+    }
+
+    async getAccountHistories() {
+        return this.db.getAll('accounthistory');
+    }
+
+    async putAccountHistory(value: TableAccountHistory) {
+        //value.saved = now();
+        return this.db.put('accounthistory', value);
+    }
+
+    async deleteAccountHistory(key: string) {
+        return this.db.delete('accounthistory', key);
+    }
+
+    
+    async getSetting(key: string) {
+        return this.db.get('settings', key);
+    }
+
+    async getSettings() {
+        return this.db.getAll('settings');
+    }
+
+    async putSettings(value: TableSettings) {
+        //value.saved = now();
+        return this.db.put('settings', value);
+    }
+
+    async deleteSettings(key: string) {
+        return this.db.delete('settings', key);
+    }
+
+
+    async getNetworkState(key: string) {
+        return this.db.get('networkstate', key);
+    }
+
+    async getNetworkStates() {
+        return this.db.getAll('networkstate');
+    }
+
+    async putNetworkState(value: TableNetworkState) {
+        //value.saved = now();
+        return this.db.put('networkstate', value);
+    }
+
+    async deleteNetworkState(key: string) {
+        return this.db.delete('networkstate', key);
+    }
+
+
+    
+    async getApp(key: string) {
+        return this.db.get('app', key);
+    }
+
+    async getApps() {
+        return this.db.getAll('app');
+    }
+
+    async putApp(value: TableApp) {
+        //value.saved = now();
+        return this.db.put('app', value);
+    }
+
+    async deleteApp(key: string) {
+        return this.db.delete('app', key);
+    }
+
+
     async getWallet(key: string) {
         return this.db.get('wallet', key);
     }
@@ -279,5 +405,7 @@ export class Storage {
     async deleteWallet(key: string) {
         return this.db.delete('wallet', key);
     }
-    
+
+
+
 }
