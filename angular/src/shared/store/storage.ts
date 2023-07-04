@@ -43,26 +43,52 @@ interface WalletDB extends DBSchema {
     };
 }
 
-interface TableAccountState {
+export interface TableAccountState {
+  /** The unique identifier of the account that this state belongs to. */
+  id: string;
+
+  /** The latest known balance of this account */
+  balance: number;
+
+  /** The time when this account data was updated */
+  retrieved?: string;
+
+  /** The total amount of pending received on this account */
+  pendingReceived?: number;
+
+  /** The total amount of pending sent on this account. */
+  pendingSent?: number;
+
+  /** All the known used and one unused receive address. */
+//   receive: Address[];
+
+//   /** All the known used and one unused change address. */
+//   change: Address[];
+
+  /** The last date in ISO format the account was scanned for changes. */
+  lastScan?: string;
+
+  /** Indicates if the scan has been completed. */
+  completedScan?: boolean;
 }
 
-interface TableAccountHistory {
+export interface TableAccountHistory {
+    
+}
+
+export interface TableSettings {
 
 }
 
-interface TableSettings {
+export interface TableNetworkState {
 
 }
 
-interface TableNetworkState {
+export interface TableApp {
 
 }
 
-interface TableApp {
-
-}
-
-interface TableAccount {
+export interface TableAccount {
 
     name: string | undefined;
 
@@ -116,7 +142,7 @@ interface TableAccount {
 
 }
 
-interface TableWallet {
+export interface TableWallet {
     /** Indicates if this wallet was restored or created as new. If the wallet is restored, we will automatically scan the blockchains to data when new accounts are added. */
     restored: boolean;
     id: string;
@@ -146,11 +172,11 @@ export class Storage {
     async open() {
         this.db = await openDB<WalletDB>(this.name, 1, {
             upgrade(db, oldVersion, newVersion, transaction, event) {
-                debugger;
-
                 switch (oldVersion) {
                     case 0:
                         upgradeV0toV1();
+                        upgradeV1toV2();
+                        break;
                     /* FALLTHROUGH */
                     case 1:
                         upgradeV1toV2();
