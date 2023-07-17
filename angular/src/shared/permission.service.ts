@@ -1,6 +1,7 @@
 import { ActionMessage, Permission, PermissionDomain } from './interfaces';
 import { PermissionExecutionStore } from './store/permission-execution-store';
 import { PermissionStore } from './store/permission-store';
+import { Database } from './store/storage';
 
 export class PermissionServiceShared {
   private store: PermissionStore;
@@ -8,10 +9,7 @@ export class PermissionServiceShared {
 
   constructor() {
     this.store = new PermissionStore();
-    this.store.load();
-
     this.storeExecutions = new PermissionExecutionStore();
-    this.storeExecutions.load();
   }
 
   get(app: string) {

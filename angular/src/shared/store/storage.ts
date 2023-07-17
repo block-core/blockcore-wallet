@@ -207,6 +207,11 @@ export class Storage {
     constructor(private name: string) { }
 
     async open() {
+        // If we already have a database connection, then return.
+        if (this.db) {
+            return;
+        }
+
         this.db = await openDB<WalletDB>(this.name, 1, {
             upgrade(db, oldVersion, newVersion, transaction, event) {
                 switch (oldVersion) {

@@ -1,10 +1,11 @@
 import { Persistence } from '../persistence';
+import { Database } from './storage';
 
 export class StoreListBase<T> {
   protected items: Map<string, T> = new Map<string, T>();
   protected state = new Persistence();
 
-  constructor(public stateKey: string) {}
+  constructor(public stateKey: string) { }
 
   async wipe(): Promise<void> {
     await this.state.remove(this.stateKey);
@@ -34,6 +35,10 @@ export class StoreListBase<T> {
   }
 
   async load() {
+    // debugger;
+    // Ensure the database is opened.
+    // await Database.Instance.open();
+
     const values = await this.state.get(this.stateKey);
 
     if (values != null && Object.keys(values).length > 0) {
@@ -49,7 +54,7 @@ export class StoreBase<T> {
   protected item: T;
   protected state = new Persistence();
 
-  constructor(public stateKey: string) {}
+  constructor(public stateKey: string) { }
 
   get() {
     return this.item;

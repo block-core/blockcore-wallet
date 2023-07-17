@@ -87,7 +87,7 @@ export class AppComponent implements OnInit {
   async ngOnInit() {
     this.uiState.manifest = await this.runtime.getManifest();
 
-    await Database.Instance.open();
+    // await Database.Instance.open();
 
     // let qs = new URLSearchParams(location.search);
     // let id = qs.get('id');

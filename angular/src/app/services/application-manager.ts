@@ -3,6 +3,7 @@ import { MessageService, NetworkLoader } from 'src/shared';
 import { MINUTE } from '../shared/constants';
 import { SecureStateService, CryptoUtility, DataSyncService, CommunicationService, WalletManager } from './';
 import { StateService } from './state.service';
+import { Database } from 'src/shared/store/storage';
 
 @Injectable({
   providedIn: 'root',
@@ -22,6 +23,8 @@ export class AppManager {
 
   async initialize() {
     await this.communication.initialize();
+
+    await Database.Instance.open();
 
     // Load all the stores.
     await this.state.load();
