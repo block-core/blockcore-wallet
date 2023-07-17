@@ -1,3 +1,11 @@
+## <small>1.0.31 (2023-07-10)</small>
+
+* Fix null reference bug for new accounts in new wallets ([0dce440](https://github.com/block-core/blockcore-wallet/commit/0dce440))
+* Update CHANGELOG.md ([240bd37](https://github.com/block-core/blockcore-wallet/commit/240bd37))
+* Update version and changelog ([8e6a922](https://github.com/block-core/blockcore-wallet/commit/8e6a922))
+
+
+
 ## <small>1.0.30 (2023-06-29)</small>
 
 * add a basic log monitor ([c681ef1](https://github.com/block-core/blockcore-wallet/commit/c681ef1))
