@@ -47,6 +47,11 @@ interface WalletDB extends DBSchema {
         value: TableWallet;
         key: string;
     };
+
+    bucket: {
+        value: any;
+        key: string;
+    };
 }
 
 export interface TableState {
@@ -221,14 +226,15 @@ export class Storage {
                 }
 
                 function upgradeV0toV1() {
-                    db.createObjectStore('state', { keyPath: 'url' });
+                    db.createObjectStore('state', { keyPath: 'id' });
                     db.createObjectStore('account', { keyPath: 'id' });
                     db.createObjectStore('accountstate', { keyPath: 'id' });
                     db.createObjectStore('accounthistory', { keyPath: 'id', autoIncrement: true });
                     db.createObjectStore('settings', { keyPath: 'id' });
-                    db.createObjectStore('networkstate', { keyPath: 'pubkey' });
+                    db.createObjectStore('networkstate', { keyPath: 'id' });
                     db.createObjectStore('app', { keyPath: 'id' });
                     db.createObjectStore('wallet', { keyPath: 'id' });
+                    db.createObjectStore('bucket', { keyPath: 'id' });
                     // const notificationsStore = db.createObjectStore('notifications', { keyPath: 'id' });
                     // notificationsStore.createIndex('created', 'created');
 
@@ -247,12 +253,15 @@ export class Storage {
             },
             blocked(currentVersion, blockedVersion, event) {
                 // …
+                debugger;
             },
             blocking(currentVersion, blockedVersion, event) {
                 // …
+                debugger;
             },
             terminated() {
                 // …
+                debugger;
             },
         });
     }
@@ -271,7 +280,7 @@ export class Storage {
         return this.db.put('state', value);
     }
 
-    
+
     async getAccount(key: string) {
         return this.db.get('account', key);
     }
@@ -307,7 +316,7 @@ export class Storage {
         return this.db.delete('accountstate', key);
     }
 
-    async delete() {
+    async deleteDatabase() {
         await deleteDB(this.name, {
             blocked() {
                 console.log('BLOCKED...');
@@ -315,7 +324,7 @@ export class Storage {
         });
     }
 
-    
+
     async getAccountHistory(key: string) {
         return this.db.get('accounthistory', key);
     }
@@ -333,7 +342,7 @@ export class Storage {
         return this.db.delete('accounthistory', key);
     }
 
-    
+
     async getSetting(key: string) {
         return this.db.get('settings', key);
     }
@@ -370,7 +379,7 @@ export class Storage {
     }
 
 
-    
+
     async getApp(key: string) {
         return this.db.get('app', key);
     }
@@ -406,6 +415,37 @@ export class Storage {
         return this.db.delete('wallet', key);
     }
 
+    async getBucket(key: string) {
+        return this.get('bucket', key);
+    }
 
+    async putBucket(key: any, value: any) {
+        //value.saved = now();
+        return this.put('bucket', { id: key, value });
+    }
 
+    async deleteBucket(key: string) {
+        return this.delete('bucket', key);
+    }
+
+    async get(table: string | any, key: string) {
+        return this.db.get(table, key);
+    }
+
+    async getAll(table: string | any) {
+        return this.db.getAll(table);
+    }
+
+    async put(table: string | any, value: any) {
+        //value.saved = now();
+        return this.db.put(table, value);
+    }
+
+    async delete(table: string | any, key: string) {
+        return this.db.delete(table, key);
+    }
+}
+
+export class Database {
+    public static Instance = new Storage('blockcore-wallet');
 }

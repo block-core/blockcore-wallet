@@ -11,6 +11,7 @@ import { AppUpdateService } from './services/app-update.service';
 import { ActionService } from './services/action.service';
 import { DisableRightClickService } from './services/disable-right-click.service';
 import { MessageService } from 'src/shared';
+import { Database } from 'src/shared/store/storage';
 
 @Component({
   selector: 'app-root',
@@ -85,6 +86,8 @@ export class AppComponent implements OnInit {
 
   async ngOnInit() {
     this.uiState.manifest = await this.runtime.getManifest();
+
+    await Database.Instance.open();
 
     // let qs = new URLSearchParams(location.search);
     // let id = qs.get('id');
