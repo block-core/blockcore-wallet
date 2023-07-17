@@ -26,11 +26,20 @@ export class Persistence {
         if (!dbValue) {
             if (globalThis.chrome && globalThis.chrome.storage) {
                 const value = await globalThis.chrome.storage.local.get(key);
+
+                // If it exists in the storage, put it in the database.
+                if (value[key]) {
+                    await this.db.putBucket(key, value[key]);
+                }
+
                 return value[key];
             } else {
                 let value = globalThis.localStorage.getItem(key);
 
                 if (value) {
+                    // If it exists in the storage, put it in the database.
+                    await this.db.putBucket(key, JSON.parse(value));
+
                     return JSON.parse(value);
                 } else {
                     return undefined;
@@ -39,7 +48,6 @@ export class Persistence {
         } else {
             return undefined;
         }
-
     }
 
     async remove(key: string) {
