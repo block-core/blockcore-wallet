@@ -152,8 +152,6 @@ export interface TableAccountHistory {
 
 }
 
-
-
 export interface TableSettings {
     developer: boolean;
     indexer: string;
@@ -167,7 +165,6 @@ export interface TableSettings {
     requirePassword: boolean;
     /** Allows users to change how the amounts are displayed. */
     amountFormat: string;
-
 }
 
 export interface TableNetworkState {
@@ -177,7 +174,6 @@ export interface TableNetworkState {
 export interface TableApp {
 
 }
-
 
 export interface TableWallet {
     /** Indicates if this wallet was restored or created as new. If the wallet is restored, we will automatically scan the blockchains to data when new accounts are added. */
@@ -231,23 +227,26 @@ export class Storage {
                 }
 
                 function upgradeV0toV1() {
-                    db.createObjectStore('state', { keyPath: 'id' });
-                    db.createObjectStore('account', { keyPath: 'id' });
-                    db.createObjectStore('accountstate', { keyPath: 'id' });
-                    db.createObjectStore('accounthistory', { keyPath: 'id', autoIncrement: true });
-                    db.createObjectStore('settings', { keyPath: 'id' });
-                    db.createObjectStore('networkstate', { keyPath: 'id' });
-                    db.createObjectStore('app', { keyPath: 'id' });
-                    db.createObjectStore('wallet', { keyPath: 'id' });
                     db.createObjectStore('bucket', { keyPath: 'id' });
+
+                    // The initial release of IndexedDB support maps using the bucket for all storage
+                    // entries. Refactoring of logic is required to enable these specific storage tables.
+                    // db.createObjectStore('state', { keyPath: 'id' });
+                    // db.createObjectStore('account', { keyPath: 'id' });
+                    // db.createObjectStore('accountstate', { keyPath: 'id' });
+                    // db.createObjectStore('accounthistory', { keyPath: 'id' });
+                    // db.createObjectStore('settings', { keyPath: 'id' });
+                    // db.createObjectStore('networkstate', { keyPath: 'id' });
+                    // db.createObjectStore('app', { keyPath: 'id' });
+                    // db.createObjectStore('wallet', { keyPath: 'id' });
+
+                    // db.createObjectStore('accounthistory', { keyPath: 'id', autoIncrement: true });
                     // const notificationsStore = db.createObjectStore('notifications', { keyPath: 'id' });
                     // notificationsStore.createIndex('created', 'created');
-
                     // const eventsStore = db.createObjectStore('events', { keyPath: 'id' });
                     // eventsStore.createIndex('pubkey', 'pubkey');
                     // eventsStore.createIndex('created', 'created_at');
                     // eventsStore.createIndex('kind', 'kind');
-
                     //const profilesStore = db.createObjectStore('profiles', { keyPath: 'pubkey' });
                     //profilesStore.createIndex('status', 'status');
                 }
@@ -285,7 +284,6 @@ export class Storage {
         return this.db.put('state', value);
     }
 
-
     async getAccount(key: string) {
         return this.db.get('account', key);
     }
@@ -302,7 +300,6 @@ export class Storage {
     async deleteAccount(key: string) {
         return this.db.delete('account', key);
     }
-
 
     async getAccountState(key: string) {
         return this.db.get('accountstate', key);
@@ -329,7 +326,6 @@ export class Storage {
         });
     }
 
-
     async getAccountHistory(key: string) {
         return this.db.get('accounthistory', key);
     }
@@ -346,7 +342,6 @@ export class Storage {
     async deleteAccountHistory(key: string) {
         return this.db.delete('accounthistory', key);
     }
-
 
     async getSetting(key: string) {
         return this.db.get('settings', key);
@@ -365,7 +360,6 @@ export class Storage {
         return this.db.delete('settings', key);
     }
 
-
     async getNetworkState(key: string) {
         return this.db.get('networkstate', key);
     }
@@ -383,8 +377,6 @@ export class Storage {
         return this.db.delete('networkstate', key);
     }
 
-
-
     async getApp(key: string) {
         return this.db.get('app', key);
     }
@@ -401,7 +393,6 @@ export class Storage {
     async deleteApp(key: string) {
         return this.db.delete('app', key);
     }
-
 
     async getWallet(key: string) {
         return this.db.get('wallet', key);
