@@ -1,5 +1,9 @@
+import { Database } from "./store/storage";
+
 /** Abstracts the storage API and relies on localStorage for unit tests/fallback. */
 export class Persistence {
+    db = Database.Instance;
+
     /** The consumer of this API is responsible to ensure the value can be serialized to JSON. */
     async set(key: string, value: any) {
         if (globalThis.chrome && globalThis.chrome.storage) {
@@ -7,6 +11,8 @@ export class Persistence {
         } else {
             globalThis.localStorage.setItem(key, JSON.stringify(value));
         }
+
+        await this.db.putBucket(key, value);
     }
 
     async get<T>(key: string): Promise<T> {
@@ -30,5 +36,7 @@ export class Persistence {
         } else {
             globalThis.localStorage.removeItem(key);
         }
+
+        await this.db.deleteBucket(key);
     }
 }

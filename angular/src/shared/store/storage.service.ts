@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Storage } from './storage';
+import { Database, Storage } from './storage';
 import * as moment from 'moment';
 
 @Injectable({
@@ -13,7 +13,7 @@ export class StorageService {
 
   async initialize(databaseName: string) {
     // Open the new storage database.
-    this.storage = new Storage('blockcore-wallet');
+    this.storage = Database.Instance; // new Storage('blockcore-wallet');
     await this.storage.open();
 
     let state = await this.storage.getState();
@@ -77,6 +77,6 @@ export class StorageService {
   }
 
   async delete() {
-    await this.storage.delete();
+    await this.storage.deleteDatabase();
   }
 }
