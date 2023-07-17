@@ -88,7 +88,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
       if (walletId) {
         // Set the active wallet if different from before.
         if (this.walletManager.activeWalletId != walletId) {
-          console.log('DASHBOARD SET ACTIVE WALLET!');
           await this.walletManager.setActiveWallet(walletId);
 
           // Check if the new wallet is unlocked, if not, go to home and unlock.
