@@ -73,17 +73,23 @@ export class PermissionsComponent implements OnDestroy, OnInit {
     this.executions = this.permissionExecutionStore.all();
   }
 
-  executedCount(permission: Permission)
-  {
+  executedCount(permission: Permission) {
     const key = PermissionStore.permissionKey(permission);
-    return this.permissionExecutionStore.get(key).executions;
+
+    const val = this.permissionExecutionStore.get(key);
+
+    if (val == null) {
+      return 0;
+    }
+
+    return val.executions;
   }
 
   toArray(items: any): Permission[][] {
     return Object.values(items);
   }
 
-  ngOnDestroy() {}
+  ngOnDestroy() { }
 
   cancel() {
     this.location.back();
