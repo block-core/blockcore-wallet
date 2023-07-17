@@ -191,7 +191,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
         const identityNode = this.identityService.getIdentityNode(this.walletManager.activeWallet, this.walletManager.activeAccount);
 
         this.privateKey = this.cryptoUtility.convertToBech32(identityNode.privateKey, 'nsec');
-        console.log(secp.utils.bytesToHex(identityNode.privateKey));
+        // console.log(secp.utils.bytesToHex(identityNode.privateKey));
         //this.privateKey = secp.utils.bytesToHex(identityNode.privateKey);
 
         this.qrCodePrivateKey = await QRCode.toDataURL('nostr:' + this.privateKey, {

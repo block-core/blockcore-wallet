@@ -13,11 +13,12 @@ import { NetworkLoader } from '../../angular/src/shared/network-loader';
 import { MessageService } from '../../angular/src/shared';
 import { EventBus } from '../../angular/src/shared/event-bus';
 import { Dwn, DataStream, DidKeyResolver, Jws, RecordsWrite, RecordsQuery } from '@tbd54566975/dwn-sdk-js';
+import { Database } from '../../angular/src/shared/store/storage';
 
 // let state: ActionState;
 let prompt: any | null;
 let promptMutex = new Mutex();
-let releaseMutex = () => {};
+let releaseMutex = () => { };
 let permissionService = new PermissionServiceShared();
 let watchManager: BackgroundManager | null;
 let networkManager: BackgroundManager;
@@ -338,6 +339,9 @@ chrome.runtime.onConnect.addListener((port) => {
 });
 
 chrome.runtime.onInstalled.addListener(async ({ reason }) => {
+  // Open the database.
+  await Database.Instance.open();
+
   // Initialize the Decentralized Web Node.
   await dwn.load();
 
@@ -450,7 +454,7 @@ const executeIndexer = async () => {
 const runIndexer = async () => {
   // Stop and ensure watcher doesn't start up while indexer is running.
   if (watchManager) {
-    watchManager.onStopped = () => {};
+    watchManager.onStopped = () => { };
     watchManager.stop();
     watchManager = null;
   }
