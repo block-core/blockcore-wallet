@@ -1,4 +1,5 @@
 export * from './network';
+export * from './ION';
 export * from './IDENTITY';
 export * from './STRAX';
 export * from './TSTRAX';

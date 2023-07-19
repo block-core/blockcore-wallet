@@ -1,5 +1,5 @@
 import { Account } from './interfaces';
-import { BTC, CITY, CRS, CY, IDENTITY, NOSTR, RSC, SBC, STRAX, TCRS, TSTRAX, X42 , IMPLX, MOL,  KEY, XRC, SERF} from './networks';
+import { BTC, CITY, CRS, CY, ION, IDENTITY, NOSTR, RSC, SBC, STRAX, TCRS, TSTRAX, X42 , IMPLX, MOL,  KEY, XRC, SERF} from './networks';
 import { JWK } from './networks/JWK';
 const { v4: uuidv4 } = require('uuid');
 
@@ -10,6 +10,7 @@ export class Defaults {
     networks.push(new CITY());
     networks.push(new CRS());
     networks.push(new CY());
+    networks.push(new ION());
     networks.push(new IDENTITY());
     networks.push(new JWK());
     networks.push(new KEY());
