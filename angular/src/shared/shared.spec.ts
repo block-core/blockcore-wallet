@@ -16,9 +16,13 @@ import { Wallet } from './interfaces';
 import { AccountHistoryStore, SettingStore } from './store';
 import { AddressStore } from './store/address-store';
 import { NetworkLoader } from './network-loader';
+import { Database } from './store/storage';
 
 describe('SharedTests', () => {
-  beforeEach(() => {});
+  beforeEach(async () => {
+    // Ensure that the database has been opened before each test.
+    await Database.Instance.open();
+  });
 
   // it('Validate the StateStore', async () => {
   //     const stateStore = new StateStore();
