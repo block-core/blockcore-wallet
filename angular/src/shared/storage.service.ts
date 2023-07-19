@@ -1,11 +1,13 @@
 import { RuntimeService } from "./runtime.service";
 
+// This service is primarily only used for "active" and "timeout" keys.
 export class StorageService {
 
     constructor(public runtime: RuntimeService) {
     }
 
     async set(key: string, value: any, persisted: boolean) {
+        // console.log(`SET: ${key} PERSISTED: ${persisted}`);
         if (this.runtime.isExtension) {
             if (persisted) {
                 await globalThis.chrome.storage.local.set({ [key]: value });
@@ -25,6 +27,7 @@ export class StorageService {
     }
 
     async get(key: string, persisted: boolean) {
+        // console.log(`GET: ${key} PERSISTED: ${persisted}`);
         if (this.runtime.isExtension) {
             if (persisted) {
                 let { keys } = await globalThis.chrome.storage.local.get([key]);
