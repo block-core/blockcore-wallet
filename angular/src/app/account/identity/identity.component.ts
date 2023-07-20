@@ -66,6 +66,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
 
   shortForm: string;
   longForm: string;
+  request: any;
 
   get identityUrl(): string {
     if (!this.identity?.published) {
@@ -150,8 +151,6 @@ export class IdentityComponent implements OnInit, OnDestroy {
         // console.log(privateJwk);
         // console.log(publicJwk);
 
-        debugger;
-
         let did = new DID({
           generateKeyPair: () => { return { publicJwk, privateJwk } },
           content: {
@@ -182,9 +181,13 @@ export class IdentityComponent implements OnInit, OnDestroy {
           solutionEndpoint: 'https://beta.ion.msidentity.com/api/v1.0/operations'
         };
 
+        debugger;
+
         // Generate and publish create request to an ION node
         let createRequest = await did.generateRequest(0);
         console.log('REQUEST:', createRequest);
+
+        this.request = createRequest;
 
         let operation = await did.getOperation(0);
         console.log('OPERATION:', operation);
@@ -200,6 +203,9 @@ export class IdentityComponent implements OnInit, OnDestroy {
 
         const jws = await sign({ payload: createRequest, privateJwk });
         console.log('JWS:', jws);
+
+        let ionOps = await did.getAllOperations();
+        console.log(JSON.stringify({ ops: ionOps }));
       }
 
       if (!account.prv) {
@@ -391,6 +397,58 @@ export class IdentityComponent implements OnInit, OnDestroy {
 
   private getRandomInt(max: number) {
     return Math.floor(Math.random() * max);
+  }
+
+  async publishIonDid() {
+    // const serviceUrl = 'https://ion-test.tbddev.org/operations';
+    const serviceUrl = 'https://ion.tbd.engineering/operations';
+
+    debugger;
+
+    const response = await fetch(serviceUrl, {
+      method: 'POST',
+      body: JSON.stringify(this.request),
+    })
+
+    if (response.status >= 400) {
+      throw new Error(response.statusText);
+    }
+
+    const result = await response.json();
+
+    debugger;
+
+    console.log(result);
+
+    // const recoveryKey = jwkEs256k1Public;
+    // const updateKey = jwkEs256k2Public;
+    // const publicKey = publicKeyModel1;
+    // const publicKeys = [publicKey as any];
+
+    // const service = service1;
+    // const services = [service];
+
+    // const document : IonDocumentModel = {
+    //   publicKeys,
+    //   services
+    // };
+    // const input = { recoveryKey, updateKey, document };
+    // const result = await IonRequest.createCreateRequest(input);
+
+    // const jws = await this.generateOperation(0);
+    // const rawResponse = await fetch(serviceUrl, {
+    //   method: 'POST',
+    //   headers: {
+    //     Accept: 'application/json',
+    //     'Content-Type': 'application/json',
+    //   },
+    //   body: jws,
+    // });
+
+    // const content = await rawResponse.json();
+    // console.log(content);
+
+    this.published = true;
   }
 
   async publish() {

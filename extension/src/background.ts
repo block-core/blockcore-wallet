@@ -376,6 +376,9 @@ chrome.runtime.onInstalled.addListener(async ({ reason }) => {
 });
 
 chrome.alarms.onAlarm.addListener(async (alarm: chrome.alarms.Alarm) => {
+  // Just make sure database is opened. Errors have happened here in executeIndexer if not.
+  await Database.Instance.open();
+
   if (alarm.name === 'periodic') {
     await shared.checkLockTimeout();
   } else if (alarm.name === 'index') {
