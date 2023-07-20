@@ -49,7 +49,7 @@
     "@blockcore/blockcore-js": "^7.0.4",
     "@blockcore/did-resolver": "0.0.3",
     "@blockcore/dns": "0.0.11",
-    "@blockcore/identity": "0.0.10",
+    "@blockcore/identity": "0.0.12",
     "@blockcore/web5-injector": "0.0.3",
     "@decentralized-identity/ion-tools": "^1.1.1",
     "@fontsource/material-icons": "^4.5.4",

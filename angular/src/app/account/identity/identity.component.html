@@ -5,7 +5,84 @@
       <span *ngIf="(uiState.displayLabels$ | async) === false">{{ "Account.Identity" | translate }}</span>
     </ng-template>
 
-    <div *ngIf="isDid" class="page">
+    <div *ngIf="isDid && identityType == 619" class="page">
+      <h2>
+        {{ shortForm }}
+        <button class="copy-button" mat-icon-button (click)="copyText(shortForm)">
+          <mat-icon>content_copy</mat-icon>
+        </button>
+        <button class="copy-button" mat-icon-button (click)="openIonDid(longForm)">
+          <mat-icon>travel_explore</mat-icon>
+        </button>
+      </h2>
+
+      <!-- <h3 class="break">{{ shortForm }}</h3>
+      <h4 class="break">{{ longForm }}</h4> -->
+
+      <!-- <h3 class="break">{{identifier}} <button class="copy-button" mat-icon-button (click)="copy()">
+        <mat-icon>content_copy</mat-icon>
+    </button></h3> -->
+      <!-- <h4>{{walletManager.activeAccount.did}}</h4> -->
+
+      <p class="icon-indicator" *ngIf="published === undefined"><mat-icon class="icon-warn">loop</mat-icon>Loading...</p>
+      <p class="icon-indicator" *ngIf="published === false"><mat-icon class="icon-warn">done</mat-icon>{{ "Account.ThisIdentityIsCurrentlyNOTPublic" | translate }}</p>
+      <p class="icon-indicator" *ngIf="published === true"><mat-icon class="icon-success">done</mat-icon>{{ "Account.ThisIdentityIsCurrentlyPublic" | translate }}</p>
+
+      <mat-form-field class="input-full-width" appearance="outline">
+        <mat-label>Decentralized Web Node URL</mat-label>
+        <input matInput [(ngModel)]="verifiableDataRegistryUrl" />
+        <mat-hint
+          >Set a custom DWN URL if you self-host your own instance of Blockcore
+          Vault or use other DWN software.</mat-hint
+        >
+      </mat-form-field>
+
+      <br /><br />
+      IMPORTANT NOTE ON PRIVACY
+      <br />
+      The DID Document should never contain personal identifiable information.
+      Never put your e-mail address or name of any kind into the URL above.
+      <br /><br />
+      <!-- <p>
+        <button
+          class="signup-button"
+          mat-flat-button
+          color="primary"
+          (click)="save()"
+        >
+          Save (locally)
+        </button>
+        <button
+          class="signup-button"
+          mat-flat-button
+          color="warn"
+          (click)="publish()"
+        >
+          Publish
+        </button>
+      </p>  -->
+
+      <p *ngIf="identity?.published">
+        <a [href]="identityUrl" target="_blank">{{ "Account.ViewIdentityOnServer" | translate }}</a>
+      </p>
+
+      <br /><br />
+
+      <p>
+        <button class="signup-button" [disabled]="published === true" mat-flat-button color="warn" (click)="publish()">{{ "Account.Publish" | translate }}</button>
+      </p>
+
+      <!-- <p>
+                Your identity is primarily a list of public keys that you make public available for others to connect with you
+                in a secure manner.</p>
+            <p>You can use your identity to login to web apps, to chat with others, to sign contracts and documents, to
+                establish digital agreements and a lot more.</p> -->
+
+      <!-- <h3>DID Document:</h3>
+            <textarea class="diddocument">{{identity.didDocument | json}}</textarea> -->
+    </div>
+
+    <div *ngIf="isDid && identityType != 619" class="page">
       <h2>
         {{ readableId }}
         <button class="copy-button" mat-icon-button (click)="copy()">
@@ -229,9 +306,7 @@
       <span *ngIf="(uiState.displayLabels$ | async) === false">{{ "Account.Data" | translate }}</span>
     </ng-template>
 
-    <div *ngIf="isDid" class="page">
-      Coming soon.
-    </div>
+    <div *ngIf="isDid" class="page">Coming soon.</div>
   </mat-tab>
 
   <mat-tab>
@@ -307,7 +382,7 @@
               <mat-radio-button value="npub">Public Key</mat-radio-button>&nbsp;
               <mat-radio-button value="nsec">Private Key</mat-radio-button>
             </mat-radio-group>
-            <br><br>
+            <br /><br />
 
             <mat-card class="mat-elevation-z6 selectable wrap" *ngIf="convertedKey"
               >{{ convertedKey

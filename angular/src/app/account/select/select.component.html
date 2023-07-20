@@ -6,7 +6,7 @@
     <div mat-subheader *ngIf="identity?.length > 0">{{ "Account.Identity" | translate }}</div>
     <mat-list-option *ngFor="let account of identity" [(selected)]="account.selected">
       <app-account-icon mat-list-icon [value]="account"></app-account-icon>
-      <div mat-line>{{ account.name }} ({{ account | network }})</div>
+      <div mat-line>{{ account.name }}</div>
     </mat-list-option>
     <div mat-subheader>{{ "Account.CoinsTokens" | translate }}</div>
     <mat-list-option *ngFor="let account of coins" [(selected)]="account.selected">

@@ -19,6 +19,8 @@ import { PasswordDialog } from 'src/app/shared/password-dialog/password-dialog';
 import * as secp from '@noble/secp256k1';
 import * as QRCode from 'qrcode';
 import { SigningUtilities } from 'src/shared/identity/signing-utilities';
+import { sign, anchor, DID } from '@decentralized-identity/ion-tools';
+import { base64url as base64url2 } from 'multiformats/bases/base64';
 
 @Component({
   selector: 'app-identity',
@@ -60,6 +62,10 @@ export class IdentityComponent implements OnInit, OnDestroy {
   showConversionOptions = false;
   conversionKeyType = 'npub';
   utility = new SigningUtilities();
+  identityType: number = 0;
+
+  shortForm: string;
+  longForm: string;
 
   get identityUrl(): string {
     if (!this.identity?.published) {
@@ -96,19 +102,107 @@ export class IdentityComponent implements OnInit, OnDestroy {
 
       await this.walletManager.setActiveAccount(accountIdentifier);
 
-      const accountTranslate = await this.translate.get('Account.Account').toPromise();
-      this.uiState.title = accountTranslate + ': ' + this.walletManager.activeAccount?.name;
+      const account = this.walletManager.activeAccount;
 
-      this.network = this.walletManager.getNetwork(this.walletManager.activeAccount.networkType);
-      const accountState = this.accountStateStore.get(this.walletManager.activeAccount.identifier);
+      const accountTranslate = await this.translate.get('Account.Account').toPromise();
+      this.uiState.title = accountTranslate + ': ' + account?.name;
+
+      console.log(account);
+      console.log(JSON.stringify(account));
+
+      this.network = this.walletManager.getNetwork(account.networkType);
+      const accountState = this.accountStateStore.get(account.identifier);
 
       // The very first receive address is the actual identity of the account.
       let address = accountState.receive[0];
 
       const tools = new BlockcoreIdentityTools();
-      const identityNode = this.identityService.getIdentityNode(this.walletManager.activeWallet, this.walletManager.activeAccount);
+      const identityNode = this.identityService.getIdentityNode(this.walletManager.activeWallet, account);
 
-      if (!this.walletManager.activeAccount.prv) {
+      this.identityType = account.network;
+
+      // 619 = DID ION
+      if (account.network === 619) {
+
+        // const compressedPublicKeyBytes = secp.getPublicKey(identityNode.privateKey);
+        // const compressedPublicKeyHex = secp.utils.bytesToHex(compressedPublicKeyBytes);
+        // const curvePoints = secp.Point.fromHex(compressedPublicKeyHex);
+        // const uncompressedPublicKeyBytes = curvePoints.toRawBytes(false); // false = uncompressed
+
+        // const d = base64url2.baseEncode(identityNode.privateKey);
+        // // skip the first byte because it's used as a header to indicate whether the key is uncompressed
+        // const x = base64url2.baseEncode(uncompressedPublicKeyBytes.subarray(1, 33));
+        // const y = base64url2.baseEncode(uncompressedPublicKeyBytes.subarray(33, 65));
+
+        // const publicJwk = {
+        //   // alg: 'ES256K',
+        //   kty: 'EC',
+        //   crv: 'secp256k1',
+        //   x,
+        //   y
+        // };
+        // const privateJwk = { ...publicJwk, d };
+
+        // const publicKey = secp.getPublicKey(privateKey);
+
+        // Generate keys and ION DID
+        const { privateJwk, publicJwk } = tools.convertPrivateKeyToJsonWebKeyPairWithoutPadding(identityNode.privateKey);
+        // console.log(privateJwk);
+        // console.log(publicJwk);
+
+        debugger;
+
+        let did = new DID({
+          generateKeyPair: () => { return { publicJwk, privateJwk } },
+          content: {
+            publicKeys: [
+              {
+                id: 'key-1',
+                type: 'EcdsaSecp256k1VerificationKey2019',
+                publicKeyJwk: publicJwk,
+                purposes: ['authentication']
+              }
+            ],
+            services: [
+              {
+                id: 'domain-1',
+                type: 'LinkedDomains',
+                serviceEndpoint: 'https://foo.example.com'
+              }
+            ]
+          }
+        });
+
+        let options = {
+          // nodeEndpoint: 'https://localhost',
+          // challengeEndpoint: 'https://localhost/2',
+          // solutionEndpoint: 'https://localhost/3',
+          nodeEndpoint: 'https://beta.discover.did.microsoft.com/1.0/identifiers',
+          challengeEndpoint: 'https://beta.ion.msidentity.com/api/v1.0/proof-of-work-challenge',
+          solutionEndpoint: 'https://beta.ion.msidentity.com/api/v1.0/operations'
+        };
+
+        // Generate and publish create request to an ION node
+        let createRequest = await did.generateRequest(0);
+        console.log('REQUEST:', createRequest);
+
+        let operation = await did.getOperation(0);
+        console.log('OPERATION:', operation);
+
+        let longFormURI = await did.getURI();
+        let shortFormURI = await did.getURI('short');
+
+        this.shortForm = shortFormURI;
+        this.longForm = longFormURI;
+
+        console.log('LONG:', longFormURI);
+        console.log('SHORT:', shortFormURI);
+
+        const jws = await sign({ payload: createRequest, privateJwk });
+        console.log('JWS:', jws);
+      }
+
+      if (!account.prv) {
         const verificationMethod = tools.getVerificationMethod(identityNode.publicKey, 0, this.network.symbol);
         const identity = new BlockcoreIdentity(verificationMethod);
         this.identifier = identity.did;
@@ -213,6 +307,16 @@ export class IdentityComponent implements OnInit, OnDestroy {
     });
   }
 
+  async copyText(text: string) {
+    copyToClipboard(text);
+
+    this.snackBar.open(await this.translate.get('Account.IdentifierCopiedToClipboard').toPromise(), await this.translate.get('Account.IdentifierCopiedToClipboardAction').toPromise(), {
+      duration: 2500,
+      horizontalPosition: 'center',
+      verticalPosition: 'bottom',
+    });
+  }
+
   async copy() {
     copyToClipboard(this.identifier);
 
@@ -233,7 +337,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
     });
   }
 
-  ngOnDestroy(): void {}
+  ngOnDestroy(): void { }
 
   save() {
     if (!this.identity) {
@@ -568,6 +672,11 @@ export class IdentityComponent implements OnInit, OnDestroy {
       horizontalPosition: 'center',
       verticalPosition: 'bottom',
     });
+  }
+
+  openIonDid(did: string) {
+    const url = `https://identity.foundation/ion/explorer/?did=${did}`;
+    window.open(url, '_blank');
   }
 
   openDid() {

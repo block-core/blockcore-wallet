@@ -183,9 +183,22 @@ export class Defaults {
             networkType: 'IDENTITY',
             selected: false,
             mode: 'normal',
-            name: 'Identity',
+            name: 'Identity (did:is)',
             type: 'identity',
             network: 616,
+            purpose: 302,
+            purposeAddress: 340, // BIP0340
+            icon: 'account_circle',
+          },
+          {
+            identifier: uuidv4(),
+            index: 0,
+            networkType: 'IDENTITY',
+            selected: false,
+            mode: 'normal',
+            name: 'Identity (did:ion)',
+            type: 'identity',
+            network: 619,
             purpose: 302,
             purposeAddress: 340, // BIP0340
             icon: 'account_circle',
