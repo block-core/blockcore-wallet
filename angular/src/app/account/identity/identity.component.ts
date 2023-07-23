@@ -166,24 +166,25 @@ export class IdentityComponent implements OnInit, OnDestroy {
             }
           });
 
-          this.longForm = await did.getURI();
+          // If the latest copy of the DID Document indicates published, show it immediately.
+          if (existingDidDocument.document.didDocumentMetadata['method'].published === true) {
+            this.published = true;
+            this.attested = true;
+          } else {
+            // We have a local copy of the document, but it's not been published (attested) yet.
+            this.published = true;
+            this.attested = false;
+          }
 
-          if (existingDidDocument.document.didDocument.service)
-            // If the latest copy of the DID Document indicates published, show it immediately.
-            if (existingDidDocument.document.didDocumentMetadata['method'].published === true) {
-              this.published = true;
-              this.attested = true;
-            } else {
-              // We have a local copy of the document, but it's not been published (attested) yet.
-              this.published = true;
-              this.attested = false;
-            }
+          this.longForm = await did.getURI();
         } else {
           this.longForm = await did.getURI();
         }
 
+        // setTimeout(async () => {
         // Attempt to resolve the long form and verify if the "published": true flag is set in the metadata.
         const result = await this.resolver.resolve(this.longForm);
+        // let didResult: any = null;
 
         if (!result || result.didResolutionMetadata?.error) {
           console.log(`DID Not found: ${this.longForm}`);
@@ -198,9 +199,14 @@ export class IdentityComponent implements OnInit, OnDestroy {
 
             // Only when the DID is fully attested, will be update the local copy.
             this.identityStore.set(this.shortForm, doc);
+            await this.identityStore.save();
             didResult = result;
           }
         }
+
+        // Get the DWN from the local cache or from resolved DID Document:
+        // this.verifiableDataRegistryUrl = didResult.didDocument.service[0].serviceEndpoint.nodes[0];
+        // }, 5000);
 
         // Get the DWN from the local cache or from resolved DID Document:
         this.verifiableDataRegistryUrl = didResult.didDocument.service[0].serviceEndpoint.nodes[0];
