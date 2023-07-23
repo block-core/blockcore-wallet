@@ -361,15 +361,15 @@ interface ContactAddress {
   network: any;
 }
 
-interface Identity {
+interface DecentralizedIdentity {
+  /** The DID ID */
+  id: string;
+
   /** Indicates if this identity is part of wallets or just a cached identity by others. */
   local: boolean;
 
   /** The DID Document */
   document: any;
-
-  /** The DID ID */
-  id: string;
 }
 
 interface Wallet {
@@ -853,5 +853,6 @@ export {
   DIDRequestResponse,
   AccountFilter,
   VCRequestResponse,
-  PermissionExecution
+  PermissionExecution,
+  DecentralizedIdentity
 };

@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { AccountStateStore, bytesToBase64Url, DecentralizedWebNode, generateCid, getDagCid, Identity, Jws, MessageService } from 'src/shared';
+import { AccountStateStore, bytesToBase64Url, DecentralizedIdentity, DecentralizedWebNode, generateCid, getDagCid, Identity, Jws, MessageService } from 'src/shared';
 import { CryptoUtility, SettingsService, UIState, WalletManager } from 'src/app/services';
 import { copyToClipboard } from 'src/app/shared/utilities';
 import { Network } from '../../../shared/networks';
@@ -36,6 +36,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
   alarmName = 'refresh';
   wallet: any;
   published: boolean;
+  attested: boolean;
   account!: any;
   previousIndex!: number;
   identity: Identity | undefined;
@@ -67,7 +68,6 @@ export class IdentityComponent implements OnInit, OnDestroy {
 
   shortForm: string;
   longForm: string;
-  request: any;
 
   get identityUrl(): string {
     if (!this.identity?.published) {
@@ -137,48 +137,49 @@ export class IdentityComponent implements OnInit, OnDestroy {
 
         console.log('SHORT:', this.shortForm);
 
+        let didResult = null;
+
         // Attempt to find a local cached version of the DID Document.
         const existingDidDocument = this.identityStore.get(this.shortForm);
+
+        if (existingDidDocument) {
+          didResult = existingDidDocument.document;
+
+          if (existingDidDocument.document.didDocument.service)
+            // If the latest copy of the DID Document indicates published, show it immediately.
+            if (existingDidDocument.document.didDocumentMetadata['method'].published === true) {
+              this.published = true;
+              this.attested = true;
+            } else {
+              // We have a local copy of the document, but it's not been published (attested) yet.
+              this.published = true;
+              this.attested = false;
+            }
+        }
 
         // Attempt to resolve the long form and verify if the "published": true flag is set in the metadata.
         const result = await this.resolver.resolve(this.longForm);
 
-        if (result.didDocumentMetadata['method'].published === true) {
-          this.published = true;
+        if (!result || result.didResolutionMetadata?.error) {
+          console.log(`DID Not found: ${this.longForm}`);
         } else {
-          this.published = false;
-          // It might be that we have published already, but not attested the identifier.
+          // If we already have the document, we still want to resolve the DID Document for changes
+          // that can have happened on other wallets.
+          const doc: DecentralizedIdentity = { id: this.shortForm, local: true, document: result };
+
+          if (result.didDocumentMetadata['method'].published === true) {
+            this.published = true;
+            this.attested = true;
+
+            // Only when the DID is fully attested, will it again include the service element, so
+            // don't update the identity store until it's fully attested.
+            this.identityStore.set(this.shortForm, doc);
+            didResult = result;
+          }
         }
 
-        debugger;
-        // console.log(privateJwk);
-        // console.log(publicJwk);
-
-        let did2 = new DID({
-          generateKeyPair: () => { return { publicJwk, privateJwk } },
-          content: {
-            publicKeys: [
-              {
-                id: 'key-1',
-                type: 'EcdsaSecp256k1VerificationKey2019',
-                publicKeyJwk: publicJwk,
-                purposes: ['authentication']
-              }
-            ],
-            services: [
-              {
-                id: 'domain-1',
-                type: 'LinkedDomains',
-                serviceEndpoint: 'https://foo.example.com'
-              }
-            ]
-          }
-        });
-
-        debugger;
-
-        var long = await did.getURI();
-        var short = await did.getURI('short');
+        // Get the DWN from the local cache or from resolved DID Document:
+        this.verifiableDataRegistryUrl = didResult.didDocument.service[0].serviceEndpoint.nodes[0];
 
         // let options = {
         //   // nodeEndpoint: 'https://localhost',
@@ -190,24 +191,18 @@ export class IdentityComponent implements OnInit, OnDestroy {
         // };
 
         // Generate and publish create request to an ION node
-        let createRequest = await did.generateRequest(0);
-        console.log('REQUEST:', createRequest);
+        // let createRequest = await did.generateRequest(0);
+        // console.log('REQUEST:', createRequest);
+        // this.request = createRequest;
 
-        this.request = createRequest;
+        // let operation = await did.getOperation(0);
+        // console.log('OPERATION:', operation);
 
-        debugger;
+        // const jws = await sign({ payload: createRequest, privateJwk });
+        // console.log('JWS:', jws);
 
-        // this.identityStore.get()
-
-
-        let operation = await did.getOperation(0);
-        console.log('OPERATION:', operation);
-
-        const jws = await sign({ payload: createRequest, privateJwk });
-        console.log('JWS:', jws);
-
-        let ionOps = await did.getAllOperations();
-        console.log(JSON.stringify({ ops: ionOps }));
+        // let ionOps = await did.getAllOperations();
+        // console.log(JSON.stringify({ ops: ionOps }));
       }
 
       if (!account.prv) {
@@ -404,53 +399,58 @@ export class IdentityComponent implements OnInit, OnDestroy {
   async publishIonDid() {
     // const serviceUrl = 'https://ion-test.tbddev.org/operations';
     const serviceUrl = 'https://ion.tbd.engineering/operations';
+    const account = this.walletManager.activeAccount;
+    const tools = new BlockcoreIdentityTools();
+    const identityNode = this.identityService.getIdentityNode(this.walletManager.activeWallet, account);
+    const { privateJwk, publicJwk } = tools.convertPrivateKeyToJsonWebKeyPairWithoutPadding(identityNode.privateKey);
 
-    debugger;
+    let did = new DID({
+      generateKeyPair: () => { return { publicJwk, privateJwk } },
+      content: {
+        publicKeys: [
+          {
+            id: 'key-1',
+            type: 'EcdsaSecp256k1VerificationKey2019',
+            publicKeyJwk: publicJwk,
+            purposes: ['authentication']
+          }
+        ],
+        services: [
+          {
+            id: 'dwn',
+            type: 'DecentralizedWebNode',
+            serviceEndpoint: {
+              nodes: [this.verifiableDataRegistryUrl]
+            }
+          }
+        ]
+      }
+    });
+
+    // Generate and publish create request to an ION node
+    let createRequest = await did.generateRequest(0);
+    console.log('REQUEST:', createRequest);
 
     const response = await fetch(serviceUrl, {
       method: 'POST',
-      body: JSON.stringify(this.request),
+      body: JSON.stringify(createRequest),
     })
 
     if (response.status >= 400) {
       throw new Error(response.statusText);
     }
 
+    // The result from CREATE operation should have the full DID Document, including the service parts.
     const result = await response.json();
 
-    debugger;
+    this.identityStore.set(this.shortForm, { id: this.shortForm, local: true, document: result });
+    await this.identityStore.save();
 
     console.log(result);
 
-    // const recoveryKey = jwkEs256k1Public;
-    // const updateKey = jwkEs256k2Public;
-    // const publicKey = publicKeyModel1;
-    // const publicKeys = [publicKey as any];
-
-    // const service = service1;
-    // const services = [service];
-
-    // const document : IonDocumentModel = {
-    //   publicKeys,
-    //   services
-    // };
-    // const input = { recoveryKey, updateKey, document };
-    // const result = await IonRequest.createCreateRequest(input);
-
-    // const jws = await this.generateOperation(0);
-    // const rawResponse = await fetch(serviceUrl, {
-    //   method: 'POST',
-    //   headers: {
-    //     Accept: 'application/json',
-    //     'Content-Type': 'application/json',
-    //   },
-    //   body: jws,
-    // });
-
-    // const content = await rawResponse.json();
-    // console.log(content);
-
+    // Update the published status immediately.
     this.published = true;
+    this.attested = false;
   }
 
   async publish() {

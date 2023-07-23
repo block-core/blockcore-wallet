@@ -11,13 +11,15 @@
         <button class="copy-button" mat-icon-button (click)="copyText(shortForm)">
           <mat-icon>content_copy</mat-icon>
         </button>
-        <button class="copy-button" mat-icon-button (click)="copyText(longForm)">
-          <mat-icon>content_copy</mat-icon>
-        </button>
         <button class="copy-button" mat-icon-button (click)="openIonDid(longForm)">
           <mat-icon>travel_explore</mat-icon>
         </button>
       </h2>
+
+      Copy "Long form":
+      <button class="copy-button" mat-icon-button (click)="copyText(longForm)">
+        <mat-icon>content_copy</mat-icon>
+      </button>
 
       <!-- <h3 class="break">{{ shortForm }}</h3>
       <h4 class="break">{{ longForm }}</h4> -->
@@ -28,23 +30,21 @@
       <!-- <h4>{{walletManager.activeAccount.did}}</h4> -->
 
       <p class="icon-indicator" *ngIf="published === undefined"><mat-icon class="icon-warn">loop</mat-icon>Loading...</p>
-      <p class="icon-indicator" *ngIf="published === false"><mat-icon class="icon-warn">done</mat-icon>{{ "Account.ThisIdentityIsCurrentlyNOTPublic" | translate }}</p>
-      <p class="icon-indicator" *ngIf="published === true"><mat-icon class="icon-success">done</mat-icon>{{ "Account.ThisIdentityIsCurrentlyPublic" | translate }}</p>
+      <p class="icon-indicator" *ngIf="published === false"><mat-icon class="icon-warn">done</mat-icon>This identity is not published</p>
+      <p class="icon-indicator" *ngIf="published === true"><mat-icon class="icon-success">done</mat-icon>This identity is published</p>
+      <p class="icon-indicator" *ngIf="attested === false"><mat-icon class="icon-warn">done</mat-icon>Please wait for attestation on Bitcoin...</p>
+      <p class="icon-indicator" *ngIf="attested === true"><mat-icon class="icon-success">done</mat-icon>This identity has been attested on Bitcoin</p>
 
       <mat-form-field class="input-full-width" appearance="outline">
         <mat-label>Decentralized Web Node URL</mat-label>
         <input matInput [(ngModel)]="verifiableDataRegistryUrl" />
-        <mat-hint
-          >Set a custom DWN URL if you self-host your own instance of Blockcore
-          Vault or use other DWN software.</mat-hint
-        >
+        <mat-hint>Set a custom DWN URL if you self-host your own instance of Blockcore Vault or use other DWN software.</mat-hint>
       </mat-form-field>
 
       <br /><br />
       IMPORTANT NOTE ON PRIVACY
       <br />
-      The DID Document should never contain personal identifiable information.
-      Never put your e-mail address or name of any kind into the URL above.
+      The DID Document should never contain personal identifiable information. Never put your e-mail address or name of any kind into the URL above.
       <br /><br />
       <!-- <p>
         <button

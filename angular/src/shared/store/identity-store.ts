@@ -1,12 +1,12 @@
-import { Identity } from "..";
+import { DecentralizedIdentity } from "..";
 import { StoreListBase } from "./store-base";
 
-export class IdentityStore extends StoreListBase<Identity> {
+export class IdentityStore extends StoreListBase<DecentralizedIdentity> {
     constructor() {
         super('identity');
     }
 
-    getIdentities(): Identity[] {
+    getIdentities(): DecentralizedIdentity[] {
         return Array.from(this.items.values());
     }
 }
