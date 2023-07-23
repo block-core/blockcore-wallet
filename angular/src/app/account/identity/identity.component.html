@@ -11,7 +11,10 @@
         <button class="copy-button" mat-icon-button (click)="copyText(shortForm)">
           <mat-icon>content_copy</mat-icon>
         </button>
-        <button class="copy-button" mat-icon-button (click)="openIonDid(longForm)">
+        <button *ngIf="!attested" class="copy-button" mat-icon-button (click)="openIonDid(longForm)">
+          <mat-icon>travel_explore</mat-icon>
+        </button>
+        <button *ngIf="attested" class="copy-button" mat-icon-button (click)="openIonDid(shortForm)">
           <mat-icon>travel_explore</mat-icon>
         </button>
       </h2>
@@ -32,7 +35,10 @@
       <p class="icon-indicator" *ngIf="published === undefined"><mat-icon class="icon-warn">loop</mat-icon>Loading...</p>
       <p class="icon-indicator" *ngIf="published === false"><mat-icon class="icon-warn">done</mat-icon>This identity is not published</p>
       <p class="icon-indicator" *ngIf="published === true"><mat-icon class="icon-success">done</mat-icon>This identity is published</p>
-      <p class="icon-indicator" *ngIf="attested === false"><mat-icon class="icon-warn">done</mat-icon>Please wait for attestation on Bitcoin...</p>
+      <p class="icon-indicator" *ngIf="attested === false">
+        <mat-icon class="icon-warn">done</mat-icon>Please wait for attestation on Bitcoin...
+        <a href="https://ion.tbd.engineering/monitor/operation-queue-size" target="_blank">Queue size</a>
+      </p>
       <p class="icon-indicator" *ngIf="attested === true"><mat-icon class="icon-success">done</mat-icon>This identity has been attested on Bitcoin</p>
 
       <mat-form-field class="input-full-width" appearance="outline">
@@ -243,7 +249,7 @@
     </div>
   </mat-tab>
 
-  <mat-tab>
+  <mat-tab *ngIf="identityType != 619">
     <ng-template mat-tab-label>
       <mat-icon class="example-tab-icon">contact_mail</mat-icon>&nbsp;
       <span *ngIf="(uiState.displayLabels$ | async) === false">{{ "Account.Profile" | translate }}</span>
@@ -303,7 +309,7 @@
     </div>
   </mat-tab>
 
-  <mat-tab>
+  <mat-tab *ngIf="identityType != 619">
     <ng-template mat-tab-label>
       <mat-icon class="example-tab-icon">inventory_2</mat-icon>&nbsp;
       <span *ngIf="(uiState.displayLabels$ | async) === false">{{ "Account.Data" | translate }}</span>
@@ -312,7 +318,7 @@
     <div *ngIf="isDid" class="page">Coming soon.</div>
   </mat-tab>
 
-  <mat-tab>
+  <mat-tab *ngIf="identityType != 619">
     <ng-template mat-tab-label>
       <mat-icon class="example-tab-icon">handyman</mat-icon>&nbsp;
       <span *ngIf="(uiState.displayLabels$ | async) === false">Tools</span>
