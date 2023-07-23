@@ -10,6 +10,7 @@ import { StateStore } from 'src/shared/store/state-store';
 import { StoreBase, StoreListBase } from 'src/shared/store/store-base';
 import { EnvironmentService } from './environment.service';
 import { LoggerService } from './logger.service';
+import { IdentityStore } from 'src/shared/store/identity-store';
 
 @Injectable({
   providedIn: 'root',
@@ -38,6 +39,7 @@ export class StateService {
     private addressIndexedStore: AddressIndexedStore,
     private accountStateStore: AccountStateStore,
     private permissionStore: PermissionStore,
+    private identityStore: IdentityStore,
     private stateStore: StateStore,
     private contactStore: ContactStore,
     private tokenStore: StandardTokenStore,
@@ -63,6 +65,7 @@ export class StateService {
     this.stores.push(addressIndexedStore);
     this.stores.push(accountStateStore);
     this.stores.push(permissionStore);
+    this.stores.push(identityStore);
     this.stores.push(contactStore);
     this.stores.push(tokenStore);
     this.stores.push(transactionMetadataStore);
@@ -110,6 +113,7 @@ export class StateService {
       await this.addressIndexedStore.load();
       await this.accountStateStore.load();
       await this.permissionStore.load();
+      await this.identityStore.load();
 
       this.logger.debug('RELOAD CALLED:');
       this.logger.debug(this.accountHistoryStore.all());
@@ -132,6 +136,7 @@ export class StateService {
       await this.addressIndexedStore.load();
       await this.accountStateStore.load();
       await this.permissionStore.load();
+      await this.identityStore.load();
 
       this.changedSubject.next(this);
     });

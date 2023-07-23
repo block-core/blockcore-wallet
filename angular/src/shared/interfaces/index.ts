@@ -361,6 +361,17 @@ interface ContactAddress {
   network: any;
 }
 
+interface Identity {
+  /** Indicates if this identity is part of wallets or just a cached identity by others. */
+  local: boolean;
+
+  /** The DID Document */
+  document: any;
+
+  /** The DID ID */
+  id: string;
+}
+
 interface Wallet {
   /** Indicates if this wallet was restored or created as new. If the wallet is restored, we will automatically scan the blockchains to data when new accounts are added. */
   restored: boolean;

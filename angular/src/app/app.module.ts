@@ -132,6 +132,7 @@ import { SendConfirmationDialog } from './action/transaction.send/send-confirmat
 import { ActionWalletUnlockComponent } from './action/wallet.unlock/wallet.unlock.component';
 import { ActionSwapsSendComponent } from './action/swaps.send/swaps.send.component';
 import { AccountIconComponent } from './shared/account-icon/account-icon.component';
+import { IdentityStore } from 'src/shared/store/identity-store';
 
 // required for AOT compilation
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
@@ -296,6 +297,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     TransactionMetadataStore,
     UIStore,
     WalletStore,
+    IdentityStore,
     AccountHistoryStore,
     AddressWatchStore,
     // NetworkLoader,

@@ -1,4 +1,4 @@
-import { DIDResolutionOptions, Resolver } from 'did-resolver';
+import { DIDResolutionOptions, DIDResolutionResult, Resolver } from 'did-resolver';
 import is from '@blockcore/did-resolver';
 import { Injectable } from '@angular/core';
 
@@ -18,10 +18,32 @@ export class IdentityResolverService {
     // });
 
     const isResolver = is.getResolver();
-    this.resolver = new Resolver(isResolver);
+
+    const ionResolver = {
+      ion: async (didUri: string, options: DIDResolutionOptions = {}) => {
+        debugger;
+        // https://beta.discover.did.microsoft.com/1.0/identifiers
+        // https://ion.tbd.engineering/operations
+        const nodeEndpoint = 'https://ion.tbd.engineering/identifiers';
+
+        const response = await fetch(`${nodeEndpoint}/${didUri}`);
+
+        if (response.status >= 400) {
+          throw new Error(response.statusText);
+        }
+
+        const didResolution: DIDResolutionResult = await response.json();
+        return didResolution;
+      }
+    };
+
+    this.resolver = new Resolver({
+      ...isResolver,
+      ...ionResolver,
+    });
   }
 
-  async resolve(didUrl: string, options: DIDResolutionOptions = {}) {
-    return this.resolver.resolve(didUrl, options);
+  async resolve(didUri: string, options: DIDResolutionOptions = {}) {
+    return this.resolver.resolve(didUri, options);
   }
 }

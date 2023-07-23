@@ -19,8 +19,9 @@ import { PasswordDialog } from 'src/app/shared/password-dialog/password-dialog';
 import * as secp from '@noble/secp256k1';
 import * as QRCode from 'qrcode';
 import { SigningUtilities } from 'src/shared/identity/signing-utilities';
-import { sign, anchor, DID } from '@decentralized-identity/ion-tools';
+import { sign, anchor, DID, resolve } from '@decentralized-identity/ion-tools';
 import { base64url as base64url2 } from 'multiformats/bases/base64';
+import { IdentityStore } from 'src/shared/store/identity-store';
 
 @Component({
   selector: 'app-identity',
@@ -87,6 +88,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
     private settings: SettingsService,
     private identityService: IdentityService,
     public translate: TranslateService,
+    private identityStore: IdentityStore,
     public dialog: MatDialog,
     private message: MessageService
   ) {
@@ -124,34 +126,35 @@ export class IdentityComponent implements OnInit, OnDestroy {
 
       // 619 = DID ION
       if (account.network === 619) {
-
-        // const compressedPublicKeyBytes = secp.getPublicKey(identityNode.privateKey);
-        // const compressedPublicKeyHex = secp.utils.bytesToHex(compressedPublicKeyBytes);
-        // const curvePoints = secp.Point.fromHex(compressedPublicKeyHex);
-        // const uncompressedPublicKeyBytes = curvePoints.toRawBytes(false); // false = uncompressed
-
-        // const d = base64url2.baseEncode(identityNode.privateKey);
-        // // skip the first byte because it's used as a header to indicate whether the key is uncompressed
-        // const x = base64url2.baseEncode(uncompressedPublicKeyBytes.subarray(1, 33));
-        // const y = base64url2.baseEncode(uncompressedPublicKeyBytes.subarray(33, 65));
-
-        // const publicJwk = {
-        //   // alg: 'ES256K',
-        //   kty: 'EC',
-        //   crv: 'secp256k1',
-        //   x,
-        //   y
-        // };
-        // const privateJwk = { ...publicJwk, d };
-
-        // const publicKey = secp.getPublicKey(privateKey);
-
         // Generate keys and ION DID
         const { privateJwk, publicJwk } = tools.convertPrivateKeyToJsonWebKeyPairWithoutPadding(identityNode.privateKey);
+
+        // Create the DID Document with the key pair, to derive the identifier for it.        
+        let did = new DID({ generateKeyPair: () => { return { publicJwk, privateJwk } } });
+
+        this.longForm = await did.getURI();
+        this.shortForm = await did.getURI('short');
+
+        console.log('SHORT:', this.shortForm);
+
+        // Attempt to find a local cached version of the DID Document.
+        const existingDidDocument = this.identityStore.get(this.shortForm);
+
+        // Attempt to resolve the long form and verify if the "published": true flag is set in the metadata.
+        const result = await this.resolver.resolve(this.longForm);
+
+        if (result.didDocumentMetadata['method'].published === true) {
+          this.published = true;
+        } else {
+          this.published = false;
+          // It might be that we have published already, but not attested the identifier.
+        }
+
+        debugger;
         // console.log(privateJwk);
         // console.log(publicJwk);
 
-        let did = new DID({
+        let did2 = new DID({
           generateKeyPair: () => { return { publicJwk, privateJwk } },
           content: {
             publicKeys: [
@@ -172,16 +175,19 @@ export class IdentityComponent implements OnInit, OnDestroy {
           }
         });
 
-        let options = {
-          // nodeEndpoint: 'https://localhost',
-          // challengeEndpoint: 'https://localhost/2',
-          // solutionEndpoint: 'https://localhost/3',
-          nodeEndpoint: 'https://beta.discover.did.microsoft.com/1.0/identifiers',
-          challengeEndpoint: 'https://beta.ion.msidentity.com/api/v1.0/proof-of-work-challenge',
-          solutionEndpoint: 'https://beta.ion.msidentity.com/api/v1.0/operations'
-        };
-
         debugger;
+
+        var long = await did.getURI();
+        var short = await did.getURI('short');
+
+        // let options = {
+        //   // nodeEndpoint: 'https://localhost',
+        //   // challengeEndpoint: 'https://localhost/2',
+        //   // solutionEndpoint: 'https://localhost/3',
+        //   nodeEndpoint: 'https://beta.discover.did.microsoft.com/1.0/identifiers',
+        //   challengeEndpoint: 'https://beta.ion.msidentity.com/api/v1.0/proof-of-work-challenge',
+        //   solutionEndpoint: 'https://beta.ion.msidentity.com/api/v1.0/operations'
+        // };
 
         // Generate and publish create request to an ION node
         let createRequest = await did.generateRequest(0);
@@ -189,17 +195,13 @@ export class IdentityComponent implements OnInit, OnDestroy {
 
         this.request = createRequest;
 
+        debugger;
+
+        // this.identityStore.get()
+
+
         let operation = await did.getOperation(0);
         console.log('OPERATION:', operation);
-
-        let longFormURI = await did.getURI();
-        let shortFormURI = await did.getURI('short');
-
-        this.shortForm = shortFormURI;
-        this.longForm = longFormURI;
-
-        console.log('LONG:', longFormURI);
-        console.log('SHORT:', shortFormURI);
 
         const jws = await sign({ payload: createRequest, privateJwk });
         console.log('JWS:', jws);
