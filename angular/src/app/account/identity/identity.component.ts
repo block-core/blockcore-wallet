@@ -110,9 +110,6 @@ export class IdentityComponent implements OnInit, OnDestroy {
       const accountTranslate = await this.translate.get('Account.Account').toPromise();
       this.uiState.title = accountTranslate + ': ' + account?.name;
 
-      console.log(account);
-      console.log(JSON.stringify(account));
-
       this.network = this.walletManager.getNetwork(account.networkType);
       const accountState = this.accountStateStore.get(account.identifier);
 
@@ -131,19 +128,45 @@ export class IdentityComponent implements OnInit, OnDestroy {
 
         // Create the DID Document with the key pair, to derive the identifier for it.        
         let did = new DID({ generateKeyPair: () => { return { publicJwk, privateJwk } } });
-
-        this.longForm = await did.getURI();
         this.shortForm = await did.getURI('short');
-
-        console.log('SHORT:', this.shortForm);
-
-        let didResult = null;
 
         // Attempt to find a local cached version of the DID Document.
         const existingDidDocument = this.identityStore.get(this.shortForm);
 
+        let didResult = null;
+
         if (existingDidDocument) {
           didResult = existingDidDocument.document;
+
+          // Get the DWN from the local cache or from resolved DID Document:
+          // TODO: This will crash misarably if the array and data is not there.
+          this.verifiableDataRegistryUrl = didResult.didDocument.service[0].serviceEndpoint.nodes[0];
+
+          // Re-create the DID with the existing document.
+          did = new DID({
+            generateKeyPair: () => { return { publicJwk, privateJwk } },
+            content: {
+              publicKeys: [
+                {
+                  id: 'key-1',
+                  type: 'EcdsaSecp256k1VerificationKey2019',
+                  publicKeyJwk: publicJwk,
+                  purposes: ['authentication']
+                }
+              ],
+              services: [
+                {
+                  id: 'dwn',
+                  type: 'DecentralizedWebNode',
+                  serviceEndpoint: {
+                    nodes: [this.verifiableDataRegistryUrl]
+                  }
+                }
+              ]
+            }
+          });
+
+          this.longForm = await did.getURI();
 
           if (existingDidDocument.document.didDocument.service)
             // If the latest copy of the DID Document indicates published, show it immediately.
@@ -155,6 +178,8 @@ export class IdentityComponent implements OnInit, OnDestroy {
               this.published = true;
               this.attested = false;
             }
+        } else {
+          this.longForm = await did.getURI();
         }
 
         // Attempt to resolve the long form and verify if the "published": true flag is set in the metadata.
@@ -171,8 +196,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
             this.published = true;
             this.attested = true;
 
-            // Only when the DID is fully attested, will it again include the service element, so
-            // don't update the identity store until it's fully attested.
+            // Only when the DID is fully attested, will be update the local copy.
             this.identityStore.set(this.shortForm, doc);
             didResult = result;
           }

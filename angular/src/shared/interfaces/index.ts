@@ -370,6 +370,8 @@ interface DecentralizedIdentity {
 
   /** The DID Document */
   document: any;
+
+  // operations: [];
 }
 
 interface Wallet {
