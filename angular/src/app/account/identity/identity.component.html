@@ -41,17 +41,19 @@
       </p>
       <p class="icon-indicator" *ngIf="attested === true"><mat-icon class="icon-success">done</mat-icon>This identity has been attested on Bitcoin</p>
 
-      <mat-form-field class="input-full-width" appearance="outline">
-        <mat-label>Decentralized Web Node URL</mat-label>
-        <input matInput [(ngModel)]="verifiableDataRegistryUrl" />
-        <mat-hint>Set a custom DWN URL if you self-host your own instance of Blockcore Vault or use other DWN software.</mat-hint>
-      </mat-form-field>
+      <div *ngIf="attested">
+        <mat-form-field class="input-full-width" appearance="outline">
+          <mat-label>Decentralized Web Node URL</mat-label>
+          <input matInput [(ngModel)]="verifiableDataRegistryUrl" />
+          <mat-hint>Set a custom DWN URL if you self-host your own instance of Blockcore Vault or use other DWN software.</mat-hint>
+        </mat-form-field>
 
-      <br /><br />
-      IMPORTANT NOTE ON PRIVACY
-      <br />
-      The DID Document should never contain personal identifiable information. Never put your e-mail address or name of any kind into the URL above.
-      <br /><br />
+        <br /><br />
+        IMPORTANT NOTE ON PRIVACY
+        <br />
+        The DID Document should never contain personal identifiable information. Never put your e-mail address or name of any kind into the URL above.
+        <br /><br />
+      </div>
       <!-- <p>
         <button
           class="signup-button"
@@ -78,7 +80,13 @@
       <br /><br />
 
       <p>
+        <button class="signup-button" [disabled]="attested === true" mat-flat-button color="warn" (click)="updateIonDid()">Update</button>
+      </p>
+
+      <p>
         <button class="signup-button" [disabled]="published === true" mat-flat-button color="warn" (click)="publishIonDid()">{{ "Account.Publish" | translate }}</button>
+
+        <button class="signup-button" mat-flat-button color="warn" (click)="publishIonDid()">Resubmit (debug)</button>
       </p>
 
       <!-- <p>

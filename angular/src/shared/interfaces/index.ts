@@ -371,6 +371,8 @@ interface DecentralizedIdentity {
   /** The DID Document */
   document: any;
 
+  state: any;
+
   // operations: [];
 }
 

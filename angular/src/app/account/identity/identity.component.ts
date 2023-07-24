@@ -19,7 +19,7 @@ import { PasswordDialog } from 'src/app/shared/password-dialog/password-dialog';
 import * as secp from '@noble/secp256k1';
 import * as QRCode from 'qrcode';
 import { SigningUtilities } from 'src/shared/identity/signing-utilities';
-import { sign, anchor, DID, resolve } from '@decentralized-identity/ion-tools';
+import { sign, anchor, DID, resolve } from 'src/shared/identity/ion-tools';
 import { base64url as base64url2 } from 'multiformats/bases/base64';
 import { IdentityStore } from 'src/shared/store/identity-store';
 
@@ -68,6 +68,13 @@ export class IdentityComponent implements OnInit, OnDestroy {
 
   shortForm: string;
   longForm: string;
+
+
+  shortForm1: string;
+  shortForm2: string;
+  shortForm3: string;
+
+  didInstance: any;
 
   get identityUrl(): string {
     if (!this.identity?.published) {
@@ -126,48 +133,84 @@ export class IdentityComponent implements OnInit, OnDestroy {
         // Generate keys and ION DID
         const { privateJwk, publicJwk } = tools.convertPrivateKeyToJsonWebKeyPairWithoutPadding(identityNode.privateKey);
 
-        // Create the DID Document with the key pair, to derive the identifier for it.        
-        let did = new DID({ generateKeyPair: () => { return { publicJwk, privateJwk } } });
-        this.shortForm = await did.getURI('short');
+        const content = {
+          publicKeys: [
+            {
+              id: 'key-1',
+              type: 'EcdsaSecp256k1VerificationKey2019',
+              publicKeyJwk: publicJwk,
+              purposes: ['authentication']
+            }
+          ]
+        }
 
-        // Attempt to find a local cached version of the DID Document.
-        const existingDidDocument = this.identityStore.get(this.shortForm);
+        // The initial DID is always created with simply a single public key and nothing more. This allows to always derive the DID identifier.
+        this.didInstance = new DID({
+          generateKeyPair: () => { return { publicJwk, privateJwk } },
+          // content: content // NO LONGER IN USE AFTER FORK.
+        });
 
-        let didResult = null;
+        // We must manually create the create operation, bug fix with local fork of ion-tools.
+        await this.didInstance.generateOperation('create', content);
 
-        if (existingDidDocument) {
-          didResult = existingDidDocument.document;
+        this.shortForm = await this.didInstance.getURI('short');
+
+        // let updateOperation = await did.generateOperation('update', {
+        //   addServices: [
+        //     {
+        //       id: 'dwn',
+        //       type: 'DecentralizedWebNode',
+        //       serviceEndpoint: {
+        //         nodes: [this.verifiableDataRegistryUrl]
+        //       }
+        //     }
+        //   ]
+        // });
+
+        // const state3 = await did.getState();
+        // console.log(state3);
+
+        // debugger;
+
+        // let operation = await did.getOperation(0);
+
+        // Query for existing state for this DID.
+        const identityItem = this.identityStore.get(this.shortForm);
+
+        // TEMPORARY FIX DURING DEVELOPMENT, REMOVE THIS IN THE FUTURE:
+        let state = await this.didInstance.getState();
+        identityItem.state = state;
+
+        if (identityItem && identityItem.state && identityItem.state.shortForm) {
+          if (identityItem.state.shortForm != this.shortForm) {
+            throw Error('Critical error: The identifiers does not match.');
+          }
+        }
+
+        if (identityItem && identityItem.state) {
+          debugger;
+          // Restore the DID with the persisted operations history.
+          this.didInstance = new DID({
+            generateKeyPair: () => { return { publicJwk, privateJwk } },
+            ops: identityItem.state.ops,
+          });
+
+          const tmpShortForm = await this.didInstance.getURI('short');
+
+          // Get the updates long form that includes the operations history.
+          this.longForm = await this.didInstance.getURI();
+
+          // After the DID has been restored, validate that the subject identifier is correct.
+          if (tmpShortForm != this.shortForm) {
+            throw Error('Critical error: The identifiers does not match.');
+          }
 
           // Get the DWN from the local cache or from resolved DID Document:
           // TODO: This will crash misarably if the array and data is not there.
-          this.verifiableDataRegistryUrl = didResult.didDocument.service[0].serviceEndpoint.nodes[0];
-
-          // Re-create the DID with the existing document.
-          did = new DID({
-            generateKeyPair: () => { return { publicJwk, privateJwk } },
-            content: {
-              publicKeys: [
-                {
-                  id: 'key-1',
-                  type: 'EcdsaSecp256k1VerificationKey2019',
-                  publicKeyJwk: publicJwk,
-                  purposes: ['authentication']
-                }
-              ],
-              services: [
-                {
-                  id: 'dwn',
-                  type: 'DecentralizedWebNode',
-                  serviceEndpoint: {
-                    nodes: [this.verifiableDataRegistryUrl]
-                  }
-                }
-              ]
-            }
-          });
+          this.verifiableDataRegistryUrl = this.getDwnUrl(identityItem.document.didDocument);
 
           // If the latest copy of the DID Document indicates published, show it immediately.
-          if (existingDidDocument.document.didDocumentMetadata['method'].published === true) {
+          if (identityItem.document.didDocumentMetadata['method'].published === true) {
             this.published = true;
             this.attested = true;
           } else {
@@ -176,22 +219,205 @@ export class IdentityComponent implements OnInit, OnDestroy {
             this.attested = false;
           }
 
-          this.longForm = await did.getURI();
+          // Get the DWN from the local cache or from resolved DID Document:
+          // TODO: This will crash misarably if the array and data is not there.
+          // this.verifiableDataRegistryUrl = existingState.document.didDocument.service[0].serviceEndpoint.nodes[0];
+
+          // let updateOperation = await did.generateOperation('update', {
+          //   addServices: [
+          //     {
+          //       id: 'dwn',
+          //       type: 'DecentralizedWebNode',
+          //       serviceEndpoint: {
+          //         nodes: [this.verifiableDataRegistryUrl]
+          //       }
+          //     }
+          //   ]
+          // });
+          // console.log(updateOperation);
+
+
+          // did = new DID({
+          //   generateKeyPair: () => { return { publicJwk, privateJwk } },
+          //   ops: existingState.state.ops,
+          //   content: {
+          //     publicKeys: [
+          //       {
+          //         id: 'key-1',
+          //         type: 'EcdsaSecp256k1VerificationKey2019',
+          //         publicKeyJwk: publicJwk,
+          //         purposes: ['authentication']
+          //       }
+          //     ],
+          //     services: [
+          //       {
+          //         id: 'dwn',
+          //         type: 'DecentralizedWebNode',
+          //         serviceEndpoint: {
+          //           nodes: [this.verifiableDataRegistryUrl]
+          //         }
+          //       }
+          //     ]
+          //   }
+          // },
+          // );
+
+          // const tmpShortForm = await did.getURI('short');
+          // const tmpState = await did.getState();
+
+          // console.log(tmpState.ops[1].previous);
+
+          // const json = JSON.stringify(tmpState);
+
+          // console.log(json);
+          // console.log(JSON.parse(json));
+
+          // console.log(this.shortForm);
+          // console.log(tmpShortForm);
+          // console.log(tmpState);
+
+          // debugger;
         } else {
-          this.longForm = await did.getURI();
+          // We have no operations yet, generate it so we have the initial create with only the single public key.  
+          this.longForm = state.longForm;
+          // let createRequest = await did.generateRequest(0);
         }
+
+        // let state = await did.getState();
+        // existingState.state = state;
+
+        // debugger;
+
+        // let did2 = new DID({
+        //   generateKeyPair: () => { return { publicJwk, privateJwk } }
+        // });
+
+        // const t1 = await did.getURI('short');
+        // const t2 = await did2.getURI('short');
+        // const t3 = await did.getURI();
+        // const t4 = await did2.getURI();
+
+        // console.log(t1);
+        // console.log(t2);
+        // console.log(t3);
+        // console.log(t4);
+
+        // debugger;
+
+        // Re-create the DID with the existing document.
+        // let did2 = new DID({
+        //   generateKeyPair: () => { return { publicJwk, privateJwk } },
+        //   content: {
+        //     publicKeys: [
+        //       {
+        //         id: 'key-1',
+        //         type: 'EcdsaSecp256k1VerificationKey2019',
+        //         publicKeyJwk: publicJwk,
+        //         purposes: ['authentication']
+        //       }
+        //     ],
+        //     services: [
+        //       {
+        //         id: 'dwn',
+        //         type: 'DecentralizedWebNode',
+        //         serviceEndpoint: {
+        //           nodes: [this.verifiableDataRegistryUrl]
+        //         }
+        //       }
+        //     ]
+        //   }
+        // });
+
+        // const t1 = await did.getURI('short');
+        // const t2 = await did2.getURI('short');
+        // const t3 = await did.getURI();
+        // const t4 = await did2.getURI();
+
+        // console.log(t1);
+        // console.log(t2);
+        // console.log(t3);
+        // console.log(t4);
+
+        // this.shortForm = await did.getURI('short');
+        // console.log('SHORT FORM:', this.shortForm);
+
+        // this.shortForm1 = this.shortForm;
+        // this.shortForm3 = await did2.getURI('short');
+        // console.log('1:', this.shortForm1);
+        // console.log('3:', this.shortForm3);
+
+        // Attempt to find a local cached version of the DID Document.
+        // const existingDidDocument = this.identityStore.get(this.shortForm);
+
+        // let didResult = null;
+
+        // if (existingDidDocument) {
+        //   // didResult = existingDidDocument.document;
+
+        //   // console.log('DID RESULT:', didResult);
+
+        //   // // Get the DWN from the local cache or from resolved DID Document:
+        //   // // TODO: This will crash misarably if the array and data is not there.
+        //   // this.verifiableDataRegistryUrl = didResult.didDocument.service[0].serviceEndpoint.nodes[0];
+
+        //   // // Re-create the DID with the existing document.
+        //   // did = new DID({
+        //   //   generateKeyPair: () => { return { publicJwk, privateJwk } },
+        //   //   content: {
+        //   //     publicKeys: [
+        //   //       {
+        //   //         id: 'key-1',
+        //   //         type: 'EcdsaSecp256k1VerificationKey2019',
+        //   //         publicKeyJwk: publicJwk,
+        //   //         purposes: ['authentication']
+        //   //       }
+        //   //     ],
+        //   //     services: [
+        //   //       {
+        //   //         id: 'dwn',
+        //   //         type: 'DecentralizedWebNode',
+        //   //         serviceEndpoint: {
+        //   //           nodes: [this.verifiableDataRegistryUrl]
+        //   //         }
+        //   //       }
+        //   //     ]
+        //   //   }
+        //   // });
+
+        //   // this.shortForm2 = await did.getURI('short');
+
+        //   // If the latest copy of the DID Document indicates published, show it immediately.
+        //   if (existingDidDocument.document.didDocumentMetadata['method'].published === true) {
+        //     this.published = true;
+        //     this.attested = true;
+        //   } else {
+        //     // We have a local copy of the document, but it's not been published (attested) yet.
+        //     this.published = true;
+        //     this.attested = false;
+        //   }
+
+        //   this.longForm = await did.getURI();
+        // } else {
+        //   this.longForm = await did.getURI();
+        // }
+
+        console.log('LONG FORM:', this.longForm);
 
         // setTimeout(async () => {
         // Attempt to resolve the long form and verify if the "published": true flag is set in the metadata.
         const result = await this.resolver.resolve(this.longForm);
         // let didResult: any = null;
 
+        console.log('RESOLVE RESULT:', result);
+
+        debugger;
+
         if (!result || result.didResolutionMetadata?.error) {
           console.log(`DID Not found: ${this.longForm}`);
         } else {
           // If we already have the document, we still want to resolve the DID Document for changes
           // that can have happened on other wallets.
-          const doc: DecentralizedIdentity = { id: this.shortForm, local: true, document: result };
+          const doc: DecentralizedIdentity = { id: this.shortForm, local: true, document: result, state: state };
 
           if (result.didDocumentMetadata['method'].published === true) {
             this.published = true;
@@ -200,7 +426,18 @@ export class IdentityComponent implements OnInit, OnDestroy {
             // Only when the DID is fully attested, will be update the local copy.
             this.identityStore.set(this.shortForm, doc);
             await this.identityStore.save();
-            didResult = result;
+
+            const didDocument: any = result.didDocument;
+
+            // Get the DWN from the resolved DID Document:
+            this.verifiableDataRegistryUrl = this.getDwnUrl(didDocument);
+          } else {
+            this.published = true;
+            this.attested = false;
+
+            // Update local copy that was resolved.
+            this.identityStore.set(this.shortForm, doc);
+            await this.identityStore.save();
           }
         }
 
@@ -208,8 +445,8 @@ export class IdentityComponent implements OnInit, OnDestroy {
         // this.verifiableDataRegistryUrl = didResult.didDocument.service[0].serviceEndpoint.nodes[0];
         // }, 5000);
 
-        // Get the DWN from the local cache or from resolved DID Document:
-        this.verifiableDataRegistryUrl = didResult.didDocument.service[0].serviceEndpoint.nodes[0];
+        // console.log('111111111:', this.shortForm1);
+        // console.log('222222222:', this.shortForm2);
 
         // let options = {
         //   // nodeEndpoint: 'https://localhost',
@@ -266,6 +503,14 @@ export class IdentityComponent implements OnInit, OnDestroy {
         });
       }
     });
+  }
+
+  getDwnUrl(didDocument: any) {
+    if (!didDocument.service) {
+      return undefined;
+    }
+
+    return didDocument.service[0]?.serviceEndpoint?.nodes[0];
   }
 
   convertKey() {
@@ -426,7 +671,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
     return Math.floor(Math.random() * max);
   }
 
-  async publishIonDid() {
+  async updateIonDid() {
     // const serviceUrl = 'https://ion-test.tbddev.org/operations';
     const serviceUrl = 'https://ion.tbd.engineering/operations';
     const account = this.walletManager.activeAccount;
@@ -434,31 +679,20 @@ export class IdentityComponent implements OnInit, OnDestroy {
     const identityNode = this.identityService.getIdentityNode(this.walletManager.activeWallet, account);
     const { privateJwk, publicJwk } = tools.convertPrivateKeyToJsonWebKeyPairWithoutPadding(identityNode.privateKey);
 
-    let did = new DID({
-      generateKeyPair: () => { return { publicJwk, privateJwk } },
-      content: {
-        publicKeys: [
-          {
-            id: 'key-1',
-            type: 'EcdsaSecp256k1VerificationKey2019',
-            publicKeyJwk: publicJwk,
-            purposes: ['authentication']
+    let updateOperation = await this.didInstance.generateOperation('update', {
+      addServices: [
+        {
+          id: 'dwn',
+          type: 'DecentralizedWebNode',
+          serviceEndpoint: {
+            nodes: [this.verifiableDataRegistryUrl]
           }
-        ],
-        services: [
-          {
-            id: 'dwn',
-            type: 'DecentralizedWebNode',
-            serviceEndpoint: {
-              nodes: [this.verifiableDataRegistryUrl]
-            }
-          }
-        ]
-      }
+        }
+      ]
     });
 
     // Generate and publish create request to an ION node
-    let createRequest = await did.generateRequest(0);
+    let createRequest = await this.didInstance.generateRequest(updateOperation);
     console.log('REQUEST:', createRequest);
 
     const response = await fetch(serviceUrl, {
@@ -473,7 +707,82 @@ export class IdentityComponent implements OnInit, OnDestroy {
     // The result from CREATE operation should have the full DID Document, including the service parts.
     const result = await response.json();
 
-    this.identityStore.set(this.shortForm, { id: this.shortForm, local: true, document: result });
+    // Get the latest state so we'll persist that.
+    const state = await this.didInstance.getState();
+
+    this.identityStore.set(this.shortForm, { id: this.shortForm, local: true, document: result, state: state });
+    await this.identityStore.save();
+
+    console.log(result);
+
+    // Update the published status immediately.
+    this.published = true;
+    this.attested = false;
+  }
+
+  async publishIonDid() {
+    // const serviceUrl = 'https://ion-test.tbddev.org/operations';
+    const serviceUrl = 'https://ion.tbd.engineering/operations';
+    // const account = this.walletManager.activeAccount;
+    // const tools = new BlockcoreIdentityTools();
+    // const identityNode = this.identityService.getIdentityNode(this.walletManager.activeWallet, account);
+    // const { privateJwk, publicJwk } = tools.convertPrivateKeyToJsonWebKeyPairWithoutPadding(identityNode.privateKey);
+
+    // let updateOperation = await this.didInstance.generateOperation('update', {
+    //   addServices: [
+    //     {
+    //       id: 'dwn',
+    //       type: 'DecentralizedWebNode',
+    //       serviceEndpoint: {
+    //         nodes: [this.verifiableDataRegistryUrl]
+    //       }
+    //     }
+    //   ]
+    // });
+
+    // let did = new DID({
+    //   generateKeyPair: () => { return { publicJwk, privateJwk } },
+    //   content: {
+    //     publicKeys: [
+    //       {
+    //         id: 'key-1',
+    //         type: 'EcdsaSecp256k1VerificationKey2019',
+    //         publicKeyJwk: publicJwk,
+    //         purposes: ['authentication']
+    //       }
+    //     ],
+    //     services: [
+    //       {
+    //         id: 'dwn',
+    //         type: 'DecentralizedWebNode',
+    //         serviceEndpoint: {
+    //           nodes: [this.verifiableDataRegistryUrl]
+    //         }
+    //       }
+    //     ]
+    //   }
+    // });
+
+    // This is the creation operation, so just get the first operation in the DID instance.
+    let createRequest = await this.didInstance.generateRequest(0);
+    console.log('REQUEST:', createRequest);
+
+    const response = await fetch(serviceUrl, {
+      method: 'POST',
+      body: JSON.stringify(createRequest),
+    })
+
+    if (response.status >= 400) {
+      throw new Error(response.statusText);
+    }
+
+    // The result from CREATE operation should have the full DID Document, including the service parts.
+    const result = await response.json();
+
+    // Get the latest state so we'll persist that.
+    const state = await this.didInstance.getState();
+
+    this.identityStore.set(this.shortForm, { id: this.shortForm, local: true, document: result, state: state });
     await this.identityStore.save();
 
     console.log(result);
