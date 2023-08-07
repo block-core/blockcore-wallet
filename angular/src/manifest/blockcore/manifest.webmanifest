@@ -3,7 +3,7 @@
     "scope": "./",
     "start_url": "./",
     "name": "Blockcore Wallet",
-    "short_name": "Blockcore",
+    "short_name": "Wallet",
     "version": "1.0.32",
     "author": "Blockcore",
     "display": "standalone",
