@@ -39,6 +39,9 @@ let walletStore: WalletStore;
 
 // Don't mark this method async, it will result in caller not being called in "sendResponse".
 browser.runtime.onMessage.addListener(async (msg: ActionMessage, sender) => {
+  // Open the database.
+  await Database.Instance.open();
+
   // We verify in both content.ts and here, simply because hostile website can always load the provider.ts if
   // they reference it directly manually.
   let verify = DomainVerification.verify(msg.app);
@@ -376,6 +379,9 @@ chrome.runtime.onInstalled.addListener(async ({ reason }) => {
 });
 
 chrome.alarms.onAlarm.addListener(async (alarm: chrome.alarms.Alarm) => {
+  // Open the database.
+  await Database.Instance.open();
+
   if (alarm.name === 'periodic') {
     await shared.checkLockTimeout();
   } else if (alarm.name === 'index') {
