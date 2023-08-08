@@ -1,3 +1,30 @@
+## <small>1.0.33 (2023-08-08)</small>
+
+* Ensure that database instance is opened on message and alarms ([a9c98cf](https://github.com/block-core/blockcore-wallet/commit/a9c98cf))
+* Update lists ([762187e](https://github.com/block-core/blockcore-wallet/commit/762187e))
+
+
+
+## <small>1.0.32 (2023-07-19)</small>
+
+* Add a basic unit test for storage ([25a2656](https://github.com/block-core/blockcore-wallet/commit/25a2656))
+* Add a comment regarding StorageService ([97f7f52](https://github.com/block-core/blockcore-wallet/commit/97f7f52))
+* Add a static database instance and generic table ([924bbc7](https://github.com/block-core/blockcore-wallet/commit/924bbc7))
+* Add basic DB-storage ([85f452e](https://github.com/block-core/blockcore-wallet/commit/85f452e))
+* Create TEST.md ([6b5920e](https://github.com/block-core/blockcore-wallet/commit/6b5920e))
+* Custom storage tables are not yet enabled, disable the tests ([87b9386](https://github.com/block-core/blockcore-wallet/commit/87b9386))
+* Did some tests ([143afbf](https://github.com/block-core/blockcore-wallet/commit/143afbf))
+* Enable only the bucket table for database ([0d00a83](https://github.com/block-core/blockcore-wallet/commit/0d00a83))
+* Ensure quick migrate from storage to database ([82d7070](https://github.com/block-core/blockcore-wallet/commit/82d7070))
+* Ensure that the database has been opened before each test ([f34c1af](https://github.com/block-core/blockcore-wallet/commit/f34c1af))
+* Fix a null reference bug on executions info ([e8ad80f](https://github.com/block-core/blockcore-wallet/commit/e8ad80f))
+* Implement IndexedDB storage for data ([111cf50](https://github.com/block-core/blockcore-wallet/commit/111cf50))
+* Remove some debug logging ([d7f7ada](https://github.com/block-core/blockcore-wallet/commit/d7f7ada))
+* Update storage.ts ([f5a04a0](https://github.com/block-core/blockcore-wallet/commit/f5a04a0))
+* Update version and changelog ([89ad3b0](https://github.com/block-core/blockcore-wallet/commit/89ad3b0))
+
+
+
 ## <small>1.0.31 (2023-07-10)</small>
 
 * Fix null reference bug for new accounts in new wallets ([0dce440](https://github.com/block-core/blockcore-wallet/commit/0dce440))
