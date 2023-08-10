@@ -17,3 +17,6 @@
 .verify-status {
   text-align: center;
 }
+.overflow-auto{
+  overflow: auto;
+}
