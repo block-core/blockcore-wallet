@@ -74,7 +74,7 @@
               "extractLicenses": true,
               "sourceMap": false,
               "namedChunks": true,
-              "outputHashing": "all",
+              "outputHashing": "none",
               "budgets": [
                 {
                   "type": "initial",
@@ -155,7 +155,7 @@
               "extractLicenses": true,
               "sourceMap": false,
               "namedChunks": true,
-              "outputHashing": "all",
+              "outputHashing": "none",
               "outputPath": "dist/extension",
               "budgets": [
                 {
@@ -212,7 +212,7 @@
               "extractLicenses": true,
               "sourceMap": false,
               "namedChunks": true,
-              "outputHashing": "all",
+              "outputHashing": "none",
               "outputPath": "dist/extension",
               "budgets": [
                 {
