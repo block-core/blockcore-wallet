@@ -1,5 +1,5 @@
 {
-    "name": "Smart City Platform",
+    "name": "Free City Wallet",
     "version": "1.0.33",
     "manifest_version": 3,
     "description": "Manage your citizenship, identity, properties, social network and more.",
@@ -20,7 +20,7 @@
     },
     "action": {
         "default_popup": "index.html?#/popup",
-        "default_title": "Smart City Platform"
+        "default_title": "Free City Wallet"
     },
     "content_scripts": [
         {
@@ -38,6 +38,8 @@
     "externally_connectable": {
         "matches": [
             "https://www.blockcore.net/*",
+            "https://hub.freeplatform.city/*",
+            "https://www.freeplatform.city/*",
             "https://www.city-chain.org/*",
             "https://www.coinvault.io/*",
             "http://localhost/*"

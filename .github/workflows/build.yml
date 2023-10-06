@@ -66,7 +66,7 @@ jobs:
           cd ../../
           rm -rf dist/extension
 
-      - name: Package SmartCityPlatform
+      - name: Package FreeCityWallet
         run: |
           npm run build:smartcityplatform
           cd dist/extension
@@ -86,7 +86,7 @@ jobs:
           name: ${{env.COINVAULT}}-preview-${{env.VERSION}}
           path: "${{env.RELEASE_NAME_COINVAULT}}"
 
-      - name: Upload SmartCityPlatform
+      - name: Upload FreeCityWallet
         uses: actions/upload-artifact@v1
         with:
           name: ${{env.SMARTCITYPLATFORM}}-preview-${{env.VERSION}}

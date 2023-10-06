@@ -13,10 +13,10 @@ export const environment: IEnvironment = {
   enableDebugTools: false,
   logLevel: 'info',
   features: ['wallet', 'identity', 'handler:pay', 'handler:did'],
-  releaseUrl: 'https://github.com/CityChainFoundation/smart-city-platform/releases',
-  sourceUrl: 'https://github.com/CityChainFoundation/smart-city-platform',
+  releaseUrl: 'https://github.com/CityChainFoundation/free-city-wallet/releases',
+  sourceUrl: 'https://github.com/CityChainFoundation/free-city-wallet',
   instance: 'smartcityplatform',
-  instanceName: 'Smart City Platform',
+  instanceName: 'Free City Wallet',
   instanceUrl: 'https://www.city-chain.org/',
   instanceExplorerUrl: 'https://explorer.city-chain.org',
   networks: ['CITY', 'IDENTITY']

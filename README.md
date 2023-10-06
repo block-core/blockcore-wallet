@@ -49,7 +49,7 @@ This wallet is made available in multiple different instances that has different
 - Features: Wallet, NFT and more.
 - Download: ["coinvault-\*.zip](https://github.com/block-core/blockcore-wallet/releases)
 
-### Smart City Platform
+### Free City Wallet
 
 - Chains: City Chain
 - Features: Focused on decentralized citizenship
