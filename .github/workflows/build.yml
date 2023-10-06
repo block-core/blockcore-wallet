@@ -15,7 +15,7 @@ jobs:
     env:
       BLOCKCORE: "blockcore"
       COINVAULT: "coinvault"
-      SMARTCITYPLATFORM: "smartcityplatform"
+      FREECITY: "freecity"
 
     steps:
       - name: Checkout
@@ -68,9 +68,9 @@ jobs:
 
       - name: Package FreeCityWallet
         run: |
-          npm run build:smartcityplatform
+          npm run build:freecity
           cd dist/extension
-          zip -r ../../${{env.RELEASE_NAME_SMARTCITYPLATFORM}} "./"
+          zip -r ../../${{env.RELEASE_NAME_FREECITY}} "./"
           cd ../../
           rm -rf  dist/extension
 

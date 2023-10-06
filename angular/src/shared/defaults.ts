@@ -286,7 +286,7 @@ export class Defaults {
           },
         ];
         break;
-      case 'smartcityplatform':
+      case 'freecity':
         accounts = [
           {
             identifier: uuidv4(),

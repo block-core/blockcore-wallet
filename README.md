@@ -53,7 +53,7 @@ This wallet is made available in multiple different instances that has different
 
 - Chains: City Chain
 - Features: Focused on decentralized citizenship
-- Download: ["smartcityplatform-\*.zip](https://github.com/block-core/blockcore-wallet/releases)
+- Download: ["freecity-\*.zip](https://github.com/block-core/blockcore-wallet/releases)
 
 ## Supported Browsers
 

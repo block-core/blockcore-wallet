@@ -193,10 +193,10 @@
                 }
               ]
             },
-            "smartcityplatform": {
+            "freecity": {
               "stylePreprocessorOptions": {
                 "includePaths": [
-                  "angular/src/styles/smartcityplatform/"
+                  "angular/src/styles/freecity/"
                 ]
               },
               "buildOptimizer": false,
@@ -228,7 +228,7 @@
               ],
               "assets": [
                 {
-                  "input": "angular/src/assets/smartcityplatform/",
+                  "input": "angular/src/assets/freecity/",
                   "output": "/assets",
                   "glob": "*"
                 },
@@ -238,7 +238,7 @@
                   "glob": "*"
                 },
                 {
-                  "input": "angular/src/manifest/smartcityplatform/",
+                  "input": "angular/src/manifest/freecity/",
                   "output": "/",
                   "glob": "*"
                 }
@@ -246,7 +246,7 @@
               "fileReplacements": [
                 {
                   "replace": "angular/src/environments/environment.ts",
-                  "with": "angular/src/environments/environment.smartcityplatform.ts"
+                  "with": "angular/src/environments/environment.freecity.ts"
                 }
               ]
             }
@@ -268,8 +268,8 @@
             "coinvault": {
               "browserTarget": "blockcore-wallet:build:coinvault"
             },
-            "smartcityplatform": {
-              "browserTarget": "blockcore-wallet:build:smartcityplatform"
+            "freecity": {
+              "browserTarget": "blockcore-wallet:build:freecity"
             }
           },
           "defaultConfiguration": "development"

@@ -12,12 +12,12 @@ export const environment: IEnvironment = {
   production: true,
   enableDebugTools: false,
   logLevel: 'info',
-  features: ['wallet', 'identity', 'handler:pay', 'handler:did'],
-  releaseUrl: 'https://github.com/CityChainFoundation/free-city-wallet/releases',
-  sourceUrl: 'https://github.com/CityChainFoundation/free-city-wallet',
-  instance: 'smartcityplatform',
+  features: ['wallet', 'identity', 'handler:pay', 'handler:did', 'handler:nostr'],
+  releaseUrl: 'https://github.com/block-core/blockcore-wallet/releases',
+  sourceUrl: 'https://github.com/block-core/blockcore-wallet',
+  instance: 'freecity',
   instanceName: 'Free City Wallet',
-  instanceUrl: 'https://www.city-chain.org/',
-  instanceExplorerUrl: 'https://explorer.city-chain.org',
-  networks: ['CITY', 'IDENTITY']
+  instanceUrl: 'https://www.freeplatform.city/',
+  instanceExplorerUrl: 'https://explorer.blockcore.net',
+  networks: ['CITY', 'IDENTITY', 'NOSTR', 'JWK', 'KEY', 'BTC']
 };
