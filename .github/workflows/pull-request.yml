@@ -37,7 +37,7 @@ jobs:
         run: |
           echo RELEASE_NAME_BLOCKCORE=${{ env.BLOCKCORE }}-${{ env.VERSION }}.zip >> $GITHUB_ENV
           echo RELEASE_NAME_COINVAULT=${{ env.COINVAULT }}-${{ env.VERSION }}.zip >> $GITHUB_ENV
-          echo RELEASE_NAME_SMARTCITYPLATFORM=${{ env.SMARTCITYPLATFORM }}-${{ env.VERSION }}.zip >> $GITHUB_ENV
+          echo RELEASE_NAME_FREECITY=${{ env.FREECITY }}-${{ env.VERSION }}.zip >> $GITHUB_ENV
         shell: bash
 
       - name: Setup

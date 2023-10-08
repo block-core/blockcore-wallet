@@ -37,7 +37,7 @@ jobs:
         run: |
           echo RELEASE_NAME_BLOCKCORE=${{ env.BLOCKCORE }}-${{ env.VERSION }}.zip >> $GITHUB_ENV
           echo RELEASE_NAME_COINVAULT=${{ env.COINVAULT }}-${{ env.VERSION }}.zip >> $GITHUB_ENV
-          echo RELEASE_NAME_SMARTCITYPLATFORM=${{ env.SMARTCITYPLATFORM }}-${{ env.VERSION }}.zip >> $GITHUB_ENV
+          echo RELEASE_NAME_FREECITY=${{ env.FREECITY }}-${{ env.VERSION }}.zip >> $GITHUB_ENV
         shell: bash
 
       - name: Setup
@@ -89,14 +89,14 @@ jobs:
       - name: Upload FreeCityWallet
         uses: actions/upload-artifact@v1
         with:
-          name: ${{env.SMARTCITYPLATFORM}}-preview-${{env.VERSION}}
-          path: "${{env.RELEASE_NAME_SMARTCITYPLATFORM}}"
+          name: ${{env.FREECITY}}-preview-${{env.VERSION}}
+          path: "${{env.RELEASE_NAME_FREECITY}}"
 
       - name: Create/Update Draft Release
         uses: sondreb/action-release@main
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          files: "${{env.RELEASE_NAME_BLOCKCORE}};${{env.RELEASE_NAME_COINVAULT}};${{env.RELEASE_NAME_SMARTCITYPLATFORM}}"
+          files: "${{env.RELEASE_NAME_BLOCKCORE}};${{env.RELEASE_NAME_COINVAULT}};${{env.RELEASE_NAME_FREECITY}}"
           draft: true
           prerelease: false
           name: "Blockcore Wallet (${{env.VERSION}})"
