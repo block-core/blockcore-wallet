@@ -1,4 +1,4 @@
-import { Injectable, OnInit, NgZone } from '@angular/core';
+import { Injectable, OnInit, NgZone, Inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { DecentralizedWebNode, Message, MessageService } from 'src/shared';
 import { BackgroundManager, ProcessResult } from 'src/shared/background-manager';
@@ -9,6 +9,7 @@ import { EventBus } from '../../shared/event-bus';
 import { SettingsService } from './settings.service';
 import { StateService } from './state.service';
 import { WalletManager } from './wallet-manager';
+import { DOCUMENT } from '@angular/common';
 
 @Injectable({
   providedIn: 'root',
@@ -21,6 +22,7 @@ export class FrontendService implements OnInit {
   private indexing: boolean;
 
   constructor(
+    @Inject(DOCUMENT) private document: Document,
     private ngZone: NgZone,
     private walletManager: WalletManager,
     private events: EventBus,
@@ -76,6 +78,14 @@ export class FrontendService implements OnInit {
         case 'indexed': {
           // console.log('SERVICE WORKER HAS FINISHED INDEXING!!! WE MUST RELOAD STORES!', message.data);
           await this.state.refresh();
+          return 'ok';
+        }
+        case 'did.request': {
+          debugger;
+          const msg = message as any;
+          let url = msg.request.params[0].callback;
+          url = url.replace('%s', msg.key); // This is the DID.
+          this.document.location.href = url;
           return 'ok';
         }
         case 'reload': {
@@ -186,7 +196,7 @@ export class FrontendService implements OnInit {
   runIndexer = async () => {
     // Stop and ensure watcher doesn't start up while indexer is running.
     if (this.watchManager) {
-      this.watchManager.onStopped = () => {};
+      this.watchManager.onStopped = () => { };
       this.watchManager.stop();
       this.watchManager = null;
     }

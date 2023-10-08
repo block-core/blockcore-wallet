@@ -40,7 +40,7 @@ export class LoadingComponent implements OnInit, OnDestroy {
     private orchestrator: OrchestratorService,
     private runtime: RuntimeService,
     @Inject(DOCUMENT) private document: Document
-  ) {}
+  ) { }
 
   ngOnDestroy(): void {
     if (this.sub) {
@@ -50,6 +50,18 @@ export class LoadingComponent implements OnInit, OnDestroy {
 
   reload() {
     window.location.href = 'index.html';
+  }
+
+  hasJsonStructure(str: any) {
+    if (typeof str !== 'string') return false;
+    try {
+      const result = JSON.parse(str);
+      const type = Object.prototype.toString.call(result);
+      return type === '[object Object]'
+        || type === '[object Array]';
+    } catch (err) {
+      return false;
+    }
   }
 
   instanceName: string;
@@ -133,10 +145,13 @@ export class LoadingComponent implements OnInit, OnDestroy {
       }
 
       if (parameters.action) {
+        // Transform the content to be displayed to user.
+        const parsedContent = this.hasJsonStructure(parameters.content) ? JSON.parse(parameters.content) : parameters.content;
+
         this.uiState.action = {
           action: parameters.action,
           id: parameters.id,
-          content: JSON.parse(parameters.content), // Transform the content to be displayed to user.
+          content: parsedContent,
           params: JSON.parse(parameters.params), // Transform the params from string to object here after we've received it through the query string.
           app: parameters.app,
           verify: verify,
