@@ -12,7 +12,9 @@ export class SecureStateService {
     // The background.ts is responsible for clearing the secure state when timeout is reached.
 
     /** Contains the master seed for unlocked wallets. This object should never be persisted and only exists in memory. */
-    private keys: Map<string, string> = new Map<string, string>();
+    
+    // Made public to support a minor hack for frontend service.
+    public keys: Map<string, string> = new Map<string, string>();
 
     unlockedWalletsSubject: BehaviorSubject<string[]> = new BehaviorSubject<string[]>([]);
 

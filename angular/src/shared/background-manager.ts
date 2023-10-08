@@ -150,8 +150,8 @@ export class BackgroundManager {
     return true;
   }
 
-  async getKey(walletId: string, accountId: string, keyId: string) {
-    await this.sharedManager.loadPrivateKeys();
+  async getKey(walletId: string, accountId: string, keyId: string, secure: any = null) {
+    await this.sharedManager.loadPrivateKeys(secure);
 
     // Get the secret seed.
     const masterSeedBase64 = this.sharedManager.getPrivateKey(walletId);

@@ -37,13 +37,19 @@ export class SharedManager {
     return this.allNetworks.find((w) => w.id == networkType);
   }
 
-  async loadPrivateKeys() {
-    let keys = await this.storage.get('keys', false);
+  // Secure can be supplied to load the keys from secure storage instead of storage service.
+  async loadPrivateKeys(secure: any = null) {
+    if (secure) {
+      this.keys = secure.keys;
 
-    if (keys != null && Object.keys(keys).length > 0) {
-      this.keys = new Map<string, string>(Object.entries(keys));
     } else {
-      this.keys = new Map<string, string>();
+      let keys = await this.storage.get('keys', false);
+
+      if (keys != null && Object.keys(keys).length > 0) {
+        this.keys = new Map<string, string>(Object.entries(keys));
+      } else {
+        this.keys = new Map<string, string>();
+      }
     }
   }
 

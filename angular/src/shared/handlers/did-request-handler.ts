@@ -25,9 +25,9 @@ export class DidRequestHandler implements ActionHandler {
     };
   }
 
-  async execute(state: ActionState, permission: Permission): Promise<ActionResponse> {
+  async execute(state: ActionState, permission: Permission, secure: any = null): Promise<ActionResponse> {
     // Get the private key
-    const { network, node } = await this.backgroundManager.getKey(permission.walletId, permission.accountId, permission.keyId);
+    const { network, node } = await this.backgroundManager.getKey(permission.walletId, permission.accountId, permission.keyId, secure);
 
     if (state.content) {
       let contentText = state.content;
@@ -47,7 +47,6 @@ export class DidRequestHandler implements ActionHandler {
 
       // "jws" or "jwt"?
       // const didDocument = identity.document();
-
       const jws = await createJWS(proofContent, tools.getSigner(privateKey), { kid: `${identity.did}${verificationMethod.id}` });
 
       let returnData: ActionResponse = {
