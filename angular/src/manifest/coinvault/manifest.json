@@ -1,6 +1,6 @@
 {
     "name": "CoinVault",
-    "version": "1.0.35",
+    "version": "1.0.36",
     "manifest_version": 3,
     "description": "Non-Custodial wallet for Stratis, Cirrus, NFTs and more.",
     "author": "Softchains Ltd",
