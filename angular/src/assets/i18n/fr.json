@@ -1,7 +1,7 @@
 {
   "en": "English",
   "no": "Norsk",
-  "fr": "French",
+  "fr": "Français",
   "el": "Greek",
   "fa": "Persian",
   "ar": "Arabic",
@@ -67,7 +67,7 @@
     "ChangePassword": "Changer le mot de passe",
     "Biometric": "Biométrique",
     "WipeData": "Effacer les données",
-    "Information": "Information",
+    "Information": "Informations",
     "About": "À propos",
     "Release": "Version",
     "ThirdPartyLicenses": "Licences tierces",
@@ -123,8 +123,8 @@
     "RequirePasswordForSending": "Exiger un mot de passe pour envoyer",
     "Yes": "Oui",
     "No": "Non",
-    "DebugLoggingEnabled": "Debug Logging Enabled",
-    "InfoLoggingEnabled": "Info Logging Enabled"
+    "DebugLoggingEnabled": "Journalisation de débogage activée",
+    "InfoLoggingEnabled": "Journalisation des informations activée"
   },
   "Wallet": {
     "CreateNewWallet": "Créer un nouveau portefeuille",
@@ -136,7 +136,7 @@
     "Receive": "Recevoir",
     "CreateWallet": "Créer un portefeuille",
     "CreateWalletDescription": "C'est votre phrase privée et secrète qui est votre compte. Vous devez la conserver en sécurité, si vous la perdez, vous perdrez tous vos actifs. Personne ne peut le récupérer pour vous.",
-    "NeverShareIt": "Ne le partagez jamais.",
+    "NeverShareIt": "Ne la partagez jamais.",
     "RecoverWalletDescription": "Restaurez votre portefeuille existant avec votre phrase de récupération secrète de 12 ou 24 mots.",
     "RecoverWalletNote": "Remarque : il s'agit d'un portefeuille chaud, il est conseillé de ne pas récupérer de portefeuilles importants sur des portefeuilles chauds.",
     "Options": "Options",
@@ -438,8 +438,8 @@
     "ExchangeCryptoDescription": "Échangez votre cryptomonnaie existante contre d'autres cryptomonnaies.",
     "ExchangeBTCForSTRAX": "Échanger du BTC contre du STRAX avec Exolix",
     "ExchangeSTRAXForBTC": "Échanger du STRAX contre du BTC avec Exolix",
-    "ExchangeBTCForSTRAXChangeNOW": "Exchange BTC for STRAX with ChangeNOW",
-    "ExchangeSTRAXForBTCChangeNOW": "Exchange STRAX for BTC with ChangeNOW",
+    "ExchangeBTCForSTRAXChangeNOW": "Échanger du BTC contre du STRAX avec ChangeNOW",
+    "ExchangeSTRAXForBTCChangeNOW": "Échanger du STRAX contre du BTC avec ChangeNOW",
     "Partners": "Partenaires",
     "PartnersDescription": "En utilisant nos liens et nos partenaires affiliés, vous contribuez au développement continu de ce portefeuille."
   },
@@ -455,14 +455,14 @@
     "ClearAll": "Effacer tout"
   },
   "english": "English",
-  "chinese_simplified": "Chinese (Simplified)",
-  "chinese_traditional": "Chinese (Traditional)",
-  "czech": "Czech",
-  "french": "French",
-  "italian": "Italian",
-  "japanese": "Japanese",
-  "korean": "Korean",
-  "portuguese": "Portuguese",
-  "spanish": "Spanish",
-  "russian": "Russian"
+  "chinese_simplified": "Chinois (simplifié)",
+  "chinese_traditional": "Chinois (traditionnel)",
+  "czech": "Tchèque",
+  "french": "Français",
+  "italian": "Italien",
+  "japanese": "Japonais",
+  "korean": "Coréen",
+  "portuguese": "Portugais",
+  "spanish": "Espagnol",
+  "russian": "Russe"
 }
