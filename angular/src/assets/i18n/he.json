@@ -1,12 +1,12 @@
 {
   "en": "English",
-  "no": "Norsk",
+  "no": "Norwegian",
   "fr": "French",
   "el": "Greek",
   "fa": "Persian",
   "ar": "Arabic",
-  "he": "עברית",
-  "ru": "Русский",
+  "he": "Hebrew",
+  "ru": "Russian",
   "App": {
     "AddAccount": "הוסף חשבון",
     "ChooseWallet": "בחר ארנק",

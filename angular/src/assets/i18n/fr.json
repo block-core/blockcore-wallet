@@ -1,12 +1,12 @@
 {
   "en": "English",
-  "no": "Norsk",
-  "fr": "Français",
+  "no": "Norwegian",
+  "fr": "French",
   "el": "Greek",
   "fa": "Persian",
   "ar": "Arabic",
   "he": "Hebrew",
-  "ru": "Русский",
+  "ru": "Russian",
   "App": {
     "Hide": "Masquer",
     "ConvertKey": "Convertir la clé",
