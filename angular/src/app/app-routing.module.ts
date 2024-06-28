@@ -51,6 +51,7 @@ import { ExchangeComponent } from './exchange/exchange.component';
 import { BiometricComponent } from './settings/biometric/biometric.component';
 import { ActionSignVerifiableCredentialComponent } from './action/sign-credential/sign.component';
 import { ActionSignMessageComponent } from './action/sign-message/sign.component';
+import { ActionSignPsbtComponent } from './action/sign-psbt/signpsbt.component';
 import { ActionVaultSetupComponent } from './action/vault-setup/vault-setup.component';
 import { PaymentComponent } from './account/payment/payment.component';
 import { DebuggerComponent } from './settings/debugger/debugger.component';
@@ -422,6 +423,13 @@ const routes: Routes = [
         },
       },
       {
+        path: 'signPsbt',
+        component: ActionSignPsbtComponent,
+        resolve: {
+          data: LoadingResolverService,
+        },
+      },
+      {
         path: 'wallets',
         component: ActionWalletsComponent,
         resolve: {
@@ -498,7 +506,7 @@ const routes: Routes = [
           data: LoadingResolverService,
         },
       },
-      
+
       // {
       //   path: 'signVerifiableCredential',
       //   component: ActionSignVerifiableCredentialComponent,
@@ -569,4 +577,4 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes, { enableTracing: false, useHash: true })],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

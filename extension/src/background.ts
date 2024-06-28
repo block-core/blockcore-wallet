@@ -127,6 +127,7 @@ async function handleContentScriptMessage(message: ActionMessage) {
   }
 
   const method = message.request.method;
+  // console.log('Message', message);
   const params = message.request.params[0];
 
   // Create a new handler instance.
@@ -156,7 +157,10 @@ async function handleContentScriptMessage(message: ActionMessage) {
   const prepare = await state.handler.prepare(state);
   state.content = prepare.content;
 
+  // console.log("Prepare ", prepare);
+
   let permission: Permission | unknown | null = null;
+  // console.log('Permission:', permission);
 
   if (prepare.consent) {
     // Reload the permissions each time.
@@ -306,6 +310,8 @@ async function promptPermission(state: ActionState) {
   };
 
   let qs = new URLSearchParams(parameters);
+  // let url = `${browser.runtime.getURL('index.html')}?${qs.toString()}`;
+  // console.log("url: ", url);
 
   return new Promise((resolve, reject) => {
     // Set the global prompt object:

@@ -102,6 +102,7 @@ import { ExchangeComponent } from './exchange/exchange.component';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { StandardTokenStore } from '../shared/store/standard-token-store';
 import { ActionSignMessageComponent } from './action/sign-message/sign.component';
+import { ActionSignPsbtComponent } from './action/sign-psbt/signpsbt.component';
 import { ActionSignVerifiableCredentialComponent } from './action/sign-credential/sign.component';
 import { RuntimeService } from 'src/shared/runtime.service';
 import { StorageService } from 'src/shared/storage.service';
@@ -199,6 +200,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     ContactsViewComponent,
     ExchangeComponent,
     ActionSignMessageComponent,
+    ActionSignPsbtComponent,
     ActionSignVerifiableCredentialComponent,
     ActionVaultSetupComponent,
     PaymentComponent,
@@ -338,4 +340,4 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
   ],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule { }
