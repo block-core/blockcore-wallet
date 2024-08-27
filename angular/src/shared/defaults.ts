@@ -1,5 +1,5 @@
 import { Account } from './interfaces';
-import { BTC, CITY, CRS, CY, IDENTITY, NOSTR, RSC, SBC, STRAX, TCRS, TSTRAX, X42 , IMPLX, MOL,  KEY, XRC, SERF} from './networks';
+import { BITCOIN_TESTNET, BTC, CITY, CRS, CY, IDENTITY, NOSTR, RSC, SBC, STRAX, TCRS, TSTRAX, X42, IMPLX, MOL, KEY, XRC, SERF } from './networks';
 import { JWK } from './networks/JWK';
 const { v4: uuidv4 } = require('uuid');
 
@@ -24,6 +24,7 @@ export class Defaults {
     networks.push(new X42());
     networks.push(new XRC());
     networks.push(new SERF());
+    networks.push(new BITCOIN_TESTNET());
     return networks;
   }
 
@@ -284,6 +285,20 @@ export class Defaults {
             purposeAddress: 44,
             icon: 'account_circle',
           },
+          {
+            identifier: uuidv4(),
+            index: 0,
+            networkType: 'BITCOIN_TESTNET',
+            mode: 'normal',
+            selected: false,
+            name: 'Bitcoin Testnet',
+            type: 'coin',
+            network: 1,
+            purpose: 44,
+            purposeAddress: 44,
+            icon: 'paid',
+          }
+
         ];
         break;
       case 'freecity':
