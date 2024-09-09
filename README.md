@@ -116,3 +116,8 @@ The `lists` is a git submodule and to update to latest:
 ```sh
 git submodule update --remote --merge
 ```
+
+## PSBT Test guide
+
+To test the PSBT signing, there are few pre-built vectors, along with wallet configuration. You can refer to this document for the details:
+https://docs.google.com/document/d/1we2a26ezo914LcbEMVe4V8Fwl2zK2194si_6yL4Wd8E/edit?usp=sharing
