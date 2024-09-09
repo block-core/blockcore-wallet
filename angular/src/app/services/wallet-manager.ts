@@ -723,6 +723,17 @@ export class WalletManager {
   async addAccount(account: Account, wallet: Wallet, runIndexIfRestored = true) {
     try {
       const network = this.getNetwork(account.networkType);
+      
+      //Un comment the following part to get all the details for creating a test PSBT. 
+
+      // Get the secret seed.
+      // const masterSeedBase64 = this.secure.get(wallet.id);
+      // console.log("Wallet and the wallet id: ", wallet, wallet.id)
+      // const masterSeed = Buffer.from(masterSeedBase64, 'base64');
+      // const hdNode = bip32.fromSeed(masterSeed, network);
+      // console.log("HD Node: ", hdNode)
+      // const xPrivKey = hdNode.toBase58();
+      // console.log("Extended Private Key (XPriv):", xPrivKey);
 
       if (!account.prv) {
         // First derive the xpub and store that on the account.
@@ -732,8 +743,13 @@ export class WalletManager {
         const masterSeed = Buffer.from(masterSeedBase64, 'base64');
         const masterNode = HDKey.fromMasterSeed(masterSeed, network.bip32);
         const accountNode = masterNode.derive(`m/${account.purpose}'/${account.network}'/${account.index}'`);
-
+        // console.log("Account node: ", accountNode);
         account.xpub = accountNode.publicExtendedKey;
+
+        // Again, uncomment the following logs, to access information you would need to create a test PSBT
+        
+        // console.log("Extended public key of new account: ", account.xpub);
+        // console.log("Path: ", account.purpose, account.network, account.index)
       }
 
       // Add account to the wallet and persist.

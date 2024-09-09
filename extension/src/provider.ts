@@ -120,7 +120,7 @@ export class BlockcoreRequestProvider implements Web5RequestProvider {
 }
 
 class NostrProvider {
-  constructor(private provider: BlockcoreRequestProvider) {}
+  constructor(private provider: BlockcoreRequestProvider) { }
 
   /** Nostr NIP-07 function: https://github.com/nostr-protocol/nips/blob/master/07.md */
   async getPublicKey(): Promise<string | unknown> {
@@ -157,7 +157,7 @@ class NostrProvider {
 }
 
 export class NostrNip04 {
-  constructor(private provider: BlockcoreRequestProvider) {}
+  constructor(private provider: BlockcoreRequestProvider) { }
 
   async encrypt(peer: string, plaintext: string): Promise<string> {
     const result = (await this.provider.request({

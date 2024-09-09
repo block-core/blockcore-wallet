@@ -16,3 +16,4 @@ export * from './MOL';
 export * from './KEY';
 export * from './XRC';
 export * from './SERF';
+export * from './BTC_TEST';

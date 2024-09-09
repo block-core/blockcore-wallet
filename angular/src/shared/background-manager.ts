@@ -115,7 +115,7 @@ export class BackgroundManager {
 
     // Create the master node.
     const masterNode = HDKey.fromMasterSeed(masterSeed, network.bip32);
-    
+
     // based on BCIP3 we allow to derive a key only
     // under the wallet path and it must be hardened keys.
     var node = masterNode.derive(`m/3'/${account.network}'/${path}`);
@@ -178,6 +178,11 @@ export class BackgroundManager {
     return { network, node };
   }
 
+  async getMasterSeedBase64(walletId: string) {
+    const masterSeedBase64 = this.sharedManager.getPrivateKey(walletId);
+    return masterSeedBase64;
+  }
+
   async updateNetworkStatus(instance: string) {
     const walletStore = new WalletStore();
     await walletStore.load();
@@ -214,7 +219,9 @@ export class BackgroundManager {
   private async updateAll(accounts: Account[], networkLoader: NetworkLoader, settingStore: SettingStore) {
     // Make only a unique list of accounts:
     const uniqueAccounts = accounts.filter((value, index, self) => self.map((x) => x.networkType).indexOf(value.networkType) == index);
-
+    // for (let i = 0; i < uniqueAccounts.length; i++) {
+    //   console.log("Account " + i + ": ", uniqueAccounts[i]);
+    // }
     const settings = settingStore.get();
 
     // Load all services from selected nameservers:
@@ -224,7 +231,9 @@ export class BackgroundManager {
       const account = accounts[i];
       const network = networkLoader.getNetwork(account.networkType);
       const indexerUrls = networkLoader.getServers(network.id, settings.server, settings.indexer) || [];
-
+      // console.log("Network: ", network);
+      // console.log("Indexer URL: ", indexerUrls);
+      //TODO: No Indexer URL for bitcoin testnet. 
       if (indexerUrls == null && account.type != 'identity') {
         console.warn(`Invalid configuration of servers. There are no servers registered for network of type ${network.id}.`);
         continue;
@@ -248,8 +257,11 @@ export class BackgroundManager {
             timeout: 3000,
           });
 
+          // console.log("URL used to fetch: ", indexerUrl);
+          // console.debug("Response: ", response);
           if (response.ok) {
             const data = await response.json();
+            // console.debug("Data: ", data);
             if (data.error) {
               networkStatus = {
                 domain,
@@ -297,6 +309,7 @@ export class BackgroundManager {
             };
           }
         } catch (error: any) {
+
           console.log('Error on Network Status Service:', error);
 
           if (error.response) {
