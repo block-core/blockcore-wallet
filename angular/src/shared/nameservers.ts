@@ -8,11 +8,7 @@ export const Nameservers: any = {
     {
       url: 'https://ns.coinvault.io',
       contact: 'post@coinvault.io',
-    },
-    {
-      url: 'https://ns.seniorblockchain.io',
-      contact: 'post@seniorblockchain.io',
-    },
+    }
   ],
   group2: [
     {
@@ -22,10 +18,6 @@ export const Nameservers: any = {
     {
       url: 'https://ns.coinvault.io',
       contact: 'post@coinvault.io',
-    },
-    {
-      url: 'https://ns.seniorblockchain.io',
-      contact: 'post@seniorblockchain.io',
-    },
+    }
   ],
 };
