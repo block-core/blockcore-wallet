@@ -78,19 +78,19 @@ jobs:
           rm -rf  dist/extension
 
       - name: Upload Blockcore
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v2
         with:
           name: ${{env.BLOCKCORE}}-preview-${{env.VERSION}}
           path: "${{env.RELEASE_NAME_BLOCKCORE}}"
 
       - name: Upload CoinVault
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v2
         with:
           name: ${{env.COINVAULT}}-preview-${{env.VERSION}}
           path: "${{env.RELEASE_NAME_COINVAULT}}"
 
       - name: Upload FreeCityWallet
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v2
         with:
           name: ${{env.FREECITY}}-preview-${{env.VERSION}}
           path: "${{env.RELEASE_NAME_FREECITY}}"
