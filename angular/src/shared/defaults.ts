@@ -8,22 +8,10 @@ export class Defaults {
     const networks = [];
     networks.push(new BTC());
     networks.push(new CITY());
-    // networks.push(new CRS());
-    // networks.push(new CY());
     networks.push(new IDENTITY());
     networks.push(new JWK());
     networks.push(new KEY());
-    // networks.push(new IMPLX());
-    // networks.push(new MOL());
     networks.push(new NOSTR());
-    // networks.push(new RSC());
-    // networks.push(new SBC());
-    // networks.push(new STRAX());
-    // networks.push(new TCRS());
-    // networks.push(new TSTRAX());
-    // networks.push(new X42());
-    // networks.push(new XRC());
-    // networks.push(new SERF());
     networks.push(new BITCOIN_TESTNET());
     return networks;
   }
