@@ -13,8 +13,12 @@
     "permissions": [
         "storage",
         "unlimitedStorage",
-        "alarms"
+        "alarms",
+        "sidePanel"
     ],
+    "side_panel": {
+        "default_path": "index.html?#/side"
+    },
     "background": {
         "service_worker": "background.js"
     },

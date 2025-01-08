@@ -73,6 +73,8 @@ export class LoadingComponent implements OnInit, OnDestroy {
     })).subscribe((res: { params: Params; data: Data }) => {
       const { params, data } = res;
 
+      debugger;
+
       // NOTE: This logic is executed every time / is navigated to.
       if (this.document.body.classList.contains('popup-mode') || this.document.body.classList.contains('full-mode')) {
         return;
@@ -81,6 +83,9 @@ export class LoadingComponent implements OnInit, OnDestroy {
       // If it's verified that we're in a popup.
       if (data['popup'] === true) {
         this.document.body.classList.add('popup-mode');
+      } else if (data['side'] === true) {
+        this.document.body.classList.add('full-mode');
+        this.document.body.classList.add('side-mode');
       } else {
         this.document.body.classList.add('full-mode');
       }
