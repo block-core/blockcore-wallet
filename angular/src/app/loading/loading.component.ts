@@ -73,8 +73,6 @@ export class LoadingComponent implements OnInit, OnDestroy {
     })).subscribe((res: { params: Params; data: Data }) => {
       const { params, data } = res;
 
-      debugger;
-
       // NOTE: This logic is executed every time / is navigated to.
       if (this.document.body.classList.contains('popup-mode') || this.document.body.classList.contains('full-mode')) {
         return;
