@@ -1,5 +1,5 @@
 import { Account } from './interfaces';
-import { BITCOIN_TESTNET, BTC, CITY, CRS, CY, IDENTITY, NOSTR, RSC, SBC, STRAX, TCRS, TSTRAX, X42, IMPLX, MOL, KEY, XRC, SERF } from './networks';
+import { BITCOIN_TESTNET, BTC, CITY, IDENTITY, NOSTR, KEY } from './networks';
 import { JWK } from './networks/JWK';
 const { v4: uuidv4 } = require('uuid');
 
@@ -8,22 +8,22 @@ export class Defaults {
     const networks = [];
     networks.push(new BTC());
     networks.push(new CITY());
-    networks.push(new CRS());
-    networks.push(new CY());
+    // networks.push(new CRS());
+    // networks.push(new CY());
     networks.push(new IDENTITY());
     networks.push(new JWK());
     networks.push(new KEY());
-    networks.push(new IMPLX());
-    networks.push(new MOL());
+    // networks.push(new IMPLX());
+    // networks.push(new MOL());
     networks.push(new NOSTR());
-    networks.push(new RSC());
-    networks.push(new SBC());
-    networks.push(new STRAX());
-    networks.push(new TCRS());
-    networks.push(new TSTRAX());
-    networks.push(new X42());
-    networks.push(new XRC());
-    networks.push(new SERF());
+    // networks.push(new RSC());
+    // networks.push(new SBC());
+    // networks.push(new STRAX());
+    // networks.push(new TCRS());
+    // networks.push(new TSTRAX());
+    // networks.push(new X42());
+    // networks.push(new XRC());
+    // networks.push(new SERF());
     networks.push(new BITCOIN_TESTNET());
     return networks;
   }

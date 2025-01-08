@@ -2,7 +2,7 @@ import { Network } from './network';
 
 export class CITY implements Network {
     id = 'CITY';
-    name = 'City Chain';
+    name = 'City Coin';
     symbol = 'CITY';
     network = 1926;
     purpose = 44;
