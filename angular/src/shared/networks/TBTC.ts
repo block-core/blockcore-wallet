@@ -2,10 +2,10 @@ import { Network } from './network';
 
 /* This is the configuration for testnet3
 TODO: Address generation works correctly, but for full functionality indexer has to be updated */
-export class BITCOIN_TESTNET implements Network {
-    id = 'BITCOIN_TESTNET';
+export class TBTC implements Network {
+    id = 'TBTC';
     name = 'Bitcoin Testnet';
-    symbol = 'BTC_TEST';
+    symbol = 'TBTC';
     network = 1;
     purpose = 44;
     messagePrefix = '\x18Bitcoin Signed Message:\n';

@@ -49,7 +49,14 @@ export class NetworkLoader {
   }
 
   getServer(networkType: string, networkGroup: string, customServer?: string) {
-    // console.debug(`getServer: ${networkType} | ${networkGroup} | ${customServer}`);
+    if (networkType === 'TBTC')
+    {
+      debugger;
+    }
+
+
+    debugger;
+    console.debug(`getServer: ${networkType} | ${networkGroup} | ${customServer}`);
     const stateEntry = this.stateStore.get();
 
     if (!stateEntry.activeNetworks) {

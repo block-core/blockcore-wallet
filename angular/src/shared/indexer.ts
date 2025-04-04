@@ -49,6 +49,8 @@ export class IndexerBackgroundService {
     public runState: RunState;
 
     async calculateBalance() {
+        debugger;
+        console.log('calculateBalance()');
         // Then calculate the balance.
         const wallets = this.walletStore.all();
         const addressStates = this.addressStore.all();
@@ -253,6 +255,8 @@ export class IndexerBackgroundService {
 
     /** This is the main process that runs the indexing and persists the state. */
     async process(addressWatchStore: AddressWatchStore): Promise<ProcessResult> {
+        console.log('PROCESS: ', addressWatchStore);
+        debugger;
         // TODO: There is a lot of duplicate code in this method, refactor when possible.
         let changes = false;
         const settings = this.settingStore.get();
@@ -784,6 +788,8 @@ export class IndexerBackgroundService {
     }
 
     async processAddress(indexerUrl: string, state: AddressState) {
+        debugger;
+        console.log('PROCESSING!!!');
         let changes = false;
         let completed = false;
 

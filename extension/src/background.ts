@@ -450,6 +450,7 @@ const networkStatusWatcher = async () => {
 };
 
 const executeIndexer = async () => {
+  debugger;
   // If we are already indexing, simply ignore this request.
   if (indexing) {
     return;

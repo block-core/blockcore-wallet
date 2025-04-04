@@ -2,7 +2,7 @@ import { BlockcoreDns, ServiceListEntry } from '@blockcore/dns';
 import { Nameservers } from './nameservers';
 
 export class NameserverService {
-  constructor() {}
+  constructor() { }
 
   public services: ServiceListEntry[];
 
@@ -11,7 +11,35 @@ export class NameserverService {
       let dns = new BlockcoreDns();
       await dns.load(Nameservers[networkGroup]);
 
-      this.services = dns.getServices();
+      let services = dns.getServices();
+      services.push({
+        domain : "test.explorer.angor.io",
+        online  : true,
+        service : "Indexer",
+        symbol : "BTC_TEST",
+        ttl : 20
+      });
+
+      services.push({
+        domain : "test.explorer.angor.io",
+        online  : true,
+        service : "Indexer",
+        symbol : "TBTC",
+        ttl : 20
+      });
+
+      services.push({
+        domain : "explorer.angor.io",
+        online  : true,
+        service : "Indexer",
+        symbol : "BTC",
+        ttl : 20
+      });
+
+      this.services = services;
+
+      console.log('Services:', this.services);
+      debugger;
     }
   }
 

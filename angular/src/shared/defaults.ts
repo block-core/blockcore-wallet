@@ -1,5 +1,5 @@
 import { Account } from './interfaces';
-import { BITCOIN_TESTNET, BTC, CITY, IDENTITY, NOSTR, KEY } from './networks';
+import { TBTC, BTC, CITY, IDENTITY, NOSTR, KEY } from './networks';
 import { JWK } from './networks/JWK';
 const { v4: uuidv4 } = require('uuid');
 
@@ -12,7 +12,7 @@ export class Defaults {
     networks.push(new JWK());
     networks.push(new KEY());
     networks.push(new NOSTR());
-    networks.push(new BITCOIN_TESTNET());
+    networks.push(new TBTC());
     return networks;
   }
 
@@ -77,7 +77,7 @@ export class Defaults {
           {
             identifier: uuidv4(),
             index: 0,
-            networkType: 'BITCOIN_TESTNET',
+            networkType: 'TBTC',
             mode: 'normal',
             selected: false,
             name: 'Bitcoin Testnet',
@@ -146,7 +146,7 @@ export class Defaults {
           {
             identifier: uuidv4(),
             index: 0,
-            networkType: 'BITCOIN_TESTNET',
+            networkType: 'TBTC',
             mode: 'normal',
             selected: false,
             name: 'Bitcoin Testnet',

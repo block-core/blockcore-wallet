@@ -4,4 +4,4 @@ export * from './CITY';
 export * from './NOSTR';
 export * from './BTC';
 export * from './KEY';
-export * from './BTC_TEST';
+export * from './TBTC';

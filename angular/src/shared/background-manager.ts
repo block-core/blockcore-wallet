@@ -252,49 +252,82 @@ export class BackgroundManager {
         let networkStatus: NetworkStatus;
 
         try {
+          let apiUrlSegment = '/api/stats';
+
+          if (network.id == 'TBTC' || network.id == 'BTC') {
+            apiUrlSegment = '/api/blocks/tip/height';
+            debugger;
+          }
+
           // Default options are marked with *
-          const response = await this.webRequest.fetchWithTimeout(`${indexerUrl}/api/stats`, {
+          const response = await this.webRequest.fetchWithTimeout(`${indexerUrl}${apiUrlSegment}`, {
             timeout: 3000,
           });
+
+          debugger;
 
           // console.log("URL used to fetch: ", indexerUrl);
           // console.debug("Response: ", response);
           if (response.ok) {
-            const data = await response.json();
-            // console.debug("Data: ", data);
-            if (data.error) {
+
+            if (network.id == 'TBTC' || network.id == 'BTC') {
+              const tipText = await response.text();
+              const tip = Number(tipText);
+
+              const responseFee = await this.webRequest.fetchWithTimeout(`${indexerUrl}/api/v1/fees/recommended`, {
+                timeout: 3000,
+              });
+
+              // {"fastestFee":2,"halfHourFee":2,"hourFee":2,"economyFee":2,"minimumFee":1}
+              const responseFeeJson = await responseFee.json();
+
               networkStatus = {
                 domain,
                 url: indexerUrl,
-                blockSyncHeight: -1,
+                blockSyncHeight: tip,
                 networkType: account.networkType,
-                availability: IndexerApiStatus.Error,
-                status: 'Error: ' + data.error,
-                relayFee: 10,
+                availability: IndexerApiStatus.Online,
+                status: 'Online / Progress: 100%',
+                relayFee: responseFeeJson.minimumFee,
               };
             } else {
-              const blocksBehind = data.blockchain.blocks - data.syncBlockIndex;
-
-              if (blocksBehind > 5) {
+              const data = await response.json();
+              // console.debug("Data: ", data);
+              if (data.error) {
                 networkStatus = {
                   domain,
                   url: indexerUrl,
-                  blockSyncHeight: data.syncBlockIndex,
+                  blockSyncHeight: -1,
                   networkType: account.networkType,
-                  availability: IndexerApiStatus.Syncing,
-                  status: 'Syncing / Progress: ' + data.progress,
-                  relayFee: data.network?.relayFee * FEE_FACTOR,
+                  availability: IndexerApiStatus.Error,
+                  status: 'Error: ' + data.error,
+                  relayFee: 10,
                 };
               } else {
-                networkStatus = {
-                  domain,
-                  url: indexerUrl,
-                  blockSyncHeight: data.syncBlockIndex,
-                  networkType: account.networkType,
-                  availability: IndexerApiStatus.Online,
-                  status: 'Online / Progress: ' + data.progress,
-                  relayFee: data.network?.relayFee * FEE_FACTOR,
-                };
+
+                const blocksBehind = data.blockchain.blocks - data.syncBlockIndex;
+
+                if (blocksBehind > 5) {
+                  networkStatus = {
+                    domain,
+                    url: indexerUrl,
+                    blockSyncHeight: data.syncBlockIndex,
+                    networkType: account.networkType,
+                    availability: IndexerApiStatus.Syncing,
+                    status: 'Syncing / Progress: ' + data.progress,
+                    relayFee: data.network?.relayFee * FEE_FACTOR,
+                  };
+                } else {
+                  networkStatus = {
+                    domain,
+                    url: indexerUrl,
+                    blockSyncHeight: data.syncBlockIndex,
+                    networkType: account.networkType,
+                    availability: IndexerApiStatus.Online,
+                    status: 'Online / Progress: ' + data.progress,
+                    relayFee: data.network?.relayFee * FEE_FACTOR,
+                  };
+                }
               }
             }
           } else {
