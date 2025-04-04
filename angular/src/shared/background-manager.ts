@@ -256,15 +256,12 @@ export class BackgroundManager {
 
           if (network.id == 'TBTC' || network.id == 'BTC') {
             apiUrlSegment = '/api/blocks/tip/height';
-            debugger;
           }
 
           // Default options are marked with *
           const response = await this.webRequest.fetchWithTimeout(`${indexerUrl}${apiUrlSegment}`, {
             timeout: 3000,
           });
-
-          debugger;
 
           // console.log("URL used to fetch: ", indexerUrl);
           // console.debug("Response: ", response);

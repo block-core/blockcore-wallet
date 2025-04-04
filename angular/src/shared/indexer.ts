@@ -1,6 +1,7 @@
 import { AddressState, Transaction, WebRequestService } from '.';
 import { AddressManager } from './address-manager';
 import { ProcessResult } from './background-manager';
+import { MempoolNetworkService, MempoolSpaceIndexerApi } from './indexer-compatibility-provider';
 import { AccountUnspentTransactionOutput, AddressIndexedState, TransactionHistory } from './interfaces';
 import { NetworkLoader } from './network-loader';
 import { AccountHistoryStore, AddressStore, SettingStore, TransactionStore, WalletStore } from './store';
@@ -49,8 +50,6 @@ export class IndexerBackgroundService {
     public runState: RunState;
 
     async calculateBalance() {
-        debugger;
-        console.log('calculateBalance()');
         // Then calculate the balance.
         const wallets = this.walletStore.all();
         const addressStates = this.addressStore.all();
@@ -255,8 +254,6 @@ export class IndexerBackgroundService {
 
     /** This is the main process that runs the indexing and persists the state. */
     async process(addressWatchStore: AddressWatchStore): Promise<ProcessResult> {
-        console.log('PROCESS: ', addressWatchStore);
-        debugger;
         // TODO: There is a lot of duplicate code in this method, refactor when possible.
         let changes = false;
         const settings = this.settingStore.get();
@@ -788,6 +785,16 @@ export class IndexerBackgroundService {
     }
 
     async processAddress(indexerUrl: string, state: AddressState) {
+        if (indexerUrl == '"https://explorer.angor.io"' || "https://test.explorer.angor.io")
+        {
+            const mempoolNetworkService = new MempoolNetworkService(indexerUrl);
+            const indexer = new MempoolSpaceIndexerApi(mempoolNetworkService);
+            const addressBalances = await indexer.getAdressBalancesAsync([{address: state.address }], true);
+            console.log(addressBalances);
+            debugger;
+            return null;
+        }
+
         debugger;
         console.log('PROCESSING!!!');
         let changes = false;

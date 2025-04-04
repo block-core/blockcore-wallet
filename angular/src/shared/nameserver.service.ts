@@ -11,15 +11,8 @@ export class NameserverService {
       let dns = new BlockcoreDns();
       await dns.load(Nameservers[networkGroup]);
 
+      // Harcoded for now, but should be dynamic based on DNS lookup.
       let services = dns.getServices();
-      services.push({
-        domain : "test.explorer.angor.io",
-        online  : true,
-        service : "Indexer",
-        symbol : "BTC_TEST",
-        ttl : 20
-      });
-
       services.push({
         domain : "test.explorer.angor.io",
         online  : true,
@@ -37,9 +30,6 @@ export class NameserverService {
       });
 
       this.services = services;
-
-      console.log('Services:', this.services);
-      debugger;
     }
   }
 
