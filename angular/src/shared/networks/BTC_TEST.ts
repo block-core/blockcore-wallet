@@ -25,7 +25,7 @@ export class BITCOIN_TESTNET implements Network {
     type = 'coin';
 
     explorer = {
-        url: 'https://live.blockcypher.com/btc-testnet/',
+        url: 'https://test.explorer.angor.io/',
         tx: 'tx/',
         address: 'address/',
     };

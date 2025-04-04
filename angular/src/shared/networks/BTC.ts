@@ -20,6 +20,12 @@ export class BTC implements Network {
     testnet = false;
     smartContractSupport = false;
     type = 'coin';
+
+    explorer = {
+        url: 'https://explorer.angor.io/',
+        tx: 'tx/',
+        address: 'address/',
+    };
 }
 
 // WE DO NOT SUPPORT THESE ADDRESS TYPES AS THEY WAS TRANSITIONAL.
