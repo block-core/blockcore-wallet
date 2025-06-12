@@ -44,7 +44,7 @@ jobs:
         shell: bash
 
       - name: Setup
-        run: npm ci
+        run: npm install --force
 
       - name: Test
         run: npm test -- --no-watch --no-progress --browsers=ChromeHeadless
