@@ -87,7 +87,7 @@
     "js-base64": "3.7.3",
     "moment": "^2.29.4",
     "ngx-logger": "^5.0.11",
-    "nostr-tools": "1.7.4",
+    "nostr-tools": "2.15.0",
     "qrcode": "^1.5.1",
     "qs": "^6.11.0",
     "rxjs": "7.5.6",

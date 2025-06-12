@@ -1,6 +1,5 @@
 {
-    "compileOnSave": false,
-    "compilerOptions": {
+    "compileOnSave": false,    "compilerOptions": {
         "strictNullChecks": false,
         "allowJs": true,
         "baseUrl": "./",
@@ -11,6 +10,7 @@
         "noPropertyAccessFromIndexSignature": true,
         "noImplicitReturns": true,
         "noFallthroughCasesInSwitch": true,
+        "skipLibCheck": true,
         "sourceMap": true,
         "declaration": false,
         "downlevelIteration": true,

@@ -11,8 +11,8 @@ import { CryptoUtility } from '.';
 import { HDKey } from '@scure/bip32';
 import * as secp from '@noble/secp256k1';
 import { decodeJWT, createJWT, verifyJWT, ES256KSigner } from 'did-jwt';
-import { getPublicKey } from 'nostr-tools';
 import { SigningUtilities } from 'src/shared/identity/signing-utilities';
+const { getPublicKey } = require('nostr-tools');
 
 @Injectable({
   providedIn: 'root',

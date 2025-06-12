@@ -154,6 +154,8 @@ class NostrProvider {
   }
 
   nip04 = new NostrNip04(this.provider);
+
+  nip44 = new NostrNip44(this.provider);
 }
 
 export class NostrNip04 {
@@ -172,6 +174,28 @@ export class NostrNip04 {
     const result = (await this.provider.request({
       method: 'nostr.decrypt',
       params: [{ peer, ciphertext: ciphertext }],
+    })) as any;
+
+    return result.response || {};
+  }
+}
+
+export class NostrNip44 {
+  constructor(private provider: BlockcoreRequestProvider) { }
+
+  async encrypt(peer: string, plaintext: string): Promise<string> {
+    const result = (await this.provider.request({
+      method: 'nostr.encrypt',
+      params: [{ peer, plaintext: plaintext, nip44: true }],
+    })) as any;
+
+    return result.response || {};
+  }
+
+  async decrypt(peer: string, ciphertext: string): Promise<string> {
+    const result = (await this.provider.request({
+      method: 'nostr.decrypt',
+      params: [{ peer, ciphertext: ciphertext, nip44: true }],
     })) as any;
 
     return result.response || {};
