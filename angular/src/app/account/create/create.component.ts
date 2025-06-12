@@ -8,6 +8,7 @@ import { MessageService } from 'src/shared';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
 import { nip19 } from 'nostr-tools';
+import * as secp from '@noble/secp256k1';
 const { v4: uuidv4 } = require('uuid');
 
 @Component({
@@ -164,7 +165,7 @@ export class AccountCreateComponent implements OnInit, OnDestroy {
   async import() {
     if (this.privateKeyImport.startsWith('nsec')) {
       const decoded = nip19.decode(this.privateKeyImport);
-      this.privateKeyImport = decoded.data as string;
+      this.privateKeyImport = secp.utils.bytesToHex(decoded.data as Uint8Array);
     }
 
     const account: Account = {
