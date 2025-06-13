@@ -4,7 +4,7 @@
     "start_url": "./",
     "name": "Free City Wallet",
     "short_name": "FreeCityWallet",
-    "version": "1.0.39",
+    "version": "1.0.40",
     "author": "City Chain Foundation",
     "display": "standalone",
     "theme_color": "#DFAB3C",
