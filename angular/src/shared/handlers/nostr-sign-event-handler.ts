@@ -31,9 +31,9 @@ export class NostrSignEventHandler implements ActionHandler {
     if (!validateEvent(event)) throw new Error('Invalid Nostr event.');
 
     // Out-of-sync type definitions require an any here. It does return string, even though type definition says otherwise.
-    const signature = finalizeEvent(event, hexToBytes(node.privateKey as string)) as any;
-    event.sig = signature;
+    const signedEvent = finalizeEvent(event, hexToBytes(node.privateKey as string)) as any;
+    // event.sig = signature;
 
-    return { key: event.pubkey, response: event };
+    return { key: event.pubkey, response: signedEvent };
   }
 }
