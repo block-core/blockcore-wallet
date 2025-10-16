@@ -25,13 +25,16 @@ export class NostrSignEventHandler implements ActionHandler {
     // There are no proper
     const event = state.content as any;
 
+    // Convert private key to bytes if it's a hex string, otherwise use as-is
+    const privateKeyBytes = typeof node.privateKey === 'string' ? hexToBytes(node.privateKey) : node.privateKey;
+
     // For nostr we'll derive the public key from private key, since we allow users to BYOK (bring your own key).
-    event.pubkey = getPublicKey(hexToBytes(node.privateKey as string));
+    event.pubkey = getPublicKey(privateKeyBytes);
     if (!event.id) event.id = await getEventHash(event);
     if (!validateEvent(event)) throw new Error('Invalid Nostr event.');
 
     // Out-of-sync type definitions require an any here. It does return string, even though type definition says otherwise.
-    const signedEvent = finalizeEvent(event, hexToBytes(node.privateKey as string)) as any;
+    const signedEvent = finalizeEvent(event, privateKeyBytes) as any;
     // event.sig = signature;
 
     return { key: event.pubkey, response: signedEvent };
