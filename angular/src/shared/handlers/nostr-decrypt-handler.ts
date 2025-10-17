@@ -22,7 +22,8 @@ export class NostrDecryptHandler implements ActionHandler {
   async execute(state: ActionState, permission: Permission): Promise<ActionResponse> {
     const { network, node } = await this.backgroundManager.getKey(permission.walletId, permission.accountId, permission.keyId);
 
-    const privateKey = hexToBytes(node.privateKey as string);
+    // Convert private key to bytes if it's a hex string, otherwise use as-is
+    const privateKey = typeof node.privateKey === 'string' ? hexToBytes(node.privateKey) : node.privateKey;
     const publicKeyHex = getPublicKey(privateKey);
 
     if (state.content.nip44) {
