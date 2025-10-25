@@ -132,7 +132,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
         // this.identifierWithoutPrefix = this.identifier.substring(this.identifier.lastIndexOf(':') + 1);
         // this.readableId = identity.short.substring(identity.short.lastIndexOf(':') + 1);
 
-        this.qrCodePublicKey = await QRCode.toDataURL('nostr:' + this.identifier, {
+        this.qrCodePublicKey = await QRCode.toDataURL(this.identifier, {
           errorCorrectionLevel: 'L',
           margin: 2,
           scale: 5,
@@ -194,7 +194,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
         // console.log(secp.utils.bytesToHex(identityNode.privateKey));
         //this.privateKey = secp.utils.bytesToHex(identityNode.privateKey);
 
-        this.qrCodePrivateKey = await QRCode.toDataURL('nostr:' + this.privateKey, {
+        this.qrCodePrivateKey = await QRCode.toDataURL(this.privateKey, {
           errorCorrectionLevel: 'L',
           margin: 2,
           scale: 5,

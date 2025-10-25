@@ -95,7 +95,7 @@
       <p>
         <img [src]="qrCodePublicKey" class="qr-code" />
       </p>
-      <div class="dimmed">nostr:{{ identifier }}</div>
+      <div class="dimmed">{{ identifier }}</div>
 
       <!-- <h3 class="break">{{identifier}} <button class="copy-button" mat-icon-button (click)="copy()">
         <mat-icon>content_copy</mat-icon>
@@ -282,7 +282,7 @@
               <p>
                 <img [src]="qrCodePrivateKey" class="qr-code" />
               </p>
-              <div class="dimmed">nostr:{{ privateKey }}</div>
+              <div class="dimmed">{{ privateKey }}</div>
             </mat-card>
             <mat-card *ngIf="verifiedWalletPassword === false">Invalid Password</mat-card>
             <br />
