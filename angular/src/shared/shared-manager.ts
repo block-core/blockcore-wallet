@@ -4,6 +4,7 @@ import { NetworkLoader } from './network-loader';
 import { Network } from './networks';
 import { StorageService } from './storage.service';
 import { WalletStore } from './store';
+import * as browser from 'webextension-polyfill';
 
 export class SharedManager {
   /** Contains the master seed for unlocked wallets. This object should never be persisted and only exists in memory. */
@@ -55,10 +56,10 @@ export class SharedManager {
 
   async checkLockTimeout() {
     if (this.storage.runtime.isExtension) {
-      const storage = globalThis.chrome.storage as any;
+      const storage = browser.storage as any;
 
       // Get both "active" (Date) and timeout (number of minutes) from local settings.
-      const { active, timeout } = await chrome.storage.local.get(['active', 'timeout']);
+      const { active, timeout } = await browser.storage.local.get(['active', 'timeout']) as any;
 
       // Reset storage if there is no 'active' state data.
       if (!active) {

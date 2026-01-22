@@ -7,6 +7,7 @@ import { LoggerService } from './logger.service';
 import { RuntimeService } from '../../shared/runtime.service';
 import { StateService } from './state.service';
 import { WalletManager } from './';
+import * as browser from 'webextension-polyfill';
 
 @Injectable({
   providedIn: 'root',
@@ -27,29 +28,33 @@ export class CommunicationService {
   initialize() {
     // TODO: Handle these messages internally when running outside of extension context.
     if (this.runtime.isExtension) {
-      chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
-        // console.log('chrome.runtime.onMessage within ANGULAR!', message);
-        this.ngZone.run(async () => {
-          const result = await this.handleInternalMessage(message, sender);
-          // this.logger.debug(`Process messaged ${message.type} and returning this response: `, result);
+      browser.runtime.onMessage.addListener(async (message: any, sender: browser.Runtime.MessageSender) => {
+        // console.log('browser.runtime.onMessage within ANGULAR!', message);
+        return new Promise((resolve) => {
+          this.ngZone.run(async () => {
+            const result = await this.handleInternalMessage(message, sender);
+            // this.logger.debug(`Process messaged ${message.type} and returning this response: `, result);
 
-          // Only return a response if the result is other than null. Null means we did not handle the message.
-          if (result !== null) {
-            sendResponse(result);
-          }
+            // Only return a response if the result is other than null. Null means we did not handle the message.
+            if (result !== null) {
+              resolve(result);
+            }
+          });
         });
       });
 
-      chrome.runtime.onMessageExternal.addListener(async (message, sender, sendResponse) => {
-        // console.log('chrome.runtime.onMessageExternal 2222 within ANGULAR!');
-        this.ngZone.run(async () => {
-          const result = await this.handleExternalMessage(message, sender);
-          // this.logger.debug(`Process (external) messaged ${message.type} and returning this response: `, result);
+      browser.runtime.onMessageExternal.addListener(async (message: any, sender: browser.Runtime.MessageSender) => {
+        // console.log('browser.runtime.onMessageExternal within ANGULAR!');
+        return new Promise((resolve) => {
+          this.ngZone.run(async () => {
+            const result = await this.handleExternalMessage(message, sender);
+            // this.logger.debug(`Process (external) messaged ${message.type} and returning this response: `, result);
 
-          // Only return a response if the result is other than null. Null means we did not handle the message.
-          if (result !== null) {
-            sendResponse(result);
-          }
+            // Only return a response if the result is other than null. Null means we did not handle the message.
+            if (result !== null) {
+              resolve(result);
+            }
+          });
         });
       });
     } else {
@@ -64,7 +69,7 @@ export class CommunicationService {
     }
   }
 
-  handleInternalMessage(message: Message, sender: chrome.runtime.MessageSender) {
+  handleInternalMessage(message: Message, sender: browser.Runtime.MessageSender) {
     // If the source is provider, never handle these messages as multiple open
     // instances of the extension will cause callbacks from provider to complete.
     if (message.source === 'provider') {
@@ -133,7 +138,7 @@ export class CommunicationService {
     return null;
   }
 
-  async handleExternalMessage(message: any, sender: chrome.runtime.MessageSender) {
+  async handleExternalMessage(message: any, sender: browser.Runtime.MessageSender) {
     this.logger.info('CommunicationService:onMessageExternal: ', message);
     this.logger.info('CommunicationService:onMessageExternal:sender: ', sender);
   }

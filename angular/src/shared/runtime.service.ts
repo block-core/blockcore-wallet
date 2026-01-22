@@ -1,15 +1,17 @@
 import { SharedManager } from './shared-manager';
+import * as browser from 'webextension-polyfill';
 
 export class RuntimeService {
   isExtension;
 
   constructor() {
-    this.isExtension = globalThis.chrome && globalThis.chrome.runtime && globalThis.chrome.tabs;
+    // Check for browser extension environment
+    this.isExtension = !!(globalThis.chrome?.runtime?.id);
   }
 
-  async getManifest(): Promise<chrome.runtime.Manifest> {
+  async getManifest(): Promise<browser.Manifest.WebExtensionManifest> {
     if (this.isExtension) {
-      return chrome.runtime.getManifest();
+      return browser.runtime.getManifest();
     } else {
       // Default options are marked with *
       const response = await fetch('/manifest.webmanifest', {

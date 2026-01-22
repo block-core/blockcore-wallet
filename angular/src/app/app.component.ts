@@ -12,6 +12,7 @@ import { ActionService } from './services/action.service';
 import { DisableRightClickService } from './services/disable-right-click.service';
 import { MessageService } from 'src/shared';
 import { Database } from 'src/shared/store/storage';
+import * as browser from 'webextension-polyfill';
 
 @Component({
   selector: 'app-root',
@@ -67,7 +68,7 @@ export class AppComponent implements OnInit {
   }
 
   maximize() {
-    chrome.tabs.create({ active: true, selected: true, url: 'index.html' });
+    browser.tabs.create({ active: true, url: 'index.html' });
   }
 
   goBack() {

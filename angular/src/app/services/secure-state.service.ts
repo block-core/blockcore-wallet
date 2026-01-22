@@ -3,6 +3,7 @@ import { Router } from "@angular/router";
 import { BehaviorSubject, Observable } from "rxjs";
 import { RuntimeService } from "../../shared/runtime.service";
 import { StorageService } from "../../shared/storage.service";
+import * as browser from 'webextension-polyfill';
 
 @Injectable({
     providedIn: 'root'
@@ -25,11 +26,11 @@ export class SecureStateService {
     constructor(private ngZone: NgZone, private runtime: RuntimeService, private storage: StorageService) {
         // TODO: Add support for fallback on storage.
         if (runtime.isExtension) {
-            const storage = globalThis.chrome.storage as any;
+            const storageApi = browser.storage as any;
 
-            if (storage.session != null) {
+            if (storageApi.session != null) {
                 // Each instance of extension need this listener when session is cleared.
-                storage.session.onChanged.addListener(async (changes: any) => {
+                storageApi.session.onChanged.addListener(async (changes: any) => {
                     this.ngZone.run(async () => {
                         // TODO: Find a better solution than checking the sizes of keys to redirect
                         // to home when timeout is reached.
@@ -59,18 +60,15 @@ export class SecureStateService {
         // Update the keys, then persist it.
         this.keys.set(key, value);
 
-        if (globalThis.chrome && globalThis.chrome.storage) {
+        if (this.runtime.isExtension) {
             // Only on extensions will we listen to the event and reload cross instances. That is not possible on mobile / browser.
-            if (this.runtime.isExtension) {
-                const storage = globalThis.chrome.storage;
-                // This will trigger an onChange event and reload the same keys. This will happens twice
-                // in the instance that called set, but only once for other instances of the extension.
-                await (<any>storage).session.set({ 'keys': Object.fromEntries(this.keys.entries()) });
-            }
+            const storageApi = browser.storage as any;
+            // This will trigger an onChange event and reload the same keys. This will happens twice
+            // in the instance that called set, but only once for other instances of the extension.
+            await storageApi.session.set({ 'keys': Object.fromEntries(this.keys.entries()) });
 
             await this.storage.set('active', new Date().toJSON(), true);
             // Every time a new key is set, we'll update the active value as well.
-            // await globalThis.chrome.storage.local.set({ 'active': new Date().toJSON() });
         } else {
             await this.storage.set('active', new Date().toJSON(), true);
         }

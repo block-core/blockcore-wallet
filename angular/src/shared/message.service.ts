@@ -1,6 +1,7 @@
 import { ActionMessage, Message, MessageResponse } from './interfaces';
 import { EventBus } from './event-bus';
 import { RuntimeService } from './runtime.service';
+import * as browser from 'webextension-polyfill';
 const { v4: uuidv4 } = require('uuid');
 
 export class MessageService {
@@ -30,7 +31,9 @@ export class MessageService {
   /** Send message, supports either extension or web modes. */
   send(message: Message | ActionMessage | any) {
     if (this.runtime.isExtension) {
-      chrome.runtime.sendMessage(message);
+      browser.runtime.sendMessage(message).catch(() => {
+        // Ignore errors when no listeners are registered
+      });
     } else {
       this.events.publish(message.type, message);
     }

@@ -9,6 +9,7 @@ import { TransactionMetadataStore, TransactionStore } from 'src/shared';
 import { RuntimeService } from 'src/shared/runtime.service';
 import * as secp from '@noble/secp256k1';
 import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import * as browser from 'webextension-polyfill';
 
 @Component({
   selector: 'app-account-transaction',
@@ -125,7 +126,7 @@ export class AccountTransactionComponent implements OnInit, OnDestroy {
     if (!this.runtime.isExtension) {
       window.open(`${this.env.instanceExplorerUrl}/${this.network.id}/explorer/transaction/${txid}`, '_blank').focus();
     } else {
-      chrome.tabs.create({ url: `${this.env.instanceExplorerUrl}/${this.network.id}/explorer/transaction/${txid}`, active: false });
+      browser.tabs.create({ url: `${this.env.instanceExplorerUrl}/${this.network.id}/explorer/transaction/${txid}`, active: false });
     }
   }
 
@@ -134,13 +135,13 @@ export class AccountTransactionComponent implements OnInit, OnDestroy {
       if (!this.runtime.isExtension) {
         window.open(`${this.env.instanceExplorerUrl}/${this.network.id}/explorer/block/${blockhash}`, '_blank').focus();
       } else {
-        chrome.tabs.create({ url: `${this.env.instanceExplorerUrl}/${this.network.id}/explorer/block/${blockhash}`, active: false });
+        browser.tabs.create({ url: `${this.env.instanceExplorerUrl}/${this.network.id}/explorer/block/${blockhash}`, active: false });
       }
     } else {
       if (!this.runtime.isExtension) {
         window.open(`${this.env.instanceExplorerUrl}/${this.network.id}/explorer/block/${blockhash}`, '_blank').focus();
       } else {
-        chrome.tabs.create({ url: `${this.env.instanceExplorerUrl}/${this.network.id}/explorer/block/${blockhash}`, active: false });
+        browser.tabs.create({ url: `${this.env.instanceExplorerUrl}/${this.network.id}/explorer/block/${blockhash}`, active: false });
       }
     }
   }

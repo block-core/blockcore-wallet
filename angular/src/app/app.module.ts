@@ -276,7 +276,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     ServiceWorkerModule.register('ngsw-worker.js', {
       //enabled: environment.production,
       // Do not register the service worker, if running in extension mode.
-      enabled: !(globalThis.chrome && globalThis.chrome.runtime && globalThis.chrome.tabs),
+      enabled: !(globalThis.chrome?.runtime?.id),
 
       // Register the ServiceWorker as soon as the application is stable
       // or after 30 seconds (whichever comes first).

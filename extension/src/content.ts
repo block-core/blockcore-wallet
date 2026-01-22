@@ -2,10 +2,45 @@ import * as browser from 'webextension-polyfill';
 import { ActionMessage } from '../../angular/src/shared';
 import { DomainVerification } from '../../angular/src/shared';
 
-// If the blockcore is not registered yet, load the provider now.
-if (!globalThis.blockcore) {
-  // This verification is not enough, any website can always reference an extension directly and load the provider.js, so
-  // we need additional verification in the background.ts
+// Guard to prevent multiple injections in the same context
+// Content scripts run in isolated world, so we use a unique property
+const INJECTION_GUARD = '__blockcore_content_injected__';
+if ((globalThis as any)[INJECTION_GUARD]) {
+  // Already injected, skip
+} else {
+  (globalThis as any)[INJECTION_GUARD] = true;
+
+  // Function to inject provider script into page's MAIN world
+  function injectProvider() {
+    const scriptUrl = browser.runtime.getURL('provider.js');
+    
+    // Method 1: Try to inject via script src (works on most sites)
+    const script = document.createElement('script');
+    script.src = scriptUrl;
+    script.async = false;
+    script.onload = () => {
+      script.remove();
+    };
+    script.onerror = () => {
+      // Method 2: If src fails due to CSP, try fetching and inline injection
+      console.log('Fallback to inline script injection');
+      fetch(scriptUrl)
+        .then(response => response.text())
+        .then(scriptContent => {
+          const inlineScript = document.createElement('script');
+          inlineScript.textContent = scriptContent;
+          (document.head || document.documentElement).appendChild(inlineScript);
+          inlineScript.remove();
+        })
+        .catch(error => {
+          console.error('Failed to load provider script:', error);
+        });
+    };
+    
+    (document.head || document.documentElement).appendChild(script);
+  }
+
+  // Verify the domain
   let verify = DomainVerification.verify(window.location.host);
 
   if (verify == false) {
@@ -17,16 +52,8 @@ if (!globalThis.blockcore) {
       console.log('The domain is unknown, allow loading.');
     }
 
-    // Load the JavaScript provided by the extension. We need this to activate the extension.
-    let script = document.createElement('script');
-    script.setAttribute('async', 'false');
-    script.setAttribute('type', 'text/javascript');
-    script.setAttribute('src', chrome.runtime.getURL('provider.js'));
-    document.head.appendChild(script);
-
-    script.onload = function () {
-      // console.log('Blockcore Provider Script Loaded from Extension.');
-    };
+    // Inject the provider script into the page's MAIN world
+    injectProvider();
 
     // listen for messages from the provider script
     window.addEventListener('message', async (message) => {
@@ -44,20 +71,25 @@ if (!globalThis.blockcore) {
 
       try {
         // Send the message to background service:
-        if (chrome.runtime?.id) {
+        if (browser.runtime?.id) {
           response = await browser.runtime.sendMessage(msg);
+          console.log('CONTENT: Got response from background:', response);
         } else {
           console.warn('The extension has been updated and context is lost. Page requires reload.');
-          // TODO: Can we re-inject script in the caller? Should we display a popup in the DOM of the website?
           location.reload();
+          return;
         }
-      } catch (error) {
-        response = { error };
+      } catch (error: any) {
+        console.error('CONTENT: Error sending message to background:', error);
+        response = { error: { message: error.message, stack: error.stack } };
       }
 
-      const responseMsg: ActionMessage = { ...data, response };
+      // Always send a response back, even if it's null/undefined
+      const responseMsg: ActionMessage = { ...data, response: response ?? { error: { message: 'No response from background' } } };
       responseMsg.target = 'provider';
 
+      console.log('CONTENT: Sending response to provider:', responseMsg);
+      
       // Return the response to the provider/caller.
       window.postMessage(responseMsg, message.origin);
     });

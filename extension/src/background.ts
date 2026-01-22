@@ -37,101 +37,145 @@ let walletStore: WalletStore;
 // Since the mutex happens right before popup is shown, we need to keep more than a single entry available.
 // let prompts: ActionState[] = [];
 
-// Don't mark this method async, it will result in caller not being called in "sendResponse".
-browser.runtime.onMessage.addListener(async (msg: ActionMessage, sender) => {
-  // Open the database.
-  await Database.Instance.open();
+// Message handler for extension messaging
+// Use native chrome API with sendResponse for reliable async responses in MV3
+chrome.runtime.onMessage.addListener((msg: ActionMessage, sender, sendResponse) => {
+  // Handle async message processing
+  (async () => {
+    try {
+      // Open the database.
+      await Database.Instance.open();
 
-  // We verify in both content.ts and here, simply because hostile website can always load the provider.ts if
-  // they reference it directly manually.
-  let verify = DomainVerification.verify(msg.app);
+      // We verify in both content.ts and here, simply because hostile website can always load the provider.ts if
+      // they reference it directly manually.
+      let verify = DomainVerification.verify(msg.app);
 
-  if (verify == false) {
-    console.warn('Request is not allowed on this domain.');
-    return;
-  }
-
-  msg.verify = verify;
-
-  // console.log('Receive message in background:', msg);
-
-  // When messages are coming from popups, the prompt will be set.
-  if (msg.prompt) {
-    if (msg.promptResponse) {
-      customActionResponse = msg.promptResponse;
-    }
-
-    return handlePromptMessage(msg, sender);
-  } else if (msg.source == 'provider') {
-    return handleContentScriptMessage(msg);
-  } else if (msg.source == 'tabs') {
-    // Handle messages coming from the UI.
-    if (msg.type === 'keep-alive') {
-      // console.debug('Received keep-alive message.');
-    } else if (msg.type === 'index') {
-      await executeIndexer();
-    } else if (msg.type === 'watch') {
-      await runWatcher();
-    } else if (msg.type === 'data:get') {
-      await getDwnData(msg);
-    } else if (msg.type === 'network') {
-      // When we get the 'network' message, we'll scan network and then run index.
-      await updateNetworkStatus();
-      await executeIndexer();
-    } else if (msg.type === 'activated') {
-      // console.log('THE UI WAS ACTIVATED!!');
-      // When UI is triggered, we'll also trigger network watcher.
-      await networkStatusWatcher();
-    } else if (msg.type === 'broadcast') {
-      // Grab the content returned in this message and use as custom action response.
-      customActionResponse = msg.response.response;
-
-      // If there is an active prompt, it means we should resolve it with the broadcast result:
-      if (prompt) {
-        prompt?.resolve?.();
-        prompt = null;
-        releaseMutex();
+      if (verify == false) {
+        console.warn('Request is not allowed on this domain.');
+        sendResponse({ error: { message: 'Request is not allowed on this domain.' } });
+        return;
       }
 
-      // if (sender) {
-      //   // Remove the popup window that was opened:
-      //   browser.windows.remove(sender.tab.windowId);
-      // }
+      msg.verify = verify;
+
+      // console.log('Receive message in background:', msg);
+
+      // When messages are coming from popups, the prompt will be set.
+      if (msg.prompt) {
+        if (msg.promptResponse) {
+          customActionResponse = msg.promptResponse;
+        }
+
+        handlePromptMessage(msg, sender);
+        sendResponse({ success: true });
+        return;
+      } else if (msg.source == 'provider') {
+        const result = await handleContentScriptMessage(msg);
+        console.log('MAIN HANDLER: Returning to content script:', result);
+        sendResponse(result);
+        return;
+      } else if (msg.source == 'tabs') {
+        // Handle messages coming from the UI.
+        if (msg.type === 'keep-alive') {
+          // console.debug('Received keep-alive message.');
+          sendResponse({ success: true });
+          return;
+        } else if (msg.type === 'index') {
+          await executeIndexer();
+          sendResponse({ success: true });
+          return;
+        } else if (msg.type === 'watch') {
+          await runWatcher();
+          sendResponse({ success: true });
+          return;
+        } else if (msg.type === 'data:get') {
+          await getDwnData(msg);
+          sendResponse({ success: true });
+          return;
+        } else if (msg.type === 'network') {
+          // When we get the 'network' message, we'll scan network and then run index.
+          await updateNetworkStatus();
+          await executeIndexer();
+          sendResponse({ success: true });
+          return;
+        } else if (msg.type === 'activated') {
+          // console.log('THE UI WAS ACTIVATED!!');
+          // When UI is triggered, we'll also trigger network watcher.
+          await networkStatusWatcher();
+          sendResponse({ success: true });
+          return;
+        } else if (msg.type === 'broadcast') {
+          // Grab the content returned in this message and use as custom action response.
+          customActionResponse = msg.response.response;
+
+          // If there is an active prompt, it means we should resolve it with the broadcast result:
+          if (prompt) {
+            prompt?.resolve?.();
+            prompt = null;
+            releaseMutex();
+          }
+
+          sendResponse({ success: true });
+          return;
+        }
+        sendResponse({ success: true });
+        return;
+      } else {
+        // console.log('Unhandled message:', msg);
+        sendResponse({ error: { message: 'Unhandled message type' } });
+        return;
+      }
+    } catch (error: any) {
+      console.error('Error in message handler:', error);
+      sendResponse({ error: { message: error.message } });
     }
-  } else {
-    // console.log('Unhandled message:', msg);
-  }
+  })();
+  
+  // Return true to indicate we will send response asynchronously
+  return true;
 });
 
-browser.runtime.onMessageExternal.addListener(async (msg: ActionMessage, sender) => {
-  // We verify in both content.ts and here, simply because hostile website can always load the provider.ts if
-  // they reference it directly manually.
-  let verify = DomainVerification.verify(msg.app);
+chrome.runtime.onMessageExternal.addListener((msg: ActionMessage, sender, sendResponse): boolean => {
+  (async () => {
+    try {
+      // We verify in both content.ts and here, simply because hostile website can always load the provider.ts if
+      // they reference it directly manually.
+      let verify = DomainVerification.verify(msg.app);
 
-  if (verify == false) {
-    console.warn('Request is not allowed on this domain.');
-    return;
-  }
+      if (verify == false) {
+        console.warn('Request is not allowed on this domain.');
+        sendResponse({ error: { message: 'Request not allowed' } });
+        return;
+      }
 
-  console.log('BACKGROUND:EXTERNAL:MSG:', msg);
-  let extensionId = new URL(sender.url!).host;
-  msg.app = extensionId;
-  return handleContentScriptMessage(msg);
+      console.log('BACKGROUND:EXTERNAL:MSG:', msg);
+      let extensionId = new URL(sender.url!).host;
+      msg.app = extensionId;
+      const result = await handleContentScriptMessage(msg);
+      sendResponse(result);
+    } catch (error: any) {
+      sendResponse({ error: { message: error.message } });
+    }
+  })();
+  
+  return true;
 });
 
 async function handleContentScriptMessage(message: ActionMessage) {
-  // console.log('handleContentScriptMessage:', message);
+  console.log('handleContentScriptMessage:', message);
+  
   // We only allow messages of type 'request' here.
   if (message.type !== 'request') {
-    return null;
+    console.log('Message type is not request:', message.type);
+    return { error: { message: 'Invalid message type' } };
   }
 
   const method = message.request.method;
-  // console.log('Message', message);
-  const params = message.request.params[0];
+  console.log('Processing method:', method);
+  
+  const params = message.request.params ? message.request.params[0] : undefined;
 
   // Create a new handler instance.
-  // const handler = Handlers.getAction(method);
   let id = Math.random().toString().slice(4);
 
   // Ensure that we have a BackgroundManager available for the action handler.
@@ -143,21 +187,21 @@ async function handleContentScriptMessage(message: ActionMessage) {
   state.id = message.id;
   state.id2 = id;
 
-  // This will throw error if the action is not supported.
-  state.handler = Handlers.getAction(method, networkManager); // watchManager can sometimes be null.
+  try {
+    // This will throw error if the action is not supported.
+    state.handler = Handlers.getAction(method, networkManager);
+  } catch (err: any) {
+    console.error('Handler not found for method:', method, err);
+    return { error: { message: `Unsupported method: ${method}` } };
+  }
+  
   state.message = message;
-
-  // Make sure we reload wallets at this point every single process.
-  // await this.walletStore.load();
-  // await this.accountStateStore.load();
-  // const wallets = this.walletStore.getWallets();
-  // ActionStateHolder.prompts.push(state);
 
   // Use the handler to prepare the content to be displayed for signing.
   const prepare = await state.handler.prepare(state);
   state.content = prepare.content;
 
-  // console.log("Prepare ", prepare);
+  console.log('Prepare result:', prepare);
 
   let permission: Permission | unknown | null = null;
   // console.log('Permission:', permission);
@@ -183,9 +227,10 @@ async function handleContentScriptMessage(message: ActionMessage) {
     // Check if user have already approved this kind of access on this domain/host.
     if (!permission) {
       try {
+        console.log('No existing permission, prompting user...');
         // Keep a copy of the prompt message, we need it to finalize if user clicks "X" to close window.
-        // state.promptPermission = await promptPermission({ app: message.app, id: message.id, method: method, params: message.args.params });
         permission = await promptPermission(state);
+        console.log('Permission granted:', permission);
         // authorized, proceed
       } catch (err) {
         console.error('Permission not accepted: ', err);
@@ -199,6 +244,7 @@ async function handleContentScriptMessage(message: ActionMessage) {
         };
       }
     } else {
+      console.log('Existing permission found:', permission);
       // TODO: This logic can be put into the query into permission set, because permissions
       // must be stored with more keys than just "action", it must contain wallet/account and potentially keyId.
 
@@ -213,6 +259,7 @@ async function handleContentScriptMessage(message: ActionMessage) {
 
   if (customActionResponse) {
     // Clone and clean.
+    console.log('Returning custom action response:', customActionResponse);
     const customReturn = JSON.stringify(customActionResponse);
     customActionResponse = undefined;
     return JSON.parse(customReturn);
@@ -220,9 +267,11 @@ async function handleContentScriptMessage(message: ActionMessage) {
 
   try {
     const p = <Permission>permission;
+    console.log('Executing handler with permission:', p);
 
     if (p) {
       const isKeyUnlocked = await networkManager.isKeyUnlocked(p.walletId);
+      console.log('Key unlocked:', isKeyUnlocked);
 
       // The key is empty if the wallet is locked. Force user to unlock before we continue.
       if (p && prepare.consent && !isKeyUnlocked) {
@@ -238,7 +287,7 @@ async function handleContentScriptMessage(message: ActionMessage) {
 
     // User have given permission to execute.
     const result = await state.handler.execute(state, p);
-    // console.log('ACTION RESPONSE: ', result);
+    console.log('ACTION RESPONSE: ', result);
 
     // Increase the execution counter
     const executions = await permissionService.increaseExecution(<Permission>permission);
@@ -248,8 +297,10 @@ async function handleContentScriptMessage(message: ActionMessage) {
       result.notification = `Blockcore Wallet: ${(<Permission>permission).action} (${executions})`;
     }
 
+    console.log('Returning result:', result);
     return result;
-  } catch (error) {
+  } catch (error: any) {
+    console.error('Error executing handler:', error);
     return { error: { message: error.message, stack: error.stack } };
   }
 }
@@ -265,23 +316,26 @@ async function promptUnlock(state: ActionState) {
   }
 }
 
-function handlePromptMessage(message: ActionMessage, sender) {
-  // console.log('handlePromptMessage!!!:', message);
+function handlePromptMessage(message: ActionMessage, sender: any) {
+  console.log('handlePromptMessage:', message);
   // Create an permission instance from the message received from prompt dialog:
   const permission = permissionService.createPermission(message);
+  console.log('Created permission:', permission);
 
   switch (message.permission) {
     case 'forever':
     case 'connect':
     case 'expirable':
-      // const permission = permissionService.persistPermission(permission); // .updatePermission(message.app, message.type, message.permission, message.walletId, message.accountId, message.keyId, message.key);
       permissionService.persistPermission(permission);
+      console.log('Resolving prompt with permission (persistent)');
       prompt?.resolve?.(permission);
       break;
     case 'once':
+      console.log('Resolving prompt with permission (once)');
       prompt?.resolve?.(permission);
       break;
     case 'no':
+      console.log('Rejecting prompt');
       prompt?.reject?.();
       break;
   }
@@ -339,15 +393,19 @@ browser.runtime.onStartup.addListener(async () => {
   console.log('Extension: onStartup');
 });
 
-chrome.runtime.onSuspend.addListener(() => {
-  console.log('Extension: onSuspend.');
-});
+// Service worker suspend event - save any important state
+// Note: onSuspend is Chrome-specific, use chrome namespace directly
+if (typeof chrome !== 'undefined' && chrome.runtime?.onSuspend) {
+  chrome.runtime.onSuspend.addListener(() => {
+    console.log('Extension: onSuspend.');
+  });
+}
 
-chrome.runtime.onConnect.addListener((port) => {
+browser.runtime.onConnect.addListener((port) => {
   console.log('onConnect:', port);
 });
 
-chrome.runtime.onInstalled.addListener(async ({ reason }) => {
+browser.runtime.onInstalled.addListener(async ({ reason }) => {
   // Open the database.
   await Database.Instance.open();
 
@@ -357,9 +415,10 @@ chrome.runtime.onInstalled.addListener(async ({ reason }) => {
   // console.debug('onInstalled', reason);
 
   // Periodic alarm that will check if wallet should be locked.
-  chrome.alarms.get('periodic', (a) => {
-    if (!a) chrome.alarms.create('periodic', { periodInMinutes: 1 });
-  });
+  const periodicAlarm = await browser.alarms.get('periodic');
+  if (!periodicAlarm) {
+    await browser.alarms.create('periodic', { periodInMinutes: 1 });
+  }
 
   // The index alarm is used to perform background scanning of the
   // whole address space of all wallets. This will check used addresses
@@ -367,24 +426,25 @@ chrome.runtime.onInstalled.addListener(async ({ reason }) => {
   // TODO: Log the last UI activation date and increase the period by the time since
   // UI was last activated. If it's 1 hour since last time, set the periodInMinutes to 60.
   // And if user has not used the extension UI in 24 hours, then set interval to 24 hours.
-  chrome.alarms.get('index', (a) => {
-    if (!a) chrome.alarms.create('index', { periodInMinutes: 10 });
-  });
+  const indexAlarm = await browser.alarms.get('index');
+  if (!indexAlarm) {
+    await browser.alarms.create('index', { periodInMinutes: 10 });
+  }
 
   if (reason === 'install') {
     // Open a new tab for initial setup, before we wait for network status watcher.
-    chrome.tabs.create({ url: 'index.html' });
+    await browser.tabs.create({ url: 'index.html' });
     await networkStatusWatcher();
     await executeIndexer();
   } else if (reason === 'update') {
-    // chrome.tabs.create({ url: 'index.html' });
+    // await browser.tabs.create({ url: 'index.html' });
     // Run a full indexing when the extension has been updated/reloaded.
     await networkStatusWatcher();
     await executeIndexer();
   }
 });
 
-chrome.alarms.onAlarm.addListener(async (alarm: chrome.alarms.Alarm) => {
+browser.alarms.onAlarm.addListener(async (alarm) => {
   // Open the database.
   await Database.Instance.open();
 
@@ -403,19 +463,19 @@ const updateNetworkStatus = async () => {
   // are default on CoinVault.
   await networkManager.updateNetworkStatus('blockcore');
 
-  chrome.runtime.sendMessage(
-    {
+  // Note: Service workers don't have access to location.host, use runtime.id instead
+  try {
+    await browser.runtime.sendMessage({
       type: 'network-updated',
       data: { source: 'network-status-watcher' },
       ext: 'blockcore',
       source: 'background',
       target: 'tabs',
-      host: location.host,
-    },
-    function (response) {
-      // console.log('Extension:sendMessage:response:indexed:', response);
-    }
-  );
+      host: browser.runtime.id,
+    });
+  } catch (e) {
+    // Ignore errors when no listeners are registered
+  }
 
   // Whenever the network status has updated, also trigger indexer.
   // 2022-02-12: We don't need to force indexer it, it just adds too many extra calls to indexing.
@@ -473,35 +533,29 @@ const runIndexer = async () => {
 
   // Whenever indexer is executed, we'll create a new manager.
   let manager: any = new BackgroundManager(shared);
-  manager.onUpdates = (status: ProcessResult) => {
-    if (status.changes) {
-      chrome.runtime.sendMessage(
-        {
+  manager.onUpdates = async (status: ProcessResult) => {
+    try {
+      if (status.changes) {
+        await browser.runtime.sendMessage({
           type: 'indexed',
           data: { source: 'indexer-on-schedule' },
           ext: 'blockcore',
           source: 'background',
           target: 'tabs',
-          host: location.host,
-        },
-        function (response) {
-          // console.log('Extension:sendMessage:response:indexed:', response);
-        }
-      );
-    } else {
-      chrome.runtime.sendMessage(
-        {
+          host: browser.runtime.id,
+        });
+      } else {
+        await browser.runtime.sendMessage({
           type: 'updated',
           data: { source: 'indexer-on-schedule' },
           ext: 'blockcore',
           source: 'background',
           target: 'tabs',
-          host: location.host,
-        },
-        function (response) {
-          // console.log('Extension:sendMessage:response:updated:', response);
-        }
-      );
+          host: browser.runtime.id,
+        });
+      }
+    } catch (e) {
+      // Ignore errors when no listeners are registered
     }
   };
 
@@ -560,35 +614,29 @@ const runWatcher = async () => {
       runWatcher();
     };
 
-    watchManager.onUpdates = (status: ProcessResult) => {
-      if (status.changes) {
-        chrome.runtime.sendMessage(
-          {
+    watchManager.onUpdates = async (status: ProcessResult) => {
+      try {
+        if (status.changes) {
+          await browser.runtime.sendMessage({
             type: 'indexed',
             data: { source: 'watcher' },
             ext: 'blockcore',
             source: 'background',
             target: 'tabs',
-            host: location.host,
-          },
-          function (response) {
-            // console.log('Extension:sendMessage:response:indexed:', response);
-          }
-        );
-      } else {
-        chrome.runtime.sendMessage(
-          {
+            host: browser.runtime.id,
+          });
+        } else {
+          await browser.runtime.sendMessage({
             type: 'updated',
             data: { source: 'watcher' },
             ext: 'blockcore',
             source: 'background',
             target: 'tabs',
-            host: location.host,
-          },
-          function (response) {
-            // console.log('Extension:sendMessage:response:updated:', response);
-          }
-        );
+            host: browser.runtime.id,
+          });
+        }
+      } catch (e) {
+        // Ignore errors when no listeners are registered
       }
     };
 

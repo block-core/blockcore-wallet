@@ -3,9 +3,13 @@ import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { AppModule } from './app/app.module';
 import { TAB_ID } from './app/providers/tab-id.provider';
 import { environment } from './environments/environment';
+import * as browser from 'webextension-polyfill';
 
-if (globalThis.chrome && globalThis.chrome.runtime && globalThis.chrome.tabs) {
-  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+// Check for extension environment
+const isExtension = !!(globalThis.chrome?.runtime?.id || (typeof browser !== 'undefined' && browser.runtime?.id));
+
+if (isExtension) {
+  browser.tabs.query({ active: true, currentWindow: true }).then((tabs) => {
     if (environment.production) {
       enableProdMode();
     }

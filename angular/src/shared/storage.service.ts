@@ -1,4 +1,5 @@
 import { RuntimeService } from "./runtime.service";
+import * as browser from 'webextension-polyfill';
 
 // This service is primarily only used for "active" and "timeout" keys.
 export class StorageService {
@@ -10,10 +11,10 @@ export class StorageService {
         // console.log(`SET: ${key} PERSISTED: ${persisted}`);
         if (this.runtime.isExtension) {
             if (persisted) {
-                await globalThis.chrome.storage.local.set({ [key]: value });
+                await browser.storage.local.set({ [key]: value });
             } else {
-                const storage = globalThis.chrome.storage;
-                await (<any>storage).session.set({ [key]: value });
+                const storage = browser.storage as any;
+                await storage.session.set({ [key]: value });
             }
         } else {
             if (persisted) {
@@ -30,11 +31,11 @@ export class StorageService {
         // console.log(`GET: ${key} PERSISTED: ${persisted}`);
         if (this.runtime.isExtension) {
             if (persisted) {
-                let { keys } = await globalThis.chrome.storage.local.get([key]);
+                let { keys } = await browser.storage.local.get([key]) as any;
                 return keys;
             } else {
-                const storage = globalThis.chrome.storage;
-                let { keys } = await (<any>storage).session.get([key]);
+                const storage = browser.storage as any;
+                let { keys } = await storage.session.get([key]);
                 return keys;
             }
         } else {

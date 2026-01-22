@@ -3,6 +3,7 @@ import { Location } from '@angular/common'
 import { UIState } from '../services/ui-state.service';
 import { StateService } from '../services';
 import { RuntimeService } from '../../shared/runtime.service';
+import * as browser from 'webextension-polyfill';
 
 @Component({
     selector: 'app-wipe',
@@ -23,7 +24,7 @@ export class WipeComponent {
         await this.state.wipe();
 
         if (this.runtime.isExtension) {
-            chrome.runtime.reload();
+            browser.runtime.reload();
         } else {
             window.location.reload();
         }

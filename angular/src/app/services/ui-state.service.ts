@@ -7,6 +7,7 @@ import { PaymentRequestData } from 'src/shared/payment';
 import { Direction } from '@angular/cdk/bidi';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { Subject, map, shareReplay, Observable, ReplaySubject } from 'rxjs';
+import * as browser from 'webextension-polyfill';
 
 @Injectable({
   providedIn: 'root',
@@ -59,7 +60,7 @@ export class UIState {
     }
   }
 
-  manifest!: chrome.runtime.Manifest;
+  manifest!: browser.Manifest.WebExtensionManifest;
 
   persisted$: Subject<Persisted> = new ReplaySubject();
 
