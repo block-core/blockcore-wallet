@@ -12,13 +12,6 @@ export class BlockcoreRequestProvider implements Web5RequestProvider {
     // This will receive various messages that are posted to the window. Make sure we filter out anything that
     // is not related to the extension.
     globalThis.addEventListener('message', (message) => {
-      // Debug logging
-      if (message.data?.ext === 'blockcore') {
-        console.log('PROVIDER: Received message:', message.data);
-        console.log('PROVIDER: Has response?', !!message.data.response);
-        console.log('PROVIDER: Request ID exists?', !!this.#requests[message.data?.id]);
-      }
-      
       // Make sure there is response in the data, extension is setup and it belongs to the existing promises in this web app.
       if (!message.data || !message.data.response || message.data.ext !== 'blockcore' || !this.#requests[message.data.id]) {
         return;

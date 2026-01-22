@@ -73,14 +73,12 @@ if ((globalThis as any)[INJECTION_GUARD]) {
         // Send the message to background service:
         if (browser.runtime?.id) {
           response = await browser.runtime.sendMessage(msg);
-          console.log('CONTENT: Got response from background:', response);
         } else {
           console.warn('The extension has been updated and context is lost. Page requires reload.');
           location.reload();
           return;
         }
       } catch (error: any) {
-        console.error('CONTENT: Error sending message to background:', error);
         response = { error: { message: error.message, stack: error.stack } };
       }
 
@@ -88,8 +86,6 @@ if ((globalThis as any)[INJECTION_GUARD]) {
       const responseMsg: ActionMessage = { ...data, response: response ?? { error: { message: 'No response from background' } } };
       responseMsg.target = 'provider';
 
-      console.log('CONTENT: Sending response to provider:', responseMsg);
-      
       // Return the response to the provider/caller.
       window.postMessage(responseMsg, message.origin);
     });

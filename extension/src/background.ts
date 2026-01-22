@@ -71,7 +71,6 @@ chrome.runtime.onMessage.addListener((msg: ActionMessage, sender, sendResponse) 
         return;
       } else if (msg.source == 'provider') {
         const result = await handleContentScriptMessage(msg);
-        console.log('MAIN HANDLER: Returning to content script:', result);
         sendResponse(result);
         return;
       } else if (msg.source == 'tabs') {
@@ -162,16 +161,12 @@ chrome.runtime.onMessageExternal.addListener((msg: ActionMessage, sender, sendRe
 });
 
 async function handleContentScriptMessage(message: ActionMessage) {
-  console.log('handleContentScriptMessage:', message);
-  
   // We only allow messages of type 'request' here.
   if (message.type !== 'request') {
-    console.log('Message type is not request:', message.type);
     return { error: { message: 'Invalid message type' } };
   }
 
   const method = message.request.method;
-  console.log('Processing method:', method);
   
   const params = message.request.params ? message.request.params[0] : undefined;
 
@@ -191,7 +186,6 @@ async function handleContentScriptMessage(message: ActionMessage) {
     // This will throw error if the action is not supported.
     state.handler = Handlers.getAction(method, networkManager);
   } catch (err: any) {
-    console.error('Handler not found for method:', method, err);
     return { error: { message: `Unsupported method: ${method}` } };
   }
   
@@ -200,8 +194,6 @@ async function handleContentScriptMessage(message: ActionMessage) {
   // Use the handler to prepare the content to be displayed for signing.
   const prepare = await state.handler.prepare(state);
   state.content = prepare.content;
-
-  console.log('Prepare result:', prepare);
 
   let permission: Permission | unknown | null = null;
   // console.log('Permission:', permission);
@@ -227,13 +219,10 @@ async function handleContentScriptMessage(message: ActionMessage) {
     // Check if user have already approved this kind of access on this domain/host.
     if (!permission) {
       try {
-        console.log('No existing permission, prompting user...');
         // Keep a copy of the prompt message, we need it to finalize if user clicks "X" to close window.
         permission = await promptPermission(state);
-        console.log('Permission granted:', permission);
         // authorized, proceed
       } catch (err) {
-        console.error('Permission not accepted: ', err);
 
         // When the user clicks X during a payment request, the user might still have completed the process, and
         // we should return a successful response here. For other actions, clicking X means "Cancel"/"Deny".
@@ -244,7 +233,6 @@ async function handleContentScriptMessage(message: ActionMessage) {
         };
       }
     } else {
-      console.log('Existing permission found:', permission);
       // TODO: This logic can be put into the query into permission set, because permissions
       // must be stored with more keys than just "action", it must contain wallet/account and potentially keyId.
 
@@ -259,7 +247,6 @@ async function handleContentScriptMessage(message: ActionMessage) {
 
   if (customActionResponse) {
     // Clone and clean.
-    console.log('Returning custom action response:', customActionResponse);
     const customReturn = JSON.stringify(customActionResponse);
     customActionResponse = undefined;
     return JSON.parse(customReturn);
@@ -267,11 +254,9 @@ async function handleContentScriptMessage(message: ActionMessage) {
 
   try {
     const p = <Permission>permission;
-    console.log('Executing handler with permission:', p);
 
     if (p) {
       const isKeyUnlocked = await networkManager.isKeyUnlocked(p.walletId);
-      console.log('Key unlocked:', isKeyUnlocked);
 
       // The key is empty if the wallet is locked. Force user to unlock before we continue.
       if (p && prepare.consent && !isKeyUnlocked) {
@@ -287,7 +272,6 @@ async function handleContentScriptMessage(message: ActionMessage) {
 
     // User have given permission to execute.
     const result = await state.handler.execute(state, p);
-    console.log('ACTION RESPONSE: ', result);
 
     // Increase the execution counter
     const executions = await permissionService.increaseExecution(<Permission>permission);
@@ -297,10 +281,8 @@ async function handleContentScriptMessage(message: ActionMessage) {
       result.notification = `Blockcore Wallet: ${(<Permission>permission).action} (${executions})`;
     }
 
-    console.log('Returning result:', result);
     return result;
   } catch (error: any) {
-    console.error('Error executing handler:', error);
     return { error: { message: error.message, stack: error.stack } };
   }
 }
@@ -317,25 +299,20 @@ async function promptUnlock(state: ActionState) {
 }
 
 function handlePromptMessage(message: ActionMessage, sender: any) {
-  console.log('handlePromptMessage:', message);
   // Create an permission instance from the message received from prompt dialog:
   const permission = permissionService.createPermission(message);
-  console.log('Created permission:', permission);
 
   switch (message.permission) {
     case 'forever':
     case 'connect':
     case 'expirable':
       permissionService.persistPermission(permission);
-      console.log('Resolving prompt with permission (persistent)');
       prompt?.resolve?.(permission);
       break;
     case 'once':
-      console.log('Resolving prompt with permission (once)');
       prompt?.resolve?.(permission);
       break;
     case 'no':
-      console.log('Rejecting prompt');
       prompt?.reject?.();
       break;
   }
@@ -351,8 +328,6 @@ function handlePromptMessage(message: ActionMessage, sender: any) {
 
 async function promptPermission(state: ActionState) {
   releaseMutex = await promptMutex.acquire();
-
-  console.log('ActionState:', state);
 
   var parameters: ActionUrlParameters | any = {
     id: state.message.id,
