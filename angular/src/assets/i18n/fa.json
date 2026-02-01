@@ -36,15 +36,12 @@
   "Dashboard": {
     "Accounts": "حساب‌ها",
     "Vaults": "خزانه‌ها",
-    "Collectibles": "کالکشن‌ها",
     "Inbox": "صندوق ورودی",
     "AddressBook": "دفترچه آدرس",
     "AddAccount": "افزودن حساب",
     "AddWallet": "افزودن کیف پول",
     "Exchange": "صرافی (خرید/فروش)",
     "ScanPayment": "اسکن پرداخت",
-    "NoCollectablesFound": "موردی یافت نشد",
-    "GoToMarketplace": "به بازار بروید",
     "ZeroAccounts": "کیف پول شما هیچ حسابی ندارد."
   },
   "Settings": {
@@ -403,10 +400,6 @@
   },
   "Manifest": {
     "Description": "کیف پول غیرحضانتی برای سکه‌ها، توکن‌ها، هویت‌ها، NFTها و بیشتر."
-  },
-  "Collectables": {
-    "PurchasePrice": "قیمت خرید",
-    "Details": "جزئیات"
   },
   "Exchange": {
     "PurchaseCrypto": "خرید ارز دیجیتال",

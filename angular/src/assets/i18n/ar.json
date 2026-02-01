@@ -38,15 +38,12 @@
   "Dashboard": {
     "Accounts": "الحسابات",
     "Vaults": "الخزائن",
-    "Collectibles": "المقتنيات",
     "Inbox": "البريد الوارد",
     "AddressBook": "دفتر العناوين",
     "AddAccount": "إضافة حساب",
     "AddWallet": "إضافة محفظة",
     "Exchange": "التبادل (شراء/بيع)",
     "ScanPayment": "مسح الدفع",
-    "NoCollectablesFound": "لم يتم العثور على مقتنيات.",
-    "GoToMarketplace": "الذهاب إلى السوق.",
     "ZeroAccounts": "محفظتك لا تحتوي على حسابات.",
     "SignVerify": "توقيع والتحقق"
   },
@@ -386,10 +383,6 @@
     "AuthorizeFor5Minutes": "التفويض لمدة 5 دقائق",
     "AuthorizeForever": "التفويض دائمًا",
     "Cancel": "إلغاء"
-  },
-  "Collectables": {
-    "PurchasePrice": "سعر الشراء",
-    "Details": "التفاصيل"
   },
   "Manifest": {
     "Description": "محفظة غير وصية للعملات والرموز والهويات وNFTs وغيرها."

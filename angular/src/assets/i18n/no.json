@@ -36,15 +36,12 @@
   "Dashboard": {
     "Accounts": "Kontoer",
     "Vaults": "Hvelv",
-    "Collectibles": "Samleobjekter",
     "Inbox": "Innboks",
     "AddressBook": "Adressebok",
     "AddAccount": "Legg til konto",
     "AddWallet": "Legg til lommebok",
     "Exchange": "Bytte (kjøp/selg)",
     "ScanPayment": "Skann betaling",
-    "NoCollectablesFound": "Ingen samleobjekter funnet.",
-    "GoToMarketplace": "Gå til markedsplassen.",
     "ZeroAccounts": "Lommeboken din har ingen kontoer."
   },
   "Settings": {
@@ -405,10 +402,6 @@
   },
   "Manifest": {
     "Description": "Non-Custodial lommebok for mynter, tokens, identiteter, NFTer og mer."
-  },
-  "Collectables": {
-    "PurchasePrice": "Kjøpesum",
-    "Details": "Detaljer"
   },
   "Exchange": {
     "PurchaseCrypto": "Kjøp krypto",

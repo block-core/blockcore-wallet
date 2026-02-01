@@ -36,15 +36,12 @@
   "Dashboard": {
     "Accounts": "Аккаунты",
     "Vaults": "Хранилища",
-    "Collectibles": "Коллекционные предметы",
     "Inbox": "Входящие",
     "AddressBook": "Контакты",
     "AddAccount": "Добавить аккаунт",
     "AddWallet": "Добавить кошелёк",
     "Exchange": "Обмен (покупка/продажа)",
     "ScanPayment": "Отсканировать платёж",
-    "NoCollectablesFound": "Коллекционные предметы не найдены.",
-    "GoToMarketplace": "Перейти на торговую площадку",
     "ZeroAccounts": "В вашем кошельке нет аккаунтов."
   },
   "Settings": {
@@ -402,10 +399,6 @@
     "AuthorizeFor5Minutes": "Авторизовать на 5 минут",
     "AuthorizeForever": "Авторизовать навсегда",
     "Cancel": "Отмена"
-  },
-  "Collectables": {
-    "PurchasePrice": "Цена покупки",
-    "Details": "Детали"
   },
   "Manifest": {
     "Description": "Кошелёк без кастодиана для монет, токенов, удостоверений личности, NFT и многого другого."

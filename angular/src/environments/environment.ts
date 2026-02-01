@@ -16,7 +16,7 @@ export const environment: IEnvironment = {
   production: false,
   enableDebugTools: true,
   logLevel: 'debug',
-  features: ['wallet', 'identity', 'collectible', 'vault', 'handler:pay', 'handler:bitcoin', 'handler:vault', 'handler:sid', 'handler:did', 'handler:nostr'],
+  features: ['wallet', 'identity', 'vault', 'handler:pay', 'handler:bitcoin', 'handler:vault', 'handler:sid', 'handler:did', 'handler:nostr'],
   releaseUrl: 'https://github.com/block-core/blockcore-wallet/releases',
   sourceUrl: 'https://github.com/block-core/blockcore-wallet',
   instance: 'blockcore',

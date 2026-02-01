@@ -38,15 +38,12 @@
   "Dashboard": {
     "Accounts": "Comptes",
     "Vaults": "Coffres-forts",
-    "Collectibles": "Objets de collection",
     "Inbox": "Boîte de réception",
     "AddressBook": "Carnet d'adresses",
     "AddAccount": "Ajouter un compte",
     "AddWallet": "Ajouter un portefeuille",
     "Exchange": "Échange (achat/vente)",
     "ScanPayment": "Scanner un paiement",
-    "NoCollectablesFound": "Aucun objet de collection trouvé.",
-    "GoToMarketplace": "Aller à la place de marché.",
     "ZeroAccounts": "Votre portefeuille ne contient aucun compte.",
     "SignVerify": "Signer et vérifier"
   },
@@ -420,10 +417,6 @@
     "AuthorizeFor5Minutes": "Autoriser pendant 5 minutes",
     "AuthorizeForever": "Autoriser indéfiniment",
     "Cancel": "Annuler"
-  },
-  "Collectables": {
-    "PurchasePrice": "prix d'achat",
-    "Details": "détails"
   },
   "Manifest": {
     "Description": "Portefeuille non-custodial pour les pièces, les jetons, les identités, les NFT et plus encore."

@@ -38,15 +38,12 @@
   "Dashboard": {
     "Accounts": "Accounts",
     "Vaults": "Vaults",
-    "Collectibles": "Collectibles",
     "Inbox": "Inbox",
     "AddressBook": "Address Book",
     "AddAccount": "Add Account",
     "AddWallet": "Add Wallet",
     "Exchange": "Exchange (buy/sell)",
     "ScanPayment": "Scan Payment",
-    "NoCollectablesFound": "No collectibles found.",
-    "GoToMarketplace": "Go to Marketplace",
     "ZeroAccounts": "Your wallet has zero accounts.",
     "SignVerify": "Sign & Verify"
   },
@@ -420,10 +417,6 @@
     "AuthorizeFor5Minutes": "Authorize for 5 Minutes",
     "AuthorizeForever": "Authorize Forever",
     "Cancel": "Cancel"
-  },
-  "Collectables": {
-    "PurchasePrice": "Purchase Price",
-    "Details": "Details"
   },
   "Manifest": {
     "Description": "Non-Custodial wallet for Coins, Tokens, Identities, NFTs, and more."

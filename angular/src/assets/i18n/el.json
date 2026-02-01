@@ -36,15 +36,12 @@
   "Dashboard": {
     "Accounts": "Λογαριασμοί",
     "Vaults": "Θησαυροφυλάκια",
-    "Collectibles": "Συλλεκτικά",
     "Inbox": "Εισερχόμενα",
     "AddressBook": "Βιβλίο Διευθύνσεων",
     "AddAccount": "Προσθήκη Λογαριασμού",
     "AddWallet": "Προσθήκη Πορτοφολιού",
     "Exchange": "Ανταλλαγή (αγορά/πώληση)",
     "ScanPayment": "Σάρωση Πληρωμής",
-    "NoCollectablesFound": "Δεν βρέθηκαν συλλεκτικά αντικείμενα",
-    "GoToMarketplace": "Μετάβαση στην Αγορά",
     "ZeroAccounts": "Το πορτοφόλι σας έχει μηδενικούς λογαριασμούς."
   },
   "Settings": {
@@ -400,10 +397,6 @@
     "AuthorizeFor5Minutes": "Εξουσιοδότηση για 5 Λεπτά",
     "AuthorizeForever": "Εξουσιοδότηση για Πάντα",
     "Cancel": "Ακύρωση"
-  },
-  "Collectables": {
-    "PurchasePrice": "Τιμή Αγοράς",
-    "Details": "Λεπτομέρειες"
   },
   "Manifest": {
     "Description": "Πορτοφόλι χωρίς θεματοφυλακή για νομίσματα, διακριτικά, ταυτότητες, NFT και άλλα."

@@ -36,15 +36,12 @@
   "Dashboard": {
     "Accounts": "חשבונות",
     "Vaults": "כספות",
-    "Collectibles": "אוספים",
     "Inbox": "תיבת הודעות",
     "AddressBook": "ספר כתובות",
     "AddAccount": "הוסף חשבון",
     "AddWallet": "הוסף ארנק",
     "Exchange": "החלפת מטבעות",
     "ScanPayment": "סריקת תשלום",
-    "NoCollectablesFound": "לא נמצאו פריטים",
-    "GoToMarketplace": "עבור לשוק הפריטים",
     "ZeroAccounts": "בארנק שלך אין חשבונות."
   },
   "Settings": {
@@ -400,10 +397,6 @@
     "AuthorizeFor5Minutes": "אשר ל-5 דקות",
     "AuthorizeForever": "אשר לצמיתות",
     "Cancel": "בטל"
-  },
-  "Collectables": {
-    "PurchasePrice": "מחיר רכישה",
-    "Details": "פרטים"
   },
   "Manifest": {
     "Description": "ארנק ללא משמורת למטבעות, אסימונים, זהויות, נכסים ועוד."
