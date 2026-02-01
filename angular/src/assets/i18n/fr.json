@@ -86,7 +86,7 @@
     "CustomServerHint": "Le serveur personnalisé doit contenir une variable (id) qui correspond au réseau pour chaque compte que vous créez.",
     "Version": "Version",
     "By": "Par",
-    "WalletDescriptionP1": "Portefeuille HD non-custodial dans votre navigateur pour les coins, les jetons, les identités, les NFT, et plus encore.",
+    "WalletDescriptionP1": "Portefeuille HD non-custodial dans votre navigateur pour les coins, les jetons, les identités, et plus encore.",
     "WalletDescriptionP2": "Ce portefeuille est un logiciel gratuit et open source.",
     "MadeWith": "Créé avec ❤",
     "AnarchyText": "« Contrairement aux communautés traditionnellement associées au mot 'anarchie', dans une crypto-anarchie, le gouvernement n'est pas temporairement détruit, mais définitivement interdit et définitivement inutile. C'est une communauté où la menace de violence est impuissante car la violence est impossible, et la violence est impossible car ses participants ne peuvent pas être liés à leurs vrais noms ou à leurs emplacements physiques. » - Wei Dai 1998",
@@ -419,7 +419,7 @@
     "Cancel": "Annuler"
   },
   "Manifest": {
-    "Description": "Portefeuille non-custodial pour les pièces, les jetons, les identités, les NFT et plus encore."
+    "Description": "Portefeuille non-custodial pour les pièces, les jetons, les identités et plus encore."
   },
   "Exchange": {
     "PurchaseCrypto": "Acheter de la crypto",

@@ -1,6 +1,6 @@
 import { Injectable, OnInit, NgZone, Inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { DecentralizedWebNode, Message, MessageService } from 'src/shared';
+import { Message, MessageService } from 'src/shared';
 import { BackgroundManager, ProcessResult } from 'src/shared/background-manager';
 import { SharedManager } from 'src/shared/shared-manager';
 import { RunState } from 'src/shared/task-runner';
@@ -33,8 +33,7 @@ export class FrontendService implements OnInit {
     private settings: SettingsService,
     private secure: SecureStateService,
     private message: MessageService,
-    private sharedManager: SharedManager,
-    private dwn: DecentralizedWebNode
+    private sharedManager: SharedManager
   ) {
     this.events.subscribeAll().subscribe(async (message) => {
       this.ngZone.run(async () => {
@@ -146,8 +145,6 @@ export class FrontendService implements OnInit {
   }
 
   async ngOnInit() {
-    // Initialize the Decentralized Web Node.
-    await this.dwn.load();
   }
 
   async networkStatusWatcher() {

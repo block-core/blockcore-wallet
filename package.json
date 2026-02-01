@@ -1,7 +1,7 @@
 {
   "name": "blockcore-wallet",
   "version": "1.0.43",
-  "description": "An Non-Custodial HD wallet in your browser for Coins, Tokens, Identities, NFTs and more",
+  "description": "Non-Custodial HD wallet in your browser for Coins, Tokens, Identities and more",
   "scripts": {
     "version": "node -p \"require('./package.json').version\"",
     "changelog": "conventional-changelog -i CHANGELOG.md -s -r 0 && git add CHANGELOG.md",
@@ -51,7 +51,7 @@
     "@blockcore/did-resolver": "0.0.4",
     "@blockcore/dns": "0.0.13",
     "@blockcore/identity": "0.0.12",
-    "@blockcore/web5-injector": "0.0.3",
+
     "@fontsource/material-icons": "^4.5.4",
     "@ipld/dag-cbor": "^8.0.0",
     "@ngx-translate/core": "^14.0.0",
@@ -60,7 +60,7 @@
     "@scure/base": "^1.1.1",
     "@scure/bip32": "^1.1.5",
     "@scure/bip39": "^1.1.1",
-    "@tbd54566975/dwn-sdk-js": "^0.0.25",
+
     "@types/qs": "^6.9.7",
     "async-mutex": "^0.4.0",
     "axios": "0.27.2",

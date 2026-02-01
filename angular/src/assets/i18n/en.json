@@ -86,7 +86,7 @@
     "CustomServerHint": "The custom server must contain a variable (id) which identifies the network for each account you create.",
     "Version": "Version",
     "By": "By",
-    "WalletDescriptionP1": "Non-Custodial HD wallet in your browser for Coins, Tokens, Identities, NFTs, and more.",
+    "WalletDescriptionP1": "Non-Custodial HD wallet in your browser for Coins, Tokens, Identities, and more.",
     "WalletDescriptionP2": "This wallet is free and open-source software.",
     "MadeWith": "Made with ❤",
     "AnarchyText": "“Unlike the communities traditionally associated with the word 'anarchy', in a crypto-anarchy the government is not temporarily destroyed but permanently forbidden and permanently unnecessary. It's a community where the threat of violence is impotent because violence is impossible, and violence is impossible because its participants cannot be linked to their true names or physical locations.” - Wei Dai 1998",
@@ -419,7 +419,7 @@
     "Cancel": "Cancel"
   },
   "Manifest": {
-    "Description": "Non-Custodial wallet for Coins, Tokens, Identities, NFTs, and more."
+    "Description": "Non-Custodial wallet for Coins, Tokens, Identities, and more."
   },
   "Exchange": {
     "PurchaseCrypto": "Purchase Crypto",

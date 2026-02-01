@@ -1,9 +1,13 @@
 // Import only types that don't pull in webextension-polyfill
 // provider.ts runs in the MAIN world (page context), not extension context
 import { ActionMessage, ActionRequest, ActionResponse, EventEmitter, Listener } from '../../angular/src/shared/provider-types';
-import { Injector, RequestArguments, Web5RequestProvider } from '@blockcore/web5-injector';
 
-export class BlockcoreRequestProvider implements Web5RequestProvider {
+export interface RequestArguments {
+  method: string;
+  params?: any[];
+}
+
+export class BlockcoreRequestProvider {
   name = 'Blockcore';
   #requests = {};
   #events = new EventEmitter();
@@ -205,12 +209,10 @@ export class NostrNip44 {
 }
 
 const provider = new BlockcoreRequestProvider();
-Injector.register(provider);
 
-// Also make our provider available on "blockcore".
+// Make our provider available on "blockcore".
 globalThis.blockcore = provider;
 
-// TODO: Consider playing nice with other extensions that implement the same global objects,
-// perhaps something similar like the suggest Web5Provider. Also we should consider not injection if
-// user have zero Nostr accounts in their wallets.
+// TODO: Consider playing nice with other extensions that implement the same global objects.
+// Also we should consider not injecting if user has zero Nostr accounts in their wallets.
 globalThis.nostr = new NostrProvider(provider);

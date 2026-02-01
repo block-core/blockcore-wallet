@@ -83,7 +83,7 @@
     "CustomServerHint": "Den tilpassede serveren må inneholde en variabel (id) som er nettverket for hver konto du oppretter.",
     "Version": "Versjon",
     "By": "Av",
-    "WalletDescriptionP1": "Non-Custodial HD-lommebok i nettleseren din for mynter, tokens, identiteter, NFT-er og mer.",
+    "WalletDescriptionP1": "Non-Custodial HD-lommebok i nettleseren din for mynter, tokens, identiteter og mer.",
     "WalletDescriptionP2": "Denne lommeboken er gratis programvare med åpen kildekode.",
     "MadeWith": "Laget med ❤",
     "AnarchyText": "«I motsetning til samfunnene som tradisjonelt forbindes med ordet 'anarki', er ikke regjeringen midlertidig ødelagt, men permanent forbudt og permanent unødvendig. Det er et samfunn der trusselen om vold er impotent fordi vold er umulig, og vold er umulig fordi deltakerne ikke kan knyttes til deres sanne navn eller fysiske steder.» - Wei Dai 1998",
@@ -401,7 +401,7 @@
     "Cancel": "Avbryt"
   },
   "Manifest": {
-    "Description": "Non-Custodial lommebok for mynter, tokens, identiteter, NFTer og mer."
+    "Description": "Non-Custodial lommebok for mynter, tokens, identiteter og mer."
   },
   "Exchange": {
     "PurchaseCrypto": "Kjøp krypto",

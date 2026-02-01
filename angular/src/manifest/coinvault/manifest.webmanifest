@@ -9,7 +9,7 @@
     "display": "standalone",
     "theme_color": "#206997",
     "background_color": "#212121",
-    "description": "Non-Custodial wallet for Stratis, Cirrus, NFTs and more.",
+    "description": "Non-Custodial wallet for Stratis, Cirrus and more.",
     "orientation": "any",
     "related_applications": [],
     "prefer_related_applications": false,
@@ -66,7 +66,6 @@
         "Coins",
         "Tokens",
         "Identities",
-        "NFT",
         "Stratis",
         "Cirrus"
     ],

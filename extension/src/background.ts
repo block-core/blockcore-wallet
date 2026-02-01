@@ -5,14 +5,14 @@ import { RunState } from '../../angular/src/shared/task-runner';
 import { WalletStore } from '../../angular/src/shared/store/wallet-store';
 import { PermissionServiceShared } from '../../angular/src/shared/permission.service';
 import * as browser from 'webextension-polyfill';
-import { ActionState, DecentralizedWebNode, DomainVerification, Handlers } from '../../angular/src/shared';
+import { ActionState, DomainVerification, Handlers } from '../../angular/src/shared';
 import { Mutex } from 'async-mutex';
 import { StorageService } from '../../angular/src/shared/storage.service';
 import { RuntimeService } from '../../angular/src/shared/runtime.service';
 import { NetworkLoader } from '../../angular/src/shared/network-loader';
 import { MessageService } from '../../angular/src/shared';
 import { EventBus } from '../../angular/src/shared/event-bus';
-import { Dwn, DataStream, DidKeyResolver, Jws, RecordsWrite, RecordsQuery } from '@tbd54566975/dwn-sdk-js';
+
 import { Database } from '../../angular/src/shared/store/storage';
 
 // let state: ActionState;
@@ -28,7 +28,6 @@ let customActionResponse = undefined;
 let networkLoader = new NetworkLoader();
 let runtimeService = new RuntimeService();
 let messageService = new MessageService(runtimeService, new EventBus());
-let dwn = new DecentralizedWebNode();
 
 let shared = new SharedManager(new StorageService(runtimeService), new WalletStore(), networkLoader, messageService);
 const networkUpdateInterval = 45000;
@@ -85,10 +84,6 @@ chrome.runtime.onMessage.addListener((msg: ActionMessage, sender, sendResponse) 
           return;
         } else if (msg.type === 'watch') {
           await runWatcher();
-          sendResponse({ success: true });
-          return;
-        } else if (msg.type === 'data:get') {
-          await getDwnData(msg);
           sendResponse({ success: true });
           return;
         } else if (msg.type === 'network') {
@@ -384,9 +379,6 @@ browser.runtime.onInstalled.addListener(async ({ reason }) => {
   // Open the database.
   await Database.Instance.open();
 
-  // Initialize the Decentralized Web Node.
-  await dwn.load();
-
   // console.debug('onInstalled', reason);
 
   // Periodic alarm that will check if wallet should be locked.
@@ -538,32 +530,6 @@ const runIndexer = async () => {
 
   // Reset the manager after full indexer run.
   manager = null;
-};
-
-const getDwnData = async (msg: ActionMessage | any) => {
-  const did = msg.data.did;
-  console.log('Get data for DID: ', did);
-  console.log(msg);
-
-  // const didKey = await DidKeyResolver.generate(); // generate a did:key DID
-  // const signatureMaterial = Jws.createSignatureInput(didKey);
-  // // const data = randomBytes(32); // in node.js
-  // // or in web
-  // const data = Uint8Array.from(msg.data.data);
-
-  // const query = await RecordsWrite.create({
-  //   data,
-  //   dataFormat: 'application/json',
-  //   published: true,
-  //   protocol: 'yeeter',
-  //   schema: 'yeeter/post',
-  //   authorizationSignatureInput: signatureMaterial,
-  // });
-
-  // const dataStream = DataStream.fromBytes(data);
-  // const result = await dwn.dwn.processMessage(didKey.did, query.toJSON(), dataStream);
-  // console.log(result);
-  // dwn.dwn.processMessage('', msg, data);
 };
 
 const runWatcher = async () => {

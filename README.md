@@ -1,6 +1,6 @@
 # Blockcore Wallet
 
-### Non-Custodial Web5 Wallet for your Browser
+### Non-Custodial Wallet for your Browser
 
 The Blockcore Wallet does wallet management, account management, identity management and signing. Built on web-technology, Blockcore Wallet is cross-platform and works in
 different modes, such as browser extension, Progressive Web App, native mobile and desktop app and more.
@@ -14,7 +14,6 @@ Open the [Wallet Guide](https://www.blockcore.net/wallet/guide) to install the w
 The wallet supports having multiple active wallets at the same time, and each wallet can contain one or more accounts, even on different blockchains and networks.
 
 - [x] Multiple wallets with multiple accounts
-- [x] Web5 wallet for identity and data
 - [x] Payment requests
 - [x] Decentralized blockchain API discovery
 - [x] Internationalization support with multiple languages and LTR/RTL support.
@@ -46,7 +45,7 @@ This wallet is made available in multiple different instances that has different
 ### CoinVault
 
 - Chains: Stratis and Cirrus.
-- Features: Wallet, NFT and more.
+- Features: Wallet and more.
 - Download: ["coinvault-\*.zip](https://github.com/block-core/blockcore-wallet/releases)
 
 ### Free City Wallet

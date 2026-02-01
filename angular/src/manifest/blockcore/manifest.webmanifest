@@ -9,7 +9,7 @@
     "display": "standalone",
     "theme_color": "#22a893",
     "background_color": "#212121",
-    "description": "Non-Custodial wallet for Coins, Tokens, Identities, NFTs and more.",
+    "description": "Non-Custodial wallet for Coins, Tokens, Identities and more.",
     "orientation": "any",
     "related_applications": [],
     "prefer_related_applications": false,
@@ -65,8 +65,7 @@
         "Non-Custodial Wallet",
         "Coins",
         "Tokens",
-        "Identities",
-        "NFT"
+        "Identities"
     ],
     "categories": [
         "productivity"
