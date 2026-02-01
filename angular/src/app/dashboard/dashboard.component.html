@@ -136,23 +136,6 @@
 
   </mat-tab> -->
 
-  <mat-tab *ngIf="feature.enabled('collectible')">
-    <ng-template mat-tab-label>
-      <mat-icon class="example-tab-icon">category</mat-icon>
-      &nbsp;
-      <span>{{ "Dashboard.Collectibles" | translate }}</span>
-    </ng-template>
-
-    <ng-container class="centered">
-      <div class="centered nft-view" *ngIf="totalCollectablesCount == 0">
-        <img src="assets/nfts.png" class="nft-preview" /><br />
-        {{ "Dashboard.NoCollectablesFound" | translate }}
-        <a [href]="this.stratisphereUrl" target="_blank">{{ "Dashboard.GoToMarketplace" | translate }}</a>
-      </div>
-      <app-collectable *ngFor="let account of smartContractAccounts" (totalItemsOnAccount)="addToTotalItems($event)" [account]="account"> </app-collectable>
-    </ng-container>
-  </mat-tab>
-
   <mat-tab *ngIf="feature.enabled('inbox')">
     <ng-template mat-tab-label>
       <mat-icon class="example-tab-icon">mail</mat-icon>

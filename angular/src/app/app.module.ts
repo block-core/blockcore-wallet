@@ -80,8 +80,6 @@ import { SettingStore } from 'src/shared/store/setting-store';
 import { AddressWatchStore } from 'src/shared/store/address-watch-store';
 import { SizePipe } from './shared/size.pipe';
 import { AccountStateStore } from 'src/shared/store/account-state-store';
-import { NonFungibleTokenComponent } from './collectables/non-fungible-token.component';
-import { CollectablesComponent } from './collectables/collectables.component';
 import { NetworkComponent } from './settings/network/network.component';
 import { NetworkStatusPipe } from './shared/network-status.pipe';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -183,10 +181,6 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     AccountSendSidechainSendingComponent,
     NetworkStatusComponent,
     HandlerComponent,
-    ActionStratisIdentityComponent,
-    ActionNostrIdentityComponent,
-    CollectablesComponent,
-    NonFungibleTokenComponent,
     ActionStratisIdentityComponent,
     ActionNostrIdentityComponent,
     NetworkComponent,
