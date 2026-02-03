@@ -1,6 +1,6 @@
 {
   "name": "blockcore-wallet",
-  "version": "1.0.44",
+  "version": "1.0.45",
   "description": "Non-Custodial HD wallet in your browser for Coins, Tokens, Identities and more",
   "scripts": {
     "version": "node -p \"require('./package.json').version\"",
