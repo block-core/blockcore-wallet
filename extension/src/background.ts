@@ -33,8 +33,14 @@ let shared = new SharedManager(new StorageService(runtimeService), new WalletSto
 const networkUpdateInterval = 45000;
 let walletStore: WalletStore;
 
-// Since the mutex happens right before popup is shown, we need to keep more than a single entry available.
-// let prompts: ActionState[] = [];
+// Request queue system - handles multiple signing requests with a single popup
+interface QueuedRequest {
+  state: ActionState;
+  resolve: (permission: Permission | null) => void;
+  reject: (error: any) => void;
+}
+let requestQueue: QueuedRequest[] = [];
+let isProcessingQueue = false;
 
 // Message handler for extension messaging
 // Use native chrome API with sendResponse for reliable async responses in MV3
@@ -303,6 +309,8 @@ function handlePromptMessage(message: ActionMessage, sender: any) {
     case 'expirable':
       permissionService.persistPermission(permission);
       prompt?.resolve?.(permission);
+      // After granting a reusable permission, process remaining queued requests that might benefit
+      processQueuedRequestsWithPermission(permission);
       break;
     case 'once':
       prompt?.resolve?.(permission);
@@ -319,9 +327,126 @@ function handlePromptMessage(message: ActionMessage, sender: any) {
     // Remove the popup window that was opened:
     browser.windows.remove(sender.tab.windowId);
   }
+  
+  // Continue processing the queue after this prompt is handled
+  processNextInQueue();
 }
 
-async function promptPermission(state: ActionState) {
+// Process queued requests that can now be auto-approved with the newly granted permission
+async function processQueuedRequestsWithPermission(grantedPermission: Permission) {
+  if (!grantedPermission || grantedPermission.type === 'once') {
+    return; // Only reusable permissions can auto-approve other requests
+  }
+
+  // Find and resolve queued requests that match the granted permission
+  const matchingRequests: QueuedRequest[] = [];
+  const remainingRequests: QueuedRequest[] = [];
+
+  for (const queuedRequest of requestQueue) {
+    const method = queuedRequest.state.message.request.method;
+    const app = queuedRequest.state.message.app;
+    const params = queuedRequest.state.message.request.params ? queuedRequest.state.message.request.params[0] : undefined;
+
+    // Check if this queued request matches the granted permission
+    const isMatch = app === grantedPermission.app && method === grantedPermission.action;
+
+    if (isMatch) {
+      // If the permission is key-specific, verify the key matches
+      if (params?.key && grantedPermission.key && params.key !== grantedPermission.key) {
+        remainingRequests.push(queuedRequest);
+      } else {
+        matchingRequests.push(queuedRequest);
+      }
+    } else {
+      remainingRequests.push(queuedRequest);
+    }
+  }
+
+  // Update the queue to only contain non-matching requests
+  requestQueue = remainingRequests;
+
+  // Resolve all matching requests with the granted permission
+  for (const match of matchingRequests) {
+    match.resolve(grantedPermission);
+  }
+}
+
+// Add a request to the queue and start processing if not already doing so
+function queuePermissionRequest(state: ActionState): Promise<Permission | null> {
+  return new Promise((resolve, reject) => {
+    requestQueue.push({ state, resolve, reject });
+    
+    // Start processing if not already
+    if (!isProcessingQueue) {
+      processNextInQueue();
+    }
+  });
+}
+
+// Process the next request in the queue
+async function processNextInQueue() {
+  if (isProcessingQueue || requestQueue.length === 0) {
+    return;
+  }
+
+  isProcessingQueue = true;
+
+  // Before showing a popup, re-check if permission was already granted
+  // (another popup may have granted it while this request was waiting)
+  await permissionService.refresh();
+
+  const nextRequest = requestQueue[0];
+  if (!nextRequest) {
+    isProcessingQueue = false;
+    return;
+  }
+
+  const method = nextRequest.state.message.request.method;
+  const app = nextRequest.state.message.app;
+  const params = nextRequest.state.message.request.params ? nextRequest.state.message.request.params[0] : undefined;
+
+  // Re-check for existing permission
+  let existingPermission: Permission | null = null;
+  if (params?.key) {
+    existingPermission = permissionService.findPermissionByKey(app!, method, params.key);
+  } else {
+    const permissions = permissionService.findPermissions(app!, method) as any[];
+    if (permissions?.length > 0) {
+      existingPermission = permissions[0];
+    }
+  }
+
+  if (existingPermission) {
+    // Permission already exists, resolve without popup
+    requestQueue.shift(); // Remove from queue
+    nextRequest.resolve(existingPermission);
+    isProcessingQueue = false;
+    // Process next item in queue
+    processNextInQueue();
+    return;
+  }
+
+  // No permission found, show popup for this request
+  try {
+    const permission = await showPermissionPopup(nextRequest.state);
+    requestQueue.shift(); // Remove from queue after popup closes
+    nextRequest.resolve(permission);
+  } catch (err) {
+    requestQueue.shift(); // Remove from queue
+    nextRequest.reject(err);
+  }
+
+  isProcessingQueue = false;
+  // Note: processNextInQueue will be called from handlePromptMessage after popup closes
+}
+
+// Queue-based prompt: adds request to queue instead of directly showing popup
+async function promptPermission(state: ActionState): Promise<Permission | null> {
+  return queuePermissionRequest(state);
+}
+
+// Actually show the popup window for a permission request
+async function showPermissionPopup(state: ActionState): Promise<Permission> {
   releaseMutex = await promptMutex.acquire();
 
   var parameters: ActionUrlParameters | any = {
@@ -331,11 +456,10 @@ async function promptPermission(state: ActionState) {
     content: JSON.stringify(state.content), // Content prepared by the handler to be displayed for user.
     params: JSON.stringify(state.message.request.params), // Params is used to display structured information for signing.
     verify: state.message.verify,
+    queueLength: requestQueue.length, // Pass queue length so UI can show "X more requests pending"
   };
 
   let qs = new URLSearchParams(parameters);
-  // let url = `${browser.runtime.getURL('index.html')}?${qs.toString()}`;
-  // console.log("url: ", url);
 
   return new Promise((resolve, reject) => {
     // Set the global prompt object:
@@ -355,6 +479,9 @@ browser.windows.onRemoved.addListener(function (windowId) {
     prompt?.reject?.();
     prompt = null;
     releaseMutex();
+    // Continue processing the queue even if user closed the popup
+    isProcessingQueue = false;
+    processNextInQueue();
   }
 });
 

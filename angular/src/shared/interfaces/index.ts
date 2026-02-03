@@ -575,6 +575,9 @@ interface ActionUrlParameters {
 
   /** Indicates if the current dapp domain is allowed or not. */
   verify?: string | undefined;
+  
+  /** Number of additional requests waiting in the queue. */
+  queueLength?: string;
 }
 
 export interface Token {
